@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.documentation.actions.ShowQuickDocInfoAction;
 import consulo.ide.impl.idea.codeInsight.hint.actions.ShowImplementationsAction;
-import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.editor.completion.AutoCompletionContext;
 import consulo.language.editor.completion.AutoCompletionDecision;
@@ -27,6 +26,7 @@ import consulo.language.editor.completion.CompletionType;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.localize.LanguageLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
@@ -36,18 +36,17 @@ import consulo.util.lang.StringUtil;
  */
 @ExtensionImpl(id = "default", order = "last")
 public class DefaultCompletionContributor extends CompletionContributor {
-
   static void addDefaultAdvertisements(LookupEx lookup, boolean includePsiFeatures) {
     Project project = lookup.getProject();
     if (CompletionUtil.shouldShowFeature(project, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_DOT_ETC)) {
-      lookup.addAdvertisement(LangBundle.message("completion.dot.etc.ad"), null);
+      lookup.addAdvertisement(LanguageLocalize.completionDotEtcAd(), null);
     }
     if (!includePsiFeatures) return;
 
     if (CompletionUtil.shouldShowFeature(project, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_SMART_ENTER)) {
       String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT);
       if (StringUtil.isNotEmpty(shortcut)) {
-        lookup.addAdvertisement(LangBundle.message("completion.smart.enter.ad", shortcut), null);
+        lookup.addAdvertisement(LanguageLocalize.completionSmartEnterAd(shortcut), null);
       }
     }
 
@@ -55,7 +54,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
          CompletionUtil.shouldShowFeature(project, ShowQuickDocInfoAction.CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE))) {
       String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_QUICK_JAVADOC);
       if (StringUtil.isNotEmpty(shortcut)) {
-        lookup.addAdvertisement(LangBundle.message("completion.quick.javadoc.ad", shortcut), null);
+        lookup.addAdvertisement(LanguageLocalize.completionQuickJavadocAd(shortcut), null);
       }
     }
 
@@ -63,7 +62,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
         CompletionUtil.shouldShowFeature(project, ShowImplementationsAction.CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE)) {
       String shortcut = CompletionUtil.getActionShortcut(IdeActions.ACTION_QUICK_IMPLEMENTATIONS);
       if (StringUtil.isNotEmpty(shortcut)) {
-        lookup.addAdvertisement(LangBundle.message("completion.quick.implementations.ad", shortcut), null);
+        lookup.addAdvertisement(LanguageLocalize.completionQuickImplementationsAd(shortcut), null);
       }
     }
   }

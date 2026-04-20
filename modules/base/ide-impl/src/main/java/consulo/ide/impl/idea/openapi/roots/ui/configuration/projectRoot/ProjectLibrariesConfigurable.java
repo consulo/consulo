@@ -27,7 +27,7 @@ import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -59,7 +59,6 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
         return "ProjectLibrariesConfigurable.UI";
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Libraries");
@@ -71,7 +70,6 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
     }
 
     @Override
-    
     public String getId() {
         return ID;
     }
@@ -88,7 +86,7 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
 
     @Override
     protected String getAddText() {
-        return ProjectBundle.message("add.new.project.library.text");
+        return ProjectLocalize.addNewProjectLibraryText().get();
     }
 
     @Override

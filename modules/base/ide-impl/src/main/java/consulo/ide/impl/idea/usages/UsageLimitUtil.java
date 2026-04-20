@@ -21,6 +21,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.StringUtil;
 
 import java.util.function.Supplier;
@@ -47,19 +48,19 @@ public class UsageLimitUtil {
     CONTINUE, ABORT
   }
 
-  
-  public static Result showTooManyUsagesWarning(Project project,
-                                                String message,
-                                                UsageViewPresentation usageViewPresentation) {
-    String[] buttons = {UsageViewBundle.message("button.text.continue"), UsageViewBundle.message("button.text.abort")};
+  public static Result showTooManyUsagesWarning(
+    Project project,
+    String message,
+    UsageViewPresentation usageViewPresentation
+  ) {
     int result = runOrInvokeAndWait(() -> {
       String title = UsageViewBundle.message("find.excessive.usages.title", StringUtil.capitalize(StringUtil.pluralize(usageViewPresentation.getUsagesWord())));
       return Messages.showOkCancelDialog(
         project,
         message,
         title,
-        buttons[0],
-        buttons[1],
+        UsageLocalize.buttonTextContinue().get(),
+        UsageLocalize.buttonTextAbort().get(),
         Messages.getWarningIcon()
       );
     });

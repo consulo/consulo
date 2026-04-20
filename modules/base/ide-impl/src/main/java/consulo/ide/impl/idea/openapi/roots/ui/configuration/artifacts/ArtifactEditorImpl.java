@@ -39,10 +39,12 @@ import consulo.language.editor.ui.awt.HintUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.CheckBox;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -59,13 +61,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * @author nik
  */
 public class ArtifactEditorImpl implements ArtifactEditorEx {
     private JPanel myMainPanel;
-    private JCheckBox myBuildOnMakeCheckBox;
+    private CheckBox myBuildOnMakeCheckBox;
     private TextFieldWithBrowseButton myOutputDirectoryField;
     private JPanel myEditorPanel;
     private JPanel myErrorPanelPlace;
@@ -84,11 +87,8 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     private final ArtifactValidationManagerImpl myValidationManager;
     private boolean myDisposed;
 
-    public ArtifactEditorImpl(
-        ArtifactsStructureConfigurableContext context,
-        Artifact artifact,
-        ArtifactEditorSettings settings
-    ) {
+    @RequiredUIAccess
+    public ArtifactEditorImpl(ArtifactsStructureConfigurableContext context, Artifact artifact, ArtifactEditorSettings settings) {
         $$$setupUI$$$();
         myContext = createArtifactEditorContext(context);
         myOriginalArtifact = artifact;
@@ -101,7 +101,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         Disposer.register(this, mySourceItemsTree);
         Disposer.register(this, myLayoutTreeComponent);
         myTopPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        myBuildOnMakeCheckBox.setSelected(artifact.isBuildOnMake());
+        myBuildOnMakeCheckBox.setValue(artifact.isBuildOnMake());
         String outputPath = artifact.getOutputPath();
         myOutputDirectoryField.addBrowseFolderListener(
             CompilerLocalize.dialogTitleOutputDirectoryForArtifact().get(),
@@ -136,10 +136,11 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myOutputDirectoryField.setText(outputPath != null ? FileUtil.toSystemDependentName(outputPath) : null);
     }
 
+    @RequiredUIAccess
     public void apply() {
         ModifiableArtifact modifiableArtifact =
             myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
-        modifiableArtifact.setBuildOnMake(myBuildOnMakeCheckBox.isSelected());
+        modifiableArtifact.setBuildOnMake(myBuildOnMakeCheckBox.getValue());
         modifiableArtifact.setOutputPath(getConfiguredOutputPath());
         myPropertiesEditors.applyProperties();
         myLayoutTreeComponent.saveElementProperties();
@@ -173,6 +174,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void rebuildTries() {
         myLayoutTreeComponent.rebuildTree();
         mySourceItemsTree.rebuildTree();
@@ -183,6 +185,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myContext.queueValidation();
     }
 
+    @RequiredUIAccess
     public JComponent createMainComponent() {
         mySourceItemsTree.initTree();
         myLayoutTreeComponent.initTree();
@@ -208,12 +211,14 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         link.setUseIconAsLink(true);
         link.addHyperlinkListener(new HyperlinkAdapter() {
             @Override
+            @RequiredUIAccess
             protected void hyperlinkActivated(HyperlinkEvent e) {
                 JLabel label = new JLabel(ProjectLocalize.artifactSourceItemsTreeTooltip().get());
                 label.setBorder(HintUtil.createHintBorder());
                 label.setBackground(HintUtil.INFORMATION_COLOR);
                 label.setOpaque(true);
-                HintManager.getInstance().showHint(label, RelativePoint.getSouthEastOf(link), HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE, -1);
+                HintManager.getInstance()
+                    .showHint(label, RelativePoint.getSouthEastOf(link), HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE, -1);
             }
         });
         labelPanel.add(link);
@@ -350,33 +355,32 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void addNewPackagingElement(PackagingElementType<?> type) {
         myLayoutTreeComponent.addNewPackagingElement(type);
         mySourceItemsTree.rebuildTree();
     }
 
     @Override
+    @RequiredUIAccess
     public void removeSelectedElements() {
         myLayoutTreeComponent.removeSelectedElements();
     }
 
     @Override
+    @RequiredUIAccess
     public void removePackagingElement(String pathToParent, PackagingElement<?> element) {
         doReplaceElement(pathToParent, element, null);
     }
 
     @Override
-    public void replacePackagingElement(String pathToParent,
-                                        PackagingElement<?> element,
-                                        PackagingElement<?> replacement) {
+    @RequiredUIAccess
+    public void replacePackagingElement(String pathToParent, PackagingElement<?> element, PackagingElement<?> replacement) {
         doReplaceElement(pathToParent, element, replacement);
     }
 
-    private void doReplaceElement(
-        String pathToParent,
-        PackagingElement<?> element,
-        @Nullable PackagingElement replacement
-    ) {
+    @RequiredUIAccess
+    private void doReplaceElement(String pathToParent, PackagingElement<?> element, @Nullable PackagingElement replacement) {
         myLayoutTreeComponent.editLayout(() -> {
             CompositePackagingElement<?> parent = findCompositeElementByPath(pathToParent);
             if (parent == null) {
@@ -406,11 +410,12 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         return element;
     }
 
+    @RequiredUIAccess
     public boolean isModified() {
-        return myBuildOnMakeCheckBox.isSelected() != myOriginalArtifact.isBuildOnMake() ||
-            !Comparing.equal(getConfiguredOutputPath(), myOriginalArtifact.getOutputPath()) ||
-            myPropertiesEditors.isModified() ||
-            myLayoutTreeComponent.isPropertiesModified();
+        return myBuildOnMakeCheckBox.getValue() != myOriginalArtifact.isBuildOnMake()
+            || !Objects.equals(getConfiguredOutputPath(), myOriginalArtifact.getOutputPath())
+            || myPropertiesEditors.isModified()
+            || myLayoutTreeComponent.isPropertiesModified();
     }
 
     @Override
@@ -451,6 +456,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void updateLayoutTree() {
         myLayoutTreeComponent.rebuildTree();
     }
@@ -460,6 +466,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new LibrarySourceItem(library)));
     }
 
+    @RequiredUIAccess
     public void setArtifactType(ArtifactType artifactType) {
         ModifiableArtifact modifiableArtifact =
             myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
@@ -480,6 +487,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         return myValidationManager;
     }
 
+    @RequiredUIAccess
     private void createUIComponents() {
         myShowContentCheckBox = new ThreeStateCheckBox();
         myShowSpecificContentOptionsButton = Button.create(LocalizeValue.empty());
@@ -500,28 +508,25 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
      * Method generated by Consulo GUI Designer
      * >>> IMPORTANT!! <<<
      * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
      */
+    @RequiredUIAccess
     private void $$$setupUI$$$() {
         createUIComponents();
         myMainPanel = new JPanel();
-        myMainPanel.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+        myMainPanel.setLayout(new GridLayoutManager(4, 1, JBUI.emptyInsets(), -1, -1));
         myTopPanel = new JPanel();
-        myTopPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        myTopPanel.setLayout(new GridLayoutManager(2, 2, JBUI.emptyInsets(), -1, -1));
         myMainPanel.add(myTopPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        final JLabel label1 = new JLabel();
-        this.$$$loadLabelText$$$(label1, ProjectBundle.message("label.text.output.directory"));
-        myTopPanel.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Label label1 = Label.create(ProjectLocalize.labelTextOutputDirectory());
+        myTopPanel.add(TargetAWT.to(label1), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         myOutputDirectoryField = new TextFieldWithBrowseButton();
         myTopPanel.add(myOutputDirectoryField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 2, JBUI.emptyInsets(), -1, -1));
         myTopPanel.add(panel1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        myBuildOnMakeCheckBox = new JCheckBox();
-        this.$$$loadButtonText$$$(myBuildOnMakeCheckBox, ProjectBundle.message("checkbox.text.build.on.make"));
-        panel1.add(myBuildOnMakeCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
+        myBuildOnMakeCheckBox = CheckBox.create(ProjectLocalize.checkboxTextBuildOnMake());
+        panel1.add(TargetAWT.to(myBuildOnMakeCheckBox), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         myEditorPanel = new JPanel();
         myEditorPanel.setLayout(new BorderLayout(0, 0));
@@ -539,67 +544,6 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         bottomPanel.add(TargetAWT.to(myShowSpecificContentOptionsButton));
     }
 
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadLabelText$$$(JLabel component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setDisplayedMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadButtonText$$$(AbstractButton component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) {
-                    break;
-                }
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    /**
-     * @noinspection ALL
-     */
     public JComponent $$$getRootComponent$$$() {
         return myMainPanel;
     }
@@ -612,5 +556,4 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
             }
         }
     }
-
 }

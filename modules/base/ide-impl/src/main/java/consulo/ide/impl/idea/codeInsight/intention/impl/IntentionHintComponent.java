@@ -2,8 +2,8 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
@@ -32,6 +31,7 @@ import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.internal.intention.CachedIntentions;
 import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
 import consulo.language.editor.internal.intention.IntentionManagerSettings;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
 import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.inject.InjectedLanguageManager;
@@ -39,6 +39,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -60,8 +61,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -85,7 +86,8 @@ import java.util.List;
 public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     private static final Logger LOG = Logger.getInstance(IntentionHintComponent.class);
 
-    private static final Image ourInactiveArrowIcon = Image.empty(AllIcons.General.ArrowDown.getWidth(), AllIcons.General.ArrowDown.getHeight());
+    private static final Image ourInactiveArrowIcon =
+        Image.empty(PlatformIconGroup.generalArrowdown().getWidth(), PlatformIconGroup.generalArrowdown().getHeight());
 
     private static final int NORMAL_BORDER_SIZE = 6;
     private static final int SMALL_BORDER_SIZE = 4;
@@ -168,7 +170,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
 
         if (showExpanded) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            Application.get().invokeLater(() -> {
                 if (!editor.isDisposed() && editor.getComponent().isShowing()) {
                     component.showPopup(false);
                 }
@@ -201,6 +203,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @Override
+    @RequiredUIAccess
     public void editorScrolled() {
         closePopup();
     }
@@ -215,7 +218,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         HIDE_AND_RECREATE   // ahh, has to close already shown popup, recreate and re-show again
     }
 
-    
+    @RequiredReadAction
     public PopupUpdateResult getPopupUpdateResult(boolean actionsChanged) {
         if (myPopup.isDisposed() || !myFile.isValid()) {
             return PopupUpdateResult.HIDE_AND_RECREATE;
@@ -276,7 +279,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     private static @Nullable Point getHintPosition(Editor editor) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             return new Point();
         }
         int offset = editor.getCaretModel().getOffset();
@@ -332,7 +335,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     private static boolean canPlaceBulbOnTheSameLine(Editor editor) {
-        if (ApplicationManager.getApplication().isUnitTestMode() || editor.isOneLineMode()) {
+        if (Application.get().isUnitTestMode() || editor.isOneLineMode()) {
             return false;
         }
         if (Registry.is("always.show.intention.above.current.line", false)) {
@@ -366,16 +369,16 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
         Image smartTagIcon;
         if (showRefactoringsBulb) {
-            smartTagIcon = AllIcons.Actions.RefactoringBulb;
+            smartTagIcon = PlatformIconGroup.actionsRefactoringbulb();
         }
         else if (showFix) {
-            smartTagIcon = AllIcons.Actions.QuickfixBulb;
+            smartTagIcon = PlatformIconGroup.actionsQuickfixbulb();
         }
         else {
-            smartTagIcon = AllIcons.Actions.IntentionBulb;
+            smartTagIcon = PlatformIconGroup.actionsIntentionbulb();
         }
 
-        myHighlightedIcon = ImageEffects.appendRight(smartTagIcon, AllIcons.General.ArrowDown);
+        myHighlightedIcon = ImageEffects.appendRight(smartTagIcon, PlatformIconGroup.generalArrowdown());
         myInactiveIcon = ImageEffects.appendRight(smartTagIcon, ourInactiveArrowIcon);
 
         myIconLabel = new JBLabel(myInactiveIcon);
@@ -433,7 +436,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
         String acceleratorsText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
         if (!acceleratorsText.isEmpty()) {
-            myIconLabel.setToolTipText(CodeInsightBundle.message("lightbulb.tooltip", acceleratorsText));
+            myIconLabel.setToolTipText(CodeInsightLocalize.lightbulbTooltip(acceleratorsText).get());
         }
     }
 
@@ -560,6 +563,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         Disposer.register(myPopup, UIAccess::assertIsUIThread);
     }
 
+    @RequiredUIAccess
     void canceled(ListPopupStep intentionListStep) {
         if (myPopup.getListStep() != intentionListStep || myDisposed) {
             return;

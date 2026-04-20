@@ -38,6 +38,7 @@ import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -52,8 +53,8 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.usage.UsageInfo;
-import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
@@ -181,7 +182,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
           textRange = nameElement.getTextRange();
         }
       }
-      // highlight injected element in host document textrange
+      // highlight injected element in host document text range
       textRange = InjectedLanguageManager.getInstance(project).injectedToHost(psiElement, textRange);
 
       RangeHighlighter highlighter = markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), highlightLayer, attributes, HighlighterTargetArea.EXACT_RANGE);
@@ -303,13 +304,13 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     }
   }
 
-  public final @Nullable String getCannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
+  public final LocalizeValue getCannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
     return cannotPreviewMessage(infos);
   }
 
-  private @Nullable String cannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
+  private LocalizeValue cannotPreviewMessage(@Nullable List<? extends UsageInfo> infos) {
     if (infos == null || infos.isEmpty()) {
-      return UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord());
+      return UsageLocalize.selectTheUsageToPreview();
     }
     PsiFile psiFile = null;
     for (UsageInfo info : infos) {
@@ -321,16 +322,17 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
       }
       else {
         if (psiFile != file) {
-          return UsageViewBundle.message("several.occurrences.selected");
+          return UsageLocalize.severalOccurrencesSelected();
         }
       }
     }
-    return null;
+    return LocalizeValue.empty();
   }
 
   @Override
+  @RequiredUIAccess
   public void updateLayoutLater(@Nullable List<? extends UsageInfo> infos) {
-    String cannotPreviewMessage = cannotPreviewMessage(infos);
+    String cannotPreviewMessage = cannotPreviewMessage(infos).getNullIfEmpty();
     if (cannotPreviewMessage != null) {
       releaseEditor();
       removeAll();

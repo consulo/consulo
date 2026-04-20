@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -110,13 +109,11 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         return CodeInsightBundle.message("goto.implementation.chooserTitle", fullName, length, finished ? "" : " so far");
     }
 
-    
     @Override
     protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
         return CodeInsightBundle.message("goto.implementation.findUsages.title", name, length);
     }
 
-    
     @Override
     protected String getNotFoundMessage(Project project, Editor editor, PsiFile file) {
         return CodeInsightLocalize.gotoImplementationNotfound().get();

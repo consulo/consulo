@@ -16,8 +16,8 @@
 package consulo.language.psi.path;
 
 import consulo.document.util.TextRange;
-import consulo.language.LangBundle;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.resolve.ResolveCache;
@@ -511,9 +511,9 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   @Override
   public LocalizeValue buildUnresolvedMessage(String referenceText) {
     return LocalizeValue.localizeTODO(
-        new StringBuilder().append(LangBundle.message("error.cannot.resolve"))
+        new StringBuilder().append(LanguageLocalize.errorCannotResolve().get())
             .append(" ")
-            .append(LangBundle.message(isLast() ? "terms.file" : "terms.directory"))
+            .append(isLast() ? LanguageLocalize.termsFile().get() : LanguageLocalize.termsDirectory().get())
             .append(" '")
             .append(StringUtil.escapePattern(decode(getCanonicalText())))
             .append("'")

@@ -100,8 +100,12 @@ node.targets:
     text: Targets
 node.usages.in.generated.code:
     text: Usages in generated code
+notification.title.find.usages.finished:
+    text: Find Usages Finished
 notification.usage.search.is.not.available.until.indices.are.ready:
     text: Usage search is not available until indexes are ready
+notification.n.usages.found:
+    text: '{0,choice, 0#No usages|1#1 usage|2#{0,number} usages} found'
 occurence.info.occurence:
     text: '{0,choice, 0#Not Found|1#1 occurrence|2#{0,number} occurrences}{1,choice, 0#|1# in 1 file|2# in {1,number} files}'
 occurence.info.reference:

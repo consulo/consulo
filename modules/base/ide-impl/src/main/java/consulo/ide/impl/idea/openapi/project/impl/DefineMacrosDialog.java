@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
@@ -48,31 +49,36 @@ public class DefineMacrosDialog extends DialogWrapper{
       myMacroTable[idx] = new String[]{macroName, ""};
       myIndex.putInt(macroName, idx);
     }
-    setCancelButtonText(ProjectBundle.message("project.macros.cancel.button"));
+    setCancelButtonText(ProjectLocalize.projectMacrosCancelButton());
     init();
   }
 
+  @RequiredUIAccess
   protected void doOKAction() {
     for (int idx = 0; idx < myMacroTable.length; idx++) {
       String[] row = myMacroTable[idx];
       String path = row[MACRO_VALUE];
 
       if (path == null || path.length() == 0) {
-        Messages.showErrorDialog(getContentPane(), ProjectBundle.message("project.macros.variable.missing.error", row[MACRO_NAME]),
-                                 ProjectBundle.message("project.macros.variable.missing.title"));
+        Messages.showErrorDialog(
+            getContentPane(),
+            ProjectLocalize.projectMacrosVariableMissingError(row[MACRO_NAME]).get(),
+            ProjectLocalize.projectMacrosVariableMissingTitle().get()
+        );
         return;
       }
       if (!new File(path).exists()) {
-        Messages.showErrorDialog(getContentPane(),
-                                 ProjectBundle.message("project.macros.variable.missing.error", row[MACRO_NAME]),
-                                 ProjectBundle.message("project.macros.variable.missing.title"));
+        Messages.showErrorDialog(
+          getContentPane(),
+          ProjectLocalize.projectMacrosVariableMissingError(row[MACRO_NAME]).get(),
+          ProjectLocalize.projectMacrosVariableMissingTitle().get()
+        );
         return;
       }
     }
     super.doOKAction();
   }
 
-  
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction()};
   }
@@ -80,7 +86,7 @@ public class DefineMacrosDialog extends DialogWrapper{
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     JBTable table = new JBTable(new MyTableModel());
-    JLabel label = new JLabel(ProjectBundle.message("project.macros.prompt"));
+    JLabel label = new JLabel(ProjectLocalize.projectMacrosPrompt().get());
     label.setBorder(IdeBorderFactory.createEmptyBorder(6, 6, 6, 6));
     panel.add(label, BorderLayout.NORTH);
     panel.add(ScrollPaneFactory.createScrollPane(table), BorderLayout.CENTER);
@@ -94,11 +100,11 @@ public class DefineMacrosDialog extends DialogWrapper{
 
   private class MyTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
-      switch(column) {
-        case MACRO_NAME : return ProjectBundle.message("project.macros.name.column");
-        case MACRO_VALUE : return ProjectBundle.message("project.macros.path.column");
-      }
-      return "";
+      return switch (column) {
+        case MACRO_NAME -> ProjectLocalize.projectMacrosNameColumn().get();
+        case MACRO_VALUE -> ProjectLocalize.projectMacrosPathColumn().get();
+        default -> "";
+      };
     }
 
     public int getColumnCount() {
@@ -123,5 +129,4 @@ public class DefineMacrosDialog extends DialogWrapper{
       return columnIndex == MACRO_VALUE;
     }
   }
-
 }

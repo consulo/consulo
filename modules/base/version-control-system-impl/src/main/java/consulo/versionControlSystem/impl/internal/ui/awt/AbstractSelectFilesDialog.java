@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
-import consulo.application.CommonBundle;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
-import consulo.ui.ex.action.*;
-
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
 import org.jspecify.annotations.Nullable;
 
@@ -94,7 +92,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     panel.add(getFileList(), BorderLayout.CENTER);
 
     if (myShowDoNotAskOption) {
-      myDoNotShowCheckbox = new JCheckBox(CommonBundle.message("dialog.options.do.not.ask"));
+      myDoNotShowCheckbox = new JCheckBox(CommonLocalize.dialogOptionsDoNotAsk().get());
       panel.add(myDoNotShowCheckbox, BorderLayout.SOUTH);
     }
     return panel;

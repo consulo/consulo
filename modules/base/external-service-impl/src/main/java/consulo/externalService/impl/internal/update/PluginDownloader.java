@@ -62,17 +62,11 @@ public class PluginDownloader {
     private static final String CHECKSUM_ALGORITHM = "SHA3-256";
     private static final int MAX_TRIES = 3;
 
-    
     public static PluginDownloader createDownloader(PluginDescriptor descriptor, boolean viaUpdate) {
         return createDownloader(descriptor, null, viaUpdate);
     }
 
-    
-    public static PluginDownloader createDownloader(
-        PluginDescriptor d,
-        @Nullable String platformVersion,
-        boolean viaUpdate
-    ) {
+    public static PluginDownloader createDownloader(PluginDescriptor d, @Nullable String platformVersion, boolean viaUpdate) {
         return new PluginDownloader(d, (descriptor, tryIndex) -> {
             boolean noRedirect = tryIndex > 2;
             return RepositoryHelper.buildUrlForDownload(
@@ -269,7 +263,6 @@ public class PluginDownloader {
         }
     }
 
-    
     private Pair<File, String> downloadPlugin(ProgressIndicator indicator, String expectedChecksum, int tryIndex)
         throws IOException {
         File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
@@ -309,26 +302,22 @@ public class PluginDownloader {
             });
         }
         catch (IOException e) {
-            throw new IOException("Failed to read data from URL: " + downloadUrl + "\nView logs for details.", e);
+            throw new IOException(ExternalServiceLocalize.messageFailedToReadDataFromUrl(downloadUrl).get(), e);
         }
     }
 
-    
     public PluginId getPluginId() {
         return myPluginId;
     }
 
-    
     private String getFileName() {
         return myPluginId + "_" + myDescriptor.getVersion() + (myIsPlatform ? ".tar.gz" : ".zip");
     }
 
-    
     public String getPluginName() {
         return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
     }
 
-    
     public PluginDescriptor getPluginDescriptor() {
         return myDescriptor;
     }

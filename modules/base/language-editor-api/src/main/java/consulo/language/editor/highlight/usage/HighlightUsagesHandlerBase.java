@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.highlight.usage;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
@@ -43,8 +43,8 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
 
   protected List<TextRange> myReadUsages = new ArrayList<>();
   protected List<TextRange> myWriteUsages = new ArrayList<>();
-  protected String myStatusText;
-  protected String myHintText;
+  protected LocalizeValue myStatusText = LocalizeValue.empty();
+  protected LocalizeValue myHintText = LocalizeValue.empty();
 
   protected HighlightUsagesHandlerBase(Editor editor, PsiFile file) {
     myEditor = editor;
@@ -65,15 +65,14 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
 
   public void buildStatusText(@Nullable String elementName, int refCount) {
     if (refCount > 0) {
-      myStatusText = CodeInsightBundle.message(elementName != null ?
-                                               "status.bar.highlighted.usages.message" :
-                                               "status.bar.highlighted.usages.no.target.message", refCount, elementName,
-                                               getShortcutText());
+      myStatusText = elementName != null
+        ? CodeInsightLocalize.statusBarHighlightedUsagesMessage(refCount, elementName, getShortcutText())
+        : CodeInsightLocalize.statusBarHighlightedUsagesNoTargetMessage(refCount, getShortcutText());
     }
     else {
-      myHintText = CodeInsightBundle.message(elementName != null ?
-                                             "status.bar.highlighted.usages.not.found.message" :
-                                             "status.bar.highlighted.usages.not.found.no.target.message", elementName);
+      myHintText = elementName != null
+        ? CodeInsightLocalize.statusBarHighlightedUsagesNotFoundMessage(elementName)
+        : CodeInsightLocalize.statusBarHighlightedUsagesNotFoundNoTargetMessage();
     }
   }
 
@@ -113,11 +112,11 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
     return myWriteUsages;
   }
 
-  public @Nullable String getHintText() {
+  public LocalizeValue getHintText() {
     return myHintText;
   }
 
-  public @Nullable String getStatusText() {
+  public LocalizeValue getStatusText() {
     return myStatusText;
   }
 

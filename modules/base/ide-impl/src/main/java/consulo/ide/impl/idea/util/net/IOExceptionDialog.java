@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.util.net;
 
-import consulo.application.CommonBundle;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.logging.Logger;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +36,7 @@ public class IOExceptionDialog extends DialogWrapper {
   public IOExceptionDialog(String title, String errorText)  {
     super((Project)null, true);
     setTitle(title);
-    setOKButtonText(CommonBundle.message("dialog.ioexception.tryagain"));
+    setOKButtonText(CommonLocalize.dialogIoexceptionTryagain());
 
     myErrorLabel = new JTextArea();
     myErrorLabel.setText(errorText);
@@ -52,11 +52,10 @@ public class IOExceptionDialog extends DialogWrapper {
     return myErrorLabel;
   }
 
-  
   @Override
   protected Action[] createLeftSideActions() {
     return new Action[] {
-      new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
+      new AbstractAction(CommonLocalize.dialogIoexceptionProxy().get()) {
         @Override
         public void actionPerformed(ActionEvent e) {
           ShowSettingsUtil.getInstance().editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class), new HttpProxyConfigurable());
@@ -81,10 +80,7 @@ public class IOExceptionDialog extends DialogWrapper {
         }
       });
     }
-    catch (InterruptedException e) {
-      LOG.info(e);
-    }
-    catch (InvocationTargetException e) {
+    catch (InterruptedException | InvocationTargetException e) {
       LOG.info(e);
     }
 

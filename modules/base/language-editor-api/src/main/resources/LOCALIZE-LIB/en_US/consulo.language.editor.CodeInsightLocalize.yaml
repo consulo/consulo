@@ -954,7 +954,7 @@ status.bar.exit.points.highlighted.message:
 status.bar.highlighted.usages.message:
     text: '{0} {0, choice, 1#usage|2#usages} of {1} found (press {2} again to remove the highlighting, Escape to remove all highlighting)'
 status.bar.highlighted.usages.no.target.message:
-    text: '{0} {0, choice, 1#usage|2#usages} found (press {2} again to remove the highlighting, Escape to remove all highlighting)'
+    text: '{0} {0, choice, 1#usage|2#usages} found (press {1} again to remove the highlighting, Escape to remove all highlighting)'
 status.bar.highlighted.usages.not.found.message:
     text: No usages of {0} found
 status.bar.highlighted.usages.not.found.no.target.message:

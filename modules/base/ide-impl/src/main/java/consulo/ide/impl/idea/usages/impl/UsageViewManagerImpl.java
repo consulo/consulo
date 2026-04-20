@@ -16,26 +16,24 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.find.SearchInBackgroundOption;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.application.Application;
 import consulo.application.internal.TooManyUsagesStatus;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.usages.UsageLimitUtil;
-import consulo.usage.rule.PsiElementUsage;
-import consulo.usage.rule.UsageInFile;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.content.scope.SearchScope;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
+import consulo.ide.impl.idea.find.SearchInBackgroundOption;
+import consulo.ide.impl.idea.usages.UsageLimitUtil;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.internal.content.scope.ProjectAndLibrariesScope;
 import consulo.language.impl.internal.content.scope.ProjectScopeImpl;
-import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -44,12 +42,16 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.usage.*;
+import consulo.usage.localize.UsageLocalize;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.UsageInFile;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -69,7 +71,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  
   public UsageView createUsageView(UsageTarget[] targets, Usage[] usages, UsageViewPresentation presentation, Supplier<UsageSearcher> usageSearcherFactory) {
     UsageViewImpl usageView = new UsageViewImpl(myProject, presentation, targets, usageSearcherFactory);
     appendUsages(usages, usageView);
@@ -78,7 +79,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  
   public UsageView showUsages(UsageTarget[] searchedFor, Usage[] foundUsages, UsageViewPresentation presentation, Supplier<UsageSearcher> factory) {
     UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
     addContent((UsageViewImpl)usageView, presentation);
@@ -92,7 +92,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  
   public UsageView showUsages(UsageTarget[] searchedFor, Usage[] foundUsages, UsageViewPresentation presentation) {
     return showUsages(searchedFor, foundUsages, presentation, null);
   }
@@ -133,21 +132,22 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     searchScopeToWarnOfFallingOutOf, listener).run();
       }
 
-      
       @Override
       public NotificationInfo getNotificationInfo() {
         UsageViewImpl usageView = usageViewRef.get();
         int count = usageView == null ? 0 : usageView.getUsagesCount();
-        String notification = StringUtil.capitalizeWords(UsageViewBundle.message("usages.n", count), true);
-        LOG.debug(notification + " in " + (System.currentTimeMillis() - start) + "ms.");
-        return new NotificationInfo("Find Usages", "Find Usages Finished", notification);
+        LOG.debug("Found ", count, " usages in ", System.currentTimeMillis() - start, " ms.");
+        return new NotificationInfo(
+          "Find Usages",
+          UsageLocalize.notificationTitleFindUsagesFinished(),
+          UsageLocalize.notificationNUsagesFound(count)
+        );
       }
     };
     ProgressManager.getInstance().run(task);
     return usageViewRef.get();
   }
 
-  
   SearchScope getMaxSearchScopeToWarnOfFallingOutOf(UsageTarget[] searchFor) {
     UsageTarget target = searchFor.length > 0 ? searchFor[0] : null;
     if (target instanceof TypeSafeDataProvider) {
@@ -182,11 +182,10 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return null;
   }
 
-  
   public static String getProgressTitle(UsageViewPresentation presentation) {
     String scopeText = presentation.getScopeText();
     String usagesString = StringUtil.capitalize(presentation.getUsagesString());
-    return UsageViewBundle.message("progress.searching.for.in", usagesString, scopeText, presentation.getContextText());
+    return UsageLocalize.progressSearchingForIn(usagesString, scopeText, presentation.getContextText()).get();
   }
 
   void showToolWindow(boolean activateWindow) {
@@ -198,7 +197,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   protected static void appendUsages(Usage[] foundUsages, UsageViewImpl usageView) {
-    ApplicationManager.getApplication().runReadAction(() -> {
+    Application.get().runReadAction(() -> {
       for (Usage foundUsage : foundUsages) {
         usageView.appendUsage(foundUsage);
       }
@@ -214,8 +213,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
     UIUtil.invokeLaterIfNeeded(() -> {
       if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
       int shownUsageCount = usageView == null ? usageCount : usageView.getRoot().getRecursiveUsageCount();
-      String message = UsageViewBundle.message("find.excessive.usage.count.prompt", shownUsageCount, StringUtil.pluralize(presentation.getUsagesWord()));
-      UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message, presentation);
+      LocalizeValue message = UsageLocalize.findExcessiveUsageCountPrompt(shownUsageCount);
+      UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message.get(), presentation);
       if (ret == UsageLimitUtil.Result.ABORT) {
         if (usageView != null) {
           usageView.cancelCurrentSearch();
@@ -228,17 +227,16 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   public static long getFileLength(VirtualFile virtualFile) {
     long[] length = {-1L};
-    ApplicationManager.getApplication().runReadAction(() -> {
+    Application.get().runReadAction(() -> {
       if (!virtualFile.isValid()) return;
       length[0] = virtualFile.getLength();
     });
     return length[0];
   }
 
-  
   public static String presentableSize(long bytes) {
     long megabytes = bytes / (1024 * 1024);
-    return UsageViewBundle.message("find.file.size.megabytes", Long.toString(megabytes));
+    return UsageLocalize.findFileSizeMegabytes(Long.toString(megabytes)).get();
   }
 
   public static boolean isInScope(Usage usage, SearchScope searchScope) {
@@ -258,9 +256,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return searchScope.contains(file);
   }
 
-  
   public static String outOfScopeMessage(int nUsages, SearchScope searchScope) {
     return (nUsages == 1 ? "One usage is" : nUsages + " usages are") + " out of scope '" + searchScope.getDisplayName() + "'";
   }
-
 }

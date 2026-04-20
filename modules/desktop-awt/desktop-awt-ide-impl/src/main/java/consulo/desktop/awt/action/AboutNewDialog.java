@@ -16,12 +16,12 @@
 package consulo.desktop.awt.action;
 
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.application.internal.JobScheduler;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.platform.Platform;
 import consulo.ui.Size2D;
@@ -79,15 +79,14 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     return 0.8f;
   }
 
-  @RequiredUIAccess
-  
   @Override
+  @RequiredUIAccess
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     JTextArea area = new JTextArea();
     area.setEditable(false);
     area.setText(buildAboutInfo());
 
-    setOKButtonText(CommonBundle.getCloseButtonText());
+    setOKButtonText(CommonLocalize.buttonClose());
 
     JButton okButton = createJButtonForAction(getOKAction());
 
@@ -108,7 +107,6 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     return Couple.of(ScrollPaneFactory.createScrollPane(area, true), eastPanel);
   }
 
-  
   private String buildAboutInfo() {
 
     ApplicationInfo info = ApplicationInfo.getInstance();

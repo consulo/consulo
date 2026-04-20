@@ -22,18 +22,18 @@ import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
-import consulo.language.LangBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.file.FileTypeManager;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.TextBox;
 import consulo.ui.HasValidator;
+import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -43,8 +43,8 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -102,7 +102,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
             NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile(), contentPanel, (JComponent) TargetAWT.to(nameField));
         contentPanel.addValidator(value -> {
             if (!validator.checkInput(value)) {
-                String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
+                String message = InputValidatorEx.getErrorText(validator, value, LanguageLocalize.incorrectName().get());
                 return new HasValidator.ValidationInfo(message);
             }
 

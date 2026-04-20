@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
+import consulo.configurable.Settings;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
@@ -23,13 +24,13 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.language.internal.FileTypeManagerEx;
-import consulo.configurable.Settings;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.ResourceTextDescriptor;
 import consulo.language.editor.internal.intention.TextDescriptor;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
+import consulo.language.internal.FileTypeManagerEx;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -89,7 +90,7 @@ public class IntentionDescriptionPanel {
   public void reset(IntentionActionMetaData actionMetaData, String filter) {
     try {
       TextDescriptor url = actionMetaData.getDescription();
-      String description = url == null ? CodeInsightBundle.message("under.construction.string") : SearchUtil.markup(url.getText(), filter);
+      String description = url == null ? CodeInsightLocalize.underConstructionString().get() : SearchUtil.markup(url.getText(), filter);
       myDescriptionBrowser.setText(description);
       setupPoweredByPanel(actionMetaData);
 
@@ -114,7 +115,7 @@ public class IntentionDescriptionPanel {
 
     JComponent owner;
     PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
-    HyperlinkLabel label = new HyperlinkLabel(CodeInsightBundle.message("powered.by.plugin", pluginDescriptor.getName()));
+    HyperlinkLabel label = new HyperlinkLabel(CodeInsightLocalize.poweredByPlugin(pluginDescriptor.getName()).get());
     label.addHyperlinkListener(new HyperlinkListener() {
       @RequiredUIAccess
       @Override
@@ -136,9 +137,9 @@ public class IntentionDescriptionPanel {
 
   public void reset(String intentionCategory) {
     try {
-      String text = CodeInsightBundle.message("intention.settings.category.text", intentionCategory);
+      LocalizeValue text = CodeInsightLocalize.intentionSettingsCategoryText(intentionCategory);
 
-      myDescriptionBrowser.setText(text);
+      myDescriptionBrowser.setText(text.get());
       setupPoweredByPanel(null);
 
       URL beforeURL = getClass().getClassLoader().getResource("intentionDescriptions/TemplateGroup/before.txt.template");
@@ -169,7 +170,7 @@ public class IntentionDescriptionPanel {
       gb.gridwidth = 1;
       gb.gridx = 0;
       gb.gridy = 0;
-      gb.insets = new Insets(0, 0, 0, 0);
+      gb.insets = JBUI.emptyInsets();
       gb.ipadx = 5;
       gb.ipady = 5;
       gb.weightx = 1;

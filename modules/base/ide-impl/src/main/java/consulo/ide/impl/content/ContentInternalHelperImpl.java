@@ -17,47 +17,55 @@ package consulo.ide.impl.content;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.internal.ContentInternalHelper;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * @author VISTALL
- * @since 20-Aug-22
+ * @since 2022-08-20
  */
 @Singleton
 @ServiceImpl
 public class ContentInternalHelperImpl implements ContentInternalHelper {
-  @Override
-  public @Nullable String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
-    return Messages
-            .showInputDialog(parent, ProjectBundle.message("sdk.configure.javadoc.url.prompt"), ProjectBundle.message("sdk.configure.javadoc.url.title"), Messages.getQuestionIcon(), initialValue,
-                             new InputValidator() {
-                               @RequiredUIAccess
-                               @Override
-                               public boolean checkInput(String inputString) {
-                                 return true;
-                               }
+    @Override
+    @RequiredUIAccess
+    public @Nullable String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
+        return Messages.showInputDialog(
+            parent,
+            ProjectLocalize.sdkConfigureJavadocUrlPrompt().get(),
+            ProjectLocalize.sdkConfigureJavadocUrlTitle().get(),
+            UIUtil.getQuestionIcon(),
+            initialValue,
+            new InputValidator() {
+                @Override
+                @RequiredUIAccess
+                public boolean checkInput(String inputString) {
+                    return true;
+                }
 
-                               @RequiredUIAccess
-                               @Override
-                               public boolean canClose(String inputString) {
-                                 try {
-                                   new URL(inputString);
-                                   return true;
-                                 }
-                                 catch (MalformedURLException e1) {
-                                   Messages.showErrorDialog(e1.getMessage(), ProjectBundle.message("sdk.configure.javadoc.url.title"));
-                                 }
-                                 return false;
-                               }
-                             });
-  }
+                @Override
+                @RequiredUIAccess
+                public boolean canClose(String inputString) {
+                    try {
+                        new URL(inputString);
+                        return true;
+                    }
+                    catch (MalformedURLException e1) {
+                        Messages.showErrorDialog(e1.getMessage(), ProjectLocalize.sdkConfigureJavadocUrlTitle().get());
+                    }
+                    return false;
+                }
+            }
+        );
+    }
 }

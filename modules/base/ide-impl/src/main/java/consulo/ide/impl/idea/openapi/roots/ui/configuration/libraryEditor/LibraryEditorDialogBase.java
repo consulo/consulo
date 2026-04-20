@@ -16,10 +16,11 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.module.Module;
-import consulo.project.ProjectBundle;
 import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.FormBuilder;
@@ -37,11 +38,12 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
   protected JTextField myNameField;
   private LibraryRootsComponent myLibraryRootsComponent;
 
+  @RequiredUIAccess
   public LibraryEditorDialogBase(Component parent, LibraryRootsComponent libraryRootsComponent) {
     super(parent, true);
     myLibraryRootsComponent = libraryRootsComponent;
     libraryRootsComponent.resetProperties();
-    setTitle(ProjectBundle.message("library.configure.title"));
+    setTitle(ProjectLocalize.libraryConfigureTitle());
     Disposer.register(getDisposable(), myLibraryRootsComponent);
   }
 
@@ -60,6 +62,7 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected final void doOKAction() {
     if (!validateAndApply()) {
       return;
@@ -67,6 +70,7 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
     super.doOKAction();
   }
 
+  @RequiredUIAccess
   protected boolean validateAndApply() {
     String newName = myNameField.getText().trim();
     if (newName.length() == 0) {
@@ -76,11 +80,17 @@ public abstract class LibraryEditorDialogBase extends DialogWrapper {
       LibraryTable.ModifiableModel tableModifiableModel = getTableModifiableModel();
       if (tableModifiableModel != null && !(tableModifiableModel instanceof ModuleLibraryTable)) {
         if (newName == null) {
-          Messages.showErrorDialog(ProjectBundle.message("library.name.not.specified.error", newName), ProjectBundle.message("library.name.not.specified.title"));
+          Messages.showErrorDialog(
+            ProjectLocalize.libraryNameNotSpecifiedError().get(),
+            ProjectLocalize.libraryNameNotSpecifiedTitle().get()
+          );
           return false;
         }
         if (LibraryEditingUtil.libraryAlreadyExists(tableModifiableModel, newName)) {
-          Messages.showErrorDialog(ProjectBundle.message("library.name.already.exists.error", newName), ProjectBundle.message("library.name.already.exists.title"));
+          Messages.showErrorDialog(
+            ProjectLocalize.libraryNameAlreadyExistsError(newName).get(),
+            ProjectLocalize.libraryNameAlreadyExistsTitle().get()
+          );
           return false;
         }
       }

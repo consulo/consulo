@@ -25,7 +25,7 @@ import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -46,7 +46,6 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  
   public Module getOwnerModule() {
     return myModuleRootLayer.getModule();
   }
@@ -62,13 +61,11 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  
   public String getPresentableName() {
-    return ProjectBundle.message("project.root.module.source");
+    return ProjectLocalize.projectRootModuleSource().get();
   }
 
   @Override
-  
   public VirtualFile[] getFiles(OrderRootType type) {
     if (type == SourcesOrderRootType.getInstance()) {
       return myModuleRootLayer.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
@@ -77,7 +74,6 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  
   public String[] getUrls(OrderRootType type) {
     ArrayList<String> result = new ArrayList<String>();
     if (type == SourcesOrderRootType.getInstance()) {

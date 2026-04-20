@@ -19,12 +19,12 @@ import consulo.component.PropertyName;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -320,7 +320,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         ) {
             if (value instanceof MyFileNode fileNode) {
                 VirtualFile file = fileNode.getUserObject();
-                Module module = ModuleUtil.findModuleForFile(file, myProject);
+                Module module = ModuleUtilCore.findModuleForFile(file, myProject);
                 if (module != null) {
                     setIcon(PlatformIconGroup.nodesModule());
                     append(
@@ -336,7 +336,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
             else if (value instanceof MyDuplicatesNode duplicatesNode) {
                 Set<VirtualFile> files = duplicatesNode.getUserObject();
                 for (VirtualFile file : files) {
-                    Module module = ModuleUtil.findModuleForFile(file, myProject);
+                    Module module = ModuleUtilCore.findModuleForFile(file, myProject);
 
                     if (module != null && myResourceModules.contains(module)) {
                         append("Icons can be replaced to ");

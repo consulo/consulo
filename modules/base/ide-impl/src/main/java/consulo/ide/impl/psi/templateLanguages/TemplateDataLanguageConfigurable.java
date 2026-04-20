@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
-import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.impl.internal.template.TemplateDataLanguagePatterns;
 import consulo.language.localize.LanguageLocalize;
@@ -33,8 +32,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -46,7 +45,6 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     super(project, templateDataLanguageMappings);
   }
 
-  
   @Override
   public String getId() {
     return "template.data.language.configurable";
@@ -57,7 +55,6 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
-  
   @Override
   public LocalizeValue getDisplayName() {
     return LanguageLocalize.templateDataLanguageConfigurable();
@@ -65,10 +62,10 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
 
   @Override
   protected <S> Object getParameter(Key<S> key) {
-    if (key == DESCRIPTION) return LangBundle.message("dialog.template.data.language.caption", Application.get().getName());
-    if (key == MAPPING_TITLE) return LangBundle.message("template.data.language.configurable.tree.table.title");
-    if (key == OVERRIDE_QUESTION) return LangBundle.message("template.data.language.override.warning.text");
-    if (key == OVERRIDE_TITLE) return LangBundle.message("template.data.language.override.warning.title");
+    if (key == DESCRIPTION) return LanguageLocalize.dialogTemplateDataLanguageCaption(Application.get().getName()).get();
+    if (key == MAPPING_TITLE) return LanguageLocalize.templateDataLanguageConfigurableTreeTableTitle().get();
+    if (key == OVERRIDE_QUESTION) return LanguageLocalize.templateDataLanguageOverrideWarningText().get();
+    if (key == OVERRIDE_TITLE) return LanguageLocalize.templateDataLanguageOverrideWarningTitle().get();
     return null;
   }
 

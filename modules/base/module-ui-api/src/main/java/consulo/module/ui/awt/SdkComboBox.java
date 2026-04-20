@@ -213,7 +213,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     //      }, myCreationFilter);
     //      DataContext dataContext = DataManager.getInstance().getDataContext(SdkComboBox.this);
     //      if (group.getChildrenCount() > 1) {
-    //        JBPopupFactory.getInstance().createActionGroupPopup(ProjectBundle.message("set.up.jdk.title"), group, dataContext,
+    //        JBPopupFactory.getInstance().createActionGroupPopup(ProjectLocalize.setUpJdkTitle().get(), group, dataContext,
     //                                                            JBPopupFactory.ActionSelectionAid.MNEMONICS, false)
     //                .showUnderneathOf(setUpButton);
     //      }
@@ -273,7 +273,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         T moduleExtension,
         Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction
     ) {
-
         for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
             // dont add self module
             if (module == moduleExtension.getModule()) {

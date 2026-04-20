@@ -28,8 +28,8 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.project.content.library.ProjectLibraryTable;
+import consulo.project.localize.ProjectLocalize;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -47,17 +47,17 @@ public class ProjectLibraryTableImpl extends LibraryTableBase implements Project
   private static final LibraryTablePresentation PROJECT_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
     @Override
     public String getDisplayName(boolean plural) {
-      return ProjectBundle.message("project.library.display.name", plural ? 2 : 1);
+      return ProjectLocalize.projectLibraryDisplayName(plural ? 2 : 1).get();
     }
 
     @Override
     public String getDescription() {
-      return ProjectBundle.message("libraries.node.text.project");
+      return ProjectLocalize.librariesNodeTextProject().get();
     }
 
     @Override
     public String getLibraryTableEditorTitle() {
-      return ProjectBundle.message("library.configure.project.title");
+      return ProjectLocalize.libraryConfigureProjectTitle().get();
     }
   };
 
@@ -75,7 +75,6 @@ public class ProjectLibraryTableImpl extends LibraryTableBase implements Project
     myLibraryOwner = () -> ProjectRootManagerImpl.getInstanceImpl(project).getRootsValidityChangedListener();
   }
 
-  
   @Override
   protected LibraryOwner getLibraryOwner() {
     return myLibraryOwner;

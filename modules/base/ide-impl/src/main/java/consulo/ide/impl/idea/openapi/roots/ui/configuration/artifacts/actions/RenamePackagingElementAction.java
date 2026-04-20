@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.RenameablePackagingElement;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.compiler.artifact.element.PackagingElement;
-import consulo.compiler.artifact.element.RenameablePackagingElement;
 
 import javax.swing.tree.TreePath;
 
@@ -35,7 +35,7 @@ public class RenamePackagingElementAction extends DumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public RenamePackagingElementAction(ArtifactEditorEx artifactEditor) {
-    super(ProjectBundle.message("action.name.rename.packaging.element"));
+    super(ProjectLocalize.actionNameRenamePackagingElement());
     registerCustomShortcutSet(CommonShortcuts.getRename(), artifactEditor.getLayoutTreeComponent().getTreePanel());
     myArtifactEditor = artifactEditor;
   }

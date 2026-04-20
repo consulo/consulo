@@ -15,8 +15,10 @@
  */
 package consulo.application.progress;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
@@ -41,19 +43,31 @@ public class SequentialModalProgressTask extends Task.Modal {
    */
   private long myMinIterationTime = DEFAULT_MIN_ITERATION_MIN_TIME;
 
-  private final String myTitle;
+  private final LocalizeValue myTitle;
 
   private @Nullable ProgressIndicator myIndicator;
 
   private @Nullable SequentialTask myTask;
 
-  public SequentialModalProgressTask(@Nullable ComponentManager project, String title) {
+  public SequentialModalProgressTask(@Nullable ComponentManager project, LocalizeValue title) {
     this(project, title, true);
   }
 
-  public SequentialModalProgressTask(@Nullable ComponentManager project, String title, boolean canBeCancelled) {
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
+  public SequentialModalProgressTask(@Nullable ComponentManager project, String title) {
+    this(project, LocalizeValue.of(title), true);
+  }
+
+  public SequentialModalProgressTask(@Nullable ComponentManager project, LocalizeValue title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
     myTitle = title;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
+  public SequentialModalProgressTask(@Nullable ComponentManager project, String title, boolean canBeCancelled) {
+    this(project, LocalizeValue.of(title), canBeCancelled);
   }
 
   @Override

@@ -36,7 +36,7 @@ import consulo.configurable.Settings;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MasterDetailsComponent;
@@ -47,7 +47,7 @@ import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 20/04/2021
+ * @since 2021-04-20
  */
 public class ProjectStructureSelectorOverSettings implements ProjectStructureSelector {
     private final Settings mySettings;
@@ -56,9 +56,8 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         mySettings = settings;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
         return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
             artifactsStructureConfigurable.selectNodeInTree(artifact);
@@ -66,9 +65,8 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         });
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> select(Sdk sdk, boolean requestFocus) {
         return selectAsync(SdkListConfigurable.ID, SdkListConfigurable.class, (sdkListConfigurable, runnable) -> {
             sdkListConfigurable.selectNodeInTree(sdk);
@@ -76,9 +74,8 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         });
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
             // just select Modules
@@ -95,7 +92,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
                 ModuleEditor moduleEditor = ((ModuleConfigurable) configurable).getModuleEditor();
 
                 if (tabId == null) {
-                    moduleEditor.selectEditor(ProjectBundle.message("module.paths.title"));
+                    moduleEditor.selectEditor(ProjectLocalize.modulePathsTitle().get());
                 }
                 else {
                     moduleEditor.selectEditor(tabId);
@@ -106,9 +103,8 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         });
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
         Library library = libraryOrderEntry.getLibrary();
         if (library == null) {
@@ -117,17 +113,16 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         return selectProjectOrGlobalLibrary(library, requestFocus);
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
             moduleStructureConfigurable.selectNodeInTree(module).doWhenDone((node) -> {
                 ModuleEditor moduleEditor = ((ModuleConfigurable) ((MasterDetailsComponent.MyNode) node).getConfigurable()).getModuleEditor();
 
-                moduleEditor.selectEditor(ProjectBundle.message("module.dependencies.title"));
+                moduleEditor.selectEditor(ProjectLocalize.moduleDependenciesTitle().get());
 
-                ClasspathEditor editor = (ClasspathEditor) moduleEditor.getEditor(ProjectBundle.message("module.dependencies.title"));
+                ClasspathEditor editor = (ClasspathEditor) moduleEditor.getEditor(ProjectLocalize.moduleDependenciesTitle().get());
 
                 if (orderEntry != null) {
                     editor.selectOrderEntry(orderEntry);
@@ -148,9 +143,8 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         });
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus) {
         return selectAsync(StandardConfigurableIds.PROJECT_GROUP, ProjectConfigurableGroup.class, (projectConfigurable, runnable) -> {
             runnable.run();
@@ -158,7 +152,6 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    
     private <T extends UnnamedConfigurable> AsyncResult<Void> selectAsync(String id, Class<T> cls, BiConsumer<T, Runnable> consumer) {
         AsyncResult<Void> result = AsyncResult.undefined();
 
