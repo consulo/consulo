@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 //! Assemble the final `JavaVMInitArgs` option list.
 //!
 //! Order matters: app.vmoptions come before user vmoptions so users can
@@ -33,7 +48,7 @@ pub struct LaunchInputs<'a> {
 pub fn assemble(inputs: LaunchInputs<'_>) -> Result<Vec<String>> {
     let mut opts = Vec::with_capacity(64);
 
-    // Module-path boot: only `boot/`; `boot/spi` is NOT included (see PLAN.md).
+    // Module-path boot: only `boot/`; `boot/spi` is NOT included.
     let module_path = inputs.build_dir.join("boot").to_string_checked()?;
     opts.push(format!("--module-path={module_path}"));
     opts.push(format!("-Djdk.module.main={}", variant::MAIN_MODULE));
