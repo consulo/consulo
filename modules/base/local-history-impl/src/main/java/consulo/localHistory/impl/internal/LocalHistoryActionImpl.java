@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal;
 
 import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 
 public class LocalHistoryActionImpl implements LocalHistoryAction {
-  private final String myName;
+  private final LocalizeValue myName;
   private final LocalHistoryEventDispatcher myDispatcher;
 
-  public LocalHistoryActionImpl(LocalHistoryEventDispatcher l, String name) {
+  public LocalHistoryActionImpl(LocalHistoryEventDispatcher l, LocalizeValue name) {
     myName = name;
     myDispatcher = l;
   }

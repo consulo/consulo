@@ -23,7 +23,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
-
 import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
@@ -34,21 +33,21 @@ public abstract class LocalHistory {
         return Application.get().getInstance(LocalHistory.class);
     }
 
-    public LocalHistoryAction startAction(LocalizeValue name) {
-        return startAction(name.get());
-    }
+    public abstract LocalHistoryAction startAction(LocalizeValue name);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public abstract LocalHistoryAction startAction(@Nullable String name);
-
-    public Label putSystemLabel(Project project, LocalizeValue name, int color) {
-        return putSystemLabel(project, name.get(), color);
+    public LocalHistoryAction startAction(@Nullable String name) {
+        return startAction(LocalizeValue.ofNullable(name));
     }
+
+    public abstract Label putSystemLabel(Project project, LocalizeValue name, int color);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public abstract Label putSystemLabel(Project project, String name, int color);
+    public Label putSystemLabel(Project project, String name, int color) {
+        return putSystemLabel(project, LocalizeValue.ofNullable(name), color);
+    }
 
     public Label putSystemLabel(Project project, LocalizeValue name) {
         return putSystemLabel(project, name, -1);
@@ -57,18 +56,18 @@ public abstract class LocalHistory {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public Label putSystemLabel(Project project, String name) {
-        return putSystemLabel(project, name, -1);
+        return putSystemLabel(project, LocalizeValue.ofNullable(name));
     }
 
-    public Label putUserLabel(Project project, LocalizeValue name) {
-        return putUserLabel(project, name.get());
-    }
+    public abstract Label putUserLabel(Project project, LocalizeValue name);
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public abstract Label putUserLabel(Project p, String name);
+    public Label putUserLabel(Project p, String name) {
+        return putUserLabel(p, LocalizeValue.ofNullable(name));
+    }
 
-    public abstract @Nullable byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c);
+    public abstract byte @Nullable [] getByteContent(VirtualFile f, FileRevisionTimestampComparator c);
 
     public abstract boolean isUnderControl(VirtualFile f);
 
