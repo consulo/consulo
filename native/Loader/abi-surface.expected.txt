@@ -1,0 +1,13 @@
+# Expected C ABI exports from the LoaderLibrary cdylib.
+# CI diffs actual exports against this file; changes require an explicit edit.
+# See PLAN.md § "ABI Contract (binary-compatibility gate)".
+
+# Windows (consulo.dll / consulo64.dll / consulo-aarch64.dll)
+windows:launchConsulo
+windows:launchConsulo2
+
+# macOS (libconsulo.dylib)
+macos:_launchConsulo
+
+# Linux (libconsulo.so)
+linux:launchConsulo

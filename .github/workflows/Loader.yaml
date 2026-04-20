@@ -1,0 +1,135 @@
+name: Loader build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ===== Windows =====
+          - name: windows-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            loader_src: consulo.exe
+            loader_name: consulo64.exe
+            library_src: consulo.dll
+            library_name: consulo64.dll
+          - name: windows-aarch64
+            os: windows-latest
+            target: aarch64-pc-windows-msvc
+            loader_src: consulo.exe
+            loader_name: consulo-aarch64.exe
+            library_src: consulo.dll
+            library_name: consulo-aarch64.dll
+
+          # ===== macOS (per-arch, no universal) =====
+          - name: macos-x86_64
+            os: macos-latest
+            target: x86_64-apple-darwin
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo.dylib
+            library_name: libconsulo.dylib
+          - name: macos-aarch64
+            os: macos-latest
+            target: aarch64-apple-darwin
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo.dylib
+            library_name: libconsulo.dylib
+
+          # ===== Linux =====
+          - name: linux-x86_64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo.so
+            library_name: libconsulo.so
+          - name: linux-aarch64
+            os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            apt: gcc-aarch64-linux-gnu
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo.so
+            library_name: libconsulo.so
+          - name: linux-loongarch64
+            os: ubuntu-latest
+            target: loongarch64-unknown-linux-gnu
+            apt: gcc-loongarch64-linux-gnu
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo.so
+            library_name: libconsulo.so
+          - name: linux-riscv64
+            os: ubuntu-latest
+            target: riscv64gc-unknown-linux-gnu
+            apt: gcc-riscv64-linux-gnu
+            loader_src: consulo
+            loader_name: consulo
+            library_src: libconsulo.so
+            library_name: libconsulo.so
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cross linker
+        if: matrix.apt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.apt }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: native/Loader
+
+      - name: Build release
+        working-directory: native/Loader
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Run unit tests (host targets only)
+        if: matrix.name == 'linux-x86_64' || matrix.name == 'macos-aarch64' || matrix.name == 'windows-x86_64'
+        working-directory: native/Loader
+        run: cargo test --release --target ${{ matrix.target }}
+
+      - name: Rename artifacts (loader)
+        if: matrix.loader_src != matrix.loader_name
+        shell: bash
+        run: |
+          cd native/Loader/target/${{ matrix.target }}/release
+          mv "${{ matrix.loader_src }}" "${{ matrix.loader_name }}"
+
+      - name: Rename artifacts (library)
+        if: matrix.library_src != matrix.library_name
+        shell: bash
+        run: |
+          cd native/Loader/target/${{ matrix.target }}/release
+          mv "${{ matrix.library_src }}" "${{ matrix.library_name }}"
+
+      - name: Upload loader
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.loader_name }}-${{ matrix.name }}
+          path: native/Loader/target/${{ matrix.target }}/release/${{ matrix.loader_name }}
+          if-no-files-found: error
+
+      - name: Upload library
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.library_name }}-${{ matrix.name }}
+          path: native/Loader/target/${{ matrix.target }}/release/${{ matrix.library_name }}
+          if-no-files-found: error

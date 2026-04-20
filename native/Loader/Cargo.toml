@@ -1,0 +1,49 @@
+[workspace]
+resolver = "3"
+members = ["core", "loader", "library"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "Apache-2.0"
+publish = false
+
+[workspace.dependencies]
+anyhow = "1"
+log = { version = "0.4", features = ["std"] }
+libloading = "0.9"
+jni = "0.22"
+libc = "0.2"
+va_list = "0.2"
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Globalization",
+    "Win32_Security",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Console",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Memory",
+    "Win32_System_Threading",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+winreg = "0.55"
+winresource = "0.1"
+core-foundation = "0.10"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = "debuginfo"
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = 1
+incremental = true
+codegen-units = 256
+
+[profile.dev.package."*"]
+opt-level = 0
