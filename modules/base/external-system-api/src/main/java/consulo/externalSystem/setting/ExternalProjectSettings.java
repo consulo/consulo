@@ -19,23 +19,21 @@ import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 
 import org.jspecify.annotations.Nullable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 /**
  * Holds settings specific to a particular project imported from an external system.
  *
  * @author Denis Zhdanov
- * @since 4/24/13 11:41 AM
+ * @since 2013-04-24
  */
 public abstract class ExternalProjectSettings implements Comparable<ExternalProjectSettings>, Cloneable {
-
   private String  myExternalProjectPath;
+
   @AbstractCollection(surroundWithTag = true)
   private @Nullable Set<String> myModules = new HashSet<String>();
 
-  
   public Set<String> getModules() {
     return myModules == null ? Collections.<String>emptySet() : myModules;
   }
@@ -82,13 +80,13 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
     ExternalProjectSettings that = (ExternalProjectSettings)o;
 
-    return myExternalProjectPath == null ? that.myExternalProjectPath == null : myExternalProjectPath.equals(that.myExternalProjectPath);
+    return Objects.equals(myExternalProjectPath, that.myExternalProjectPath);
   }
 
   @Override
@@ -96,7 +94,6 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
     return myExternalProjectPath;
   }
 
-  
   public abstract ExternalProjectSettings clone();
 
   protected void copyTo(ExternalProjectSettings receiver) {
