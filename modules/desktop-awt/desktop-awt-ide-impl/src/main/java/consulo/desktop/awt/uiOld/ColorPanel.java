@@ -22,6 +22,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 
+import consulo.ui.ex.localize.UILocalize;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -65,7 +66,7 @@ public class ColorPanel extends JComponent {
 
   public void onPressed() {
     if (myEditable && isEnabled()) {
-      ColorChooser.chooseColor(this, UIBundle.message("color.panel.select.color.dialog.description"), myColor, color -> {
+      ColorChooser.chooseColor(this, UILocalize.colorPanelSelectColorDialogDescription().get(), myColor, color -> {
         if (color != null) {
           setSelectedColor(color);
           if (!myListeners.isEmpty() && (myEvent == null)) {

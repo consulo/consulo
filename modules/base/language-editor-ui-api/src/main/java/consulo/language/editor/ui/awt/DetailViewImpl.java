@@ -26,11 +26,12 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -55,7 +56,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
     private JPanel myDetailPanelWrapper;
     private RangeHighlighter myHighlighter;
     private PreviewEditorState myEditorState = PreviewEditorState.EMPTY;
-    private String myEmptyLabel = UIBundle.message("message.nothingToShow");
+    private LocalizeValue myEmptyLabel = UILocalize.messageNothingtoshow();
 
     public DetailViewImpl(Project project) {
         super(new BorderLayout());
@@ -192,7 +193,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
             if (myDetailPanelWrapper != null) {
                 myDetailPanelWrapper.removeAll();
             }
-            myLabel.setText(myEmptyLabel);
+            myLabel.setText(myEmptyLabel.get());
             add(myLabel, BorderLayout.CENTER);
         }
         else if (panel != myDetailPanel) {
@@ -215,7 +216,7 @@ public class DetailViewImpl extends JPanel implements DetailView, UserDataHolder
     }
 
     public void setEmptyLabel(String text) {
-        myEmptyLabel = text;
+        myEmptyLabel = LocalizeValue.of(text);
     }
 
     @Override

@@ -19,10 +19,10 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.project.Project;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
         FileChooserDescriptor dirChooser = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         dirChooser.setShowFileSystemRoots(true);
         dirChooser.setHideIgnored(true);
-        dirChooser.setTitle(UIBundle.message("file.chooser.default.title"));
+        dirChooser.withTitle(UILocalize.fileChooserDefaultTitle());
         IdeaFileChooser.chooseFiles(dirChooser, myProject, null, new Consumer<List<VirtualFile>>() {
           @Override
           public void accept(List<VirtualFile> files) {

@@ -16,8 +16,8 @@
 package consulo.ui.ex.awt.table;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.localize.UILocalize;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -44,30 +44,22 @@ public class EditableRowTable {
     gbConstraints.insets = new Insets(2, 4, 2, 4);
 
     final JButton addButton = new JButton();
-    addButton.setText(addMnemonics ?
-                      UIBundle.message("row.add") :
-                      UIBundle.message("row.add.without.mnemonic"));
+    addButton.setText(addMnemonics ? UILocalize.rowAdd().get() : UILocalize.rowAddWithoutMnemonic().get());
     addButton.setDefaultCapable(false);
     buttonsPanel.add(addButton, gbConstraints);
 
     final JButton removeButton = new JButton();
-    removeButton.setText(addMnemonics ?
-                           UIBundle.message("row.remove") :
-                           UIBundle.message("row.remove.without.mnemonic"));
+    removeButton.setText(addMnemonics ? UILocalize.rowRemove().get() : UILocalize.rowRemoveWithoutMnemonic().get());
     removeButton.setDefaultCapable(false);
     buttonsPanel.add(removeButton, gbConstraints);
 
     final JButton upButton = new JButton();
-    upButton.setText(addMnemonics ?
-                       UIBundle.message("row.move.up") :
-                       UIBundle.message("row.move.up.without.mnemonic"));
+    upButton.setText(addMnemonics ? UILocalize.rowMoveUp().get() : UILocalize.rowMoveUpWithoutMnemonic().get());
     upButton.setDefaultCapable(false);
     buttonsPanel.add(upButton, gbConstraints);
 
     final JButton downButton = new JButton();
-    downButton.setText(addMnemonics ?
-                         UIBundle.message("row.move.down") :
-                         UIBundle.message("row.move.down.without.mnemonic"));
+    downButton.setText(addMnemonics ? UILocalize.rowMoveDown().get() : UILocalize.rowMoveDownWithoutMnemonic().get());
     downButton.setDefaultCapable(false);
     buttonsPanel.add(downButton, gbConstraints);
 
@@ -163,11 +155,14 @@ public class EditableRowTable {
     return buttonsPanel;
   }
 
-  private static void updateButtons(JTable table, RowEditableTableModel tableModel,
-                                    JButton addButton,
-                                    JButton removeButton,
-                                    JButton upButton,
-                                    JButton downButton) {
+  private static void updateButtons(
+      JTable table,
+      RowEditableTableModel tableModel,
+      JButton addButton,
+      JButton removeButton,
+      JButton upButton,
+      JButton downButton
+  ) {
     if (table.isEnabled()) {
       int index = table.getSelectedRow();
       if (0 <= index && index < tableModel.getRowCount()) {
