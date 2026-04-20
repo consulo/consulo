@@ -17,7 +17,7 @@ package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.matcher.NameUtil;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
@@ -30,7 +30,7 @@ import consulo.util.lang.StringUtil;
 @ExtensionImpl
 public class CapitalizeAndUnderscoreMacro extends MacroBase {
   public CapitalizeAndUnderscoreMacro() {
-    super("capitalizeAndUnderscore", CodeInsightBundle.message("macro.capitalizeAndUnderscore.string"));
+    super("capitalizeAndUnderscore", CodeInsightLocalize.macroCapitalizeandunderscoreString());
   }
 
   @Override

@@ -27,7 +27,6 @@ import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.IdentifierUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.HighlightManager;
@@ -37,7 +36,6 @@ import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.pom.PomTargetPsiElement;
@@ -105,8 +103,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
 
     @RequiredUIAccess
     private static void performHighlighting(Editor editor, HighlightUsagesHandlerBase<? extends PsiElement> handlerBase) {
-        String hintText = handlerBase.getHintText();
-        String statusText = handlerBase.getStatusText();
+        LocalizeValue hintText = handlerBase.getHintText();
         List<TextRange> readUsages = handlerBase.getReadUsages();
         List<TextRange> writeUsages = handlerBase.getWriteUsages();
 
@@ -130,7 +127,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         if (!clearHighlights) {
             HighlightHandlerBase.setupFindModel(editor.getProject()); // enable f3 navigation
         }
-        if (hintText != null) {
+        if (hintText.isNotEmpty()) {
             HintManager.getInstance().showInformationHint(editor, hintText);
         }
     }
@@ -452,7 +449,6 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         return collectRangesToHighlight(ref, new ArrayList<>());
     }
 
-    
     @RequiredReadAction
     public static List<TextRange> collectRangesToHighlight(PsiReference ref, List<TextRange> result) {
         for (TextRange relativeRange : ReferenceRange.getRanges(ref)) {

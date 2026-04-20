@@ -1,12 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
@@ -17,6 +16,7 @@ import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -31,6 +31,7 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
   }
 
   @Override
+  @RequiredUIAccess
   public void invoke(Project project, Editor editor, PsiFile file) {
     if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
     if (!editor.getSelectionModel().hasSelection()) {
@@ -44,13 +45,18 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
       return;
     }
 
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(CodeInsightBundle.message("templates.select.template.chooser.title"), new DefaultActionGroup(group),
-                                                                          DataManager.getInstance().getDataContext(editor.getContentComponent()), JBPopupFactory.ActionSelectionAid.MNEMONICS, false);
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+      CodeInsightLocalize.templatesSelectTemplateChooserTitle().get(),
+      new DefaultActionGroup(group),
+      DataManager.getInstance().getDataContext(editor.getContentComponent()),
+      JBPopupFactory.ActionSelectionAid.MNEMONICS,
+      false
+    );
 
     editor.showPopupInBestPositionFor(popup);
   }
 
-  
+  @RequiredReadAction
   public static List<AnAction> createActionGroup(Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
     TemplateActionContext templateActionContext = TemplateActionContext.surrounding(file, editor);
     List<CustomLiveTemplate> customTemplates = TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext);

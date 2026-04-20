@@ -1026,7 +1026,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                 return;
             }
 
-            SequentialModalProgressTask progressTask = new SequentialModalProgressTask(project, "Code Cleanup", true);
+            SequentialModalProgressTask progressTask =
+                new SequentialModalProgressTask(project, LocalizeValue.localizeTODO("Code Cleanup"), true);
             progressTask.setMinIterationTime(200);
             progressTask.setTask(new SequentialCleanupTask(project, results, progressTask));
             CommandProcessor.getInstance().newCommand()

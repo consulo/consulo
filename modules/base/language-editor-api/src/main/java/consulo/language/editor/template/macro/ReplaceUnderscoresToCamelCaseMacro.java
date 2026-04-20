@@ -16,14 +16,14 @@
 package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import consulo.util.lang.StringUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -32,7 +32,7 @@ import java.util.List;
 @ExtensionImpl
 public class ReplaceUnderscoresToCamelCaseMacro extends MacroBase {
   public ReplaceUnderscoresToCamelCaseMacro() {
-    super("underscoresToCamelCase", CodeInsightBundle.message("macro.undescoresToCamelCase.string"));
+    super("underscoresToCamelCase", CodeInsightLocalize.macroUndescorestocamelcaseString());
   }
 
   @Override

@@ -13,44 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation;
 
-import consulo.codeEditor.event.CaretAdapter;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.CaretListener;
-import consulo.logging.Logger;
+import consulo.application.util.StringSearcher;
 import consulo.codeEditor.Caret;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.action.TypedActionHandler;
-import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.hint.HintHint;
-import consulo.ui.ex.JBColor;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
-import consulo.application.util.StringSearcher;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.hint.HintHint;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -125,7 +124,7 @@ public class IncrementalSearchHandler {
       }
     }
 
-    JLabel label1 = new MyLabel(" " + CodeInsightBundle.message("incremental.search.tooltip.prefix"));
+    JLabel label1 = new MyLabel(" " + CodeInsightLocalize.incrementalSearchTooltipPrefix().get());
     label1.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
 
     JPanel panel = new MyPanel(label1);

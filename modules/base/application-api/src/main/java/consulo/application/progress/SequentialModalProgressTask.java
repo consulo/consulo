@@ -17,6 +17,7 @@ package consulo.application.progress;
 
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
@@ -41,17 +42,17 @@ public class SequentialModalProgressTask extends Task.Modal {
    */
   private long myMinIterationTime = DEFAULT_MIN_ITERATION_MIN_TIME;
 
-  private final String myTitle;
+  private final LocalizeValue myTitle;
 
   private @Nullable ProgressIndicator myIndicator;
 
   private @Nullable SequentialTask myTask;
 
-  public SequentialModalProgressTask(@Nullable ComponentManager project, String title) {
+  public SequentialModalProgressTask(@Nullable ComponentManager project, LocalizeValue title) {
     this(project, title, true);
   }
 
-  public SequentialModalProgressTask(@Nullable ComponentManager project, String title, boolean canBeCancelled) {
+  public SequentialModalProgressTask(@Nullable ComponentManager project, LocalizeValue title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
     myTitle = title;
   }

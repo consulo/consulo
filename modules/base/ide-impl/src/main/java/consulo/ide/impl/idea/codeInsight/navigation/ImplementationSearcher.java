@@ -23,13 +23,14 @@ import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.query.Query;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiElementProcessorAdapter;
 import consulo.language.psi.search.DefinitionsScopedSearch;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
@@ -40,7 +41,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ImplementationSearcher {
-    public static final String SEARCHING_FOR_IMPLEMENTATIONS = CodeInsightBundle.message("searching.for.implementations");
+    public static final LocalizeValue SEARCHING_FOR_IMPLEMENTATIONS = CodeInsightLocalize.searchingForImplementations();
 
     @Nullable PsiElement[] searchImplementations(Editor editor, PsiElement element, int offset) {
         boolean onRef = Application.get().runReadAction((Supplier<Boolean>) () -> {

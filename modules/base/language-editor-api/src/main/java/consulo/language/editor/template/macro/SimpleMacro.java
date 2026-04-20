@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template.macro;
 
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author yole
@@ -37,8 +37,8 @@ public abstract class SimpleMacro extends Macro {
   }
 
   @Override
-  public String getPresentableName() {
-    return myName + "()";
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of(myName + "()");
   }
 
   @Override

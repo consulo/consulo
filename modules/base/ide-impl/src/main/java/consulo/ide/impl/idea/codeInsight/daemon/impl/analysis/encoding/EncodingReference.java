@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.encoding;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.localize.CodeInsightLocalize;
-import consulo.language.psi.EmptyResolveMessageProvider;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.util.TextRange;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.document.util.TextRange;
-import consulo.localize.LocalizeValue;
-import consulo.util.io.CharsetToolkit;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.psi.EmptyResolveMessageProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.localize.LocalizeValue;
+import consulo.util.io.CharsetToolkit;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;

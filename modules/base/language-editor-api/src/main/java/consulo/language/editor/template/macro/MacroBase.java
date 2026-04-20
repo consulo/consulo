@@ -20,6 +20,7 @@ import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -27,9 +28,9 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class MacroBase extends Macro {
   private final String myName;
-  private final String myDescription;
+  private final LocalizeValue myDescription;
 
-  public MacroBase(String name, String description) {
+  public MacroBase(String name, LocalizeValue description) {
     myName = name;
     myDescription = description;
   }
@@ -52,11 +53,10 @@ public abstract class MacroBase extends Macro {
   }
 
   @Override
-  public String getPresentableName() {
+  public LocalizeValue getPresentableName() {
     return myDescription;
   }
 
-  
   @Override
   public String getDefaultValue() {
     return "a";

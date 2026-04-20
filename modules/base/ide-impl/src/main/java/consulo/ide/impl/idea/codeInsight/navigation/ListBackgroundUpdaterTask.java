@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.codeInsight.navigation;
 
 import consulo.language.editor.ui.navigation.BackgroundUpdaterTask;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.ui.JBListUpdater;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
@@ -41,15 +41,11 @@ public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask {
      * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, String, Comparator)}
      */
     @Deprecated
-    public ListBackgroundUpdaterTask(@Nullable Project project, String title) {
+    public ListBackgroundUpdaterTask(@Nullable Project project, LocalizeValue title) {
         this(project, title, null);
     }
 
-    public ListBackgroundUpdaterTask(
-        @Nullable Project project,
-        String title,
-        @Nullable Comparator<PsiElement> comparator
-    ) {
+    public ListBackgroundUpdaterTask(@Nullable Project project, LocalizeValue title, @Nullable Comparator<PsiElement> comparator) {
         super(project, title, comparator);
     }
 
