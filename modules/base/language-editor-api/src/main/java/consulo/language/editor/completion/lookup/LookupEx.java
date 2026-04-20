@@ -15,8 +15,10 @@
  */
 package consulo.language.editor.completion.lookup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -54,6 +56,12 @@ public interface LookupEx extends Lookup, Disposable {
 
   void setStartCompletionWhenNothingMatches(boolean startCompletionWhenNothingMatches);
 
+  default void addAdvertisement(LocalizeValue text, @Nullable Image icon) {
+    addAdvertisement(text.get(), icon);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
   void addAdvertisement(String text, @Nullable Image icon);
 
   int getLookupOriginalStart();

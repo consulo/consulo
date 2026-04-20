@@ -12,10 +12,10 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
-import consulo.language.LangBundle;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.util.LanguagePerFileMappings;
 import consulo.language.impl.util.PerFileMappingsBase;
+import consulo.language.localize.LanguageLocalize;
 import consulo.module.content.ProjectFileIndex;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -70,15 +70,15 @@ import static consulo.util.lang.Pair.pair;
 public abstract class PerFileConfigurableBase<T> implements SearchableConfigurable, Configurable.NoScroll {
     protected static final Key<String> DESCRIPTION = KeyWithDefaultValue.create("DESCRIPTION", "");
     protected static final Key<String> TARGET_TITLE =
-        KeyWithDefaultValue.create("TARGET_TITLE", () -> LangBundle.message("PerFileConfigurableBase.target.title"));
+        KeyWithDefaultValue.create("TARGET_TITLE", () -> LanguageLocalize.perfileconfigurablebaseTargetTitle().get());
     protected static final Key<String> MAPPING_TITLE =
-        KeyWithDefaultValue.create("MAPPING_TITLE", () -> LangBundle.message("PerFileConfigurableBase.mapping.title"));
+        KeyWithDefaultValue.create("MAPPING_TITLE", () -> LanguageLocalize.perfileconfigurablebaseMappingTitle().get());
     protected static final Key<String> EMPTY_TEXT =
-        KeyWithDefaultValue.create("EMPTY_TEXT", () -> LangBundle.message("PerFileConfigurableBase.empty.text"));
+        KeyWithDefaultValue.create("EMPTY_TEXT", () -> LanguageLocalize.perfileconfigurablebaseEmptyText().get());
     protected static final Key<String> OVERRIDE_QUESTION = Key.create("OVERRIDE_QUESTION");
     protected static final Key<String> OVERRIDE_TITLE = Key.create("OVERRIDE_TITLE");
     protected static final Key<String> NULL_TEXT =
-        KeyWithDefaultValue.create("NULL_TEXT", () -> LangBundle.message("PerFileConfigurableBase.null.text"));
+        KeyWithDefaultValue.create("NULL_TEXT", () -> LanguageLocalize.perfileconfigurablebaseNullText().get());
     protected static final Key<Boolean> ADD_PROJECT_MAPPING = KeyWithDefaultValue.create("ADD_PROJECT_MAPPING", Boolean.TRUE);
     protected static final Key<Boolean> ONLY_DIRECTORIES = KeyWithDefaultValue.create("ONLY_DIRECTORIES", Boolean.FALSE);
     protected static final Key<Boolean> SORT_VALUES = KeyWithDefaultValue.create("SORT_VALUES", Boolean.TRUE);
@@ -107,14 +107,13 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         myProject = project;
         myMappings = mappings;
         myProjectMapping =
-            Trinity.create(LangBundle.message("PerFileConfigurableBase.project.mapping", StringUtil.capitalize(param(MAPPING_TITLE))),
+            Trinity.create(LanguageLocalize.perfileconfigurablebaseProjectMapping(StringUtil.capitalize(param(MAPPING_TITLE))).get(),
                 () -> ((LanguagePerFileMappings<T>) myMappings).getConfiguredMapping(null), o -> myMappings.setMapping(null, o)
             );
     }
 
     protected abstract @Nullable <S> Object getParameter(Key<S> key);
 
-    
     protected List<Trinity<String, Supplier<T>, Consumer<T>>> getDefaultMappings() {
         return List.of();
     }
@@ -145,7 +144,6 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return s;
     }
 
-    
     @Override
     @RequiredUIAccess
     public JComponent createComponent() {
@@ -741,8 +739,8 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             myProject,
             question,
             title,
-            LangBundle.message("button.override"),
-            LangBundle.message("button.do.not.override"),
+            LanguageLocalize.buttonOverride().get(),
+            LanguageLocalize.buttonDoNotOverride().get(),
             CommonLocalize.buttonCancel().get(),
             UIUtil.getWarningIcon()
         );
@@ -776,11 +774,10 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             renderer.append(file.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
         else if (target == null) {
-            renderer.append(LangBundle.message("PerFileConfigurableBase.label.project"), SimpleTextAttributes.GRAY_ATTRIBUTES);
+            renderer.append(LanguageLocalize.perfileconfigurablebaseLabelProject(), SimpleTextAttributes.GRAY_ATTRIBUTES);
         }
     }
 
-    
     protected final AnAction createValueAction(@Nullable Object target, Value<T> value) {
         return new ComboBoxAction() {
             void updateText(Presentation p) {
@@ -793,20 +790,13 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 updateText(getTemplatePresentation());
             }
 
-            
             @Override
             protected DefaultActionGroup createPopupActionGroup(JComponent button) {
                 throw new UnsupportedOperationException();
             }
 
-            
             @Override
-            public JBPopup createPopup(
-                JComponent component,
-                DataContext context,
-                Presentation presentation,
-                Runnable onDispose
-            ) {
+            public JBPopup createPopup(JComponent component, DataContext context, Presentation presentation, Runnable onDispose) {
                 JBPopup popup = createValueEditorPopup(target, value.get(), onDispose, context, o -> {
                     value.accept(o);
                     updateText(presentation);
@@ -822,7 +812,6 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         };
     }
 
-    
     protected JBPopup createValueEditorPopup(
         @Nullable Object target,
         @Nullable T value,
@@ -860,7 +849,6 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return param(NULL_TEXT);
     }
 
-    
     protected Collection<T> getValueVariants(@Nullable Object target) {
         if (myMappings instanceof PerFileMappingsBase) {
             return ((PerFileMappingsBase<T>) myMappings).getAvailableValues();
@@ -868,7 +856,6 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         throw new UnsupportedOperationException();
     }
 
-    
     protected ActionGroup createActionListGroup(@Nullable Object target, Consumer<? super T> onChosen) {
         DefaultActionGroup group = new DefaultActionGroup();
         String clearText = getClearValueText(target);
