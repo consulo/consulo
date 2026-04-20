@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ui;
 
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.Application;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
@@ -32,9 +31,9 @@ public class InspectionRootNode extends InspectionTreeNode {
     myProject = project;
   }
 
+  @Override
   public String toString() {
-    return isEmpty() ? InspectionsBundle.message("inspection.empty.root.node.text") :
-           myProject.getName();
+    return isEmpty() ? InspectionLocalize.inspectionEmptyRootNodeText().get() : myProject.getName();
   }
 
   private boolean isEmpty() {

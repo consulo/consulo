@@ -16,16 +16,16 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.inspection.TooltipLinkHandler;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.editor.inspection.TooltipLinkHandler;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.project.Project;
 
 /**
  * Handles tooltip links in format <code>#inspection/inspection_short_name</code>.
@@ -63,7 +63,7 @@ public class InspectionDescriptionLinkHandler extends TooltipLinkHandler {
     String description = toolWrapper.loadDescription();
     if (description == null) {
       LOG.warn("No description for inspection '" + refSuffix + "'");
-      description = InspectionsBundle.message("inspection.tool.description.under.construction.text");
+      description = InspectionLocalize.inspectionToolDescriptionUnderConstructionText().get();
     }
     return description;
   }
