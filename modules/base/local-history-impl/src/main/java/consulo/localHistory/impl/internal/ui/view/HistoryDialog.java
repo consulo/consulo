@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.ui.view;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
@@ -26,7 +24,6 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.*;
 import consulo.localHistory.impl.internal.ui.model.FileDifferenceModel;
 import consulo.localHistory.impl.internal.ui.model.HistoryDialogModel;
@@ -51,7 +48,7 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.impl.internal.ui.awt.CreatePatchConfigurationPanel;
@@ -327,9 +324,9 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     protected abstract Runnable doUpdateDiffs(T model);
 
     protected ContentDiffRequest createDifference(final FileDifferenceModel m) {
-        final Ref<ContentDiffRequest> requestRef = new Ref<>();
+        final SimpleReference<ContentDiffRequest> requestRef = new SimpleReference<>();
 
-        new Task.Modal(myProject, LocalHistoryBundle.message("message.processing.revisions"), false) {
+        new Task.Modal(myProject, LocalHistoryLocalize.messageProcessingRevisions().get(), false) {
             @Override
             public void run(ProgressIndicator i) {
                 Application.get().runReadAction(() -> {
@@ -371,6 +368,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     //todo
     protected abstract String getHelpId();
 
+    @RequiredUIAccess
     protected void revert() {
         revert(myModel.createReverter());
     }
@@ -386,9 +384,9 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
                 return;
             }
 
-            List<String> errors = r.checkCanRevert();
+            List<LocalizeValue> errors = r.checkCanRevert();
             if (!errors.isEmpty()) {
-                showError(LocalHistoryBundle.message("message.cannot.revert.because", formatErrors(errors)));
+                showError(LocalHistoryLocalize.messageCannotRevertBecause(formatErrors(errors)));
                 return;
             }
             r.revert();
@@ -396,7 +394,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
             showNotification(r.getCommandName());
         }
         catch (IOException e) {
-            showError(LocalHistoryBundle.message("message.error.during.revert", e));
+            showError(LocalHistoryLocalize.messageErrorDuringRevert(e));
         }
     }
 
@@ -409,7 +407,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
         return Messages.showYesNoDialog(
             myProject,
-            LocalHistoryBundle.message("message.do.you.want.to.proceed", formatQuestions(questions)),
+            LocalHistoryLocalize.messageDoYouWantToProceed(formatQuestions(questions)).get(),
             CommonLocalize.titleWarning().get(),
             UIUtil.getWarningIcon()
         ) == Messages.YES;
@@ -434,10 +432,10 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         return result.substring(0, result.length() - 1);
     }
 
-    private void showNotification(String title) {
+    private void showNotification(LocalizeValue title) {
         SwingUtilities.invokeLater(() -> {
             Balloon b =
-                JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(title, null, null, null)
+                JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(title.get(), null, null, null)
                     .setFadeoutTime(3000)
                     .setShowCallout(false)
                     .createBalloon();
@@ -448,16 +446,16 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         });
     }
 
-    private String formatErrors(List<String> errors) {
+    private LocalizeValue formatErrors(List<LocalizeValue> errors) {
         if (errors.size() == 1) {
             return errors.get(0);
         }
 
-        String result = "";
-        for (String e : errors) {
-            result += "\n    -" + e;
+        StringBuilder result = new StringBuilder();
+        for (LocalizeValue e : errors) {
+            result.append("\n    -").append(e);
         }
-        return result;
+        return LocalizeValue.localizeTODO(result.toString());
     }
 
     private boolean isCreatePatchEnabled() {
@@ -468,7 +466,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     private void createPatch() {
         try {
             if (!myModel.canPerformCreatePatch()) {
-                showError(LocalHistoryBundle.message("message.cannot.create.patch.because.of.unavailable.content"));
+                showError(LocalHistoryLocalize.messageCannotCreatePatchBecauseOfUnavailableContent());
                 return;
             }
 
@@ -480,12 +478,12 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
             }
             myModel.createPatch(p.getFileName(), p.getBaseDirName(), p.isReversePatch(), p.getEncoding());
 
-            showNotification(LocalHistoryBundle.message("message.patch.created"));
+            showNotification(LocalHistoryLocalize.messagePatchCreated());
 
             Platform.current().openFileInFileManager(new File(p.getFileName()), UIAccess.current());
         }
         catch (VcsException | IOException e) {
-            showError(LocalHistoryBundle.message("message.error.during.create.patch", e));
+            showError(LocalHistoryLocalize.messageErrorDuringCreatePatch(e));
         }
     }
 
@@ -503,8 +501,8 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
 
     @RequiredUIAccess
-    public void showError(String s) {
-        Messages.showErrorDialog(myProject, s, CommonLocalize.titleError().get());
+    public void showError(LocalizeValue s) {
+        Messages.showErrorDialog(myProject, s.get(), CommonLocalize.titleError().get());
     }
 
     protected void showHelp() {
@@ -544,10 +542,11 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     private class RevertAction extends MyAction {
         public RevertAction() {
-            super(LocalHistoryLocalize.actionRevert(), LocalizeValue.empty(), AllIcons.Actions.Rollback);
+            super(LocalHistoryLocalize.actionRevert(), LocalizeValue.empty(), PlatformIconGroup.actionsRollback());
         }
 
         @Override
+        @RequiredUIAccess
         protected void doPerform(T model) {
             revert();
         }
@@ -564,6 +563,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         }
 
         @Override
+        @RequiredUIAccess
         protected void doPerform(T model) {
             createPatch();
         }
@@ -583,12 +583,12 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
         @Override
         public void processingLeftRevision() {
-            myIndicator.setText(LocalHistoryBundle.message("message.processing.left.revision"));
+            myIndicator.setText(LocalHistoryLocalize.messageProcessingLeftRevision());
         }
 
         @Override
         public void processingRightRevision() {
-            myIndicator.setText(LocalHistoryBundle.message("message.processing.right.revision"));
+            myIndicator.setText(LocalHistoryLocalize.messageProcessingRightRevision());
         }
 
         @Override

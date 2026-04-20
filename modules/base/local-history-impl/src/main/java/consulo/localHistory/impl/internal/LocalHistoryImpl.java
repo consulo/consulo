@@ -28,6 +28,7 @@ import consulo.localHistory.*;
 import consulo.localHistory.impl.internal.ui.model.DirectoryHistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.EntireFileHistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.HistoryDialogModel;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -36,10 +37,10 @@ import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -145,7 +146,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public LocalHistoryAction startAction(String name) {
+    public LocalHistoryAction startAction(LocalizeValue name) {
         if (!isInitialized()) {
             return LocalHistoryAction.NULL;
         }
@@ -156,7 +157,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public Label putUserLabel(Project p, String name) {
+    public Label putUserLabel(Project p, LocalizeValue name) {
         if (!isInitialized()) {
             return Label.NULL_INSTANCE;
         }
@@ -169,7 +170,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public Label putSystemLabel(Project project, String name, int color) {
+    public Label putSystemLabel(Project project, LocalizeValue name, int color) {
         if (!isInitialized()) {
             return Label.NULL_INSTANCE;
         }

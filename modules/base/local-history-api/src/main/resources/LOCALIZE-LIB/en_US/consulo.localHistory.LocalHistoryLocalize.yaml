@@ -93,7 +93,7 @@ revert.message.some.files.have.unversioned.content:
 revisions.table.date:
     text: Date
 revisions.table.filesCount:
-    text: '{0} file'
+    text: '{0,choice, 0#No files|1#1 file|2#{0,number} files}'
 revisions.table.period.old:
     text: Old Changes
 revisions.table.period.older:

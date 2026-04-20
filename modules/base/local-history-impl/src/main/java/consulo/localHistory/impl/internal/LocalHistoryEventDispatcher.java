@@ -17,8 +17,9 @@ package consulo.localHistory.impl.internal;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.util.DisposableList;
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.tree.Entry;
+import consulo.localHistory.localize.LocalHistoryLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.dataholder.Key;
@@ -49,7 +50,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
 
   @Override
   public void afterRefreshFinish(boolean asynchronous) {
-    endChangeSet(LocalHistoryBundle.message("system.label.external.change"));
+    endChangeSet(LocalHistoryLocalize.systemLabelExternalChange());
   }
 
   @Override
@@ -59,7 +60,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
 
   @Override
   public void commandFinished(CommandEvent e) {
-    endChangeSet(e.getCommandName());
+    endChangeSet(e.getCommandNameValue());
   }
 
   void startAction() {
@@ -67,7 +68,7 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
     myVcs.forceBeginChangeSet();
   }
 
-  void finishAction(String name) {
+  void finishAction(LocalizeValue name) {
     myGateway.registerUnsavedDocuments(myVcs);
     endChangeSet(name);
   }
@@ -76,8 +77,8 @@ class LocalHistoryEventDispatcher implements VirtualFileManagerListener, Command
     myVcs.beginChangeSet();
   }
 
-  private void endChangeSet(String name) {
-    myVcs.endChangeSet(name);
+  private void endChangeSet(LocalizeValue name) {
+    myVcs.endChangeSet(name.get());
   }
 
   private void fileCreated(VirtualFile file) {

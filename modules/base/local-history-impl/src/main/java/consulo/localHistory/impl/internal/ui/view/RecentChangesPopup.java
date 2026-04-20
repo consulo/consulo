@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.ui.view;
 
 import consulo.application.util.DateFormatUtil;
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.revision.RecentChange;
+import consulo.localHistory.localize.LocalHistoryLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -43,10 +44,11 @@ public class RecentChangesPopup {
         myVcs = vcs;
     }
 
+    @RequiredUIAccess
     public void show() {
         List<RecentChange> cc = myVcs.getRecentChanges(myGateway.createTransientRootEntry());
         if (cc.isEmpty()) {
-            Messages.showInfoMessage(myProject, LocalHistoryBundle.message("recent.changes.to.changes"), getTitle());
+            Messages.showInfoMessage(myProject, LocalHistoryLocalize.recentChangesToChanges().get(), getTitle().get());
             return;
         }
 
@@ -75,19 +77,19 @@ public class RecentChangesPopup {
     private void showList(JList list, Runnable selectAction) {
         AWTPopupFactory factory = (AWTPopupFactory) JBPopupFactory.getInstance();
 
-        factory.createListPopupBuilder(list).
-            setTitle(getTitle()).
-            setItemChosenCallback(o -> selectAction.run()).
-            createPopup().
-            showCenteredInCurrentWindow(myProject);
+        factory.createListPopupBuilder(list)
+            .setTitle(getTitle().get())
+            .setItemChosenCallback(o -> selectAction.run())
+            .createPopup()
+            .showCenteredInCurrentWindow(myProject);
     }
 
     private void showRecentChangeDialog(RecentChange c) {
         new RecentChangeDialog(myProject, myGateway, c).show();
     }
 
-    private String getTitle() {
-        return LocalHistoryBundle.message("recent.changes.popup.title");
+    private LocalizeValue getTitle() {
+        return LocalHistoryLocalize.recentChangesPopupTitle();
     }
 
     private static class RecentChangesListCellRenderer implements ListCellRenderer {
