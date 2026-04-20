@@ -88,7 +88,7 @@ public class CompilerTask extends Task.Backgroundable {
         int warnings = myCounters.get(CompilerMessageCategory.WARNING);
 
         return new NotificationInfo(
-            errors > 0 ? LocalizeValue.localizeTODO("Compiler (errors)") : LocalizeValue.localizeTODO("Compiler (success)"),
+            errors > 0 ? "Compiler (errors)" : "Compiler (success)",
             LocalizeValue.localizeTODO("Compilation Finished"),
             LocalizeValue.localizeTODO(errors + " Errors, " + warnings + " Warnings"),
             true

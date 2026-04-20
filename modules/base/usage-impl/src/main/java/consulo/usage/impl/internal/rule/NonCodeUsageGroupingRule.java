@@ -38,7 +38,6 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     private static final UsageGroup INSTANCE = new CodeUsageGroup();
 
     @Override
-    
     public String getText(UsageView view) {
       return view == null ? UsageLocalize.nodeGroupCodeUsages().get() : view.getPresentation().getCodeUsagesString();
     }
@@ -62,7 +61,6 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     public static final UsageGroup INSTANCE = new UsageInGeneratedCodeGroup();
 
     @Override
-    
     public String getText(UsageView view) {
       return view == null ? UsageLocalize.nodeUsagesInGeneratedCode().get() : view.getPresentation().getUsagesInGeneratedCodeString();
     }
@@ -82,9 +80,8 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     public static final UsageGroup INSTANCE = new NonCodeUsageGroup();
 
     @Override
-    
     public String getText(UsageView view) {
-      return view == null ? UsageLocalize.nodeGroupCodeUsages().get() : view.getPresentation().getNonCodeUsagesString();
+      return view == null ? UsageLocalize.nodeNonCodeUsages().get() : view.getPresentation().getNonCodeUsagesString();
     }
 
     @Override

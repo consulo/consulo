@@ -100,6 +100,10 @@ node.targets:
     text: Targets
 node.usages.in.generated.code:
     text: Usages in generated code
+notification.title.find.usages:
+    text: Find Usages
+notification.title.find.usages.finished:
+    text: Find Usages Finished
 notification.usage.search.is.not.available.until.indices.are.ready:
     text: Usage search is not available until indexes are ready
 occurence.info.occurence:

@@ -33,6 +33,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -78,7 +79,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  
   public UsageView showUsages(UsageTarget[] searchedFor, Usage[] foundUsages, UsageViewPresentation presentation, Supplier<UsageSearcher> factory) {
     UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
     addContent((UsageViewImpl)usageView, presentation);
@@ -136,9 +136,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
       public NotificationInfo getNotificationInfo() {
         UsageViewImpl usageView = usageViewRef.get();
         int count = usageView == null ? 0 : usageView.getUsagesCount();
-        String notification = StringUtil.capitalizeWords(UsageLocalize.usagesN(count).get(), true);
-        LOG.debug(notification + " in " + (System.currentTimeMillis() - start) + "ms.");
-        return new NotificationInfo("Find Usages", "Find Usages Finished", notification);
+        LOG.debug("Found ", count, " usages in ", System.currentTimeMillis() - start, " ms.");
+        return new NotificationInfo(
+          "Find Usages",
+          UsageLocalize.notificationTitleFindUsagesFinished(),
+          UsageLocalize.usagesN(count).capitalize()
+        );
       }
     };
     ProgressManager.getInstance().run(task);
@@ -210,8 +213,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
     UIUtil.invokeLaterIfNeeded(() -> {
       if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
       int shownUsageCount = usageView == null ? usageCount : usageView.getRoot().getRecursiveUsageCount();
-      String message = UsageViewBundle.message("find.excessive.usage.count.prompt", shownUsageCount, StringUtil.pluralize(presentation.getUsagesWord()));
-      UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message, presentation);
+      LocalizeValue message = UsageLocalize.findExcessiveUsageCountPrompt(shownUsageCount);
+      UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message.get(), presentation);
       if (ret == UsageLimitUtil.Result.ABORT) {
         if (usageView != null) {
           usageView.cancelCurrentSearch();
@@ -231,7 +234,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return length[0];
   }
 
-  
   public static String presentableSize(long bytes) {
     long megabytes = bytes / (1024 * 1024);
     return UsageLocalize.findFileSizeMegabytes(Long.toString(megabytes)).get();

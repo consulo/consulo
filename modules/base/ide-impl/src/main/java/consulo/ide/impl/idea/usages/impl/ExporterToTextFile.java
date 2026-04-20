@@ -3,6 +3,7 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.TextChunk;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageViewSettings;
@@ -25,7 +26,6 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
     myUsageViewSettings = usageViewSettings;
   }
 
-  
   @Override
   public String getReportText() {
     StringBuilder buf = new StringBuilder();
@@ -51,23 +51,24 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
     }
   }
 
+  @RequiredUIAccess
   private void appendNodeText(StringBuilder buf, DefaultMutableTreeNode node, String lineSeparator) {
-    if (node instanceof Node && ((Node)node).isExcluded()) {
+    if (node instanceof Node excludedNode && excludedNode.isExcluded()) {
       buf.append("(").append(UsageLocalize.usageExcluded().get()).append(") ");
     }
 
-    if (node instanceof UsageNode) {
-      appendUsageNodeText(buf, (UsageNode)node);
+    if (node instanceof UsageNode usageNode) {
+      appendUsageNodeText(buf, usageNode);
     }
-    else if (node instanceof GroupNode) {
-      UsageGroup group = ((GroupNode)node).getGroup();
+    else if (node instanceof GroupNode groupNode) {
+      UsageGroup group = groupNode.getGroup();
       buf.append(group != null ? group.getText(myUsageView) : UsageLocalize.usagesTitle().get());
       buf.append(" ");
-      int count = ((GroupNode)node).getRecursiveUsageCount();
+      int count = groupNode.getRecursiveUsageCount();
       buf.append(" (").append(UsageLocalize.usagesN(count).get()).append(")");
     }
-    else if (node instanceof UsageTargetNode) {
-      buf.append(((UsageTargetNode)node).getTarget().getPresentation().getPresentableText());
+    else if (node instanceof UsageTargetNode usageTargetNode) {
+      buf.append(usageTargetNode.getTarget().getPresentation().getPresentableText());
     }
     else {
       buf.append(node.toString());
@@ -85,7 +86,6 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
     }
   }
 
-  
   @Override
   public String getDefaultFilePath() {
     return myUsageViewSettings.getExportFileName();
