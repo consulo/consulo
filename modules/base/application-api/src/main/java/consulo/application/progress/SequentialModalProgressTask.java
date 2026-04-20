@@ -15,6 +15,7 @@
  */
 package consulo.application.progress;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
@@ -52,9 +53,21 @@ public class SequentialModalProgressTask extends Task.Modal {
     this(project, title, true);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
+  public SequentialModalProgressTask(@Nullable ComponentManager project, String title) {
+    this(project, LocalizeValue.of(title), true);
+  }
+
   public SequentialModalProgressTask(@Nullable ComponentManager project, LocalizeValue title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
     myTitle = title;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
+  public SequentialModalProgressTask(@Nullable ComponentManager project, String title, boolean canBeCancelled) {
+    this(project, LocalizeValue.of(title), canBeCancelled);
   }
 
   @Override

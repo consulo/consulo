@@ -38,7 +38,7 @@ public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask {
     protected AbstractPopup myPopup;
 
     /**
-     * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, String, Comparator)}
+     * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, LocalizeValue, Comparator)}
      */
     @Deprecated
     public ListBackgroundUpdaterTask(@Nullable Project project, LocalizeValue title) {

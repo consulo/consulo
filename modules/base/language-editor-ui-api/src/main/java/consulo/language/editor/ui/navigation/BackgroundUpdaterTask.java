@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.ui.navigation;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.language.psi.PsiElement;
@@ -31,6 +32,12 @@ import java.util.Comparator;
 public abstract class BackgroundUpdaterTask extends BackgroundUpdaterTaskBase<PsiElement> {
     public BackgroundUpdaterTask(@Nullable Project project, LocalizeValue title, @Nullable Comparator<PsiElement> comparator) {
         super(project, title, comparator);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public BackgroundUpdaterTask(@Nullable Project project, String title, @Nullable Comparator<PsiElement> comparator) {
+        this(project, LocalizeValue.of(title), comparator);
     }
 
     protected static Comparator<PsiElement> createComparatorWrapper(Comparator<? super PsiElement> comparator) {

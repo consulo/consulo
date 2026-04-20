@@ -121,7 +121,7 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
         panel1.add(TargetAWT.to(myOnlyChangedText), new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        myRearrangeEntriesCb = CheckBox.create(LocalizeValue.localizeTODO("&Rearrange entries"));
+        myRearrangeEntriesCb = CheckBox.create(CodeInsightLocalize.reformatOptionRearrangeEntries());
         panel1.add(TargetAWT.to(myRearrangeEntriesCb), new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         Spacer spacer2 = new Spacer();
         myPanel.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
