@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.disposer.Disposer;
-
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 
 @ExtensionImpl
 public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
-
   private TemplateListPanel myPanel;
 
   @Override

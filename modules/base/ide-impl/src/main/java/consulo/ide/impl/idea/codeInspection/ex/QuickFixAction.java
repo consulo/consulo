@@ -165,7 +165,7 @@ public class QuickFixAction extends AnAction {
                 .inGlobalUndoAction()
                 .run(() -> {
                     SequentialModalProgressTask progressTask =
-                        new SequentialModalProgressTask(project, getTemplatePresentation().getText(), false);
+                        new SequentialModalProgressTask(project, getTemplatePresentation().getTextValue(), false);
                     progressTask.setMinIterationTime(200);
                     progressTask.setTask(new PerformFixesTask(project, descriptors, ignoredElements, progressTask, context));
                     ProgressManager.getInstance().run(progressTask);

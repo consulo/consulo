@@ -117,7 +117,7 @@ class EditVariableDialog extends DialogWrapper {
         for (Macro macro : macros) {
             for (TemplateContextType contextType : myContextTypes) {
                 if (macro.isAcceptableInContext(contextType)) {
-                    comboField.addItem(macro.getPresentableName());
+                    comboField.addItem(macro.getPresentableName().get());
                     continue eachMacro;
                 }
             }

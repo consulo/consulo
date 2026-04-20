@@ -113,7 +113,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
         List<ProblemDescriptor> descriptions,
         @Nullable Class quickfixClass
     ) {
-        SequentialModalProgressTask progressTask = new SequentialModalProgressTask(project, presentationText, true);
+        SequentialModalProgressTask progressTask = new SequentialModalProgressTask(project, LocalizeValue.ofNullable(presentationText), true);
         boolean isBatch = quickfixClass != null && BatchQuickFix.class.isAssignableFrom(quickfixClass);
         AbstractPerformFixesTask fixesTask = isBatch
             ? new PerformBatchFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass)

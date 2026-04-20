@@ -24,6 +24,7 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.context.TemplateContextType;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -38,9 +39,8 @@ public abstract class Macro {
     /**
      * @return a presentable string that will be shown in the combobox in Edit Template Variables dialog
      */
-    public abstract String getPresentableName();
+    public abstract LocalizeValue getPresentableName();
 
-    
     public String getDefaultValue() {
         return "";
     }

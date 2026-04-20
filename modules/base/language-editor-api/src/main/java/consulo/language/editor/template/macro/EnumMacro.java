@@ -16,12 +16,13 @@
 package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
+import consulo.localize.LocalizeValue;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -34,8 +35,8 @@ public class EnumMacro extends Macro {
   }
 
   @Override
-  public String getPresentableName() {
-    return CodeInsightBundle.message("macro.enum");
+  public LocalizeValue getPresentableName() {
+    return CodeInsightLocalize.macroEnum();
   }
 
   @Override

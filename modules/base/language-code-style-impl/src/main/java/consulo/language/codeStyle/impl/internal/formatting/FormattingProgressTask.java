@@ -24,9 +24,9 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.language.codeStyle.internal.FormattingProgressCallback;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiFile;
-import consulo.platform.base.localize.CommonLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
@@ -44,10 +44,9 @@ import java.util.concurrent.ConcurrentMap;
  * Formatting progressable task.
  *
  * @author Denis Zhdanov
- * @since 2/10/11 3:00 PM
+ * @since 2011-02-10
  */
 public class FormattingProgressTask extends SequentialModalProgressTask implements FormattingProgressCallback {
-
   /**
    * Holds flag that indicates whether formatting was cancelled by end-user or not.
    */
@@ -93,28 +92,24 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     addCallback(EventType.CANCEL, new MyCancelCallback());
   }
 
-  
-  private static String getTitle(PsiFile file) {
+  private static LocalizeValue getTitle(PsiFile file) {
     VirtualFile virtualFile = file.getOriginalFile().getVirtualFile();
     if (virtualFile == null) {
-      return CodeInsightBundle.message("reformat.progress.common.text");
+      return CodeInsightLocalize.reformatProgressCommonText();
     }
     else {
-      return CodeInsightBundle.message("reformat.progress.file.with.known.name.text", virtualFile.getName());
+      return CodeInsightLocalize.reformatProgressFileWithKnownNameText(virtualFile.getName());
     }
   }
 
   @Override
-  protected void prepare(final SequentialTask task) {
-    UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        Document document = myDocument.get();
-        if (document != null) {
-          myDocumentModificationStampBefore = document.getModificationStamp();
-        }
-        task.prepare();
+  protected void prepare(SequentialTask task) {
+    UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
+      Document document = myDocument.get();
+      if (document != null) {
+        myDocumentModificationStampBefore = document.getModificationStamp();
       }
+      task.prepare();
     });
   }
 

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.highlighting;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
@@ -58,7 +58,7 @@ public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Ru
             }
 
             List<Object> model = new ArrayList<>(Arrays.asList(myClasses));
-            String selectAll = CodeInsightBundle.message("highlight.thrown.exceptions.chooser.all.entry");
+            String selectAll = CodeInsightLocalize.highlightThrownExceptionsChooserAllEntry().get();
             model.add(0, selectAll);
 
             IPopupChooserBuilder<Object> builder = JBPopupFactory.getInstance()

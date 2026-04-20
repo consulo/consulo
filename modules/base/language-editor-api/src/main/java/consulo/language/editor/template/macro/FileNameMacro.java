@@ -16,15 +16,15 @@
 package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -32,15 +32,14 @@ import org.jspecify.annotations.Nullable;
  */
 @ExtensionImpl
 public class FileNameMacro extends Macro {
-
   @Override
   public String getName() {
     return "fileName";
   }
 
   @Override
-  public String getPresentableName() {
-    return CodeInsightBundle.message("macro.file.name");
+  public LocalizeValue getPresentableName() {
+    return CodeInsightLocalize.macroFileName();
   }
 
   @Override

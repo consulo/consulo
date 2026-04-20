@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
+import consulo.localize.LocalizeValue;
 
 @ExtensionImpl
 public class LineNumberMacro extends Macro {
@@ -31,8 +31,8 @@ public class LineNumberMacro extends Macro {
   }
 
   @Override
-  public String getPresentableName() {
-    return CodeInsightBundle.message("macro.linenumber");
+  public LocalizeValue getPresentableName() {
+    return CodeInsightLocalize.macroLinenumber();
   }
 
   @Override

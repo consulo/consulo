@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
@@ -29,7 +28,7 @@ import consulo.language.editor.template.TextResult;
 @ExtensionImpl
 public class DecapitalizeMacro extends MacroBase {
   public DecapitalizeMacro() {
-    super("decapitalize", CodeInsightBundle.message("macro.decapitalize.string"));
+    super("decapitalize", CodeInsightLocalize.macroDecapitalizeString());
   }
 
   @Override

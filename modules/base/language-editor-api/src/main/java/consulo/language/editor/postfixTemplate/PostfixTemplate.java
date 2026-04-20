@@ -6,14 +6,15 @@ import consulo.application.dumb.PossiblyDumbAware;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.language.Language;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.postfixTemplate.PostfixTemplateMetaData;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.internal.PsiFileInternal;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.template.TemplateLanguageUtil;
 import consulo.language.util.LanguageUtil;
+import consulo.localize.LocalizeValue;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
@@ -87,9 +88,8 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
     myProvider = provider;
   }
 
-  
   protected String calcDescription() {
-    String defaultDescription = CodeInsightBundle.message("postfix.template.description.under.construction");
+    LocalizeValue defaultDescription = CodeInsightLocalize.postfixTemplateDescriptionUnderConstruction();
     try {
       return PostfixTemplateMetaData.createMetaData(this).getDescription().getText();
     }
@@ -97,7 +97,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
       //ignore
     }
 
-    return defaultDescription;
+    return defaultDescription.get();
   }
 
   /**

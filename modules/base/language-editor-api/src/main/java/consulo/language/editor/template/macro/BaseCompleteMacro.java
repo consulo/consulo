@@ -27,6 +27,7 @@ import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.template.*;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 
@@ -43,12 +44,11 @@ public abstract class BaseCompleteMacro extends Macro {
     }
 
     @Override
-    public String getPresentableName() {
-        return myName + "()";
+    public LocalizeValue getPresentableName() {
+        return LocalizeValue.of(myName + "()");
     }
 
     @Override
-    
     public String getDefaultValue() {
         return "a";
     }

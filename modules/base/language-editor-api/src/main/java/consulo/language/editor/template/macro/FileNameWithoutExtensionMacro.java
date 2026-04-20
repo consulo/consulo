@@ -16,8 +16,9 @@
 package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.TextResult;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -32,8 +33,8 @@ public class FileNameWithoutExtensionMacro extends FileNameMacro {
   }
 
   @Override
-  public String getPresentableName() {
-    return CodeInsightBundle.message("macro.file.name.without.extension");
+  public LocalizeValue getPresentableName() {
+    return CodeInsightLocalize.macroFileNameWithoutExtension();
   }
 
   @Override
