@@ -18,11 +18,11 @@ package consulo.externalSystem.ui.awt;
 import consulo.dataContext.DataProvider;
 import consulo.execution.action.Location;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTaskListModel;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
 import consulo.externalSystem.internal.ui.ExternalSystemTasksTree;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
@@ -130,11 +130,11 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     JPanel content = new JPanel(new GridBagLayout());
     content.setOpaque(true);
     content.setBackground(UIUtil.getListBackground());
-    JComponent recentTasksWithTitle = wrap(myRecentTasksList, ExternalSystemBundle.message("tasks.recent.title"));
+    JComponent recentTasksWithTitle = wrap(myRecentTasksList, ExternalSystemLocalize.tasksRecentTitle().get());
     content.add(recentTasksWithTitle, ExternalSystemUiUtil.getFillLineConstraints(0));
     JBScrollPane scrollPane = new JBScrollPane(myAllTasksTree);
     scrollPane.setBorder(null);
-    JComponent allTasksWithTitle = wrap(scrollPane, ExternalSystemBundle.message("tasks.all.title"));
+    JComponent allTasksWithTitle = wrap(scrollPane, ExternalSystemLocalize.tasksAllTitle().get());
     content.add(allTasksWithTitle, ExternalSystemUiUtil.getFillLineConstraints(0).weighty(1).fillCell());
     setContent(content);
   }

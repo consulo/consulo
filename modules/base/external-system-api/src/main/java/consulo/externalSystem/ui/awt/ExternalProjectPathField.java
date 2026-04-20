@@ -19,9 +19,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
 import consulo.component.PropertiesComponent;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.internal.ui.ExternalSystemTasksTree;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
@@ -34,6 +34,7 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldCompletionProviderDumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
@@ -46,7 +47,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -58,69 +59,73 @@ import java.util.*;
 
 /**
  * @author Denis Zhdanov
- * @since 24.05.13 19:13
+ * @since 2013-05-24
  */
 public class ExternalProjectPathField extends Wrapper implements TextAccessor {
-
-    
     private static final String PROJECT_FILE_TO_START_WITH_KEY = "external.system.task.project.file.to.start";
 
-    
     private final Project myProject;
     
     private final ProjectSystemId myExternalSystemId;
 
     private final EditorTextField myEditorTextField;
 
-    public ExternalProjectPathField(Project project,
-                                    ProjectSystemId externalSystemId,
-                                    FileChooserDescriptor descriptor,
-                                    String fileChooserTitle) {
+    @RequiredUIAccess
+    public ExternalProjectPathField(
+        Project project,
+        ProjectSystemId externalSystemId,
+        FileChooserDescriptor descriptor,
+        String fileChooserTitle
+    ) {
         myExternalSystemId = externalSystemId;
         myProject = project;
         myEditorTextField = createTextField(project, externalSystemId);
         setContent(myEditorTextField);
 
         ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-        builder.add(DumbAwareAction.create(ExternalSystemBundle.message("run.configuration.tooltip.choose.registered.project",
-            externalSystemId.getDisplayName()), externalSystemId.getIcon(), e -> {
-            final Ref<JBPopup> popupRef = new Ref<JBPopup>();
-            final Tree tree = buildRegisteredProjectsTree(project, externalSystemId);
-            tree.setBorder(IdeBorderFactory.createEmptyBorder(8));
-            Runnable treeSelectionCallback = new Runnable() {
-                @Override
-                public void run() {
-                    TreePath path = tree.getSelectionPath();
-                    if (path != null) {
-                        Object lastPathComponent = path.getLastPathComponent();
-                        if (lastPathComponent instanceof ExternalSystemNode) {
-                            Object e = ((ExternalSystemNode) lastPathComponent).getDescriptor().getElement();
-                            if (e instanceof ExternalProjectPojo) {
-                                ExternalProjectPojo pojo = (ExternalProjectPojo) e;
-                                myEditorTextField.setText(pojo.getPath());
-                                Editor editor = myEditorTextField.getEditor();
-                                if (editor != null) {
-                                    collapseIfPossible(editor, externalSystemId, project);
+        builder.add(DumbAwareAction.create(
+            ExternalSystemLocalize.runConfigurationTooltipChooseRegisteredProject(externalSystemId.getDisplayName()),
+            LocalizeValue.empty(),
+            externalSystemId.getIcon(),
+            e -> {
+                final SimpleReference<JBPopup> popupRef = new SimpleReference<>();
+                final Tree tree = buildRegisteredProjectsTree(project, externalSystemId);
+                tree.setBorder(IdeBorderFactory.createEmptyBorder(8));
+                Runnable treeSelectionCallback = new Runnable() {
+                    @Override
+                    public void run() {
+                        TreePath path = tree.getSelectionPath();
+                        if (path != null) {
+                            Object lastPathComponent = path.getLastPathComponent();
+                            if (lastPathComponent instanceof ExternalSystemNode) {
+                                Object e = ((ExternalSystemNode) lastPathComponent).getDescriptor().getElement();
+                                if (e instanceof ExternalProjectPojo) {
+                                    ExternalProjectPojo pojo = (ExternalProjectPojo) e;
+                                    myEditorTextField.setText(pojo.getPath());
+                                    Editor editor = myEditorTextField.getEditor();
+                                    if (editor != null) {
+                                        collapseIfPossible(editor, externalSystemId, project);
+                                    }
                                 }
                             }
                         }
+                        popupRef.get().closeOk(null);
                     }
-                    popupRef.get().closeOk(null);
-                }
-            };
+                };
 
-            AWTPopupFactory helper = (AWTPopupFactory) JBPopupFactory.getInstance();
+                AWTPopupFactory helper = (AWTPopupFactory) JBPopupFactory.getInstance();
 
-            JBPopup popup = helper.createPopupBuilder(tree)
-                .setItemChoosenCallback(treeSelectionCallback)
-                .setTitle(ExternalSystemBundle.message("run.configuration.title.choose.registered.project", externalSystemId.getDisplayName()))
-                .setResizable(true)
-                .setAutoselectOnMouseMove(true)
-                .setCloseOnEnter(false)
-                .createPopup();
-            popupRef.set(popup);
-            popup.showUnderneathOf(e.getInputEvent().getComponent());
-        }));
+                JBPopup popup = helper.createPopupBuilder(tree)
+                    .setItemChoosenCallback(treeSelectionCallback)
+                    .setTitle(ExternalSystemLocalize.runConfigurationTitleChooseRegisteredProject(externalSystemId.getDisplayName()).get())
+                    .setResizable(true)
+                    .setAutoselectOnMouseMove(true)
+                    .setCloseOnEnter(false)
+                    .createPopup();
+                popupRef.set(popup);
+                popup.showUnderneathOf(e.getInputEvent().getComponent());
+            }
+        ));
 
         builder.add(new MyBrowseListener(descriptor, fileChooserTitle, project, myEditorTextField));
 
@@ -132,7 +137,6 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         myEditorTextField.setSuffixComponent(toolbar.getComponent());
     }
 
-    
     private static Tree buildRegisteredProjectsTree(Project project, ProjectSystemId externalSystemId) {
         ExternalSystemTasksTreeModel model = new ExternalSystemTasksTreeModel(externalSystemId);
         ExternalSystemTasksTree result = new ExternalSystemTasksTree(model, new HashMap<>(), project, externalSystemId);
@@ -149,7 +153,6 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         return result;
     }
 
-    
     private static EditorTextField createTextField(Project project, ProjectSystemId externalSystemId) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
@@ -198,9 +201,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         }
     }
 
-    private static void collapseIfPossible(Editor editor,
-                                           ProjectSystemId externalSystemId,
-                                           Project project) {
+    private static void collapseIfPossible(Editor editor, ProjectSystemId externalSystemId, Project project) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
         AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
@@ -243,8 +244,6 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
     }
 
     private static class MyBrowseListener extends DumbAwareAction {
-
-        
         private final FileChooserDescriptor myDescriptor;
         
         private final Project myProject;
@@ -283,14 +282,11 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
     }
 
     public static class MyPathAndProjectButtonPanel extends JPanel {
-
-        
         private final EditorTextField myTextField;
         
         private final FixedSizeButton myRegisteredProjectsButton;
 
-        public MyPathAndProjectButtonPanel(EditorTextField textField,
-                                           FixedSizeButton registeredProjectsButton) {
+        public MyPathAndProjectButtonPanel(EditorTextField textField, FixedSizeButton registeredProjectsButton) {
             super(new GridBagLayout());
             myTextField = textField;
             myRegisteredProjectsButton = registeredProjectsButton;
@@ -298,7 +294,6 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
             add(myRegisteredProjectsButton, new GridBag().insets(0, 3, 0, 0));
         }
 
-        
         public EditorTextField getTextField() {
             return myTextField;
         }
