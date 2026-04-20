@@ -140,7 +140,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
         return new NotificationInfo(
           "Find Usages",
           UsageLocalize.notificationTitleFindUsagesFinished(),
-          UsageLocalize.usagesN(count).capitalize()
+          UsageLocalize.notificationNUsagesFound(count)
         );
       }
     };
