@@ -16,7 +16,6 @@
 package consulo.usage.impl.internal.rule;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -27,7 +26,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.usage.UsageView;
-import consulo.usage.UsageViewBundle;
 import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleListener;
@@ -105,7 +103,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
 
   private class ShowReadAccessUsagesAction extends ToggleAction implements DumbAware {
     private ShowReadAccessUsagesAction() {
-      super(UsageViewBundle.message("action.show.read.access"), null, AllIcons.Actions.ShowReadAccess);
+      super(UsageLocalize.actionShowReadAccess(), LocalizeValue.empty(), PlatformIconGroup.actionsShowreadaccess());
     }
 
     @Override

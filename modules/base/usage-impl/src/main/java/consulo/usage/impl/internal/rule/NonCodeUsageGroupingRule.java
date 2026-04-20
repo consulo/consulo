@@ -18,6 +18,7 @@ package consulo.usage.impl.internal.rule;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.usage.*;
+import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
@@ -37,9 +38,8 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     private static final UsageGroup INSTANCE = new CodeUsageGroup();
 
     @Override
-    
     public String getText(UsageView view) {
-      return view == null ? UsageViewBundle.message("node.group.code.usages") : view.getPresentation().getCodeUsagesString();
+      return view == null ? UsageLocalize.nodeGroupCodeUsages().get() : view.getPresentation().getCodeUsagesString();
     }
 
     @Override
@@ -61,9 +61,8 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     public static final UsageGroup INSTANCE = new UsageInGeneratedCodeGroup();
 
     @Override
-    
     public String getText(UsageView view) {
-      return view == null ? UsageViewBundle.message("node.usages.in.generated.code") : view.getPresentation().getUsagesInGeneratedCodeString();
+      return view == null ? UsageLocalize.nodeUsagesInGeneratedCode().get() : view.getPresentation().getUsagesInGeneratedCodeString();
     }
 
     @Override
@@ -81,9 +80,8 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     public static final UsageGroup INSTANCE = new NonCodeUsageGroup();
 
     @Override
-    
     public String getText(UsageView view) {
-      return view == null ? UsageViewBundle.message("node.group.code.usages") : view.getPresentation().getNonCodeUsagesString();
+      return view == null ? UsageLocalize.nodeNonCodeUsages().get() : view.getPresentation().getNonCodeUsagesString();
     }
 
     @Override

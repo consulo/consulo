@@ -98,7 +98,8 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     }
 
     private static void systemNotify(Task.NotificationInfo info) {
-        SystemNotifications.getInstance().notify(info.getNotificationName(), info.getNotificationTitle(), info.getNotificationText());
+        SystemNotifications.getInstance()
+            .notify(info.getNotificationName(), info.getNotificationTitle().get(), info.getNotificationText().get());
     }
 
     @Override

@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.usage.RuleAction;
-import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
+import consulo.usage.localize.UsageLocalize;
 
 /**
 * @author cdr
 */
 class PreviewUsageAction extends RuleAction {
   PreviewUsageAction(UsageView usageView) {
-    super(usageView, UsageViewBundle.message("preview.usages.action.text"), AllIcons.Actions.PreviewDetails);
+    super(usageView, UsageLocalize.previewUsagesActionText(), PlatformIconGroup.actionsPreviewdetails());
   }
 
   @Override

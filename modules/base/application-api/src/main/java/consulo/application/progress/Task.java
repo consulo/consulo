@@ -532,31 +532,23 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     public static class NotificationInfo {
-        private final LocalizeValue myNotificationName;
+        private final String myNotificationName;
         private final LocalizeValue myNotificationTitle;
         private final LocalizeValue myNotificationText;
         private final boolean myShowWhenFocused;
 
-        public NotificationInfo(
-            LocalizeValue notificationName,
-            LocalizeValue notificationTitle,
-            LocalizeValue notificationText
-        ) {
+        public NotificationInfo(String notificationName, LocalizeValue notificationTitle, LocalizeValue notificationText) {
             this(notificationName, notificationTitle, notificationText, false);
         }
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        public NotificationInfo(
-            String notificationName,
-            String notificationTitle,
-            String notificationText
-        ) {
+        public NotificationInfo(String notificationName, String notificationTitle, String notificationText) {
             this(notificationName, notificationTitle, notificationText, false);
         }
 
         public NotificationInfo(
-            LocalizeValue notificationName,
+            String notificationName,
             LocalizeValue notificationTitle,
             LocalizeValue notificationText,
             boolean showWhenFocused
@@ -569,30 +561,20 @@ public abstract class Task implements TaskInfo, Progressive {
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        public NotificationInfo(
-            String notificationName,
-            String notificationTitle,
-            String notificationText,
-            boolean showWhenFocused
-        ) {
-            this(
-                LocalizeValue.of(notificationName),
-                LocalizeValue.of(notificationTitle),
-                LocalizeValue.of(notificationText),
-                showWhenFocused
-            );
+        public NotificationInfo(String notificationName, String notificationTitle, String notificationText, boolean showWhenFocused) {
+            this(notificationName, LocalizeValue.of(notificationTitle), LocalizeValue.of(notificationText), showWhenFocused);
         }
 
         public String getNotificationName() {
-            return myNotificationName.get();
+            return myNotificationName;
         }
 
-        public String getNotificationTitle() {
-            return myNotificationTitle.get();
+        public LocalizeValue getNotificationTitle() {
+            return myNotificationTitle;
         }
 
-        public String getNotificationText() {
-            return myNotificationText.get();
+        public LocalizeValue getNotificationText() {
+            return myNotificationText;
         }
 
         public boolean isShowWhenFocused() {

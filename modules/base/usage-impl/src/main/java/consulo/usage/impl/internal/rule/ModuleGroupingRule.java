@@ -17,20 +17,20 @@ package consulo.usage.impl.internal.rule;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataSink;
-import consulo.language.editor.LangDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.usage.UsageViewBundle;
+import consulo.ui.image.Image;
 import consulo.usage.Usage;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageView;
+import consulo.usage.localize.UsageLocalize;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInLibrary;
 import consulo.usage.rule.UsageInModule;
-import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.status.FileStatus;
 
 /**
  * @author max
@@ -184,7 +184,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     public String toString() {
-      return UsageViewBundle.message("node.group.module") + getText(null);
+      return UsageLocalize.nodeGroupModule().get() + getText(null);
     }
 
     @Override
