@@ -1,21 +1,17 @@
-# Cross-compilation linkers. Install the cross-gcc package for each target
-# you intend to build (e.g. `sudo apt install gcc-loongarch64-linux-gnu`).
-
-[target.aarch64-unknown-linux-gnu]
-linker = "aarch64-linux-gnu-gcc"
-
-[target.loongarch64-unknown-linux-gnu]
-linker = "loongarch64-linux-gnu-gcc"
-
-[target.riscv64gc-unknown-linux-gnu]
-linker = "riscv64-linux-gnu-gcc"
-
-# Optional: uncomment for faster dev-build linking on x86_64 Linux.
-# Requires `mold` (Debian/Ubuntu: `sudo apt install mold`).
-# [target.x86_64-unknown-linux-gnu]
-# linker = "clang"
-# rustflags = ["-C", "link-arg=-fuse-ld=mold"]
-
-# Optional: faster dev-build linking on Windows (uses rust-lld).
-# [target.x86_64-pc-windows-msvc]
-# linker = "rust-lld.exe"
+# Local cross-compile linker config.
+#
+# CI uses `cross` (https://github.com/cross-rs/cross) for non-native Linux
+# targets — `cross` provides its own sysroot via Docker and sets linkers
+# automatically, so we don't configure them here.
+#
+# For local development, install the matching cross-gcc package and
+# uncomment the corresponding block below:
+#
+# [target.aarch64-unknown-linux-gnu]
+# linker = "aarch64-linux-gnu-gcc"
+#
+# [target.loongarch64-unknown-linux-gnu]
+# linker = "loongarch64-linux-gnu-gcc"
+#
+# [target.riscv64gc-unknown-linux-gnu]
+# linker = "riscv64-linux-gnu-gcc"
