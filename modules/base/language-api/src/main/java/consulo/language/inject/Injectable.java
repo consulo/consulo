@@ -27,17 +27,14 @@ import org.jspecify.annotations.Nullable;
  * @since 2013-08-01
  */
 public abstract class Injectable implements Comparable<Injectable> {
-  
   public abstract String getId();
 
-  
   public abstract LocalizeValue getDisplayName();
 
   public @Nullable String getAdditionalDescription() {
     return null;
   }
 
-  
   public Image getIcon() {
     return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
@@ -70,7 +67,6 @@ public abstract class Injectable implements Comparable<Injectable> {
         return language.getID();
       }
 
-      
       @Override
       public LocalizeValue getDisplayName() {
         return language.getDisplayName();
@@ -82,7 +78,6 @@ public abstract class Injectable implements Comparable<Injectable> {
         return ft != null ? " (" + ft.getDisplayName() + ")" : null;
       }
 
-      
       @Override
       public Image getIcon() {
         FileType ft = language.getAssociatedFileType();

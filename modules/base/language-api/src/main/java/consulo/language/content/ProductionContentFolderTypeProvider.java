@@ -34,14 +34,14 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 22:37/31.10.13
+ * @since 2013-10-31
  */
 @ExtensionImpl(order = "first", id = "production")
-public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider implements BuiltInGeneratedIconOwner, ProductionLikeContentFolderTypeProvider {
+public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider
+    implements BuiltInGeneratedIconOwner, ProductionLikeContentFolderTypeProvider {
     private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), StandardColors.BLUE);
     private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-    
     public static ProductionContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -55,13 +55,11 @@ public class ProductionContentFolderTypeProvider extends PackageBasedContentFold
         return 50;
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.modulesSourceroot();
     }
 
-    
     @Override
     public Image getGeneratedIcon() {
         return PlatformIconGroup.modulesGeneratedsourceroot();
@@ -72,13 +70,11 @@ public class ProductionContentFolderTypeProvider extends PackageBasedContentFold
         return AllIcons.Nodes.Package;
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleSourcesAction();
     }
 
-    
     @Override
     public ColorValue getGroupColor() {
         return SOURCES_COLOR;

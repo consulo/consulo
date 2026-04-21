@@ -24,10 +24,8 @@ import consulo.virtualFileSystem.VirtualFileDelegate;
  */
 public interface VirtualFileWindow extends VirtualFileDelegate {
   @Override
-  
   VirtualFile getDelegate();
 
-  
   DocumentWindow getDocumentWindow();
 
   boolean isValid();

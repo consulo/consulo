@@ -15,11 +15,12 @@
  */
 package consulo.language.cacheBuilder;
 
-import consulo.application.util.function.Processor;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.lexer.Lexer;
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * The default implementation of a words scanner based on a custom language lexer.
@@ -64,7 +65,8 @@ public class DefaultWordsScanner implements WordsScanner {
     mySkipCodeContextTokenSet = skipCodeContextTokenSet;
   }
 
-  public void processWords(CharSequence fileText, Processor<WordOccurrence> processor) {
+  @Override
+  public void processWords(CharSequence fileText, Predicate<WordOccurrence> processor) {
     myLexer.start(fileText);
     WordOccurrence occurrence = null; // shared occurrence
 
@@ -77,28 +79,52 @@ public class DefaultWordsScanner implements WordsScanner {
         else {
           occurrence.init(fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE);
         }
-        if (!processor.process(occurrence)) return;
+        if (!processor.test(occurrence)) {
+          return;
+        }
       }
       else if (myCommentTokenSet.contains(type)) {
-        if (!stripWords(processor, fileText,myLexer.getTokenStart(),myLexer.getTokenEnd(), WordOccurrence.Kind.COMMENTS,occurrence, false)) return;
+        if (!stripWords(
+          processor,
+          fileText,
+          myLexer.getTokenStart(),
+          myLexer.getTokenEnd(),
+          WordOccurrence.Kind.COMMENTS,
+          occurrence,
+          false
+        )) {
+          return;
+        }
       }
       else if (myLiteralTokenSet.contains(type)) {
-        if (!stripWords(processor, fileText, myLexer.getTokenStart(),myLexer.getTokenEnd(),WordOccurrence.Kind.LITERALS,occurrence, myMayHaveFileRefsInLiterals)) return;
+        if (!stripWords(
+          processor,
+          fileText,
+          myLexer.getTokenStart(),
+          myLexer.getTokenEnd(),
+          WordOccurrence.Kind.LITERALS,
+          occurrence,
+          myMayHaveFileRefsInLiterals
+        )) {
+          return;
+        }
       }
       else if (!mySkipCodeContextTokenSet.contains(type)) {
-        if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE, occurrence, false)) return;
+        if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE, occurrence, false)) {
+          return;
+        }
       }
       myLexer.advance();
     }
   }
 
   protected static boolean stripWords(
-      Processor<WordOccurrence> processor,
+      Predicate<WordOccurrence> processor,
       CharSequence tokenText,
       int from,
       int to,
       WordOccurrence.Kind kind,
-      @Nullable WordOccurrence occurence,
+      @Nullable WordOccurrence occurrence,
       boolean mayHaveFileRefs
   ) {
     // This code seems strange but it is more effective as Character.isJavaIdentifier_xxx_ is quite costly operation due to unicode
@@ -124,18 +150,18 @@ public class DefaultWordsScanner implements WordsScanner {
         if (c == '$' || !Character.isJavaIdentifierPart(c)) break;
       }
       int wordEnd = index;
-      if (occurence == null) {
-        occurence = new WordOccurrence(tokenText, wordStart, wordEnd, kind);
+      if (occurrence == null) {
+        occurrence = new WordOccurrence(tokenText, wordStart, wordEnd, kind);
       }
       else {
-        occurence.init(tokenText, wordStart, wordEnd, kind);
+        occurrence.init(tokenText, wordStart, wordEnd, kind);
       }
 
-      if (!processor.process(occurence)) return false;
+      if (!processor.test(occurrence)) return false;
 
       if (mayHaveFileRefs) {
-        occurence.init(tokenText,wordStart, wordEnd, WordOccurrence.Kind.FOREIGN_LANGUAGE);
-        if (!processor.process(occurence)) return false;
+        occurrence.init(tokenText,wordStart, wordEnd, WordOccurrence.Kind.FOREIGN_LANGUAGE);
+        if (!processor.test(occurrence)) return false;
       }
     }
     return true;

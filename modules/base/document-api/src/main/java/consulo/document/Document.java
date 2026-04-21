@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
 import consulo.document.event.DocumentListener;
@@ -183,6 +184,7 @@ public interface Document extends UserDataHolder {
      * @throws ReadOnlyModificationException         if the document is read-only.
      * @throws ReadOnlyFragmentModificationException if the fragment to be modified is covered by a guarded block.
      */
+    @RequiredWriteAction
     void replaceString(int startOffset, int endOffset, CharSequence s);
 
     /**

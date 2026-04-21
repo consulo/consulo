@@ -24,7 +24,6 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public interface IReparseableLeafElementType<T extends ASTNode> {
-
   /**
    * If the IDE detects that the whole changed range to be reparsed is contained within one leaf that has such element type,
    * this method is called. It should analyze the provided new leaf text, check whether this text conforms with the language rules,
@@ -35,5 +34,4 @@ public interface IReparseableLeafElementType<T extends ASTNode> {
    * @return a replacement leaf with newText text, if it's correct to do such replacement, or null otherwise
    */
   @Nullable T reparseLeaf(T leaf, CharSequence newText);
-
 }
