@@ -10,7 +10,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;

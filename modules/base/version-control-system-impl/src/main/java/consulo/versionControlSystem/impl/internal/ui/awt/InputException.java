@@ -16,8 +16,10 @@
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.localize.UILocalize;
 
 import javax.swing.*;
 
@@ -38,9 +40,10 @@ public class InputException extends RuntimeException{
     myComponent = component;
   }
 
+  @RequiredUIAccess
   public void show(){
     if (myMessage !=  null) {
-      Messages.showMessageDialog(myMessage, UIBundle.message("invalid.user.input.dialog.title"), Messages.getErrorIcon());
+      Messages.showMessageDialog(myMessage, UILocalize.invalidUserInputDialogTitle().get(), UIUtil.getErrorIcon());
     }
     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myComponent);
   }

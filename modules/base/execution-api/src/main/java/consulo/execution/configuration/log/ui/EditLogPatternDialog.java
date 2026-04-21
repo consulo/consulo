@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.configuration.log.ui;
 
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.localize.UILocalize;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -53,7 +52,7 @@ public class EditLogPatternDialog extends DialogWrapper {
 
   @Override
   protected JComponent createCenterPanel() {
-    myFilePattern.addBrowseFolderListener(UIBundle.message("file.chooser.default.title"), null, null, FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor(), TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT);
+    myFilePattern.addBrowseFolderListener(UILocalize.fileChooserDefaultTitle(), null, null, FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor(), TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT);
     myFilePattern.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {

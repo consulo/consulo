@@ -4,7 +4,6 @@ package consulo.desktop.awt.uiOld.components.fields;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -13,14 +12,15 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.localize.UILocalize;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
@@ -138,7 +138,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
 
     public ExtendableTextField addBrowseExtension(Runnable action, @Nullable Disposable parentDisposable) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
-        String tooltip = UIBundle.message("component.with.browse.button.browse.button.tooltip.text") + " (" + KeymapUtil.getKeystrokeText(keyStroke) + ")";
+        String tooltip = UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get() + " (" + KeymapUtil.getKeystrokeText(keyStroke) + ")";
 
         ExtendableTextComponent.Extension browseExtension = ExtendableTextComponent.Extension.create(AllIcons.Nodes.TreeOpen, AllIcons.Nodes.TreeOpen, tooltip, action);
 

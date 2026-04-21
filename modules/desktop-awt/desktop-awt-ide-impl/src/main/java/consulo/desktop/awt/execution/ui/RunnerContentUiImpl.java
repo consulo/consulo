@@ -34,7 +34,6 @@ import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
-import consulo.ui.ex.action.CloseAction;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -44,7 +43,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.AbstractPainter;
@@ -63,14 +61,15 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -92,7 +91,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private ContentManager myManager;
     private final RunnerLayoutImpl myLayoutSettings;
 
-    
     private final ActionManager myActionManager;
     private final String mySessionName;
     private NonOpaquePanel myComponent;
@@ -271,12 +269,12 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         myTabs.getComponent().setBackground(myToolbar.getBackground());
         myToolbar.setBorder(JBUI.Borders.customLine(JBColor.border(), 0, 0, 0, 1));
 
-        NonOpaquePanel wrappper = new MyComponent(new BorderLayout(0, 0));
-        wrappper.add(myToolbar, BorderLayout.WEST);
-        wrappper.add(myTabs.getComponent(), BorderLayout.CENTER);
-        wrappper.setBorder(new EmptyBorder(-1, 0, 0, 0));
+        NonOpaquePanel wrapper = new MyComponent(new BorderLayout(0, 0));
+        wrapper.add(myToolbar, BorderLayout.WEST);
+        wrapper.add(myTabs.getComponent(), BorderLayout.CENTER);
+        wrapper.setBorder(new EmptyBorder(-1, 0, 0, 0));
 
-        myComponent = wrappper;
+        myComponent = wrapper;
 
         myTabs.addListener(new TabsListener.Adapter() {
 
@@ -633,7 +631,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return myCurrentOverImg;
     }
 
-    
     private static PlaceInGrid calcPlaceInGrid(Point point, Dimension size) {
         // 1/3 (left) |   (center/bottom) | 1/3 (right)
         if (point.x < size.width / 3) {
@@ -1224,25 +1221,21 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return true;
     }
 
-    
     @Override
     public String getCloseActionName() {
-        return UIBundle.message("tabbed.pane.close.tab.action.name");
+        return UILocalize.tabbedPaneCloseTabActionName().get();
     }
 
-    
     @Override
     public String getCloseAllButThisActionName() {
-        return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
+        return UILocalize.tabbedPaneCloseAllTabsButThisActionName().get();
     }
 
-    
     @Override
     public String getPreviousContentActionName() {
         return "Select Previous Tab";
     }
 
-    
     @Override
     public String getNextContentActionName() {
         return "Select Next Tab";
@@ -1971,7 +1964,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             myWindow = window;
         }
 
-        
         @Override
         public List<Content> getKey() {
             return myContents;
@@ -2005,7 +1997,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             return myOriginal != null ? myOriginal : RunnerContentUiImpl.this;
         }
 
-        
         public List<Content> getContents() {
             return myContents;
         }

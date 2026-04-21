@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -27,18 +29,31 @@ import java.util.function.Consumer;
 public class ColorChooser {
     public static void chooseColor(
         Component parent,
+        LocalizeValue caption,
+        @Nullable Color preselectedColor,
+        boolean enableOpacity,
+        boolean opacityInPercent,
+        Consumer<Color> colorConsumer
+    ) {
+        ColorChooserService.getInstance().showDialog(parent, caption.get(), preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public static void chooseColor(
+        Component parent,
         String caption,
         @Nullable Color preselectedColor,
         boolean enableOpacity,
         boolean opacityInPercent,
         Consumer<Color> colorConsumer
     ) {
-        ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
+        chooseColor(parent, LocalizeValue.of(caption), preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
     }
 
     public static void chooseColor(
         Component parent,
-        String caption,
+        LocalizeValue caption,
         @Nullable Color preselectedColor,
         boolean enableOpacity,
         Consumer<Color> colorConsumer
@@ -46,12 +61,35 @@ public class ColorChooser {
         chooseColor(parent, caption, preselectedColor, enableOpacity, false, colorConsumer);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public static void chooseColor(
+        Component parent,
+        String caption,
+        @Nullable Color preselectedColor,
+        boolean enableOpacity,
+        Consumer<Color> colorConsumer
+    ) {
+        chooseColor(parent, LocalizeValue.of(caption), preselectedColor, enableOpacity, colorConsumer);
+    }
+
+    public static void chooseColor(
+        Component parent,
+        LocalizeValue caption,
+        @Nullable Color preselectedColor,
+        Consumer<Color> colorConsumer
+    ) {
+        chooseColor(parent, caption, preselectedColor, false, colorConsumer);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public static void chooseColor(
         Component parent,
         String caption,
         @Nullable Color preselectedColor,
         Consumer<Color> colorConsumer
     ) {
-        chooseColor(parent, caption, preselectedColor, false, colorConsumer);
+        chooseColor(parent, LocalizeValue.of(caption), preselectedColor, colorConsumer);
     }
 }

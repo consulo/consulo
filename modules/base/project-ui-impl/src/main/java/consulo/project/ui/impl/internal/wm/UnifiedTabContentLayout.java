@@ -15,35 +15,32 @@
  */
 package consulo.project.ui.impl.internal.wm;
 
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 
 /**
  * @author VISTALL
- * @since 18-Oct-17
+ * @since 2017-10-18
  */
 public class UnifiedTabContentLayout extends UnifiedContentLayout {
   public UnifiedTabContentLayout(UnifiedToolWindowContentUI contentUI) {
-
   }
 
   @Override
   public void init() {
-
   }
 
   @Override
   public void reset() {
-
   }
 
   @Override
   public String getCloseActionName() {
-    return UIBundle.message("tabbed.pane.close.tab.action.name");
+    return UILocalize.tabbedPaneCloseTabActionName().get();
   }
 
   @Override
   public String getCloseAllButThisActionName() {
-    return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
+    return UILocalize.tabbedPaneCloseAllTabsButThisActionName().get();
   }
 
   @Override

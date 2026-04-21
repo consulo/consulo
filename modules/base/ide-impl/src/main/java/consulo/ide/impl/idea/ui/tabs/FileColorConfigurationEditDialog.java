@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.notification.impl.ui.StickyButton;
 import consulo.ide.impl.idea.notification.impl.ui.StickyButtonUI;
 import consulo.language.editor.FileColorManager;
 import consulo.language.editor.scope.NamedScopeManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -297,14 +298,19 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
 
         @Override
         protected void doPerformAction(ActionEvent e) {
-            ColorChooser.chooseColor(FileColorConfigurationEditDialog.this.getRootPane(), "Choose Color", myColor, color -> {
-                if (color != null) {
-                    myColor = color;
-                }
+            ColorChooser.chooseColor(
+                FileColorConfigurationEditDialog.this.getRootPane(),
+                LocalizeValue.localizeTODO("Choose Color"),
+                myColor,
+                color -> {
+                    if (color != null) {
+                        myColor = color;
+                    }
 
-                setSelected(myColor != null);
-                getOKAction().setEnabled(myColor != null);
-            });
+                    setSelected(myColor != null);
+                    getOKAction().setEnabled(myColor != null);
+                }
+            );
         }
 
         @Override
