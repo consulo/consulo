@@ -16,12 +16,12 @@
 package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.language.lexer.Lexer;
-import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.ParsingException;
-
+import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.lexer.Lexer;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -67,7 +67,7 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
         pattern.append("/");
       }
       else if (lexer.getTokenType() == ScopeTokenTypes.IDENTIFIER || lexer.getTokenType() == ScopeTokenTypes.INTEGER_LITERAL) {
-        if (wasIdentifier) error(lexer, AnalysisScopeBundle.message("error.packageset.token.expectations", getTokenText(lexer)));
+        if (wasIdentifier) error(lexer, AnalysisScopeLocalize.errorPackagesetTokenExpectations(getTokenText(lexer)));
         wasIdentifier = lexer.getTokenType() == ScopeTokenTypes.IDENTIFIER;
         pattern.append(getTokenText(lexer));
       }
@@ -102,7 +102,7 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
     }
 
     if (pattern.length() == 0) {
-      error(lexer, AnalysisScopeBundle.message("error.packageset.pattern.expectations"));
+      error(lexer, AnalysisScopeLocalize.errorPackagesetPatternExpectations());
     }
 
     return pattern.toString();
@@ -114,8 +114,9 @@ public class FilePackageSetParserExtension implements PackageSetParserExtension 
     return lexer.getBufferSequence().subSequence(start, end).toString();
   }
 
-  private static void error(Lexer lexer, String message) throws ParsingException {
+  private static void error(Lexer lexer, LocalizeValue message) throws ParsingException {
     throw new ParsingException(
-      AnalysisScopeBundle.message("error.packageset.position.parsing.error", message, (lexer.getTokenStart() + 1)));
+      AnalysisScopeLocalize.errorPackagesetPositionParsingError(message, (lexer.getTokenStart() + 1)).get()
+    );
   }
 }

@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies;
 
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
@@ -56,12 +55,12 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
 
   @Override
   public String getRootNodeNameInUsageView(){
-    return AnalysisScopeBundle.message("forward.dependencies.usage.view.root.node.text");
+    return AnalysisScopeLocalize.forwardDependenciesUsageViewRootNodeText().get();
   }
 
   @Override
   public String getInitialUsagesPosition(){
-    return AnalysisScopeBundle.message("forward.dependencies.usage.view.initial.text");
+    return AnalysisScopeLocalize.forwardDependenciesUsageViewInitialText().get();
   }
 
   @Override
@@ -99,7 +98,7 @@ public class ForwardDependenciesBuilder extends DependenciesBuilder {
       if (indicator.isCanceled()) {
         throw new ProcessCanceledException();
       }
-      indicator.setText(AnalysisScopeBundle.message("package.dependencies.progress.text"));
+      indicator.setText(AnalysisScopeLocalize.packageDependenciesProgressText());
 
       if (virtualFile != null) {
         indicator.setText2(ProjectUtil.calcRelativeToProjectPath(virtualFile, getProject()));

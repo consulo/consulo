@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.application.internal.ProgressIndicatorBase;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccessScheduler;
 
@@ -55,7 +54,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
   public void stop() {
     super.stop();
     if (isCanceled()) {
-      JLabel label = new JLabel(AnalysisScopeBundle.message("usage.view.canceled"));
+      JLabel label = new JLabel(AnalysisScopeLocalize.usageViewCanceled().get());
       label.setHorizontalAlignment(SwingConstants.CENTER);
       myComponentUpdater.accept(label);
     }

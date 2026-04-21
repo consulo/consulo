@@ -18,12 +18,11 @@ package consulo.language.editor.packageDependency;
 import consulo.content.scope.ComplementPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 public class DependencyRule {
@@ -67,8 +66,8 @@ public class DependencyRule {
     String fromScopeName = myFromScope == null ? "" : myFromScope.getName();
 
     return myDenyRule
-           ? AnalysisScopeBundle.message("scope.display.name.deny.scope", toScopeName, fromScopeName)
-           : AnalysisScopeBundle.message("scope.display.name.allow.scope", toScopeName, fromScopeName);
+        ? AnalysisScopeLocalize.scopeDisplayNameDenyScope(toScopeName, fromScopeName).get()
+        : AnalysisScopeLocalize.scopeDisplayNameAllowScope(toScopeName, fromScopeName).get();
   }
 
   public boolean equals(Object o) {

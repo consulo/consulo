@@ -18,11 +18,12 @@ package consulo.language.editor.scope;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.scope.NamedScopesHolder;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
@@ -44,11 +45,11 @@ public class NamedScopeManager extends NamedScopesHolder {
 
   @Override
   public String getDisplayName() {
-    return AnalysisScopeBundle.message("local.scopes.node.text");
+    return AnalysisScopeLocalize.localScopesNodeText().get();
   }
 
   @Override
   public Image getIcon() {
-    return AllIcons.Ide.LocalScope;
+    return PlatformIconGroup.ideLocalscope();
   }
 }
