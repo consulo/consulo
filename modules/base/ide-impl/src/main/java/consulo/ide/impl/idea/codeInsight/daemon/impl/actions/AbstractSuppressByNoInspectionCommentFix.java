@@ -108,7 +108,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
       createSuppression(project, element, container);
     }
     catch (IncorrectOperationException e) {
-      if (!Application.get().isUnitTestMode() && editor != null) {
+      if (!project.getApplication().isUnitTestMode() && editor != null) {
         Messages.showErrorDialog(
           editor.getComponent(),
           InspectionLocalize.suppressInspectionAnnotationSyntaxError(e.getMessage()).get()
