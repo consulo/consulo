@@ -54,6 +54,8 @@
         
         <jackson3.version>3.1.1</jackson3.version>
 
+        <null.away.version>0.13.4</null.away.version>
+
         <build.number>SNAPSHOT</build.number>
         <dev.mode>true</dev.mode>
 
@@ -76,6 +78,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.uber.nullaway</groupId>
+                <artifactId>nullaway-annotations</artifactId>
+                <version>${null.away.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>

@@ -21,6 +21,7 @@
             <unpack>false</unpack>
             <includes>
                 <include>consulo:consulo-annotation</include>
+                <include>com.uber.nullaway:nullaway-annotations</include>
                 <include>jakarta.annotation:jakarta.annotation-api</include>
                 <include>org.jspecify:jspecify</include>
                 <include>org.apiguardian:apiguardian-api</include>

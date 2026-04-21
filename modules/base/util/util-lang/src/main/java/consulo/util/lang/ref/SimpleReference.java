@@ -15,7 +15,7 @@
  */
 package consulo.util.lang.ref;
 
-import consulo.annotation.EnsuresNonNullIf;
+import com.uber.nullaway.annotations.EnsuresNonNullIf;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -35,12 +35,12 @@ public class SimpleReference<T> implements Supplier<@Nullable T> {
     myValue = value;
   }
 
-  @EnsuresNonNullIf(expression = "get()", result = false)
+  @EnsuresNonNullIf(value = "myValue", result = false)
   public boolean isNull() {
     return myValue == null;
   }
 
-  @EnsuresNonNullIf(expression = "get()")
+  @EnsuresNonNullIf("myValue")
   public boolean isNotNull() {
     return myValue != null;
   }

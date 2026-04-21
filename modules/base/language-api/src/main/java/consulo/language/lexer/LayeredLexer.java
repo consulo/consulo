@@ -15,7 +15,7 @@
  */
 package consulo.language.lexer;
 
-import consulo.annotation.EnsuresNonNullIf;
+import com.uber.nullaway.annotations.EnsuresNonNullIf;
 import consulo.annotation.ReviewAfterIssueFix;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
@@ -199,7 +199,7 @@ public class LayeredLexer extends DelegateLexer {
         return false;
     }
 
-    @EnsuresNonNullIf(expression = "myCurrentLayerLexer")
+    @EnsuresNonNullIf("myCurrentLayerLexer")
     private boolean isLayerActive() {
         return myCurrentLayerLexer != null;
     }

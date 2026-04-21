@@ -3,7 +3,8 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 module consulo.util.lang {
   requires jdk.unsupported;
-  requires consulo.annotation;
+  requires static consulo.annotation;
+  requires static com.uber.nullaway.annotations;
   requires org.slf4j;
   
   exports consulo.util.lang;

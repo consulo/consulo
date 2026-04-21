@@ -682,5 +682,9 @@
             <groupId>consulo.internal</groupId>
             <artifactId>format-ripper-jvm-file-type-detector</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.uber.nullaway</groupId>
+            <artifactId>nullaway-annotations</artifactId>
+        </dependency>
     </dependencies>
 </project>

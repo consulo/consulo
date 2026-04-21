@@ -57,6 +57,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.uber.nullaway</groupId>
+            <artifactId>nullaway-annotations</artifactId>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-application-content-api</artifactId>
             <version>${project.version}</version>
