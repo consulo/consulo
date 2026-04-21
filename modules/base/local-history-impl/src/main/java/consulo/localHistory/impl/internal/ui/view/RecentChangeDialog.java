@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.ui.view;
 
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.revision.RecentChange;
 import consulo.localHistory.impl.internal.ui.model.DirectoryHistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.RecentChangeDialogModel;
+import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 
@@ -68,7 +67,7 @@ public class RecentChangeDialog extends DirectoryHistoryDialog {
         close();
       }
     };
-    UIUtil.setActionNameAndMnemonic(LocalHistoryBundle.message("action.revert"), revert);
+    UIUtil.setActionNameAndMnemonic(LocalHistoryLocalize.actionRevert().get(), revert);
 
     JPanel p = new JPanel();
     p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));

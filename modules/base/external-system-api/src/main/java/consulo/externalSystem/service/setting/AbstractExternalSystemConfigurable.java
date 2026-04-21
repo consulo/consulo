@@ -18,8 +18,8 @@ package consulo.externalSystem.service.setting;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
@@ -59,15 +59,15 @@ import java.util.List;
  * </pre>
  *
  * @author Denis Zhdanov
- * @since 4/30/13 12:50 PM
+ * @since 2013-04-30
  */
-public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends ExternalProjectSettings, L extends ExternalSystemSettingsListener<ProjectSettings>, SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>>
-        implements SearchableConfigurable {
-
-  
+public abstract class AbstractExternalSystemConfigurable<
+  ProjectSettings extends ExternalProjectSettings,
+  L extends ExternalSystemSettingsListener<ProjectSettings>,
+  SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>
+> implements SearchableConfigurable {
   private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = new ArrayList<>();
 
-  
   private final ProjectSystemId myExternalSystemId;
   
   private final Project myProject;
@@ -84,7 +84,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
     myExternalSystemId = externalSystemId;
   }
 
-  
   @Override
   public LocalizeValue getDisplayName() {
     return myExternalSystemId.getDisplayName();
@@ -116,13 +115,16 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
     myProjectsList = new JBList<>(myProjectsModel);
     myProjectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    addTitle(ExternalSystemBundle.message("settings.title.linked.projects", myExternalSystemId.getReadableName()));
+    addTitle(ExternalSystemLocalize.settingsTitleLinkedProjects(myExternalSystemId.getReadableName()));
     myComponent.add(new JBScrollPane(myProjectsList), ExternalSystemUiUtil.getFillLineConstraints(1));
 
-    addTitle(ExternalSystemBundle.message("settings.title.project.settings"));
+    addTitle(ExternalSystemLocalize.settingsTitleProjectSettings());
     List<ProjectSettings> settings = new ArrayList<ProjectSettings>(s.getLinkedProjectsSettings());
     myProjectsList.setVisibleRowCount(Math.max(3, Math.min(5, settings.size())));
-    ContainerUtil.sort(settings, (s1, s2) -> getProjectName(s1.getExternalProjectPath()).compareTo(getProjectName(s2.getExternalProjectPath())));
+    ContainerUtil.sort(
+        settings,
+        (s1, s2) -> getProjectName(s1.getExternalProjectPath()).compareTo(getProjectName(s2.getExternalProjectPath()))
+    );
 
     myProjectSettingsControls.clear();
     for (ProjectSettings setting : settings) {
@@ -149,14 +151,14 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
     });
 
     if (!myProjectsModel.isEmpty()) {
-      addTitle(ExternalSystemBundle.message("settings.title.system.settings", myExternalSystemId.getReadableName()));
+      addTitle(ExternalSystemLocalize.settingsTitleSystemSettings(myExternalSystemId.getDisplayName()));
       myProjectsList.setSelectedIndex(0);
     }
   }
 
-  private void addTitle(String title) {
+  private void addTitle(LocalizeValue title) {
     JPanel panel = new JPanel(new GridBagLayout());
-    panel.setBorder(IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(ExternalSystemUiUtil.INSETS)));
+    panel.setBorder(IdeBorderFactory.createTitledBorder(title.get(), false, JBUI.insetsTop(ExternalSystemUiUtil.INSETS)));
     myComponent.add(panel, ExternalSystemUiUtil.getFillLineConstraints(0));
   }
 
@@ -169,7 +171,6 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
   protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(ProjectSettings settings);
 
   @SuppressWarnings("MethodMayBeStatic")
-  
   protected String getProjectName(String path) {
     File file = new File(path);
     return file.isDirectory() || file.getParentFile() == null ? file.getName() : file.getParentFile().getName();

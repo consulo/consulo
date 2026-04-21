@@ -1,13 +1,13 @@
 package consulo.externalSystem.impl.internal.service;
 
 import consulo.application.Application;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.impl.internal.service.remote.RemoteExternalSystemProjectResolver;
-import consulo.externalSystem.service.ExternalSystemResolveProjectTask;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.service.ExternalSystemResolveProjectTask;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
@@ -19,13 +19,11 @@ import java.util.concurrent.atomic.AtomicReference;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since 1/24/12 7:21 AM
+ * @since 2012-01-24
  */
 public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystemTask implements ExternalSystemResolveProjectTask {
-
   private final AtomicReference<DataNode<ProjectData>> myExternalProject = new AtomicReference<DataNode<ProjectData>>();
 
-  
   private final String myProjectPath;
   private final boolean myIsPreviewMode;
 
@@ -66,8 +64,7 @@ public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystem
   }
 
   @Override
-  
   protected String wrapProgressText(String text) {
-    return ExternalSystemBundle.message("progress.update.text", getExternalSystemId().getReadableName(), text);
+    return ExternalSystemLocalize.progressUpdateText(getExternalSystemId().getDisplayName(), text).get();
   }
 }

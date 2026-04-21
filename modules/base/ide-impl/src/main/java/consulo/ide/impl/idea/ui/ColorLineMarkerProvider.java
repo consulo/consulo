@@ -74,7 +74,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
 
                         ColorChooser.chooseColor(
                             editor.getComponent(),
-                            IdeLocalize.dialogTitleChooseColor().get(),
+                            IdeLocalize.dialogTitleChooseColor(),
                             TargetAWT.to(color),
                             true,
                             c -> {

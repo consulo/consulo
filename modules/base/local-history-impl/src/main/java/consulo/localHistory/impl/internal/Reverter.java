@@ -17,10 +17,10 @@ package consulo.localHistory.impl.internal;
 
 import consulo.application.util.DateFormatUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.change.ChangeVisitor;
 import consulo.localHistory.impl.internal.change.StructuralChange;
 import consulo.localHistory.impl.internal.revision.Revision;
+import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,9 +45,9 @@ public abstract class Reverter {
         return Collections.emptyList();
     }
 
-    public List<String> checkCanRevert() throws IOException {
+    public List<LocalizeValue> checkCanRevert() throws IOException {
         if (!askForReadOnlyStatusClearing()) {
-            return Collections.singletonList(LocalHistoryBundle.message("revert.error.files.are.read.only"));
+            return Collections.singletonList(LocalHistoryLocalize.revertErrorFilesAreReadOnly());
         }
         return Collections.emptyList();
     }
@@ -77,7 +77,7 @@ public abstract class Reverter {
     public void revert() throws IOException {
         CommandProcessor.getInstance().newCommand()
             .project(myProject)
-            .name(LocalizeValue.ofNullable(getCommandName()))
+            .name(getCommandName())
             .inWriteAction()
             .canThrow(IOException.class)
             .run(() -> {
@@ -92,15 +92,15 @@ public abstract class Reverter {
             });
     }
 
-    public String getCommandName() {
+    public LocalizeValue getCommandName() {
         Revision to = getTargetRevision();
         String name = to.getChangeSetName();
         String date = DateFormatUtil.formatDateTime(to.getTimestamp());
         if (name != null) {
-            return LocalHistoryBundle.message("system.label.revert.to.change.date", name, date);
+            return LocalHistoryLocalize.systemLabelRevertToChangeDate(name, date);
         }
         else {
-            return LocalHistoryBundle.message("system.label.revert.to.date", date);
+            return LocalHistoryLocalize.systemLabelRevertToDate(date);
         }
     }
 

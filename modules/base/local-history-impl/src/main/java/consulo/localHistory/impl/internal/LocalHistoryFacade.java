@@ -25,6 +25,7 @@ import consulo.localHistory.impl.internal.revision.RecentChange;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.impl.internal.tree.RootEntry;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.Lists;
 import org.jetbrains.annotations.TestOnly;
 
@@ -81,12 +82,12 @@ public class LocalHistoryFacade {
     addChange(new DeleteChange(myChangeList.nextId(), path, deletedEntry));
   }
 
-  public LabelImpl putSystemLabel(String name, String projectId, int color) {
-    return putLabel(new PutSystemLabelChange(myChangeList.nextId(), name, projectId, color));
+  public LabelImpl putSystemLabel(LocalizeValue name, String projectId, int color) {
+    return putLabel(new PutSystemLabelChange(myChangeList.nextId(), name.get(), projectId, color));
   }
 
-  public LabelImpl putUserLabel(String name, String projectId) {
-    return putLabel(new PutLabelChange(myChangeList.nextId(), name, projectId));
+  public LabelImpl putUserLabel(LocalizeValue name, String projectId) {
+    return putLabel(new PutLabelChange(myChangeList.nextId(), name.get(), projectId));
   }
 
   private void addChange(Change c) {

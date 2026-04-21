@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import java.util.*;
@@ -113,7 +112,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
 
   public String getPresentableFilesCount() {
     int filesCount = getContainingFiles();
-    return filesCount > 0 ? " (" + AnalysisScopeBundle.message("package.dependencies.node.items.count", filesCount) + ")" : "";
+    return filesCount > 0 ? " (" + AnalysisScopeLocalize.packageDependenciesNodeItemsCount(filesCount).get() + ")" : "";
   }
 
   @Override

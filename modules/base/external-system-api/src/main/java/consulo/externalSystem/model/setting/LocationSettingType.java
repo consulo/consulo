@@ -1,66 +1,68 @@
 package consulo.externalSystem.model.setting;
 
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.ExternalSystemBundle;
-import org.jetbrains.annotations.PropertyKey;
+import consulo.localize.LocalizeValue;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.function.Function;
 
 /**
  * Enumerates possible types of 'gradle home' location setting.
  *
  * @author Denis Zhdanov
- * @since 9/2/11 3:58 PM
+ * @since 2011-09-02
  */
 public enum LocationSettingType {
+    /**
+     * User hasn't defined gradle location but the IDE discovered it automatically.
+     */
+    DEDUCED(ExternalSystemLocalize::settingTypeLocationDeduced, "TextField.inactiveForeground", "nimbusDisabledText"),
 
-  /** User hasn't defined gradle location but the IDE discovered it automatically. */
-  DEDUCED("setting.type.location.deduced", "TextField.inactiveForeground", "nimbusDisabledText"),
+    /**
+     * User hasn't defined gradle location and the IDE was unable to discover it automatically.
+     */
+    UNKNOWN(ExternalSystemLocalize::settingTypeLocationUnknown),
 
-  /** User hasn't defined gradle location and the IDE was unable to discover it automatically. */
-  UNKNOWN("setting.type.location.unknown"),
+    /**
+     * User defined gradle location but it's incorrect.
+     */
+    EXPLICIT_INCORRECT(ExternalSystemLocalize::settingTypeLocationExplicitIncorrect),
 
-  /** User defined gradle location but it's incorrect. */
-  EXPLICIT_INCORRECT("setting.type.location.explicit.incorrect"),
+    EXPLICIT_CORRECT(ExternalSystemLocalize::settingTypeLocationExplicitCorrect);
 
-  EXPLICIT_CORRECT("setting.type.location.explicit.correct");
-  
-  
-  private final String myDescriptionKey;
-  
-  private final Color myColor;
+    private final Function<LocalizeValue, LocalizeValue> myDescriptionGenerator;
 
-  LocationSettingType(String descriptionKey) {
-    this(descriptionKey, "TextField.foreground");
-  }
+    private final Color myColor;
 
-  LocationSettingType(@PropertyKey(resourceBundle = ExternalSystemBundle.PATH_TO_BUNDLE) String descriptionKey,
-                      String ... colorKeys)
-  {
-    myDescriptionKey = descriptionKey;
-    Color c = null;
-    for (String key : colorKeys) {
-      c = UIManager.getColor(key);
-      if (c != null) {
-        break;
-      }
+    LocationSettingType(Function<LocalizeValue, LocalizeValue> descriptionGenerator) {
+        this(descriptionGenerator, "TextField.foreground");
     }
-    
-    assert c != null : "Can't find color for keys " + Arrays.toString(colorKeys);
-    myColor = c;
-  }
 
-  /**
-   * @return human-readable description of the current setting type
-   */
-  public String getDescription(ProjectSystemId externalSystemId) {
-    return ExternalSystemBundle.message(myDescriptionKey, externalSystemId.getDisplayName().get());
-  }
+    LocationSettingType(Function<LocalizeValue, LocalizeValue> descriptionGenerator, String... colorKeys) {
+        myDescriptionGenerator = descriptionGenerator;
+        Color c = null;
+        for (String key : colorKeys) {
+            c = UIManager.getColor(key);
+            if (c != null) {
+                break;
+            }
+        }
 
-  
-  public Color getColor() {
-    return myColor;
-  }
+        assert c != null : "Can't find color for keys " + Arrays.toString(colorKeys);
+        myColor = c;
+    }
+
+    /**
+     * @return human-readable description of the current setting type
+     */
+    public LocalizeValue getDescription(ProjectSystemId externalSystemId) {
+        return myDescriptionGenerator.apply(externalSystemId.getDisplayName());
+    }
+
+    public Color getColor() {
+        return myColor;
+    }
 }

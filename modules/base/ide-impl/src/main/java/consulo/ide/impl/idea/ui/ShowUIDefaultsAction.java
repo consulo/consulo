@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Cell;
@@ -97,7 +98,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
             if (isCellEditable(row, column) && e instanceof MouseEvent) {
               Object color = getValueAt(row, column);
 
-              ColorChooser.chooseColor(this, "Choose Color", (Color)color, true, true, newColor -> {
+              ColorChooser.chooseColor(this, LocalizeValue.localizeTODO("Choose Color"), (Color)color, true, true, newColor -> {
                 if (newColor != null) {
                   ColorUIResource colorUIResource = new ColorUIResource(newColor);
                   Object key = getValueAt(row, 0);

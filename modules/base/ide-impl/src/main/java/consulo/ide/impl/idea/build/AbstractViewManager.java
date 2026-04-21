@@ -18,7 +18,6 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SystemNotifications;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -26,6 +25,7 @@ import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -169,7 +169,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
             if (notification != null) {
                 String title = notification.getTitle();
                 String content = notification.getContent();
-                SystemNotifications.getInstance().notify(UIBundle.message("tool.window.name.build"), title, content);
+                SystemNotifications.getInstance().notify(UILocalize.toolWindowNameBuild().get(), title, content);
             }
         }
     }

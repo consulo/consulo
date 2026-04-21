@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.intention.SuppressIntentionAction;
@@ -31,6 +32,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import org.jspecify.annotations.Nullable;
 
@@ -42,7 +44,6 @@ import java.util.List;
  * @since 2009-08-13
  */
 public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressIntentionAction {
-  
   protected final String myID;
   private final boolean myReplaceOtherSuppressionIds;
 
@@ -58,6 +59,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
     myReplaceOtherSuppressionIds = replaceOtherSuppressionIds;
   }
 
+  @RequiredWriteAction
   protected final void replaceSuppressionComment(PsiElement comment) {
     SuppressionUtil.replaceSuppressionComment(comment, myID, myReplaceOtherSuppressionIds, getCommentLanguage(comment));
   }
@@ -83,6 +85,8 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
   }
 
   @Override
+  @RequiredUIAccess
+  @RequiredWriteAction
   public void invoke(Project project, @Nullable Editor editor, PsiElement element) throws IncorrectOperationException {
     PsiElement container = getContainer(element);
     if (container == null) return;
@@ -104,9 +108,11 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
       createSuppression(project, element, container);
     }
     catch (IncorrectOperationException e) {
-      if (!ApplicationManager.getApplication().isUnitTestMode() && editor != null) {
-        Messages.showErrorDialog(editor.getComponent(),
-                                 InspectionsBundle.message("suppress.inspection.annotation.syntax.error", e.getMessage()));
+      if (!project.getApplication().isUnitTestMode() && editor != null) {
+        Messages.showErrorDialog(
+          editor.getComponent(),
+          InspectionLocalize.suppressInspectionAnnotationSyntaxError(e.getMessage()).get()
+        );
       }
     }
 
@@ -116,6 +122,7 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
     LanguageUndoUtil.markPsiFileForUndo(element.getContainingFile());
   }
 
+  @RequiredReadAction
   protected @Nullable List<? extends PsiElement> getCommentsFor(PsiElement container) {
     PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
@@ -124,7 +131,6 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
     return Collections.singletonList(prev);
   }
 
-  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.suppressInspectionFamily();

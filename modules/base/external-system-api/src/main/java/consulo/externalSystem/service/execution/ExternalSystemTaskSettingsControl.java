@@ -18,8 +18,8 @@ package consulo.externalSystem.service.execution;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.execution.ui.awt.RawCommandLineEditor;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.ui.ExternalSystemUiAware;
@@ -31,8 +31,10 @@ import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
-import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBTextField;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -43,26 +45,24 @@ import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;
 
 /**
  * @author Denis Zhdanov
- * @since 23.05.13 18:46
+ * @since 2013-05-23
  */
 public class ExternalSystemTaskSettingsControl implements ExternalSystemSettingsControl<ExternalSystemTaskExecutionSettings> {
-
-  
   private final ProjectSystemId myExternalSystemId;
   
   private final Project myProject;
 
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel myProjectPathLabel;
+  private Label myProjectPathLabel;
   private ExternalProjectPathField myProjectPathField;
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel myTasksLabel;
+  private Label myTasksLabel;
   private JBTextField myTasksTextField;
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel myVmOptionsLabel;
+  private Label myVmOptionsLabel;
   private RawCommandLineEditor myVmOptionsEditor;
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel myScriptParametersLabel;
+  private Label myScriptParametersLabel;
   private RawCommandLineEditor myScriptParametersEditor;
 
   private @Nullable ExternalSystemTaskExecutionSettings myOriginalSettings;
@@ -77,45 +77,46 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
+  @RequiredUIAccess
   public void fillUi(Disposable uiDisposable, PaintAwarePanel canvas, int indentLevel) {
-    myProjectPathLabel = new JBLabel(ExternalSystemBundle.message(
-      "run.configuration.settings.label.project", myExternalSystemId.getDisplayName().get()));
+    myProjectPathLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelProject(myExternalSystemId.getDisplayName()));
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     FileChooserDescriptor projectPathChooserDescriptor = null;
-    if (manager instanceof ExternalSystemUiAware) {
-      projectPathChooserDescriptor = ((ExternalSystemUiAware)manager).getExternalProjectConfigDescriptor();
+    if (manager instanceof ExternalSystemUiAware extSysUiAware) {
+      projectPathChooserDescriptor = extSysUiAware.getExternalProjectConfigDescriptor();
     }
     if (projectPathChooserDescriptor == null) {
       projectPathChooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
     }
-    String title = ExternalSystemBundle.message("settings.label.select.project", myExternalSystemId.getDisplayName().get());
+    String title = ExternalSystemLocalize.settingsLabelSelectProject(myExternalSystemId.getDisplayName().get()).get();
     myProjectPathField = new ExternalProjectPathField(myProject, myExternalSystemId, projectPathChooserDescriptor, title) {
       @Override
       public Dimension getPreferredSize() {
         return myVmOptionsEditor == null ? super.getPreferredSize() : myVmOptionsEditor.getTextField().getPreferredSize();
       }
     };
-    canvas.add(myProjectPathLabel, ExternalSystemUiUtil.getLabelConstraints(0));
+    canvas.add(TargetAWT.to(myProjectPathLabel), ExternalSystemUiUtil.getLabelConstraints(0));
     canvas.add(myProjectPathField, ExternalSystemUiUtil.getFillLineConstraints(0));
 
-    myTasksLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.tasks"));
+    myTasksLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelTasks());
     myTasksTextField = new JBTextField(ExternalSystemConstants.TEXT_FIELD_WIDTH_IN_COLUMNS);
-    canvas.add(myTasksLabel, ExternalSystemUiUtil.getLabelConstraints(0));
+    canvas.add(TargetAWT.to(myTasksLabel), ExternalSystemUiUtil.getLabelConstraints(0));
     canvas.add(myTasksTextField, ExternalSystemUiUtil.getFillLineConstraints(0));
 
-    myVmOptionsLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.vmoptions"));
+    myVmOptionsLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions());
     myVmOptionsEditor = new RawCommandLineEditor();
-    myVmOptionsEditor.setDialogCaption(ExternalSystemBundle.message("run.configuration.settings.label.vmoptions"));
-    canvas.add(myVmOptionsLabel, ExternalSystemUiUtil.getLabelConstraints(0));
+    myVmOptionsEditor.setDialogCaption(ExternalSystemLocalize.runConfigurationSettingsLabelVmoptions().get());
+    canvas.add(TargetAWT.to(myVmOptionsLabel), ExternalSystemUiUtil.getLabelConstraints(0));
     canvas.add(myVmOptionsEditor, ExternalSystemUiUtil.getFillLineConstraints(0));
-    myScriptParametersLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.script.parameters"));
+    myScriptParametersLabel = Label.create(ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters());
     myScriptParametersEditor = new RawCommandLineEditor();
-    myScriptParametersEditor.setDialogCaption(ExternalSystemBundle.message("run.configuration.settings.label.script.parameters"));
-    canvas.add(myScriptParametersLabel, ExternalSystemUiUtil.getLabelConstraints(0));
+    myScriptParametersEditor.setDialogCaption(ExternalSystemLocalize.runConfigurationSettingsLabelScriptParameters().get());
+    canvas.add(TargetAWT.to(myScriptParametersLabel), ExternalSystemUiUtil.getLabelConstraints(0));
     canvas.add(myScriptParametersEditor, ExternalSystemUiUtil.getFillLineConstraints(0));
   }
 
   @Override
+  @RequiredUIAccess
   public void reset() {
     myProjectPathField.setText("");
     myTasksTextField.setText("");

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ReadAction;
 import consulo.ide.navigationToolbar.AbstractNavBarModelExtension;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -63,7 +63,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     }
     else if (object instanceof LibraryOrderEntry) {
       String libraryName = ((LibraryOrderEntry)object).getLibraryName();
-      return libraryName != null ? libraryName : AnalysisScopeBundle.message("package.dependencies.library.node.text");
+      return libraryName != null ? libraryName : AnalysisScopeLocalize.packageDependenciesLibraryNodeText().get();
     }
     else if (object instanceof ModuleOrderEntry) {
       ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)object;

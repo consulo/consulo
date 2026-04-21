@@ -20,12 +20,13 @@ import consulo.fileChooser.FileSaverDialog;
 import consulo.fileChooser.FileSystemTree;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.UIBundle;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -140,7 +141,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
 
   protected JComponent createFileNamePanel() {
     JPanel panel = new JPanel(new BorderLayout());
-    panel.add(new JLabel(UIBundle.message("file.chooser.save.dialog.file.name")), BorderLayout.WEST);
+    panel.add(new JLabel(UILocalize.fileChooserSaveDialogFileName().get()), BorderLayout.WEST);
     myFileName.setText("");
     myFileName.getDocument().addDocumentListener(new DocumentAdapter() {
       protected void textChanged(DocumentEvent e) {
@@ -178,13 +179,16 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     File file = getFile();
     if (file != null && file.exists()) {
-      if (Messages.YES != Messages.showYesNoDialog(this.getRootPane(),
-                                                   UIBundle.message("file.chooser.save.dialog.confirmation", file.getName()),
-                                                   UIBundle.message("file.chooser.save.dialog.confirmation.title"),
-                                                   Messages.getWarningIcon())) {
+      if (Messages.YES != Messages.showYesNoDialog(
+          this.getRootPane(),
+          UILocalize.fileChooserSaveDialogConfirmation(file.getName()).get(),
+          UILocalize.fileChooserSaveDialogConfirmationTitle().get(),
+          UIUtil.getWarningIcon()
+      )) {
         return;
       }
     }

@@ -2,7 +2,7 @@ package consulo.externalSystem.impl.internal.service;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
-import consulo.externalSystem.ExternalSystemBundle;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.*;
 import consulo.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
@@ -18,20 +18,17 @@ import java.util.concurrent.atomic.AtomicReference;
  * Thread-safe.
  *
  * @author Denis Zhdanov
- * @since 1/24/12 7:03 AM
+ * @since 2012-01-24
  */
 public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
-
   private static final Logger LOG = Logger.getInstance(AbstractExternalSystemTask.class);
 
   private final AtomicReference<ExternalSystemTaskState> myState =
     new AtomicReference<ExternalSystemTaskState>(ExternalSystemTaskState.NOT_STARTED);
   private final AtomicReference<Throwable> myError = new AtomicReference<Throwable>();
 
-  
   private final transient Project myIdeProject;
 
-  
   private final ExternalSystemTaskId myId;
   
   private final ProjectSystemId myExternalSystemId;
@@ -48,17 +45,14 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
     myExternalProjectPath = externalProjectPath;
   }
 
-  
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  
   public ExternalSystemTaskId getId() {
     return myId;
   }
 
-  
   public ExternalSystemTaskState getState() {
     return myState.get();
   }
@@ -76,12 +70,10 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
     return myError.get();
   }
 
-  
   public Project getIdeProject() {
     return myIdeProject;
   }
 
-  
   public String getExternalProjectPath() {
     return myExternalProjectPath;
   }
@@ -206,9 +198,8 @@ public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
 
   protected abstract boolean doCancel() throws Exception;
 
-  
   protected String wrapProgressText(String text) {
-    return ExternalSystemBundle.message("progress.update.text", getExternalSystemId(), text);
+    return ExternalSystemLocalize.progressUpdateText(getExternalSystemId(), text).get();
   }
 
   @Override

@@ -21,9 +21,9 @@ import consulo.diff.DiffContentFactory;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.document.Document;
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.tree.Entry;
+import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 
@@ -45,23 +45,23 @@ public abstract class FileDifferenceModel {
   }
 
   public String getLeftTitle(RevisionProcessingProgress p) {
-    if (!hasLeftEntry()) return LocalHistoryBundle.message("file.does.not.exist");
+    if (!hasLeftEntry()) return LocalHistoryLocalize.fileDoesNotExist().get();
     return formatTitle(getLeftEntry(), isLeftContentAvailable(p));
   }
 
   public String getRightTitle(RevisionProcessingProgress p) {
-    if (!hasRightEntry()) return LocalHistoryBundle.message("file.does.not.exist");
+    if (!hasRightEntry()) return LocalHistoryLocalize.fileDoesNotExist().get();
     if (!isRightContentAvailable(p)) {
       return formatTitle(getRightEntry(), false);
     }
-    if (isRightContentCurrent) return LocalHistoryBundle.message("current.revision");
+    if (isRightContentCurrent) return LocalHistoryLocalize.currentRevision().get();
     return formatTitle(getRightEntry(), true);
   }
 
   private String formatTitle(Entry e, boolean isAvailable) {
     String result = DateFormatUtil.formatPrettyDateTime(e.getTimestamp()) + " - " + e.getName();
     if (!isAvailable) {
-      result += " - " + LocalHistoryBundle.message("content.not.available");
+      result += " - " + LocalHistoryLocalize.contentNotAvailable().get();
     }
     return result;
   }

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.localHistory.impl.internal.ui.view;
 
 import consulo.application.util.DateFormatUtil;
-import consulo.localHistory.LocalHistoryBundle;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.ui.model.HistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.RevisionItem;
+import consulo.localHistory.localize.LocalHistoryLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.TableCell;
@@ -135,18 +135,18 @@ public class RevisionsList {
   }
 
   private enum Period {
-    RECENT(LocalHistoryBundle.message("revisions.table.period.recent", RECENT_PERIOD)),
-    OLDER(LocalHistoryBundle.message("revisions.table.period.older")),
-    OLD(LocalHistoryBundle.message("revisions.table.period.old"));
+    RECENT(LocalHistoryLocalize.revisionsTablePeriodRecent(RECENT_PERIOD)),
+    OLDER(LocalHistoryLocalize.revisionsTablePeriodOlder()),
+    OLD(LocalHistoryLocalize.revisionsTablePeriodOld());
 
-    private final String myDisplayString;
+    private final LocalizeValue myDisplayName;
 
-    private Period(String displayString) {
-      myDisplayString = displayString;
+    private Period(LocalizeValue displayName) {
+      myDisplayName = displayName;
     }
 
-    public String getDisplayString() {
-      return myDisplayString;
+    public LocalizeValue getDisplayName() {
+      return myDisplayName;
     }
   }
 
@@ -296,7 +296,7 @@ public class RevisionsList {
       }
       else {
         myPeriodLabel.setVisible(true);
-        myPeriodLabel.setCaption(p.getDisplayString());
+        myPeriodLabel.setCaption(p.getDisplayName().get());
       }
 
       myBorder.set(row == table.getModel().getRowCount() - 1);
@@ -354,7 +354,7 @@ public class RevisionsList {
         if (affected.first.size() < affected.second) title += "...";
       }
 
-      String filesCount = StringUtil.pluralize(LocalHistoryBundle.message("revisions.table.filesCount", affected.second), affected.second);
+      LocalizeValue filesCount = LocalHistoryLocalize.revisionsTableFilescount(affected.second);
 
       Pair<String, Color> label = null;
       if (!item.labels.isEmpty()) {
@@ -362,7 +362,7 @@ public class RevisionsList {
         label = Pair.create(first.getLabel(), first.getLabelColor() == -1 ? USER_LABEL_COLOR : new Color(first.getLabelColor()));
       }
 
-      return new LabelsAndColor(named, title, filesCount, label);
+      return new LabelsAndColor(named, title, filesCount.get(), label);
     }
 
     private static class LabelsAndColor {

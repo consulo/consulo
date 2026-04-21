@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -54,12 +54,12 @@ public class BackwardDependenciesBuilder extends DependenciesBuilder {
 
   @Override
   public String getRootNodeNameInUsageView() {
-    return AnalysisScopeBundle.message("backward.dependencies.usage.view.root.node.text");
+    return AnalysisScopeLocalize.backwardDependenciesUsageViewRootNodeText().get();
   }
 
   @Override
   public String getInitialUsagesPosition() {
-    return AnalysisScopeBundle.message("backward.dependencies.usage.view.initial.text");
+    return AnalysisScopeLocalize.backwardDependenciesUsageViewInitialText().get();
   }
 
   @Override
@@ -86,7 +86,7 @@ public class BackwardDependenciesBuilder extends DependenciesBuilder {
             if (indicator.isCanceled()) {
               throw new ProcessCanceledException();
             }
-            indicator.setText(AnalysisScopeBundle.message("package.dependencies.progress.text"));
+            indicator.setText(AnalysisScopeLocalize.packageDependenciesProgressText());
             VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null) {
               indicator.setText2(ProjectUtil.calcRelativeToProjectPath(virtualFile, getProject()));
