@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.tree.MutableTreeNode;
 
 /**
@@ -63,10 +62,11 @@ public class RefElementNode extends InspectionTreeNode {
     return Math.max(1, super.getProblemCount());
   }
 
+  @Override
   public String toString() {
     RefEntity element = getElement();
     if (element == null || !element.isValid()) {
-      return InspectionsBundle.message("inspection.reference.invalid");
+      return InspectionLocalize.inspectionReferenceInvalid().get();
     }
     return element.getRefManager().getRefinedElement(element).getQualifiedName();
   }
@@ -114,5 +114,4 @@ public class RefElementNode extends InspectionTreeNode {
   public CommonProblemDescriptor getProblem() {
     return mySingleDescriptor;
   }
-
 }
