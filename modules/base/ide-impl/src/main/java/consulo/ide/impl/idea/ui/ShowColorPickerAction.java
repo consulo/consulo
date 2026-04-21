@@ -44,7 +44,7 @@ public class ShowColorPickerAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         JComponent root = rootComponent(e.getData(Project.KEY));
         if (root != null) {
-            ColorChooser.chooseColor(root, IdeLocalize.dialogTitleColorPicker().get(), null, true, true, color -> {
+            ColorChooser.chooseColor(root, IdeLocalize.dialogTitleColorPicker(), null, true, true, color -> {
             });
         }
     }

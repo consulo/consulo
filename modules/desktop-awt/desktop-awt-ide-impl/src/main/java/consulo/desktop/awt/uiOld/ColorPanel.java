@@ -66,7 +66,7 @@ public class ColorPanel extends JComponent {
 
   public void onPressed() {
     if (myEditable && isEnabled()) {
-      ColorChooser.chooseColor(this, UILocalize.colorPanelSelectColorDialogDescription().get(), myColor, color -> {
+      ColorChooser.chooseColor(this, UILocalize.colorPanelSelectColorDialogDescription(), myColor, color -> {
         if (color != null) {
           setSelectedColor(color);
           if (!myListeners.isEmpty() && (myEvent == null)) {

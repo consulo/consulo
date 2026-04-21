@@ -16,6 +16,7 @@
 package consulo.execution.debug.impl.internal.ui.tree;
 
 import consulo.execution.debug.ui.ValueMarkup;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.ColorChooser;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FixedSizeButton;
@@ -56,7 +57,7 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
     myChooseColorButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ColorChooser.chooseColor(myColorSample, "Choose Label Color", myColor, color -> {
+        ColorChooser.chooseColor(myColorSample, LocalizeValue.localizeTODO("Choose Label Color"), myColor, color -> {
           if (color != null) {
             myColor = color;
             updateLabelSample();
