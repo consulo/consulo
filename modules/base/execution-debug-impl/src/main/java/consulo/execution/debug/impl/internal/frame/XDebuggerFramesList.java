@@ -17,11 +17,11 @@ package consulo.execution.debug.impl.internal.frame;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataProvider;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XStackFrameWithSeparatorAbove;
 import consulo.execution.debug.internal.ExectutionDebugInternal;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.language.editor.FileColorManager;
 import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.language.psi.PsiFile;
@@ -212,7 +212,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
             setBorder(JBCurrentTheme.listCellBorderFull());
 
             if (value == null) {
-                append(XDebuggerBundle.message("stack.frame.loading.text"), SimpleTextAttributes.GRAY_ATTRIBUTES);
+                append(XDebuggerLocalize.stackFrameLoadingText(), SimpleTextAttributes.GRAY_ATTRIBUTES);
                 return;
             }
 

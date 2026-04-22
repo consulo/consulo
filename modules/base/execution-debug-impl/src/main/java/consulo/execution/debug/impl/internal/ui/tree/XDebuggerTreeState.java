@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.ui.tree;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.ui.XNamedTreeNode;
+import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
@@ -42,7 +43,7 @@ public class XDebuggerTreeState {
   private XDebuggerTreeState(XDebuggerTree tree) {
     UIAccess.assertIsUIThread();
     XDebuggerTreeNode root = tree.getRoot();
-    myRootInfo = root != null ? new NodeInfo("", "", tree.isPathSelected(root.getPath())) : null;
+    myRootInfo = root != null ? new NodeInfo(LocalizeValue.empty(), "", tree.isPathSelected(root.getPath())) : null;
     if (root != null) {
       addChildren(tree, myRootInfo, root);
     }
@@ -97,13 +98,13 @@ public class XDebuggerTreeState {
   }
 
   public static class NodeInfo {
-    private final String myName;
+    private final LocalizeValue myName;
     private final String myValue;
     private boolean myExpanded;
     private final boolean mySelected;
-    private MultiMap<String, NodeInfo> myChildren; // MultiMap to allow several nodes with the same name
+    private MultiMap<LocalizeValue, NodeInfo> myChildren; // MultiMap to allow several nodes with the same name
 
-    public NodeInfo(String name, String value, boolean selected) {
+    public NodeInfo(LocalizeValue name, String value, boolean selected) {
       myName = name;
       myValue = value;
       mySelected = selected;
@@ -129,7 +130,7 @@ public class XDebuggerTreeState {
     }
 
     public @Nullable NodeInfo getChild(XNamedTreeNode node) {
-      String name = node.getName();
+      LocalizeValue name = node.getName();
       if (myChildren == null) {
         return null;
       }

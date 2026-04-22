@@ -20,8 +20,8 @@ import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.debug.DefaultDebugExecutor;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.runner.RunContentBuilder;
@@ -50,9 +50,9 @@ public abstract class DebuggerSessionTabBase extends RunTab {
   protected ExecutionConsole myConsole;
 
   public DebuggerSessionTabBase(Project project, String runnerId, String sessionName, GlobalSearchScope searchScope) {
-    super(project, searchScope, runnerId, XDebuggerBundle.message("xdebugger.default.content.title"), sessionName);
+    super(project, searchScope, runnerId, XDebuggerLocalize.xdebuggerDefaultContentTitle().get(), sessionName);
 
-    myUi.getDefaults().initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), ExecutionDebugIconGroup.actionStartdebugger())
+    myUi.getDefaults().initTabDefaults(0, XDebuggerLocalize.xdebuggerDebuggerTabTitle().get(), ExecutionDebugIconGroup.actionStartdebugger())
             .initFocusContent(DebuggerContentInfo.FRAME_CONTENT, XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION)
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
   }

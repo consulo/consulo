@@ -16,23 +16,30 @@
 package consulo.execution.debug.impl.internal.breakpoint;
 
 import consulo.application.dumb.DumbAware;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.breakpoint.XBreakpoint;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 class ToggleBreakpointGutterIconAction extends AnAction implements DumbAware {
-  private XBreakpoint<?> myBreakpoint;
+    private XBreakpoint<?> myBreakpoint;
 
-  ToggleBreakpointGutterIconAction(XBreakpoint<?> breakpoint) {
-    super(breakpoint.isEnabled() ? XDebuggerBundle.message("xdebugger.disable.breakpoint.action.text") : XDebuggerBundle.message("xdebugger.enable.breakpoint.action.text"));
-    this.myBreakpoint = breakpoint;
-  }
+    ToggleBreakpointGutterIconAction(XBreakpoint<?> breakpoint) {
+        super(
+            breakpoint.isEnabled()
+                ? XDebuggerLocalize.xdebuggerDisableBreakpointActionText()
+                : XDebuggerLocalize.xdebuggerEnableBreakpointActionText()
+        );
+        this.myBreakpoint = breakpoint;
+    }
 
-  public void actionPerformed(AnActionEvent e) {
-    myBreakpoint.setEnabled(!myBreakpoint.isEnabled());
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        myBreakpoint.setEnabled(!myBreakpoint.isEnabled());
+    }
 }

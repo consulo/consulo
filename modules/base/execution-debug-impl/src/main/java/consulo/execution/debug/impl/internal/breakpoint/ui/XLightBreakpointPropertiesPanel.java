@@ -19,7 +19,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.util.popup.DetailView;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XBreakpointManager;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XDebuggerHistoryManager;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.breakpoint.XBreakpointType;
@@ -30,6 +29,7 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
@@ -138,7 +138,7 @@ public class XLightBreakpointPropertiesPanel implements XSuspendPolicyPanel.Dele
 
         myCustomPanels = new ArrayList<>();
         if (debuggerEditorsProvider != null) {
-            myConditionEnabledCheckbox = new JBCheckBox(XDebuggerBundle.message("xbreakpoints.condition.checkbox"));
+            myConditionEnabledCheckbox = new JBCheckBox(XDebuggerLocalize.xbreakpointsConditionCheckbox().get());
             myConditionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, XDebuggerHistoryManager.BREAKPOINT_CONDITION_HISTORY_ID, myBreakpoint.getSourcePosition(), true);
             JComponent conditionComponent = myConditionComboBox.getComponent();
             conditionComponent.setBorder(JBUI.Borders.emptyRight(3));
@@ -260,7 +260,7 @@ public class XLightBreakpointPropertiesPanel implements XSuspendPolicyPanel.Dele
             myConditionEnabledCheckbox.setSelected(hideCheckbox || (myBreakpoint.isConditionEnabled() && condition != null));
             myConditionEnabledPanel.removeAll();
             if (hideCheckbox) {
-                JBLabel label = new JBLabel(XDebuggerBundle.message("xbreakpoints.condition.checkbox"));
+                JBLabel label = new JBLabel(XDebuggerLocalize.xbreakpointsConditionCheckbox().get());
                 label.setBorder(JBUI.Borders.empty(0, 4));
                 label.setLabelFor(myConditionComboBox.getComboBox());
                 myConditionEnabledPanel.add(label);

@@ -16,8 +16,8 @@
 package consulo.execution.debug.impl.internal.breakpoint.ui.group;
 
 import consulo.application.AllIcons;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
@@ -32,7 +32,7 @@ import java.util.Collection;
  */
 public class XBreakpointFileGroupingRule<B> extends XBreakpointGroupingRule<B, XBreakpointFileGroup> {
   public XBreakpointFileGroupingRule() {
-    super("by-file", XDebuggerBundle.message("rule.name.group.by.file"));
+    super("by-file", XDebuggerLocalize.ruleNameGroupByFile());
   }
 
   @Override

@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.node;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
@@ -37,38 +37,31 @@ import org.jspecify.annotations.Nullable;
 public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
     private final XExpression myExpression;
 
-    public WatchNodeImpl(XDebuggerTree tree,
-                         WatchesRootNode parent,
-                         XExpression expression,
-                         @Nullable XStackFrame stackFrame) {
-        super(tree, parent, expression.getExpression(), new XWatchValue(expression, tree, stackFrame));
+    public WatchNodeImpl(XDebuggerTree tree, WatchesRootNode parent, XExpression expression, @Nullable XStackFrame stackFrame) {
+        super(tree, parent, LocalizeValue.of(expression.getExpression()), new XWatchValue(expression, tree, stackFrame));
         myExpression = expression;
     }
 
-    WatchNodeImpl(XDebuggerTree tree,
-                  WatchesRootNode parent,
-                  XExpression expression,
-                  @Nullable XStackFrame stackFrame,
-                  String name) {
+    WatchNodeImpl(
+        XDebuggerTree tree,
+        WatchesRootNode parent,
+        XExpression expression,
+        @Nullable XStackFrame stackFrame,
+        LocalizeValue name
+    ) {
         this(tree, parent, expression, name, new XWatchValue(expression, tree, stackFrame));
     }
 
-    WatchNodeImpl(XDebuggerTree tree,
-                  WatchesRootNode parent,
-                  XExpression expression,
-                  String name,
-                  XValue value) {
+    WatchNodeImpl(XDebuggerTree tree, WatchesRootNode parent, XExpression expression, LocalizeValue name, XValue value) {
         super(tree, parent, name, value);
         myExpression = expression;
     }
 
     @Override
-    
     public XExpression getExpression() {
         return myExpression;
     }
 
-    
     @Override
     public XValue getValueContainer() {
         XValue container = super.getValueContainer();
@@ -113,7 +106,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         @Override
         public void computePresentation(XValueNode node, XValuePlace place) {
             if (myStackFrame != null) {
-                if (myTree.isShowing() || ApplicationManager.getApplication().isUnitTestMode()) {
+                if (myTree.isShowing() || Application.get().isUnitTestMode()) {
                     XDebuggerEvaluator evaluator = myStackFrame.getEvaluator();
                     if (evaluator != null) {
                         evaluator.evaluate(myExpression, new MyEvaluationCallback(node, place), myStackFrame.getSourcePosition());
@@ -126,7 +119,6 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         private class MyEvaluationCallback extends XEvaluationCallbackBase implements Obsolescent {
-            
             private final XValueNode myNode;
             
             private final XValuePlace myPlace;
@@ -159,7 +151,6 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         private static final XValuePresentation EMPTY_PRESENTATION = new XValuePresentation() {
-            
             @Override
             public String getSeparator() {
                 return "";
@@ -176,7 +167,6 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        
         public AsyncResult<XExpression> calculateEvaluationExpression() {
             return AsyncResult.done(myExpression);
         }
@@ -199,7 +189,6 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        
         public consulo.util.lang.ThreeState computeInlineDebuggerData(XInlineDebuggerDataCallback callback) {
             return consulo.util.lang.ThreeState.NO;
         }

@@ -15,8 +15,9 @@
  */
 package consulo.execution.debug.impl.internal.breakpoint.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.util.popup.DetailView;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.image.Image;
@@ -24,7 +25,6 @@ import consulo.ui.image.Image;
 public class BreakpointNoneItem extends BreakpointItem {
   @Override
   public void saveState() {
-
   }
 
   @Override
@@ -59,7 +59,7 @@ public class BreakpointNoneItem extends BreakpointItem {
 
   @Override
   public String getDisplayText() {
-    return XDebuggerBundle.message("xbreakpoint.master.breakpoint.none");
+    return XDebuggerLocalize.xbreakpointMasterBreakpointNone().get();
   }
 
   @Override
@@ -67,11 +67,13 @@ public class BreakpointNoneItem extends BreakpointItem {
   }
 
   @Override
+  @RequiredReadAction
   public boolean canNavigate() {
     return false;
   }
 
   @Override
+  @RequiredReadAction
   public boolean canNavigateToSource() {
     return false;
   }

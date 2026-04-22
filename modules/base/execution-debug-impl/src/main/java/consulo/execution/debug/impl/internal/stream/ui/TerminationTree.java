@@ -1,12 +1,13 @@
 package consulo.execution.debug.impl.internal.stream.ui;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.debug.frame.*;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeListener;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.stream.trace.*;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class TerminationTree extends CollectionTree {
     super(traceElements, context, builder, debugName);
     myBuilder = builder;
 
-    XValueNodeImpl root = new XValueNodeImpl(this, null, "root", new MyValueRoot(streamResult, context));
+    XValueNodeImpl root = new XValueNodeImpl(this, null, LocalizeValue.localizeTODO("root"), new MyValueRoot(streamResult, context));
     setRoot(root, false);
     root.setLeaf(false);
 
@@ -38,14 +39,15 @@ public class TerminationTree extends CollectionTree {
 
     addTreeListener(new XDebuggerTreeListener() {
       @Override
-      public void nodeLoaded(RestorableStateNode node, String name) {
+      public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
         XDebuggerTreeListener listener = this;
         if (node instanceof XValueContainerNode<?>) {
           XValueContainer container = ((XValueContainerNode<?>)node).getValueContainer();
           if (myBuilder.isSupported(container)) {
             launcher.launchDebuggerCommand(() -> {
               Object key = myBuilder.getKey(container, NULL_MARKER);
-              ApplicationManager.getApplication().invokeLater(() -> {
+              Application app = Application.get();
+              app.invokeLater(() -> {
                 List<TraceElement> elements = key2TraceElements.get(key);
                 int nextIndex = key2Index.getOrDefault(key, -1) + 1;
                 if (elements != null && nextIndex < elements.size()) {
@@ -58,7 +60,7 @@ public class TerminationTree extends CollectionTree {
                   //NOTE(Korovin): This will not be called if we have a big list of items and it's loaded partially
                   //If missing repaints, we need to replace this logic to some flow/debounce coroutine and repaint after a batch of nodes
                   removeTreeListener(listener);
-                  ApplicationManager.getApplication().invokeLater(() -> repaint());
+                  app.invokeLater(() -> repaint());
                 }
               });
             });
@@ -69,9 +71,9 @@ public class TerminationTree extends CollectionTree {
 
     addTreeListener(new XDebuggerTreeListener() {
       @Override
-      public void nodeLoaded(RestorableStateNode node, String name) {
+      public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
         if (node.getPath().getPathCount() == 2) {
-          ApplicationManager.getApplication().invokeLater(() -> expandPath(node.getPath()));
+          Application.get().invokeLater(() -> expandPath(node.getPath()));
           removeTreeListener(this);
         }
       }

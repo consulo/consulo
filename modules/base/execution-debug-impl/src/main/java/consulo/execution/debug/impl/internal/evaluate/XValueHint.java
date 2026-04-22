@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.evaluate;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -26,11 +26,11 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.ExpressionInfo;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.*;
+import consulo.execution.debug.frame.presentation.XValueNodePresentationConfigurator;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerEvaluateActionHandler;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
-import consulo.execution.debug.frame.presentation.XValueNodePresentationConfigurator;
 import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValueTree;
@@ -233,8 +233,8 @@ public class XValueHint extends AbstractValueHint {
                     }
 
                     @Override
-                    public String getName() {
-                        return null;
+                    public LocalizeValue getName() {
+                        return LocalizeValue.empty();
                     }
 
                     @Override
@@ -257,7 +257,7 @@ public class XValueHint extends AbstractValueHint {
             @Override
             public void errorOccurred(LocalizeValue errorMessage) {
                 if (getType() == ValueHintType.MOUSE_CLICK_HINT) {
-                    ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage.get())));
+                    Application.get().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage.get())));
                 }
                 LOG.debug("Cannot evaluate '" + myExpression + "':" + errorMessage);
             }

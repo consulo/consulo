@@ -68,7 +68,8 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     public static final Key<XDebuggerEvaluationDialog> KEY = Key.create("DEBUGGER_EVALUATION_DIALOG");
 
     //can not use new SHIFT_DOWN_MASK etc because in this case ActionEvent modifiers do not match
-    private static final int ADD_WATCH_MODIFIERS = (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
+    private static final int ADD_WATCH_MODIFIERS =
+        (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
     static KeyStroke ADD_WATCH_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ADD_WATCH_MODIFIERS);
 
     private final JPanel myMainPanel;
@@ -112,8 +113,14 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
             }
         }, myDisposable);
 
-        myTreePanel = new XDebuggerTreePanel(session.getProject(), editorsProvider, myDisposable, sourcePosition, XDebuggerActions.EVALUATE_DIALOG_TREE_POPUP_GROUP,
-            ((XDebugSessionImpl) session).getValueMarkers());
+        myTreePanel = new XDebuggerTreePanel(
+            session.getProject(),
+            editorsProvider,
+            myDisposable,
+            sourcePosition,
+            XDebuggerActions.EVALUATE_DIALOG_TREE_POPUP_GROUP,
+            session.getValueMarkers()
+        );
         myResultPanel = JBUI.Panels.simplePanel()
             .addToTop(new JLabel(XDebuggerLocalize.xdebuggerEvaluateLabelResult().get()))
             .addToCenter(myTreePanel.getMainPanel());
@@ -208,7 +215,6 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    
     @Override
     protected Action[] createActions() {
         if (myIsCodeFragmentEvaluationSupported) {
@@ -269,6 +275,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         return myInputComponent.getInputEditor();
     }
 
+    @RequiredUIAccess
     private EvaluationInputComponent createInputComponent(EvaluationMode mode, XExpression text) {
         Project project = mySession.getProject();
         text = XExpression.changeMode(text, mode);
