@@ -23,6 +23,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.dnd.DnDAction;
@@ -83,7 +84,7 @@ public class XDebuggerTreePanel implements DnDSource {
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(myTree, nodes[0].getPath(), dragOrigin);
     }
-    return DnDAwareTree.getDragImage(myTree, XDebuggerBundle.message("xdebugger.drag.text.0.elements", nodes.length), dragOrigin);
+    return DnDAwareTree.getDragImage(myTree, XDebuggerLocalize.xdebuggerDragText0Elements(nodes.length).get(), dragOrigin);
   }
 
   @Override

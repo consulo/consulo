@@ -16,12 +16,12 @@
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.disposer.Disposable;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.impl.internal.ui.XDebuggerEditorBase;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionEditorImpl;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -45,7 +45,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
                                     @Nullable XExpression statements,
                                     String splitterProportionKey,
                                     Disposable parentDisposable) {
-    super(XDebuggerBundle.message("dialog.title.evaluate.code.fragment"));
+    super(XDebuggerLocalize.dialogTitleEvaluateCodeFragment());
     myMultilineEditor = new XDebuggerExpressionEditorImpl(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
                                                       statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT, false, true);
     myMainPanel = new JPanel(new BorderLayout());

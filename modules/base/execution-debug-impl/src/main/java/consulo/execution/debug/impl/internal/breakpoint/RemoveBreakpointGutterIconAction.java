@@ -16,8 +16,9 @@
 package consulo.execution.debug.impl.internal.breakpoint;
 
 import consulo.application.dumb.DumbAware;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -25,10 +26,12 @@ class RemoveBreakpointGutterIconAction extends AnAction implements DumbAware {
   private XBreakpointBase<?,?,?> myBreakpoint;
 
   RemoveBreakpointGutterIconAction(XBreakpointBase<?, ?, ?> breakpoint) {
-    super(XDebuggerBundle.message("xdebugger.remove.line.breakpoint.action.text"));
+    super(XDebuggerLocalize.xdebuggerRemoveLineBreakpointActionText());
     myBreakpoint = breakpoint;
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     XDebuggerUtil.getInstance().removeBreakpoint(myBreakpoint.getProject(), myBreakpoint);
   }

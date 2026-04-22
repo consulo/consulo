@@ -36,6 +36,7 @@ import consulo.execution.debug.ui.XValueTree;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.action.ActionGroup;
@@ -327,7 +328,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
         }
     }
 
-    public void nodeLoaded(RestorableStateNode node, String name) {
+    public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
         for (XDebuggerTreeListener listener : myListeners) {
             listener.nodeLoaded(node, name);
         }
@@ -380,7 +381,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     public void selectNodeOnLoad(final Predicate<TreeNode> nodeFilter) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
                 if (nodeFilter.test(node)) {
                     setSelectionPath(node.getPath());
                     removeTreeListener(this); // remove the listener on first match
@@ -396,7 +397,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     public void expandNodesOnLoad(final Predicate<TreeNode> nodeFilter) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
-            public void nodeLoaded(RestorableStateNode node, String name) {
+            public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
                 if (nodeFilter.test(node) && !node.isLeaf()) {
                     // cause children computing
                     node.getChildCount();

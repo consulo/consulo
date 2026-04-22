@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.ui.tree;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
+import consulo.localize.LocalizeValue;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  * @author nik
  */
 public interface XDebuggerTreeListener {
-    default void nodeLoaded(RestorableStateNode node, String name) {
+    default void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
     }
 
     default void childrenLoaded(XDebuggerTreeNode node, List<XValueContainerNode<?>> children, boolean last) {

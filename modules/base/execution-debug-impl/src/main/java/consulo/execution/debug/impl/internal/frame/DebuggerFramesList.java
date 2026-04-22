@@ -18,7 +18,6 @@ package consulo.execution.debug.impl.internal.frame;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.awt.JBList;
-import consulo.execution.debug.XDebuggerBundle;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -67,12 +66,12 @@ public abstract class DebuggerFramesList extends JBList implements OccurenceNavi
 
   @Override
   public String getNextOccurenceActionName() {
-    return XDebuggerBundle.message("action.next.frame.text");
+    return XDebuggerLocalize.actionNextFrameText().get();
   }
 
   @Override
   public String getPreviousOccurenceActionName() {
-    return XDebuggerBundle.message("action.previous.frame.text");
+    return XDebuggerLocalize.actionPreviousFrameText().get();
   }
 
   @Override

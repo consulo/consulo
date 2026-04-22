@@ -16,7 +16,6 @@
 package consulo.execution.debug.impl.internal.evaluate;
 
 import consulo.disposer.Disposable;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
@@ -54,6 +53,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
     
     private final Project myProject;
 
+    @RequiredUIAccess
     public ExpressionInputComponent(
         Project project,
         XDebuggerEditorsProvider editorsProvider,
@@ -61,7 +61,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         @Nullable XExpression expression,
         Disposable parentDisposable
     ) {
-        super(XDebuggerLocalize.xdebuggerDialogTitleEvaluateExpression().get());
+        super(XDebuggerLocalize.xdebuggerDialogTitleEvaluateExpression());
         myProject = project;
         myMainPanel = new JPanel(new BorderLayout());
         myExpressionEditor = new XDebuggerExpressionEditorImpl(
@@ -79,13 +79,8 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         historyButton.setToolTipText(XDebuggerLocalize.xdebuggerEvaluateHistoryHint().get());
         historyButton.addActionListener(e -> showHistory());
         myMainPanel.add(historyButton, BorderLayout.EAST);
-        JBLabel help = new JBLabel(
-            XDebuggerBundle.message(
-                "xdebugger.evaluate.addtowatches.hint",
-                ShortcutUtil.getKeystrokeText(XDebuggerEvaluationDialog.ADD_WATCH_KEYSTROKE)
-            ),
-            SwingConstants.RIGHT
-        );
+        String keystrokeText = ShortcutUtil.getKeystrokeText(XDebuggerEvaluationDialog.ADD_WATCH_KEYSTROKE);
+        JBLabel help = new JBLabel(XDebuggerLocalize.xdebuggerEvaluateAddtowatchesHint(keystrokeText).get(), SwingConstants.RIGHT);
         help.setBorder(JBUI.Borders.empty(2, 0, 6, 0));
         help.setComponentStyle(UIUtil.ComponentStyle.SMALL);
         help.setFontColor(UIUtil.FontColor.BRIGHTER);
@@ -123,14 +118,16 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
 
             AWTPopupFactory awtPopupFactory = (AWTPopupFactory) JBPopupFactory.getInstance();
 
-            AWTListPopup popup = awtPopupFactory.createListPopup(myProject, step, p -> {
-                return new ColoredListCellRenderer<XExpression>() {
+            AWTListPopup popup = awtPopupFactory.createListPopup(
+                myProject,
+                step,
+                p -> new ColoredListCellRenderer<XExpression>() {
                     @Override
                     protected void customizeCellRenderer(JList list, XExpression value, int index, boolean selected, boolean hasFocus) {
                         append(value.getExpression());
                     }
-                };
-            });
+                }
+            );
 
             popup.getList().setFont(AWTLanguageEditorUtil.getEditorFont());
             popup.showUnderneathOf(myExpressionEditor.getEditorComponent());
@@ -143,7 +140,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         contentPanel.add(myMainPanel, BorderLayout.NORTH);
     }
 
-    
+    @Override
     protected XDebuggerEditorBase getInputEditor() {
         return myExpressionEditor;
     }

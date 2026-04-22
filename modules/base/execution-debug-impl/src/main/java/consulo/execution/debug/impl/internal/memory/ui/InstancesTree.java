@@ -27,7 +27,7 @@ public class InstancesTree extends XDebuggerTree {
                          Runnable onRootExpand) {
         super(project, editorsProvider, null, XDebuggerActions.INSPECT_TREE_POPUP_GROUP, valueMarkers);
         myOnRootExpandAction = onRootExpand;
-        myRoot = new XValueNodeImpl(this, null, "root", new MyRootValue());
+        myRoot = new XValueNodeImpl(this, null, LocalizeValue.localizeTODO("root"), new MyRootValue());
 
         myRoot.children();
         setRoot(myRoot, false);

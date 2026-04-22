@@ -15,17 +15,15 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
-import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
@@ -54,9 +52,9 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         XValueNodeImpl node = getSelectedNode(e.getDataContext());
         if (node != null) {
-            String nodeName = node.getName();
-            if (nodeName != null) {
-                perform(node, nodeName, e);
+            LocalizeValue nodeName = node.getName();
+            if (nodeName.isNotEmpty()) {
+                perform(node, nodeName.get(), e);
             }
         }
     }
@@ -70,7 +68,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     }
 
     protected boolean isEnabled(XValueNodeImpl node, AnActionEvent e) {
-        return node.getName() != null;
+        return node.getName().isNotEmpty();
     }
 
     

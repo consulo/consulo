@@ -234,11 +234,10 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             @Override
             protected void prepareEditor(EditorEx editor) {
                 super.prepareEditor(editor);
-                editor.setPlaceholder(XDebuggerBundle.message(
-                    "debugger.evaluate.expression.or.add.a.watch.hint",
+                editor.setPlaceholder(XDebuggerLocalize.debuggerEvaluateExpressionOrAddAWatchHint(
                     KeymapUtil.getShortcutText(new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), null)),
                     KeymapUtil.getShortcutText(new KeyboardShortcut(XDebuggerEvaluationDialog.getAddWatchKeystroke(), null))
-                ));
+                ).get());
             }
         };
         ComboBoxStyle.makeBorderInline(myEvaluateComboBox.getComboBox());

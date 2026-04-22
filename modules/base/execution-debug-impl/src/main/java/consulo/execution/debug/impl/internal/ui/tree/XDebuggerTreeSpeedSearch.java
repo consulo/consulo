@@ -3,6 +3,7 @@ package consulo.execution.debug.impl.internal.ui.tree;
 import consulo.execution.debug.impl.internal.ui.tree.node.RestorableStateNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
@@ -14,8 +15,8 @@ import java.util.List;
 import java.util.function.Function;
 
 class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeListener {
-  public XDebuggerTreeSpeedSearch(XDebuggerTree tree, Function<TreePath, String> toStringConvertor) {
-    super(tree, toStringConvertor, true);
+  public XDebuggerTreeSpeedSearch(XDebuggerTree tree, Function<TreePath, String> toStringConverter) {
+    super(tree, toStringConverter, true);
 
     //((XDebuggerTree)myComponent).addTreeListener(this);
   }
@@ -103,7 +104,7 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
       return null;
     }
 
-    LinkedList<XDebuggerTreeNode> queue = new LinkedList<XDebuggerTreeNode>();
+    List<XDebuggerTreeNode> queue = new LinkedList<>();
     queue.addLast((XDebuggerTreeNode)node);
 
     int initialLevel = ((XDebuggerTreeNode)node).getPath().getPathCount();
@@ -145,7 +146,7 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
   }
 
   @Override
-  public void nodeLoaded(RestorableStateNode node, String name) {
+  public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
   }
 
   @Override

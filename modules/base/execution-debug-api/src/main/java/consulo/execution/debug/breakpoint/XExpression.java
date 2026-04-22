@@ -19,6 +19,7 @@ import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,20 +29,20 @@ public interface XExpression {
   XExpression EMPTY_EXPRESSION = fromText("", EvaluationMode.EXPRESSION);
   XExpression EMPTY_CODE_FRAGMENT = fromText("", EvaluationMode.CODE_FRAGMENT);
 
+  @Contract("null,_ -> null; !null,_ -> !null")
   public static @Nullable XExpression fromText(@Nullable String text) {
     return text != null ? new XExpressionImpl(text, null, null, EvaluationMode.EXPRESSION) : null;
   }
 
+  @Contract("null,_ -> null; !null,_ -> !null")
   public static @Nullable XExpression fromText(@Nullable String text, EvaluationMode mode) {
     return text != null ? new XExpressionImpl(text, null, null, mode) : null;
   }
 
-  
   public static XExpression changeMode(XExpression expression, EvaluationMode mode) {
     return new XExpressionImpl(expression.getExpression(), expression.getLanguage(), expression.getCustomInfo(), mode);
   }
 
-  
   String getExpression();
 
   @Nullable Language getLanguage();

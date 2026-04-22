@@ -15,14 +15,15 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree;
 
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.impl.internal.evaluate.DebuggerTreeWithHistoryPanel;
 import consulo.execution.debug.impl.internal.evaluate.XDebuggerTreeCreator;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -43,12 +44,12 @@ public class XInspectDialog extends DialogWrapper {
                         XValueMarkers<?, ?> markers) {
     super(project, false);
 
-    setTitle(XDebuggerBundle.message("inspect.value.dialog.title", name));
+    setTitle(XDebuggerLocalize.inspectValueDialogTitle(name));
     setModal(false);
 
     Pair<XValue, String> initialItem = Pair.create(value, name);
     XDebuggerTreeCreator creator = new XDebuggerTreeCreator(project, editorsProvider, sourcePosition, markers);
-    myDebuggerTreePanel = new DebuggerTreeWithHistoryPanel<Pair<XValue, String>>(initialItem, creator, project);
+    myDebuggerTreePanel = new DebuggerTreeWithHistoryPanel<>(initialItem, creator, project);
     init();
   }
 
@@ -58,12 +59,12 @@ public class XInspectDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected @Nullable JComponent createSouthPanel() {
     return null;
   }
 
   @Override
-  
   protected String getDimensionServiceKey() {
     return "#xdebugger.XInspectDialog";
   }

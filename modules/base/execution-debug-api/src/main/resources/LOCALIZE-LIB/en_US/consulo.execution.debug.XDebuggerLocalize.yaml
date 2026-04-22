@@ -491,7 +491,7 @@ xdebugger.drop.text.add.to.watches:
 xdebugger.enable.breakpoint.action.text:
     text: Enable breakpoint
 xdebugger.evaluate.addtowatches.hint:
-    text: Use Control+Shift+Enter to add to Watches
+    text: Use {0} to add to Watches
 xdebugger.evaluate.dialog.close:
     text: Close
 xdebugger.evaluate.history.hint:
