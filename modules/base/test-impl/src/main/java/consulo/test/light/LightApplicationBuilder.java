@@ -17,44 +17,60 @@ package consulo.test.light;
 
 import consulo.application.Application;
 import consulo.component.internal.ComponentBinding;
-import consulo.component.internal.inject.InjectingBindingLoader;
-import consulo.component.internal.inject.TopicBindingLoader;
+import consulo.component.internal.inject.*;
 import consulo.disposer.Disposable;
 import consulo.test.light.impl.LightApplication;
 import consulo.test.light.impl.LightExtensionRegistrator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
 public class LightApplicationBuilder {
-  public static class DefaultRegistrator extends LightExtensionRegistrator {
-  }
+    public static class DefaultRegistrator extends LightExtensionRegistrator {
+    }
 
-  
-  public static LightApplicationBuilder create(Disposable rootDisposable) {
-    return create(rootDisposable, new DefaultRegistrator());
-  }
 
-  
-  public static LightApplicationBuilder create(Disposable rootDisposable, DefaultRegistrator registrator) {
-    return new LightApplicationBuilder(rootDisposable, registrator);
-  }
+    public static LightApplicationBuilder create(Disposable rootDisposable) {
+        return create(rootDisposable, new DefaultRegistrator());
+    }
 
-  private final Disposable myRootDisposable;
-  private final LightExtensionRegistrator myRegistrator;
 
-  private LightApplicationBuilder(Disposable rootDisposable, LightExtensionRegistrator registrator) {
-    myRootDisposable = rootDisposable;
-    myRegistrator = registrator;
-  }
+    public static LightApplicationBuilder create(Disposable rootDisposable, DefaultRegistrator registrator) {
+        return new LightApplicationBuilder(rootDisposable, registrator);
+    }
 
-  
-  public Application build() {
-    InjectingBindingLoader bindingLoader = new InjectingBindingLoader();
-    bindingLoader.analyzeBindings();
-    return new LightApplication(myRootDisposable,
-                                new ComponentBinding(bindingLoader, new TopicBindingLoader()),
-                                myRegistrator);
-  }
+    private final Disposable myRootDisposable;
+    private final LightExtensionRegistrator myRegistrator;
+
+    private LightApplicationBuilder(Disposable rootDisposable, LightExtensionRegistrator registrator) {
+        myRootDisposable = rootDisposable;
+        myRegistrator = registrator;
+    }
+
+    public Application build() {
+        NewInjectingBindingCollector injectingBindingCollector = new NewInjectingBindingCollector();
+        NewTopicBindingCollector topicBindingCollector = new NewTopicBindingCollector();
+        NewBindingLoader loader = new NewBindingLoader(injectingBindingCollector, topicBindingCollector);
+
+        List<Runnable> actions = new ArrayList<>();
+
+        loader.init(actions);
+
+        actions.parallelStream().forEach(Runnable::run);
+
+        InjectingBindingLoader injectingBindingLoader = new InjectingBindingLoader(
+            injectingBindingCollector.getServices(),
+            injectingBindingCollector.getExtensions(),
+            injectingBindingCollector.getTopics(),
+            injectingBindingCollector.getActions()
+        );
+
+        TopicBindingLoader topicBindingLoader = new TopicBindingLoader(topicBindingCollector.getBindings());
+
+        return new LightApplication(myRootDisposable, new ComponentBinding(injectingBindingLoader, topicBindingLoader), myRegistrator);
+    }
 }
