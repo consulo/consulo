@@ -40,6 +40,13 @@
       <plugin>
         <groupId>io.github.ascopes</groupId>
         <artifactId>protobuf-maven-plugin</artifactId>
+        <executions>
+           <execution>
+              <goals>
+                 <goal>generate</goal>
+              </goals>
+           </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
