@@ -16,6 +16,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingHolder;
+import consulo.component.internal.inject.InjectingBindingHolderImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
@@ -192,10 +193,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                 myComponentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
 
             String actionGroupClassName = ActionGroup.class.getName();
-            for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
+            for (Collection<InjectingBinding> bindingList : holder.getBindings().values()) {
                 for (InjectingBinding binding : bindingList) {
                     try {
-                        if (!InjectingBindingHolder.isValid(binding, profiles)) {
+                        if (!InjectingBindingHolderImpl.isValid(binding, profiles)) {
                             continue;
                         }
 

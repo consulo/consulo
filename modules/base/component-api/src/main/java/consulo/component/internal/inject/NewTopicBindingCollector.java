@@ -15,22 +15,30 @@
  */
 package consulo.component.internal.inject;
 
-import consulo.component.bind.InjectingBinding;
+import consulo.component.bind.TopicBinding;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 2026-04-23
  */
-public interface InjectingBindingHolder {
-    InjectingBindingHolder EMPTY = new InjectingBindingHolder() {
-        @Override
-        public Map<String, List<InjectingBinding>> getBindings() {
-            return Map.of();
-        }
-    };
+public class NewTopicBindingCollector extends NewBindingCollector<TopicBinding> {
+    private Map<String, TopicBinding> myBindings = new ConcurrentHashMap<>();
 
-    Map<String, List<InjectingBinding>> getBindings();
+    public Map<String, TopicBinding> getBindings() {
+        return myBindings;
+    }
+
+    @Override
+    protected Class<TopicBinding> getBindingClass() {
+        return TopicBinding.class;
+    }
+
+    @Override
+    protected void process(TopicBinding binding) {
+        myBindings.put(binding.getApiClassName(), binding);
+    }
 }

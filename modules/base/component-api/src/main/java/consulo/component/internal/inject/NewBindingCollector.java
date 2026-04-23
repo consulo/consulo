@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize.internal;
+package consulo.component.internal.inject;
 
-import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
- * @since 2024-09-01
+ * @since 2026-04-23
  */
-public interface LocalizeManagerEx {
-    void visitPlugins(List<Runnable> actions);
+public abstract class NewBindingCollector<B> {
+    protected Set<Class> processed = ConcurrentHashMap.newKeySet();
 
-    void afterInit();
+    protected boolean doRecordClass(Class<?> type) {
+        return processed.add(type);
+    }
+
+    protected abstract Class<B> getBindingClass();
+
+    protected abstract void process(B binding);
 }

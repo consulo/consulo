@@ -16,70 +16,31 @@
 package consulo.component.internal.inject;
 
 import consulo.annotation.component.*;
-import consulo.component.bind.InjectingBinding;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 13-Jun-22
  */
-public class InjectingBindingLoader extends BindingLoader<InjectingBinding> {
-  private final Map<ComponentScope, InjectingBindingHolder> myServices = new HashMap<>();
-  private final Map<ComponentScope, InjectingBindingHolder> myExtensions = new HashMap<>();
-  private final Map<ComponentScope, InjectingBindingHolder> myTopics = new HashMap<>();
-  private final InjectingBindingHolder myActions = new InjectingBindingHolder(myLocked);
+public record InjectingBindingLoader(Map<ComponentScope, InjectingBindingHolder> services,
+                                     Map<ComponentScope, InjectingBindingHolder> extensions,
+                                     Map<ComponentScope, InjectingBindingHolder> topics,
+                                     InjectingBindingHolder actions) {
 
-  public InjectingBindingLoader() {
-  }
-
-  @Override
-  public void close() {
-    for (InjectingBindingHolder value : myServices.values()) {
-      value.clear();
+    public InjectingBindingHolder getHolder(Class<?> annotationClass, ComponentScope componentScope) {
+        if (annotationClass == ServiceAPI.class) {
+            return services().getOrDefault(componentScope, InjectingBindingHolder.EMPTY);
+        }
+        else if (annotationClass == ExtensionAPI.class) {
+            return extensions().getOrDefault(componentScope, InjectingBindingHolder.EMPTY);
+        }
+        else if (annotationClass == TopicAPI.class) {
+            return topics().getOrDefault(componentScope, InjectingBindingHolder.EMPTY);
+        }
+        else if (annotationClass == ActionAPI.class) {
+            return actions();
+        }
+        throw new UnsupportedOperationException("Unknown annotation: " + annotationClass);
     }
-
-    for (InjectingBindingHolder value : myExtensions.values()) {
-      value.clear();
-    }
-
-    for (InjectingBindingHolder value : myTopics.values()) {
-      value.clear();
-    }
-
-    myServices.clear();
-    myExtensions.clear();
-    myTopics.clear();
-    myActions.clear();
-  }
-
-  
-  @Override
-  protected Class<InjectingBinding> getBindingClass() {
-    return InjectingBinding.class;
-  }
-
-  @Override
-  protected void process(InjectingBinding binding) {
-    getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
-  }
-
-  
-  public InjectingBindingHolder getHolder(Class<?> annotationClass, ComponentScope componentScope) {
-    if (annotationClass == ServiceAPI.class) {
-      return myServices.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
-    }
-    else if (annotationClass == ExtensionAPI.class) {
-      return myExtensions.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
-    }
-    else if (annotationClass == TopicAPI.class) {
-      return myTopics.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
-    }
-    else if (annotationClass == ActionAPI.class) {
-      return myActions;
-    }
-
-    throw new UnsupportedOperationException("Unknown annotation: " + annotationClass);
-  }
 }

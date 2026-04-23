@@ -26,13 +26,9 @@ import consulo.application.internal.StartupProgress;
 import consulo.application.internal.plugin.PluginsInitializeInfo;
 import consulo.application.internal.plugin.PluginsLoader;
 import consulo.component.internal.ComponentBinding;
-import consulo.component.internal.inject.InjectingBindingLoader;
-import consulo.component.internal.inject.TopicBindingLoader;
+import consulo.component.internal.inject.*;
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.classloader.PluginClassLoader;
 import consulo.container.internal.ShowErrorCaller;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.localization.LocalizationManager;
 import consulo.localization.internal.LocalizationManagerEx;
@@ -43,18 +39,15 @@ import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.platform.Platform;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.util.io.URLUtil;
 import consulo.util.lang.ControlFlowException;
-import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public abstract class ApplicationStarter {
@@ -91,7 +84,7 @@ public abstract class ApplicationStarter {
         initializeEnviroment(false, args, stat);
     }
 
-    
+
     protected abstract Application createApplication(
         ComponentBinding componentBinding,
         boolean isHeadlessMode,
@@ -125,84 +118,41 @@ public abstract class ApplicationStarter {
 
         myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
-        StatCollector libraryStats = new StatCollector();
         LocalizationManagerEx localizationManager = (LocalizationManagerEx) LocalizationManager.get();
         LocalizeManagerEx localizeManager = (LocalizeManagerEx) LocalizeManager.get();
         BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
 
-        Map<String, Set<String>> filesWithMarkers = new HashMap<>();
+        NewInjectingBindingCollector injectingBindingCollector = new NewInjectingBindingCollector();
+        NewTopicBindingCollector topicBindingCollector = new NewTopicBindingCollector();
 
-        InjectingBindingLoader injectingBindingLoader = new InjectingBindingLoader();
-        TopicBindingLoader topicBindingLoader = new TopicBindingLoader();
+        List<Runnable> actions = new ArrayList<>();
 
-        libraryStats.markWith("injecting.binding.analyze", injectingBindingLoader::analyzeBindings);
-        libraryStats.markWith("topic.binding.analyze", topicBindingLoader::analyzeBindings);
+        NewBindingLoader bindingLoader = new NewBindingLoader(injectingBindingCollector, topicBindingCollector);
 
-        libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
+        bindingLoader.init(actions);
 
-        libraryStats.markWith("localization.initialize", localizationManager::initialize);
-        libraryStats.markWith("localize.initialize", localizeManager::initialize);
-        libraryStats.markWith(
-            "icon.initialize",
-            () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY))
+        localizationManager.initialize();// TODO dummy
+
+        localizeManager.visitPlugins(actions);
+
+        iconLibraryManager.visitPlugins(actions);
+
+        stat.markWith("preparing bindings", () -> actions.parallelStream().forEach(Runnable::run));
+
+        localizeManager.afterInit();
+
+        iconLibraryManager.afterInit();
+
+        InjectingBindingLoader injectingBindingLoader = new InjectingBindingLoader(
+            injectingBindingCollector.getServices(),
+            injectingBindingCollector.getExtensions(),
+            injectingBindingCollector.getTopics(),
+            injectingBindingCollector.getActions()
         );
 
-        libraryStats.dump("Libraries", LOG::info);
+        TopicBindingLoader topicBindingLoader = new TopicBindingLoader(topicBindingCollector.getBindings());
 
         createApplication(new ComponentBinding(injectingBindingLoader, topicBindingLoader), isHeadlessMode, mySplashRef, args);
-    }
-
-    protected void analyzeLibraries(Map<String, Set<String>> filesWithMarkers) {
-        PluginManager.forEachEnabledPlugin(
-            pluginDescriptor -> searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY)
-        );
-    }
-
-    private void searchMarkerInClassLoaderMarker(
-        PluginDescriptor pluginDescriptor,
-        Map<String, Set<String>> filesWithMarkers,
-        String libraryDir
-    ) {
-        PluginClassLoader pluginClassLoader = (PluginClassLoader) pluginDescriptor.getPluginClassLoader();
-
-        try {
-            Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
-            if (urlsIndex != null) {
-                for (Map.Entry<URL, Set<String>> entry : urlsIndex.entrySet()) {
-                    URL fileUrl = entry.getKey();
-                    Set<String> index = entry.getValue();
-
-                    for (String classPath : index) {
-                        if (classPath.startsWith(libraryDir)) {
-                            File file = URLUtil.urlToFile(fileUrl);
-
-                            filesWithMarkers.computeIfAbsent(libraryDir, it -> new HashSet<>()).add(file.getPath());
-                            // we add file - stop checking
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-                Enumeration<URL> ownResources = pluginClassLoader.findOwnResources(libraryDir);
-
-                while (ownResources.hasMoreElements()) {
-                    URL url = ownResources.nextElement();
-
-                    Pair<String, String> urlFileInfo = URLUtil.splitJarUrl(url.getFile());
-                    if (urlFileInfo == null) {
-                        continue;
-                    }
-
-                    filesWithMarkers.computeIfAbsent(libraryDir, it -> new HashSet<>()).add(urlFileInfo.getFirst());
-
-                    break;
-                }
-            }
-        }
-        catch (IOException e) {
-            LOG.error(e);
-        }
     }
 
     public void run(StatCollector stat, Runnable appInitializationMark, boolean newConfigFolder) {
@@ -280,7 +230,7 @@ public abstract class ApplicationStarter {
         }
     }
 
-    
+
     public static String getFrameClass() {
         String name = ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT);
         String wmClass = StringUtil.replaceChar(name, ' ', '-');

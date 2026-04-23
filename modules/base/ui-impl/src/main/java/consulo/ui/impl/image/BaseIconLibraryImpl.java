@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
@@ -89,7 +90,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
     private final BaseIconLibraryManager myIconLibraryManager;
 
-    private final Map<String, IconGroup> myRegisteredGroups = new HashMap<>();
+    private final Map<String, IconGroup> myRegisteredGroups = new ConcurrentHashMap<>();
 
     public BaseIconLibraryImpl(String id, BaseIconLibraryManager baseIconLibraryManager) {
         myId = id;

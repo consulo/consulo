@@ -44,12 +44,8 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -175,9 +171,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
         InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(TopicAPI.class, getComponentScope());
 
-        for (List<InjectingBinding> bindings : holder.getBindings().values()) {
+        for (Collection<InjectingBinding> bindings : holder.getBindings().values()) {
             for (InjectingBinding binding : bindings) {
-                if (InjectingBindingHolder.isValid(binding, getProfiles())) {
+                if (InjectingBindingHolderImpl.isValid(binding, getProfiles())) {
                     mapByTopic.put(binding.getApiClassName(), bindings);
                 }
             }
@@ -198,9 +194,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         int profiles = getProfiles();
 
-        for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
+        for (Collection<InjectingBinding> listOfBindings : holder.getBindings().values()) {
             try {
-                InjectingBinding injectingBinding = InjectingBindingHolder.findValid(listOfBindings, profiles);
+                InjectingBinding injectingBinding = InjectingBindingHolderImpl.findValid(listOfBindings, profiles);
                 if (injectingBinding == null) {
                     LOG.error("There no valid binding " + listOfBindings);
                     continue;

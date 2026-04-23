@@ -26,7 +26,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionWalker;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
-import consulo.component.internal.inject.InjectingBindingHolder;
+import consulo.component.internal.inject.InjectingBindingHolderImpl;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -212,7 +212,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         List<ExtensionValue<T>> extensions = new ArrayList<>(injectingBindings.size());
         for (InjectingBinding binding : injectingBindings) {
-            if (!InjectingBindingHolder.isValid(binding, myComponentManager.getProfiles())) {
+            if (!InjectingBindingHolderImpl.isValid(binding, myComponentManager.getProfiles())) {
                 continue;
             }
 

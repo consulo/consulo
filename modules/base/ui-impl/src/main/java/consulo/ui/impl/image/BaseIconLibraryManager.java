@@ -15,6 +15,8 @@
  */
 package consulo.ui.impl.image;
 
+import consulo.container.classloader.PluginClassLoader;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
@@ -25,16 +27,21 @@ import consulo.ui.image.internal.IconLibraryDescriptorLoader;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.util.io.StreamUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -58,26 +65,25 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     private final AtomicLong myModificationCount = new AtomicLong();
     private final AtomicBoolean myInitialized = new AtomicBoolean();
 
-    private Map<String, IconLibrary> myLibraries = new HashMap<>();
+    private Map<String, IconLibrary> myLibraries = new ConcurrentHashMap<>();
 
     private String myActiveLibraryId;
     private BaseIconLibraryImpl myActiveLibrary;
 
     private ErrorBaseIconLibraryImpl myErrorLibrary = new ErrorBaseIconLibraryImpl(this);
 
-    
     @Override
     public Map<String, IconLibrary> getLibraries() {
         return Collections.unmodifiableMap(myLibraries);
     }
 
-    
+
     @Override
     public String getActiveLibraryId() {
         return getActiveLibraryId(StyleManager.get().getCurrentStyle());
     }
 
-    
+
     public String getActiveLibraryId(Style currentStyle) {
         if (myActiveLibraryId == null) {
             return currentStyle.getIconLibraryId();
@@ -127,7 +133,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     @Override
-    
+
     public BaseIconLibraryImpl getActiveLibrary() {
         if (myActiveLibrary == null) {
             String activeLibraryId = getActiveLibraryId();
@@ -142,46 +148,94 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         return myActiveLibrary;
     }
 
-    
+
     protected abstract BaseIconLibraryImpl createLibrary(String id);
 
-    public void initialize(@Nullable Set<String> files) {
-        if (myInitialized.compareAndSet(false, true)) {
-            if (files == null) {
-                return;
+    public void visitPlugins(List<Runnable> actions) {
+        Set<String> analyzedGroups = ConcurrentHashMap.newKeySet();
+
+        Consumer<String> path = file -> {
+            try {
+                analyzeLibraryJar(file, analyzedGroups);
             }
+            catch (IOException e) {
+                LOG.error("Fail to analyze library from url: " + file, e);
+            }
+        };
 
-            Set<String> analyzedGroups = new HashSet<>();
+        PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
+            actions.add(() -> searchMarkerInClassLoaderMarker(pluginDescriptor, path, BaseIconLibraryManager.ICON_DIRECTORY));
+        });
+    }
 
-            for (String file : files) {
-                try {
-                    analyzeLibraryJar(file, analyzedGroups);
-                }
-                catch (IOException e) {
-                    LOG.error("Fail to analyze library from url: " + file, e);
+    public void afterInit() {
+        Map<String, IconLibraryDescriptor> descriptors = getAllDescriptors();
+
+        for (Map.Entry<String, IconLibrary> entry : myLibraries.entrySet()) {
+            String libraryId = entry.getKey();
+
+            BaseIconLibraryImpl iconLibrary = (BaseIconLibraryImpl) entry.getValue();
+
+            IconLibraryDescriptor descriptor = descriptors.get(libraryId);
+            if (descriptor != null) {
+                iconLibrary.setBaseId(descriptor.getBaseLibraryId());
+                iconLibrary.setInverseId(descriptor.getInverseLibraryId());
+                iconLibrary.setDark(descriptor.isDark());
+                iconLibrary.setName(descriptor.getName());
+            }
+        }
+        myInitialized.set(true);
+
+        myModificationCount.incrementAndGet();
+    }
+
+    private void searchMarkerInClassLoaderMarker(
+        PluginDescriptor pluginDescriptor,
+        Consumer<String> loader,
+        String libraryDir
+    ) {
+        PluginClassLoader pluginClassLoader = (PluginClassLoader) pluginDescriptor.getPluginClassLoader();
+
+        try {
+            Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
+            if (urlsIndex != null) {
+                for (Map.Entry<URL, Set<String>> entry : urlsIndex.entrySet()) {
+                    URL fileUrl = entry.getKey();
+                    Set<String> index = entry.getValue();
+
+                    for (String classPath : index) {
+                        if (classPath.startsWith(libraryDir)) {
+                            File file = URLUtil.urlToFile(fileUrl);
+
+                            loader.accept(file.getPath());
+                            // we add file - stop checking
+                            break;
+                        }
+                    }
                 }
             }
+            else {
+                Enumeration<URL> ownResources = pluginClassLoader.findOwnResources(libraryDir);
 
-            Map<String, IconLibraryDescriptor> descriptors = getAllDescriptors();
+                while (ownResources.hasMoreElements()) {
+                    URL url = ownResources.nextElement();
 
-            for (Map.Entry<String, IconLibrary> entry : myLibraries.entrySet()) {
-                String libraryId = entry.getKey();
+                    Pair<String, String> urlFileInfo = URLUtil.splitJarUrl(url.getFile());
+                    if (urlFileInfo == null) {
+                        continue;
+                    }
 
-                BaseIconLibraryImpl iconLibrary = (BaseIconLibraryImpl) entry.getValue();
+                    loader.accept(urlFileInfo.getFirst());
 
-                IconLibraryDescriptor descriptor = descriptors.get(libraryId);
-                if (descriptor != null) {
-                    iconLibrary.setBaseId(descriptor.getBaseLibraryId());
-                    iconLibrary.setInverseId(descriptor.getInverseLibraryId());
-                    iconLibrary.setDark(descriptor.isDark());
-                    iconLibrary.setName(descriptor.getName());
+                    break;
                 }
             }
-            myModificationCount.incrementAndGet();
+        }
+        catch (IOException e) {
+            LOG.error(e);
         }
     }
 
-    
     private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
         Map<String, IconLibraryDescriptor> list = new HashMap<>();
 

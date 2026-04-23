@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -88,23 +88,33 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     });
 
     @Override
-    public void initialize() {
-        if (myInitialized.compareAndSet(false, true)) {
-            try {
-                init();
-            }
-            catch (Exception e) {
-                LOG.error("Fail to initialize", e);
-            }
-
-            myModificationCount ++;
+    public void visitPlugins(List<Runnable> actions) {
+        try {
+            init(actions);
+        }
+        catch (Exception e) {
+            LOG.error("Fail to initialize", e);
         }
     }
 
-    private void init() {
-        List<PluginFileInfo> forLoad = new ArrayList<>();
+    @Override
+    public void afterInit() {
+        myInitialized.set(true);
+        myAutoDetectedLocale.clear();
+        myModificationCount++;
+    }
 
-        PluginManager.forEachEnabledPlugin(descriptor -> {
+    private void init(List<Runnable> actions) {
+        Consumer<PluginFileInfo> loader = fileInfo -> {
+            try {
+                load(fileInfo);
+            }
+            catch (Exception e) {
+                LOG.error("Fail to analyze library from url: " + fileInfo, e);
+            }
+        };
+
+        PluginManager.forEachEnabledPlugin(descriptor -> actions.add(() -> {
             ClassLoader classLoader = descriptor.getPluginClassLoader();
 
             if (!(classLoader instanceof PluginClassLoader pluginClassLoader)) {
@@ -143,17 +153,15 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                         }
                     }
 
-                    forLoad.addAll(loadInfo.values());
+                    for (PluginFileInfo info : loadInfo.values()) {
+                        loader.accept(info);
+                    }
                 }
             }
             else {
-                legacySearch(descriptor, forLoad);
+                legacySearch(descriptor, loader);
             }
-        });
-
-        load(forLoad);
-
-        myAutoDetectedLocale.clear();
+        }));
     }
 
     private int getIndexOf(String str, char symbol, int atCount) {
@@ -162,7 +170,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if (c == symbol) {
-                visited ++;
+                visited++;
 
                 if (visited == atCount) {
                     return i;
@@ -173,7 +181,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return -1;
     }
 
-    private void legacySearch(PluginDescriptor pluginDescriptor, List<PluginFileInfo> forLoad) {
+    private void legacySearch(PluginDescriptor pluginDescriptor, Consumer<PluginFileInfo> loader) {
         PluginClassLoader pluginClassLoader = (PluginClassLoader) pluginDescriptor.getPluginClassLoader();
 
         try {
@@ -190,23 +198,12 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                 String path = urlFileInfo.getSecond();
                 if (path.endsWith(YAML_EXTENSION)) {
                     String yamlId = path.substring(0, path.length() - YAML_EXTENSION.length());
-                    forLoad.add(new PluginFileInfo(yamlId, pluginDescriptor, path, Set.of()));
+                    loader.accept(new PluginFileInfo(yamlId, pluginDescriptor, path, Set.of()));
                 }
             }
         }
         catch (IOException e) {
             LOG.error(e);
-        }
-    }
-
-    public void load(List<PluginFileInfo> files) {
-        for (PluginFileInfo fileInfo : files) {
-            try {
-                load(fileInfo);
-            }
-            catch (Exception e) {
-                LOG.error("Fail to analyze library from url: " + fileInfo, e);
-            }
         }
     }
 
@@ -247,7 +244,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         }
     }
 
-    
+
     private Locale buildLocale(String fullId) {
         StringTokenizer tokenizer = new StringTokenizer(fullId, "_");
         String language = tokenizer.nextToken();
@@ -257,7 +254,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return new Locale(language, country, variant);
     }
 
-    
+
     @Override
     public Set<Locale> getAvaliableLocales() {
         return Collections.unmodifiableSet(myLocalizes.keySet());
@@ -269,14 +266,14 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
         myCurrentLocale = locale;
 
-        myModificationCount ++;
+        myModificationCount++;
 
         if (fireEvents) {
             myEventDispatcher.getMulticaster().localeChanged(oldLocale, locale);
         }
     }
 
-    
+
     @Override
     public Locale getLocale() {
         if (myCurrentLocale != null) {
@@ -286,7 +283,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return myAutoDetectedLocale.get();
     }
 
-    
+
     @Override
     public Locale getAutoDetectedLocale() {
         return myAutoDetectedLocale.get();
@@ -307,7 +304,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return myModificationCount;
     }
 
-    
+
     @Override
     public Locale parseLocale(String localeText) {
         try {
@@ -319,7 +316,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         }
     }
 
-    
+
     @Override
     public LocalizeValue fromStringKey(String localizeKeyInfo) {
         List<String> values = StringUtil.split(localizeKeyInfo, "@");
@@ -331,7 +328,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return localizeKey.getValue();
     }
 
-    
+
     @Override
     public Map.Entry<Locale, String> getUnformattedText(LocalizeKey key) {
         if (!myInitialized.get()) {
@@ -358,7 +355,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return Map.entry(ourDefaultLocale, key.toString());
     }
 
-    
+
     @Override
     public String formatText(String unformattedText, Locale locale, Object... args) {
         MessageFormat format = new MessageFormat(unformattedText, locale);
