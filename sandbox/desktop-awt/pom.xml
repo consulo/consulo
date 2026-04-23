@@ -585,5 +585,9 @@
             <groupId>com.uber.nullaway</groupId>
             <artifactId>nullaway-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-javalite</artifactId>
+        </dependency>
     </dependencies>
 </project>

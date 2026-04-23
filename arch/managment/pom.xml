@@ -47,6 +47,7 @@
         <jetty.version>11.0.15</jetty.version>
         <swt.version>3.120.0</swt.version>
         <flatlaf.version>3.7</flatlaf.version>
+        <protobuf.version>4.33.4</protobuf.version>
 
         <vaadin.flow.version>25.1.1</vaadin.flow.version>
 
@@ -967,6 +968,11 @@
                 <version>5.18.0</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-javalite</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1038,9 +1044,28 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>io.github.ascopes</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>4.1.2</version>
+
+                    <configuration>
+                        <protoc>${protobuf.version}</protoc>
+                        <liteOnly>true</liteOnly>
+                    </configuration>
+
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
                     <groupId>consulo.maven</groupId>
                     <artifactId>maven-consulo-plugin</artifactId>
-                    <version>3.17</version>
+                    <version>3.21</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>

@@ -10,6 +10,7 @@ module consulo.ui.impl {
   requires consulo.container.api;
   requires consulo.ui.api;
   requires consulo.localize.api;
+  requires com.google.protobuf;
 
   requires consulo.base.localize.library;
 
