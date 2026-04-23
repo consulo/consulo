@@ -24,6 +24,7 @@ import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.internal.IconLibraryDescriptorLoader;
+import consulo.ui.impl.proto.IconIndex;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.util.io.StreamUtil;
@@ -37,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -164,7 +166,38 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         };
 
         PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
-            actions.add(() -> searchMarkerInClassLoaderMarker(pluginDescriptor, path, BaseIconLibraryManager.ICON_DIRECTORY));
+            actions.add(() -> {
+                File iconIndexBin = new File(pluginDescriptor.getPath(), "icon-index.bin");
+                boolean processToSearch = true;
+
+                if (Boolean.FALSE) { // TODO
+                    try (InputStream stream = Files.newInputStream(iconIndexBin.toPath())) {
+                        IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
+
+                        for (IconIndex.IconGroup group : from.getIconGroupsList()) {
+                            String groupId = group.getId();
+
+                            BaseIconLibraryImpl lib =
+                                (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
+
+                            group.getIconsList().parallelStream().forEach(icon -> {
+                                boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
+
+                                lib.registerIcon(groupId, icon.getId(), icon.getData().toByteArray(), null, isSVG);
+                            });
+                        }
+
+                        processToSearch = false;
+                    }
+                    catch (Exception e) {
+                        LOG.warn("Failed to read " + iconIndexBin, e);
+                    }
+                }
+
+                if (processToSearch) {
+                    searchMarkerInClassLoaderMarker(pluginDescriptor, path, BaseIconLibraryManager.ICON_DIRECTORY);
+                }
+            });
         });
     }
 

@@ -47,6 +47,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -73,7 +74,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
 
-    private Class<?> myCurrentNotLazyServiceClass;
+    private final ThreadLocal<Class<?>> myCurrentNotLazyServiceClass = new ThreadLocal<>();
 
     private volatile ThreeState myDisposeState = ThreeState.NO;
 
@@ -242,9 +243,11 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     protected <T> T runServiceInitialize(InjectingBinding binding, Supplier<T> runnable) {
-        if (!myNotLazyStepFinished && !binding.isLazy() && myCurrentNotLazyServiceClass != null) {
-            if (!Objects.equals(binding.getApiClass(), myCurrentNotLazyServiceClass) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
-                LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClass().getName() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
+        Class<?> current = myCurrentNotLazyServiceClass.get();
+
+        if (!myNotLazyStepFinished && !binding.isLazy() && current != null) {
+            if (!Objects.equals(binding.getApiClass(), current) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
+                LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClass().getName() + "] from another service [" + current + "]"));
             }
         }
         return runnable.get();
@@ -260,6 +263,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void initNotLazyServices() {
         try {
             if (myNotLazyStepFinished) {
@@ -270,12 +274,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
             StatCollector stat = new StatCollector();
 
-            int i = 1;
-            for (Class<?> serviceClass : myNotLazyServices) {
+            AtomicInteger i = new AtomicInteger(0);
+            myNotLazyServices.parallelStream().forEach(serviceClass -> {
                 try {
-                    myCurrentNotLazyServiceClass = serviceClass;
+                    myCurrentNotLazyServiceClass.set(serviceClass);
 
-                    checkCanceledAndChangeProgress(progressIndicator, i, myNotLazyServices.size());
+                    checkCanceledAndChangeProgress(progressIndicator, i.get(), myNotLazyServices.size());
 
                     stat.markWith(serviceClass.getName(), () -> getInstance(serviceClass));  // init it
                 }
@@ -283,16 +287,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
                     PluginExceptionUtil.logPluginError(LOG, t.getMessage(), t, serviceClass);
                 }
                 finally {
-                    i++;
+                    myCurrentNotLazyServiceClass.remove();
+                    
+                    i.incrementAndGet();
                 }
-            }
+            });
 
-            if (i != 1) {
+            if (i.get() != 0) {
                 stat.dump(getClass().getSimpleName() + " not lazy services initialize", LOG::info);
             }
         }
         finally {
-            myCurrentNotLazyServiceClass = null;
             myNotLazyStepFinished = true;
         }
     }
