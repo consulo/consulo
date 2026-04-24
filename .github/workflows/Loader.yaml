@@ -17,16 +17,16 @@ jobs:
             os: windows-latest
             target: x86_64-pc-windows-msvc
             loader_src: consulo.exe
-            loader_name: consulo64.exe
+            loader_name: consulo.exe
             library_src: consulo_library.dll
-            library_name: consulo64.dll
+            library_name: consulo.dll
           - name: windows-aarch64
             os: windows-latest
             target: aarch64-pc-windows-msvc
             loader_src: consulo.exe
-            loader_name: consulo-aarch64.exe
+            loader_name: consulo.exe
             library_src: consulo_library.dll
-            library_name: consulo-aarch64.dll
+            library_name: consulo.dll
 
           # ===== macOS (per-arch, no universal) =====
           - name: macos-x86_64
@@ -152,3 +152,51 @@ jobs:
           name: ${{ matrix.library_name }}-${{ matrix.name }}
           path: native/Loader/target/${{ matrix.target }}/release/${{ matrix.library_name }}
           if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: binaries-publish
+      cancel-in-progress: false
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Arrange binaries by os-arch
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          for dir in artifacts/*/; do
+            name=$(basename "$dir")
+            for plat in windows-x86_64 windows-aarch64 macos-x86_64 macos-aarch64 linux-x86_64 linux-aarch64 linux-riscv64 linux-loongarch64; do
+              if [[ "$name" == *"-$plat" ]]; then
+                mkdir -p "out/$plat"
+                cp "$dir"* "out/$plat/"
+                break
+              fi
+            done
+          done
+          find out -type f
+
+      - name: Commit and push to consulo/binaries
+        env:
+          CONSULO_BOT_TOKEN: ${{ secrets.CONSULO_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone "https://consulo-bot:${CONSULO_BOT_TOKEN}@github.com/consulo/binaries.git" binaries-repo
+          cd binaries-repo
+          git checkout master 2>/dev/null || git checkout --orphan master
+          git config user.name "consulo Bot"
+          git config user.email "consulo.bot@gmail.com"
+          cp -r ../out/. .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update loader binaries from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+            git push -u origin master
+          fi
