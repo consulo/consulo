@@ -1,15 +1,17 @@
 /**
  * @author VISTALL
- * @since 02-Aug-22
+ * @since 2022-08-02
  */
 module consulo.http.impl {
     requires transitive consulo.http.api;
 
     requires java.net.http;
 
-    requires consulo.project.api;
+    requires com.google.common;
 
+    requires consulo.project.api;
     requires consulo.credential.storage.api;
+    requires consulo.util.io;
 
     // TODO remove in future
     requires java.desktop;

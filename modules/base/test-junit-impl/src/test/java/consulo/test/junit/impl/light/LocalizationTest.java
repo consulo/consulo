@@ -47,8 +47,8 @@ public class LocalizationTest {
 
     @Test
     public void testParam2() {
-        LocalizeValue value = CommonLocalize.labelOldWayJvmPropertyUsed(1, 2);
+        LocalizeValue value = CommonLocalize.cannotStartOtherInstanceIsRunningErrorMessage(1, 2);
 
-        Assertions.assertEquals(value.get(), "[consulo.platform.base.CommonLocalize@label.old.way.jvm.property.used](1, 2)");
+        Assertions.assertEquals(value.get(), "[consulo.platform.base.CommonLocalize@cannot.start.other.instance.is.running.error.message](1, 2)");
     }
 }
