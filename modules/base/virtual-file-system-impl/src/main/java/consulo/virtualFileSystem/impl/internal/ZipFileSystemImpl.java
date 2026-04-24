@@ -28,7 +28,7 @@ import java.io.IOException;
  * @author VISTALL
  * @since 16:43/14.07.13
  */
-@ExtensionImpl
+@ExtensionImpl(id = "zip")
 public class ZipFileSystemImpl extends ArchiveFileSystemViaArchiveFile implements VirtualFileSystemWithMacroSupport {
   public ZipFileSystemImpl() {
     super(ZipArchiveFileType.PROTOCOL);
