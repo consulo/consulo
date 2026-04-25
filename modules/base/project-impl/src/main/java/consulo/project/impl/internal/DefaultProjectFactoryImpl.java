@@ -58,13 +58,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
     myDefaultProject.setInitialized();
   }
 
-  @TestOnly
-  public boolean isDefaultProjectInitialized() {
-    return myDefaultProject != null;
-  }
-
   @Override
-  
   public Project getDefaultProject() {
     LOG.assertTrue(!myDefaultProjectWasDisposed, "Default project has been already disposed!");
     return myDefaultProject;
