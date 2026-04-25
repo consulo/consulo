@@ -26,9 +26,7 @@ import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.DirectoryStorageData;
 import consulo.component.store.impl.internal.storage.StateStorageFacade;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
-import consulo.component.store.internal.PathMacrosService;
-import consulo.component.store.internal.StateStorageManager;
-import consulo.component.store.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
@@ -50,11 +48,17 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(Application application, Provider<ApplicationPathMacroManager> pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+  public ApplicationStoreImpl(Application application, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(applicationDefaultStoreCache);
     myApplication = application;
-    myStateStorageManager = new StateStorageManagerImpl(new TrackingPathMacroSubstitutorImpl(pathMacroManager), ROOT_ELEMENT_NAME, application, () -> null,
-                                                        () -> application.getInstance(PathMacrosService.class), StateStorageFacade.JAVA_IO) {
+    myStateStorageManager = new StateStorageManagerImpl(
+        EmptyTrackingPathMacroSubstitutor.INSTANCE,
+        ROOT_ELEMENT_NAME,
+        application,
+        () -> null,
+        () -> EmptyPathMacrosService.INSTANCE, 
+        StateStorageFacade.JAVA_IO
+      ) {
       
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
