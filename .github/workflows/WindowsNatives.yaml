@@ -1,4 +1,4 @@
-name: WindowsNatives
+name: Windows Natives
 
 on:
   push:
@@ -7,145 +7,186 @@ on:
     branches: ["**"]
 
 jobs:
-  build:
+  # ===== Rust loader for Windows =====
+  loader:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: windows-x86_64,  target: x86_64-pc-windows-msvc  }
+          - { name: windows-aarch64, target: aarch64-pc-windows-msvc }
 
-    runs-on: windows-2022
-    defaults:
-      run:
-        working-directory: ./native/WinRestarter/
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/setup-java@v1
-      with:
-        distribution: 'temurin'
-        java-version: 21
-    - uses: actions/checkout@v4
-############################ WindowsRestarter ############################
-# WindowsRestarter X64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinRestarter
-        build-dir: ./native/WinRestarter/build64
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A x64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: restarter64.exe
-        path: ./native/WinRestarter/build64/Release/restarter64.exe
-        if-no-files-found: error
-# WindowsRestarter ARM64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinRestarter
-        build-dir: ./native/WinRestarter/build
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A ARM64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: restarter-aarch64.exe
-        path: ./native/WinRestarter/build/Release/restarter-aarch64.exe
-        if-no-files-found: error
-# WindowsRestarter ARM64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinRestarter
-        build-dir: ./native/WinRestarter/buildA64
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A Win32
-    - uses: actions/upload-artifact@v4
-      with:
-        name: restarter.exe
-        path: ./native/WinRestarter/buildA64/Release/restarter.exe
-        if-no-files-found: error
-############################ WinRunner ############################
-# WinRunner X64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinRunner
-        build-dir: ./native/WinRunner/build64
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A x64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: runnerw64.exe
-        path: ./native/WinRunner/build64/Release/runnerw64.exe
-        if-no-files-found: error
-# WinRunner ARM64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinRunner
-        build-dir: ./native/WinRunner/buildA64
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A ARM64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: runnerw-aarch64.exe
-        path: ./native/WinRunner/buildA64/Release/runnerw-aarch64.exe
-        if-no-files-found: error
-# WinRunner X86
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinRunner
-        build-dir: ./native/WinRunner/build
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A Win32
-    - uses: actions/upload-artifact@v4
-      with:
-        name: runnerw.exe
-        path: ./native/WinRunner/build/Release/runnerw.exe
-        if-no-files-found: error
-############################ WinLoader ############################
-# WinLoader X64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinLoader
-        build-dir: ./native/WinLoader/build64
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A x64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: consulo64.exe
-        path: ./native/WinLoader/build64/Release/consulo64.exe
-        if-no-files-found: error
-# WinLoader ARM64
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinLoader
-        build-dir: ./native/WinLoader/buildA64
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A ARM64
-    - uses: actions/upload-artifact@v4
-      with:
-        name: consulo-aarch64.exe
-        path: ./native/WinLoader/buildA64/Release/consulo-aarch64.exe
-        if-no-files-found: error
-# WinLoader X86
-    - uses: threeal/cmake-action@main
-      with:
-        generator: Visual Studio 17 2022
-        source-dir: ./native/WinLoader
-        build-dir: ./native/WinLoader/build
-        options: CMAKE_BUILD_TYPE=Release
-        build-args:  --config Release
-        args: -A Win32
-    - uses: actions/upload-artifact@v4
-      with:
-        name: consulo.exe
-        path: ./native/WinLoader/build/Release/consulo.exe
-        if-no-files-found: error
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: native/Loader
+
+      - name: Build release
+        working-directory: native/Loader
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Run unit tests (host only)
+        if: matrix.name == 'windows-x86_64'
+        working-directory: native/Loader
+        run: cargo test --release --target ${{ matrix.target }}
+
+      - name: Rename library
+        shell: bash
+        working-directory: native/Loader/target/${{ matrix.target }}/release
+        run: mv consulo_library.dll consulo.dll
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consulo.exe-${{ matrix.name }}
+          path: native/Loader/target/${{ matrix.target }}/release/consulo.exe
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consulo.dll-${{ matrix.name }}
+          path: native/Loader/target/${{ matrix.target }}/release/consulo.dll
+          if-no-files-found: error
+
+  # ===== Windows CMake natives (Restarter, Runner, FileSystemNotifier, JumpListBridge) =====
+  cmake:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { plat: windows-x86_64,  msvc: x64,   suffix: "64"        }
+          - { plat: windows-aarch64, msvc: ARM64, suffix: "-aarch64"  }
+
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Export JDK env vars for JumpListBridge
+        shell: bash
+        run: |
+          echo "JDK_18=$JAVA_HOME"      >> $GITHUB_ENV
+          echo "JDK_18_x64=$JAVA_HOME"  >> $GITHUB_ENV
+          echo "JDK_AARCH64=$JAVA_HOME" >> $GITHUB_ENV
+
+      # WinRestarter
+      - uses: threeal/cmake-action@main
+        with:
+          generator: Visual Studio 17 2022
+          source-dir: ./native/WinRestarter
+          build-dir: ./native/WinRestarter/build
+          options: CMAKE_BUILD_TYPE=Release
+          build-args: --config Release
+          args: -A ${{ matrix.msvc }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: restarter${{ matrix.suffix }}.exe-${{ matrix.plat }}
+          path: ./native/WinRestarter/build/Release/restarter${{ matrix.suffix }}.exe
+          if-no-files-found: error
+
+      # WinRunner
+      - uses: threeal/cmake-action@main
+        with:
+          generator: Visual Studio 17 2022
+          source-dir: ./native/WinRunner
+          build-dir: ./native/WinRunner/build
+          options: CMAKE_BUILD_TYPE=Release
+          build-args: --config Release
+          args: -A ${{ matrix.msvc }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runnerw${{ matrix.suffix }}.exe-${{ matrix.plat }}
+          path: ./native/WinRunner/build/Release/runnerw${{ matrix.suffix }}.exe
+          if-no-files-found: error
+
+      # WinFileSystemNotifier
+      - uses: threeal/cmake-action@main
+        with:
+          generator: Visual Studio 17 2022
+          source-dir: ./native/WinFileSystemNotifier
+          build-dir: ./native/WinFileSystemNotifier/build
+          options: CMAKE_BUILD_TYPE=Release
+          build-args: --config Release
+          args: -A ${{ matrix.msvc }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fsnotifier${{ matrix.suffix }}.exe-${{ matrix.plat }}
+          path: ./native/WinFileSystemNotifier/build/Release/fsnotifier${{ matrix.suffix }}.exe
+          if-no-files-found: error
+
+      # WinJumpListBridge
+      - uses: threeal/cmake-action@main
+        with:
+          generator: Visual Studio 17 2022
+          source-dir: ./native/WinJumpListBridge
+          build-dir: ./native/WinJumpListBridge/build
+          options: CMAKE_BUILD_TYPE=Release
+          build-args: --config Release
+          args: -A ${{ matrix.msvc }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jumplistbridge${{ matrix.suffix }}.dll-${{ matrix.plat }}
+          path: ./native/WinJumpListBridge/build/Release/jumplistbridge${{ matrix.suffix }}.dll
+          if-no-files-found: error
+
+  # ===== Publish to consulo/binaries (per-arch dirs) =====
+  publish:
+    needs: [loader, cmake]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: binaries-publish
+      cancel-in-progress: false
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Arrange binaries by os-arch
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          for dir in artifacts/*/; do
+            name=$(basename "$dir")
+            for plat in windows-x86_64 windows-aarch64; do
+              if [[ "$name" == *"-$plat" ]]; then
+                mkdir -p "out/$plat"
+                cp "$dir"* "out/$plat/"
+                break
+              fi
+            done
+          done
+          find out -type f
+
+      - name: Commit and push to consulo/binaries
+        env:
+          CONSULO_BOT_TOKEN: ${{ secrets.CONSULO_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone "https://consulo-bot:${CONSULO_BOT_TOKEN}@github.com/consulo/binaries.git" binaries-repo
+          cd binaries-repo
+          git checkout master 2>/dev/null || git checkout --orphan master
+          git config user.name "consulo Bot"
+          git config user.email "consulo.bot@gmail.com"
+          cp -r ../out/. .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Windows native binaries from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+            git push -u origin master
+          fi

@@ -1,0 +1,154 @@
+name: Mac Natives
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # ===== Rust loader for macOS (per-arch, no universal) =====
+  loader:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: macos-x86_64,  target: x86_64-apple-darwin  }
+          - { name: macos-aarch64, target: aarch64-apple-darwin }
+
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: native/Loader
+
+      - name: Build release
+        working-directory: native/Loader
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Run unit tests (host only)
+        if: matrix.name == 'macos-aarch64'
+        working-directory: native/Loader
+        run: cargo test --release --target ${{ matrix.target }}
+
+      - name: Rename library
+        working-directory: native/Loader/target/${{ matrix.target }}/release
+        run: mv libconsulo_library.dylib libconsulo.dylib
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consulo-${{ matrix.name }}
+          path: native/Loader/target/${{ matrix.target }}/release/consulo
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libconsulo.dylib-${{ matrix.name }}
+          path: native/Loader/target/${{ matrix.target }}/release/libconsulo.dylib
+          if-no-files-found: error
+
+  # ===== macOS CMake natives (MacEnvReader + MacFileSystemNotifier) =====
+  # Runs on macos-14 (aarch64). x86_64 is cross-built via Xcode SDK; no universal binary.
+  cmake:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macos-x86_64
+            target_define: TARGET_X64
+            env_file: printenv64
+            fsn_file: fsnotifier64
+          - name: macos-aarch64
+            target_define: TARGET_ARM64
+            env_file: printenv-aarch64
+            fsn_file: fsnotifier-aarch64
+
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # MacEnvReader
+      - name: Configure MacEnvReader
+        run: |
+          cmake -S native/MacEnvReader -B native/MacEnvReader/build \
+                -DCMAKE_BUILD_TYPE=Release \
+                -D${{ matrix.target_define }}=ON
+      - name: Build MacEnvReader
+        run: cmake --build native/MacEnvReader/build --config Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.env_file }}-${{ matrix.name }}
+          path: native/MacEnvReader/build/${{ matrix.env_file }}
+          if-no-files-found: error
+
+      # MacFileSystemNotifier
+      - name: Configure MacFileSystemNotifier
+        run: |
+          cmake -S native/MacFileSystemNotifier -B native/MacFileSystemNotifier/build \
+                -DCMAKE_BUILD_TYPE=Release \
+                -D${{ matrix.target_define }}=ON
+      - name: Build MacFileSystemNotifier
+        run: cmake --build native/MacFileSystemNotifier/build --config Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.fsn_file }}-${{ matrix.name }}
+          path: native/MacFileSystemNotifier/build/${{ matrix.fsn_file }}
+          if-no-files-found: error
+
+  # ===== Publish to consulo/binaries (per-arch dirs) =====
+  publish:
+    needs: [loader, cmake]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: binaries-publish
+      cancel-in-progress: false
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Arrange binaries by os-arch
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          for dir in artifacts/*/; do
+            name=$(basename "$dir")
+            for plat in macos-x86_64 macos-aarch64; do
+              if [[ "$name" == *"-$plat" ]]; then
+                mkdir -p "out/$plat"
+                cp "$dir"* "out/$plat/"
+                break
+              fi
+            done
+          done
+          find out -type f
+
+      - name: Commit and push to consulo/binaries
+        env:
+          CONSULO_BOT_TOKEN: ${{ secrets.CONSULO_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone "https://consulo-bot:${CONSULO_BOT_TOKEN}@github.com/consulo/binaries.git" binaries-repo
+          cd binaries-repo
+          git checkout master 2>/dev/null || git checkout --orphan master
+          git config user.name "consulo Bot"
+          git config user.email "consulo.bot@gmail.com"
+          cp -r ../out/. .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update macOS native binaries from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+            git push -u origin master
+          fi
