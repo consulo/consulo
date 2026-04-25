@@ -25,6 +25,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.ModalityState;
 import consulo.util.lang.StringUtil;
 
 import java.util.*;
@@ -85,7 +86,7 @@ public class ProjectMacrosUtil {
 
     Runnable r = () -> result[0] = showMacrosConfigurationDialog(project, usedMacros);
 
-    WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, IdeaModalityState.nonModal());
+    WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, ModalityState.nonModal());
     return result[0];
   }
 

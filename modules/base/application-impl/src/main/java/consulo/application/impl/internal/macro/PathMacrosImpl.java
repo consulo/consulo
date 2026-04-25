@@ -17,6 +17,8 @@ package consulo.application.impl.internal.macro;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.macro.PathMacroContributor;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.PathMacroProtocolProvider;
@@ -33,6 +35,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -44,263 +47,245 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
 public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance(PathMacrosImpl.class);
-  public static final String STORE_FILE = "path.macros.xml";
+    private static final Logger LOG = Logger.getInstance(PathMacrosImpl.class);
+    public static final String STORE_FILE = "path.macros.xml";
 
-  private final Map<String, String> myLegacyMacros = new HashMap<>();
-  private final Map<String, String> myMacros = new HashMap<>();
-  private int myModificationStamp = 0;
-  private final ReentrantReadWriteLock myLock = new ReentrantReadWriteLock();
-  private final List<String> myIgnoredMacros = Lists.newLockFreeCopyOnWriteList();
+    private final Map<String, String> myMacros = new HashMap<>();
+    private int myModificationStamp = 0;
+    private final ReentrantReadWriteLock myLock = new ReentrantReadWriteLock();
+    private final List<String> myIgnoredMacros = Lists.newLockFreeCopyOnWriteList();
 
-  public static final String MACRO_ELEMENT = "macro";
-  public static final String NAME_ATTR = "name";
-  public static final String VALUE_ATTR = "value";
+    public static final String MACRO_ELEMENT = "macro";
+    public static final String NAME_ATTR = "name";
+    public static final String VALUE_ATTR = "value";
 
-  public static final String IGNORED_MACRO_ELEMENT = "ignoredMacro";
+    public static final String IGNORED_MACRO_ELEMENT = "ignoredMacro";
 
-  // predefined macros
-  public static final String APPLICATION_HOME_MACRO_NAME = PathMacroUtil.APPLICATION_HOME_DIR;
-  public static final String PROJECT_DIR_MACRO_NAME = PathMacroUtil.PROJECT_DIR_MACRO_NAME;
-  public static final String MODULE_DIR_MACRO_NAME = PathMacroUtil.MODULE_DIR_MACRO_NAME;
-  public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_MACRO_NAME;
+    // predefined macros
+    public static final String APPLICATION_HOME_MACRO_NAME = PathMacroUtil.APPLICATION_HOME_DIR;
+    public static final String PROJECT_DIR_MACRO_NAME = PathMacroUtil.PROJECT_DIR_MACRO_NAME;
+    public static final String MODULE_DIR_MACRO_NAME = PathMacroUtil.MODULE_DIR_MACRO_NAME;
+    public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_MACRO_NAME;
 
-  private static final Set<String> SYSTEM_MACROS = new HashSet<>();
+    private static final Set<String> SYSTEM_MACROS = Set.of(
+        PathMacroUtil.APPLICATION_HOME_DIR,
+        PathMacroUtil.PROJECT_DIR_MACRO_NAME,
+        PathMacroUtil.MODULE_DIR_MACRO_NAME,
+        PathMacroUtil.USER_HOME_MACRO_NAME
+    );
 
-  static {
-    SYSTEM_MACROS.add(APPLICATION_HOME_MACRO_NAME);
-    SYSTEM_MACROS.add(PROJECT_DIR_MACRO_NAME);
-    SYSTEM_MACROS.add(MODULE_DIR_MACRO_NAME);
-    SYSTEM_MACROS.add(USER_HOME_MACRO_NAME);
-  }
+    private final Provider<PathMacroProtocolProvider> myPathMacroProtocolProviderProvider;
+    private final Application myApplication;
 
-  private final Provider<PathMacroProtocolProvider> myPathMacroProtocolProviderProvider;
-
-  @Inject
-  public PathMacrosImpl(Provider<PathMacroProtocolProvider> pathMacroProtocolProviderProvider) {
-    myPathMacroProtocolProviderProvider = pathMacroProtocolProviderProvider;
-  }
-
-  @Override
-  public Set<String> getUserMacroNames() {
-    myLock.readLock().lock();
-    try {
-      return new HashSet<>(myMacros.keySet()); // keyset should not escape the lock
+    @Inject
+    public PathMacrosImpl(Provider<PathMacroProtocolProvider> pathMacroProtocolProviderProvider, Application application) {
+        myPathMacroProtocolProviderProvider = pathMacroProtocolProviderProvider;
+        myApplication = application;
     }
-    finally {
-      myLock.readLock().unlock();
-    }
-  }
 
-  @Override
-  public Set<String> getSystemMacroNames() {
-    return SYSTEM_MACROS;
-  }
-
-  @Override
-  public Collection<String> getIgnoredMacroNames() {
-    return myIgnoredMacros;
-  }
-
-  @Override
-  public void setIgnoredMacroNames(Collection<String> names) {
-    myIgnoredMacros.clear();
-    myIgnoredMacros.addAll(names);
-  }
-
-  @Override
-  public void addIgnoredMacro(String name) {
-    if (!myIgnoredMacros.contains(name)) myIgnoredMacros.add(name);
-  }
-
-  public int getModificationStamp() {
-    myLock.readLock().lock();
-    try {
-      return myModificationStamp;
-    }
-    finally {
-      myLock.readLock().unlock();
-    }
-  }
-
-  @Override
-  public boolean isIgnoredMacroName(String macro) {
-    return myIgnoredMacros.contains(macro);
-  }
-
-  @Override
-  public Set<String> getAllMacroNames() {
-    Set<String> userMacroNames = getUserMacroNames();
-    Set<String> systemMacroNames = getSystemMacroNames();
-    Set<String> allNames = new HashSet<>(userMacroNames.size() + systemMacroNames.size());
-    allNames.addAll(systemMacroNames);
-    allNames.addAll(userMacroNames);
-    return allNames;
-  }
-
-  @Override
-  public String getValue(String name) {
-    try {
-      myLock.readLock().lock();
-      return myMacros.get(name);
-    }
-    finally {
-      myLock.readLock().unlock();
-    }
-  }
-
-  @Override
-  public void removeAllMacros() {
-    try {
-      myLock.writeLock().lock();
-      myMacros.clear();
-    }
-    finally {
-      myModificationStamp++;
-      myLock.writeLock().unlock();
-    }
-  }
-
-  @Override
-  public Collection<String> getLegacyMacroNames() {
-    try {
-      myLock.readLock().lock();
-      return new HashSet<>(myLegacyMacros.keySet()); // keyset should not escape the lock
-    }
-    finally {
-      myLock.readLock().unlock();
-    }
-  }
-
-  @Override
-  public void setMacro(String name, String value) {
-    if (value.trim().isEmpty()) return;
-    try {
-      myLock.writeLock().lock();
-      myMacros.put(name, value);
-    }
-    finally {
-      myModificationStamp++;
-      myLock.writeLock().unlock();
-    }
-  }
-
-  @Override
-  public void addLegacyMacro(String name, String value) {
-    try {
-      myLock.writeLock().lock();
-      myLegacyMacros.put(name, value);
-      myMacros.remove(name);
-    }
-    finally {
-      myModificationStamp++;
-      myLock.writeLock().unlock();
-    }
-  }
-
-  @Override
-  public void removeMacro(String name) {
-    try {
-      myLock.writeLock().lock();
-      String value = myMacros.remove(name);
-      LOG.assertTrue(value != null);
-    }
-    finally {
-      myModificationStamp++;
-      myLock.writeLock().unlock();
-    }
-  }
-
-  @Override
-  public void loadState(Element state) {
-    try {
-      myLock.writeLock().lock();
-
-      List<Element> children = state.getChildren(MACRO_ELEMENT);
-      for (Element aChildren : children) {
-        String name = aChildren.getAttributeValue(NAME_ATTR);
-        String value = aChildren.getAttributeValue(VALUE_ATTR);
-        if (name == null || value == null) {
-          throw new InvalidDataException();
+    @Override
+    public Set<String> getUserMacroNames() {
+        myLock.readLock().lock();
+        try {
+            return new HashSet<>(myMacros.keySet()); // keyset should not escape the lock
         }
-
-        if (SYSTEM_MACROS.contains(name)) {
-          continue;
+        finally {
+            myLock.readLock().unlock();
         }
+    }
 
-        if (value.length() > 1 && value.charAt(value.length() - 1) == '/') {
-          value = value.substring(0, value.length() - 1);
+    @Override
+    public Set<String> getSystemMacroNames() {
+        return SYSTEM_MACROS;
+    }
+
+    @Override
+    public Collection<String> getIgnoredMacroNames() {
+        return myIgnoredMacros;
+    }
+
+    @Override
+    public void setIgnoredMacroNames(Collection<String> names) {
+        myIgnoredMacros.clear();
+        myIgnoredMacros.addAll(names);
+    }
+
+    @Override
+    public void addIgnoredMacro(String name) {
+        if (!myIgnoredMacros.contains(name)) {
+            myIgnoredMacros.add(name);
         }
+    }
 
-        myMacros.put(name, value);
-      }
-
-      List<Element> ignoredChildren = state.getChildren(IGNORED_MACRO_ELEMENT);
-      for (Element child : ignoredChildren) {
-        String ignoredName = child.getAttributeValue(NAME_ATTR);
-        if (ignoredName != null && !ignoredName.isEmpty() && !myIgnoredMacros.contains(ignoredName)) {
-          myIgnoredMacros.add(ignoredName);
+    public int getModificationStamp() {
+        myLock.readLock().lock();
+        try {
+            return myModificationStamp;
         }
-      }
-    }
-    finally {
-      myModificationStamp++;
-      myLock.writeLock().unlock();
-    }
-  }
-
-  @Override
-  public Element getState() {
-    Element state = new Element("state");
-    try {
-      myLock.writeLock().lock();
-
-      Set<Map.Entry<String, String>> entries = myMacros.entrySet();
-      for (Map.Entry<String, String> entry : entries) {
-        String value = entry.getValue();
-        if (value != null && !value.trim().isEmpty()) {
-          Element macro = new Element(MACRO_ELEMENT);
-          macro.setAttribute(NAME_ATTR, entry.getKey());
-          macro.setAttribute(VALUE_ATTR, value);
-          state.addContent(macro);
+        finally {
+            myLock.readLock().unlock();
         }
-      }
-
-      for (String macro : myIgnoredMacros) {
-        Element macroElement = new Element(IGNORED_MACRO_ELEMENT);
-        macroElement.setAttribute(NAME_ATTR, macro);
-        state.addContent(macroElement);
-      }
-    }
-    finally {
-      myLock.writeLock().unlock();
-    }
-    return state;
-  }
-
-  @Override
-  public void addMacroReplacements(ReplacePathToMacroMap result) {
-    for (String name : getUserMacroNames()) {
-      String value = getValue(name);
-      if (value != null && !value.trim().isEmpty()) result.addMacroReplacement(myPathMacroProtocolProviderProvider.get(), value, name);
-    }
-  }
-
-  @Override
-  public void addMacroExpands(ExpandMacroToPathMap result) {
-    for (String name : getUserMacroNames()) {
-      String value = getValue(name);
-      if (value != null && !value.trim().isEmpty()) result.addMacroExpand(name, value);
     }
 
-    myLock.readLock().lock();
-    try {
-      for (Map.Entry<String, String> entry : myLegacyMacros.entrySet()) {
-        result.addMacroExpand(entry.getKey(), entry.getValue());
-      }
+    @Override
+    public boolean isIgnoredMacroName(String macro) {
+        return myIgnoredMacros.contains(macro);
     }
-    finally {
-      myLock.readLock().unlock();
+
+    @Override
+    public Set<String> getAllMacroNames() {
+        Set<String> userMacroNames = getUserMacroNames();
+        Set<String> systemMacroNames = getSystemMacroNames();
+        Set<String> allNames = new HashSet<>(userMacroNames.size() + systemMacroNames.size());
+        allNames.addAll(systemMacroNames);
+        allNames.addAll(userMacroNames);
+        return allNames;
     }
-  }
+
+    @Override
+    public @Nullable String getValue(String name) {
+        try {
+            myLock.readLock().lock();
+            return myMacros.get(name);
+        }
+        finally {
+            myLock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public void removeAllMacros() {
+        try {
+            myLock.writeLock().lock();
+            myMacros.clear();
+        }
+        finally {
+            myModificationStamp++;
+            myLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void setMacro(String name, String value) {
+        if (value.trim().isEmpty()) {
+            return;
+        }
+        try {
+            myLock.writeLock().lock();
+            myMacros.put(name, value);
+        }
+        finally {
+            myModificationStamp++;
+            myLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void removeMacro(String name) {
+        try {
+            myLock.writeLock().lock();
+            String value = myMacros.remove(name);
+            LOG.assertTrue(value != null);
+        }
+        finally {
+            myModificationStamp++;
+            myLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void loadState(Element state) {
+        try {
+            myLock.writeLock().lock();
+
+            Map<String, String> newMacros = new HashMap<>();
+
+            myApplication.getExtensionPoint(PathMacroContributor.class).forEach(c -> c.registerPathMacros(newMacros, Map.of()));
+
+            List<Element> children = state.getChildren(MACRO_ELEMENT);
+            for (Element aChildren : children) {
+                String name = aChildren.getAttributeValue(NAME_ATTR);
+                String value = aChildren.getAttributeValue(VALUE_ATTR);
+                if (name == null || value == null) {
+                    throw new InvalidDataException();
+                }
+
+                if (SYSTEM_MACROS.contains(name)) {
+                    continue;
+                }
+
+                if (value.length() > 1 && value.charAt(value.length() - 1) == '/') {
+                    value = value.substring(0, value.length() - 1);
+                }
+
+                newMacros.put(name, value);
+            }
+
+            List<Element> ignoredChildren = state.getChildren(IGNORED_MACRO_ELEMENT);
+            for (Element child : ignoredChildren) {
+                String ignoredName = child.getAttributeValue(NAME_ATTR);
+                if (ignoredName != null && !ignoredName.isEmpty() && !myIgnoredMacros.contains(ignoredName)) {
+                    myIgnoredMacros.add(ignoredName);
+                }
+            }
+
+            myApplication.getExtensionPoint(PathMacroContributor.class).forEach(c -> c.forceRegisterPathMacros(newMacros));
+
+            myMacros.clear();
+            myMacros.putAll(newMacros);
+        }
+        finally {
+            myModificationStamp++;
+            myLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public Element getState() {
+        Element state = new Element("state");
+        try {
+            myLock.writeLock().lock();
+
+            Set<Map.Entry<String, String>> entries = myMacros.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                String value = entry.getValue();
+                if (value != null && !value.trim().isEmpty()) {
+                    Element macro = new Element(MACRO_ELEMENT);
+                    macro.setAttribute(NAME_ATTR, entry.getKey());
+                    macro.setAttribute(VALUE_ATTR, value);
+                    state.addContent(macro);
+                }
+            }
+
+            for (String macro : myIgnoredMacros) {
+                Element macroElement = new Element(IGNORED_MACRO_ELEMENT);
+                macroElement.setAttribute(NAME_ATTR, macro);
+                state.addContent(macroElement);
+            }
+        }
+        finally {
+            myLock.writeLock().unlock();
+        }
+        return state;
+    }
+
+    @Override
+    public void addMacroReplacements(ReplacePathToMacroMap result) {
+        for (String name : getUserMacroNames()) {
+            String value = getValue(name);
+            if (value != null && !value.trim().isEmpty()) {
+                result.addMacroReplacement(myPathMacroProtocolProviderProvider.get(), value, name);
+            }
+        }
+    }
+
+    @Override
+    public void addMacroExpands(ExpandMacroToPathMap result) {
+        for (String name : getUserMacroNames()) {
+            String value = getValue(name);
+            if (value != null && !value.trim().isEmpty()) {
+                result.addMacroExpand(name, value);
+            }
+        }
+    }
 }

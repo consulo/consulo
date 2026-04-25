@@ -21,6 +21,7 @@ import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -34,21 +35,16 @@ import java.util.Set;
 public class LightPathMacros implements PathMacros {
   @Override
   public Set<String> getAllMacroNames() {
-    return null;
+    return Set.of();
   }
 
   @Override
-  public String getValue(String name) {
+  public @Nullable String getValue(String name) {
     return null;
   }
 
   @Override
   public void setMacro(String name, String value) {
-
-  }
-
-  @Override
-  public void addLegacyMacro(String name, String value) {
 
   }
 

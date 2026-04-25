@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -33,17 +34,9 @@ public interface PathMacros {
 
   Set<String> getAllMacroNames();
 
-  String getValue(String name);
+  @Nullable String getValue(String name);
 
   void setMacro(String name, String value);
-
-  /**
-   * Obsolete macros that are to be removed gently from the project files. They can be read, but not written again. Not persisted.
-   *
-   * @param name
-   * @param value
-   */
-  void addLegacyMacro(String name, String value);
 
   void removeMacro(String name);
 
@@ -60,8 +53,6 @@ public interface PathMacros {
   boolean isIgnoredMacroName(String macro);
 
   void removeAllMacros();
-
-  Collection<String> getLegacyMacroNames();
 
   void addMacroReplacements(ReplacePathToMacroMap result);
 

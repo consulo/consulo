@@ -46,7 +46,6 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
     collector.substitute(root, true, false, filter);
     HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());
     result.removeAll(pathMacros.getSystemMacroNames());
-    result.removeAll(pathMacros.getLegacyMacroNames());
     for (Macro macro : MacroManager.getInstance().getMacros()) {
       result.remove(macro.getName());
     }
