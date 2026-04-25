@@ -40,6 +40,7 @@ import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.index.impl.internal.hash.FileContentHashIndex;
 import consulo.language.index.impl.internal.hash.FileContentHashIndexExtension;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
 import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.internal.FileTypeManagerEx;
 import consulo.language.internal.LanguageInternal;
@@ -1813,6 +1814,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                         ProgressManager.checkCanceled();
                         if (!updateSingleIndex(indexId, file, inputId, fc)) {
                             setIndexedStatus.set(Boolean.FALSE);
+                        }
+                        else {
+                            ModuleAwareIndexMetaRecorder.recordIfApplicable(indexId, file, finalProject);
                         }
                         currentIndexedStates.remove(indexId);
                     }
