@@ -33,11 +33,17 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.ClearableLazyValue;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author VISTALL
@@ -57,7 +63,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     private static final String YAML_EXTENSION = ".yaml";
 
-    private final Map<Locale, Map<String, LocalizeFileState>> myLocalizes = new HashMap<>();
+    private final Map<Locale, Map<String, LocalizeLoader<?>>> myLocalizes = new HashMap<>();
 
     private Locale myCurrentLocale;
 
@@ -105,6 +111,49 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     private void init(List<Runnable> actions) {
+        PluginManager.forEachEnabledPlugin(pluginDescriptor -> actions.add(() -> {
+            Path indexFile = Objects.requireNonNull(pluginDescriptor.getNioPath()).resolve("localize-index.bin");
+            boolean processToSearch = true;
+
+            if (Files.exists(indexFile)) {
+                try (InputStream stream = Files.newInputStream(indexFile)) {
+                    LocalizeProto.LocalizeIndex from = LocalizeProto.LocalizeIndex.parseFrom(stream);
+
+                    from.getLocalizesList().parallelStream().forEach(localize -> {
+                        String localizeId = localize.getId();
+                        String localeStr = localize.getLocale();
+
+                        Locale locale = buildLocale(localeStr);
+
+                        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
+
+                        Map<String, LocalizeKeyText> map = localize.getTextsList()
+                            .parallelStream()
+                            .collect(Collectors.toMap(LocalizeProto.Text::getId, text -> new LocalizeKeyText(text.getText())));
+
+                        mapByLocalizeId.put(localizeId, new IndexLocalizeLoader(localizeId, pluginDescriptor, map));
+                    });
+
+                    processToSearch = false;
+                }
+                catch (Exception e) {
+                    LOG.warn("Failed to read " + indexFile, e);
+                }
+            }
+
+            if (processToSearch) {
+                loadWithoutIndex(pluginDescriptor);
+            }
+        }));
+    }
+
+    private void loadWithoutIndex(PluginDescriptor pluginDescriptor) {
+        ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
+
+        if (!(classLoader instanceof PluginClassLoader pluginClassLoader)) {
+            return;
+        }
+
         Consumer<PluginFileInfo> loader = fileInfo -> {
             try {
                 load(fileInfo);
@@ -114,54 +163,46 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
             }
         };
 
-        PluginManager.forEachEnabledPlugin(descriptor -> actions.add(() -> {
-            ClassLoader classLoader = descriptor.getPluginClassLoader();
+        Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
+        if (urlsIndex != null) {
+            for (Set<String> filePaths : urlsIndex.values()) {
+                Map<String, PluginFileInfo> loadInfo = new HashMap<>();
 
-            if (!(classLoader instanceof PluginClassLoader pluginClassLoader)) {
-                return;
-            }
+                for (String filePath : filePaths) {
+                    if (filePath.startsWith(LOCALIZE_DIRECTORY) && filePath.endsWith(YAML_EXTENSION)) {
+                        String pathId = filePath.substring(0, filePath.length() - YAML_EXTENSION.length());
 
-            Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
-            if (urlsIndex != null) {
-                for (Set<String> filePaths : urlsIndex.values()) {
-                    Map<String, PluginFileInfo> loadInfo = new HashMap<>();
-
-                    for (String filePath : filePaths) {
-                        if (filePath.startsWith(LOCALIZE_DIRECTORY) && filePath.endsWith(YAML_EXTENSION)) {
-                            String pathId = filePath.substring(0, filePath.length() - YAML_EXTENSION.length());
-
-                            loadInfo.put(pathId, new PluginFileInfo(pathId, descriptor, filePath, new HashSet<>()));
-                        }
-                    }
-
-                    for (String filePath : filePaths) {
-                        if (filePath.startsWith(LOCALIZE_DIRECTORY) && !filePath.endsWith(YAML_EXTENSION)) {
-                            int index = getIndexOf(filePath, '/', 3);
-                            if (index == -1) {
-                                LOG.warn("Invalid localize path: " + filePath);
-                                continue;
-                            }
-
-                            String yamlIdPath = filePath.substring(0, index);
-                            PluginFileInfo info = loadInfo.get(yamlIdPath);
-                            if (info == null) {
-                                LOG.warn("Localize yaml not loaded. Path: " + yamlIdPath);
-                                continue;
-                            }
-
-                            info.files().add(filePath);
-                        }
-                    }
-
-                    for (PluginFileInfo info : loadInfo.values()) {
-                        loader.accept(info);
+                        loadInfo.put(pathId, new PluginFileInfo(pathId, pluginDescriptor, filePath, new HashSet<>()));
                     }
                 }
+
+                for (String filePath : filePaths) {
+                    if (filePath.startsWith(LOCALIZE_DIRECTORY) && !filePath.endsWith(YAML_EXTENSION)) {
+                        int index = getIndexOf(filePath, '/', 3);
+                        if (index == -1) {
+                            LOG.warn("Invalid localize path: " + filePath);
+                            continue;
+                        }
+
+                        String yamlIdPath = filePath.substring(0, index);
+                        PluginFileInfo info = loadInfo.get(yamlIdPath);
+                        if (info == null) {
+                            LOG.warn("Localize yaml not loaded. Path: " + yamlIdPath);
+                            continue;
+                        }
+
+                        info.files().add(filePath);
+                    }
+                }
+
+                for (PluginFileInfo info : loadInfo.values()) {
+                    loader.accept(info);
+                }
             }
-            else {
-                legacySearch(descriptor, loader);
-            }
-        }));
+        }
+        else {
+            legacySearch(pluginDescriptor, loader);
+        }
     }
 
     private int getIndexOf(String str, char symbol, int atCount) {
@@ -219,7 +260,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         // -5 - its '.yaml' prefix
         String localizeId = fullFilePath.substring(localeStr.length() + 1, fullFilePath.length() - YAML_EXTENSION.length());
 
-        Map<String, LocalizeFileState> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
+        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
 
         LocalizeFileState state = new LocalizeFileState(localizeId, fileInfo.descriptor(), zipEntryName);
 
@@ -363,11 +404,11 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     private @Nullable String getValue(LocalizeKey key, Locale locale) {
-        Map<String, LocalizeFileState> map = myLocalizes.get(locale);
+        Map<String, LocalizeLoader<?>> map = myLocalizes.get(locale);
         if (map != null) {
-            LocalizeFileState fileInfo = map.get(key.getLocalizeId());
+            LocalizeLoader<?> fileInfo = map.get(key.getLocalizeId());
             if (fileInfo != null) {
-                String value = fileInfo.getValue(key);
+                String value =  fileInfo.getValue(key);
                 if (value != null) {
                     return value;
                 }

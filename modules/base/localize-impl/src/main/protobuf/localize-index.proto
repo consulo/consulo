@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package consulo.localize.impl;
+
+option java_outer_classname = "LocalizeProto";
+
+message LocalizeIndex {
+    int32 version = 1;
+
+    repeated Localize localizes = 2;
+}
+
+message Localize {
+    string id = 1;
+
+    string locale = 2;
+
+    repeated Text texts = 3;
+}
+
+message Text {
+    string id = 1;
+
+    string text = 2;
+}

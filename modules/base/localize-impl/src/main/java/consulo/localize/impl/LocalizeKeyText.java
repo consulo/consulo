@@ -20,22 +20,10 @@ import java.util.function.Supplier;
 /**
  * @author VISTALL
  * @since 2020-05-20
- * <p>
- * TODO [VISTALL] condition support
  */
-public class LocalizeKeyText implements Supplier<String> {
-    private final String myText;
-
-    public LocalizeKeyText(String text) {
-        myText = text;
-    }
-
-    public String getText() {
-        return myText;
-    }
-
+public record LocalizeKeyText(String text) implements Supplier<String> {
     @Override
     public String get() {
-        return myText;
+        return text();
     }
 }

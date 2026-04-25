@@ -25,6 +25,7 @@ module consulo.localize.impl {
     requires consulo.util.lang;
     requires consulo.util.io;
     requires consulo.proxy;
+    requires com.google.protobuf;
 
     requires org.yaml.snakeyaml;
     requires com.ibm.icu;

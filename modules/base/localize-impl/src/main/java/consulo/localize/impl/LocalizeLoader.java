@@ -17,8 +17,10 @@ package consulo.localize.impl;
 
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStatus;
+import consulo.localize.LocalizeKey;
 import consulo.logging.Logger;
 import consulo.util.lang.lazy.LazyValue;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +50,8 @@ public abstract class LocalizeLoader<V> {
     protected V getValue() {
         return myValue.get();
     }
+
+    public abstract @Nullable String getValue(LocalizeKey key);
 
     protected abstract V getInvalidValue();
 

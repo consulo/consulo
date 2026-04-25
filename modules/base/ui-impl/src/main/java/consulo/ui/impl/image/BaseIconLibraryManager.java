@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -167,37 +168,39 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
         PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
             actions.add(() -> {
-                File iconIndexBin = new File(pluginDescriptor.getPath(), "icon-index.bin");
+                Path indexFile = Objects.requireNonNull(pluginDescriptor.getNioPath()).resolve("icon-index.bin");
                 boolean processToSearch = true;
 
-                try (InputStream stream = Files.newInputStream(iconIndexBin.toPath())) {
-                    IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
+                if (Files.exists(indexFile)) {
+                    try (InputStream stream = Files.newInputStream(indexFile)) {
+                        IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
 
-                    for (IconIndex.IconGroup group : from.getIconGroupsList()) {
-                        String groupId = group.getId();
+                        for (IconIndex.IconGroup group : from.getIconGroupsList()) {
+                            String groupId = group.getId();
 
-                        BaseIconLibraryImpl lib =
-                            (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
+                            BaseIconLibraryImpl lib =
+                                (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
 
-                        group.getIconsList().parallelStream().forEach(icon -> {
-                            boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
+                            group.getIconsList().parallelStream().forEach(icon -> {
+                                boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
 
-                            IconIndex.IconData x1 = icon.getX1();
+                                IconIndex.IconData x1 = icon.getX1();
 
-                            lib.registerIcon(
-                                groupId,
-                                icon.getId(),
-                                x1.getData().toByteArray(),
-                                icon.hasX2() ? icon.getX2().getData().toByteArray() : null,
-                                isSVG
-                            );
-                        });
+                                lib.registerIcon(
+                                    groupId,
+                                    icon.getId(),
+                                    x1.getData().toByteArray(),
+                                    icon.hasX2() ? icon.getX2().getData().toByteArray() : null,
+                                    isSVG
+                                );
+                            });
+                        }
+
+                        processToSearch = false;
                     }
-
-                    processToSearch = false;
-                }
-                catch (Exception e) {
-                    LOG.warn("Failed to read " + iconIndexBin, e);
+                    catch (Exception e) {
+                        LOG.warn("Failed to read " + indexFile, e);
+                    }
                 }
 
                 if (processToSearch) {
