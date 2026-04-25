@@ -128,7 +128,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                         Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
 
                         Map<String, LocalizeKeyText> map = localize.getTextsList()
-                            .parallelStream()
+                            .stream()
                             .collect(Collectors.toMap(LocalizeProto.Text::getId, text -> new LocalizeKeyText(text.getText())));
 
                         mapByLocalizeId.put(localizeId, new IndexLocalizeLoader(localizeId, pluginDescriptor, map));
