@@ -89,11 +89,6 @@ public class LightPathMacros implements PathMacros {
   }
 
   @Override
-  public Collection<String> getLegacyMacroNames() {
-    return null;
-  }
-
-  @Override
   public void addMacroReplacements(ReplacePathToMacroMap result) {
 
   }
