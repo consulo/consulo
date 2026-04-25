@@ -41,7 +41,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION)
 @ServiceImpl
 public class QuickListsManager {
     public static QuickListsManager getInstance() {
@@ -65,7 +65,6 @@ public class QuickListsManager {
                 return createItem(element);
             }
 
-            
             @Override
             public String getName(QuickList immutableElement) {
                 return immutableElement.getName();
@@ -96,7 +95,6 @@ public class QuickListsManager {
             }
         });
         mySchemeManager.loadSchemes();
-        registerActions();
     }
 
     
@@ -112,7 +110,7 @@ public class QuickListsManager {
         return lists.toArray(new QuickList[lists.size()]);
     }
 
-    private void registerActions() {
+    void registerActions() {
         // to prevent exception if 2 or more targets have the same name
         Set<String> registeredIds = new HashSet<String>();
         for (QuickList list : mySchemeManager.getAllSchemes()) {

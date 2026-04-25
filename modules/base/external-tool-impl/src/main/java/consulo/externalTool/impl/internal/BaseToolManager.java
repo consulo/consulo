@@ -21,21 +21,21 @@ import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.component.persist.scheme.SchemeProcessor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.util.collection.ArrayUtil;
+import jakarta.inject.Provider;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public abstract class BaseToolManager<T extends Tool> {
-    private final ActionManager myActionManager;
+    private final Provider<ActionManager> myActionManager;
     private final SchemeManager<ToolsGroup<T>, ToolsGroup<T>> mySchemeManager;
 
-    public BaseToolManager(ActionManager actionManagerEx, SchemeManagerFactory factory) {
-        myActionManager = actionManagerEx;
+    public BaseToolManager(Provider<ActionManager> actionManager, SchemeManagerFactory factory) {
+        myActionManager = actionManager;
 
         mySchemeManager = factory.createSchemeManager(getSchemesPath(), createProcessor(), RoamingType.DEFAULT);
 
         mySchemeManager.loadSchemes();
-        registerActions();
     }
 
     protected abstract String getSchemesPath();
@@ -97,11 +97,12 @@ public abstract class BaseToolManager<T extends Tool> {
         for (ToolsGroup newGroup : tools) {
             mySchemeManager.addNewScheme(newGroup, true);
         }
-        registerActions();
+
+        registerActions(myActionManager.get());
     }
 
-    void registerActions() {
-        unregisterActions();
+    void registerActions(ActionManager actionManager) {
+        unregisterActions(actionManager);
 
         // register
         Set<String> registeredIds = new HashSet<>(); // to prevent exception if 2 or more targets have the same name
@@ -112,7 +113,7 @@ public abstract class BaseToolManager<T extends Tool> {
 
             if (!registeredIds.contains(actionId)) {
                 registeredIds.add(actionId);
-                myActionManager.registerAction(actionId, createToolAction(tool));
+                actionManager.registerAction(actionId, createToolAction(tool));
             }
         }
     }
@@ -123,10 +124,10 @@ public abstract class BaseToolManager<T extends Tool> {
 
     protected abstract String getActionIdPrefix();
 
-    private void unregisterActions() {
+    private void unregisterActions(ActionManager actionManager) {
         // unregister Tool actions
-        for (String oldId : myActionManager.getActionIds(getActionIdPrefix())) {
-            myActionManager.unregisterAction(oldId);
+        for (String oldId : actionManager.getActionIds(getActionIdPrefix())) {
+            actionManager.unregisterAction(oldId);
         }
     }
 }

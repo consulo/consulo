@@ -16,13 +16,14 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.internal.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
 import consulo.execution.executor.ExecutorRegistry;
-import consulo.execution.internal.ExecutorRegistryEx;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionPreInitializer;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -32,16 +33,17 @@ import jakarta.inject.Provider;
  */
 @ExtensionImpl(order = "first")
 public class ActionPreloader extends PreloadingActivity {
+    private final Application myApplication;
     private final ActionManager myActionManager;
-    private final ExecutorRegistry myExecutorRegistry;
     private final Provider<TouchBarController> myTouchBarControllerProvider;
 
     @Inject
-    public ActionPreloader(ActionManager actionManager,
+    public ActionPreloader(Application application,
+                           ActionManager actionManager,
                            ExecutorRegistry executorRegistry,
                            Provider<TouchBarController> touchBarControllerProvider) {
+        myApplication = application;
         myActionManager = actionManager;
-        myExecutorRegistry = executorRegistry;
         myTouchBarControllerProvider = touchBarControllerProvider;
     }
 
@@ -52,8 +54,7 @@ public class ActionPreloader extends PreloadingActivity {
         actionManager.initialize(() -> {
             actionManager.loadActions();
 
-            // need it due its register actions
-            ((ExecutorRegistryEx) myExecutorRegistry).initExecuteActions();
+            myApplication.getExtensionPoint(ActionPreInitializer.class).forEach(i -> i.preload(actionManager));
 
             actionManager.preloadActions(indicator);
 

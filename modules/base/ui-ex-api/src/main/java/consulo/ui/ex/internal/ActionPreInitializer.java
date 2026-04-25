@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.internal;
+package consulo.ui.ex.internal;
 
-import consulo.execution.executor.ExecutorRegistry;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.ui.ex.action.ActionManager;
 
 /**
  * @author VISTALL
- * @since 2024-09-05
+ * @since 2026-04-25
  */
-public abstract class ExecutorRegistryEx extends ExecutorRegistry {
-    public abstract void initExecuteActions();
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface ActionPreInitializer {
+    void preload(ActionManager actionManager);
 }
