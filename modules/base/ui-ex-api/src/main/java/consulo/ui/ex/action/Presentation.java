@@ -178,7 +178,7 @@ public final class Presentation implements Cloneable {
 
     public void setText(LocalizeValue text) {
         LocalizeValue oldText = myText;
-        myText = text;
+        myText = Objects.requireNonNull(text);
 
         if (!oldText.equals(text)) {
             fireObjectPropertyChange(PROP_TEXT, oldText, text);
@@ -223,7 +223,7 @@ public final class Presentation implements Cloneable {
 
     public void setDescription(LocalizeValue description) {
         LocalizeValue oldDescription = myDescription;
-        myDescription = description;
+        myDescription = Objects.requireNonNull(description);
 
         if (!oldDescription.equals(description)) {
             fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
