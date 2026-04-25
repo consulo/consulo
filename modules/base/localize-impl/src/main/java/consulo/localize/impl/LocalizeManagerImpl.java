@@ -40,6 +40,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -63,7 +64,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     private static final String YAML_EXTENSION = ".yaml";
 
-    private final Map<Locale, Map<String, LocalizeLoader<?>>> myLocalizes = new HashMap<>();
+    private final Map<Locale, Map<String, LocalizeLoader<?>>> myLocalizes = new ConcurrentHashMap<>();
 
     private Locale myCurrentLocale;
 
