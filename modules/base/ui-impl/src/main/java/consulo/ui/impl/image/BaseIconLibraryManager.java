@@ -170,28 +170,34 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
                 File iconIndexBin = new File(pluginDescriptor.getPath(), "icon-index.bin");
                 boolean processToSearch = true;
 
-                if (Boolean.FALSE) { // TODO
-                    try (InputStream stream = Files.newInputStream(iconIndexBin.toPath())) {
-                        IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
+                try (InputStream stream = Files.newInputStream(iconIndexBin.toPath())) {
+                    IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
 
-                        for (IconIndex.IconGroup group : from.getIconGroupsList()) {
-                            String groupId = group.getId();
+                    for (IconIndex.IconGroup group : from.getIconGroupsList()) {
+                        String groupId = group.getId();
 
-                            BaseIconLibraryImpl lib =
-                                (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
+                        BaseIconLibraryImpl lib =
+                            (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
 
-                            group.getIconsList().parallelStream().forEach(icon -> {
-                                boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
+                        group.getIconsList().parallelStream().forEach(icon -> {
+                            boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
 
-                                lib.registerIcon(groupId, icon.getId(), icon.getData().toByteArray(), null, isSVG);
-                            });
-                        }
+                            IconIndex.IconData x1 = icon.getX1();
 
-                        processToSearch = false;
+                            lib.registerIcon(
+                                groupId,
+                                icon.getId(),
+                                x1.getData().toByteArray(),
+                                icon.hasX2() ? icon.getX2().getData().toByteArray() : null,
+                                isSVG
+                            );
+                        });
                     }
-                    catch (Exception e) {
-                        LOG.warn("Failed to read " + iconIndexBin, e);
-                    }
+
+                    processToSearch = false;
+                }
+                catch (Exception e) {
+                    LOG.warn("Failed to read " + iconIndexBin, e);
                 }
 
                 if (processToSearch) {

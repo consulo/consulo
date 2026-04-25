@@ -95,11 +95,15 @@ public class DesktopAWTScalableImage extends AbstractMultiResolutionImage {
       DesktopAWTImageReference ref =
         (DesktopAWTImageReference)iconLibraryManager.resolveImage(myForceLibraryId, imageKey);
 
-      assert ref != null;
-
       BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
       Graphics2D graphics = bufferedImage.createGraphics();
-      ref.draw(JBUI.ScaleContext.create(JBUI.Scale.create(1, JBUI.ScaleType.SYS_SCALE)), graphics, 0, 0, width, height);
+      if (ref == null) {
+       graphics.setColor(Color.ORANGE);
+       graphics.fillRect(0, 0, width, height);
+      }
+      else {
+        ref.draw(JBUI.ScaleContext.create(JBUI.Scale.create(1, JBUI.ScaleType.SYS_SCALE)), graphics, 0, 0, width, height);
+      }
       graphics.dispose();
       return bufferedImage;
     }

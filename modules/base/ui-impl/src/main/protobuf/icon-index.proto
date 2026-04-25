@@ -19,13 +19,19 @@ message IconGroup {
 message Icon {
     string id = 1;
 
-    int32 width = 2;
+    IconType type = 2;
 
-    int32 height = 3;
+    IconData x1 = 3;
 
-    bytes data = 4;
+    IconData x2 = 4;
+}
 
-    IconType type = 5;
+message IconData {
+    int32 width = 1;
+
+    int32 height = 2;
+
+    bytes data = 3;
 }
 
 enum IconType {

@@ -66,7 +66,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     }
 
     public static class IconGroup {
-        private final Map<String, ImageState> myRegisteredIcons = new HashMap<>();
+        private final Map<String, ImageState> myRegisteredIcons = new ConcurrentHashMap<>();
 
         public IconGroup(String groupId) {
         }
