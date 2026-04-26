@@ -93,7 +93,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
         }
 
         HttpProxyManagerState state = settings.getState();
-        return !Objects.equals(myProxyExceptions.getValue().trim(), state.PROXY_EXCEPTIONS)
+        return !Objects.equals(StringUtil.trimToNull(myProxyExceptions.getValue()), StringUtil.trimToNull(state.PROXY_EXCEPTIONS))
             || state.USE_PROXY_PAC != myAutoDetectProxyRb.getValue()
             || state.USE_PAC_URL != myPacUrlCheckBox.getValue()
             || !Objects.equals(state.PAC_URL, myPacUrlTextField.getValue())
@@ -213,7 +213,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
                         Messages.showMessageDialog(parent, "Connection successful", title, UIUtil.getInformationIcon());
                     }
                     else {
-                        String message = exception.getMessage();
+                        String message = StringUtil.notNullize(exception.getMessage(), "N/A");
                         if (settings.getState().USE_HTTP_PROXY) {
                             settings.getState().LAST_ERROR = message;
                         }

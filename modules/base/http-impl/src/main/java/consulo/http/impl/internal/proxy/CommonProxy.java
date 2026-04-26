@@ -182,7 +182,7 @@ public class CommonProxy extends ProxySelector {
 
     public void removeCustom(String key) {
         synchronized (myLock) {
-            LOG.debug("custom set: ", key);
+            LOG.debug("custom removed: ", key);
             myCustom.remove(key);
         }
     }
