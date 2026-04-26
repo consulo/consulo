@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.net.HttpProxyConfigurable;
+import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

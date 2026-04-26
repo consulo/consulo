@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.net;
+package consulo.http.impl.internal.proxy;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.IdeaConfigurableBase;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.http.HttpProxyManager;
-import consulo.http.impl.internal.proxy.HttpProxyManagerImpl;
 import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
@@ -46,7 +45,6 @@ public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySetting
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
-  
   @Override
   protected HttpProxyManagerImpl getSettings() {
     return settings;

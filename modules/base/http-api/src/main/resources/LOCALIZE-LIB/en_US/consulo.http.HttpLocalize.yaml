@@ -1,4 +1,44 @@
-error.connection.failed.with.http.code.N:
-  text: "Connection failed with HTTP code {0}"
 error.connection.failed.redirects:
-  text: "Connection failed: too many redirects"
+    text: 'Connection failed: too many redirects'
+error.connection.failed.with.http.code.N:
+    text: Connection failed with HTTP code {0}
+label.old.way.jvm.property.used:
+    text: '<html>You have JVM property "{0}" set to "{1}".<br>This may lead to incorrect behaviour. Proxy should be set in Settings | HTTP Proxy<br>This JVM property is old and its usage is not recommended by Oracle.<br>(Note: It could have been assigned by some code dynamically.)'
+proxy.direct.rb:
+    text: No proxy
+proxy.manual.auth:
+    text: Proxy a&uthentication
+proxy.manual.exclude:
+    text: 'No proxy for:'
+proxy.manual.exclude.example:
+    text: 'Example: *.example.com, 192.168.*'
+proxy.manual.host:
+    text: '&Host name:'
+proxy.manual.port:
+    text: 'Port &number:'
+proxy.manual.rb:
+    text: Manual proxy configuration
+proxy.manual.type.http:
+    text: HTTP
+proxy.manual.type.socks:
+    text: SOCKS
+proxy.pac.pw.clear.button:
+    text: Clear Passwords
+proxy.pac.rb:
+    text: Auto-detect proxy settings
+proxy.pac.rb.tt:
+    text: This will attempt to use your system settings and is useful if your system uses a proxy auto-configuration file (.pac).
+proxy.pac.url.example:
+    text: 'Example: https://example.com/wpad.pac'
+proxy.pac.url.label:
+    text: 'Automatic proxy configuration URL:'
+proxy.settings.override.by.plugin.checkbox:
+    text: Proxy settings provided by ''{0}'' plugin
+proxy.system.label:
+    text: <html>You have JVM property <tt>java.net.useSystemProxies</tt> set to <tt>true</tt>. This will cause some network calls to go through operating system-defined proxy. If you didn't intend to use system-defined proxy, please disable this property.</html>
+proxy.system.proxy.settings:
+    text: '&System proxy settings…'
+proxy.test.button:
+    text: Check Connection
+proxy.tunneling.disabled.warning:
+    text: <html>Basic proxy authentication is currently disabled for HTTPS connections. HTTPS connections may fail if proxy requires authentication. To allow basic proxy authentication, add <tt>-Djdk.http.auth.tunneling.disabledSchemes=""</tt> to your VM options file and restart.</html>

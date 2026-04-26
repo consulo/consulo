@@ -16,7 +16,7 @@
 package consulo.ide.impl.task;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.util.net.HttpProxyConfigurable;
+import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.task.internal.TaskInternalHelper;

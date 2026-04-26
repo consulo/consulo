@@ -15,14 +15,16 @@
  */
 package consulo.ide.impl.idea.util.net;
 
+import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -30,60 +32,60 @@ import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 
 public class IOExceptionDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance(IOExceptionDialog.class);
-  private final JTextArea myErrorLabel;
+    private static final Logger LOG = Logger.getInstance(IOExceptionDialog.class);
+    private final JTextArea myErrorLabel;
 
-  public IOExceptionDialog(String title, String errorText)  {
-    super((Project)null, true);
-    setTitle(title);
-    setOKButtonText(CommonLocalize.dialogIoexceptionTryagain());
+    public IOExceptionDialog(String title, String errorText) {
+        super((Project) null, true);
+        setTitle(title);
+        setOKButtonText(CommonLocalize.dialogIoexceptionTryagain());
 
-    myErrorLabel = new JTextArea();
-    myErrorLabel.setText(errorText);
-    myErrorLabel.setFont(UIManager.getFont("Label.font"));
-    myErrorLabel.setBackground(UIManager.getColor("Label.background"));
-    myErrorLabel.setForeground(UIManager.getColor("Label.foreground"));
+        myErrorLabel = new JTextArea();
+        myErrorLabel.setText(errorText);
+        myErrorLabel.setFont(UIManager.getFont("Label.font"));
+        myErrorLabel.setBackground(UIManager.getColor("Label.background"));
+        myErrorLabel.setForeground(UIManager.getColor("Label.foreground"));
 
-    init();
-  }
-
-  @Override
-  protected @Nullable JComponent createCenterPanel() {
-    return myErrorLabel;
-  }
-
-  @Override
-  protected Action[] createLeftSideActions() {
-    return new Action[] {
-      new AbstractAction(CommonLocalize.dialogIoexceptionProxy().get()) {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          ShowSettingsUtil.getInstance().editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class), new HttpProxyConfigurable());
-        }
-      }
-    };
-  }
-
-  /**
-   * Show the dialog
-   * @return <code>true</code> if "Try Again" button pressed and <code>false</code> if "Cancel" button pressed
-   */
-  public static boolean showErrorDialog(final String title, final String text) {
-    final Ref<Boolean> ok = Ref.create(false);
-    try {
-      GuiUtils.runOrInvokeAndWait(new Runnable() {
-        @Override
-        public void run() {
-          IOExceptionDialog dialog = new IOExceptionDialog(title, text);
-          dialog.show();
-          ok.set(dialog.isOK());
-        }
-      });
-    }
-    catch (InterruptedException | InvocationTargetException e) {
-      LOG.info(e);
+        init();
     }
 
-    return ok.get();
-  }
+    @Override
+    protected @Nullable JComponent createCenterPanel() {
+        return myErrorLabel;
+    }
+
+    @Override
+    protected Action[] createLeftSideActions() {
+        return new Action[]{
+            new AbstractAction(CommonLocalize.dialogIoexceptionProxy().get()) {
+                @Override
+                @RequiredUIAccess
+                public void actionPerformed(ActionEvent e) {
+                    ShowSettingsUtil.getInstance()
+                        .editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class), new HttpProxyConfigurable());
+                }
+            }
+        };
+    }
+
+    /**
+     * Show the dialog
+     *
+     * @return <code>true</code> if "Try Again" button pressed and <code>false</code> if "Cancel" button pressed
+     */
+    public static boolean showErrorDialog(String title, String text) {
+        SimpleReference<Boolean> ok = SimpleReference.create(false);
+        try {
+            GuiUtils.runOrInvokeAndWait(() -> {
+                IOExceptionDialog dialog = new IOExceptionDialog(title, text);
+                dialog.show();
+                ok.set(dialog.isOK());
+            });
+        }
+        catch (InterruptedException | InvocationTargetException e) {
+            LOG.info(e);
+        }
+
+        return ok.get();
+    }
 }
