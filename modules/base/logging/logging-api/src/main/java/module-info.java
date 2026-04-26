@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.logging.api {
     requires transitive consulo.annotation;
     requires consulo.util.lang;

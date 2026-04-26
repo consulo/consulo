@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import com.uber.nullaway.annotations.EnsuresNonNullIf;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import org.jspecify.annotations.Nullable;
@@ -86,6 +87,7 @@ public class RunResult<T> extends Result<T> {
     return this;
   }
 
+  @EnsuresNonNullIf("myThrowable")
   public boolean hasException() {
     return myThrowable != null;
   }

@@ -21,6 +21,7 @@ module consulo.application.api {
     requires transitive consulo.util.interner;
 
     requires transitive jakarta.inject;
+    requires com.uber.nullaway.annotations;
 
     requires static consulo.util.jna;
     requires static com.sun.jna;
