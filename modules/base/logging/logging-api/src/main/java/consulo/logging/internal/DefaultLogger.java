@@ -41,7 +41,7 @@ public class DefaultLogger implements Logger {
   }
 
   @Override
-  public void debug(String message, Throwable t) {
+  public void debug(String message, @Nullable Throwable t) {
   }
 
   @Override
@@ -64,10 +64,10 @@ public class DefaultLogger implements Logger {
   }
 
   @Override
-  public void info(String message, Throwable t) {
+  public void info(String message, @Nullable Throwable t) {
   }
 
   @Override
-  public void warn(String message, Throwable t) {
+  public void warn(String message, @Nullable Throwable t) {
   }
 }

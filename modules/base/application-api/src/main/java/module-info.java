@@ -10,9 +10,10 @@ module consulo.application.api {
     requires java.desktop;
     requires java.management;
 
+    requires transitive consulo.annotation;
+    requires transitive consulo.base.icon.library;
     requires transitive consulo.component.api;
     requires transitive consulo.localize.api;
-    requires transitive consulo.base.icon.library;
     requires consulo.proxy;
 
     requires transitive consulo.util.concurrent.coroutine;
@@ -21,7 +22,6 @@ module consulo.application.api {
     requires transitive consulo.util.interner;
 
     requires transitive jakarta.inject;
-    requires com.uber.nullaway.annotations;
 
     requires static consulo.util.jna;
     requires static com.sun.jna;
