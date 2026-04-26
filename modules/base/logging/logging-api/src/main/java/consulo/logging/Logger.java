@@ -17,6 +17,7 @@ package consulo.logging;
 
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -70,7 +71,7 @@ public interface Logger {
     }
 
     default void info(Throwable t) {
-        info(t.getMessage(), t);
+        info(StringUtil.notNullize(t.getMessage()), t);
     }
 
     public abstract void info(String message);
@@ -82,7 +83,7 @@ public interface Logger {
     }
 
     default void warn(Throwable t) {
-        warn(t.getMessage(), t);
+        warn(StringUtil.notNullize(t.getMessage()), t);
     }
 
     public abstract void warn(String message, @Nullable Throwable t);
@@ -116,7 +117,7 @@ public interface Logger {
     }
 
     default void error(Throwable t) {
-        error(t.getMessage(), t, EMPTY_STRING_ARRAY);
+        error(StringUtil.notNullize(t.getMessage()), t, EMPTY_STRING_ARRAY);
     }
 
     public abstract void error(String message, @Nullable Throwable t, String... details);

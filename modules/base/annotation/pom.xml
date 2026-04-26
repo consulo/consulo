@@ -37,6 +37,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.uber.nullaway</groupId>
+            <artifactId>nullaway-annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>

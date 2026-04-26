@@ -15,6 +15,7 @@
  */
 package consulo.util.lang;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.io.PrintWriter;
@@ -136,24 +137,29 @@ public class ExceptionUtil {
 
   public static void rethrowUnchecked(@Nullable Throwable t) {
     if (t != null) {
-      if (t instanceof Error) throw (Error)t;
-      if (t instanceof RuntimeException) throw (RuntimeException)t;
+      if (t instanceof Error e) {
+        throw e;
+      }
+      if (t instanceof RuntimeException re) {
+        throw re;
+      }
     }
   }
 
+  @Contract("!null -> fail")
   public static void rethrowAll(@Nullable Throwable t) throws Exception {
     if (t != null) {
       rethrowUnchecked(t);
-      throw (Exception)t;
+      throw (Exception) t;
     }
   }
 
   public static void rethrow(@Nullable Throwable throwable) {
-    if (throwable instanceof Error) {
-      throw (Error)throwable;
+    if (throwable instanceof Error e) {
+      throw e;
     }
-    else if (throwable instanceof RuntimeException) {
-      throw (RuntimeException)throwable;
+    else if (throwable instanceof RuntimeException re) {
+      throw re;
     }
     else {
       throw new RuntimeException(throwable);
