@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 02/02/2023
+ * @since 2023-02-02
  */
 module consulo.task.impl {
     requires consulo.task.api;

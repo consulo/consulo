@@ -346,20 +346,6 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
 
     public static class Config {
         /**
-         * Ensure that request's hostname matches certificate's common name (CN).
-         */
-        public boolean CHECK_HOSTNAME = false;
-        /**
-         * Ensure that certificate is neither expired nor not yet eligible.
-         */
-        public boolean CHECK_VALIDITY = false;
-
-        @Tag("expired")
-        @Property(surroundWithTag = false)
-        @AbstractCollection(elementTag = "commonName")
-        public LinkedHashSet<String> BROKEN_CERTIFICATES = new LinkedHashSet<>();
-
-        /**
          * Do not show the dialog and accept untrusted certificates automatically.
          */
         public boolean ACCEPT_AUTOMATICALLY = false;

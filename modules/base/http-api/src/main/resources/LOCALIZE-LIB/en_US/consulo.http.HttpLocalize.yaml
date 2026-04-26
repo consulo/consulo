@@ -1,9 +1,37 @@
+certificate.accept.non.trusted.certificates.automatically:
+    text: Accept non-trusted certificates &automatically
+certificate.accepted.certificates:
+    text: 'Accepted certificates:'
+certificate.cannot.add.certificate:
+    text: Cannot Add Certificate
+certificate.cannot.add.certificate.for:
+    text: Cannot add certificate for {0}
+certificate.cannot.remove.certificate:
+    text: Cannot Remove Certificate
+certificate.cannot.remove.certificate.for:
+    text: Cannot remove certificate for {0}
+certificate.certificate.already.exists:
+    text: Certificate already exists
+certificate.choose.certificate:
+    text: Choose Certificate
+certificate.filter.label:
+    text: Certificate files
+certificate.malformed.x509.server.certificate:
+    text: Malformed X509 server certificate
+certificate.no.certificate.selected:
+    text: No certificate selected
+certificate.no.certificates:
+    text: No certificates
+certificate.not.imported:
+    text: Not Imported
 error.connection.failed.redirects:
     text: 'Connection failed: too many redirects'
 error.connection.failed.with.http.code.N:
     text: Connection failed with HTTP code {0}
 http.proxy.configurable:
     text: HTTP Proxy
+label.certificate.root:
+    text: <root>
 label.old.way.jvm.property.used:
     text: '<html>You have JVM property "{0}" set to "{1}".<br>This may lead to incorrect behaviour. Proxy should be set in Settings | HTTP Proxy<br>This JVM property is old and its usage is not recommended by Oracle.<br>(Note: It could have been assigned by some code dynamically.)'
 proxy.direct.rb:

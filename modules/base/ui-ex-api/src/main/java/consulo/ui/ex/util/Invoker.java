@@ -19,6 +19,8 @@ import consulo.disposer.Disposable;
 import consulo.ui.TreeExecutor;
 import consulo.util.concurrent.CancellablePromise;
 
+import java.util.function.Supplier;
+
 /**
  * @author VISTALL
  * @since 24-Feb-22
@@ -71,4 +73,13 @@ public interface Invoker extends Disposable, TreeExecutor {
    * @return {@code true} if the current thread is valid, or {@code false} otherwise
    */
   boolean isValidThread();
+
+  /**
+   * Computes the specified task immediately if the current thread is valid,
+   * or asynchronously after all pending tasks have been processed.
+   *
+   * @param task a task to execute on the valid thread
+   * @return an object to control task processing
+   */
+  <T> CancellablePromise<T> compute(Supplier<? extends T> task);
 }

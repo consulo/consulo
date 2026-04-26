@@ -1,7 +1,11 @@
 package consulo.http.impl.internal.ssl;
 
+import consulo.disposer.Disposable;
+import consulo.http.localize.HttpLocalize;
+import consulo.logging.Logger;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AsyncTreeModel;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.tree.AbstractTreeStructure;
@@ -13,13 +17,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static consulo.http.impl.internal.ssl.CertificateWrapper.CommonField.COMMON_NAME;
 import static consulo.http.impl.internal.ssl.CertificateWrapper.CommonField.ORGANIZATION;
@@ -27,48 +26,50 @@ import static consulo.http.impl.internal.ssl.CertificateWrapper.CommonField.ORGA
 /**
  * @author Mikhail Golubev
  */
-public class CertificateTreeBuilder extends AbstractTreeBuilder {
+public final class CertificateTreeBuilder implements Disposable {
     private static final SimpleTextAttributes STRIKEOUT_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_STRIKEOUT, null);
     private static final RootDescriptor ROOT_DESCRIPTOR = new RootDescriptor();
 
+    private static final Comparator<NodeDescriptor<?>> NODE_COMPARATOR = (o1, o2) -> {
+        if (o1 instanceof OrganizationDescriptor od1 && o2 instanceof OrganizationDescriptor od2) {
+            return od1.getElement().compareTo(od2.getElement());
+        }
+        else if (o1 instanceof CertificateDescriptor cd1 && o2 instanceof CertificateDescriptor cd2) {
+            String cn1 = cd1.getElement().getSubjectField(COMMON_NAME);
+            String cn2 = cd2.getElement().getSubjectField(COMMON_NAME);
+            return cn1.compareTo(cn2);
+        }
+        return 0;
+    };
+
     private final MultiMap<String, CertificateWrapper> myCertificates = new MultiMap<>();
 
+    private final StructureTreeModel<MyTreeStructure> myStructureTreeModel;
+    private final Tree myTree;
+
     public CertificateTreeBuilder(Tree tree) {
-        init(
-            tree,
-            new DefaultTreeModel(new DefaultMutableTreeNode()),
-            new MyTreeStructure(),
-            (o1, o2) -> {
-                if (o1 instanceof OrganizationDescriptor od1 && o2 instanceof OrganizationDescriptor od2) {
-                    return od1.getElement().compareTo(od2.getElement());
-                }
-                else if (o1 instanceof CertificateDescriptor cd1 && o2 instanceof CertificateDescriptor cd2) {
-                    String cn1 = cd1.getElement().getSubjectField(COMMON_NAME);
-                    String cn2 = cd2.getElement().getSubjectField(COMMON_NAME);
-                    return cn1.compareTo(cn2);
-                }
-                return 0;
-            },
-            true
-        );
-        initRootNode();
+        myTree = tree;
+        MyTreeStructure treeStructure = new MyTreeStructure();
+        myStructureTreeModel = new StructureTreeModel(treeStructure, NODE_COMPARATOR, this);
+        AsyncTreeModel asyncTreeModel = new AsyncTreeModel(myStructureTreeModel, this);
+        tree.setModel(asyncTreeModel);
     }
 
-    public void reset(Collection<X509Certificate> certificates) {
+    public void reset(Collection<? extends X509Certificate> certificates) {
         myCertificates.clear();
         for (X509Certificate certificate : certificates) {
             addCertificate(certificate);
         }
         // expand organization nodes at the same time
         //initRootNode();
-        queueUpdateFrom(RootDescriptor.ROOT, true)
-            .doWhenDone(() -> CertificateTreeBuilder.this.expandAll(null));
+        myStructureTreeModel.invalidateAsync();
+        TreeUtil.expandAll(myTree);
     }
 
     public void addCertificate(X509Certificate certificate) {
         CertificateWrapper wrapper = new CertificateWrapper(certificate);
         myCertificates.putValue(wrapper.getSubjectField(ORGANIZATION), wrapper);
-        queueUpdateFrom(RootDescriptor.ROOT, true);
+        myStructureTreeModel.invalidateAsync();
     }
 
     /**
@@ -77,7 +78,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     public void removeCertificate(X509Certificate certificate) {
         CertificateWrapper wrapper = new CertificateWrapper(certificate);
         myCertificates.remove(wrapper.getSubjectField(ORGANIZATION), wrapper);
-        queueUpdateFrom(RootDescriptor.ROOT, true);
+        myStructureTreeModel.invalidateAsync();
     }
 
     public List<X509Certificate> getCertificates() {
@@ -89,15 +90,11 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     }
 
     public void selectCertificate(X509Certificate certificate) {
-        select(new CertificateWrapper(certificate));
+        myStructureTreeModel.select(new CertificateWrapper(certificate), myTree, path -> {});
     }
 
     public void selectFirstCertificate() {
-        if (!isEmpty()) {
-            Tree tree = (Tree)getTree();
-            TreePath path = TreeUtil.getFirstLeafNodePath(tree);
-            tree.addSelectionPath(path);
-        }
+        TreeUtil.promiseSelectFirstLeaf(myTree);
     }
 
     /**
@@ -107,12 +104,23 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
      * @return - selected certificates
      */
     public Set<X509Certificate> getSelectedCertificates(boolean addFromOrganization) {
-        Set<X509Certificate> selected = getSelectedElements(X509Certificate.class);
-        if (addFromOrganization) {
-            for (String s : getSelectedElements(String.class)) {
-                selected.addAll(getCertificatesByOrganization(s));
+        Set<X509Certificate> selected = new HashSet<>();
+        TreeUtil.collectSelectedUserObjects(myTree).forEach(o -> {
+            if (o instanceof CertificateDescriptor certDescr) {
+                selected.add(certDescr.getElement().getCertificate());
             }
-        }
+            else if (o instanceof OrganizationDescriptor orgDescr) {
+                if (addFromOrganization) {
+                    selected.addAll(getCertificatesByOrganization(orgDescr.getElement()));
+                }
+            }
+            else if (o instanceof RootDescriptor) {
+                // nop
+            }
+            else {
+                Logger.getInstance(getClass()).error("Unknown tree node object of type: " + o.getClass().getName());
+            }
+        });
         return selected;
     }
 
@@ -121,34 +129,25 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
         return certificates.isEmpty() ? null : certificates.iterator().next();
     }
 
-    
     public List<X509Certificate> getCertificatesByOrganization(String organizationName) {
         Collection<CertificateWrapper> wrappers = myCertificates.get(organizationName);
         return extract(wrappers);
+    }
+
+    @Override
+    public void dispose() {
     }
 
     private static List<X509Certificate> extract(Collection<CertificateWrapper> wrappers) {
         return ContainerUtil.map(wrappers, CertificateWrapper::getCertificate);
     }
 
-    @Override
-    protected Object transformElement(Object object) {
-        return object instanceof CertificateWrapper certificateWrapper ? certificateWrapper.getCertificate() : object;
-    }
-
-    @Override
-    protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
-        return super.isAutoExpandNode(nodeDescriptor) || nodeDescriptor instanceof OrganizationDescriptor;
-    }
-
-    class MyTreeStructure extends AbstractTreeStructure {
-        
+    final class MyTreeStructure extends AbstractTreeStructure {
         @Override
         public Object getRootElement() {
             return RootDescriptor.ROOT;
         }
 
-        
         @Override
         public Object[] getChildElements(Object element) {
             if (element == RootDescriptor.ROOT) {
@@ -168,19 +167,18 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
             else if (element instanceof String) {
                 return RootDescriptor.ROOT;
             }
-            return ((CertificateWrapper)element).getSubjectField(ORGANIZATION);
+            return ((CertificateWrapper) element).getSubjectField(ORGANIZATION);
         }
 
-        
         @Override
-        public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+        public NodeDescriptor<?> createDescriptor(Object element, NodeDescriptor parentDescriptor) {
             if (element == RootDescriptor.ROOT) {
                 return ROOT_DESCRIPTOR;
             }
-            else if (element instanceof String str) {
-                return new OrganizationDescriptor(parentDescriptor, str);
+            else if (element instanceof String key) {
+                return new OrganizationDescriptor(parentDescriptor, key);
             }
-            return new CertificateDescriptor(parentDescriptor, (CertificateWrapper)element);
+            return new CertificateDescriptor(parentDescriptor, (CertificateWrapper) element);
         }
 
         @Override
@@ -196,7 +194,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
 
     // Auxiliary node descriptors
 
-    static abstract class MyNodeDescriptor<T> extends PresentableNodeDescriptor<T> {
+    abstract static class MyNodeDescriptor<T> extends PresentableNodeDescriptor<T> {
         private final T myObject;
 
         MyNodeDescriptor(@Nullable NodeDescriptor parentDescriptor, T object) {
@@ -210,7 +208,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
         }
     }
 
-    static class RootDescriptor extends MyNodeDescriptor<Object> {
+    static final class RootDescriptor extends MyNodeDescriptor<Object> {
         public static final Object ROOT = new Object();
 
         private RootDescriptor() {
@@ -219,11 +217,11 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
 
         @Override
         protected void update(PresentationData presentation) {
-            presentation.addText("<root>", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            presentation.addText(HttpLocalize.labelCertificateRoot(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
     }
 
-    static class OrganizationDescriptor extends MyNodeDescriptor<String> {
+    static final class OrganizationDescriptor extends MyNodeDescriptor<String> {
         private OrganizationDescriptor(@Nullable NodeDescriptor parentDescriptor, String object) {
             super(parentDescriptor, object);
         }
@@ -234,7 +232,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
         }
     }
 
-    static class CertificateDescriptor extends MyNodeDescriptor<CertificateWrapper> {
+    static final class CertificateDescriptor extends MyNodeDescriptor<CertificateWrapper> {
         private CertificateDescriptor(@Nullable NodeDescriptor parentDescriptor, CertificateWrapper object) {
             super(parentDescriptor, object);
         }

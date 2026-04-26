@@ -23,20 +23,23 @@ import consulo.ui.ex.SimpleTextAttributes;
 
 import org.jspecify.annotations.Nullable;
 
-public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
+import java.awt.*;
+import java.util.List;
+import java.util.Objects;
 
-  private PresentationData myTemplatePresentation;
-  private PresentationData myUpdatedPresentation;
+public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
+  private volatile @Nullable PresentationData myTemplatePresentation = null;
+  private volatile @Nullable PresentationData myUpdatedPresentation = null;
 
   protected PresentableNodeDescriptor(@Nullable NodeDescriptor parentDescriptor) {
     super(parentDescriptor);
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public final boolean update() {
     if (shouldUpdateData()) {
-      PresentationData before = getPresentation().clone();
+      PresentationData before = getPresentation();
       PresentationData updated = getUpdatedPresentation();
       return shouldApply() && apply(updated, before);
     }
@@ -49,8 +52,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 
   @Override
   public void applyFrom(NodeDescriptor desc) {
-    if (desc instanceof PresentableNodeDescriptor) {
-      PresentableNodeDescriptor pnd = (PresentableNodeDescriptor)desc;
+    if (desc instanceof PresentableNodeDescriptor pnd) {
       apply(pnd.getPresentation());
     }
     else {
@@ -60,29 +62,38 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 
   protected final boolean apply(PresentationData presentation, @Nullable PresentationData before) {
     setIcon(presentation.getIcon());
+    // If the node has both plain and colored text, the plain one takes priority for myName because it's also supposed to be plain,
+    // and it can be used, e.g. for sorting, while the colored version may contain information not needed for sorting such as inplace comments.
     myName = presentation.getPresentableText();
+    if (myName == null) {
+      myName = getColoredTextAsPlainText(presentation);
+    }
     myColor = presentation.getForcedTextForeground();
-    boolean updated = before == null || !presentation.equals(before);
+    boolean updated = !presentation.equals(before);
 
-    if (myUpdatedPresentation == null) {
-      myUpdatedPresentation = createPresentation();
+    PresentationData updatedPresentation = myUpdatedPresentation;
+    if (updatedPresentation == null) {
+      updatedPresentation = createPresentation();
+    } else {
+      updatedPresentation = updatedPresentation.clone();
     }
 
-    myUpdatedPresentation.copyFrom(presentation);
+    updatedPresentation.copyFrom(presentation);
 
-    if (myTemplatePresentation != null) {
-      myUpdatedPresentation.applyFrom(myTemplatePresentation);
+    PresentationData templatePresentation = myTemplatePresentation;
+    if (templatePresentation != null) {
+      updatedPresentation.applyFrom(templatePresentation);
     }
 
-    updated |= myUpdatedPresentation.isChanged();
-    myUpdatedPresentation.setChanged(false);
+    updated |= updatedPresentation.isChanged();
+    updatedPresentation.setChanged(false);
 
+    myUpdatedPresentation = updatedPresentation;
     return updated;
   }
 
   private PresentationData getUpdatedPresentation() {
-    PresentationData presentation = myUpdatedPresentation != null ? myUpdatedPresentation : createPresentation();
-    myUpdatedPresentation = presentation;
+    PresentationData presentation = getPresentation().clone();
     presentation.clear();
     presentation.setBackground(computeBackgroundColor());
     update(presentation);
@@ -91,6 +102,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
       postprocess(presentation);
     }
 
+    myUpdatedPresentation = presentation;
     return presentation;
   }
 
@@ -104,7 +116,6 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
   }
 
   protected void postprocess(PresentationData date) {
-
   }
 
   protected boolean shouldPostprocess() {
@@ -119,26 +130,24 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     return true;
   }
 
+  protected @Nullable Color computeBackgroundColor() {
+    return null;
+  }
+
   protected abstract void update(PresentationData presentation);
 
-  
   public final PresentationData getPresentation() {
-    PresentationData result;
-    if (myUpdatedPresentation == null) {
-      result = getTemplatePresentation();
-    }
-    else {
-      result = myUpdatedPresentation;
-    }
-    return result;
+    PresentationData updatedPresentation = myUpdatedPresentation;
+    return updatedPresentation == null ? getTemplatePresentation() : updatedPresentation;
   }
 
   protected final PresentationData getTemplatePresentation() {
-    if (myTemplatePresentation == null) {
-      myTemplatePresentation = createPresentation();
+    PresentationData templatePresentation = myTemplatePresentation;
+    if (templatePresentation == null) {
+      templatePresentation = createPresentation();
+      myTemplatePresentation = templatePresentation;
     }
-
-    return myTemplatePresentation;
+    return templatePresentation;
   }
 
   public boolean isContentHighlighted() {
@@ -171,27 +180,25 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     return false;
   }
 
-  public static class ColoredFragment {
+  public static final class ColoredFragment {
     private final LocalizeValue myText;
     private final LocalizeValue myToolTip;
     private final SimpleTextAttributes myAttributes;
 
-    public ColoredFragment(LocalizeValue aText, SimpleTextAttributes aAttributes) {
-      this(aText, LocalizeValue.empty(), aAttributes);
+    public ColoredFragment(LocalizeValue text, SimpleTextAttributes attributes) {
+      this(text, LocalizeValue.empty(), attributes);
     }
 
-    public ColoredFragment(LocalizeValue aText, LocalizeValue toolTip, SimpleTextAttributes aAttributes) {
-      myText = aText;
-      myAttributes = aAttributes;
+    public ColoredFragment(LocalizeValue text, LocalizeValue toolTip, SimpleTextAttributes attributes) {
+      myText = text;
+      myAttributes = attributes;
       myToolTip = toolTip;
     }
 
-    
     public LocalizeValue getToolTip() {
       return myToolTip;
     }
 
-    
     public LocalizeValue getText() {
       return myText;
     }
@@ -200,37 +207,48 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
       return myAttributes;
     }
 
-    public boolean equals(Object o) {
+    @Override
+    public boolean equals(@Nullable Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      ColoredFragment that = (ColoredFragment)o;
+      ColoredFragment that = (ColoredFragment) o;
 
-      if (myAttributes != null ? !myAttributes.equals(that.myAttributes) : that.myAttributes != null) return false;
-      if (myText != null ? !myText.equals(that.myText) : that.myText != null) return false;
-      if (myToolTip != null ? !myToolTip.equals(that.myToolTip) : that.myToolTip != null) return false;
-
-      return true;
+      return Objects.equals(myAttributes, that.myAttributes)
+        && myText.equals(that.myText)
+        && myToolTip.equals(that.myToolTip);
     }
 
+    @Override
     public int hashCode() {
-      int result;
-      result = (myText != null ? myText.hashCode() : 0);
-      result = 31 * result + (myToolTip != null ? myToolTip.hashCode() : 0);
-      result = 31 * result + (myAttributes != null ? myAttributes.hashCode() : 0);
+      int result = myText.hashCode();
+      result = 31 * result + myToolTip.hashCode();
+      result = 31 * result + Objects.hashCode(myAttributes);
       return result;
     }
   }
 
   @Override
   public String getName() {
-    if (!getPresentation().getColoredText().isEmpty()) {
-      StringBuilder result = new StringBuilder("");
-      for (ColoredFragment each : getPresentation().getColoredText()) {
-        result.append(each.getText());
+    String result = getColoredTextAsPlainText(getPresentation());
+    return result == null ? myName : result;
+  }
+
+  protected static @Nullable String getColoredTextAsPlainText(PresentationData presentation) {
+    List<ColoredFragment> textFragments = presentation.getColoredText();
+    int size = textFragments.size();
+    if (size == 0) {
+      return null;
+    }
+    else if (size == 1) {
+      return textFragments.get(0).getText().getNullIfEmpty();
+    }
+    else {
+      StringBuilder result = new StringBuilder();
+      for (ColoredFragment each : textFragments) {
+        result.append(each.getText().get());
       }
       return result.toString();
     }
-    return myName;
   }
 }

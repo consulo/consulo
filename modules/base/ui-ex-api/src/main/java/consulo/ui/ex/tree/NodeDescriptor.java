@@ -80,9 +80,8 @@ public abstract class NodeDescriptor<E> {
   }
 
   public int getWeight() {
-    E element = getElement();
-    if (element instanceof WeighedItem) {
-      return ((WeighedItem)element).getWeight();
+    if (getElement() instanceof WeighedItem weighedItem) {
+      return weighedItem.getWeight();
     }
     return 30;
   }
@@ -122,7 +121,6 @@ public abstract class NodeDescriptor<E> {
   }
 
   public abstract static class NodeComparator<T extends NodeDescriptor> implements Comparator<T> {
-
     private long myStamp;
 
     public final void setStamp(long stamp) {
@@ -138,7 +136,6 @@ public abstract class NodeDescriptor<E> {
     }
 
     public static class Delegate<T extends NodeDescriptor> extends NodeComparator<T> {
-
       private NodeComparator<T> myDelegate;
 
       protected Delegate(NodeComparator<T> delegate) {
