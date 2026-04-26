@@ -17,8 +17,8 @@ package consulo.application.impl.internal.store;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.impl.internal.macro.ApplicationPathMacroManagerImpl;
 import consulo.application.impl.internal.macro.PathMacrosImpl;
-import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
@@ -51,12 +51,17 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   public ApplicationStoreImpl(Application application, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(applicationDefaultStoreCache);
     myApplication = application;
+
+    SystemOnlyPathMacros macros = new SystemOnlyPathMacros();
+    SystemOnlyPathMacrosService pathMacrosService = new SystemOnlyPathMacrosService(macros);
+    ApplicationPathMacroManagerImpl pathMacroManager = new ApplicationPathMacroManagerImpl(macros);
+
     myStateStorageManager = new StateStorageManagerImpl(
-        EmptyTrackingPathMacroSubstitutor.INSTANCE,
+        new TrackingPathMacroSubstitutorImpl(() -> pathMacroManager),
         ROOT_ELEMENT_NAME,
         application,
         () -> null,
-        () -> EmptyPathMacrosService.INSTANCE, 
+        () -> pathMacrosService,
         StateStorageFacade.JAVA_IO
       ) {
       

@@ -19,22 +19,33 @@ import consulo.application.macro.PathMacros;
 import consulo.component.macro.PathMacroFilter;
 import org.jdom.Element;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 2026-04-25
+ * @since 2026-04-26
  */
-public class EmptyPathMacrosService extends PathMacrosService {
-    public static final EmptyPathMacrosService INSTANCE = new EmptyPathMacrosService();
+public class SystemOnlyPathMacrosService extends PathMacrosService {
+    private final SystemOnlyPathMacros myMacros;
 
-    @Override
-    public Set<String> getMacroNames(Element root, PathMacroFilter filter, PathMacros pathMacros) {
-        return Set.of();
+    public SystemOnlyPathMacrosService(SystemOnlyPathMacros macros) {
+        myMacros = macros;
     }
 
     @Override
-    public Set<String> getMacroNames(Element e) {
-        return Set.of();
+    public PathMacros getPathMacros() {
+        return myMacros;
+    }
+
+    @Override
+    public Set<String> getMacroNames(Element root, PathMacroFilter filter, PathMacros pathMacros) {
+        PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
+        collector.substitute(root, true, false, filter);
+        HashSet<String> result = new HashSet<>(collector.getMacroMap().keySet());
+
+        result.removeAll(pathMacros.getSystemMacroNames());
+
+        return result;
     }
 }
