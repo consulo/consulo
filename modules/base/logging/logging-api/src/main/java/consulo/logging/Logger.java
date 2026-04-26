@@ -54,7 +54,7 @@ public interface Logger {
 
     public abstract void debug(String message);
 
-    public abstract void debug(@Nullable Throwable t);
+    public abstract void debug(Throwable t);
 
     public abstract void debug(String message, @Nullable Throwable t);
 
