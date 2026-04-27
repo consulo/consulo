@@ -536,7 +536,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.script;
     exports consulo.ide.impl.start;
     exports consulo.ide.impl.startup.customize;
-    exports consulo.ide.impl.task;
     exports consulo.ide.impl.ui;
     exports consulo.ide.impl.ui.app;
     exports consulo.ide.impl.ui.app.impl.settings;

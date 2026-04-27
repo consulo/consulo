@@ -266,6 +266,10 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         return null;
     }
 
+    public OptionsEditor getEditor() {
+        return myEditor;
+    }
+
     private class ApplyAction extends DialogWrapperAction {
         public ApplyAction() {
             super(CommonLocalize.buttonApply());

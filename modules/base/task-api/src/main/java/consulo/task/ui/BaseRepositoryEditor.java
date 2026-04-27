@@ -20,12 +20,12 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.http.HttpProxyManager;
+import consulo.http.HttpProxySettingService;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
 import consulo.task.BaseRepository;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
-import consulo.task.internal.TaskInternalHelper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -88,7 +88,8 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
       @Override
       @RequiredUIAccess
       public void actionPerformed(ActionEvent e) {
-        myProject.getApplication().getInstance(TaskInternalHelper.class).openProxySettings(myProject, () -> enableButtons());
+        myProject.getApplication().getInstance(HttpProxySettingService.class)
+          .showSettings(myProject).whenComplete((o, throwable) -> enableButtons());
       }
     });
 

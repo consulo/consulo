@@ -41,13 +41,12 @@ import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -59,7 +58,8 @@ import java.util.function.Function;
 public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSettingsUtil {
     private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 
-    private final AtomicBoolean myShown = new AtomicBoolean(false);
+    private volatile DesktopSettingsDialog myCurrentSettingsDialog;
+    private AsyncResult<Void> myShowDialogResult = AsyncResult.rejected();
 
     private final DefaultProjectFactory myDefaultProjectFactory;
 
@@ -71,7 +71,6 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         mySdksModel = new DefaultSdksModel(sdkTableProvider);
     }
 
-    
     @Override
     public SettingsSdksModel getSdksModel() {
         mySdksModel.initializeIfNeed();
@@ -89,10 +88,19 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
         AsyncResult<Void> result = AsyncResult.undefined();
 
+        DesktopSettingsDialog currentDialog = myCurrentSettingsDialog;
+        if (currentDialog != null) {
+            OptionsEditor editor = myCurrentSettingsDialog.getEditor();
+
+            editor.doSelect(strategy, () -> {
+                onShow.accept(currentDialog);
+            });
+
+            return myShowDialogResult;
+        }
+
         UIAccess uiAccess = UIAccess.current();
         uiAccess.give(() -> {
-            myShown.set(true);
-
             DesktopSettingsDialog dialog;
             if (ModalityPerProjectEAPDescriptor.is()) {
                 dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, true, onShow);
@@ -101,15 +109,22 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
                 dialog = new DesktopSettingsDialog(actualProject, configurableBuilder, strategy, onShow);
             }
 
+            myCurrentSettingsDialog = dialog;
+
             Disposer.register(dialog.getDisposable(), this::clearCaches);
 
-            dialog.showAsync().doWhenProcessed(() -> myShown.set(false)).notify(result);
+            dialog.showAsync().doWhenProcessed(() -> {
+                myShowDialogResult = AsyncResult.rejected();
+                myCurrentSettingsDialog = null;
+            }).notify(result);
         });
+
+        myShowDialogResult = result;
 
         return result;
     }
 
-    
+
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
     @Override
@@ -127,7 +142,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         });
     }
 
-    
+
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
@@ -140,7 +155,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    
+
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
@@ -153,7 +168,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    
+
     @Override
     @RequiredUIAccess
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
@@ -191,7 +206,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         return null;
     }
 
-    
+
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
@@ -288,6 +303,6 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     @Override
     public boolean isAlreadyShown(Project project) {
-        return myShown.get();
+        return myCurrentSettingsDialog != null;
     }
 }

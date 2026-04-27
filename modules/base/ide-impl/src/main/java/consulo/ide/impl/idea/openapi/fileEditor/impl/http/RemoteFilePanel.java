@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.http.HttpProxySettingService;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -90,7 +91,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
             remoteFileInfo.restartDownloading();
         });
         myChangeProxySettingsButton.addActionListener(
-            e -> ShowSettingsUtil.getInstance().editConfigurable(myMainPanel, new HttpProxyConfigurable())
+            e -> Application.get().getInstance(HttpProxySettingService.class).showSettings(project)
         );
         showCard(DOWNLOADING_CARD);
         remoteFileInfo.startDownloading();

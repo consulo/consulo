@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.task.internal;
+package consulo.http;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 02-Aug-22
+ * @since 2026-04-27
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface TaskInternalHelper {
-  @RequiredUIAccess
-  void openProxySettings(Project project, Runnable afterCallback);
+public interface HttpProxySettingService {
+    @RequiredUIAccess
+    CompletableFuture<?> showSettings(@Nullable ComponentManager project);
 }

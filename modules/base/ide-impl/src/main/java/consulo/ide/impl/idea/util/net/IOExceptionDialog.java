@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util.net;
 
+import consulo.application.Application;
+import consulo.http.HttpProxySettingService;
 import consulo.http.impl.internal.proxy.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
@@ -61,8 +63,7 @@ public class IOExceptionDialog extends DialogWrapper {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(ActionEvent e) {
-                    ShowSettingsUtil.getInstance()
-                        .editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class), new HttpProxyConfigurable());
+                    Application.get().getInstance(HttpProxySettingService.class).showSettings(null);
                 }
             }
         };

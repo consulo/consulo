@@ -695,34 +695,38 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         });
     }
 
+    public void doSelect(ConfigurablePreselectStrategy preselectStrategy, Runnable afterTreeLoad) {
+        Configurable preselectedConfigurable = preselectStrategy.get(myBuildConfigurables);
+
+        myProject.getUIAccess().give(() -> {
+            myTreeDecoratorPanel.invalidate();
+            myTreeDecoratorPanel.stopLoading();
+
+            myTree.rebuild(() -> {
+                if (preselectedConfigurable != BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION) {
+                    if (preselectedConfigurable != null) {
+                        myTree.select(preselectedConfigurable);
+                    }
+                    else {
+                        myTree.selectFirst();
+                    }
+                }
+
+                afterTreeLoad.run();
+            });
+
+            mySearchWrapper.setVisible(true);
+            myTree.getComponent().setVisible(true);
+        });
+    }
+
     private void run() {
         try {
             myBuildConfigurables = myConfigurablesBuilder.apply(myProject);
 
-            Configurable preselectedConfigurable = myConfigurablePreselectStrategy.get(myBuildConfigurables);
-
             myConfigurablesLoaded = true;
 
-            myProject.getUIAccess().give(() -> {
-                myTreeDecoratorPanel.invalidate();
-                myTreeDecoratorPanel.stopLoading();
-
-                myTree.rebuild(() -> {
-                    if (preselectedConfigurable != BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION) {
-                        if (preselectedConfigurable != null) {
-                            myTree.select(preselectedConfigurable);
-                        }
-                        else {
-                            myTree.selectFirst();
-                        }
-                    }
-
-                    myAfterTreeLoad.run();
-                });
-
-                mySearchWrapper.setVisible(true);
-                myTree.getComponent().setVisible(true);
-            });
+            doSelect(myConfigurablePreselectStrategy, myAfterTreeLoad);
         }
         catch (Exception e) {
             if (e instanceof ControlFlowException) {
