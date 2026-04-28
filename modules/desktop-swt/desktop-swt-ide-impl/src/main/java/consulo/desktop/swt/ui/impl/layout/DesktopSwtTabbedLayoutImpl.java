@@ -36,10 +36,6 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
     private final List<DesktopSwtTabImpl> myTabs = new ArrayList<>();
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    @Override
     protected CTabFolder createSWT(Composite parent) {
         return new CTabFolder(parent, SWT.TOP | SWT.FLAT);
     }
@@ -65,14 +61,12 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
         }
     }
 
-    
     @Override
     public Tab createTab() {
         return new DesktopSwtTabImpl();
     }
 
     @RequiredUIAccess
-    
     @Override
     public Tab addTab(Tab tab, Component component) {
         DesktopSwtTabImpl swtTab = (DesktopSwtTabImpl) tab;
@@ -84,7 +78,6 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
         return tab;
     }
 
-    
     @Override
     @RequiredUIAccess
     public Tab addTab(String tabName, Component component) {

@@ -39,11 +39,6 @@ import java.util.function.Consumer;
  */
 public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVaadinComponentWrapper, LC extends LayoutConstraint>
     extends VaadinComponentDelegate<C> implements Layout<LC> {
-    @Override
-    public void addStyle(LayoutStyle style) {
-        // TODO
-    }
-
     @RequiredUIAccess
     @Override
     public void removeAll() {

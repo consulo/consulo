@@ -43,17 +43,11 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    
-    @Override
     public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
         toVaadinComponent().add(TargetVaddin.to(component));
         return this;
     }
 
-    
     @Override
     public WebVerticalLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

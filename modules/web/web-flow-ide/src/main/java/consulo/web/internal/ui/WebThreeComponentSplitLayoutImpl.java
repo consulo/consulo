@@ -68,17 +68,11 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    
-    @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @RequiredUIAccess
-    
     @Override
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
         if (component != null) {

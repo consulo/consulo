@@ -72,11 +72,6 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    
-    @Override
     public WebScrollLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();
     }

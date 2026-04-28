@@ -48,13 +48,8 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
         toVaadinComponent().setSplitterPosition(percent);
     }
 
-    @Override
-    public void addStyle(LayoutStyle style) {
-
-    }
 
     @RequiredUIAccess
-    
     @Override
     public TwoComponentSplitLayout setFirstComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);

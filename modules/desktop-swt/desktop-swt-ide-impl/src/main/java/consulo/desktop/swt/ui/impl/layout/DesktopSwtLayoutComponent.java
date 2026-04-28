@@ -43,10 +43,6 @@ public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, Layo
     private MultiMap<String, Pair<SWTComponentDelegate<?>, Object>> myMappedComponents = new MultiMap<>();
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    @Override
     protected Composite createSWT(Composite parent) {
         return new Composite(parent, SWT.NONE);
     }

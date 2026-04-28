@@ -82,17 +82,11 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    
-    @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @RequiredUIAccess
-    
     @Override
     public TableLayout add(consulo.ui.Component component, TableCell tableCell) {
         toVaadinComponent().add(component, tableCell);

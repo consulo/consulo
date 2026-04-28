@@ -38,14 +38,9 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
         }
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
-    }
-
-    @Override
-    public void addStyle(LayoutStyle style) {
     }
 
     @RequiredUIAccess
@@ -60,7 +55,6 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
     }
 
     @RequiredUIAccess
-    
     @Override
     public WrappedLayout set(@Nullable Component component) {
         if (component != null) {

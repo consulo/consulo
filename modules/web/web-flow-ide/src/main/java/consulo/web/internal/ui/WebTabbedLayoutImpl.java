@@ -51,11 +51,6 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-    }
-
-    
-    @Override
     @RequiredUIAccess
     public Tab addTab(Tab tab, Component component) {
         WebTabImpl webTab = (WebTabImpl) tab;
@@ -67,7 +62,6 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         return tab;
     }
 
-    
     @Override
     @RequiredUIAccess
     public Tab addTab(String tabName, Component component) {
