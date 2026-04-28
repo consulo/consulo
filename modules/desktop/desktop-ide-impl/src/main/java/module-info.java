@@ -40,4 +40,5 @@ module consulo.desktop.ide.impl {
     exports consulo.desktop.util.windows.defender to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
 
     opens consulo.desktop.util.windows to com.sun.jna;
+    opens consulo.desktop.util.windows.defender to com.sun.jna;
 }
