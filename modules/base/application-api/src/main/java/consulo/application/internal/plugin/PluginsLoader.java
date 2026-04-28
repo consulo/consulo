@@ -205,7 +205,6 @@ public class PluginsLoader {
 
         PluginHolderModificator.setPluginLoadOrder(id2Index);
 
-        long time = System.currentTimeMillis();
         int i = 0;
         for (PluginDescriptorImpl pluginDescriptor : result) {
             // platform plugin already have classloader
@@ -246,8 +245,6 @@ public class PluginsLoader {
                 progress.showProgress("", PLUGINS_PROGRESS_MAX_VALUE + (i++ / (float) result.size()) * 0.35f);
             }
         }
-
-        System.out.println((System.currentTimeMillis() - time) +  " ms");
 
         PluginHolderModificator.initialize(pluginDescriptors);
 
