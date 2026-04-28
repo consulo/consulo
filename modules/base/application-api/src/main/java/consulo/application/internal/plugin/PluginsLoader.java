@@ -205,6 +205,7 @@ public class PluginsLoader {
 
         PluginHolderModificator.setPluginLoadOrder(id2Index);
 
+        long time = System.currentTimeMillis();
         int i = 0;
         for (PluginDescriptorImpl pluginDescriptor : result) {
             // platform plugin already have classloader
@@ -245,6 +246,8 @@ public class PluginsLoader {
                 progress.showProgress("", PLUGINS_PROGRESS_MAX_VALUE + (i++ / (float) result.size()) * 0.35f);
             }
         }
+
+        System.out.println((System.currentTimeMillis() - time) +  " ms");
 
         PluginHolderModificator.initialize(pluginDescriptors);
 
@@ -325,30 +328,30 @@ public class PluginsLoader {
                                        boolean isHeadlessMode,
                                        boolean isPreInstalledPath) {
         File[] files = pluginsHome.listFiles();
-        if (files != null) {
-            int i = result.size();
-            for (File file : files) {
-                Runnable mark = stat.mark(file.getName());
-                PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, C_LOG);
-                if (descriptor == null) {
-                    mark.run();
-                    continue;
-                }
+        if (files == null) {
+            return;
+        }
 
-                if (progress != null) {
-                    progress.showProgress(StringUtil.notNullize(descriptor.getName()), PLUGINS_PROGRESS_MAX_VALUE * ((float) ++i / pluginsCount));
+        List<PluginDescriptorImpl> loadedPlugins = Arrays.stream(files)
+            .parallel()
+            .map(file -> PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, C_LOG))
+            .filter(Objects::nonNull)
+            .toList();
+
+        int i = result.size();
+        for (PluginDescriptorImpl descriptor : loadedPlugins) {
+            if (progress != null) {
+                progress.showProgress(StringUtil.notNullize(descriptor.getName()), PLUGINS_PROGRESS_MAX_VALUE * ((float) ++i / pluginsCount));
+            }
+            int oldIndex = result.indexOf(descriptor);
+            if (oldIndex >= 0) {
+                PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
+                if (StringUtil.compareVersionNumbers(oldDescriptor.getVersion(), descriptor.getVersion()) < 0) {
+                    result.set(oldIndex, descriptor);
                 }
-                int oldIndex = result.indexOf(descriptor);
-                if (oldIndex >= 0) {
-                    PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
-                    if (StringUtil.compareVersionNumbers(oldDescriptor.getVersion(), descriptor.getVersion()) < 0) {
-                        result.set(oldIndex, descriptor);
-                    }
-                }
-                else {
-                    result.add(descriptor);
-                }
-                mark.run();
+            }
+            else {
+                result.add(descriptor);
             }
         }
     }

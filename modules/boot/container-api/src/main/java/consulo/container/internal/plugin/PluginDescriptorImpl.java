@@ -24,8 +24,10 @@ import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import org.jspecify.annotations.Nullable;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -295,7 +297,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
             return Collections.emptyList();
         }
 
-        List<ClassPathItem> result = new ArrayList<ClassPathItem>();
+        List<ClassPathItem> result = new ArrayList<>();
         File libDir = new File(myPath, "lib");
 
         Map<String, Set<String>> data = readIndex(libDir);
@@ -312,14 +314,17 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
             return Collections.emptyMap();
         }
 
-        try {
-            List<String> lines = Files.readAllLines(jarIndex.toPath());
+        Map<String, Set<String>> data = new HashMap<>();
 
-            Map<String, Set<String>> data = new HashMap<>();
-
+        try (BufferedReader bufferedReader = Files.newBufferedReader(jarIndex.toPath(), StandardCharsets.UTF_8)) {
             String currentJarFile = null;
-            for (String line : lines) {
-                if (line.isEmpty()) {
+            for (;;) {
+                String line = bufferedReader.readLine();
+                if (line == null) {
+                    break;
+                }
+
+                if(line.isEmpty()) {
                     continue;
                 }
 
@@ -335,7 +340,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
                     if (line.startsWith(META_INF_VERSION)) {
                         int metaInfVersionIndex = line.indexOf('/', META_INF_VERSION.length() + 1);
                         paths.add(line.substring(metaInfVersionIndex + 1, line.length()));
-                    } else {
+                    }
+                    else {
                         paths.add(line);
                     }
                 }
