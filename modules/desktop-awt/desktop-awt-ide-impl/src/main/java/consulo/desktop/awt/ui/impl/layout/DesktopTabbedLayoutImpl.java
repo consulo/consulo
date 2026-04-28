@@ -60,17 +60,10 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
-
-    
-    @Override
     public Tab createTab() {
         return new DesktopTabImpl(this);
     }
 
-    
     @Override
     @RequiredUIAccess
     public Tab addTab(Tab tab, Component component) {

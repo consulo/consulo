@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayoutStyle;
 
 import javax.swing.*;
 
@@ -31,7 +32,13 @@ public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase<JPanel, Stati
         initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(JBUI.scale(gapInPixels)));
     }
 
-    
+    @Override
+    public void addStyle(HorizontalLayoutStyle style) {
+        switch (style) {
+            case TRANSPARENT_BACKGROUND -> toAWTComponent().setOpaque(false);
+        }
+    }
+
     @Override
     public HorizontalLayout add(Component component, StaticPosition constraint) {
         return (HorizontalLayout) super.add(component, constraint);

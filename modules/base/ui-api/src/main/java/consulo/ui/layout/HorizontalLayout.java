@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.PseudoComponent;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,7 +31,7 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public interface HorizontalLayout extends Layout<StaticPosition> {
+public interface HorizontalLayout extends Layout<StaticPosition>, HasComponentStyle<HorizontalLayoutStyle> {
     static HorizontalLayout create() {
         return create(UIConstant.DEFAULT_SPACING_PX);
     }

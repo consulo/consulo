@@ -18,6 +18,7 @@ package consulo.desktop.swt.ui.impl.layout;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayoutStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Layout;
@@ -37,9 +38,13 @@ public class DesktopSwtHorizontalLayoutImpl extends DesktopSwtLayoutComponent<St
         return layout;
     }
 
-    
     @Override
     public HorizontalLayout add(Component component, StaticPosition constraint) {
         return (HorizontalLayout) super.add(component, constraint);
+    }
+
+    @Override
+    public void addStyle(HorizontalLayoutStyle style) {
+
     }
 }

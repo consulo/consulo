@@ -84,11 +84,6 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
-
-    @Override
     public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         toAWTComponent(); // initialize root
 

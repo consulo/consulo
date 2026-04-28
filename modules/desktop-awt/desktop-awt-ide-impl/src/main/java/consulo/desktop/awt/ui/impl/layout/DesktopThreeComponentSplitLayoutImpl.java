@@ -43,13 +43,7 @@ public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate
         return new ThreeComponentsSplitter(myPosition == SplitLayoutPosition.VERTICAL);
     }
 
-    @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
-
     @RequiredUIAccess
-    
     @Override
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
         toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));

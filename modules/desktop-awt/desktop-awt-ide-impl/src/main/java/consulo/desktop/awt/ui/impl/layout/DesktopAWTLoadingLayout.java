@@ -50,11 +50,6 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
         return new AWTLoadingPanel(this, (JComponent) TargetAWT.to(myInnerLayout), myParent);
     }
 
-    @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
-
     @RequiredUIAccess
     @Override
     public <Value> Future<Value> startLoading(Supplier<Value> valueGetter, BiConsumer<L, Value> uiSetter) {

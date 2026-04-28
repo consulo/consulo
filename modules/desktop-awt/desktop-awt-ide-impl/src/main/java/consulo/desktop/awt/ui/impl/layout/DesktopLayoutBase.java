@@ -94,10 +94,6 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         panel.repaint();
     }
 
-    @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
 
     @RequiredUIAccess
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.impl.layout;
+package consulo.ui.layout;
 
-import consulo.ui.layout.LayoutStyle;
-
-import javax.swing.*;
+import consulo.ui.ComponentStyle;
 
 /**
  * @author VISTALL
- * @since 2025-02-25
+ * @since 2026-04-28
  */
-public class DesktopAWTLayoutStyleHandler {
-    public static void addStyle(LayoutStyle style, JComponent component) {
-        switch (style) {
-            case TRANSPARENT_BACKGROUND:
-                component.setOpaque(false);
-                break;
-        }
-    }
+public enum LabeledLayoutStyle implements ComponentStyle {
+    TRANSPARENT_BACKGROUND,
+    NO_INDENT
 }

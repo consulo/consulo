@@ -87,9 +87,4 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
 
         return pane;
     }
-
-    @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
 }

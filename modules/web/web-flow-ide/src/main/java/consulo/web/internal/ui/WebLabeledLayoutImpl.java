@@ -18,6 +18,7 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.ThemableLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import consulo.ui.layout.LabeledLayoutStyle;
 import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -82,8 +83,7 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-
+    public void addStyle(LabeledLayoutStyle style) {
     }
 
     @Override

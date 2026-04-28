@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface Layout<C extends LayoutConstraint> extends Component, HasComponentStyle<LayoutStyle> {
+public interface Layout<C extends LayoutConstraint> extends Component {
     default Layout<C> add(Component component, C constraint) {
         throw new UnsupportedOperationException("Adding not supported");
     }

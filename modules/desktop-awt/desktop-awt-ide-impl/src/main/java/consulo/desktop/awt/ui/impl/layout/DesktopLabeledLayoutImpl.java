@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.LabeledLayoutStyle;
 import consulo.ui.layout.LayoutConstraint;
 
 import javax.swing.*;
@@ -31,6 +32,8 @@ import java.awt.*;
 public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements LabeledLayout {
     class LabelJPanel extends MyJPanel {
         private final LocalizeValue myLabelValue;
+
+        private boolean myIndent = true;
 
         private LabelJPanel(LayoutManager layout, LocalizeValue labelValue) {
             super(layout);
@@ -47,7 +50,7 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCo
         public void updateBorder() {
             // first component create
             if (myLabelValue != null) {
-                setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.getValue()));
+                setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.getValue(), myIndent));
             }
         }
     }
@@ -65,10 +68,21 @@ public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCo
         return component;
     }
 
-    
     @Override
     public LabeledLayout add(Component component, LayoutConstraint constraint) {
         addImpl(component, BorderLayout.CENTER);
         return this;
+    }
+
+    @Override
+    public void addStyle(LabeledLayoutStyle style) {
+        switch (style) {
+            case TRANSPARENT_BACKGROUND -> toAWTComponent().setOpaque(false);
+            case NO_INDENT -> {
+                LabelJPanel component = (LabelJPanel) toAWTComponent();
+                component.myIndent = false;
+                component.updateBorder();
+            }
+        }
     }
 }

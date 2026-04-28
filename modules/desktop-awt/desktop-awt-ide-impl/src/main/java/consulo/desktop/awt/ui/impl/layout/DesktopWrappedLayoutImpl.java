@@ -81,13 +81,7 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
         return panel;
     }
 
-    @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
-
     @RequiredUIAccess
-    
     @Override
     public WrappedLayout set(@Nullable Component component) {
         setContent(component == null ? null : (JComponent) TargetAWT.to(component));

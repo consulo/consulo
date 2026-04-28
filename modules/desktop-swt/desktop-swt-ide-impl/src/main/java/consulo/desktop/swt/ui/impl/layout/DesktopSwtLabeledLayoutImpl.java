@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.LabeledLayoutStyle;
 import consulo.ui.layout.LayoutConstraint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -31,34 +32,37 @@ import org.eclipse.swt.widgets.Layout;
  * @since 29/04/2021
  */
 public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements LabeledLayout {
-  private final LocalizeValue myLabel;
+    private final LocalizeValue myLabel;
 
-  public DesktopSwtLabeledLayoutImpl(LocalizeValue label) {
-    myLabel = label;
-  }
+    public DesktopSwtLabeledLayoutImpl(LocalizeValue label) {
+        myLabel = label;
+    }
 
-  @Override
-  protected void initialize(Composite component) {
-    super.initialize(component);
+    @Override
+    protected void initialize(Composite component) {
+        super.initialize(component);
 
-    ((Group) component).setText(myLabel.get());
-  }
+        ((Group) component).setText(myLabel.get());
+    }
 
-  @Override
-  protected Composite createSWT(Composite parent) {
-    return new Group(parent, SWT.SHADOW_NONE);
-  }
+    @Override
+    protected Composite createSWT(Composite parent) {
+        return new Group(parent, SWT.SHADOW_NONE);
+    }
 
-  @Override
-  protected Layout createLayout() {
-    return new FillLayout();
-  }
+    @Override
+    protected Layout createLayout() {
+        return new FillLayout();
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public LabeledLayout set(Component component) {
-    addImpl(component, null);
-    return this;
-  }
+    @RequiredUIAccess
+    @Override
+    public LabeledLayout set(Component component) {
+        addImpl(component, null);
+        return this;
+    }
+
+    @Override
+    public void addStyle(LabeledLayoutStyle style) {
+    }
 }

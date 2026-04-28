@@ -57,16 +57,10 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
     }
 
     @Override
-    public void addStyle(LayoutStyle style) {
-        DesktopAWTLayoutStyleHandler.addStyle(style, toAWTComponent());
-    }
-
-    @Override
     public void setProportion(int percent) {
         toAWTComponent().setProportion(percent / 100f);
     }
 
-    
     @RequiredUIAccess
     @Override
     public TwoComponentSplitLayout setFirstComponent(Component component) {
