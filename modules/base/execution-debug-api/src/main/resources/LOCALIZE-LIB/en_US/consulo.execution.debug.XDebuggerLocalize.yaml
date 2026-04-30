@@ -524,3 +524,19 @@ xdebugger.view.breakpoint.properties.action:
     text: Properties
 xdebugger.view.breakpoint.reveal.action:
     text: Show Breakpoints Dialog
+done.action.text:
+    text: Done
+breakpoints.dialog.edit.description:
+    text: Edit Description
+breakpoints.dialog.new.group.name:
+    text: New group name
+breakpoints.dialog.new.group:
+    text: New Group
+breakpoints.dialog.no.group:
+    text: <No Group>
+breakpoints.dialog.create.new.group:
+    text: Create New…
+breakpoints.dialog.unset.as.default:
+    text: Unset as Default
+breakpoints.dialog.set.as.default:
+    text: Set as Default
