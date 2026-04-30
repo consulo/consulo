@@ -100,32 +100,26 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
         return EnumSet.allOf(StandardPanels.class);
     }
 
-    
     public final String getId() {
         return myId;
     }
 
-    
     public String getTitle() {
         return myTitle;
     }
 
-    
     public Image getEnabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpoint();
     }
 
-    
     public Image getDisabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointdisabled();
     }
 
-    
     public Image getMutedEnabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointmuted();
     }
 
-    
     public Image getMutedDisabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointmuteddisabled();
     }
@@ -163,15 +157,14 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
         return Collections.emptyList();
     }
 
-    
     public Comparator<B> getBreakpointComparator() {
         return (b, b1) -> (int) (b1.getTimeStamp() - b.getTimeStamp());
         //return XDebuggerUtil.getInstance().getDefaultBreakpointComparator(this);
     }
 
     /**
-     * Return <code>true</code> from this method in order to allow adding breakpoints from the "Breakpoints" dialog. Also override
-     * {@link XBreakpointType#addBreakpoint(Project, JComponent)} method.
+     * Return <code>true</code> from this method in order to allow adding breakpoints from the "Breakpoints" dialog.
+     * Also override {@link XBreakpointType#addBreakpoint(Project, JComponent)} method.
      *
      * @return <code>true</code> if "Add" button should be visible in "Breakpoints" dialog
      */
@@ -191,8 +184,8 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     }
 
     /**
-     * Returns properties of the default breakpoint. The default breakpoints cannot be deleted and is always shown on top of the breakpoints
-     * list in the dialog.
+     * Returns properties of the default breakpoint.
+     * The default breakpoints cannot be deleted and is always shown on top of the breakpoints list in the dialog.
      *
      * @return a default breakpoint or {@code null} if default breakpoint isn't supported
      */
@@ -209,7 +202,8 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     }
 
     /**
-     * Override this method to define source position for a breakpoint. It will be used e.g. by 'Go To' and 'View Source' buttons in 'Breakpoints' dialog
+     * Override this method to define source position for a breakpoint.
+     * It will be used e.g. by 'Go To' and 'View Source' buttons in 'Breakpoints' dialog.
      */
     public @Nullable XSourcePosition getSourcePosition(XBreakpoint<P> breakpoint) {
         return null;
@@ -220,7 +214,6 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     }
 
     public interface XBreakpointCreator<P extends XBreakpointProperties> {
-        
         XBreakpoint<P> createBreakpoint(@Nullable P properties);
     }
 }
