@@ -16,6 +16,7 @@
 <component>
   <dependencySets>
     <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.web/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
@@ -92,6 +93,7 @@
     </dependencySet>
 
     <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>

@@ -17,6 +17,7 @@
   <!--FIXME [VISTALL] if you update this file - update _mac file too-->
   <dependencySets>
     <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.swt/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
@@ -26,6 +27,7 @@
     </dependencySet>
 
     <dependencySet>
+      <useStrictFiltering>true</useStrictFiltering>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>

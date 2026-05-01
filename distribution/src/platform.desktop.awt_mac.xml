@@ -17,6 +17,7 @@
     <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
     <dependencySets>
         <dependencySet>
+            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.awt/lib</outputDirectory>
             <unpack>false</unpack>
             <includes>
@@ -36,6 +37,7 @@
         </dependencySet>
 
         <dependencySet>
+            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>

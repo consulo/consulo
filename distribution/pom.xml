@@ -229,6 +229,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-execution-test-thrift-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-external-system-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -255,6 +260,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-copyright-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-duplicate-analysis-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-diagram-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -299,6 +314,16 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-spellchecker-editor-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-spellchecker-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-local-history-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -315,6 +340,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-module-content-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-path-macro-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -696,6 +726,7 @@
         <dependency>
             <groupId>jakarta.websocket</groupId>
             <artifactId>jakarta.websocket-api</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>

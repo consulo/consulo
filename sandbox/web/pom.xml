@@ -132,6 +132,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-builtin-web-server-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-compiler-artifact-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -149,6 +154,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-credential-storage-impl</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-awt-eawt-wrapper</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -173,6 +184,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-execution-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-execution-test-thrift-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -203,6 +219,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-copyright-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-duplicate-analysis-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-diagram-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -252,6 +278,16 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-spellchecker-editor-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-spellchecker-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-local-history-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -272,6 +308,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-path-macro-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-process-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -288,6 +329,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-task-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-tips-of-day-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -313,6 +359,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-util-interner</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-util-netty</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -510,6 +561,10 @@
         <dependency>
             <groupId>consulo.internal</groupId>
             <artifactId>format-ripper-jvm-file-type-detector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>jediterm-core</artifactId>
         </dependency>
         <dependency>
             <groupId>consulo</groupId>

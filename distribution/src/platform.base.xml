@@ -17,6 +17,7 @@
     <!--FIXME [VISTALL] if you update this file - update _mac file too-->
     <dependencySets>
         <dependencySet>
+            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
             <unpack>false</unpack>
             <includes>
