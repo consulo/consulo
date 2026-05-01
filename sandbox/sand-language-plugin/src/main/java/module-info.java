@@ -31,6 +31,7 @@ module consulo.sand.language.plugin {
 
   requires consulo.remote.server.api;
 
+  requires consulo.module.creation.api;
   requires consulo.module.ui.api;
 
   requires consulo.language.copyright.api;

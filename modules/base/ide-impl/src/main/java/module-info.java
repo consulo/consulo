@@ -42,6 +42,7 @@ open module consulo.ide.impl {
     requires consulo.file.chooser.api;
     requires consulo.project.content.api;
     requires consulo.module.content.api;
+    requires consulo.module.creation.api;
     requires consulo.language.api;
     requires consulo.language.impl;
     requires consulo.index.io;
@@ -504,9 +505,7 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.language.editor.refactoring;
     exports consulo.ide.impl.language.psi;
     exports consulo.ide.impl.language.psi.search.scope;
-    exports consulo.ide.impl.moduleImport;
     exports consulo.ide.impl.newProject.actions;
-    exports consulo.ide.impl.newProject.ui;
     exports consulo.ide.impl.packageDependencies;
     exports consulo.ide.impl.project;
     exports consulo.ide.impl.projectView;

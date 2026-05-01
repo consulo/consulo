@@ -16,7 +16,7 @@
 package consulo.ide.impl.project;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.moduleImport.ImportProjectOpenProcessor;
+import consulo.ide.impl.module.importing.ImportProjectOpenProcessor;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
 import consulo.project.impl.internal.FolderProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;

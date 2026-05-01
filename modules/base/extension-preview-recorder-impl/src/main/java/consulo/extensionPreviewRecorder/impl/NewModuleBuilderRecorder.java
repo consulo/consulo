@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
-import consulo.ide.newModule.NewModuleBuilder;
+import consulo.module.creation.scratch.NewModuleBuilder;
 import jakarta.inject.Inject;
 
 import java.util.function.Consumer;

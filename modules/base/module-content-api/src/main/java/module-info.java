@@ -36,5 +36,6 @@ module consulo.module.content.api {
         consulo.external.system.impl,
         consulo.module.ui.api,
         consulo.module.content.impl,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.external.system.api;
 }

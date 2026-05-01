@@ -15,7 +15,6 @@ module consulo.ide.api {
   requires consulo.ui.ex.api;
   requires consulo.ui.ex.awt.api;
   requires consulo.external.service.api;
-  requires consulo.external.system.api;
   requires consulo.language.editor.api;
   requires consulo.language.editor.refactoring.api;
   requires consulo.http.api;
@@ -23,7 +22,6 @@ module consulo.ide.api {
   exports consulo.ide;
   exports consulo.ide.action;
   exports consulo.ide.action.ui;
-  exports consulo.ide.externalSystem.importing;
   exports consulo.ide.navigation;
   exports consulo.ide.tipOfDay;
   exports consulo.ide.navigationToolbar;
@@ -31,10 +29,7 @@ module consulo.ide.api {
   exports consulo.ide.setting.module;
   exports consulo.ide.setting.bundle;
   exports consulo.ide.setting.module.event;
-  exports consulo.ide.moduleImport;
-  exports consulo.ide.newModule;
   exports consulo.ide.runAnything;
-  exports consulo.ide.newModule.ui;
   exports consulo.ide.ui;
   exports consulo.ide.ui.popup;
   exports consulo.ide.localize;

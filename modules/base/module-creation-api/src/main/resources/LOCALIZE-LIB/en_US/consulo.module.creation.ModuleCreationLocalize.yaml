@@ -1,0 +1,12 @@
+label.module.content.root:
+    text: 'Module content &root:'
+label.module.name:
+    text: '&Module name:'
+label.project.files.location:
+    text: 'Project &location:'
+label.project.name:
+    text: 'Project n&ame:'
+project.new.wizard.module.identification:
+    text: module
+project.new.wizard.project.identification:
+    text: project

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.newModule.NewOrImportModuleUtil;
+import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,8 +26,8 @@ import consulo.module.ModuleManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.newProject.ui.NewProjectDialog;
-import consulo.ide.impl.newProject.ui.NewProjectPanel;
+import consulo.ide.impl.module.creation.NewProjectDialog;
+import consulo.ide.impl.module.creation.NewProjectPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;

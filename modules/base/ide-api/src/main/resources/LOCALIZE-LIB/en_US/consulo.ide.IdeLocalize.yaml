@@ -1241,12 +1241,8 @@ label.missed.libraries.prefix:
     text: 'The following libraries are missing:'
 label.missed.libraries.text:
     text: '{0}.<br>Class ''''{1}'''' not found'
-label.module.content.root:
-    text: 'Module content &root:'
 label.module.file.will.be.saved.in:
     text: 'Module file will be saved in:'
-label.module.name:
-    text: '&Module name:'
 label.name:
     text: 'Name:'
 label.no.actions.found:
@@ -1287,12 +1283,8 @@ label.path.to.module.file:
     text: 'Path to {0} module file (.iml):'
 label.please.enter.project.name:
     text: Please enter a name to create a new {0} {1}.
-label.project.files.location:
-    text: 'Project &location:'
 label.project.jdk:
     text: 'Project SDK:'
-label.project.name:
-    text: 'Project n&ame:'
 label.project.roots.have.been.found:
     text: |-
         Source files for your project have been found. Please choose directories that will
@@ -1706,10 +1698,6 @@ project.import.show.settings.after:
     text: '&Open Project Structure after import'
 project.import.wizard.title:
     text: Import from {0}
-project.new.wizard.module.identification:
-    text: module
-project.new.wizard.project.identification:
-    text: project
 project.settings.separator:
     text: Project Settings
 promot.projectwizard.directory.does.not.exist:

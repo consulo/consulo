@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.M
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
-import consulo.ide.moduleImport.ModuleImportProviders;
+import consulo.ide.impl.module.importing.ModuleImportProviders;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.LangDataKeys;
