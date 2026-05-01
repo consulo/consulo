@@ -32,6 +32,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.cache.enabled>false</maven.build.cache.enabled>
     </properties>
 
     <build>
@@ -189,6 +190,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-execution-test-thrift-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-external-service-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -215,6 +221,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-language-copyright-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-duplicate-analysis-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-editor-diagram-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -259,6 +275,16 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-spellchecker-editor-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-language-spellchecker-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-local-history-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -275,6 +301,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-module-content-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-path-macro-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -300,6 +331,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-task-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-tips-of-day-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -450,6 +486,10 @@
         <dependency>
             <groupId>consulo.internal</groupId>
             <artifactId>format-ripper-jvm-file-type-detector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>jediterm-core</artifactId>
         </dependency>
         <dependency>
             <groupId>consulo</groupId>
