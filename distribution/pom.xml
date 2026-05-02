@@ -505,9 +505,12 @@
 
         <!-- FlatLAF -->
         <dependency>
-            <groupId>com.formdev</groupId>
+            <groupId>consulo.internal</groupId>
             <artifactId>flatlaf</artifactId>
-            <classifier>no-natives</classifier>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>flatlaf-swingx</artifactId>
         </dependency>
 
         <!-- Explicitly adding optional dependencies of each module -->

@@ -29,8 +29,8 @@
                 <include>consulo.internal.org.cobraparser:cobra-core</include>
                 <include>consulo.internal.org.cobraparser:cobra-jstyleparser</include>
                 <include>xml-apis:xml-apis-ext</include>
-                <include>com.formdev:flatlaf</include>
-                <include>com.formdev:flatlaf-swingx</include>
+                <include>consulo.internal:flatlaf</include>
+                <include>consulo.internal:flatlaf-swingx</include>
                 <include>org.swinglabs.swingx:swingx-all</include>
                 <include>consulo.internal:jediterm-ui</include>
             </includes>

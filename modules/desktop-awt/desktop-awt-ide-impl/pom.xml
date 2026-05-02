@@ -118,12 +118,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.formdev</groupId>
+            <groupId>consulo.internal</groupId>
             <artifactId>flatlaf</artifactId>
-            <classifier>no-natives</classifier>
         </dependency>
         <dependency>
-            <groupId>com.formdev</groupId>
+            <groupId>consulo.internal</groupId>
             <artifactId>flatlaf-swingx</artifactId>
         </dependency>
         <dependency>
