@@ -37,13 +37,13 @@ import java.util.List;
  * @author VISTALL
  * @since 2017-06-22
  */
-public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
+public class PreloadedPluginsAdvertiserDialog extends WholeWestDialogWrapper {
     private final @Nullable Project myProject;
     private final List<PluginDescriptor> myToInstallPlugins;
     
     private final List<PluginDescriptor> myAllPlugins;
 
-    public PluginsAdvertiserDialog(
+    public PreloadedPluginsAdvertiserDialog(
         @Nullable Project project,
         List<PluginDescriptor> allPlugins,
         List<PluginDescriptor> toInstallPlugins
@@ -57,7 +57,6 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
         init();
     }
 
-    
     @Override
     @RequiredUIAccess
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {

@@ -19,13 +19,18 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author VISTALL
@@ -34,9 +39,30 @@ import java.util.Set;
 @ServiceImpl
 @Singleton
 public class PluginAdvertiserHelperImpl implements PluginAdvertiserHelper {
+    private final PluginAdvertiserRequester myPluginAdvertiserRequester;
+
+    @Inject
+    public PluginAdvertiserHelperImpl(PluginAdvertiserRequester pluginAdvertiserRequester) {
+        myPluginAdvertiserRequester = pluginAdvertiserRequester;
+    }
+
+    @Override
+    public CompletableFuture<PluginsInfo> findPluginsForSuggest(ExtensionPreview extensionPreview) {
+        return myPluginAdvertiserRequester.doRequest().thenApply(allPlugins -> {
+            Set<PluginDescriptor> featurePlugins = PluginAdvertiserImpl.findImpl(allPlugins, extensionPreview);
+
+            Set<PluginDescriptor> featuredPlugins = featurePlugins
+                .stream()
+                .filter(it -> PluginManager.findPlugin(it.getPluginId()) == null)
+                .collect(Collectors.toSet());
+
+            return new PluginsInfo(allPlugins, featuredPlugins);
+        });
+    }
+
     @Override
     public PluginsInfo getLoadedPlugins(ExtensionPreview extensionPreview) {
-        List<PluginDescriptor> allPlugins = Application.get().getInstance(PluginAdvertiserRequester.class).getLoadedPluginDescriptors();
+        List<PluginDescriptor> allPlugins = myPluginAdvertiserRequester.getLoadedPluginDescriptors();
         Set<PluginDescriptor> featurePlugins = PluginAdvertiserImpl.findImpl(allPlugins, extensionPreview);
         return new PluginsInfo(allPlugins, featurePlugins);
     }
@@ -44,8 +70,14 @@ public class PluginAdvertiserHelperImpl implements PluginAdvertiserHelper {
     @Override
     @RequiredUIAccess
     public void showDialog(PluginsInfo pluginsInfo) {
-        PluginsAdvertiserDialog advertiserDialog =
-            new PluginsAdvertiserDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
+        PreloadedPluginsAdvertiserDialog advertiserDialog =
+            new PreloadedPluginsAdvertiserDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
         advertiserDialog.show();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showDialogForExtension(ExtensionPreview preview) {
+        new WaitingPluginsAdvertiserDialog(null, preview, this).showAsync();
     }
 }

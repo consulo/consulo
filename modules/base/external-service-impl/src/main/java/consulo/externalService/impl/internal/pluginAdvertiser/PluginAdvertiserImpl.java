@@ -138,7 +138,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             .content(ExternalServiceLocalize.messagePluginsSuggestionNotification())
             .addClosingAction(
                 ExternalServiceLocalize.actionPluginsSuggestionInstallText(),
-                () -> new PluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync()
+                () -> new PreloadedPluginsAdvertiserDialog(myProject, allDescriptors, new ArrayList<>(ids)).showAsync()
             )
             .addClosingAction(
                 ExternalServiceLocalize.actionPluginsSuggestionIgnoreText(),

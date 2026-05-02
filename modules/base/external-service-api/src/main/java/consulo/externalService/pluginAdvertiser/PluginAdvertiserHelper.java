@@ -24,6 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -41,6 +42,11 @@ public interface PluginAdvertiserHelper {
 
     PluginsInfo getLoadedPlugins(ExtensionPreview extensionPreview);
 
+    CompletableFuture<PluginsInfo> findPluginsForSuggest(ExtensionPreview extensionPreview);
+
     @RequiredUIAccess
     void showDialog(PluginsInfo pluginsInfo);
+
+    @RequiredUIAccess
+    void showDialogForExtension(ExtensionPreview preview);
 }

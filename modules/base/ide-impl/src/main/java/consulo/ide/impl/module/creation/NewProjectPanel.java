@@ -16,7 +16,9 @@
 package consulo.ide.impl.module.creation;
 
 import consulo.application.Application;
+import consulo.component.extension.preview.ExtensionPreview;
 import consulo.disposer.Disposable;
+import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -29,12 +31,14 @@ import consulo.module.creation.scratch.NewModuleContextItem;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.util.ProjectUtil;
+import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
@@ -67,6 +71,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
     private Tree myTree;
 
+    private Hyperlink myMoreViaPlugins;
+
     @RequiredUIAccess
     public NewProjectPanel(
         Disposable parentDisposable,
@@ -97,7 +103,6 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         return myModuleHome != null;
     }
 
-    
     @RequiredUIAccess
     protected abstract JComponent createSouthPanel();
 
@@ -129,8 +134,20 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         myTree.setRowHeight(JBUI.scale(24));
         myTree.setBorder(JBUI.Borders.empty(8));
 
+        myMoreViaPlugins = Hyperlink.create(LocalizeValue.localizeTODO("More via plugins..."), event -> {
+            PluginAdvertiserHelper.getInstance().showDialogForExtension(ExtensionPreview.of(NewModuleBuilder.class, "*"));
+        });
+        
         TreeUtil.expandAll(myTree);
-        return ScrollPaneFactory.createScrollPane(myTree, true);
+        BorderLayoutPanel layoutPanel = new BorderLayoutPanel();
+        layoutPanel.addToCenter(ScrollPaneFactory.createScrollPane(myTree, true));
+
+        Wrapper southPanel = new Wrapper((JComponent) TargetAWT.to(myMoreViaPlugins));
+        southPanel.setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
+
+        layoutPanel.addToBottom(southPanel);
+
+        return layoutPanel;
     }
 
     @RequiredUIAccess
@@ -245,6 +262,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
     @RequiredUIAccess
     private void updateButtonPresentation(JPanel rightContentPanel) {
+        myMoreViaPlugins.setVisible(false);
+
         if (myProcessor != null) {
             assert myWizardSession != null;
 
@@ -270,6 +289,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
             }
 
             setOKActionEnabled(true);
+            myMoreViaPlugins.setVisible(currentStepIndex == 0);
         }
         else {
             setOKActionEnabled(false);
@@ -277,6 +297,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
             setOKActionText(IdeLocalize.buttonCreate());
             setOKAction(null);
             setCancelAction(null);
+
+            myMoreViaPlugins.setVisible(true);
         }
     }
 

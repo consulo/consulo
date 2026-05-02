@@ -153,7 +153,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         }
         else {
             builder.withAction(ExternalServiceLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()), (i) -> {
-                PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
+                PreloadedPluginsAdvertiserDialog advertiserDialog = new PreloadedPluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
                 advertiserDialog.show();
             });
         }
