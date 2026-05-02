@@ -70,6 +70,8 @@ open module consulo.desktop.awt.ide.impl {
 
     requires swingx.all;
 
+    requires jetbrains.runtime.api;
+    
     requires consulo.desktop.awt.bootstrap;
     requires consulo.desktop.awt.hacking;
     requires consulo.desktop.awt.eawt.wrapper;

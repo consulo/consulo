@@ -272,6 +272,7 @@
                 <include>it.unimi.dsi:fastutil</include>
                 <include>ch.qos.logback:logback-core</include>
                 <include>com.google.protobuf:protobuf-javalite</include>
+                <include>org.jetbrains.runtime:jbr-api</include>
 
                 <include>com.github.hypfvieh:dbus-java-core</include>
                 <include>com.github.hypfvieh:dbus-java-transport-native-unixsocket</include>

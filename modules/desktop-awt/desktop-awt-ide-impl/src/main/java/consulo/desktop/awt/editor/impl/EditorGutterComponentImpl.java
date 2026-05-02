@@ -2,6 +2,8 @@
 
 package consulo.desktop.awt.editor.impl;
 
+import com.jetbrains.FontExtensions;
+import com.jetbrains.JBR;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.internal.ProgressIndicatorBase;
@@ -82,6 +84,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.Ref;
 import it.unimi.dsi.fastutil.ints.Int2IntRBTreeMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -99,6 +102,7 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * Gutter content (left to right):
@@ -131,6 +135,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * </ul>
  */
 public class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, DataProvider, Accessible {
+    private static Supplier<@Nullable FontExtensions> FONT_EXTENSIONS = LazyValue.nullable(() -> JBR.getFontExtensions());
+
     private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
         @Override
         protected void hoverChanged(Component component, boolean hovered) {
@@ -162,7 +168,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private int myIconsAreaWidth;
     protected int myLineNumberAreaWidth;
     protected int myAdditionalLineNumberAreaWidth;
-    
+
     private List<FoldRegion> myActiveFoldRegions = Collections.emptyList();
     protected int myTextAnnotationGuttersSize;
     protected int myTextAnnotationExtraSize;
@@ -171,7 +177,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private boolean myGapAfterAnnotations;
     private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
     private LocalizeValue myLastGutterToolTip;
-    
+
     private LineNumberConverter myLineNumberConverter = LineNumberConverter.DEFAULT;
     private @Nullable LineNumberConverter myAdditionalLineNumberConverter;
     private boolean myShowDefaultGutterPopup = true;
@@ -227,7 +233,6 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         HOVER_STATE_LISTENER.addTo(this);
     }
 
-    
     DesktopEditorImpl getEditor() {
         return myEditor;
     }
@@ -579,6 +584,12 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             g.setColor(TargetAWT.to(myEditor.getColorsScheme().getColor(gutterProvider.getColor(line, myEditor))));
             EditorFontType style = gutterProvider.getStyle(line, myEditor);
             Font font = getFontForText(s, style);
+            if (gutterProvider.useTabularNumsFont(line, myEditor)) {
+                FontExtensions fontExtensions = FONT_EXTENSIONS.get();
+                if (fontExtensions != null) {
+                    font = fontExtensions.deriveFontWithFeatures(font, FontExtensions.FeatureTag.TNUM);
+                }
+            }
             g.setFont(font);
             int offset = 0;
             if (gutterProvider.useMargin()) {
@@ -1089,7 +1100,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     @Override
-    
+
     public List<GutterMark> getGutterRenderers(int line) {
         if (myLineToGutterRenderers == null || myLineToGutterRenderersCacheForLogicalLines != logicalLinesMatchVisualOnes()) {
             buildGutterRenderersCache();
@@ -1282,7 +1293,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return startFoldRegion == null || !startFoldRegion.equals(endFoldRegion);
     }
 
-    @Nullable Rectangle getLineRendererRectangle(RangeHighlighter highlighter) {
+    @Nullable
+    Rectangle getLineRendererRectangle(RangeHighlighter highlighter) {
         if (!isLineMarkerVisible(highlighter)) {
             return null;
         }
@@ -1444,7 +1456,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         updateSize();
     }
 
-    
+
     @Override
     public List<TextAnnotationGutterProvider> getTextAnnotations() {
         return new ArrayList<>(myTextAnnotationGutters);
@@ -1686,7 +1698,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return 0;
     }
 
-    @Nullable EditorMouseEventArea getEditorMouseAreaByOffset(int offset) {
+    @Nullable
+    EditorMouseEventArea getEditorMouseAreaByOffset(int offset) {
         return myLayout.getEditorMouseAreaByOffset(offset);
     }
 
@@ -2004,7 +2017,6 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         UIUtil.setCursor(this, cursor);
     }
 
-    
     private List<FoldRegion> getGroupRegions(@Nullable FoldRegion foldingAtCursor) {
         if (foldingAtCursor == null) {
             return Collections.emptyList();
@@ -2442,13 +2454,19 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     private @Nullable PointInfo getPointInfo(Inlay<?> inlay, int inlayY, int x, int y) {
         GutterIconRenderer renderer = inlay.getGutterIconRenderer();
-        if (!shouldBeShown(renderer) || !checkDumbAware(renderer)) return null;
+        if (!shouldBeShown(renderer) || !checkDumbAware(renderer)) {
+            return null;
+        }
         Icon icon = scaleIcon(renderer.getIcon());
         int iconHeight = icon.getIconHeight();
-        if ((y - inlayY) >= Math.max(iconHeight, myEditor.getLineHeight()) || iconHeight > inlay.getHeightInPixels()) return null;
+        if ((y - inlayY) >= Math.max(iconHeight, myEditor.getLineHeight()) || iconHeight > inlay.getHeightInPixels()) {
+            return null;
+        }
         int iconWidth = icon.getIconWidth();
         int rightX = getIconAreaOffset() + getIconsAreaWidth();
-        if (x < rightX - iconWidth || x > rightX) return null;
+        if (x < rightX - iconWidth || x > rightX) {
+            return null;
+        }
         PointInfo pointInfo = new PointInfo(renderer, new Point(rightX - iconWidth / 2,
             inlayY + getTextAlignmentShiftForInlayIcon(icon, inlay) + iconHeight / 2));
         pointInfo.renderersInLine = 1;
@@ -2525,7 +2543,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             ((GutterIconRenderer) renderer).getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS;
     }
 
-    
+
     static LineMarkerRenderer.Position getLineMarkerPosition(LineMarkerRenderer renderer) {
         return renderer.getPosition();
     }
@@ -2567,7 +2585,8 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         myAccessibleGutterLine = line;
     }
 
-    @Nullable AccessibleGutterLine getCurrentAccessibleLine() {
+    @Nullable
+    AccessibleGutterLine getCurrentAccessibleLine() {
         return myAccessibleGutterLine;
     }
 

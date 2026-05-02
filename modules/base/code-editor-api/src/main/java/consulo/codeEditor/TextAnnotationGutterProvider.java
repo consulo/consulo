@@ -44,6 +44,10 @@ public interface TextAnnotationGutterProvider {
      */
     @Nullable String getLineText(int line, Editor editor);
 
+    default boolean useTabularNumsFont(int line, Editor editor) {
+        return false;
+    }
+
     //TODO: rename into getToolTip() after deprecation deletion
     
     default LocalizeValue getToolTipValue(int line, Editor editor) {

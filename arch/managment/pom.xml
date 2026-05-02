@@ -899,6 +899,12 @@
                 <artifactId>swingx-all</artifactId>
                 <version>1.6.5</version>
             </dependency>
+            
+            <dependency>
+                <groupId>org.jetbrains.runtime</groupId>
+                <artifactId>jbr-api</artifactId>
+                <version>1.10.1</version>
+            </dependency>
 
             <!-- Test -->
             <dependency>

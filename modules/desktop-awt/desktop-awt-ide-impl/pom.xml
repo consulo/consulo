@@ -165,6 +165,10 @@
             <groupId>consulo.internal</groupId>
             <artifactId>jediterm-ui</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.runtime</groupId>
+            <artifactId>jbr-api</artifactId>
+        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

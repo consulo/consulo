@@ -31,9 +31,9 @@ import org.jspecify.annotations.Nullable;
  * @see FileAnnotation#getAspects()
  */
 public interface LineAnnotationAspect {
-    String AUTHOR = VcsBundle.message("line.annotation.aspect.author");
-    String DATE = VcsBundle.message("line.annotation.aspect.date");
-    String REVISION = VcsBundle.message("line.annotation.aspect.revision");
+    String AUTHOR = "Author";
+    String DATE = "Date";
+    String REVISION = "Revision";
 
     /**
      * Get annotation text for the specific line number
