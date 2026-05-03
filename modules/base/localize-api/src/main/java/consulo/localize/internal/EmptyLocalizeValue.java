@@ -38,10 +38,12 @@ public final class EmptyLocalizeValue implements LocalizeValue {
     public boolean isNotEmpty() {
         return false;
     }
+
     @Override
     public String getId() {
         return "empty";
     }
+
     @Override
     public String getValue() {
         return "";
@@ -51,6 +53,7 @@ public final class EmptyLocalizeValue implements LocalizeValue {
     public @Nullable String getNullIfEmpty() {
         return null;
     }
+
     @Override
     public LocalizeValue orIfEmpty(LocalizeValue defaultValue) {
         return defaultValue;
@@ -60,10 +63,12 @@ public final class EmptyLocalizeValue implements LocalizeValue {
     public byte getModificationCount() {
         return 0;
     }
+
     @Override
     public LocalizeValue map(Function<String, String> mapper) {
         return this;
     }
+
     @Override
     public LocalizeValue map(BiFunction<LocalizeManager, String, String> mapper) {
         return this;

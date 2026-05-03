@@ -34,10 +34,12 @@ public final class ConstantLocalizeValue implements LocalizeValue {
     public ConstantLocalizeValue(String value) {
         myValue = value;
     }
+
     @Override
     public String getId() {
         return '"' + myValue + '"';
     }
+
     @Override
     public String getValue() {
         return myValue;

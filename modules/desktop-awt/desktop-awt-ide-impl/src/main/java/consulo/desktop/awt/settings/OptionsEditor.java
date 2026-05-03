@@ -581,7 +581,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         myRootPanel = rootPanel;
         myAfterTreeLoad = afterTreeLoad;
 
-        myConfigurableSession = new ConfigurableSessionImpl(project);
+        myConfigurableSession = new ConfigurableSessionImpl(project, () -> myBuildConfigurables);
 
         myFilter = new Filter();
         myContext = new OptionsEditorContext(myFilter);

@@ -45,8 +45,7 @@ public interface Settings {
     @DeprecationInfo("Use #select(Class)")
     AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
 
-    
     <T extends UnnamedConfigurable> AsyncResult<T> select(Class<T> clazz);
 
-    AsyncResult<Configurable> select(String confurableId);
+    AsyncResult<Configurable> select(String configurableId);
 }

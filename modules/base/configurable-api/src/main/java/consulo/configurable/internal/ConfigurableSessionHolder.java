@@ -27,11 +27,15 @@ import java.util.Objects;
  * @since 2022-01-20
  */
 public class ConfigurableSessionHolder {
-  public static @Nullable ConfigurableSession ourCurrentSession = null;
+    public static @Nullable ConfigurableSession ourCurrentSession = null;
 
-  @RequiredUIAccess
-  public static ConfigurableSession get() {
-    UIAccess.assertIsUIThread();
-    return Objects.requireNonNull(ourCurrentSession, "Session is not initialized");
-  }
+    @RequiredUIAccess
+    public static ConfigurableSession get() {
+        UIAccess.assertIsUIThread();
+        return Objects.requireNonNull(ourCurrentSession, "Session is not initialized");
+    }
+
+    public static @Nullable ConfigurableSession getNullable() {
+        return ourCurrentSession;
+    }
 }
