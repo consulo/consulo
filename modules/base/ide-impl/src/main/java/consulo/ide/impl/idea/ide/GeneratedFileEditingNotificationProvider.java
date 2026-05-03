@@ -21,7 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.FileEditor;
-import consulo.localize.LocalizeValue;
+import consulo.module.content.localize.ModuleContentLocalize;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.ui.NotificationType;
@@ -43,22 +43,25 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
         myProject = project;
     }
 
-    
     @Override
     public String getId() {
         return "file-is-generated";
     }
 
-    @RequiredReadAction
     @Override
-    public @Nullable EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
+    @RequiredReadAction
+    public @Nullable EditorNotificationBuilder buildNotification(
+        VirtualFile file,
+        FileEditor fileEditor,
+        Supplier<EditorNotificationBuilder> builderFactory
+    ) {
         if (!GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, myProject)) {
             return null;
         }
 
         EditorNotificationBuilder builder = builderFactory.get();
         builder.withType(NotificationType.WARNING);
-        builder.withText(LocalizeValue.localizeTODO("Generated source files should not be edited. The changes will be lost when sources are regenerated."));
+        builder.withText(ModuleContentLocalize.linkLabelGeneratedSourceFiles());
         return builder;
     }
 }
