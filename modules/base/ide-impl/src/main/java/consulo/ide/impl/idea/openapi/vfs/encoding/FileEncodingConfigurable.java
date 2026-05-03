@@ -8,6 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
@@ -117,7 +118,6 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     }
 
     @Override
-    
     public String getId() {
         return "file.encoding";
     }
@@ -128,26 +128,23 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     }
 
     @Override
-    protected <S> Object getParameter(Key<S> key) {
-        if (key == DESCRIPTION) {
-            return IdeLocalize.encodingsDialogCaption(Application.get().getName()).get();
-        }
-        if (key == MAPPING_TITLE) {
-            return IdeLocalize.fileEncodingOptionEncodingColumn().get();
-        }
-        if (key == TARGET_TITLE) {
-            return IdeLocalize.fileEncodingOptionPathColumn().get();
-        }
-        if (key == OVERRIDE_QUESTION) {
-            return null;
-        }
-        if (key == OVERRIDE_TITLE) {
-            return null;
-        }
-        if (key == EMPTY_TEXT) {
-            return IdeLocalize.fileEncodingsNotConfigured().get();
-        }
-        return null;
+    public LocalizeValue getDescription() {
+        return IdeLocalize.encodingsDialogCaption(Application.get().getName());
+    }
+
+    @Override
+    public LocalizeValue getMappingTitle() {
+        return IdeLocalize.fileEncodingOptionEncodingColumn();
+    }
+
+    @Override
+    public LocalizeValue getTargetTitle() {
+        return IdeLocalize.fileEncodingOptionPathColumn();
+    }
+
+    @Override
+    protected LocalizeValue getEmptyText() {
+        return IdeLocalize.fileEncodingsNotConfigured();
     }
 
     @Override
@@ -180,32 +177,28 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
                 onChosen.accept(charset);
                 return true;
             }
-        }.createActionGroup(file, null, document, bytes, getClearValueText(target));
+        }.createActionGroup(file, null, document, bytes, getClearValueText(target).get());
     }
 
     @Override
-    protected @Nullable String getClearValueText(@Nullable Object target) {
-        return target != null ? super.getClearValueText(target) : LanguageLocalize.actionSetSystemDefaultEncodingText().get();
+    protected LocalizeValue getClearValueText(@Nullable Object target) {
+        return target != null ? super.getClearValueText(target) : LanguageLocalize.actionSetSystemDefaultEncodingText();
     }
 
     @Override
-    protected @Nullable String getNullValueText(@Nullable Object target) {
-        return target != null
-            ? super.getNullValueText(target)
-            : IdeLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName()).get();
+    protected LocalizeValue getNullValueText(@Nullable Object target) {
+        return target != null ? super.getNullValueText(target) : IdeLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName());
     }
 
-    
     @Override
     protected Collection<Charset> getValueVariants(@Nullable Object target) {
         return Arrays.asList(CharsetToolkit.getAvailableCharsets());
     }
 
-    
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
-        myTablePanel.add(super.createComponent(), BorderLayout.CENTER);
+    public JComponent createComponent(Disposable uiDisposable) {
+        myTablePanel.add(super.createComponent(uiDisposable), BorderLayout.CENTER);
         JPanel p = createActionPanel(null, new Value<>() {
             @Override
             public void commit() {
@@ -225,7 +218,6 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         return myPanel;
     }
 
-    
     @Override
     protected List<Trinity<String, Supplier<Charset>, Consumer<Charset>>> getDefaultMappings() {
         return Arrays.asList(myProjectMapping, myGlobalMapping);

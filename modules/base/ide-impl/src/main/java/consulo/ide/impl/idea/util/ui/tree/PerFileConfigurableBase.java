@@ -6,6 +6,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
@@ -16,6 +17,8 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.util.LanguagePerFileMappings;
 import consulo.language.impl.util.PerFileMappingsBase;
 import consulo.language.localize.LanguageLocalize;
+import consulo.localization.LocalizedValue;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectFileIndex;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -62,27 +65,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static consulo.ui.ex.awt.IdeBorderFactory.*;
+import static consulo.util.lang.Pair.empty;
 import static consulo.util.lang.Pair.pair;
 
 /**
  * @author peter
  */
 public abstract class PerFileConfigurableBase<T> implements SearchableConfigurable, Configurable.NoScroll {
-    protected static final Key<String> DESCRIPTION = KeyWithDefaultValue.create("DESCRIPTION", "");
-    protected static final Key<String> TARGET_TITLE =
-        KeyWithDefaultValue.create("TARGET_TITLE", () -> LanguageLocalize.perfileconfigurablebaseTargetTitle().get());
-    protected static final Key<String> MAPPING_TITLE =
-        KeyWithDefaultValue.create("MAPPING_TITLE", () -> LanguageLocalize.perfileconfigurablebaseMappingTitle().get());
-    protected static final Key<String> EMPTY_TEXT =
-        KeyWithDefaultValue.create("EMPTY_TEXT", () -> LanguageLocalize.perfileconfigurablebaseEmptyText().get());
-    protected static final Key<String> OVERRIDE_QUESTION = Key.create("OVERRIDE_QUESTION");
-    protected static final Key<String> OVERRIDE_TITLE = Key.create("OVERRIDE_TITLE");
-    protected static final Key<String> NULL_TEXT =
-        KeyWithDefaultValue.create("NULL_TEXT", () -> LanguageLocalize.perfileconfigurablebaseNullText().get());
-    protected static final Key<Boolean> ADD_PROJECT_MAPPING = KeyWithDefaultValue.create("ADD_PROJECT_MAPPING", Boolean.TRUE);
-    protected static final Key<Boolean> ONLY_DIRECTORIES = KeyWithDefaultValue.create("ONLY_DIRECTORIES", Boolean.FALSE);
-    protected static final Key<Boolean> SORT_VALUES = KeyWithDefaultValue.create("SORT_VALUES", Boolean.TRUE);
-
     protected final Project myProject;
     protected final PerFileMappingsEx<T> myMappings;
 
@@ -95,9 +84,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     private final List<Runnable> myResetRunnables = new ArrayList<>();
     private final Map<String, T> myDefaultVals = new HashMap<>();
-    private final List<Trinity<String, Supplier<T>, Consumer<T>>> myDefaultProps = new ArrayList<>();
+    private final SequencedSet<Trinity<String, Supplier<T>, Consumer<T>>> myDefaultProps = new LinkedHashSet<>();
     private VirtualFile myFileToSelect;
-    private final Trinity<String, Supplier<T>, Consumer<T>> myProjectMapping;
+    private final @Nullable Trinity<String, Supplier<T>, Consumer<T>> myProjectMapping;
 
     protected interface Value<T> extends Consumer<T>, Supplier<T> {
         void commit();
@@ -106,13 +95,15 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     protected PerFileConfigurableBase(Project project, PerFileMappingsEx<T> mappings) {
         myProject = project;
         myMappings = mappings;
-        myProjectMapping =
-            Trinity.create(LanguageLocalize.perfileconfigurablebaseProjectMapping(StringUtil.capitalize(param(MAPPING_TITLE))).get(),
-                () -> ((LanguagePerFileMappings<T>) myMappings).getConfiguredMapping(null), o -> myMappings.setMapping(null, o)
-            );
+        if (mappings instanceof PerFileMappingsBase perFileMappingsBase) {
+            myProjectMapping =
+                Trinity.create(LanguageLocalize.perfileconfigurablebaseProjectMapping(getMappingTitle()).get(),
+                    () -> ((PerFileMappingsBase<T>) myMappings).getConfiguredMapping(null), o -> myMappings.setMapping(null, o)
+                );
+        } else {
+            myProjectMapping = null;
+        }
     }
-
-    protected abstract @Nullable <S> Object getParameter(Key<S> key);
 
     protected List<Trinity<String, Supplier<T>, Consumer<T>>> getDefaultMappings() {
         return List.of();
@@ -135,21 +126,27 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     protected void renderDefaultValue(@Nullable Object target, ColoredTextContainer renderer) {
     }
 
-    private <S> S param(Key<S> key) {
-        Object o = getParameter(key);
-        if (o == null && key instanceof KeyWithDefaultValue) {
-            return ((KeyWithDefaultValue<S>) key).getDefaultValue();
-        }
-        @SuppressWarnings("unchecked") S s = (S) o;
-        return s;
+    protected LocalizeValue getEmptyText() {
+        return LanguageLocalize.perfileconfigurablebaseEmptyText();
+    }
+
+    public LocalizeValue getDescription() {
+        return LocalizeValue.empty();
+    }
+
+    public LocalizeValue getMappingTitle() {
+        return LanguageLocalize.perfileconfigurablebaseMappingTitle();
+    }
+
+    public LocalizeValue getTargetTitle() {
+        return LanguageLocalize.perfileconfigurablebaseTargetTitle();
     }
 
     @Override
     @RequiredUIAccess
-    public JComponent createComponent() {
-        //todo multi-editing, separate project/ide combos _if_ needed by specific configurable (SQL, no Web)
+    public JComponent createComponent(Disposable uiDisposable) {
         myPanel = new JPanel(new BorderLayout());
-        myTable = new JBTable(myModel = new MyModel<>(param(TARGET_TITLE), param(MAPPING_TITLE))) {
+        myTable = new JBTable(myModel = new MyModel<>(getTargetTitle().get(), getMappingTitle().get())) {
             @SuppressWarnings("unchecked")
             @Override
             public String getToolTipText(MouseEvent event) {
@@ -172,11 +169,11 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             .setEditActionUpdater(e -> myTable.getSelectedRows().length > 0)
             .createPanel();
         myTable.getEmptyText()
-            .setText(param(EMPTY_TEXT).replace(
+            .setText(getEmptyText().get().replace(
                 "$addShortcut",
                 KeymapUtil.getFirstKeyboardShortcutText(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD))
             ));
-        JBLabel label = new JBLabel(param(DESCRIPTION));
+        JBLabel label = new JBLabel(getDescription().get());
         label.setBorder(BorderFactory.createEmptyBorder(TITLED_BORDER_TOP_INSET, TITLED_BORDER_INDENT, TITLED_BORDER_BOTTOM_INSET, 0));
         label.setComponentStyle(UIUtil.ComponentStyle.SMALL);
 
@@ -194,9 +191,21 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return null;
     }
 
+    protected boolean isAddOnlyDirectories() {
+        return false;
+    }
+
+    protected boolean isAddProjectMapping() {
+        return true;
+    }
+
+    public boolean isSortValues() {
+        return true;
+    }
+
     protected @Nullable JComponent createDefaultMappingComponent() {
         myDefaultProps.addAll(getDefaultMappings());
-        if (myMappings instanceof LanguagePerFileMappings && param(ADD_PROJECT_MAPPING)) {
+        if (isAddProjectMapping() && myProjectMapping != null) {
             myDefaultProps.add(myProjectMapping);
         }
         if (myDefaultProps.size() == 0) {
@@ -253,7 +262,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         int row = myTable.getSelectedRow();
         Object selectedTarget = row >= 0 ? myModel.data.get(myTable.convertRowIndexToModel(row)).first : null;
         VirtualFile toSelect = myFileToSelect != null ? myFileToSelect : ObjectUtil.tryCast(selectedTarget, VirtualFile.class);
-        FileChooserDescriptor descriptor = new FileChooserDescriptor(!param(ONLY_DIRECTORIES), true, true, true, true, true);
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(!isAddOnlyDirectories(), true, true, true, true, true);
         IdeaFileChooser.chooseFiles(descriptor, myProject, myTable, toSelect, this::doAddFiles);
     }
 
@@ -318,7 +327,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
             }
         }
         ProjectFileIndex index = ProjectFileIndex.getInstance(myProject);
-        for (Trinity<String, Supplier<T>, Consumer<T>> prop : ContainerUtil.reverse(myDefaultProps)) {
+        for (Trinity<String, Supplier<T>, Consumer<T>> prop : myDefaultProps.reversed()) {
             if (isProjectMapping(prop) && file != null && index.isInContent(file) || isGlobalMapping(prop)) {
                 T t = myDefaultVals.get(prop.first);
                 if (t != null) {
@@ -411,15 +420,13 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                 map.put((VirtualFile) p.first, p.second);
             }
         }
-        if (myMappings instanceof LanguagePerFileMappings) {
-            for (Trinity<String, Supplier<T>, Consumer<T>> prop : ContainerUtil.reverse(myDefaultProps)) {
-                if (isProjectMapping(prop)) {
-                    T t = myDefaultVals.get(prop.first);
-                    if (t != null) {
-                        map.put(null, t);
-                    }
-                    break;
+        for (Trinity<String, Supplier<T>, Consumer<T>> prop : myDefaultProps.reversed()) {
+            if (isProjectMapping(prop)) {
+                T t = myDefaultVals.get(prop.first);
+                if (t != null) {
+                    map.put(null, t);
                 }
+                break;
             }
         }
         return map;
@@ -728,17 +735,25 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return ret;
     }
 
+    public LocalizeValue getOverrideQuestion() {
+        return LocalizeValue.empty();
+    }
+
+    public LocalizeValue getOverrideTitle() {
+        return LocalizeValue.empty();
+    }
+
     @RequiredUIAccess
     private int askUserToOverrideSubdirectories() {
-        String question = param(OVERRIDE_QUESTION);
-        String title = param(OVERRIDE_TITLE);
-        if (question == null || title == null) {
+        LocalizeValue question = getOverrideQuestion();
+        LocalizeValue title = getOverrideTitle();
+        if (question.isEmpty() || title.isEmpty()) {
             return Messages.NO;
         }
         return Messages.showYesNoCancelDialog(
             myProject,
-            question,
-            title,
+            question.get(),
+            title.get(),
             LanguageLocalize.buttonOverride().get(),
             LanguageLocalize.buttonDoNotOverride().get(),
             CommonLocalize.buttonCancel().get(),
@@ -781,7 +796,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     protected final AnAction createValueAction(@Nullable Object target, Value<T> value) {
         return new ComboBoxAction() {
             void updateText(Presentation p) {
-                String text = renderValue(value.get(), StringUtil.notNullize(getNullValueText(target)));
+                String text = renderValue(value.get(), getNullValueText(target).getNullIfEmpty());
                 p.setText(StringUtil.shortenTextWithEllipsis(text, 40, 0));
             }
 
@@ -841,12 +856,12 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         return null;
     }
 
-    protected @Nullable String getClearValueText(@Nullable Object target) {
-        return target == null ? getNullValueText(null) : null;
+    protected LocalizeValue getClearValueText(@Nullable Object target) {
+        return target == null ? getNullValueText(null) : LocalizeValue.empty();
     }
 
-    protected @Nullable String getNullValueText(@Nullable Object target) {
-        return param(NULL_TEXT);
+    protected LocalizeValue getNullValueText(@Nullable Object target) {
+        return LanguageLocalize.perfileconfigurablebaseNullText();
     }
 
     protected Collection<T> getValueVariants(@Nullable Object target) {
@@ -858,9 +873,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     protected ActionGroup createActionListGroup(@Nullable Object target, Consumer<? super T> onChosen) {
         DefaultActionGroup group = new DefaultActionGroup();
-        String clearText = getClearValueText(target);
+        LocalizeValue clearText = getClearValueText(target);
         Function<T, AnAction> choseAction = t -> {
-            String nullValue = StringUtil.notNullize(clearText);
+            String nullValue = clearText.get();
             AnAction a = new DumbAwareAction(renderValue(t, nullValue), "", getActionListIcon(target, t)) {
                 @Override
                 @RequiredUIAccess
@@ -877,7 +892,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         SimpleColoredText text = new SimpleColoredText();
         List<T> values = new ArrayList<>(getValueVariants(target));
 
-        if (param(SORT_VALUES)) {
+        if (isSortValues()) {
             Function<T, String> toString = o -> {
                 text.clear();
                 renderValue(target, o, text);
