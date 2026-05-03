@@ -188,6 +188,20 @@ action.view.text.text:
     text: View Text
 ad.extra.selection.shortcut:
     text: 'You can also choose an item with: {0}'
+breakpoints.dialog.create.new.group:
+    text: Create New…
+breakpoints.dialog.edit.description:
+    text: Edit Description
+breakpoints.dialog.new.group:
+    text: New Group
+breakpoints.dialog.new.group.name:
+    text: New group name
+breakpoints.dialog.no.group:
+    text: <No Group>
+breakpoints.dialog.set.as.default:
+    text: Set as Default
+breakpoints.dialog.unset.as.default:
+    text: Unset as Default
 button.text.code.fragment.mode:
     text: Code Fragment &Mode
 button.text.expression.mode:
@@ -244,6 +258,8 @@ debugger.variables.not.available:
     text: Variables are not available
 dialog.title.evaluate.code.fragment:
     text: Evaluate Code Fragment
+done.action.text:
+    text: Done
 evaluation.in.progress:
     text: Evaluation in progress
 exception.label:
@@ -524,19 +540,3 @@ xdebugger.view.breakpoint.properties.action:
     text: Properties
 xdebugger.view.breakpoint.reveal.action:
     text: Show Breakpoints Dialog
-done.action.text:
-    text: Done
-breakpoints.dialog.edit.description:
-    text: Edit Description
-breakpoints.dialog.new.group.name:
-    text: New group name
-breakpoints.dialog.new.group:
-    text: New Group
-breakpoints.dialog.no.group:
-    text: <No Group>
-breakpoints.dialog.create.new.group:
-    text: Create New…
-breakpoints.dialog.unset.as.default:
-    text: Unset as Default
-breakpoints.dialog.set.as.default:
-    text: Set as Default
