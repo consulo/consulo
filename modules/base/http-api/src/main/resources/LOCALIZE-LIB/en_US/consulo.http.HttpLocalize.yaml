@@ -2,6 +2,8 @@ error.connection.failed.redirects:
     text: 'Connection failed: too many redirects'
 error.connection.failed.with.http.code.N:
     text: Connection failed with HTTP code {0}
+http.proxy.configurable:
+    text: HTTP Proxy
 label.old.way.jvm.property.used:
     text: '<html>You have JVM property "{0}" set to "{1}".<br>This may lead to incorrect behaviour. Proxy should be set in Settings | HTTP Proxy<br>This JVM property is old and its usage is not recommended by Oracle.<br>(Note: It could have been assigned by some code dynamically.)'
 proxy.direct.rb:

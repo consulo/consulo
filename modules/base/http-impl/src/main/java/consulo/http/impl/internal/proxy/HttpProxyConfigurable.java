@@ -20,38 +20,41 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.IdeaConfigurableBase;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.http.HttpProxyManager;
-import consulo.localize.LocalizeValue;
+import consulo.http.localize.HttpLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
-
 import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
-public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpProxyManagerImpl> implements ApplicationConfigurable {
-  private final HttpProxyManagerImpl settings;
+public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpProxyManagerImpl>
+    implements ApplicationConfigurable {
+  
+    private final HttpProxyManagerImpl settings;
 
-  public HttpProxyConfigurable() {
-    this(HttpProxyManager.getInstance());
-  }
+    public HttpProxyConfigurable() {
+        this(HttpProxyManager.getInstance());
+    }
 
-  @Inject
-  public HttpProxyConfigurable(HttpProxyManager settings) {
-    super("http.proxy", LocalizeValue.localizeTODO("HTTP Proxy"), "http.proxy");
+    @Inject
+    public HttpProxyConfigurable(HttpProxyManager settings) {
+        super("http.proxy", HttpLocalize.httpProxyConfigurable(), "http.proxy");
 
-    this.settings = (HttpProxyManagerImpl)settings;
-  }
+        this.settings = (HttpProxyManagerImpl) settings;
+    }
 
-  @Override
-  public @Nullable String getParentId() {
-    return StandardConfigurableIds.GENERAL_GROUP;
-  }
+    @Override
+    public @Nullable String getParentId() {
+        return StandardConfigurableIds.GENERAL_GROUP;
+    }
 
-  @Override
-  protected HttpProxyManagerImpl getSettings() {
-    return settings;
-  }
+    @Override
+    protected HttpProxyManagerImpl getSettings() {
+        return settings;
+    }
 
-  @Override
-  protected HttpProxySettingsUi createUi() {
-    return new HttpProxySettingsUi(settings);
-  }
+    @Override
+    @RequiredUIAccess
+    protected HttpProxySettingsUi createUi() {
+        return new HttpProxySettingsUi(settings);
+    }
 }
