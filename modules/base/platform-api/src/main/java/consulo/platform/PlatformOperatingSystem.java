@@ -36,6 +36,8 @@ public interface PlatformOperatingSystem {
 
     boolean isFreeBSD();
 
+    boolean isHaiku();
+
     boolean isUnix();
 
     @Deprecated
