@@ -132,8 +132,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
 
     builder.group("JVM");
     builder.item("vendor", platform.jvm().vendor());
-    builder.item("version", platform.jvm().version());
-    builder.item("runtimeVersion", platform.jvm().runtimeVersion());
+    builder.item("version", platform.jvm().rawVersion());
     builder.item("locale", Locale.getDefault().toString());
     builder.group("JVM Env");
     for (Map.Entry<String, String> entry : new TreeMap<>(platform.jvm().getRuntimeProperties()).entrySet()) {

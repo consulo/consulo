@@ -1,5 +1,5 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.application.util;
+package consulo.platform;
 
 import org.jspecify.annotations.Nullable;
 
@@ -164,45 +164,6 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         return compose(feature, 0, 0, 0, false);
     }
 
-    private static @Nullable JavaVersion current = null;
-
-    /**
-     * Returns the version of a Java runtime the class is loaded into.
-     * The method attempts to parse {@code "java.runtime.version"} system property first (usually, it is more complete),
-     * and falls back to {@code "java.version"} if the former is invalid or differs in {@link #feature} or {@link #minor} numbers.
-     */
-    public static JavaVersion current() {
-        if (current == null) {
-            JavaVersion fallback = parse(System.getProperty("java.version"));
-            JavaVersion rt = rtVersion();
-            if (rt == null) {
-                try {
-                    rt = parse(System.getProperty("java.runtime.version"));
-                }
-                catch (Throwable ignored) {
-                }
-            }
-            current = rt != null && rt.feature == fallback.feature && rt.minor == fallback.minor ? rt : fallback;
-        }
-        return current;
-    }
-
-    private static @Nullable JavaVersion rtVersion() {
-        try {
-            Runtime.Version version = Runtime.version();
-            int feature = version.feature();
-            int minor = version.interim();
-            int security = version.update();
-            Optional<Integer> buildOpt = version.build();
-            int build = buildOpt.orElse(0);
-            Optional<String> preOpt = version.pre();
-            boolean ea = preOpt.isPresent();
-            return new JavaVersion(feature, minor, security, build, ea);
-        }
-        catch (Throwable ignored) {
-            return null;
-        }
-    }
 
     private static final int MAX_ACCEPTED_VERSION = 50;  // sanity check
 

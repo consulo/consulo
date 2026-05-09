@@ -145,7 +145,7 @@ public class LogbackLogger implements Logger {
         }
 
         Platform platform = Platform.current();
-        logger.error("JDK: " + platform.jvm().version());
+        logger.error("JDK: " + platform.jvm().rawVersion());
         logger.error("VM: " + platform.jvm().name());
         logger.error("Vendor: " + platform.jvm().vendor());
         logger.error("OS: " + platform.os().name());

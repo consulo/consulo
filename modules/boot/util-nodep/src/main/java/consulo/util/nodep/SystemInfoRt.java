@@ -33,6 +33,6 @@ public class SystemInfoRt {
   public static final boolean isUnix = !isWindows;
 
   public static boolean isJavaVersionAtLeast(int major) {
-    return JavaVersion.current().isAtLeast(major);
+    return JavaVersionRt.current().isAtLeast(major);
   }
 }
