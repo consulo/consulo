@@ -41,7 +41,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     public UnifiedApplication(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
 
-        myLock = new UnifiedRWLock();
+        myLock = new StampedRWLock();
 
         ApplicationManager.setApplication(this);
     }
@@ -59,7 +59,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     @Override
     public void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
         UIAccess uiAccess = getLastUIAccess();
-        uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
+        uiAccess.give(action);
     }
 
     @Override
@@ -136,11 +136,6 @@ public abstract class UnifiedApplication extends BaseApplication {
         }
 
         getLastUIAccess().giveAndWait(runnable);
-    }
-
-    @Override
-    public void runIntendedWriteActionOnCurrentThread(Runnable action) {
-        action.run();
     }
 
     @Override

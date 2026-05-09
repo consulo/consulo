@@ -51,16 +51,20 @@ public final class WriteLock<I, O> extends CoroutineStep<I, O> {
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess.assetIsNotUIThread();
 
-        ApplicationWithIntentWriteLock application =
-            (ApplicationWithIntentWriteLock) Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
-
-        try {
-            application.acquireWriteIntentLock(WriteLock.class.getName());
+        Application application = Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application Required");
+        if (application instanceof ApplicationWithIntentWriteLock applicationWithIntentWriteLock) {
+            try {
+                applicationWithIntentWriteLock.acquireWriteIntentLock(WriteLock.class.getName());
+                //noinspection RequiredXAction
+                return application.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
+            }
+            finally {
+                applicationWithIntentWriteLock.releaseWriteIntentLock();
+            }
+        }
+        else {
             //noinspection RequiredXAction
             return application.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
-        }
-        finally {
-            application.releaseWriteIntentLock();
         }
     }
 }

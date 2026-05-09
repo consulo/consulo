@@ -23,7 +23,8 @@ import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ReadMostlyRWLock;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
@@ -86,7 +87,7 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
-public class DesktopApplicationImpl extends BaseApplication {
+public class DesktopApplicationImpl extends BaseApplication implements ApplicationWithIntentWriteLock {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
     private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
@@ -140,7 +141,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             };
         }
 
-        Thread edt = UIUtil.invokeAndWaitIfNeeded(() -> {
+        UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
             // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
             // that thread was chosen because we know for sure it's running
             AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
@@ -149,12 +150,9 @@ public class DesktopApplicationImpl extends BaseApplication {
             Disposer.register(this, () -> {
                 AWTAutoShutdownHacking.notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
             });
-            return Thread.currentThread();
         });
 
-        myLock = new ReadMostlyRWLock(edt);
-
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
+        myLock = new ReadMostlyRWLock(null);
 
         NoSwingUnderWriteAction.watchForEvents(this);
     }
@@ -245,7 +243,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         ModalityState state,
         BooleanSupplier expired
     ) {
-        LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
+        LaterInvocator.invokeLaterWithCallback(runnable, state, expired, null);
     }
 
     @RequiredUIAccess
@@ -256,7 +254,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             return;
         }
         if (SwingUtilities.isEventDispatchThread()) {
-            runIntendedWriteActionOnCurrentThread(runnable);
+            runnable.run();
             return;
         }
 
@@ -264,7 +262,58 @@ public class DesktopApplicationImpl extends BaseApplication {
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
 
-        LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(runnable), modalityState);
+        LaterInvocator.invokeAndWait(runnable, modalityState);
+    }
+
+    @Override
+    public void acquireWriteIntentLock(String invokedClassFqn) {
+        myLock.writeIntentLock();
+    }
+
+    @Override
+    public void releaseWriteIntentLock() {
+        myLock.writeIntentUnlock();
+    }
+
+    @Override
+    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
+        if (!myLock.isWriteThread()) {
+            return action.compute();
+        }
+        myLock.writeIntentUnlock();
+        try {
+            return action.compute();
+        }
+        finally {
+            myLock.writeIntentLock();
+        }
+    }
+
+    @Override
+    public void runIntendedWriteActionOnCurrentThread(Runnable action) {
+        if (isWriteThread()) {
+            action.run();
+        }
+        else {
+            myLock.writeIntentLock();
+            try {
+                action.run();
+            }
+            finally {
+                myLock.writeIntentUnlock();
+            }
+        }
+    }
+
+    @Override
+    public void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
+        Runnable r = wrapLaterInvocation(action, modal);
+        LaterInvocator.invokeLaterWithCallback(
+            () -> runIntendedWriteActionOnCurrentThread(r),
+            modal,
+            expired,
+            null
+        );
     }
 
     @Override

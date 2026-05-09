@@ -35,7 +35,6 @@ class TranslactionCompilerMonitorCachesInvalidator extends CachesInvalidator {
         myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
     }
 
-    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Invalidate compiler cache");

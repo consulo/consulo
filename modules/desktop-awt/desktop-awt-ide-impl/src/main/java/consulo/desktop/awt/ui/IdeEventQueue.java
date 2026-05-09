@@ -89,8 +89,8 @@ public class IdeEventQueue extends EventQueue {
     private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
     private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
-    private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
-    private static final boolean ourDefaultEventWithWrite = true;
+    private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of();
+    private static final boolean ourDefaultEventWithWrite = false;
 
     private static ProgressManager ourProgressManager;
 
