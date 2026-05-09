@@ -15,8 +15,8 @@
  */
 package consulo.dataContext;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,6 +29,8 @@ import org.jspecify.annotations.Nullable;
  *
  * @see DataContext
  */
+@Deprecated
+@DeprecationInfo("Use UiDataProvider")
 public interface DataProvider {
     /**
      * Returns the object corresponding to the specified data identifier. Some of the supported
@@ -37,10 +39,11 @@ public interface DataProvider {
      * @param dataId the data identifier for which the value is requested.
      * @return the value, or null if no value is available in the current context for this identifier.
      */
-    @Nullable Object getData(Key<?> dataId);
+    @Nullable
+    Object getData(Key<?> dataId);
 
     @SuppressWarnings("unchecked")
     default <T> @Nullable T getDataUnchecked(Key<T> key) {
-        return (T)getData(key);
+        return (T) getData(key);
     }
 }

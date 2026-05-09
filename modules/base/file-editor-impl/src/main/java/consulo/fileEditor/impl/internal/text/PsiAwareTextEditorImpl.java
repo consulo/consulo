@@ -33,7 +33,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSink;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -109,17 +109,15 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-      if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-        LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
-        if (lookup != null && lookup.isVisible()) {
-          return lookup.getBounds();
-        }
+    public void uiDataSnapshot(DataSink sink) {
+      super.uiDataSnapshot(sink);
+
+      LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
+      if (lookup != null && lookup.isVisible()) {
+        sink.set(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE, lookup.getBounds());
       }
-      if (LangDataKeys.MODULE == dataId) {
-        return ModuleUtilCore.findModuleForFile(myFile, myProject);
-      }
-      return super.getData(dataId);
+
+      sink.lazy(LangDataKeys.MODULE, () -> ModuleUtilCore.findModuleForFile(myFile, myProject));
     }
   }
 }

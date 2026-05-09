@@ -20,6 +20,8 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.impl.internal.ui.layout.RunnerLayoutImpl;
@@ -242,19 +244,15 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             return;
         }
 
-        myTabs = (JBRunnerTabs) new JBRunnerTabs(myProject, myActionManager, myFocusManager, this).setDataProvider(new DataProvider() {
+        myTabs = (JBRunnerTabs) new JBRunnerTabs(myProject, myActionManager, myFocusManager, this).setDataProvider(new UiDataProvider() {
                 @Override
-                public Object getData(Key<?> dataId) {
-                    if (ViewContext.CONTENT_KEY == dataId) {
-                        TabInfo info = myTabs.getTargetInfo();
-                        if (info != null) {
-                            return getGridFor(info).getData(dataId);
-                        }
+                public void uiDataSnapshot(DataSink sink) {
+                    sink.set(ViewContext.CONTEXT_KEY, RunnerContentUiImpl.this);
+                    TabInfo info = myTabs.getTargetInfo();
+                    if (info != null) {
+                        Object content = getGridFor(info).getData(ViewContext.CONTENT_KEY);
+                        sink.set(ViewContext.CONTENT_KEY, (Content[]) content);
                     }
-                    else if (ViewContext.CONTEXT_KEY == dataId) {
-                        return RunnerContentUiImpl.this;
-                    }
-                    return null;
                 }
             })
             .setInnerInsets(JBUI.emptyInsets())

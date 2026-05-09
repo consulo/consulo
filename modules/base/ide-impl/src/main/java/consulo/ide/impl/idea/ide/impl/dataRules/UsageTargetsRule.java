@@ -16,27 +16,16 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.DataSnapshot;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetUtil;
-import consulo.usage.UsageView;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
-@ExtensionImpl
-public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
-  @Override
-  public Key<UsageTarget[]> getKey() {
-    return UsageView.USAGE_TARGETS_KEY;
-  }
-
-  @Override
-  public UsageTarget @Nullable [] getData(DataProvider dataProvider) {
+public final class UsageTargetsRule {
+  static UsageTarget @Nullable [] getData(DataSnapshot dataProvider) {
     return UsageTargetUtil.findUsageTargets(dataProvider);
   }
 }

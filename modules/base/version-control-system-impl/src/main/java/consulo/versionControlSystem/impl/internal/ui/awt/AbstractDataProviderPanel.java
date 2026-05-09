@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,7 @@ import java.awt.*;
  * @author Irina.Chernushina
  * @since 2012-09-14
  */
-public abstract class AbstractDataProviderPanel extends JPanel implements TypeSafeDataProvider {
+public abstract class AbstractDataProviderPanel extends JPanel implements UiDataProvider {
     public AbstractDataProviderPanel(GridBagLayout layout) {
         super(layout);
     }

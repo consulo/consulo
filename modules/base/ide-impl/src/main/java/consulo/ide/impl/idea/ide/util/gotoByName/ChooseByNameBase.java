@@ -1143,7 +1143,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     protected void chosenElementMightChange() {
     }
 
-    protected final class MyTextField extends JTextField implements PopupOwner, TypeSafeDataProvider {
+    protected final class MyTextField extends JTextField implements PopupOwner, UiDataProvider {
         private final KeyStroke myCompletionKeyStroke;
         private final KeyStroke forwardStroke;
         private final KeyStroke backStroke;
@@ -1180,16 +1180,12 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
 
         @Override
-        public void calcData(Key key, DataSink sink) {
-            if (LangDataKeys.POSITION_ADJUSTER_POPUP.equals(key)) {
-                if (myDropdownPopup != null && myDropdownPopup.isVisible()) {
-                    sink.put(key, myDropdownPopup);
-                }
+        public void uiDataSnapshot(DataSink sink) {
+            if (myDropdownPopup != null && myDropdownPopup.isVisible()) {
+                sink.set(LangDataKeys.POSITION_ADJUSTER_POPUP, myDropdownPopup);
             }
-            else if (LangDataKeys.PARENT_POPUP.equals(key)) {
-                if (myTextPopup != null && myTextPopup.isVisible()) {
-                    sink.put(key, myTextPopup);
-                }
+            if (myTextPopup != null && myTextPopup.isVisible()) {
+                sink.set(LangDataKeys.PARENT_POPUP, myTextPopup);
             }
         }
 

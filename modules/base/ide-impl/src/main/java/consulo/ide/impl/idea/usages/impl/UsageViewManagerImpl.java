@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.idea.find.SearchInBackgroundOption;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -150,15 +150,35 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   SearchScope getMaxSearchScopeToWarnOfFallingOutOf(UsageTarget[] searchFor) {
     UsageTarget target = searchFor.length > 0 ? searchFor[0] : null;
-    if (target instanceof TypeSafeDataProvider) {
+    if (target instanceof UiDataProvider uiDataProvider) {
       final SearchScope[] scope = new SearchScope[1];
-      ((TypeSafeDataProvider)target).calcData(UsageView.USAGE_SCOPE, new DataSink() {
+      uiDataProvider.uiDataSnapshot(new DataSink() {
         @Override
-        public <T> void put(Key<T> key, T data) {
-          scope[0] = (SearchScope)data;
+        public <T> void set(Key<T> key, T data) {
+          if (key == UsageView.USAGE_SCOPE) {
+            scope[0] = (SearchScope)data;
+          }
+        }
+
+        @Override
+        public <T> void lazy(Key<T> key, java.util.function.Supplier<T> dataSupplier) {
+          if (key == UsageView.USAGE_SCOPE) {
+            scope[0] = (SearchScope)dataSupplier.get();
+          }
+        }
+
+        @Override
+        public <T> void lazyValue(Key<T> key, java.util.function.Function<consulo.dataContext.DataSnapshot, T> dataFunction) {
+        }
+
+        @Override
+        public void uiDataSnapshot(UiDataProvider provider) {
+          provider.uiDataSnapshot(this);
         }
       });
-      return scope[0];
+      if (scope[0] != null) {
+        return scope[0];
+      }
     }
     return GlobalSearchScope.allScope(myProject); // by default do not warn of falling out of scope
   }

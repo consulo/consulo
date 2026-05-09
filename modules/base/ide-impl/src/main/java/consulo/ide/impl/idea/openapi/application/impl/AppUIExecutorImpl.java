@@ -62,7 +62,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     @Override
     public void execute(Runnable command) {
       Application application = Application.get();
-      if (application.isWriteThread() && !application.getCurrentModalityState().dominates(modality)) {
+      if (application.isDispatchThread() && !application.getCurrentModalityState().dominates(modality)) {
         command.run();
       }
       else {

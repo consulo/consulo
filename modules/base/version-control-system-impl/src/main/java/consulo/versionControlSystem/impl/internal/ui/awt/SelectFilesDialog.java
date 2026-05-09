@@ -136,14 +136,12 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> im
         }
 
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
-            super.calcData(key, sink);
-            if (DeleteProvider.KEY == key && myDeleteProvider != null) {
-                sink.put(DeleteProvider.KEY, myDeleteProvider);
+        public void uiDataSnapshot(DataSink sink) {
+            super.uiDataSnapshot(sink);
+            if (myDeleteProvider != null) {
+                sink.set(DeleteProvider.KEY, myDeleteProvider);
             }
-            else if (VirtualFile.KEY_OF_ARRAY == key) {
-                sink.put(VirtualFile.KEY_OF_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
-            }
+            sink.set(VirtualFile.KEY_OF_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
         }
 
         public void refresh() {

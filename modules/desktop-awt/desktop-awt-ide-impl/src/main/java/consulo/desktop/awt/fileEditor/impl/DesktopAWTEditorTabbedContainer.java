@@ -20,7 +20,8 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.Queryable;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -66,7 +67,6 @@ import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -446,35 +446,20 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     }
 
-    private class MyDataProvider implements DataProvider {
+    private class MyDataProvider implements UiDataProvider {
         @Override
-        public Object getData(Key<?> dataId) {
-            if (Project.KEY == dataId) {
-                return myProject;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(Project.KEY, myProject);
+            VirtualFile selectedFile = myWindow.getSelectedFile();
+            if (selectedFile != null && selectedFile.isValid()) {
+                sink.set(VirtualFile.KEY, selectedFile);
             }
-            if (VirtualFile.KEY == dataId) {
-                VirtualFile selectedFile = myWindow.getSelectedFile();
-                return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
+            sink.set(DesktopFileEditorWindow.DATA_KEY, myWindow);
+            sink.set(HelpManager.HELP_ID, HELP_ID);
+            TabInfo selected = myTabs.getSelectedInfo();
+            if (selected != null) {
+                sink.set(CloseAction.CloseTarget.KEY, DesktopAWTEditorTabbedContainer.this);
             }
-            if (DesktopFileEditorWindow.DATA_KEY == dataId) {
-                return myWindow;
-            }
-            if (HelpManager.HELP_ID == dataId) {
-                return HELP_ID;
-            }
-
-            if (CloseAction.CloseTarget.KEY == dataId) {
-                TabInfo selected = myTabs.getSelectedInfo();
-                if (selected != null) {
-                    return DesktopAWTEditorTabbedContainer.this;
-                }
-            }
-
-            if (DesktopFileEditorWindow.DATA_KEY == dataId) {
-                return myWindow;
-            }
-
-            return null;
         }
     }
 

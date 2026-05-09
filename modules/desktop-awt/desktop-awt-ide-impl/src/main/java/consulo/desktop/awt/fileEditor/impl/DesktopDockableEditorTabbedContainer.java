@@ -16,7 +16,7 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.application.Application;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.DockableEditorTabbedContainer;
@@ -139,10 +139,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
   public void add(DockableContent content, RelativePoint dropTarget) {
     FileEditorWindow window = null;
     if (myCurrentOver != null) {
-      DataProvider provider = myCurrentOver.getDataProvider();
-      if (provider != null) {
-        window = provider.getDataUnchecked(FileEditorWindow.DATA_KEY);
-      }
+      window = DataManager.getInstance().getDataContext(myCurrentOver.getComponent()).getData(FileEditorWindow.DATA_KEY);
     }
 
     DesktopAWTEditorTabbedContainer.DockableEditor dockableEditor = (DesktopAWTEditorTabbedContainer.DockableEditor)content;

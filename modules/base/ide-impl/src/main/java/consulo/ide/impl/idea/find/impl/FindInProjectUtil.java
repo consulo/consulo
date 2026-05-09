@@ -19,7 +19,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -503,7 +503,7 @@ public class FindInProjectUtil {
         }
     }
 
-    public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, TypeSafeDataProvider {
+    public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, UiDataProvider {
         
         protected final Project myProject;
         
@@ -608,12 +608,8 @@ public class FindInProjectUtil {
         }
 
         @Override
-        @RequiredReadAction
-        public void calcData(Key key, DataSink sink) {
-            if (UsageView.USAGE_SCOPE == key) {
-                SearchScope scope = getScopeFromModel(myProject, myFindModel);
-                sink.put(UsageView.USAGE_SCOPE, scope);
-            }
+        public void uiDataSnapshot(DataSink sink) {
+            sink.lazy(UsageView.USAGE_SCOPE, () -> getScopeFromModel(myProject, myFindModel));
         }
     }
 

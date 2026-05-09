@@ -40,11 +40,8 @@ final class ServiceViewTreeUi implements ServiceViewUi {
     myContentPanel.setContent(mySplitter);
 
     myMasterPanel = new JPanel(new BorderLayout());
-    DataManager.registerDataProvider(myMasterPanel, dataId -> {
-      if (ServiceViewActionUtils.IS_FROM_TREE_KEY.is(dataId)) {
-        return true;
-      }
-      return null;
+    DataManager.registerUiDataProvider(myMasterPanel, sink -> {
+      sink.set(ServiceViewActionUtils.IS_FROM_TREE_KEY, true);
     });
 
     mySplitter.setFirstComponent(myMasterPanel);

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.NonFocusableSetting;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -58,7 +58,7 @@ import java.util.*;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use MemberChooserBuilder")
-public class MemberChooser<T extends ClassMember> extends DialogWrapper implements TypeSafeDataProvider {
+public class MemberChooser<T extends ClassMember> extends DialogWrapper implements UiDataProvider {
     protected Tree myTree;
     private DefaultTreeModel myTreeModel;
     protected JComponent[] myOptionControls;
@@ -739,13 +739,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     }
 
     @Override
-    public void calcData(Key key, DataSink sink) {
-        if (PsiElement.KEY == key) {
-            if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
-                T selectedElement = mySelectedElements.iterator().next();
-                if (selectedElement instanceof ClassMemberWithElement) {
-                    sink.put(PsiElement.KEY, ((ClassMemberWithElement) selectedElement).getElement());
-                }
+    public void uiDataSnapshot(DataSink sink) {
+        if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
+            T selectedElement = mySelectedElements.iterator().next();
+            if (selectedElement instanceof ClassMemberWithElement) {
+                sink.set(PsiElement.KEY, ((ClassMemberWithElement) selectedElement).getElement());
             }
         }
     }

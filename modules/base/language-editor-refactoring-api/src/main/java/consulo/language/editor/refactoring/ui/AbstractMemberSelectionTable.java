@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring.ui;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.language.editor.refactoring.classMember.MemberInfoChange;
 import consulo.language.editor.refactoring.classMember.MemberInfoChangeListener;
@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * @author Dennis.Ushakov
  */
-public abstract class AbstractMemberSelectionTable<T extends PsiElement, M extends MemberInfoBase<T>> extends JBTable implements TypeSafeDataProvider {
+public abstract class AbstractMemberSelectionTable<T extends PsiElement, M extends MemberInfoBase<T>> extends JBTable implements UiDataProvider {
   protected static final int CHECKED_COLUMN = 0;
   protected static final int DISPLAY_NAME_COLUMN = 1;
   protected static final int ABSTRACT_COLUMN = 2;
@@ -162,12 +162,10 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   @Override
-  public void calcData(Key key, DataSink sink) {
-    if (key == PsiElement.KEY) {
-      Collection<M> memberInfos = getSelectedMemberInfos();
-      if (memberInfos.size() > 0) {
-        sink.put(PsiElement.KEY, memberInfos.iterator().next().getMember());
-      }
+  public void uiDataSnapshot(DataSink sink) {
+    Collection<M> memberInfos = getSelectedMemberInfos();
+    if (memberInfos.size() > 0) {
+      sink.set(PsiElement.KEY, memberInfos.iterator().next().getMember());
     }
   }
 

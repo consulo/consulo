@@ -18,7 +18,7 @@ package consulo.desktop.awt.language.editor;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.generation.*;
 import consulo.language.psi.PsiCompiledElement;
@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Function;
 
-public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper implements TypeSafeDataProvider {
+public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper implements UiDataProvider {
     protected Tree myTree;
     private DefaultTreeModel myTreeModel;
 
@@ -655,13 +655,11 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @Override
-    public void calcData(Key key, DataSink sink) {
-        if (PsiElement.KEY == key) {
-            if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
-                T selectedElement = mySelectedElements.iterator().next();
-                if (selectedElement instanceof ClassMemberWithElement classMemberWithElement) {
-                    sink.put(PsiElement.KEY, classMemberWithElement.getElement());
-                }
+    public void uiDataSnapshot(DataSink sink) {
+        if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
+            T selectedElement = mySelectedElements.iterator().next();
+            if (selectedElement instanceof ClassMemberWithElement classMemberWithElement) {
+                sink.set(PsiElement.KEY, classMemberWithElement.getElement());
             }
         }
     }

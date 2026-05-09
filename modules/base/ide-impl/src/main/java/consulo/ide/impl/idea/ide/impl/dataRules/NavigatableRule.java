@@ -16,50 +16,32 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNavigationSupport;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
-import consulo.util.dataholder.Key;
-import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-@ExtensionImpl
-public class NavigatableRule implements GetDataRule<Navigatable> {
-    private final PsiNavigationSupport myPsiNavigationSupport;
-
-    @Inject
-    public NavigatableRule(PsiNavigationSupport psiNavigationSupport) {
-        myPsiNavigationSupport = psiNavigationSupport;
-    }
-
-    @Override
-    public Key<Navigatable> getKey() {
-        return Navigatable.KEY;
-    }
-
-    @Override
-    public @Nullable Navigatable getData(DataProvider dataProvider) {
-        Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
+public final class NavigatableRule {
+    static @Nullable Navigatable getData(DataSnapshot dataProvider) {
+        Navigatable navigatable = dataProvider.get(Navigatable.KEY);
         if (navigatable != null && navigatable instanceof OpenFileDescriptor openFileDescriptor) {
             if (openFileDescriptor.getFile().isValid()) {
                 return openFileDescriptor;
             }
         }
-        PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
+        PsiElement element = dataProvider.get(PsiElement.KEY);
         if (element instanceof Navigatable navElem) {
             return navElem;
         }
-        
+
         if (element != null) {
-            return myPsiNavigationSupport.getDescriptor(element);
+            return PsiNavigationSupport.getInstance().getDescriptor(element);
         }
 
-        Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
+        Object selection = dataProvider.get(PlatformDataKeys.SELECTED_ITEM);
         return selection instanceof Navigatable navSel ? navSel : null;
     }
 }

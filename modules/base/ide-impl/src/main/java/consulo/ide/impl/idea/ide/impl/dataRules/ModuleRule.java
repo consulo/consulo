@@ -16,17 +16,12 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
-import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -34,32 +29,22 @@ import org.jspecify.annotations.Nullable;
  * @author Eugene Zhuravlev
  * @since 2004-02-10
  */
-@ExtensionImpl
-public class ModuleRule implements GetDataRule<Module> {
-  @Override
-  public Key<Module> getKey() {
-    return Module.KEY;
-  }
-
-  @Override
-  public @Nullable Module getData(DataProvider dataProvider) {
-    Module moduleContext = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
+public final class ModuleRule {
+  static @Nullable Module getData(DataSnapshot dataProvider) {
+    Module moduleContext = dataProvider.get(LangDataKeys.MODULE_CONTEXT);
     if (moduleContext != null) {
       return moduleContext;
     }
-    Project project = dataProvider.getDataUnchecked(Project.KEY);
+    Project project = dataProvider.get(Project.KEY);
     if (project == null) {
-      PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
+      PsiElement element = dataProvider.get(PsiElement.KEY);
       if (element == null || !element.isValid()) return null;
       project = element.getProject();
     }
 
-    VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
+    VirtualFile virtualFile = dataProvider.get(VirtualFile.KEY);
     if (virtualFile == null) {
-      GetDataRule<VirtualFile> dataRule = ((BaseDataManager)DataManager.getInstance()).getDataRule(VirtualFile.KEY);
-      if (dataRule != null) {
-        virtualFile = dataRule.getData(dataProvider);
-      }
+      virtualFile = VirtualFileRule.getData(dataProvider);
     }
 
     if (virtualFile == null) {

@@ -560,7 +560,7 @@ public class Notification {
     }
 
     public static void setDataProvider(Notification notification, JComponent component) {
-        DataManager.registerDataProvider(component, dataId -> KEY == dataId ? notification : null);
+        DataManager.registerUiDataProvider(component, sink -> sink.set(KEY, notification));
     }
 
     

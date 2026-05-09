@@ -38,7 +38,6 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
     private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
     private final Map<DocumentFilePath, DocumentReference> myDeletedFilePathToRef = Maps.newWeakValueHashMap();
 
-    
     private final Application myApplication;
 
     @Inject
@@ -97,7 +96,6 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
         });
     }
 
-    
     private static List<VirtualFile> collectDeletedFiles(VirtualFile f, List<VirtualFile> files) {
         if (!(f instanceof NewVirtualFile)) {
             return files;
@@ -117,13 +115,10 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
     
     @Override
     public DocumentReference create(Document document) {
-        myApplication.assertIsWriteThread();
-
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         return file == null ? createFromDocument(document) : create(file);
     }
 
-    
     private DocumentReference createFromDocument(Document document) {
         DocumentReference result = myDocToRef.get(document);
         if (result == null) {
@@ -133,11 +128,8 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
         return result;
     }
 
-    
     @Override
     public DocumentReference create(VirtualFile file) {
-        myApplication.assertIsWriteThread();
-
         if (!file.isInLocalFileSystem()) { // we treat local files differently from non local because we can undo their deletion
             DocumentReference reference = file.getUserData(FILE_TO_STRONG_REF_KEY);
             if (reference == null) {

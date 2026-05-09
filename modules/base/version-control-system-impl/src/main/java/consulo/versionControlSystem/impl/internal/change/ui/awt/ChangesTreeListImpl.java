@@ -18,7 +18,7 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.localize.DiffLocalize;
 import consulo.language.editor.FileColorManager;
 import consulo.platform.Platform;
@@ -70,7 +70,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDataProvider, ChangesBrowserTree<T> {
+public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvider, ChangesBrowserTree<T> {
     
     protected final Project myProject;
     private final boolean myShowCheckboxes;
@@ -680,10 +680,8 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements TypeSafeDat
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (CopyProvider.KEY == key) {
-            sink.put(CopyProvider.KEY, myTreeCopyProvider);
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(CopyProvider.KEY, myTreeCopyProvider);
     }
 
     @Override

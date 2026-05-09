@@ -22,6 +22,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.diff.action.OpenInEditorAction;
 import consulo.desktop.awt.internal.diff.external.ExternalDiffTool;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
@@ -473,7 +475,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         ActionGroup group = collectToolbarActions(viewerActions);
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DIFF_TOOLBAR, group, true);
 
-        DataManager.registerDataProvider(toolbar.getComponent(), myMainPanel);
+        DataManager.registerUiDataProvider(toolbar.getComponent(), myMainPanel);
         toolbar.setTargetComponent(toolbar.getComponent());
 
         myToolbarPanel.setContent(toolbar.getComponent());
@@ -898,7 +900,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     // Helpers
     //
 
-    private class MyPanel extends JPanel implements DataProvider {
+    private class MyPanel extends JPanel implements UiDataProvider {
         public MyPanel() {
             super(new BorderLayout());
         }
@@ -911,60 +913,37 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            Object data;
-
+        public void uiDataSnapshot(DataSink sink) {
             DataProvider contentProvider =
                 ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
-            if (contentProvider != null) {
-                data = contentProvider.getData(dataId);
-                if (data != null) {
-                    return data;
-                }
+            if (contentProvider instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
 
-            if (OpenInEditorAction.KEY == dataId) {
-                return myOpenInEditorAction;
-            }
-            else if (DiffDataKeys.DIFF_REQUEST == dataId) {
-                return myActiveRequest;
-            }
-            else if (Project.KEY == dataId) {
-                return myProject;
-            }
-            else if (HelpManager.HELP_ID == dataId) {
+            sink.set(OpenInEditorAction.KEY, myOpenInEditorAction);
+            sink.set(DiffDataKeys.DIFF_REQUEST, myActiveRequest);
+            sink.set(Project.KEY, myProject);
+            sink.lazy(HelpManager.HELP_ID, () -> {
                 if (myActiveRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
                     return myActiveRequest.getUserData(DiffUserDataKeys.HELP_ID);
                 }
                 else {
                     return "reference.dialogs.diff.file";
                 }
-            }
-            else if (DiffDataKeys.DIFF_CONTEXT == dataId) {
-                return myContext;
-            }
+            });
+            sink.set(DiffDataKeys.DIFF_CONTEXT, myContext);
 
-            data = myState.getData(dataId);
-            if (data != null) {
-                return data;
-            }
+            myState.uiDataSnapshot(sink);
 
             DataProvider requestProvider = myActiveRequest.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-            if (requestProvider != null) {
-                data = requestProvider.getData(dataId);
-                if (data != null) {
-                    return data;
-                }
+            if (requestProvider instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
 
             DataProvider contextProvider = myContext.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-            if (contextProvider != null) {
-                data = contextProvider.getData(dataId);
-                if (data != null) {
-                    return data;
-                }
+            if (contextProvider instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
-            return null;
         }
     }
 
@@ -1089,9 +1068,8 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Nullable JComponent getPreferredFocusedComponent();
 
-        @Nullable Object getData(Key<?> dataId);
+        void uiDataSnapshot(DataSink sink);
 
-        
         DiffTool getActiveTool();
     }
 
@@ -1114,11 +1092,9 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
         }
 
-        
         @Override
         public DiffTool getActiveTool() {
             return ErrorDiffTool.INSTANCE;
@@ -1167,11 +1143,9 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
         }
 
-        
         @Override
         public DiffTool getActiveTool() {
             return myDiffTool != null ? myDiffTool : ErrorDiffTool.INSTANCE;
@@ -1221,11 +1195,8 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (DiffDataKeys.DIFF_VIEWER == dataId) {
-                return myViewer;
-            }
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(DiffDataKeys.DIFF_VIEWER, myViewer);
         }
     }
 
@@ -1299,14 +1270,9 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (DiffDataKeys.WRAPPING_DIFF_VIEWER == dataId) {
-                return myWrapperViewer;
-            }
-            if (DiffDataKeys.DIFF_VIEWER == dataId) {
-                return myViewer;
-            }
-            return null;
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(DiffDataKeys.WRAPPING_DIFF_VIEWER, myWrapperViewer);
+            sink.set(DiffDataKeys.DIFF_VIEWER, myViewer);
         }
     }
 }

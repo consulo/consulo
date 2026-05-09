@@ -22,7 +22,8 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.ProgramRunnerUtil;
@@ -644,11 +645,10 @@ public class RunConfigurable extends BaseConfigurable {
         });
 
         myWholePanel = new JPanel(new BorderLayout());
-        DataManager.registerDataProvider(myWholePanel, new DataProvider() {
+        DataManager.registerUiDataProvider(myWholePanel, new UiDataProvider() {
             @Override
-            public @Nullable Object getData(Key dataId) {
-                return RunConfigurationSelector.KEY == dataId
-                    ? (RunConfigurationSelector) configuration -> selectConfiguration(configuration) : null;
+            public void uiDataSnapshot(DataSink sink) {
+                sink.set(RunConfigurationSelector.KEY, configuration -> selectConfiguration(configuration));
             }
         });
 

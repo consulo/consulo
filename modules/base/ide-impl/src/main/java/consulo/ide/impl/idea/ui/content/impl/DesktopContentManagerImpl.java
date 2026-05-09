@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui.content.impl;
 
-import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
@@ -126,8 +125,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
         return ((DataProvider)myUI).getData(dataId);
       }
 
-      DataProvider provider = DataManager.getDataProvider(this);
-      return provider == null ? null : provider.getData(dataId);
+      return null;
     }
   }
 }

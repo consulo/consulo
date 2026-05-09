@@ -23,7 +23,7 @@ import consulo.application.progress.Task;
 import consulo.application.util.BufferedListConsumer;
 import consulo.application.util.function.AsynchConsumer;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -61,7 +61,7 @@ import java.util.function.Consumer;
  * @author yole
  * @since 2006-12-05
  */
-public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvider, Disposable {
+public class CommittedChangesPanel extends JPanel implements UiDataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(CommittedChangesPanel.class);
 
   private final CommittedChangesTreeBrowser myBrowser;
@@ -288,15 +288,10 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   }
 
   @Override
-  public void calcData(Key<?> key, DataSink sink) {
-    if (VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER == key) {
-      sink.put(VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER, myIfNotCachedReloader);
-    }
-    else if (VcsDataKeys.REMOTE_HISTORY_LOCATION.equals(key)) {
-      sink.put(VcsDataKeys.REMOTE_HISTORY_LOCATION, myLocation);
-    }
-    //if (key.equals(VcsDataKeys.CHANGES) || key.equals(VcsDataKeys.CHANGE_LISTS)) {
-    myBrowser.calcData(key, sink);
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER, myIfNotCachedReloader);
+    sink.set(VcsDataKeys.REMOTE_HISTORY_LOCATION, myLocation);
+    sink.uiDataSnapshot(myBrowser);
     //}
   }
 

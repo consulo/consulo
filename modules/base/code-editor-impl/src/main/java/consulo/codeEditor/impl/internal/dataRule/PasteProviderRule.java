@@ -15,25 +15,14 @@
  */
 package consulo.codeEditor.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.ui.ex.PasteProvider;
-import consulo.util.dataholder.Key;
-import org.jspecify.annotations.Nullable;
 
-@ExtensionImpl
-public class PasteProviderRule implements GetDataRule<PasteProvider> {
-  @Override
-  public Key<PasteProvider> getKey() {
-    return PasteProvider.KEY;
-  }
-
-  @Override
-  public @Nullable PasteProvider getData(DataProvider dataProvider) {
-    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+public final class PasteProviderRule {
+  static PasteProvider getData(DataSnapshot dataProvider) {
+    Editor editor = dataProvider.get(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getPasteProvider() : null;
   }
 }

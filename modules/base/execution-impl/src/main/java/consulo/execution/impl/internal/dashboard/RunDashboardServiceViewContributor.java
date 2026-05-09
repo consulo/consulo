@@ -5,9 +5,9 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.component.util.WeighedItem;
-import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.dataContext.internal.DataManagerEx;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationType;
@@ -284,20 +284,6 @@ public final class RunDashboardServiceViewContributor
         @Override
         public ItemPresentation getPresentation() {
             return myNode.getPresentation();
-        }
-
-        @Override
-        public @Nullable DataProvider getDataProvider() {
-            Content content = myNode.getContent();
-            if (content == null) {
-                return null;
-            }
-
-            // Try to get data provider from content's component itself.
-            // No need to search for data providers in content's component swing hierarchy,
-            // because it is inside service view component for which data is provided.
-            DataManagerEx dataManager = (DataManagerEx)DataManager.getInstance();
-            return dataManager.getDataProviderEx(content.getComponent());
         }
 
         @Override
@@ -659,7 +645,7 @@ public final class RunDashboardServiceViewContributor
     }
 
     private static final class RunDashboardContributorViewDescriptor extends SimpleServiceViewDescriptor
-        implements ServiceViewToolWindowDescriptor {
+        implements ServiceViewToolWindowDescriptor, UiDataProvider {
         private final Project myProject;
 
         RunDashboardContributorViewDescriptor(Project project) {
@@ -678,13 +664,13 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public DataProvider getDataProvider() {
-            return id -> DeleteProvider.KEY == id ? new RunDashboardServiceViewDeleteProvider() : null;
+        public @Nullable JComponent getContentComponent() {
+            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myProject)).getEmptyContent();
         }
 
         @Override
-        public @Nullable JComponent getContentComponent() {
-            return ((RunDashboardManagerImpl)RunDashboardManager.getInstance(myProject)).getEmptyContent();
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(DeleteProvider.KEY, new RunDashboardServiceViewDeleteProvider());
         }
 
         @Override

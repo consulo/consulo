@@ -15,15 +15,13 @@
  */
 package consulo.versionControlSystem.distributed.internal;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.KeepingPopupOpenAction;
-import consulo.util.lang.ObjectUtil;
+import consulo.ui.ex.awt.popup.ListPopupModel;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -65,12 +63,10 @@ public class BranchMoreAction extends DumbAwareAction implements KeepingPopupOpe
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         setExpanded(!myIsExpanded);
-        InputEvent event = e.getInputEvent();
-        if (event != null && event.getSource() instanceof JComponent) {
-            DataProvider dataProvider = DataManager.getDataProvider((JComponent) event.getSource());
-            if (dataProvider != null) {
-                ObjectUtil.assertNotNull(dataProvider.getDataUnchecked(BranchListPopup.POPUP_MODEL)).refilter();
-            }
+
+        ListPopupModel model = e.getData(BranchListPopup.POPUP_MODEL);
+        if (model != null) {
+            model.refilter();
         }
     }
 

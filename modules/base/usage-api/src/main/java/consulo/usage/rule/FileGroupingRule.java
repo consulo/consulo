@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiElement;
@@ -54,7 +54,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     return null;
   }
 
-  public static class FileUsageGroup implements UsageGroup, TypeSafeDataProvider, NamedPresentably {
+  public static class FileUsageGroup implements UsageGroup, UiDataProvider, NamedPresentably {
     private final Project myProject;
     private final VirtualFile myFile;
     private String myPresentableName;
@@ -141,15 +141,10 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    @RequiredReadAction
-    public void calcData(Key<?> key, DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       if (!isValid()) return;
-      if (key == VirtualFile.KEY) {
-        sink.put(VirtualFile.KEY, myFile);
-      }
-      if (key == PsiElement.KEY) {
-        sink.put(PsiElement.KEY, getPsiFile());
-      }
+      sink.set(VirtualFile.KEY, myFile);
+      sink.lazy(PsiElement.KEY, () -> getPsiFile());
     }
 
     @RequiredReadAction

@@ -1,7 +1,6 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.service;
 
-import consulo.dataContext.DataProvider;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.action.ActionGroup;
@@ -40,10 +39,6 @@ public interface ServiceViewDescriptor {
 
   default @Nullable ActionGroup getPopupActions() {
     return getToolbarActions();
-  }
-
-  default @Nullable DataProvider getDataProvider() {
-    return null;
   }
 
   default void onNodeSelected(List<Object> selectedServices) {

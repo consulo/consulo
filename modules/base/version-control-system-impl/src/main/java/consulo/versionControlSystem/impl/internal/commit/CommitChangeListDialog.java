@@ -22,7 +22,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.util.localize.BundleBase;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffPlaces;
 import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.disposer.Disposable;
@@ -70,7 +70,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class CommitChangeListDialog extends DialogWrapper implements CheckinProjectPanel, TypeSafeDataProvider {
+public class CommitChangeListDialog extends DialogWrapper implements CheckinProjectPanel, UiDataProvider {
     private final static String outCommitHelpId = "reference.dialogs.vcs.commit";
     private static final int LAYOUT_VERSION = 2;
 
@@ -1351,13 +1351,9 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
-        if (key == Refreshable.PANEL_KEY) {
-            sink.put(Refreshable.PANEL_KEY, this);
-        }
-        else {
-            myBrowser.calcData(key, sink);
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(Refreshable.PANEL_KEY, this);
+        sink.uiDataSnapshot(myBrowser);
     }
 
     public static String trimEllipsis(String title) {

@@ -2,9 +2,8 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.application.HelpManager;
-import consulo.application.util.RecursionManager;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.service.*;
 import consulo.language.editor.PlatformDataKeys;
@@ -121,53 +120,39 @@ public abstract class ServiceView extends JPanel implements Disposable {
         return serviceView.isGroupByServiceGroups();
       }
     };
-    DataManager.registerDataProvider(serviceView, dataId -> {
-      if (HelpManager.HELP_ID.is(dataId)) {
-        return ServiceViewManagerImpl.getToolWindowContextHelpId();
-      }
-      if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {
-        return ContainerUtil.map2Array(serviceView.getSelectedItems(), ServiceViewItem::getValue);
-      }
-      if (PlatformDataKeys.SELECTED_ITEM.is(dataId)) {
-        ServiceViewItem item = ContainerUtil.getOnlyItem(serviceView.getSelectedItems());
-        return item != null ? item.getValue() : null;
-      }
-      if (ServiceViewActionProvider.SERVICES_SELECTED_ITEMS.is(dataId)) {
-        return serviceView.getSelectedItems();
-      }
-      if (DeleteProvider.KEY.is(dataId)) {
-        List<ServiceViewItem> selection = serviceView.getSelectedItems();
-        ServiceViewContributor<?> contributor = ServiceViewDragHelper.getTheOnlyRootContributor(selection);
-        DataProvider delegate = contributor == null ? null : contributor.getViewDescriptor(serviceView.getProject()).getDataProvider();
-        DeleteProvider deleteProvider = delegate == null ? null : delegate.getDataUnchecked(DeleteProvider.KEY);
-        if (deleteProvider == null) return new ServiceViewDeleteProvider(serviceView);
+    DataManager.registerUiDataProvider(serviceView, sink -> {
+      sink.set(HelpManager.HELP_ID, ServiceViewManagerImpl.getToolWindowContextHelpId());
 
-        if (deleteProvider instanceof ServiceViewContributorDeleteProvider) {
-          ((ServiceViewContributorDeleteProvider)deleteProvider).setFallbackProvider(new ServiceViewDeleteProvider(serviceView));
-        }
-        return deleteProvider;
-      }
-      if (CopyProvider.KEY.is(dataId)) {
-        return new ServiceViewCopyProvider(serviceView);
-      }
-      if (ServiceViewActionUtils.CONTRIBUTORS_KEY.is(dataId)) {
-        return serviceView.getModel().getRoots().stream().map(ServiceViewItem::getRootContributor).collect(Collectors.toSet());
-      }
-      if (ServiceViewActionUtils.OPTIONS_KEY.is(dataId)) {
-        return viewOptions;
-      }
       List<ServiceViewItem> selectedItems = serviceView.getSelectedItems();
-      if (Navigatable.KEY_OF_ARRAY.is(dataId)) {
-        List<Navigatable> navigatables = ContainerUtil.mapNotNull(selectedItems, item -> item.getViewDescriptor().getNavigatable());
-        return navigatables.toArray(Navigatable.EMPTY_ARRAY);
+      sink.set(PlatformDataKeys.SELECTED_ITEMS, ContainerUtil.map2Array(selectedItems, ServiceViewItem::getValue));
+
+      ServiceViewItem item = ContainerUtil.getOnlyItem(selectedItems);
+      if (item != null) {
+        sink.set(PlatformDataKeys.SELECTED_ITEM, item);
       }
+
+      sink.set(ServiceViewActionProvider.SERVICES_SELECTED_ITEMS, selectedItems);
+      sink.set(CopyProvider.KEY, new ServiceViewCopyProvider(serviceView));
+      sink.set(ServiceViewActionUtils.CONTRIBUTORS_KEY, serviceView.getModel()
+        .getRoots()
+        .stream()
+        .map(ServiceViewItem::getRootContributor)
+        .collect(Collectors.toSet())
+      );
+      sink.set(ServiceViewActionUtils.OPTIONS_KEY, viewOptions);
+
+      sink.lazy(Navigatable.KEY_OF_ARRAY, () -> {
+        List<Navigatable> navigatables = ContainerUtil.mapNotNull(selectedItems, it -> it.getViewDescriptor().getNavigatable());
+        return navigatables.toArray(Navigatable.EMPTY_ARRAY);
+      });
+
+      sink.set(DeleteProvider.KEY, new ServiceViewDeleteProvider(serviceView));
+
       ServiceViewItem selectedItem = ContainerUtil.getOnlyItem(selectedItems);
       ServiceViewDescriptor descriptor = selectedItem == null || selectedItem.isRemoved() ? null : selectedItem.getViewDescriptor();
-      DataProvider dataProvider = descriptor == null ? null : descriptor.getDataProvider();
-      if (dataProvider != null) {
-        return RecursionManager.doPreventingRecursion(serviceView, false, () -> dataProvider.getData(dataId));
+      if (descriptor instanceof UiDataProvider uiDataProvider) {
+        uiDataProvider.uiDataSnapshot(sink);
       }
-      return null;
     });
   }
 

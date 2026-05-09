@@ -320,7 +320,7 @@ public final class ProgressRunner<R> {
             };
             // If a progress indicator has not been calculated yet, grabbing IW lock might lead to deadlock, as progress might need it for init
             progressFuture = progressFuture.thenApplyAsync(modalityRunnable, r -> {
-                if (ApplicationManager.getApplication().isWriteThread()) {
+                if (ApplicationManager.getApplication().isDispatchThread()) {
                     r.run();
                 }
                 else {
@@ -334,7 +334,7 @@ public final class ProgressRunner<R> {
         if (isModal) {
             CompletableFuture<Void> modalityExitFuture = resultFuture.handle((r, throwable) -> r) // ignore result computation exception
                 .thenAcceptBoth(progressFuture, (r, progressIndicator) -> {
-                    if (ApplicationManager.getApplication().isWriteThread()) {
+                    if (ApplicationManager.getApplication().isDispatchThread()) {
                         LaterInvocator.leaveModal(progressIndicator);
                     }
                     else {

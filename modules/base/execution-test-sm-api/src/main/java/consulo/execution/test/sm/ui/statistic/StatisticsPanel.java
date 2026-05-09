@@ -18,7 +18,8 @@ package consulo.execution.test.sm.ui.statistic;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.util.config.Storage;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.TestsUIUtil;
 import consulo.execution.test.sm.SMRunnerUtil;
@@ -49,7 +50,7 @@ import java.util.List;
 /**
  * @author Roman Chernyatchik
  */
-public class StatisticsPanel implements DataProvider {
+public class StatisticsPanel implements UiDataProvider {
     public static final Key<StatisticsPanel> SM_TEST_RUNNER_STATISTICS = Key.create("SM_TEST_RUNNER_STATISTICS");
 
     private TableView<SMTestProxy> myStatisticsTableView;
@@ -92,7 +93,7 @@ public class StatisticsPanel implements DataProvider {
         // Context menu in Table
         PopupHandler.installPopupHandler(myStatisticsTableView, IdeActions.GROUP_TESTTREE_POPUP, ActionPlaces.TESTTREE_VIEW_POPUP);
         // set this statistic tab as dataprovider for test's table view
-        DataManager.registerDataProvider(myStatisticsTableView, this);
+        DataManager.registerUiDataProvider(myStatisticsTableView, this);
     }
 
     public void addPropagateSelectionListener(PropagateSelectionHandler handler) {
@@ -155,11 +156,10 @@ public class StatisticsPanel implements DataProvider {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (SM_TEST_RUNNER_STATISTICS == dataId) {
-            return this;
-        }
-        return TestsUIUtil.getData(getSelectedItem(), dataId, myFrameworkRunningModel);
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(SM_TEST_RUNNER_STATISTICS, this);
+
+        TestsUIUtil.uiSnapshot(sink, getSelectedItem(), myFrameworkRunningModel);
     }
 
     /**

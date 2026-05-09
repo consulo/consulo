@@ -27,9 +27,9 @@ import consulo.dataContext.*;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.language.editor.PlatformDataKeys;
@@ -143,15 +143,21 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   @Override
   @SuppressWarnings("deprecation")
   public @Nullable DataProvider getDataProviderEx(Component component) {
+    // UiDataProvider takes priority over DataProvider
+    if (component instanceof UiDataProvider uiProvider) {
+      return new UiDataProviderAdapter(uiProvider);
+    }
+
     DataProvider dataProvider = null;
     if (component instanceof DataProvider) {
       dataProvider = (DataProvider)component;
     }
-    else if (component instanceof TypeSafeDataProvider) {
-      dataProvider = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)component);
-    }
-    else if (component instanceof JComponent) {
-      dataProvider = DataManager.getDataProvider((JComponent)component);
+    else if (component instanceof JComponent jComponent) {
+      // Check for registered UiDataProvider first (via DataManager.registerUiDataProvider)
+      Object uiDataObj = jComponent.getClientProperty(UiDataProvider.KEY);
+      if (uiDataObj instanceof UiDataProvider uiProvider) {
+        return new UiDataProviderAdapter(uiProvider);
+      }
     }
     // special case for desktop impl. Later removed since we don't want use AWT
     else if (component instanceof FromSwingComponentWrapper) {

@@ -15,25 +15,14 @@
  */
 package consulo.codeEditor.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.CutProvider;
-import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
-import org.jspecify.annotations.Nullable;
+import consulo.dataContext.DataSnapshot;
+import consulo.ui.ex.CutProvider;
 
-@ExtensionImpl
-public class CutProviderRule implements GetDataRule<CutProvider> {
-  @Override
-  public Key<CutProvider> getKey() {
-    return CutProvider.KEY;
-  }
-
-  @Override
-  public @Nullable CutProvider getData(DataProvider dataProvider) {
-    Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
+public final class CutProviderRule {
+  static CutProvider getData(DataSnapshot dataProvider) {
+    Editor editor = dataProvider.get(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCutProvider() : null;
   }
 }

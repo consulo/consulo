@@ -8,7 +8,7 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -24,7 +24,6 @@ import consulo.execution.ui.console.language.LanguageConsoleBuilder;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.util.FileContentUtil;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -51,7 +50,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.util.UndoUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -66,7 +64,7 @@ import java.util.Collections;
  * @author Gregory.Shrago
  * In case of REPL consider to use {@link LanguageConsoleBuilder}
  */
-public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx, DataProvider {
+public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx {
     private final Helper myHelper;
 
     private final ConsoleExecutionEditor myConsoleExecutionEditor;
@@ -132,7 +130,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
         myPanel.add(myConsoleExecutionEditor.getComponent());
         myPanel.add(myScrollBar);
         myPanel.setBackground(TargetAWT.to(myConsoleExecutionEditor.getEditor().getBackgroundColor()));
-        DataManager.registerDataProvider(myPanel, this);
+        DataManager.registerUiDataProvider(myPanel, this);
     }
 
     @Override
@@ -414,12 +412,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        return super.getData(dataId);
-    }
 
-    @Override
-    
     public EditorEx getCurrentEditor() {
         return myConsoleExecutionEditor.getCurrentEditor();
     }
@@ -513,23 +506,14 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
             editorSettings.setAdditionalLinesCount(1);
             editorSettings.setAdditionalColumnsCount(1);
 
-            DataManager.registerDataProvider(editor.getComponent(), (dataId) -> getEditorData(editor, dataId));
+            DataManager.registerUiDataProvider(editor.getComponent(), sink -> {
+                sink.set(OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR, editor);
+            });
         }
 
-        
+
         public PsiFile getFileSafe() {
             return file == null || !file.isValid() ? file = getFile() : file;
-        }
-
-        protected @Nullable Object getEditorData(EditorEx editor, Key dataId) {
-            if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
-                return editor;
-            }
-            else if (project.isInitialized()) {
-                Caret caret = editor.getCaretModel().getCurrentCaret();
-                return FileEditorManagerEx.getInstanceEx(project).getData(dataId, editor, caret);
-            }
-            return null;
         }
     }
 

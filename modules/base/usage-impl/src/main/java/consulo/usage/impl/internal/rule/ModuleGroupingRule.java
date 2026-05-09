@@ -17,7 +17,7 @@ package consulo.usage.impl.internal.rule;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -118,7 +118,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
   }
 
-  private static class ModuleUsageGroup implements UsageGroup, TypeSafeDataProvider {
+  private static class ModuleUsageGroup implements UsageGroup, UiDataProvider {
     private final Module myModule;
 
     public ModuleUsageGroup(Module module) {
@@ -188,11 +188,9 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(Key<?> key, DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       if (!isValid()) return;
-      if (LangDataKeys.MODULE_CONTEXT == key) {
-        sink.put(LangDataKeys.MODULE_CONTEXT, myModule);
-      }
+      sink.set(LangDataKeys.MODULE_CONTEXT, myModule);
     }
   }
 }

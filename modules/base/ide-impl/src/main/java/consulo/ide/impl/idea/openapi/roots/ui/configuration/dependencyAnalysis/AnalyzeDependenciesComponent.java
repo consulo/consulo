@@ -18,7 +18,8 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.dependencyAnalysis;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -276,7 +277,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      *
      * @param <T> the actual explanation type
      */
-    abstract class PathNode<T extends ModuleDependenciesAnalyzer.Explanation> extends NamedConfigurable<T> implements DataProvider {
+    abstract class PathNode<T extends ModuleDependenciesAnalyzer.Explanation> extends NamedConfigurable<T> implements UiDataProvider {
         /**
          * The cut off length, after which URLs are not shown (only suffix)
          */
@@ -315,7 +316,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             myExplanationTree = new Tree(new DefaultTreeModel(buildTree()));
             myExplanationTree.setRootVisible(false);
             myExplanationTree.setCellRenderer(new ExplanationTreeRenderer());
-            DataManager.registerDataProvider(myExplanationTree, this);
+            DataManager.registerUiDataProvider(myExplanationTree, this);
             TreeUtil.expandAll(myExplanationTree);
             NavigateAction navigateAction = new NavigateAction();
             navigateAction.registerCustomShortcutSet(
@@ -328,21 +329,17 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             return new JBScrollPane(myExplanationTree);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
-        public Object getData(Key<?> dataId) {
-            if (Project.KEY == dataId) {
-                return myModule.getProject();
-            }
-            if (Module.KEY == dataId) {
-                return myModule;
-            }
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(Project.KEY, myModule.getProject());
+            sink.set(Module.KEY, myModule);
+
             TreePath selectionPath = myExplanationTree.getSelectionPath();
             DefaultMutableTreeNode node = selectionPath == null ? null : (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
             Object o = node == null ? null : node.getUserObject();
-            return o instanceof ModuleDependenciesAnalyzer.OrderPathElement && ORDER_PATH_ELEMENT_KEY == dataId ? o : null;
+            if (o instanceof ModuleDependenciesAnalyzer.OrderPathElement orderPathElement) {
+                sink.set(ORDER_PATH_ELEMENT_KEY, orderPathElement);
+            }
         }
 
         /**

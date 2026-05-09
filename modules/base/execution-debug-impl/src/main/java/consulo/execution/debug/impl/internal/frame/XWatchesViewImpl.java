@@ -18,6 +18,7 @@ package consulo.execution.debug.impl.internal.frame;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebugSession;
@@ -51,7 +52,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -359,11 +359,9 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (XWatchesView.DATA_KEY == dataId) {
-            return this;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(XWatchesView.DATA_KEY, this);
     }
 
     @Override

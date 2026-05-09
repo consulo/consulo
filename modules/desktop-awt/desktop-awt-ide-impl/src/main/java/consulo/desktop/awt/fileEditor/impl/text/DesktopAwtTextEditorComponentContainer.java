@@ -17,7 +17,7 @@ package consulo.desktop.awt.fileEditor.impl.text;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.internal.TextEditorComponentContainer;
 import consulo.ui.ex.awt.JBLoadingPanel;
@@ -34,7 +34,7 @@ import java.awt.*;
 public class DesktopAwtTextEditorComponentContainer implements TextEditorComponentContainer {
   private final JBLoadingPanel myComponent;
 
-  public DesktopAwtTextEditorComponentContainer(Editor editor, Disposable parentDisposable, DataProvider dataProvider) {
+  public DesktopAwtTextEditorComponentContainer(Editor editor, Disposable parentDisposable, UiDataProvider uiDataProvider) {
     myComponent = new JBLoadingPanel(new BorderLayout(), parentDisposable) {
       @Override
       public Color getBackground() {
@@ -47,7 +47,7 @@ public class DesktopAwtTextEditorComponentContainer implements TextEditorCompone
         return JBSwingUtilities.runGlobalCGTransform(this, super.getComponentGraphics(g));
       }
     };
-    DataManager.registerDataProvider(myComponent, dataProvider);
+    DataManager.registerUiDataProvider(myComponent, uiDataProvider);
 
     myComponent.add(editor.getComponent(), BorderLayout.CENTER);
   }

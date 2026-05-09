@@ -15,22 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.navigation.Navigatable;
-import consulo.util.dataholder.Key;
 
-@ExtensionImpl
-public class NavigatableArrayRule implements GetDataRule<Navigatable[]> {
-  @Override
-  public Key<Navigatable[]> getKey() {
-    return Navigatable.KEY_OF_ARRAY;
-  }
-
-  @Override
-  public Navigatable[] getData(DataProvider dataProvider) {
-    Navigatable element = dataProvider.getDataUnchecked(Navigatable.KEY);
+public final class NavigatableArrayRule {
+  static Navigatable[] getData(DataSnapshot dataProvider) {
+    Navigatable element = dataProvider.get(Navigatable.KEY);
     return element == null ? null : new Navigatable[]{element};
   }
 }
