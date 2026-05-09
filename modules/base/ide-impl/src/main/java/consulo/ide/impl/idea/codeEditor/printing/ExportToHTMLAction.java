@@ -27,6 +27,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -58,13 +60,15 @@ public class ExportToHTMLAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
-            presentation.setEnabled(true);
-            return;
-        }
-        PsiFile psiFile = e.getData(PsiFile.KEY);
-        presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(ActionSafeReadLock.apply(e, p -> {
+            Presentation presentation = e.getPresentation();
+            if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
+                presentation.setEnabled(true);
+                return;
+            }
+            PsiFile psiFile = e.getData(PsiFile.KEY);
+            presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
+        }));
     }
 }

@@ -39,8 +39,10 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -156,7 +158,12 @@ public abstract class BaseRefactoringAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(ActionSafeReadLock.apply(e, p -> updateInRead(e)));
+    }
+
+    @RequiredReadAction
+    protected void updateInRead(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true);
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
