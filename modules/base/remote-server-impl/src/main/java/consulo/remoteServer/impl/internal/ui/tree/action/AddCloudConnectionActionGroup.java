@@ -30,8 +30,6 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         return true;
     }
 
-    @Override
-    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<ServerType> serverTypes = ContainerUtil.filter(
             ServerType.EP_NAME.getExtensionList(),
@@ -66,12 +64,6 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
             else {
                 e.getPresentation().setText(myServerType.getPresentableName());
             }
-        }
-
-        @Override
-        
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.EDT;
         }
 
         @Override

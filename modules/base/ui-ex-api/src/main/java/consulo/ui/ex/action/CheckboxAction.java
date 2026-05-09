@@ -79,12 +79,6 @@ public abstract class CheckboxAction extends ToggleAction implements CustomUICom
         return checkBox;
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
-    }
-
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {

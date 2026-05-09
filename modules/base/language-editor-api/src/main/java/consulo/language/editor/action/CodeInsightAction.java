@@ -15,7 +15,6 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -53,12 +52,6 @@ public abstract class CodeInsightAction extends AnAction {
         Editor editor = getEditor(e.getDataContext(), project, false);
 
         actionPerformedImpl(project, editor);
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
@@ -139,7 +132,6 @@ public abstract class CodeInsightAction extends AnAction {
         return true;
     }
 
-    
     protected abstract CodeInsightActionHandler getHandler();
 
     protected String getCommandName() {

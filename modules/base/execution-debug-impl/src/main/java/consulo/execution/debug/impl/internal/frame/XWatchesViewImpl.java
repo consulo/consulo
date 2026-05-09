@@ -194,7 +194,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         XDebuggerTree tree = getTree();
         Ref<AnAction> addToWatchesActionRef = new Ref<>();
         XDebuggerEditorsProvider provider = tree.getEditorsProvider();
-        
+
         if (!provider.isEvaluateExpressionFieldEnabled()) {
             return null;
         }
@@ -216,13 +216,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
                             XExpression expression = getExpression();
                             e.getPresentation().setEnabled(expression != null && !StringUtil.isEmptyOrSpaces(expression.getExpression()));
                         }
-
-                        @Override
-                        
-                        public ActionUpdateThread getActionUpdateThread() {
-                            return ActionUpdateThread.BGT;
-                        }
-                    };
+};
 
                 super.addActions(builder, showMultiline);
 
@@ -337,7 +331,6 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         }
     }
 
-    
     private XExpression[] getExpressions() {
         XDebuggerTree tree = getTree();
         XDebugSession session = XDebugView.getSession(tree);

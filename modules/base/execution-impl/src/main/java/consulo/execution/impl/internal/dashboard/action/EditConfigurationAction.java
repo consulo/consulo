@@ -19,12 +19,6 @@ public final class EditConfigurationAction extends AnAction {
         super(ActionLocalize.actionRundashboardEditconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsEditsource());
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     @Override
     public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);

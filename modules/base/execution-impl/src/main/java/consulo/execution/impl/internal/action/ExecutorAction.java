@@ -43,9 +43,9 @@ import java.util.List;
 
 public class ExecutorAction extends AnAction implements DumbAware {
     private final Executor myExecutor;
-    
+
     private final ExecutorRegistry myExecutorRegistry;
-    
+
     private final RunCurrentFileService myRunCurrentFileService;
 
     public ExecutorAction(ExecutorRegistry executorRegistry,
@@ -110,11 +110,6 @@ public class ExecutorAction extends AnAction implements DumbAware {
 
         presentation.setEnabled(enabled);
         presentation.setText(text);
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     public static Image getInformativeIcon(Project project,

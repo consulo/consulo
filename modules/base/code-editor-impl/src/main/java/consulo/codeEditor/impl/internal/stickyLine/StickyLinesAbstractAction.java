@@ -16,7 +16,6 @@
 package consulo.codeEditor.impl.internal.stickyLine;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.DumbAwareAction;
 
 /**
@@ -26,11 +25,5 @@ import consulo.ui.ex.action.DumbAwareAction;
 public abstract class StickyLinesAbstractAction extends DumbAwareAction {
     public StickyLinesAbstractAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

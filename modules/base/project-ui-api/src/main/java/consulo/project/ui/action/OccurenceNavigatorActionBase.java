@@ -68,12 +68,6 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         }
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT; // TODO rework
-    }
-
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent event) {

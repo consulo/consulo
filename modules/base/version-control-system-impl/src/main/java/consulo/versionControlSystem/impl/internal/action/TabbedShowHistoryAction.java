@@ -19,7 +19,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;
@@ -61,12 +60,6 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
         presentation.setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     protected boolean isEnabled(VcsContext context) {
         boolean result = false;
         Project project = context.getProject();
@@ -98,7 +91,6 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
         return result;
     }
 
-    
     private static Pair<FilePath, VirtualFile> getPathAndParentFile(VcsContext context) {
         if (context.getSelectedFilesStream().findAny().isPresent()) {
             VirtualFile file = getIfSingle(context.getSelectedFilesStream());

@@ -71,12 +71,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     public boolean hasAvailableHandler(DataContext dataContext) {
         RefactoringActionHandler handler = getHandler(dataContext);
         if (handler != null) {
@@ -264,7 +258,6 @@ public abstract class BaseRefactoringAction extends AnAction {
         return true;
     }
 
-    
     public static PsiElement[] getPsiElementArray(DataContext dataContext) {
         PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
         if (psiElements == null || psiElements.length == 0) {

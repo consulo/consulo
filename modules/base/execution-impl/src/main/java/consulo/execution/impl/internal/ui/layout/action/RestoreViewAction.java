@@ -3,7 +3,6 @@
 package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.execution.internal.layout.RunnerContentUi;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.content.Content;
@@ -27,11 +26,6 @@ public final class RestoreViewAction extends DumbAwareToggleAction implements Vi
     @Override
     public boolean isSelected(AnActionEvent e) {
         return myLayoutSettings.isSelected();
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
     }
 
     @Override
