@@ -86,6 +86,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DesktopApplicationImpl extends BaseApplication implements ApplicationWithIntentWriteLock {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
@@ -263,6 +264,20 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
         }
 
         LaterInvocator.invokeAndWait(runnable, modalityState);
+    }
+
+    @Override
+    protected <T> T wrapWithWriteIntent(Supplier<T> action) {
+        if (myLock.isWriteThread()) {
+            return action.get();
+        }
+        myLock.writeIntentLock();
+        try {
+            return action.get();
+        }
+        finally {
+            myLock.writeIntentUnlock();
+        }
     }
 
     @Override

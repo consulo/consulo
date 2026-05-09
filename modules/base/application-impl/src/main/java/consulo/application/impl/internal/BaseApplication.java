@@ -695,19 +695,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             .modal()
             .withProgress(progress);
 
-        ProgressResult<?> result;
-        if (myLock.isWriteThread()) {
-            result = progressRunner.submitAndGet();
-        }
-        else {
-            myLock.writeIntentLock();
-            try {
-                result = progressRunner.submitAndGet();
-            }
-            finally {
-                myLock.writeIntentUnlock();
-            }
-        }
+        ProgressResult<?> result = wrapWithWriteIntent(progressRunner::submitAndGet);
 
         Throwable exception = result.getThrowable();
         if (!(exception instanceof ProcessCanceledException)) {
@@ -898,6 +886,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
         return action;
+    }
+
+    /**
+     * Hook for desktop-AWT to wrap an action in write-intent lock acquire/release.
+     * Non-AWT platforms (UnifiedApplication) have no separate write-intent stage and run the action directly.
+     */
+    protected <T> T wrapWithWriteIntent(Supplier<T> action) {
+        return action.get();
     }
 
     @Override
