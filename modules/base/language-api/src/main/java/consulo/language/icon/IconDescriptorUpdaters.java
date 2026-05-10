@@ -60,9 +60,12 @@ public final class IconDescriptorUpdaters {
         }
 
         @Override
+        @SuppressWarnings("SimplifiableIfStatement")
         public boolean equals(@Nullable Object o) {
-            return this == o
-                || o instanceof ElementIconRequest that
+            if (this == o) {
+                return true;
+            }
+            return o instanceof ElementIconRequest that
                 && myFlags == that.myFlags
                 && myPointer.equals(that.myPointer);
         }
