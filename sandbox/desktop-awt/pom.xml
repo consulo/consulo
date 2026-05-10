@@ -40,6 +40,13 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven.assembly.plugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>consulo.maven</groupId>
+                        <artifactId>maven-consulo-plugin</artifactId>
+                        <version>${maven.consulo.plugin}</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>create-sandbox</id>
@@ -48,6 +55,7 @@
                                 <descriptor>src/assembly/sandbox.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>
+                            <updateOnly>true</updateOnly>
                         </configuration>
                         <phase>package</phase>
                         <goals>
