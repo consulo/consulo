@@ -40,7 +40,6 @@ public abstract class FileIndexFacade {
     return project.getInstance(FileIndexFacade.class);
   }
 
-  
   public abstract ModificationTracker getRootModificationTracker();
 
   public abstract boolean isInContent(VirtualFile file);
@@ -70,6 +69,7 @@ public abstract class FileIndexFacade {
   public abstract boolean isValidAncestor(VirtualFile baseDir, VirtualFile child);
 
   public boolean shouldBeFound(GlobalSearchScope scope, VirtualFile virtualFile) {
-    return (scope.isSearchOutsideRootModel() || isInContent(virtualFile) || isInLibrarySource(virtualFile)) && !virtualFile.getFileType().isBinary();
+    return (scope.isSearchOutsideRootModel() || isInContent(virtualFile) || isInLibrarySource(virtualFile))
+      && !virtualFile.getFileType().isBinary();
   }
 }

@@ -22,50 +22,41 @@ import java.util.function.Predicate;
 
 /**
  * @author VISTALL
- * @since 23:12/31.10.13
+ * @since 2013-10-31
  */
 public class LanguageContentFolderScopes {
-  
   public static Predicate<ContentFolderTypeProvider> all() {
     return all(true);
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> of(ContentFolderTypeProvider provider) {
     return provider::equals;
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> excluded() {
     return of(ExcludedContentFolderTypeProvider.getInstance());
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> production() {
     return onlyProduction().or(it -> it.equals(ProductionResourceContentFolderTypeProvider.getInstance()));
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> test() {
     return onlyTest().or(it -> it.equals(TestResourceContentFolderTypeProvider.getInstance()));
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> productionAndTest() {
     return production().or(test());
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> onlyProduction() {
     return it -> it.equals(ProductionContentFolderTypeProvider.getInstance());
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> onlyTest() {
     return it -> it.equals(TestContentFolderTypeProvider.getInstance());
   }
 
-  
   public static Predicate<ContentFolderTypeProvider> all(boolean withExclude) {
     return withExclude ? it -> true : it -> !ExcludedContentFolderTypeProvider.getInstance().equals(it);
   }

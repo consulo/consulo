@@ -40,7 +40,6 @@ public interface FindUsagesProvider extends LanguageExtension {
   ExtensionPointCacheKey<FindUsagesProvider, ByLanguageValue<FindUsagesProvider>> KEY =
           ExtensionPointCacheKey.create("FindUsagesProvider", LanguageOneToOne.build(new EmptyFindUsagesProvider()));
 
-  
   static FindUsagesProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(FindUsagesProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }

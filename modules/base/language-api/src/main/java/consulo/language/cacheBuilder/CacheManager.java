@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.cacheBuilder;
 
 import consulo.annotation.component.ComponentScope;
@@ -27,16 +26,13 @@ import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CacheManager {
-  
   @Deprecated
   static CacheManager getInstance(Project project) {
     return project.getInstance(CacheManager.class);
   }
 
-  
   PsiFile[] getFilesWithWord(String word, short occurenceMask, GlobalSearchScope scope, boolean caseSensitively);
 
-  
   VirtualFile[] getVirtualFilesWithWord(String word,
                                         short occurenceMask,
                                         GlobalSearchScope scope,
@@ -48,4 +44,3 @@ public interface CacheManager {
                                GlobalSearchScope scope,
                                boolean caseSensitively);
 }
-

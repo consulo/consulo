@@ -22,12 +22,11 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 2022-06-24
  */
 public interface ByLanguageValue<V> {
   @Nullable V get(Language language);
 
-  
   default V requiredGet(Language language) {
     return Objects.requireNonNull(get(language), () -> "value required for language: " + language.toString());
   }

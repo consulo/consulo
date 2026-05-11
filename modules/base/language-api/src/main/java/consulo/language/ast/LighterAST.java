@@ -30,16 +30,13 @@ public abstract class LighterAST {
     myCharTable = charTable;
   }
 
-  
   public CharTable getCharTable() {
     return myCharTable;
   }
 
-  
   public abstract LighterASTNode getRoot();
 
   public abstract @Nullable LighterASTNode getParent(LighterASTNode node);
 
-  
   public abstract List<LighterASTNode> getChildren(LighterASTNode parent);
 }
