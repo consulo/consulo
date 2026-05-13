@@ -17,17 +17,17 @@ package consulo.util.collection.primitive.longs;
 
 /**
  * @author VISTALL
- * @since 10/06/2021
+ * @since 2021-06-10
  */
 public interface LongList extends LongCollection {
-  void add(int index, long element);
+    void add(int index, long element);
 
-  long get(int index);
+    long get(int index);
 
-  int indexOf(long value);
+    int indexOf(long value);
 
-  long removeByIndex(int index);
+    long removeByIndex(int index);
 
-  default void trimToSize() {
-  }
+    default void trimToSize() {
+    }
 }

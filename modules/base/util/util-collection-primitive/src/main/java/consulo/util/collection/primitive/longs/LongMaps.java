@@ -20,16 +20,16 @@ import org.jetbrains.annotations.Contract;
 
 /**
  * @author VISTALL
- * @since 09/02/2021
+ * @since 2021-02-09
  */
 public final class LongMaps {
-  @Contract(pure = true)
-  public static <V> ConcurrentLongObjectMap<V> newConcurrentLongObjectHashMap() {
-    return new ConcurrentLongObjectHashMap<V>();
-  }
+    @Contract(pure = true)
+    public static <V> ConcurrentLongObjectMap<V> newConcurrentLongObjectHashMap() {
+        return new ConcurrentLongObjectHashMap<V>();
+    }
 
-  @Contract(pure = true)
-  public static <V> ConcurrentLongObjectMap<V> newConcurrentLongObjectHashMap(int initialCapacity) {
-    return new ConcurrentLongObjectHashMap<V>(initialCapacity);
-  }
+    @Contract(pure = true)
+    public static <V> ConcurrentLongObjectMap<V> newConcurrentLongObjectHashMap(int initialCapacity) {
+        return new ConcurrentLongObjectHashMap<V>(initialCapacity);
+    }
 }

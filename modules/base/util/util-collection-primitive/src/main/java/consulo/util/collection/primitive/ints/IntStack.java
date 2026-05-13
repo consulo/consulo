@@ -22,88 +22,97 @@ import java.util.PrimitiveIterator;
  * @author max
  */
 public class IntStack implements IntCollection {
-  private int[] data;
-  private int size;
-  public IntStack(int initialCapacity) {
-    data = new int[initialCapacity];
-    size = 0;
-  }
+    private int[] data;
+    private int size;
 
-  public IntStack() {
-    this(5);
-  }
-
-  public void push(int t) {
-    if (size >= data.length) {
-      int[] newdata = new int[data.length * 3 / 2];
-      System.arraycopy(data, 0, newdata, 0, size);
-      data = newdata;
-    }
-    data[size++] = t;
-  }
-
-  public int peek() {
-    if (size == 0) throw new EmptyStackException();
-    return data[size - 1];
-  }
-
-  public int pop() {
-    if (size == 0) throw new EmptyStackException();
-    return data[--size];
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return size == 0;
-  }
-
-  @Override
-  public int size() {
-    return size;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o instanceof IntStack) {
-      IntStack otherStack = (IntStack)o;
-      if (size != otherStack.size) return false;
-      for (int i = 0; i < otherStack.size; i++) {
-        if (data[i] != otherStack.data[i]) return false;
-      }
-      return true;
+    public IntStack(int initialCapacity) {
+        data = new int[initialCapacity];
+        size = 0;
     }
 
-    return false;
-  }
+    public IntStack() {
+        this(5);
+    }
 
-  @Override
-  public void clear() {
-    size = 0;
-  }
+    public void push(int t) {
+        if (size >= data.length) {
+            int[] newdata = new int[data.length * 3 / 2];
+            System.arraycopy(data, 0, newdata, 0, size);
+            data = newdata;
+        }
+        data[size++] = t;
+    }
 
-  @Override
-  public boolean add(int value) {
-    push(value);
-    return true;
-  }
+    public int peek() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return data[size - 1];
+    }
 
-  @Override
-  public boolean remove(int value) {
-    throw new UnsupportedOperationException();
-  }
+    public int pop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return data[--size];
+    }
 
-  @Override
-  public boolean contains(int value) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
-  @Override
-  public int[] toArray() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public int size() {
+        return size;
+    }
 
-  @Override
-  public PrimitiveIterator.OfInt iterator() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof IntStack) {
+            IntStack otherStack = (IntStack) o;
+            if (size != otherStack.size) {
+                return false;
+            }
+            for (int i = 0; i < otherStack.size; i++) {
+                if (data[i] != otherStack.data[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        size = 0;
+    }
+
+    @Override
+    public boolean add(int value) {
+        push(value);
+        return true;
+    }
+
+    @Override
+    public boolean remove(int value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean contains(int value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int[] toArray() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public PrimitiveIterator.OfInt iterator() {
+        throw new UnsupportedOperationException();
+    }
 }

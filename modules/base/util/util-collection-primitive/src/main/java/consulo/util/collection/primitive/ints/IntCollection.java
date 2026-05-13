@@ -15,70 +15,113 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import java.util.Objects;
-import java.util.PrimitiveIterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
 public interface IntCollection extends IntIterable {
-  boolean add(int value);
+    boolean add(int value);
 
-  default boolean addAll(int[] collection) {
-    for (int i : collection) {
-      add(i);
+    default boolean addAll(int... collection) {
+        for (int i : collection) {
+            add(i);
+        }
+        return true;
     }
-    return true;
-  }
 
-  default boolean addAll(IntCollection collection) {
-    collection.forEach(this::add);
-    return true;
-  }
-
-  boolean remove(int value);
-
-  default void removeAll(int... array) {
-    for (int value : array) {
-      remove(value);
+    default boolean addAll(IntCollection collection) {
+        collection.forEach(this::add);
+        return true;
     }
-  }
 
-  boolean contains(int value);
-
-  default boolean retainAll(IntCollection otherCollection) {
-    Objects.requireNonNull(otherCollection);
-    boolean modified = false;
-    PrimitiveIterator.OfInt it = iterator();
-    while (it.hasNext()) {
-      if (!otherCollection.contains(it.nextInt())) {
-        it.remove();
-        modified = true;
-      }
+    default boolean addAll(Collection<Integer> collection) {
+        collection.forEach(this::add);
+        return true;
     }
-    return modified;
-  }
-  
-  int[] toArray();
 
-  int size();
+    boolean remove(int value);
 
-  default boolean isEmpty() {
-    return size() == 0;
-  }
+    default boolean removeAll(int... array) {
+        boolean modified = false;
+        for (int value : array) {
+            modified |= remove(value);
+        }
+        return modified;
+    }
 
-  void clear();
+    default boolean removeAll(IntCollection otherCollection) {
+        Objects.requireNonNull(otherCollection);
+        boolean modified = false;
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            if (otherCollection.contains(it.nextInt())) {
+                it.remove();
+                modified = true;
+            }
+        }
+        return modified;
+    }
 
-  default IntStream stream() {
-    return StreamSupport.intStream(splitterator(), false);
-  }
+    default boolean removeAll(Collection<Integer> otherCollection) {
+        Objects.requireNonNull(otherCollection);
+        boolean modified = false;
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            if (otherCollection.contains(it.nextInt())) {
+                it.remove();
+                modified = true;
+            }
+        }
+        return modified;
+    }
 
-  default Spliterator.OfInt splitterator() {
-    return Spliterators.spliterator(iterator(), size(), 0);
-  }
+    boolean contains(int value);
+
+    default boolean retainAll(IntCollection otherCollection) {
+        Objects.requireNonNull(otherCollection);
+        boolean modified = false;
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            if (!otherCollection.contains(it.nextInt())) {
+                it.remove();
+                modified = true;
+            }
+        }
+        return modified;
+    }
+
+    default boolean retainAll(Collection<Integer> otherCollection) {
+        Objects.requireNonNull(otherCollection);
+        boolean modified = false;
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            if (!otherCollection.contains(it.nextInt())) {
+                it.remove();
+                modified = true;
+            }
+        }
+        return modified;
+    }
+
+    int[] toArray();
+
+    int size();
+
+    default boolean isEmpty() {
+        return size() == 0;
+    }
+
+    void clear();
+
+    default IntStream stream() {
+        return StreamSupport.intStream(splitterator(), false);
+    }
+
+    default Spliterator.OfInt splitterator() {
+        return Spliterators.spliterator(iterator(), size(), 0);
+    }
 }

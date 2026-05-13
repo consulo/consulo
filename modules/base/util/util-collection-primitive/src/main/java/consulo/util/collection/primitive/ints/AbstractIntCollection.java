@@ -21,60 +21,60 @@ import java.util.PrimitiveIterator;
 
 /**
  * @author VISTALL
- * @since 05/06/2021
+ * @since 2021-06-05
  */
 public abstract class AbstractIntCollection implements IntCollection {
-  @Override
-  public boolean add(int value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void clear() {
-    PrimitiveIterator.OfInt it = iterator();
-    while (it.hasNext()) {
-      it.remove();
-    }
-  }
-
-  @Override
-  public boolean remove(int value) {
-    PrimitiveIterator.OfInt it = iterator();
-    while (it.hasNext()) {
-      if (value == it.nextInt()) {
-        it.remove();
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public boolean contains(int value) {
-    PrimitiveIterator.OfInt it = iterator();
-    while (it.hasNext()) {
-      if (value == it.nextInt()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public int[] toArray() {
-    int[] ints = new int[size()];
-
-    int i = 0;
-    PrimitiveIterator.OfInt it = iterator();
-    while (it.hasNext()) {
-      ints[i++] = it.nextInt();
+    @Override
+    public boolean add(int value) {
+        throw new UnsupportedOperationException();
     }
 
-    return ints;
-  }
+    @Override
+    public void clear() {
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            it.remove();
+        }
+    }
 
-  @Override
-  public int hashCode() {
-    return IntCollectionImpls.hashCode(this);
-  }
+    @Override
+    public boolean remove(int value) {
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            if (value == it.nextInt()) {
+                it.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean contains(int value) {
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            if (value == it.nextInt()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int[] toArray() {
+        int[] ints = new int[size()];
+
+        int i = 0;
+        PrimitiveIterator.OfInt it = iterator();
+        while (it.hasNext()) {
+            ints[i++] = it.nextInt();
+        }
+
+        return ints;
+    }
+
+    @Override
+    public int hashCode() {
+        return IntCollectionImpls.hashCode(this);
+    }
 }

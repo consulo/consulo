@@ -16,69 +16,74 @@
 package consulo.util.collection.primitive.ints;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
 public interface IntObjectMap<V> {
-  interface IntObjectEntry<V1> {
-    int getKey();
+    interface IntObjectEntry<V1> {
+        int getKey();
 
-    @Nullable V1 getValue();
-  }
-
-  IntSet keySet();
-
-  int[] keys();
-
-  /**
-   * @return old value by key
-   */
-  @Nullable V put(int key, @Nullable V value);
-
-  @Nullable V get(int key);
-
-  boolean containsKey(int key);
-
-  boolean containsValue(V value);
-
-  @Nullable V remove(int key);
-
-  Set<IntObjectEntry<V>> entrySet();
-
-  Collection<V> values();
-
-  int size();
-
-  boolean isEmpty();
-
-  void clear();
-
-  default void forEach(IntObjConsumer<? super V> action) {
-    Objects.requireNonNull(action);
-    for (IntObjectEntry<V> entry : entrySet()) {
-      int k;
-      V v;
-      try {
-        k = entry.getKey();
-        v = entry.getValue();
-      }
-      catch (IllegalStateException ise) {
-        // this usually means the entry is no longer in the map.
-        throw new ConcurrentModificationException(ise);
-      }
-      action.accept(k, v);
-    }
-  }
-
-  default @Nullable V putIfAbsent(int key, @Nullable V value) {
-    V v = get(key);
-    if (v == null) {
-      v = put(key, value);
+        @Nullable
+        V1 getValue();
     }
 
-    return v;
-  }
+    IntSet keySet();
+
+    int[] keys();
+
+    /**
+     * @return old value by key
+     */
+    @Nullable
+    V put(int key, @Nullable V value);
+
+    @Nullable
+    V get(int key);
+
+    boolean containsKey(int key);
+
+    boolean containsValue(V value);
+
+    @Nullable
+    V remove(int key);
+
+    Set<IntObjectEntry<V>> entrySet();
+
+    Collection<V> values();
+
+    int size();
+
+    boolean isEmpty();
+
+    void clear();
+
+    default void forEach(IntObjConsumer<? super V> action) {
+        Objects.requireNonNull(action);
+        for (IntObjectEntry<V> entry : entrySet()) {
+            int k;
+            V v;
+            try {
+                k = entry.getKey();
+                v = entry.getValue();
+            }
+            catch (IllegalStateException ise) {
+                // this usually means the entry is no longer in the map.
+                throw new ConcurrentModificationException(ise);
+            }
+            action.accept(k, v);
+        }
+    }
+
+    default @Nullable V putIfAbsent(int key, @Nullable V value) {
+        V v = get(key);
+        if (v == null) {
+            v = put(key, value);
+        }
+
+        return v;
+    }
 }

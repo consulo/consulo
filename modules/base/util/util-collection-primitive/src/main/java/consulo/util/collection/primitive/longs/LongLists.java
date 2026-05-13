@@ -19,14 +19,14 @@ import consulo.util.collection.primitive.longs.impl.list.LongArrayList;
 
 /**
  * @author VISTALL
- * @since 10/06/2021
+ * @since 2021-06-10
  */
 public class LongLists {
-  public static LongList newArrayList() {
-    return new LongArrayList();
-  }
+    public static LongList newArrayList() {
+        return new LongArrayList();
+    }
 
-  public static LongList newArrayList(int capacity) {
-    return new LongArrayList(capacity);
-  }
+    public static LongList newArrayList(int capacity) {
+        return new LongArrayList(capacity);
+    }
 }

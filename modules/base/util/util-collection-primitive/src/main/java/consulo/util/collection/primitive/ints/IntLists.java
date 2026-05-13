@@ -22,76 +22,75 @@ import java.util.RandomAccess;
 
 /**
  * @author VISTALL
- * @since 10/02/2021
+ * @since 2021-02-10
  */
 @SuppressWarnings("deprecation")
 public class IntLists {
-  private static final int REVERSE_THRESHOLD = 18;
+    private static final int REVERSE_THRESHOLD = 18;
 
-  public static IntList newArrayList() {
-    return new IntArrayList();
-  }
-
-  public static IntList newArrayList(int[] values) {
-    return new IntArrayList(values);
-  }
-
-  public static IntList newArrayList(int capacity) {
-    return new IntArrayList(capacity);
-  }
-
-  public static void trimToSize(IntList list) {
-    if (list instanceof IntArrayList intArrayList) {
-      intArrayList.trimToSize();
+    public static IntList newArrayList() {
+        return new IntArrayList();
     }
-  }
 
-  /**
-   * Reverses the order of the elements in the specified list.<p>
-   * <p>
-   * This method runs in linear time.
-   *
-   * @see java.util.Collections#reverse
-   *
-   * @param list the list whose elements are to be reversed.
-   * @throws UnsupportedOperationException if the specified list or
-   *                                       its list-iterator does not support the {@code set} operation.
-   */
-  public static void reverse(IntList list) {
-    int size = list.size();
-    if (size < REVERSE_THRESHOLD || list instanceof RandomAccess) {
-      for (int i = 0, mid = size >> 1, j = size - 1; i < mid; i++, j--) {
-        swap(list, i, j);
-      }
+    public static IntList newArrayList(int[] values) {
+        return new IntArrayList(values);
     }
-    else {
-      // instead of using a raw type here, it's possible to capture
-      // the wildcard but it will require a call to a supplementary
-      // private method
-      PrimitiveListIterator.OfInt fwd = list.listIterator();
-      PrimitiveListIterator.OfInt rev = list.listIterator(size);
-      for (int i = 0, mid = list.size() >> 1; i < mid; i++) {
-        int tmp = fwd.nextInt();
-        fwd.setInt(rev.previousInt());
-        rev.setInt(tmp);
-      }
-    }
-  }
 
-  /**
-   * Swaps the elements at the specified positions in the specified list.
-   * (If the specified positions are equal, invoking this method leaves
-   * the list unchanged.)
-   *
-   * @param list The list in which to swap elements.
-   * @param i    the index of one element to be swapped.
-   * @param j    the index of the other element to be swapped.
-   * @throws IndexOutOfBoundsException if either {@code i} or {@code j}
-   *                                   is out of range (i &lt; 0 || i &gt;= list.size()
-   *                                   || j &lt; 0 || j &gt;= list.size()).
-   * @since 1.4
-   */
-  public static void swap(IntList list, int i, int j) {
-    list.set(i, list.set(j, list.get(i)));
-  }
+    public static IntList newArrayList(int capacity) {
+        return new IntArrayList(capacity);
+    }
+
+    public static void trimToSize(IntList list) {
+        if (list instanceof IntArrayList intArrayList) {
+            intArrayList.trimToSize();
+        }
+    }
+
+    /**
+     * Reverses the order of the elements in the specified list.<p>
+     * <p>
+     * This method runs in linear time.
+     *
+     * @param list the list whose elements are to be reversed.
+     * @throws UnsupportedOperationException if the specified list or
+     *                                       its list-iterator does not support the {@code set} operation.
+     * @see java.util.Collections#reverse
+     */
+    public static void reverse(IntList list) {
+        int size = list.size();
+        if (size < REVERSE_THRESHOLD || list instanceof RandomAccess) {
+            for (int i = 0, mid = size >> 1, j = size - 1; i < mid; i++, j--) {
+                swap(list, i, j);
+            }
+        }
+        else {
+            // instead of using a raw type here, it's possible to capture
+            // the wildcard but it will require a call to a supplementary
+            // private method
+            PrimitiveListIterator.OfInt fwd = list.listIterator();
+            PrimitiveListIterator.OfInt rev = list.listIterator(size);
+            for (int i = 0, mid = list.size() >> 1; i < mid; i++) {
+                int tmp = fwd.nextInt();
+                fwd.setInt(rev.previousInt());
+                rev.setInt(tmp);
+            }
+        }
+    }
+
+    /**
+     * Swaps the elements at the specified positions in the specified list.
+     * (If the specified positions are equal, invoking this method leaves
+     * the list unchanged.)
+     *
+     * @param list The list in which to swap elements.
+     * @param i    the index of one element to be swapped.
+     * @param j    the index of the other element to be swapped.
+     * @throws IndexOutOfBoundsException if either {@code i} or {@code j}
+     *                                   is out of range (i &lt; 0 || i &gt;= list.size()
+     *                                   || j &lt; 0 || j &gt;= list.size()).
+     * @since 1.4
+     */
+    public static void swap(IntList list, int i, int j) {
+        list.set(i, list.set(j, list.get(i)));
+    }
 }

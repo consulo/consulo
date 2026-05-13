@@ -20,16 +20,16 @@ import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
 /**
  * @author VISTALL
- * @since 17/05/2021
+ * @since 2021-05-17
  */
 public final class LongSets {
-  private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+    private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory) CollectionFactory.get();
 
-  public static LongSet newHashSet() {
-    return ourFactory.newLongHashSet(CollectionFactory.UNKNOWN_CAPACITY);
-  }
+    public static LongSet newHashSet() {
+        return ourFactory.newLongHashSet(CollectionFactory.UNKNOWN_CAPACITY);
+    }
 
-  public static LongSet newHashSet(int capacity) {
-    return ourFactory.newLongHashSet(capacity);
-  }
+    public static LongSet newHashSet(int capacity) {
+        return ourFactory.newLongHashSet(capacity);
+    }
 }

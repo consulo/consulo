@@ -17,7 +17,7 @@ package consulo.util.collection.primitive.longs;
 
 /**
  * @author VISTALL
- * @since 09/02/2021
+ * @since 2021-02-09
  */
 public interface LongObjectMap<V> {
 }

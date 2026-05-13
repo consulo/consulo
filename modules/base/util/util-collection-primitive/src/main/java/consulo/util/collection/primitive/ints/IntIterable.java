@@ -21,17 +21,17 @@ import java.util.function.IntConsumer;
 
 /**
  * @author VISTALL
- * @since 10/02/2021
+ * @since 2021-02-10
  */
 public interface IntIterable {
-  PrimitiveIterator.OfInt iterator();
+    PrimitiveIterator.OfInt iterator();
 
-  default void forEach(IntConsumer action) {
-    Objects.requireNonNull(action);
+    default void forEach(IntConsumer action) {
+        Objects.requireNonNull(action);
 
-    PrimitiveIterator.OfInt iterator = iterator();
-    while (iterator.hasNext()) {
-      action.accept(iterator.next());
+        PrimitiveIterator.OfInt iterator = iterator();
+        while (iterator.hasNext()) {
+            action.accept(iterator.next());
+        }
     }
-  }
 }

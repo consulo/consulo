@@ -17,22 +17,21 @@ package consulo.util.collection.primitive.longs;
 
 import java.util.Objects;
 import java.util.PrimitiveIterator;
-import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
 /**
  * @author VISTALL
- * @since 17/05/2021
+ * @since 2021-05-17
  */
 public interface LongIterable {
-  PrimitiveIterator.OfLong iterator();
+    PrimitiveIterator.OfLong iterator();
 
-  default void forEach(LongConsumer action) {
-    Objects.requireNonNull(action);
+    default void forEach(LongConsumer action) {
+        Objects.requireNonNull(action);
 
-    PrimitiveIterator.OfLong iterator = iterator();
-    while (iterator.hasNext()) {
-      action.accept(iterator.next());
+        PrimitiveIterator.OfLong iterator = iterator();
+        while (iterator.hasNext()) {
+            action.accept(iterator.next());
+        }
     }
-  }
 }

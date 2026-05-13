@@ -17,7 +17,7 @@ package consulo.util.collection.primitive.ints;
 
 /**
  * @author VISTALL
- * @since 05/06/2021
+ * @since 2021-06-05
  */
 public abstract class AbstractIntSet extends AbstractIntCollection implements IntSet {
 }

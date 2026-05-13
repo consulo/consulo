@@ -24,48 +24,48 @@ import org.jetbrains.annotations.Contract;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
 public final class IntMaps {
-  private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+    private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory) CollectionFactory.get();
 
-  public static <V> IntObjectMap<V> newIntObjectHashMap() {
-    return newIntObjectHashMap(CollectionFactory.UNKNOWN_CAPACITY);
-  }
+    public static <V> IntObjectMap<V> newIntObjectHashMap() {
+        return newIntObjectHashMap(CollectionFactory.UNKNOWN_CAPACITY);
+    }
 
-  public static <V> IntObjectMap<V> newIntObjectHashMap(int capacity) {
-    return ourFactory.newIntObjectHashMap(capacity);
-  }
+    public static <V> IntObjectMap<V> newIntObjectHashMap(int capacity) {
+        return ourFactory.newIntObjectHashMap(capacity);
+    }
 
-  @Contract(pure = true)
-  public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectWeakValueHashMap() {
-    return new ConcurrentIntKeyWeakValueHashMap<>();
-  }
+    @Contract(pure = true)
+    public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectWeakValueHashMap() {
+        return new ConcurrentIntKeyWeakValueHashMap<>();
+    }
 
-  @Contract(pure = true)
-  public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap() {
-    return new ConcurrentIntObjectHashMap<>();
-  }
+    @Contract(pure = true)
+    public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap() {
+        return new ConcurrentIntObjectHashMap<>();
+    }
 
-  @Contract(pure = true)
-  public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-    return new ConcurrentIntObjectHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
-  }
+    @Contract(pure = true)
+    public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
+        return new ConcurrentIntObjectHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
+    }
 
-  @Contract(pure = true)
-  public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectSoftValueHashMap() {
-    return new ConcurrentIntKeySoftValueHashMap<>();
-  }
+    @Contract(pure = true)
+    public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectSoftValueHashMap() {
+        return new ConcurrentIntKeySoftValueHashMap<>();
+    }
 
-  public static IntIntMap newIntIntHashMap() {
-    return ourFactory.newIntIntHashMap(CollectionFactory.UNKNOWN_CAPACITY);
-  }
+    public static IntIntMap newIntIntHashMap() {
+        return ourFactory.newIntIntHashMap(CollectionFactory.UNKNOWN_CAPACITY);
+    }
 
-  public static IntIntMap newIntIntHashMap(int capacity) {
-    return ourFactory.newIntIntHashMap(capacity);
-  }
+    public static IntIntMap newIntIntHashMap(int capacity) {
+        return ourFactory.newIntIntHashMap(capacity);
+    }
 
-  public static void trimToSize(IntIntMap map) {
-    ourFactory.trimToSize(map);
-  }
+    public static void trimToSize(IntIntMap map) {
+        ourFactory.trimToSize(map);
+    }
 }

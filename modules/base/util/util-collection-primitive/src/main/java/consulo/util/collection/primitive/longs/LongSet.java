@@ -17,7 +17,7 @@ package consulo.util.collection.primitive.longs;
 
 /**
  * @author VISTALL
- * @since 17/05/2021
+ * @since 2021-05-17
  */
 public interface LongSet extends LongCollection {
 }

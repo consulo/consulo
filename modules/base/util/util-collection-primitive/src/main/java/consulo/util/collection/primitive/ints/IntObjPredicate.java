@@ -17,9 +17,9 @@ package consulo.util.collection.primitive.ints;
 
 /**
  * @author VISTALL
- * @since 29/05/2021
+ * @since 2021-05-29
  */
 @FunctionalInterface
 public interface IntObjPredicate<T> {
-  boolean test(int param1, T param2);
+    boolean test(int param1, T param2);
 }

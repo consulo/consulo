@@ -23,5 +23,5 @@ import org.jspecify.annotations.Nullable;
  */
 @FunctionalInterface
 public interface IntObjConsumer<T> {
-  void accept(int param1, @Nullable T param2);
+    void accept(int param1, @Nullable T param2);
 }

@@ -19,10 +19,10 @@ import consulo.util.collection.primitive.ints.impl.set.EmptyIntSet;
 
 /**
  * @author VISTALL
- * @since 08/02/2021
+ * @since 2021-02-08
  */
 public interface IntSet extends IntCollection {
-  static IntSet of() {
-    return EmptyIntSet.INSTANCE;
-  }
+    static IntSet of() {
+        return EmptyIntSet.INSTANCE;
+    }
 }

@@ -19,41 +19,41 @@ import consulo.util.collection.primitive.PrimitiveListIterator;
 
 /**
  * @author VISTALL
- * @since 07/02/2021
+ * @since 2021-02-07
  */
 public interface IntList extends IntCollection {
-  void add(int index, int value);
+    void add(int index, int value);
 
-  default boolean addAll(int index, IntList c) {
-    return addAll(index, c.toArray());
-  }
-
-  boolean addAll(int index, int[] values);
-
-  int get(int index);
-
-  int indexOf(int value);
-
-  /**
-   * @param index
-   * @param newValue
-   * @return oldValue
-   */
-  int set(int index, int newValue);
-
-  int removeByIndex(int index);
-
-  void sort();
-
-  PrimitiveListIterator.OfInt listIterator();
-
-  PrimitiveListIterator.OfInt listIterator(int index);
-
-  default void removeRange(int fromIndex, int toIndex) {
-    PrimitiveListIterator.OfInt it = listIterator(fromIndex);
-    for (int i = 0, n = toIndex - fromIndex; i < n; i++) {
-      it.next();
-      it.remove();
+    default boolean addAll(int index, IntList c) {
+        return addAll(index, c.toArray());
     }
-  }
+
+    boolean addAll(int index, int[] values);
+
+    int get(int index);
+
+    int indexOf(int value);
+
+    /**
+     * @param index
+     * @param newValue
+     * @return oldValue
+     */
+    int set(int index, int newValue);
+
+    int removeByIndex(int index);
+
+    void sort();
+
+    PrimitiveListIterator.OfInt listIterator();
+
+    PrimitiveListIterator.OfInt listIterator(int index);
+
+    default void removeRange(int fromIndex, int toIndex) {
+        PrimitiveListIterator.OfInt it = listIterator(fromIndex);
+        for (int i = 0, n = toIndex - fromIndex; i < n; i++) {
+            it.next();
+            it.remove();
+        }
+    }
 }

@@ -17,35 +17,35 @@ package consulo.util.collection.primitive.ints;
 
 /**
  * @author VISTALL
- * @since 08/05/2021
+ * @since 2021-05-08
  */
 public interface IntIntMap {
-  interface Entry {
-    int getKey();
+    interface Entry {
+        int getKey();
 
-    int getValue();
-  }
+        int getValue();
+    }
 
-  void putInt(int key, int value);
+    void putInt(int key, int value);
 
-  int getInt(int key);
+    int getInt(int key);
 
-  void clear();
+    void clear();
 
-  int size();
+    int size();
 
-  int remove(int key);
+    int remove(int key);
 
-  boolean containsKey(int key);
+    boolean containsKey(int key);
 
-  default boolean isEmpty() {
-    return size() == 0;
-  }
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 
-  default void trimToSize() {
-  }
+    default void trimToSize() {
+    }
 
-  void forEach(BiIntConsumer consumer);
+    void forEach(BiIntConsumer consumer);
 
-  int[] keys();
+    int[] keys();
 }

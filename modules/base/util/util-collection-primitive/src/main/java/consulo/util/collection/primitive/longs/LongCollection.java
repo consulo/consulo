@@ -15,55 +15,85 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
 
 /**
  * @author VISTALL
- * @since 17/05/2021
+ * @since 2021-05-17
  */
 public interface LongCollection extends LongIterable {
-  boolean add(long value);
+    boolean add(long value);
 
-  default boolean addAll(long[] collection) {
-    for (long i : collection) {
-      add(i);
+    default boolean addAll(long... collection) {
+        for (long i : collection) {
+            add(i);
+        }
+        return true;
     }
-    return true;
-  }
 
-  default boolean addAll(LongCollection collection) {
-    collection.forEach(this::add);
-    return true;
-  }
-
-  boolean remove(long value);
-
-  default void removeAll(long... array) {
-    for (long value : array) {
-      remove(value);
+    default boolean addAll(LongCollection collection) {
+        collection.forEach(this::add);
+        return true;
     }
-  }
 
-  boolean contains(long value);
+    default boolean addAll(Collection<Long> collection) {
+        collection.forEach(this::add);
+        return true;
+    }
 
-  long[] toArray();
+    boolean remove(long value);
 
-  int size();
+    default void removeAll(long... array) {
+        for (long value : array) {
+            remove(value);
+        }
+    }
 
-  default boolean isEmpty() {
-    return size() == 0;
-  }
+    default boolean removeAll(LongCollection otherCollection) {
+        Objects.requireNonNull(otherCollection);
+        boolean modified = false;
+        PrimitiveIterator.OfLong it = iterator();
+        while (it.hasNext()) {
+            if (otherCollection.contains(it.nextLong())) {
+                it.remove();
+                modified = true;
+            }
+        }
+        return modified;
+    }
 
-  void clear();
+    default boolean removeAll(Collection<Long> otherCollection) {
+        Objects.requireNonNull(otherCollection);
+        boolean modified = false;
+        PrimitiveIterator.OfLong it = iterator();
+        while (it.hasNext()) {
+            if (otherCollection.contains(it.nextLong())) {
+                it.remove();
+                modified = true;
+            }
+        }
+        return modified;
+    }
 
-  default LongStream stream() {
-    return StreamSupport.longStream(splitterator(), false);
-  }
+    boolean contains(long value);
 
-  default Spliterator.OfLong splitterator() {
-    return Spliterators.spliterator(iterator(), size(), 0);
-  }
+    long[] toArray();
+
+    int size();
+
+    default boolean isEmpty() {
+        return size() == 0;
+    }
+
+    void clear();
+
+    default LongStream stream() {
+        return StreamSupport.longStream(splitterator(), false);
+    }
+
+    default Spliterator.OfLong splitterator() {
+        return Spliterators.spliterator(iterator(), size(), 0);
+    }
 }

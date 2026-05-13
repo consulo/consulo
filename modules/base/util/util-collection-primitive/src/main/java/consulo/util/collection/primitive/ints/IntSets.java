@@ -20,20 +20,26 @@ import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
 /**
  * @author VISTALL
- * @since 08/05/2021
+ * @since 2021-05-08
  */
 public class IntSets {
-  private static final PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+    private static final PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory) CollectionFactory.get();
 
-  public static IntSet newHashSet() {
-    return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY);
-  }
+    public static IntSet newHashSet() {
+        return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY);
+    }
 
-  public static IntSet newHashSet(int capacity) {
-    return ourFactory.newIntHashSet(capacity);
-  }
+    public static IntSet newHashSet(int capacity) {
+        return ourFactory.newIntHashSet(capacity);
+    }
 
-  public static IntSet newHashSet(int[] array) {
-    return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY, array);
-  }
+    public static IntSet newHashSet(int[] array) {
+        return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY, array);
+    }
+
+    public static IntSet newHashSet(IntCollection collection) {
+        IntSet set = ourFactory.newIntHashSet(collection.size());
+        set.addAll(collection);
+        return set;
+    }
 }

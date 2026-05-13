@@ -17,8 +17,8 @@ package consulo.util.collection.primitive.ints;
 
 /**
  * @author VISTALL
- * @since 18/05/2021
+ * @since 2021-05-18
  */
 public interface BiIntConsumer {
-  void accept(int p1, int p2);
+    void accept(int p1, int p2);
 }
