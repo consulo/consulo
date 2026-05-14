@@ -60,12 +60,13 @@
         <build.number>SNAPSHOT</build.number>
         <dev.mode>true</dev.mode>
 
-        <maven.assembly.plugin>3.6.0</maven.assembly.plugin>
-        <maven.jar.plugin>3.3.0</maven.jar.plugin>
+        <maven.assembly.plugin>3.8.0</maven.assembly.plugin>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
-        <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
+        <maven.consulo.plugin>3.26</maven.consulo.plugin>
+        <maven.jar.plugin>3.3.0</maven.jar.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
+        <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
 
         <default.java.level>21</default.java.level>
 
@@ -1064,7 +1065,7 @@
                 <plugin>
                     <groupId>consulo.maven</groupId>
                     <artifactId>maven-consulo-plugin</artifactId>
-                    <version>3.23</version>
+                    <version>${maven.consulo.plugin}</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>

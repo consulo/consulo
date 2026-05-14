@@ -64,7 +64,7 @@ public class DFAMap<V> {
     }
     else {
       if (myAll == null) {
-        myAll = new HashMap<String,V>();
+        myAll = new HashMap<>();
         myAll.put(myK, myV);
       }
       myAll.put(key, value);
@@ -111,7 +111,7 @@ public class DFAMap<V> {
     }
     if (myK != null && (names2Include == null || names2Include.contains(myK))) {
       if (names2Include != null && names2Include.size() == 1) return names2Include;
-      HashSet<String> result = new HashSet<String>();
+      Set<String> result = new HashSet<>();
       result.add(myK);
       return result;
     }
@@ -129,7 +129,9 @@ public class DFAMap<V> {
       return myK.equals(rhs.myK) && Objects.equals(myV, rhs.myV);
     }
     else {
-      if (rhs.myAll == null) return false;
+      if (rhs.myAll == null) {
+        return false;
+      }
       return myAll.equals(rhs.myAll);
     }
   }
@@ -170,7 +172,7 @@ public class DFAMap<V> {
   }
 
   public DFAMap<V> asWritable() {
-    return new DFAMap<V>(this);
+    return new DFAMap<>(this);
   }
 
   @Override

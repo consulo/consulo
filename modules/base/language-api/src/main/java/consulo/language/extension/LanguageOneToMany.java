@@ -41,7 +41,6 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
       walker.walk(extension -> myRawExtension.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension));
     }
 
-    
     @Override
     public List<T> get(Language l) {
       return myExtensions.computeIfAbsent(l, language -> {
@@ -63,7 +62,6 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
     }
   }
 
-  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<List<E1>>> build(boolean withAnyLanguage) {
     return new LanguageOneToMany<>(withAnyLanguage);
   }

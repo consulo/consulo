@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.ast;
 
 import consulo.language.Language;
@@ -22,7 +21,7 @@ import consulo.language.Language;
  * @author ven
  */
 public abstract class ICodeFragmentElementType extends IFileElementType {
-  public ICodeFragmentElementType( String debugName, Language language) {
+  public ICodeFragmentElementType(String debugName, Language language) {
     super(debugName, language);
   }
 }

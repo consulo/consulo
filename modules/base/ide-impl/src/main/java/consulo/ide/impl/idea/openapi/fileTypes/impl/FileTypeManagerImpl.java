@@ -164,7 +164,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
         myMessageBus = application.getMessageBus();
         mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<FileType, AbstractFileType>() {
-            
             @Override
             public AbstractFileType readScheme(Element element, boolean duringLoad) {
                 if (!duringLoad) {
@@ -394,7 +393,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @TestOnly
-    
     Collection<VirtualFile> dumpReDetectQueue() {
         synchronized (filesToRedetect) {
             return new ArrayList<>(filesToRedetect);
@@ -506,7 +504,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @Override
-    
     public FileType getStdFileType(String name) {
         StandardFileType stdFileType;
         synchronized (PENDING_INIT_LOCK) {
@@ -532,13 +529,11 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @Override
-    
     public FileType getFileTypeByFileName(String fileName) {
         return getFileTypeByFileName((CharSequence)fileName);
     }
 
     @Override
-    
     public FileType getFileTypeByFileName(CharSequence fileName) {
         synchronized (PENDING_INIT_LOCK) {
             FileType type = myPatternsTable.findAssociatedFileType(fileName);
@@ -1431,12 +1426,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
     }
 
-    
     private static List<FileNameMatcher> parse(@Nullable String semicolonDelimited) {
         return parse(semicolonDelimited, ExtensionFileNameMatcherImpl::new);
     }
 
-    
     private static List<FileNameMatcher> parse(
         @Nullable String semicolonDelimited,
         Function<? super String, ? extends FileNameMatcher> matcherFactory
@@ -1456,11 +1449,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     /**
      * Registers a standard file type. Doesn't notifyListeners any change events.
      */
-    private void registerFileTypeWithoutNotification(
-        FileType fileType,
-        List<? extends FileNameMatcher> matchers,
-        boolean addScheme
-    ) {
+    private void registerFileTypeWithoutNotification(FileType fileType, List<? extends FileNameMatcher> matchers, boolean addScheme) {
         if (addScheme) {
             mySchemeManager.addNewScheme(fileType, true);
         }
@@ -1492,7 +1481,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
     }
 
-    
     private FileType loadFileType(Element typeElement, boolean isDefault) {
         String fileTypeName = typeElement.getAttributeValue(ATTRIBUTE_NAME);
         String fileTypeDescr = typeElement.getAttributeValue(ATTRIBUTE_DESCRIPTION);
@@ -1658,8 +1646,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         return FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public @Nullable FileType getKnownFileTypeOrAssociate(String fileName) {
         return FileTypeChooser.getKnownFileTypeOrAssociate(fileName);
     }
@@ -1688,7 +1676,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
     }
 
-    
     RemovedMappingTracker getRemovedMappingTracker() {
         return myRemovedMappingTracker;
     }

@@ -25,7 +25,6 @@ public class ReadOnlyLightVirtualFile extends LightVirtualFile {
     if (writable) throw new UnsupportedOperationException();
   }
 
-  
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new UnsupportedOperationException();
