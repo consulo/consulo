@@ -22,10 +22,9 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.remoteServer.platformAware.PlatformAwareServerType;
 import consulo.remoteServer.RemoteServerConfigurable;
-import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
-import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurationBase;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
@@ -49,7 +48,7 @@ import java.util.List;
  * @since 2026-03-17
  */
 @ExtensionImpl
-public class RemoteAgentServerType extends ServerType<RemoteAgentServerConfiguration> {
+public class RemoteAgentServerType extends PlatformAwareServerType<RemoteAgentServerConfiguration> {
     public RemoteAgentServerType() {
         super("remote-agent", "RemoteAgentDeployment",
             LocalizeValue.localizeTODO("Remote Agent"),

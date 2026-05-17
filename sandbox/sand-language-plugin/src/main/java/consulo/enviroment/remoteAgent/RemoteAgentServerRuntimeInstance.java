@@ -21,6 +21,7 @@ import consulo.enviroment.remoteAgent.platform.RemotePlatform;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
+import consulo.remoteServer.platformAware.PlatformAwareServerRuntimeInstance;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
@@ -32,7 +33,7 @@ import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
  * @author VISTALL
  * @since 2026-03-17
  */
-class RemoteAgentServerRuntimeInstance extends ServerRuntimeInstance<DeploymentConfiguration> {
+class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstance<DeploymentConfiguration> {
     private final RemoteAgentConnection myConnection;
     private final RemotePlatform myPlatform;
     private final RemoteNioFileSystem myNioFileSystem;
@@ -68,6 +69,7 @@ class RemoteAgentServerRuntimeInstance extends ServerRuntimeInstance<DeploymentC
         return myConnection;
     }
 
+    @Override
     public Platform getPlatform() {
         return myPlatform;
     }
