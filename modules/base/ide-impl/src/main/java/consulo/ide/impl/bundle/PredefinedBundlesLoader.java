@@ -17,14 +17,13 @@ package consulo.ide.impl.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
-import consulo.content.bundle.*;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.application.content.impl.internal.bundle.SdkPointerManagerImpl;
 import consulo.application.content.impl.internal.bundle.SdkTableImpl;
 import consulo.application.internal.PreloadingActivity;
+import consulo.application.progress.ProgressIndicator;
+import consulo.content.bundle.*;
 import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
-import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
@@ -49,7 +48,7 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
         }
 
         @Override
-        public Sdk createSdkWithName(BundleType sdkType, Path homePath, String suggestName) {
+        public Sdk createSdkWithName(PlatformAwareSdkType sdkType, Path homePath, String suggestName) {
             // TODO [VISTALL] path can be remote - handle it
 
             Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
@@ -102,11 +101,11 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
 
         if (!bundles.isEmpty()) {
             for (Sdk bundle : bundles) {
-                ((SdkImpl)bundle).setPredefined(true);
+                ((SdkImpl) bundle).setPredefined(true);
             }
 
-            ((SdkTableImpl)sdkTable).addSdksUnsafe(bundles);
-            ((SdkPointerManagerImpl)mySdkPointerManager.get()).updatePointers(bundles);
+            ((SdkTableImpl) sdkTable).addSdksUnsafe(bundles);
+            ((SdkPointerManagerImpl) mySdkPointerManager.get()).updatePointers(bundles);
         }
     }
 }

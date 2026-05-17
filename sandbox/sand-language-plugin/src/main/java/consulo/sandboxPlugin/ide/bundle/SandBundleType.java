@@ -20,6 +20,7 @@ import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.BundleType;
+import consulo.content.bundle.PlatformAwareSdkType;
 import consulo.content.bundle.SdkType;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -38,7 +39,7 @@ import java.util.function.Supplier;
  * @since 2014-05-12
  */
 @ExtensionImpl
-public class SandBundleType extends BundleType {
+public class SandBundleType extends PlatformAwareSdkType {
     public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.from(SdkType.class);
 
     public SandBundleType() {

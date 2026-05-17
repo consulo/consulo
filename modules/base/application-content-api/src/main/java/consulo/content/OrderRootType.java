@@ -46,7 +46,6 @@ public class OrderRootType {
     myId = id;
   }
 
-  
   public String getId() {
     return myId;
   }
@@ -61,17 +60,14 @@ public class OrderRootType {
     return type.equals(getId());
   }
 
-  
   public static List<OrderRootType> getAllTypes() {
     return Application.get().getExtensionPoint(OrderRootType.class).getExtensionList();
   }
 
-  
   public static List<OrderRootType> getSortedRootTypes() {
     return Application.get().getExtensionPoint(OrderRootType.class).getOrBuildCache(SORTED_KEY);
   }
 
-  
   @Deprecated
   @DeprecationInfo("Use ExtensionInstance#current()")
   public static <T extends OrderRootType> T getOrderRootType(Class<? extends T> orderRootTypeClass) {
@@ -80,6 +76,6 @@ public class OrderRootType {
 
   @Override
   public String toString() {
-    return "Root " + getId();
+    return "OrderRootType " + getId();
   }
 }

@@ -27,14 +27,16 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class DocumentationOrderRootType extends OrderRootType {
-  private static final Supplier<DocumentationOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
+    public static final String ID = "documentation";
+    
+    private static final Supplier<DocumentationOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
 
-  @Deprecated
-  public static DocumentationOrderRootType getInstance() {
-    return INSTANCE.get();
-  }
+    @Deprecated
+    public static DocumentationOrderRootType getInstance() {
+        return INSTANCE.get();
+    }
 
-  public DocumentationOrderRootType() {
-    super("documentation");
-  }
+    public DocumentationOrderRootType() {
+        super(ID);
+    }
 }

@@ -80,8 +80,8 @@ public abstract class SdkType implements SdkTypeId {
     @Override
     public final @Nullable String getVersionString(Sdk sdk) {
         SdkTypeId sdkType = sdk.getSdkType();
-        if (sdkType instanceof BundleType bundleType) {
-            return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
+        if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
+            return platformAwareSdkType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
         }
         String homePath = sdk.getHomePath();
         return homePath != null ? getVersionString(homePath) : null;

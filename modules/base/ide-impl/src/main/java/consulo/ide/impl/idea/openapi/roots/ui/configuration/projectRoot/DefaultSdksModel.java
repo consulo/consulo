@@ -42,8 +42,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -128,7 +128,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         Sdk[] sdks = mySdkTableProvider.get().getAllSdks();
         for (Sdk sdk : sdks) {
             try {
-                mySdks.put(sdk, (Sdk)sdk.clone());
+                mySdks.put(sdk, (Sdk) sdk.clone());
             }
             catch (CloneNotSupportedException e) {
                 LOG.error(e);
@@ -311,10 +311,10 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         if (type instanceof SdkTypeWithCustomCreateUI customCreateUI) {
             customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
         }
-        else if (type instanceof BundleType bundleType) {
+        else if (type instanceof PlatformAwareSdkType platformAwareSdkType) {
             Platform platform = Platform.current();
-            SdkUtil.selectSdkHome(platform, bundleType, homePath -> {
-                String newSdkName = SdkUtil.createUniqueSdkName(platform, bundleType, homePath, getSdks());
+            SdkUtil.selectSdkHome(platform, platformAwareSdkType, homePath -> {
+                String newSdkName = SdkUtil.createUniqueSdkName(platform, platformAwareSdkType, homePath, getSdks());
                 SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), type, homePath, newSdkName);
                 setupSdk(newSdk, callback);
             });
@@ -339,7 +339,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         new Task.Modal(null, "Setuping SDK...", false) {
             @Override
             public void run(ProgressIndicator indicator) {
-                SdkType sdkType = (SdkType)newSdk.getSdkType();
+                SdkType sdkType = (SdkType) newSdk.getSdkType();
                 sdkType.setupSdkPaths(newSdk);
 
                 uiAccess.give(() -> {
