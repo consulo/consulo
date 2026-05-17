@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.ex;
 import consulo.application.util.SystemInfo;
 import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.execution.wsl.WSLUtil;
+import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -57,7 +58,7 @@ public class RootFileElement extends FileElement {
         LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
         List<VirtualFile> result = new ArrayList<>(
-            StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false)
+            Platform.current().fs().getRootDirectoriesStream()
                 .map(root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.toString())))
                 .collect(Collectors.toList())
         );

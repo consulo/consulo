@@ -53,6 +53,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -140,8 +142,8 @@ public class ShowFilePathAction extends AnAction {
         Application.get().executeOnPooledThread(() -> {
             List<Image> icons = new ArrayList<>();
             for (String url : fileUrls) {
-                File ioFile = new File(url);
-                icons.add(ioFile.exists() ? fs.getImage(ioFile) : Image.empty(16));
+                Path path = Path.of(url);
+                icons.add(Files.exists(path) ? fs.getImage(path) : Image.empty(Image.DEFAULT_ICON_SIZE));
             }
 
             uiAccess.give(() -> action.accept(createPopup(project, files, icons)));
