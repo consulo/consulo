@@ -138,8 +138,8 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
             return VirtualFile.EMPTY_ARRAY;
         }
         return context != null
-            ? context.getLibraryFiles(library, BinariesOrderRootType.getInstance())
-            : library.getFiles(BinariesOrderRootType.getInstance());
+            ? context.getLibraryFiles(library, BinariesOrderRootType.ID)
+            : library.getFiles(BinariesOrderRootType.ID);
     }
 
     

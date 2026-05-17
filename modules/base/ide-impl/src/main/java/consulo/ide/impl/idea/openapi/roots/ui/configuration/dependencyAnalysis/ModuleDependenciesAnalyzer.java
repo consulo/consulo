@@ -225,7 +225,7 @@ public class ModuleDependenciesAnalyzer {
               }
               else {
                 OrderPath p = new OrderPath(myStack);
-                for (String u : orderEntry.getUrls(BinariesOrderRootType.getInstance())) {
+                for (String u : orderEntry.getUrls(BinariesOrderRootType.ID)) {
                   addUrlPath(p, u);
                 }
                 addEntryPath(orderEntry, p);

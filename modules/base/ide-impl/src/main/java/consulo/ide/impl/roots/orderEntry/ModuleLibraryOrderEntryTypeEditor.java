@@ -84,6 +84,6 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
     return myOrderEntryAppearanceService.get()
-            .getRenderForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
+            .getRenderForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !library.getInvalidRootUrls(BinariesOrderRootType.ID).isEmpty());
   }
 }

@@ -64,7 +64,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
                                                              ArtifactType artifactType) {
     Library library = findLibrary(context);
     if (library != null) {
-      VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
+      VirtualFile[] files = library.getFiles(BinariesOrderRootType.ID);
       List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
       for (VirtualFile file : files) {
         String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
@@ -169,7 +169,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   public static PackagingElementOutputKind getKindForLibrary(Library library) {
     boolean containsDirectories = false;
     boolean containsJars = false;
-    for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
+    for (VirtualFile file : library.getFiles(BinariesOrderRootType.ID)) {
       if (file.isInLocalFileSystem()) {
         containsDirectories = true;
       }

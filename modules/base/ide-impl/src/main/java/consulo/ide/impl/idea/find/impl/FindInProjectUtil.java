@@ -648,7 +648,7 @@ public class FindInProjectUtil {
                     continue;
                 }
                 // note: getUrls() returns jar directories too
-                String[] sourceUrls = library.getUrls(SourcesOrderRootType.getInstance());
+                String[] sourceUrls = library.getUrls(SourcesOrderRootType.ID);
                 for (String sourceUrl : sourceUrls) {
                     if (VirtualFileUtil.isEqualOrAncestor(sourceUrl, directory.getUrl())) {
                         // already in this library sources, no need to look for another source root
@@ -659,7 +659,7 @@ public class FindInProjectUtil {
                     // in which case we have no way to know whether this is a source jar or classes jar - so try to locate the source jar
                 }
             }
-            for (VirtualFile sourceRoot : entry.getFiles(SourcesOrderRootType.getInstance())) {
+            for (VirtualFile sourceRoot : entry.getFiles(SourcesOrderRootType.ID)) {
                 VirtualFile sourceFile = sourceRoot.findFileByRelativePath(relativePath);
                 if (sourceFile != null) {
                     otherSourceRoots.add(sourceFile);

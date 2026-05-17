@@ -15,6 +15,7 @@ package consulo.content.library.ui;
 import consulo.content.OrderRootType;
 import consulo.content.library.LibraryType;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -83,7 +84,7 @@ public abstract class LibraryRootsComponentDescriptor {
     return OrderRootType.getAllTypes();
   }
 
-  public String getAttachFilesActionName() {
-    return ProjectLocalize.buttonTextAttachFiles().get();
+  public LocalizeValue getAttachFilesActionName() {
+    return ProjectLocalize.buttonTextAttachFiles();
   }
 }

@@ -447,7 +447,7 @@ public class ExternalSystemApiUtil {
             return result;
         }
         for (OrderRootType type : OrderRootType.getAllTypes()) {
-            for (String url : library.getUrls(type)) {
+            for (String url : library.getUrls(type.getId())) {
                 String candidate = extractNameFromPath(url);
                 if (!StringUtil.isEmpty(candidate)) {
                     return candidate;

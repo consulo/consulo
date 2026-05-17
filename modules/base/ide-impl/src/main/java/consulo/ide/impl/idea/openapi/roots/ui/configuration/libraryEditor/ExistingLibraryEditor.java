@@ -23,6 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.module.event.LibraryEditorListener;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -74,7 +75,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   private LibraryType detectType() {
     if (!myDetectedTypeComputed) {
       Pair<LibraryType<?>,LibraryProperties<?>> pair = LibraryDetectionManager.getInstance().detectType(Arrays.asList(getFiles(
-              BinariesOrderRootType.getInstance())));
+              BinariesOrderRootType.ID)));
       if (pair != null) {
         myDetectedType = pair.getFirst();
         myDetectedLibraryProperties = pair.getSecond();
@@ -119,7 +120,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public String[] getUrls(OrderRootType rootType) {
+  public String[] getUrls(String rootType) {
     if (myModel != null) {
       return myModel.getUrls(rootType);
     }
@@ -127,7 +128,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public VirtualFile[] getFiles(OrderRootType rootType) {
+  public VirtualFile[] getFiles(String rootType) {
     if (myModel != null) {
       return myModel.getFiles(rootType);
     }
@@ -153,12 +154,12 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public void addRoot(VirtualFile file, OrderRootType rootType) {
+  public void addRoot(VirtualFile file, String rootType) {
     getModel().addRoot(file, rootType);
   }
 
   @Override
-  public void addRoot(String url, OrderRootType rootType) {
+  public void addRoot(String url, String rootType) {
     getModel().addRoot(url, rootType);
   }
 
@@ -168,17 +169,17 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public void addJarDirectory(VirtualFile file, boolean recursive, OrderRootType rootType) {
+  public void addJarDirectory(VirtualFile file, boolean recursive, String rootType) {
     getModel().addJarDirectory(file, recursive, rootType);
   }
 
   @Override
-  public void addJarDirectory(String url, boolean recursive, OrderRootType rootType) {
+  public void addJarDirectory(String url, boolean recursive, String rootType) {
     getModel().addJarDirectory(url, recursive, rootType);
   }
 
   @Override
-  public void removeRoot(String url, OrderRootType rootType) {
+  public void removeRoot(String url, String rootType) {
     boolean removed;
     do {
       removed = getModel().removeRoot(url, rootType);
@@ -219,7 +220,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public boolean isJarDirectory(String url, OrderRootType rootType) {
+  public boolean isJarDirectory(String url, String rootType) {
     if (myModel != null) {
       return myModel.isJarDirectory(url, rootType);
     }
@@ -227,7 +228,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public boolean isValid(String url, OrderRootType orderRootType) {
+  public boolean isValid(String url, String orderRootType) {
     if (myModel != null) {
       return myModel.isValid(url, orderRootType);
     }
@@ -235,7 +236,7 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
   }
 
   @Override
-  public Collection<OrderRootType> getOrderRootTypes() {
-    return OrderRootType.getAllTypes();
+  public Collection<String> getOrderRootTypes() {
+    return ContainerUtil.map(OrderRootType.getAllTypes(), OrderRootType::getId);
   }
 }

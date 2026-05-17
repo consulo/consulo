@@ -20,19 +20,20 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.fileChooser.FileChooserDescriptor;
 
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class SdkPathEditor extends PathEditor {
-  private final String myDisplayName;
-  private final OrderRootType myOrderRootType;
+  private final LocalizeValue myDisplayName;
+  private final String myOrderRootType;
   private final boolean myImmutable;
 
-  public SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor, Sdk sdk) {
+  public SdkPathEditor(LocalizeValue displayName, String orderRootType, FileChooserDescriptor descriptor, Sdk sdk) {
     this(displayName, orderRootType, descriptor, sdk.isPredefined());
   }
 
-  public SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor, boolean immutable) {
+  public SdkPathEditor(LocalizeValue displayName, String orderRootType, FileChooserDescriptor descriptor, boolean immutable) {
     super(descriptor);
     myDisplayName = displayName;
     myOrderRootType = orderRootType;
@@ -44,11 +45,11 @@ public class SdkPathEditor extends PathEditor {
     return myImmutable;
   }
 
-  public String getDisplayName() {
+  public LocalizeValue getDisplayName() {
     return myDisplayName;
   }
 
-  public OrderRootType getOrderRootType() {
+  public String getOrderRootType() {
     return myOrderRootType;
   }
 

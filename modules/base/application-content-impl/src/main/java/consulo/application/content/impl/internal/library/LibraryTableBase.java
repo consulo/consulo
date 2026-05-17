@@ -234,14 +234,13 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
       String libPath = System.getProperty(libraryPrefix + name);
       if (libPath != null) {
         LibraryImpl library = new LibraryImpl(name, null, LibraryTableBase.this, getLibraryOwner());
-        library.addRoot(libPath, BinariesOrderRootType.getInstance());
+        library.addRoot(libPath, BinariesOrderRootType.ID);
         return library;
       }
       return null;
     }
 
     @Override
-    
     public Library[] getLibraries() {
       return myLibraries.toArray(new Library[myLibraries.size()]);
     }

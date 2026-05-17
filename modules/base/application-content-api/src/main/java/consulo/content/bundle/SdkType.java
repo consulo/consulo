@@ -18,6 +18,7 @@ package consulo.content.bundle;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -183,8 +184,8 @@ public abstract class SdkType implements SdkTypeId {
         return null;
     }
 
-    public boolean isRootTypeApplicable(OrderRootType type) {
-        return false;
+    public boolean isRootTypeApplicable(String type) {
+        return BinariesOrderRootType.ID.equals(type);
     }
 
     /**

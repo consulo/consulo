@@ -225,7 +225,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
             for (OrderEntry entry : orderEntries) {
                 if (entry instanceof OrderEntryWithTracking) {
                     for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-                        addRootsToTrack(entry.getUrls(orderRootType), recursive, flat);
+                        addRootsToTrack(entry.getUrls(orderRootType.getId()), recursive, flat);
                     }
                 }
             }

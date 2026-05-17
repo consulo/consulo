@@ -31,28 +31,28 @@ import consulo.ui.image.Image;
  */
 @ExtensionImpl
 public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
-  @Override
-  public String getOrderRootTypeId() {
-    return "binaries";
-  }
+    @Override
+    public String getOrderRootTypeId() {
+        return BinariesOrderRootType.ID;
+    }
 
-  @Override
-  public SdkPathEditor createPathEditor(Sdk sdk) {
-    return new SdkPathEditor(
-      ProjectLocalize.libraryBinariesNode().get(),
-      BinariesOrderRootType.getInstance(),
-      new FileChooserDescriptor(true, true, true, false, true, true),
-      sdk
-    );
-  }
+    @Override
+    public SdkPathEditor createPathEditor(Sdk sdk) {
+        return new SdkPathEditor(
+            ProjectLocalize.libraryBinariesNode(),
+            BinariesOrderRootType.ID,
+            new FileChooserDescriptor(true, true, true, false, true, true),
+            sdk
+        );
+    }
 
-  @Override
-  public Image getIcon() {
-    return PlatformIconGroup.filetypesBinary();
-  }
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.filetypesBinary();
+    }
 
-  @Override
-  public String getNodeText() {
-    return ProjectLocalize.libraryBinariesNode().get();
-  }
+    @Override
+    public String getNodeText() {
+        return ProjectLocalize.libraryBinariesNode().get();
+    }
 }

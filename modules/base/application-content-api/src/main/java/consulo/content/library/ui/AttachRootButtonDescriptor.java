@@ -14,6 +14,7 @@ package consulo.content.library.ui;
 
 import consulo.content.OrderRootType;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -27,15 +28,15 @@ import javax.swing.*;
  * @see ChooserBasedAttachRootButtonDescriptor
  */
 public abstract class AttachRootButtonDescriptor {
-  private final OrderRootType myOrderRootType;
-  protected final String myButtonText;
+  private final String myOrderRootType;
+  protected final LocalizeValue myButtonText;
   private final @Nullable Image myToolbarIcon;
 
   /**
    * Creates a descriptor for 'attach' button shown in popup when user click on '+' button.
-   * Consider using {@link #AttachRootButtonDescriptor(OrderRootType, Image, String)} instead.
+   * Consider using {@link #AttachRootButtonDescriptor(String, Image, String)} instead.
    */
-  protected AttachRootButtonDescriptor(OrderRootType orderRootType, String buttonText) {
+  protected AttachRootButtonDescriptor(String orderRootType, LocalizeValue buttonText) {
     myOrderRootType = orderRootType;
     myButtonText = buttonText;
     myToolbarIcon = null;
@@ -44,7 +45,7 @@ public abstract class AttachRootButtonDescriptor {
   /**
    * Creates a descriptor for 'attach' button shown in toolbar of a library editor
    */
-  protected AttachRootButtonDescriptor(OrderRootType orderRootType, Image toolbarIcon, String description) {
+  protected AttachRootButtonDescriptor(String orderRootType, Image toolbarIcon, LocalizeValue description) {
     myOrderRootType = orderRootType;
     myButtonText = description;
     myToolbarIcon = toolbarIcon;
@@ -52,11 +53,11 @@ public abstract class AttachRootButtonDescriptor {
 
   public abstract VirtualFile[] selectFiles(JComponent parent, @Nullable VirtualFile initialSelection, DataContext dataContext, LibraryEditor libraryEditor);
 
-  public String getButtonText() {
+  public LocalizeValue getButtonText() {
     return myButtonText;
   }
 
-  public OrderRootType getRootType() {
+  public String getRootType() {
     return myOrderRootType;
   }
 

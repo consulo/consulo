@@ -24,11 +24,11 @@ import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author nik
@@ -36,8 +36,10 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P> {
-    public static OrderRootType[] getDefaultExternalRootTypes() {
-        return new OrderRootType[]{BinariesOrderRootType.getInstance()};
+    private static final Set<String> ourDefaultRootTypes = Set.of(BinariesOrderRootType.ID);
+
+    public static Set<String> getDefaultExternalRootTypes() {
+        return ourDefaultRootTypes;
     }
 
     private final PersistentLibraryKind<P> myKind;
@@ -95,7 +97,7 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
      * @return Root types to collect library files which do not belong to the project and therefore
      * indicate that the library is external.
      */
-    public OrderRootType[] getExternalRootTypes() {
+    public Set<String> getExternalRootTypes() {
         return getDefaultExternalRootTypes();
     }
 }

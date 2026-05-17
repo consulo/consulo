@@ -15,6 +15,7 @@
  */
 package consulo.component.extension;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.internal.ExtensionInstanceRef;
 import consulo.component.internal.LazyExtensionInstance;
 import consulo.component.internal.StableExtensionInstance;
@@ -25,6 +26,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 26/01/2023
  */
+@Deprecated
+@DeprecationInfo("Obsolete - need rewrite logic without it")
 public final class ExtensionInstance {
   
   @SuppressWarnings("unchecked")

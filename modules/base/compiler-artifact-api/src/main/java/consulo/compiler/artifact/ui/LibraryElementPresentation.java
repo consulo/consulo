@@ -115,7 +115,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
 
   public static String getLibraryItemText(Library library, boolean includeTableName) {
     String name = library.getName();
-    VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
+    VirtualFile[] files = library.getFiles(BinariesOrderRootType.ID);
     if (name != null) {
       return name + (includeTableName ? getLibraryTableComment(library) : "");
     }

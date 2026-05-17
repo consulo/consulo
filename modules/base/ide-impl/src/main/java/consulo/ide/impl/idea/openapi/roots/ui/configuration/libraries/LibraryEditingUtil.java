@@ -113,7 +113,8 @@ public class LibraryEditingUtil {
     public static void copyLibrary(LibraryEx from, Map<String, String> rootMapping, LibraryEx.ModifiableModelEx target) {
         target.setProperties(from.getProperties());
         for (OrderRootType type : OrderRootType.getAllTypes()) {
-            String[] urls = from.getUrls(type);
+            String rootTypeId = type.getId();
+            String[] urls = from.getUrls(rootTypeId);
             for (String url : urls) {
                 String protocol = VirtualFileManager.extractProtocol(url);
                 if (protocol == null) {
@@ -134,11 +135,11 @@ public class LibraryEditingUtil {
                 String targetPath = rootMapping.get(localPath);
                 String targetUrl = targetPath != null ? VirtualFileManager.constructUrl(protocol, targetPath + pathInJar) : url;
 
-                if (from.isJarDirectory(url, type)) {
-                    target.addJarDirectory(targetUrl, false, type);
+                if (from.isJarDirectory(url, rootTypeId)) {
+                    target.addJarDirectory(targetUrl, false, rootTypeId);
                 }
                 else {
-                    target.addRoot(targetUrl, type);
+                    target.addRoot(targetUrl, rootTypeId);
                 }
             }
         }

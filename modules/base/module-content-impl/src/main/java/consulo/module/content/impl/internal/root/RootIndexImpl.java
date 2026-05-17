@@ -130,8 +130,8 @@ public class RootIndexImpl implements RootIndex {
 
             for (OrderEntry orderEntry : moduleRootManager.getOrderEntries()) {
                 if (orderEntry instanceof OrderEntryWithTracking) {
-                    VirtualFile[] sourceRoots = orderEntry.getFiles(SourcesOrderRootType.getInstance());
-                    VirtualFile[] classRoots = orderEntry.getFiles(BinariesOrderRootType.getInstance());
+                    VirtualFile[] sourceRoots = orderEntry.getFiles(SourcesOrderRootType.ID);
+                    VirtualFile[] classRoots = orderEntry.getFiles(BinariesOrderRootType.ID);
 
                     // Init library sources
                     for (VirtualFile sourceRoot : sourceRoots) {
@@ -206,15 +206,15 @@ public class RootIndexImpl implements RootIndex {
                             depEntries.putValue(importedClassRoot, orderEntry);
                         }
                     }
-                    for (VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.getInstance())) {
+                    for (VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.ID)) {
                         depEntries.putValue(sourceRoot, orderEntry);
                     }
                 }
                 else if (orderEntry instanceof OrderEntryWithTracking) {
-                    for (VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.getInstance())) {
+                    for (VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.ID)) {
                         libSourceRootEntries.putValue(sourceRoot, orderEntry);
                     }
-                    for (VirtualFile classRoot : orderEntry.getFiles(BinariesOrderRootType.getInstance())) {
+                    for (VirtualFile classRoot : orderEntry.getFiles(BinariesOrderRootType.ID)) {
                         libClassRootEntries.putValue(classRoot, orderEntry);
                     }
                 }

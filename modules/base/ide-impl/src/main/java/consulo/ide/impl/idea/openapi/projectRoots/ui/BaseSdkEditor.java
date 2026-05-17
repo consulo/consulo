@@ -59,7 +59,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
 
     protected final Sdk mySdk;
-    private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<>();
+    private final Map<String, SdkPathEditor> myPathEditors = new HashMap<>();
 
     private TextBoxWithExtensions myHomeComponent;
     private final Map<SdkType, AdditionalDataConfigurable> myAdditionalDataConfigurables = new HashMap<>();
@@ -125,7 +125,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
                 SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
                 if (pathEditor != null) {
                     pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
-                    myPathEditors.put(type, pathEditor);
+                    myPathEditors.put(type.getId(), pathEditor);
                 }
             }
         }
@@ -220,12 +220,11 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
 
     protected boolean showTabForType(OrderRootType type) {
-        return ((SdkType) mySdk.getSdkType()).isRootTypeApplicable(type);
+        return ((SdkType) mySdk.getSdkType()).isRootTypeApplicable(type.getId());
     }
 
-
     public SdkPathEditor getPathEditor(OrderRootType rootType) {
-        return myPathEditors.get(rootType);
+        return myPathEditors.get(rootType.getId());
     }
 
     @RequiredUIAccess
@@ -279,7 +278,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     @Override
     public void reset() {
         SdkModificator sdkModificator = mySdk.getSdkModificator();
-        for (OrderRootType type : myPathEditors.keySet()) {
+        for (String type : myPathEditors.keySet()) {
             myPathEditors.get(type).reset(sdkModificator);
         }
         sdkModificator.commitChanges();
@@ -383,7 +382,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
                 );
             }
             sdkModificator = dummySdk.getSdkModificator();
-            for (OrderRootType type : myPathEditors.keySet()) {
+            for (String type : myPathEditors.keySet()) {
                 myPathEditors.get(type).addPaths(sdkModificator.getRoots(type));
             }
             mySdkModel.getMulticaster().sdkHomeSelected(dummySdk, homePath);
@@ -497,9 +496,8 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
             throw new UnsupportedOperationException(); // not supported for this editor
         }
 
-
         @Override
-        public VirtualFile[] getRoots(OrderRootType rootType) {
+        public VirtualFile[] getRoots(String rootType) {
             PathEditor editor = myPathEditors.get(rootType);
             if (editor == null) {
                 throw new IllegalStateException("no editor for root type " + rootType);
@@ -508,17 +506,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
 
         @Override
-        public void addRoot(VirtualFile root, OrderRootType rootType) {
+        public void addRoot(VirtualFile root, String rootType) {
             myPathEditors.get(rootType).addPaths(root);
         }
 
         @Override
-        public void removeRoot(VirtualFile root, OrderRootType rootType) {
+        public void removeRoot(VirtualFile root, String rootType) {
             myPathEditors.get(rootType).removePaths(root);
         }
 
         @Override
-        public void removeRoots(OrderRootType rootType) {
+        public void removeRoots(String rootType) {
             myPathEditors.get(rootType).clearList();
         }
 

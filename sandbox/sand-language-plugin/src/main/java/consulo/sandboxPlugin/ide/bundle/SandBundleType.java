@@ -64,9 +64,4 @@ public class SandBundleType extends PlatformAwareSdkType {
     public @Nullable String getVersionString(Platform platform, Path path) {
         return "1";
     }
-
-    @Override
-    public boolean isRootTypeApplicable(OrderRootType type) {
-        return type == BinariesOrderRootType.getInstance();
-    }
 }

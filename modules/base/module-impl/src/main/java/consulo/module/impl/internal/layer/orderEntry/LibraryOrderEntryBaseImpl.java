@@ -60,19 +60,16 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     }
 
     @Override
-    
-    public VirtualFile[] getFiles(OrderRootType type) {
+    public VirtualFile[] getFiles(String type) {
         RootProvider rootProvider = getRootProvider();
         return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;
     }
 
     @Override
-    
-    public String[] getUrls(OrderRootType type) {
+    public String[] getUrls(String type) {
         LOG.assertTrue(!getRootModel().getModule().isDisposed());
         RootProvider rootProvider = getRootProvider();
         return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
-
     }
 
     protected abstract @Nullable RootProvider getRootProvider();
@@ -104,8 +101,8 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
         }
         List<OrderRootType> allTypes = OrderRootType.getAllTypes();
         for (OrderRootType type : allTypes) {
-            String[] orderedRootUrls1 = getUrls(type);
-            String[] orderedRootUrls2 = other.getUrls(type);
+            String[] orderedRootUrls1 = getUrls(type.getId());
+            String[] orderedRootUrls2 = other.getUrls(type.getId());
             if (!Arrays.equals(orderedRootUrls1, orderedRootUrls2)) {
                 return false;
             }

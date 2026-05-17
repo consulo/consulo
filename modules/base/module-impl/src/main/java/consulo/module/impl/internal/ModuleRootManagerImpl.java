@@ -245,24 +245,22 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     return new ModuleOrderEnumerator(myRootModel, myOrderRootsCache);
   }
 
-  public static OrderRootsEnumerator getCachingEnumeratorForType(OrderRootType type, Module module) {
+  public static OrderRootsEnumerator getCachingEnumeratorForType(String type, Module module) {
     return getEnumeratorForType(type, module).usingCache();
   }
 
-  
-  private static OrderRootsEnumerator getEnumeratorForType(OrderRootType type, Module module) {
+  private static OrderRootsEnumerator getEnumeratorForType(String type, Module module) {
     OrderEnumerator base = OrderEnumerator.orderEntries(module);
-    if (type == BinariesOrderRootType.getInstance()) {
+    if (BinariesOrderRootType.ID.equals(type)) {
       return base.exportedOnly().withoutModuleSourceEntries().recursively().classes();
     }
-    if (type == SourcesOrderRootType.getInstance()) {
+    else if (SourcesOrderRootType.ID.equals(type)) {
       return base.exportedOnly().recursively().sources();
     }
     return base.roots(type);
   }
 
   @Override
-  
   public VirtualFile[] getContentRoots() {
     LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentRoots();

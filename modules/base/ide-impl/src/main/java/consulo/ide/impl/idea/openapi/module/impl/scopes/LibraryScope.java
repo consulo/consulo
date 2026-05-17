@@ -30,7 +30,7 @@ public class LibraryScope extends LibraryScopeBase {
   private final Library myLibrary;
 
   public LibraryScope(Project project, Library library) {
-    super(project, library.getFiles(BinariesOrderRootType.getInstance()), library.getFiles(SourcesOrderRootType.getInstance()));
+    super(project, library.getFiles(BinariesOrderRootType.ID), library.getFiles(SourcesOrderRootType.ID));
     myLibrary = library;
   }
 
@@ -38,7 +38,7 @@ public class LibraryScope extends LibraryScopeBase {
   public String getDisplayName() {
     String name = myLibrary.getName();
     if (name == null) {
-      String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
+      String[] urls = myLibrary.getUrls(BinariesOrderRootType.ID);
       if (urls.length > 0) {
         name = PathUtil.getFileName(VirtualFileUtil.urlToPath(urls[0]));
       }

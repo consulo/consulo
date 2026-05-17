@@ -153,7 +153,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
         List<Library> addedLibraries = new ArrayList<>();
         boolean onlyClasses = true;
         for (OrderRoot root : roots) {
-            onlyClasses &= root.getType() == BinariesOrderRootType.getInstance();
+            onlyClasses &= BinariesOrderRootType.ID.equals(root.getType());
         }
         if (onlyClasses) {
             for (OrderRoot root : roots) {

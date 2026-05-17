@@ -31,7 +31,7 @@ import java.util.Collection;
  * @since 2021-04-19
  */
 public interface LibrariesConfigurator extends LibraryEditorListener, Disposable {
-  VirtualFile[] getLibraryFiles(Library library, OrderRootType type);
+  VirtualFile[] getLibraryFiles(Library library, String type);
 
   LibraryTable.ModifiableModel getModifiableLibraryTable(LibraryTable table);
 

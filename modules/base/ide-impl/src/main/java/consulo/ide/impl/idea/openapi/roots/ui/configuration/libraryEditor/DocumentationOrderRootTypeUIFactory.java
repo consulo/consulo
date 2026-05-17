@@ -45,16 +45,14 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
     
     @Override
     public String getOrderRootTypeId() {
-        return "documentation";
+        return DocumentationOrderRootType.ID;
     }
 
-    
     @Override
     public SdkPathEditor createPathEditor(Sdk sdk) {
         return new DocumentationPathsEditor(sdk);
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.filetypesText();
@@ -70,8 +68,8 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
         public DocumentationPathsEditor(Sdk sdk) {
             super(
-                ProjectLocalize.libraryJavadocsNode().get(),
-                DocumentationOrderRootType.getInstance(),
+                ProjectLocalize.libraryJavadocsNode(),
+                DocumentationOrderRootType.ID,
                 FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(),
                 sdk
             );

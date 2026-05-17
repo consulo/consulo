@@ -15,7 +15,6 @@
  */
 package consulo.content.library;
 
-import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
@@ -35,11 +34,9 @@ public interface Library extends JDOMExternalizable, Disposable {
 
   @Nullable String getName();
 
-  
-  String[] getUrls(OrderRootType rootType);
+  String[] getUrls(String rootType);
 
-  
-  VirtualFile[] getFiles(OrderRootType rootType);
+  VirtualFile[] getFiles(String rootType);
 
   /**
    * As soon as you obtaining modifiable model you will have to commit it or call Disposer.dispose(model)!
@@ -53,22 +50,19 @@ public interface Library extends JDOMExternalizable, Disposable {
 
   boolean isJarDirectory(String url);
 
-  boolean isJarDirectory(String url, OrderRootType rootType);
+  boolean isJarDirectory(String url, String rootType);
 
-  boolean isValid(String url, OrderRootType rootType);
+  boolean isValid(String url, String rootType);
 
   @Nullable PersistentLibraryKind<?> getKind();
 
   LibraryProperties getProperties();
-
   
   String[] getExcludedRootUrls();
-
   
   VirtualFile[] getExcludedRoots();
-
   
-  List<String> getInvalidRootUrls(OrderRootType type);
+  List<String> getInvalidRootUrls(String type);
 
   default boolean isDisposed() {
     return false;
@@ -76,42 +70,41 @@ public interface Library extends JDOMExternalizable, Disposable {
 
   interface ModifiableModel extends Disposable {
     
-    String[] getUrls(OrderRootType rootType);
+    String[] getUrls(String rootType);
 
     void setName(String name);
 
     String getName();
 
-    void addRoot(String url, OrderRootType rootType);
+    void addRoot(String url, String rootType);
 
     void addJarDirectory(String url, boolean recursive);
 
-    void addJarDirectory(String url, boolean recursive, OrderRootType rootType);
+    void addJarDirectory(String url, boolean recursive, String rootType);
 
-    void addRoot(VirtualFile file, OrderRootType rootType);
+    void addRoot(VirtualFile file, String rootType);
 
     void addJarDirectory(VirtualFile file, boolean recursive);
 
-    void addJarDirectory(VirtualFile file, boolean recursive, OrderRootType rootType);
+    void addJarDirectory(VirtualFile file, boolean recursive, String rootType);
 
-    void moveRootUp(String url, OrderRootType rootType);
+    void moveRootUp(String url, String rootType);
 
-    void moveRootDown(String url, OrderRootType rootType);
+    void moveRootDown(String url, String rootType);
 
-    boolean removeRoot(String url, OrderRootType rootType);
+    boolean removeRoot(String url, String rootType);
 
     void commit();
 
-    
-    VirtualFile[] getFiles(OrderRootType rootType);
+    VirtualFile[] getFiles(String rootType);
 
     boolean isChanged();
 
     boolean isJarDirectory(String url);
 
-    boolean isJarDirectory(String url, OrderRootType rootType);
+    boolean isJarDirectory(String url, String rootType);
 
-    boolean isValid(String url, OrderRootType rootType);
+    boolean isValid(String url, String rootType);
 
     void setProperties(LibraryProperties properties);
 

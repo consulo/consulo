@@ -29,9 +29,9 @@ import java.io.File;
 
 class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
   protected final String myUrl;
-  private final OrderRootType myRootType;
+  private final String myRootType;
 
-  public ItemElement(OrderRootTypeElement parent, String url, OrderRootType rootType, boolean isJarDirectory,
+  public ItemElement(OrderRootTypeElement parent, String url, String rootType, boolean isJarDirectory,
                      boolean isValid) {
     super(parent);
     myUrl = url;
@@ -95,8 +95,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return (OrderRootTypeElement)getParentDescriptor();
   }
 
-  
-  public OrderRootType getRootType() {
+  public String getRootType() {
     return myRootType;
   }
 

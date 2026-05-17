@@ -33,14 +33,14 @@ import consulo.ui.image.Image;
 public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
   @Override
   public String getOrderRootTypeId() {
-    return "sources";
+    return SourcesOrderRootType.ID;
   }
 
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
     return new SdkPathEditor(
-      ProjectLocalize.librarySourcesNode().get(),
-      SourcesOrderRootType.getInstance(),
+      ProjectLocalize.librarySourcesNode(),
+      SourcesOrderRootType.ID,
       new FileChooserDescriptor(true, true, true, false, true, true),
       sdk
     );

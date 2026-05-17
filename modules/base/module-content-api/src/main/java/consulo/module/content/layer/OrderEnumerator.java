@@ -136,13 +136,13 @@ public abstract class OrderEnumerator {
    * @param rootType root type
    * @return {@link OrderRootsEnumerator} instance for processing roots of the specified type
    */
-  public abstract OrderRootsEnumerator roots(OrderRootType rootType);
+  public abstract OrderRootsEnumerator roots(String rootType);
 
   /**
    * @param rootTypeProvider custom root type provider
    * @return {@link OrderRootsEnumerator} instance for processing roots of the provided type
    */
-  public abstract OrderRootsEnumerator roots(Function<OrderEntry, OrderRootType> rootTypeProvider);
+  public abstract OrderRootsEnumerator roots(Function<OrderEntry, String> rootTypeProvider);
 
   /**
    * @return classes roots for all entries processed by this enumerator

@@ -16,7 +16,6 @@
 
 package consulo.module.impl.internal.layer.orderEntry;
 
-import consulo.content.OrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.Module;
@@ -66,17 +65,17 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  public VirtualFile[] getFiles(OrderRootType type) {
-    if (type == SourcesOrderRootType.getInstance()) {
+  public VirtualFile[] getFiles(String type) {
+    if (SourcesOrderRootType.ID.equals(type)) {
       return myModuleRootLayer.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
     }
     return VirtualFile.EMPTY_ARRAY;
   }
 
   @Override
-  public String[] getUrls(OrderRootType type) {
+  public String[] getUrls(String type) {
     ArrayList<String> result = new ArrayList<String>();
-    if (type == SourcesOrderRootType.getInstance()) {
+    if (SourcesOrderRootType.ID.equals(type)) {
       ContentEntry[] content = myModuleRootLayer.getContentEntries();
       for (ContentEntry contentEntry : content) {
         Collections.addAll(result, contentEntry.getFolderUrls(LanguageContentFolderScopes.productionAndTest()));

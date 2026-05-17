@@ -27,10 +27,9 @@ import java.util.EventListener;
  */
 public interface RootProvider {
   
-  String[] getUrls(OrderRootType rootType);
+  String[] getUrls(String rootType);
 
-  
-  VirtualFile[] getFiles(OrderRootType rootType);
+  VirtualFile[] getFiles(String rootType);
 
   interface RootSetChangedListener extends EventListener {
     void rootSetChanged(RootProvider wrapper);

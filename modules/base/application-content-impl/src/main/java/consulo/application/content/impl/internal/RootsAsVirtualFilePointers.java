@@ -28,11 +28,11 @@ import java.util.Map;
 public class RootsAsVirtualFilePointers implements RootProvider {
   private static final Logger LOG = Logger.getInstance(RootsAsVirtualFilePointers.class);
 
-  private final Map<OrderRootType, VirtualFilePointerContainer> myRoots = new HashMap<>();
+  private final Map<String, VirtualFilePointerContainer> myRoots = new HashMap<>();
 
   private final boolean myNoCopyJars;
   private final VirtualFilePointerListener myListener;
-  
+
   private final Disposable myParent;
 
   public RootsAsVirtualFilePointers(boolean noCopyJars, VirtualFilePointerListener listener, Disposable parent) {
@@ -42,39 +42,37 @@ public class RootsAsVirtualFilePointers implements RootProvider {
   }
 
   @Override
-  
-  public VirtualFile[] getFiles(OrderRootType type) {
+  public VirtualFile[] getFiles(String type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     return container == null ? VirtualFile.EMPTY_ARRAY : container.getFiles();
   }
 
   @Override
-  
-  public String[] getUrls(OrderRootType type) {
+  public String[] getUrls(String type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     return container == null ? ArrayUtil.EMPTY_STRING_ARRAY : container.getUrls();
   }
 
-  public void addRoot(VirtualFile virtualFile, OrderRootType type) {
+  public void addRoot(VirtualFile virtualFile, String type) {
     getOrCreateContainer(type).add(virtualFile);
   }
 
-  public void addRoot(String url, OrderRootType type) {
+  public void addRoot(String url, String type) {
     getOrCreateContainer(type).add(url);
   }
 
-  public void removeAllRoots(OrderRootType type) {
+  public void removeAllRoots(String type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     if (container != null) {
       container.clear();
     }
   }
 
-  public void removeRoot(VirtualFile root, OrderRootType type) {
+  public void removeRoot(VirtualFile root, String type) {
     removeRoot(root.getUrl(), type);
   }
 
-  public void removeRoot(String url, OrderRootType type) {
+  public void removeRoot(String url, String type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     VirtualFilePointer pointer = container == null ? null : container.findByUrl(url);
     if (pointer != null) {
@@ -90,7 +88,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
 
   public void readExternal(Element element) {
     for (OrderRootType type : OrderRootType.getAllTypes()) {
-      read(element, type);
+      read(element, type.getId());
     }
 
     ApplicationManager.getApplication().runReadAction(() -> myRoots.values().forEach(container -> {
@@ -111,9 +109,9 @@ public class RootsAsVirtualFilePointers implements RootProvider {
   public void copyRootsFrom(RootProvider rootContainer) {
     removeAllRoots();
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
-      String[] newRoots = rootContainer.getUrls(rootType);
+      String[] newRoots = rootContainer.getUrls(rootType.getId());
       for (String newRoot : newRoots) {
-        addRoot(newRoot, rootType);
+        addRoot(newRoot, rootType.getId());
       }
     }
   }
@@ -140,9 +138,8 @@ public class RootsAsVirtualFilePointers implements RootProvider {
    * </sourcePath>
    * </roots>
    */
-  private void read(Element roots, OrderRootType type) {
-    String sdkRootName = type.getId();
-    Element child = sdkRootName == null ? null : roots.getChild(sdkRootName);
+  private void read(Element roots, String rootId) {
+    Element child = rootId == null ? null : roots.getChild(rootId);
     if (child == null) {
       return;
     }
@@ -153,7 +150,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
     }
     Element composite = composites.get(0);
     if (!composite.getChildren("root").isEmpty()) {
-      VirtualFilePointerContainer container = getOrCreateContainer(type);
+      VirtualFilePointerContainer container = getOrCreateContainer(rootId);
       container.readExternal(composite, "root", false);
     }
   }
@@ -203,7 +200,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
   }
 
   
-  private VirtualFilePointerContainer getOrCreateContainer(OrderRootType rootType) {
+  private VirtualFilePointerContainer getOrCreateContainer(String rootType) {
     VirtualFilePointerContainer roots = myRoots.get(rootType);
     if (roots == null) {
       roots = VirtualFilePointerManager.getInstance().createContainer(myParent, myListener);

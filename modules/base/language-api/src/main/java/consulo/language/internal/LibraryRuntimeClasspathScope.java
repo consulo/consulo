@@ -68,7 +68,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   public LibraryRuntimeClasspathScope(Project project, LibraryOrderEntry entry) {
     super(project);
     myIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    Collections.addAll(myEntries, entry.getFiles(BinariesOrderRootType.getInstance()));
+    Collections.addAll(myEntries, entry.getFiles(BinariesOrderRootType.ID));
   }
 
   @Override
@@ -101,7 +101,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       public LinkedHashSet<VirtualFile> visitLibraryOrderEntry(LibraryOrderEntry libraryOrderEntry, LinkedHashSet<VirtualFile> value) {
         Library library = libraryOrderEntry.getLibrary();
         if (library != null && processedLibraries.add(library)) {
-          ContainerUtil.addAll(value, libraryOrderEntry.getFiles(BinariesOrderRootType.getInstance()));
+          ContainerUtil.addAll(value, libraryOrderEntry.getFiles(BinariesOrderRootType.ID));
         }
         return value;
       }
@@ -140,7 +140,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
                                                                           LinkedHashSet<VirtualFile> value) {
         Sdk sdk = sdkOrderEntry.getSdk();
         if (sdk != null && processedSdk.add(sdk)) {
-          ContainerUtil.addAll(value, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()));
+          ContainerUtil.addAll(value, sdkOrderEntry.getFiles(BinariesOrderRootType.ID));
         }
         return value;
       }
@@ -148,7 +148,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       @Override
       public LinkedHashSet<VirtualFile> visitOrderEntry(OrderEntry orderEntry, LinkedHashSet<VirtualFile> value) {
         if (orderEntry instanceof OrderEntryWithTracking) {
-          ContainerUtil.addAll(value, orderEntry.getFiles(BinariesOrderRootType.getInstance()));
+          ContainerUtil.addAll(value, orderEntry.getFiles(BinariesOrderRootType.ID));
         }
         return value;
       }

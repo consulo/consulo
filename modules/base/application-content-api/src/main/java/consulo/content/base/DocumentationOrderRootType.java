@@ -28,13 +28,6 @@ import java.util.function.Supplier;
 @ExtensionImpl
 public class DocumentationOrderRootType extends OrderRootType {
     public static final String ID = "documentation";
-    
-    private static final Supplier<DocumentationOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
-
-    @Deprecated
-    public static DocumentationOrderRootType getInstance() {
-        return INSTANCE.get();
-    }
 
     public DocumentationOrderRootType() {
         super(ID);

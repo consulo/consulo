@@ -135,7 +135,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         Set<LibraryKind> excluded =
             type != null ? Collections.<LibraryKind>singleton(type.getKind()) : Collections.<LibraryKind>emptySet();
         for (String description : LibraryPresentationManager.getInstance()
-            .getDescriptions(getLibraryEditor().getFiles(BinariesOrderRootType.getInstance()), excluded)) {
+            .getDescriptions(getLibraryEditor().getFiles(BinariesOrderRootType.ID), excluded)) {
             if (text.length() > 0) {
                 text.append("\n");
             }
@@ -212,7 +212,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
                             getLibraryEditor().removeRoot(itemElement.getUrl(), itemElement.getRootType());
                         }
                         else if (selectedElement instanceof OrderRootTypeElement rootTypeElement) {
-                            OrderRootType rootType = rootTypeElement.getOrderRootType();
+                            String rootType = rootTypeElement.getOrderRootType();
                             String[] urls = getLibraryEditor().getUrls(rootType);
                             for (String url : urls) {
                                 getLibraryEditor().removeRoot(url, rootType);
@@ -281,7 +281,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     @Override
     public @Nullable VirtualFile getExistingRootDirectory() {
         for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-            VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
+            VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType.getId());
             if (existingRoots.length > 0) {
                 VirtualFile existingRoot = existingRoots[0];
                 if (existingRoot.getFileSystem() instanceof ArchiveFileSystem archiveFileSystem) {
@@ -400,7 +400,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     private class AttachFilesAction extends AttachItemActionBase {
-        public AttachFilesAction(String title) {
+        public AttachFilesAction(LocalizeValue title) {
             super(title);
         }
 
@@ -422,7 +422,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
 
     public abstract class AttachItemActionBase extends DumbAwareAction {
-        protected AttachItemActionBase(String text) {
+        protected AttachItemActionBase(LocalizeValue text) {
             super(text);
         }
 
@@ -450,7 +450,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private class AttachItemAction extends AttachItemActionBase {
         private final AttachRootButtonDescriptor myDescriptor;
 
-        protected AttachItemAction(AttachRootButtonDescriptor descriptor, String title, Image icon) {
+        protected AttachItemAction(AttachRootButtonDescriptor descriptor, LocalizeValue title, Image icon) {
             super(title);
             getTemplatePresentation().setIcon(icon);
             myDescriptor = descriptor;
@@ -531,7 +531,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
             ContainerUtil.addIfNotNull(excludedRoots, VirtualFileManager.getInstance().findFileByUrl(url));
         }
         for (OrderRootType type : OrderRootType.getAllTypes()) {
-            VirtualFile[] files = getLibraryEditor().getFiles(type);
+            VirtualFile[] files = getLibraryEditor().getFiles(type.getId());
             for (VirtualFile file : files) {
                 if (!VirtualFileUtil.isUnder(file, excludedRoots)) {
                     roots.add(VirtualFilePathUtil.getLocalFile(file));

@@ -98,7 +98,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
       if (name != null) {
         return name;
       }
-      VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
+      VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.ID);
       return files.length > 0 ? files[0].getName() : "Empty Library";
     }
 
@@ -117,7 +117,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
           presentationData.addText("Invalid Library", SimpleTextAttributes.ERROR_ATTRIBUTES);
           return;
         }
-        VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.getInstance());
+        VirtualFile[] files = myLibrary.getFiles(BinariesOrderRootType.ID);
         if (files.length > 0) {
           VirtualFile file = files[0];
           presentationData.setIcon(VirtualFilePresentation.getIcon(file));

@@ -75,7 +75,7 @@ public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends Clas
 
     String name = library.getName();
     if (name != null) {
-      List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.getInstance());
+      List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.ID);
       if (!invalidUrls.isEmpty()) {
         return ProjectLocalize.projectRootsTooltipLibraryHasBrokenPaths(name, invalidUrls.size()).get();
       }

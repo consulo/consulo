@@ -66,13 +66,13 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     if (element == myRootElementDescriptor) {
       ArrayList<LibraryTableTreeContentElement> elements = new ArrayList<>(3);
       for (OrderRootType type : myComponentDescriptor.getRootTypes()) {
-        String[] urls = libraryEditor.getUrls(type);
+        String[] urls = libraryEditor.getUrls(type.getId());
         if (urls.length > 0) {
           OrderRootTypePresentation presentation = myComponentDescriptor.getRootTypePresentation(type);
           if (presentation == null) {
             presentation = getDefaultPresentation(type);
           }
-          elements.add(new OrderRootTypeElement(myRootElementDescriptor, type, presentation.getNodeText(), presentation.getIcon()));
+          elements.add(new OrderRootTypeElement(myRootElementDescriptor, type.getId(), presentation.getNodeText(), presentation.getIcon()));
         }
       }
       return elements.toArray();
@@ -80,7 +80,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
 
     if (element instanceof OrderRootTypeElement) {
       OrderRootTypeElement rootTypeElement = (OrderRootTypeElement)element;
-      OrderRootType orderRootType = rootTypeElement.getOrderRootType();
+      String orderRootType = rootTypeElement.getOrderRootType();
       ArrayList<ItemElement> items = new ArrayList<>();
       String[] urls = libraryEditor.getUrls(orderRootType).clone();
       Arrays.sort(urls, LibraryRootsComponent.ourUrlComparator);

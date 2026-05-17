@@ -309,14 +309,12 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     private class MyRootProvider extends RootProviderBase {
         @Override
-
-        public String[] getUrls(OrderRootType rootType) {
+        public String[] getUrls(String rootType) {
             return myRoots.getUrls(rootType);
         }
 
         @Override
-
-        public VirtualFile[] getFiles(OrderRootType rootType) {
+        public VirtualFile[] getFiles(String rootType) {
             return myRoots.getFiles(rootType);
         }
 
@@ -357,38 +355,37 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
 
     @Override
-    public VirtualFile[] getRoots(OrderRootType rootType) {
+    public VirtualFile[] getRoots(String rootType) {
         return myRoots.getFiles(rootType);
     }
 
-
     @Override
-    public String[] getUrls(OrderRootType rootType) {
+    public String[] getUrls(String rootType) {
         return myRoots.getUrls(rootType);
     }
 
     @Override
-    public void addRoot(VirtualFile root, OrderRootType rootType) {
+    public void addRoot(VirtualFile root, String rootType) {
         myRoots.addRoot(root, rootType);
     }
 
     @Override
-    public void addRoot(String url, OrderRootType rootType) {
+    public void addRoot(String url, String rootType) {
         myRoots.addRoot(url, rootType);
     }
 
     @Override
-    public void removeRoot(VirtualFile root, OrderRootType rootType) {
+    public void removeRoot(VirtualFile root, String rootType) {
         myRoots.removeRoot(root, rootType);
     }
 
     @Override
-    public void removeRoot(String url, OrderRootType rootType) {
+    public void removeRoot(String url, String rootType) {
         myRoots.removeRoot(url, rootType);
     }
 
     @Override
-    public void removeRoots(OrderRootType rootType) {
+    public void removeRoots(String rootType) {
         myRoots.removeAllRoots(rootType);
     }
 

@@ -109,8 +109,8 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
                 OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
                 for (OrderEntry orderEntry : orderEntries) {
                     if (orderEntry instanceof OrderEntryWithTracking && orderEntry.isValid()) {
-                        VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.getInstance());
-                        VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.getInstance());
+                        VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.ID);
+                        VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.ID);
                         for (VirtualFile[] roots : new VirtualFile[][]{libSources, libClasses}) {
                             for (VirtualFile root : roots) {
                                 if (visitedRoots.add(root)) {

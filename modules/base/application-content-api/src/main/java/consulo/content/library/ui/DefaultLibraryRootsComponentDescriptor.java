@@ -44,7 +44,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
 
   private static class AttachUrlJavadocDescriptor extends AttachRootButtonDescriptor {
     private AttachUrlJavadocDescriptor() {
-      super(DocumentationOrderRootType.getInstance(), ProjectLocalize.moduleLibrariesJavadocUrlButton().get());
+      super(DocumentationOrderRootType.ID, ProjectLocalize.moduleLibrariesJavadocUrlButton());
     }
 
     @Override

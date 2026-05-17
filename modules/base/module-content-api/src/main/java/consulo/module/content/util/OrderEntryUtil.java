@@ -126,7 +126,7 @@ public class OrderEntryUtil {
     if (library2.getTable() != null) return false;
 
     for (OrderRootType type : OrderRootType.getAllTypes()) {
-      if (!Comparing.equal(library1.getUrls(type), library2.getUrls(type))) {
+      if (!Comparing.equal(library1.getUrls(type.getId()), library2.getUrls(type.getId()))) {
         return false;
       }
     }
@@ -147,9 +147,9 @@ public class OrderEntryUtil {
       Library jarLibrary = rootModel.getModuleLibraryTable().createLibrary();
       Library.ModifiableModel libraryModel = jarLibrary.getModifiableModel();
       for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-        VirtualFile[] files = library.getFiles(orderRootType);
+        VirtualFile[] files = library.getFiles(orderRootType.getId());
         for (VirtualFile jarFile : files) {
-          libraryModel.addRoot(jarFile, orderRootType);
+          libraryModel.addRoot(jarFile, orderRootType.getId());
         }
       }
       libraryModel.commit();

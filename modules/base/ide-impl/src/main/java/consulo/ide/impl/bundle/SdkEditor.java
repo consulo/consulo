@@ -48,7 +48,7 @@ public class SdkEditor extends BaseSdkEditor {
 
         SdkPathEditor pathEditor = getPathEditor(type);
 
-        tabbedPane.addTab(pathEditor.getDisplayName(), pathEditor.createComponent());
+        tabbedPane.addTab(pathEditor.getDisplayName().get(), pathEditor.createComponent());
       }
     }
 

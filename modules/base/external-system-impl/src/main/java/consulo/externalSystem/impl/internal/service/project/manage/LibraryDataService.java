@@ -11,7 +11,6 @@ import consulo.externalSystem.model.Key;
 import consulo.externalSystem.model.ProjectKeys;
 import consulo.externalSystem.model.project.LibraryData;
 import consulo.externalSystem.model.project.LibraryPathType;
-import consulo.externalSystem.service.project.ExternalLibraryPathTypeMapper;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
@@ -26,7 +25,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.inject.Inject;
 
 import java.io.File;
 import java.util.*;
@@ -44,15 +42,6 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     private static final Logger LOG = Logger.getInstance(LibraryDataService.class);
 
-    
-    private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;
-
-    @Inject
-    public LibraryDataService(ExternalLibraryPathTypeMapper mapper) {
-        myLibraryPathTypeMapper = mapper;
-    }
-
-    
     @Override
     public Key<LibraryData> getTargetDataKey() {
         return ProjectKeys.LIBRARY;
@@ -67,7 +56,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     @RequiredUIAccess
     public void importLibrary(LibraryData toImport, Project project, boolean synchronous) {
-        Map<OrderRootType, Collection<File>> libraryFiles = prepareLibraryFiles(toImport);
+        Map<String, Collection<File>> libraryFiles = prepareLibraryFiles(toImport);
 
         Library library = ProjectStructureHelper.findIdeLibrary(toImport, project);
         if (library != null) {
@@ -77,15 +66,14 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         importLibrary(toImport.getInternalName(), libraryFiles, project, synchronous);
     }
 
-    
-    public Map<OrderRootType, Collection<File>> prepareLibraryFiles(LibraryData data) {
-        Map<OrderRootType, Collection<File>> result = new HashMap<>();
-        for (LibraryPathType pathType : LibraryPathType.values()) {
-            Set<String> paths = data.getPaths(pathType);
+    public Map<String, Collection<File>> prepareLibraryFiles(LibraryData data) {
+        Map<String, Collection<File>> result = new HashMap<>();
+        for (String rootTypeId : data.getLibraryRootTypeIds()) {
+            Set<String> paths = data.getPaths(rootTypeId);
             if (paths.isEmpty()) {
                 continue;
             }
-            result.put(myLibraryPathTypeMapper.map(pathType), ContainerUtil.map(paths, File::new));
+            result.put(rootTypeId, ContainerUtil.map(paths, File::new));
         }
         return result;
     }
@@ -93,7 +81,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     @RequiredUIAccess
     public void importLibrary(
         String libraryName,
-        Map<OrderRootType, Collection<File>> libraryFiles,
+        Map<String, Collection<File>> libraryFiles,
         Project project,
         boolean synchronous
     ) {
@@ -127,15 +115,15 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     @SuppressWarnings("MethodMayBeStatic")
     public void registerPaths(
-        Map<OrderRootType, Collection<File>> libraryFiles,
+        Map<String, Collection<File>> libraryFiles,
         Library.ModifiableModel model,
         String libraryName
     ) {
-        for (Map.Entry<OrderRootType, Collection<File>> entry : libraryFiles.entrySet()) {
+        for (Map.Entry<String, Collection<File>> entry : libraryFiles.entrySet()) {
             for (File file : entry.getValue()) {
                 VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
                 if (virtualFile == null) {
-                    if (ExternalSystemConstants.VERBOSE_PROCESSING && entry.getKey() == BinariesOrderRootType.getInstance()) {
+                    if (ExternalSystemConstants.VERBOSE_PROCESSING && BinariesOrderRootType.ID.equals(entry.getKey())) {
                         LOG.warn(String.format(
                             "Can't find %s of the library '%s' at path '%s'",
                             entry.getKey(),
@@ -209,17 +197,18 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         if (externalLibrary.isUnresolved()) {
             return;
         }
-        Map<OrderRootType, Set<String>> toRemove = new HashMap<>();
-        Map<OrderRootType, Set<String>> toAdd = new HashMap<>();
-        for (LibraryPathType pathType : LibraryPathType.values()) {
-            OrderRootType ideType = myLibraryPathTypeMapper.map(pathType);
-            HashSet<String> toAddPerType = new HashSet<>(externalLibrary.getPaths(pathType));
-            toAdd.put(ideType, toAddPerType);
+        Map<String, Set<String>> toRemove = new HashMap<>();
+        Map<String, Set<String>> toAdd = new HashMap<>();
+        for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
+            String orderRootTypeId = orderRootType.getId();
+
+            HashSet<String> toAddPerType = new HashSet<>(externalLibrary.getPaths(orderRootTypeId));
+            toAdd.put(orderRootTypeId, toAddPerType);
 
             HashSet<String> toRemovePerType = new HashSet<>();
-            toRemove.put(ideType, toRemovePerType);
+            toRemove.put(orderRootTypeId, toRemovePerType);
 
-            for (VirtualFile ideFile : ideLibrary.getFiles(ideType)) {
+            for (VirtualFile ideFile : ideLibrary.getFiles(orderRootTypeId)) {
                 String idePath = ExternalSystemApiUtil.getLocalFileSystemPath(ideFile);
                 if (!toAddPerType.remove(idePath)) {
                     toRemovePerType.add(ideFile.getUrl());
@@ -237,14 +226,15 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
                 public void execute() {
                     Library.ModifiableModel model = ideLibrary.getModifiableModel();
                     try {
-                        for (Map.Entry<OrderRootType, Set<String>> entry : toRemove.entrySet()) {
+                        for (Map.Entry<String, Set<String>> entry : toRemove.entrySet()) {
                             for (String path : entry.getValue()) {
                                 model.removeRoot(path, entry.getKey());
                             }
                         }
 
-                        for (Map.Entry<OrderRootType, Set<String>> entry : toAdd.entrySet()) {
-                            Map<OrderRootType, Collection<File>> roots = new HashMap<>();
+                        for (Map.Entry<String, Set<String>> entry : toAdd.entrySet()) {
+                            Map<String, Collection<File>> roots = new HashMap<>();
+                            
                             roots.put(entry.getKey(), ContainerUtil.map(entry.getValue(), File::new));
                             registerPaths(roots, model, externalLibrary.getInternalName());
                         }

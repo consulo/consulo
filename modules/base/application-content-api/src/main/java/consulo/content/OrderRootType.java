@@ -68,12 +68,6 @@ public class OrderRootType {
     return Application.get().getExtensionPoint(OrderRootType.class).getOrBuildCache(SORTED_KEY);
   }
 
-  @Deprecated
-  @DeprecationInfo("Use ExtensionInstance#current()")
-  public static <T extends OrderRootType> T getOrderRootType(Class<? extends T> orderRootTypeClass) {
-    return Application.get().getExtensionPoint(OrderRootType.class).findExtensionOrFail(orderRootTypeClass);
-  }
-
   @Override
   public String toString() {
     return "OrderRootType " + getId();
