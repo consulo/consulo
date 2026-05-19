@@ -16,11 +16,13 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
@@ -29,7 +31,7 @@ import consulo.ui.image.Image;
  * @author anna
  * @since 2007-12-26
  */
-@ExtensionImpl
+@ExtensionImpl(id = SourcesOrderRootType.ID, order = "after " + BinariesOrderRootType.ID)
 public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
   @Override
   public String getOrderRootTypeId() {
@@ -52,7 +54,7 @@ public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
   }
 
   @Override
-  public String getNodeText() {
-    return ProjectLocalize.librarySourcesNode().get();
+  public LocalizeValue getNodeText() {
+    return ProjectLocalize.librarySourcesNode();
   }
 }

@@ -42,23 +42,23 @@ public class RootsAsVirtualFilePointers implements RootProvider {
   }
 
   @Override
-  public VirtualFile[] getFiles(String type) {
-    VirtualFilePointerContainer container = myRoots.get(type);
+  public VirtualFile[] getFiles(String rootTypeId) {
+    VirtualFilePointerContainer container = myRoots.get(rootTypeId);
     return container == null ? VirtualFile.EMPTY_ARRAY : container.getFiles();
   }
 
   @Override
-  public String[] getUrls(String type) {
-    VirtualFilePointerContainer container = myRoots.get(type);
+  public String[] getUrls(String rootTypeId) {
+    VirtualFilePointerContainer container = myRoots.get(rootTypeId);
     return container == null ? ArrayUtil.EMPTY_STRING_ARRAY : container.getUrls();
   }
 
-  public void addRoot(VirtualFile virtualFile, String type) {
-    getOrCreateContainer(type).add(virtualFile);
+  public void addRoot(VirtualFile virtualFile, String rootTypeId) {
+    getOrCreateContainer(rootTypeId).add(virtualFile);
   }
 
-  public void addRoot(String url, String type) {
-    getOrCreateContainer(type).add(url);
+  public void addRoot(String url, String rootTypeId) {
+    getOrCreateContainer(rootTypeId).add(url);
   }
 
   public void removeAllRoots(String type) {
@@ -166,16 +166,14 @@ public class RootsAsVirtualFilePointers implements RootProvider {
    * </roots>
    */
   private void write(Element roots, OrderRootType type) {
-    String sdkRootName = type.getId();
-    if (sdkRootName == null) {
-      return;
-    }
-    Element e = new Element(sdkRootName);
+    String rootTypeId = type.getId();
+
+    Element e = new Element(rootTypeId);
     roots.addContent(e);
     Element composite = new Element("root");
     composite.setAttribute("type", "composite");
     e.addContent(composite);
-    VirtualFilePointerContainer container = myRoots.get(type);
+    VirtualFilePointerContainer container = myRoots.get(rootTypeId);
     if (container != null) {
       container.writeExternal(composite, "root", false);
     }

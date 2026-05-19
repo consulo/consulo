@@ -108,6 +108,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         return myMainPanel;
     }
 
+    @RequiredUIAccess
     private void createMainPanel(Disposable parentUIDisposable) {
         if (myMainPanel != null) {
             throw new IllegalArgumentException();
@@ -115,20 +116,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
         myMainPanel = new JPanel(new GridBagLayout());
 
-        for (OrderRootType type : OrderRootType.getAllTypes()) {
-            if (showTabForType(type)) {
-                OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
-                if (factory == null) {
-                    LOG.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
-                    continue;
-                }
+        Application.get().getExtensionPoint(OrderRootTypeUIFactory.class).forEach(factory -> {
+            String orderRootTypeId = factory.getOrderRootTypeId();
+
+            if (showTabForType(orderRootTypeId)) {
                 SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
                 if (pathEditor != null) {
                     pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
-                    myPathEditors.put(type.getId(), pathEditor);
+                    myPathEditors.put(orderRootTypeId, pathEditor);
                 }
             }
-        }
+        });
 
         JComponent centerComponent = createCenterComponent(parentUIDisposable);
 
@@ -219,12 +217,12 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
 
-    protected boolean showTabForType(OrderRootType type) {
-        return ((SdkType) mySdk.getSdkType()).isRootTypeApplicable(type.getId());
+    protected boolean showTabForType(String orderRootTypeId) {
+        return ((SdkType) mySdk.getSdkType()).isRootTypeApplicable(orderRootTypeId);
     }
 
-    public SdkPathEditor getPathEditor(OrderRootType rootType) {
-        return myPathEditors.get(rootType.getId());
+    public SdkPathEditor getPathEditor(String orderRootTypeId) {
+        return myPathEditors.get(orderRootTypeId);
     }
 
     @RequiredUIAccess

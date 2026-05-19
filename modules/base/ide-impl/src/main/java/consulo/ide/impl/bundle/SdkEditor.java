@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.bundle;
 
-import consulo.content.bundle.SdkModel;
+import consulo.application.Application;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.BaseSdkEditor;
-import consulo.ide.ui.SdkPathEditor;
 import consulo.content.OrderRootType;
-import consulo.ide.ui.OrderRootTypeUIFactory;
-import consulo.ui.ex.awt.TabbedPaneWrapper;
+import consulo.content.bundle.SdkModel;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.projectRoots.ui.BaseSdkEditor;
+import consulo.ide.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.SdkPathEditor;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 
 import javax.swing.*;
 
@@ -31,27 +32,24 @@ import javax.swing.*;
  * @since 21.03.14
  */
 public class SdkEditor extends BaseSdkEditor {
-  public SdkEditor(SdkModel sdkModel, SdkImpl sdk) {
-    super(sdkModel, sdk);
-  }
-
-  
-  @Override
-  protected JComponent createCenterComponent(Disposable parentUIDisposable) {
-    TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(parentUIDisposable);
-    for (OrderRootType type : OrderRootType.getAllTypes()) {
-      if (showTabForType(type)) {
-        OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
-        if (factory == null) {
-          continue;
-        }
-
-        SdkPathEditor pathEditor = getPathEditor(type);
-
-        tabbedPane.addTab(pathEditor.getDisplayName().get(), pathEditor.createComponent());
-      }
+    public SdkEditor(SdkModel sdkModel, SdkImpl sdk) {
+        super(sdkModel, sdk);
     }
 
-    return tabbedPane.getComponent();
-  }
+
+    @Override
+    protected JComponent createCenterComponent(Disposable parentUIDisposable) {
+        TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(parentUIDisposable);
+        Application.get().getExtensionPoint(OrderRootTypeUIFactory.class).forEach(editorType -> {
+            String orderRootTypeId = editorType.getOrderRootTypeId();
+
+            if (showTabForType(orderRootTypeId)) {
+                SdkPathEditor pathEditor = getPathEditor(orderRootTypeId);
+
+                tabbedPane.addTab(pathEditor.getDisplayName().get(), pathEditor.createComponent());
+            }
+        });
+
+        return tabbedPane.getComponent();
+    }
 }

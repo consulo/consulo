@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.content.library.ui.DocumentationUtil;
@@ -40,7 +41,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author anna
  * @since 2007-12-26
  */
-@ExtensionImpl
+@ExtensionImpl(id = DocumentationOrderRootType.ID, order = "after " + SourcesOrderRootType.ID)
 public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
     
     @Override
@@ -59,8 +60,8 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
     }
 
     @Override
-    public String getNodeText() {
-        return ProjectLocalize.libraryJavadocsNode().get();
+    public LocalizeValue getNodeText() {
+        return ProjectLocalize.libraryJavadocsNode();
     }
 
     static class DocumentationPathsEditor extends SdkPathEditor {

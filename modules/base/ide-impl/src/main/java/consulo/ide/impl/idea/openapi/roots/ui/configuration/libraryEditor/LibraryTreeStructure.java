@@ -27,10 +27,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class LibraryTreeStructure extends AbstractTreeStructure {
   private final NodeDescriptor myRootElementDescriptor;
@@ -109,8 +106,8 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   }
 
   private static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
-    OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
-    return new OrderRootTypePresentation(factory.getNodeText(), factory.getIcon());
+    OrderRootTypeUIFactory factory = Objects.requireNonNull(OrderRootTypeUIFactory.forOrderType(type));
+    return new OrderRootTypePresentation(factory.getNodeText().get(), factory.getIcon());
   }
 
   @Override
