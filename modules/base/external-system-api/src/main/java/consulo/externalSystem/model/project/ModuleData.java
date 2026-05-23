@@ -9,7 +9,6 @@ import consulo.externalSystem.service.project.Named;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;

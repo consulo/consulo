@@ -286,6 +286,11 @@ public class ContainerUtil {
         return false;
     }
 
+    @Contract(mutates = "param2")
+    public static <T, V> V[] map2Array(T[] collection, V[] to, Function<? super T, ? extends V> mapper) {
+        return map(collection, mapper).toArray(to);
+    }
+
     @Contract(pure = true)
     public static <T> Object[] map2Array(T[] array, Function<T, Object> mapper) {
         return map2Array(array, Object.class, mapper);
