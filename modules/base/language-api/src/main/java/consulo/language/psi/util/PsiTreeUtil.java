@@ -34,8 +34,10 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -1237,6 +1239,27 @@ public class PsiTreeUtil {
     }
 
     @RequiredReadAction
+    public static @Nullable PsiElement findSiblingForward(PsiElement element,
+                                                          IElementType elementType,
+                                                          @Nullable Consumer<? super PsiElement> consumer) {
+        return findSiblingForward(element, elementType, true, consumer);
+    }
+
+    @RequiredReadAction
+    public static @Nullable PsiElement findSiblingForward(PsiElement element,
+                                                          IElementType elementType,
+                                                          boolean strict,
+                                                          @Nullable Consumer<? super PsiElement> consumer) {
+        for (PsiElement e = strict ? element.getNextSibling() : element; e != null; e = e.getNextSibling()) {
+            if (elementType.equals(e.getNode().getElementType())) {
+                return e;
+            }
+            if (consumer != null) consumer.accept(e);
+        }
+        return null;
+    }
+    
+    @RequiredReadAction
     public static @Nullable PsiElement findSiblingBackward(PsiElement element,
                                                            IElementType elementType,
                                                            @Nullable Consumer<? super PsiElement> consumer) {
@@ -1257,6 +1280,26 @@ public class PsiTreeUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * Recursively process children elements that are instances of the given class. The root element is processed as well.
+     *
+     * @param element      root element to process.
+     * @param elementClass the class of elements to process. All other elements are skipped.
+     * @param processor    processor to consume elements
+     * @param <T>          type of elements to process
+     * @return {@code true} if processing was not canceled ({@code Processor.execute()} method returned {@code true} for all elements).
+     */
+    @Contract("null, _, _ -> true")
+    @RequiredReadAction
+    public static <T extends PsiElement> boolean processElements(@Nullable PsiElement element,
+                                                                 Class<T> elementClass,
+                                                                 PsiElementProcessor<? super T> processor) {
+        return element == null || processElements(element, e -> {
+            T t = ObjectUtil.tryCast(e, elementClass);
+            return t == null || processor.execute(t);
+        });
     }
 
     /**
