@@ -142,7 +142,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @throws E exception thrown by process
      */
     public <T, E extends Exception> T runProcessWithProgressSynchronously(
-        ThrowableComputable<T, E> process,
+        ThrowableSupplier<T, E> process,
         LocalizeValue progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
@@ -294,10 +294,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      */
     public abstract void run(Task task);
 
-    public abstract void runProcessWithProgressAsynchronously(
-        Task.Backgroundable task,
-        ProgressIndicator progressIndicator
-    );
+    public abstract void runProcessWithProgressAsynchronously(Task.Backgroundable task, ProgressIndicator progressIndicator);
 
     protected void indicatorCanceled(ProgressIndicator indicator) {
     }
@@ -313,14 +310,13 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     /**
      * @param progress an indicator to use, {@code null} means reuse current progress
      */
-    public abstract void executeProcessUnderProgress(
-        Runnable process,
-        @Nullable ProgressIndicator progress
-    ) throws ProcessCanceledException;
+    public abstract void executeProcessUnderProgress(Runnable process, @Nullable ProgressIndicator progress)
+        throws ProcessCanceledException;
 
     public static void assertNotCircular(ProgressIndicator original) {
         Set<ProgressIndicator> wrappedParents = null;
-        for (ProgressIndicator i = original; i instanceof WrappedProgressIndicator;
+        for (ProgressIndicator i = original;
+             i instanceof WrappedProgressIndicator;
              i = ((WrappedProgressIndicator) i).getOriginalProgressIndicator()) {
             if (wrappedParents == null) {
                 wrappedParents = new HashSet<>();
