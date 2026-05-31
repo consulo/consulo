@@ -30,5 +30,4 @@ import java.util.List;
  * hash codes. The VCS Log framework heavily relies on this fact.
  */
 public interface TimedVcsCommit extends GraphCommit<Hash> {
-
 }
