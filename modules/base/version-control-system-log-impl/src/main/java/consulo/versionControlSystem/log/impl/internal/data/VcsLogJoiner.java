@@ -31,6 +31,7 @@ import java.util.*;
 public final class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
     public static final String ILLEGAL_DATA_RELOAD_ALL = "All data is illegal - request reload all";
 
+    // Lets newSet(...) use a primitive IntOpenHashSet for Integer ids (less boxing/memory)
     private final Class<CommitId> myCommitIdClass;
 
     public VcsLogJoiner(Class<CommitId> commitIdClass) {

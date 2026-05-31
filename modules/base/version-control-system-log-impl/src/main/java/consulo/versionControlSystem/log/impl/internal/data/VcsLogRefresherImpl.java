@@ -33,6 +33,7 @@ import consulo.versionControlSystem.log.impl.internal.graph.GraphCommitImpl;
 import consulo.versionControlSystem.util.StopWatch;
 import consulo.virtualFileSystem.VirtualFile;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -309,17 +310,13 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
             if (fullLog.isEmpty()) {
                 return recentCommits;
             }
-            Collection<Integer> prevRefIndices = new IntOpenHashSet();
+            IntSet prevRefIndices = new IntOpenHashSet();
             for (CompressedRefs refs : previousRefs.values()) {
-                for (int idx : refs.getCommits()) {
-                    prevRefIndices.add(idx);
-                }
+                prevRefIndices.addAll(refs.getCommits());
             }
-            Collection<Integer> newRefIndices = new IntOpenHashSet();
+            IntSet newRefIndices = new IntOpenHashSet();
             for (CompressedRefs refs : newRefs.values()) {
-                for (int idx : refs.getCommits()) {
-                    newRefIndices.add(idx);
-                }
+                newRefIndices.addAll(refs.getCommits());
             }
             try {
                 return new VcsLogJoiner<>(Integer.class).addCommits(fullLog, prevRefIndices, recentCommits, newRefIndices).first;
@@ -408,12 +405,12 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     private static class LogInfo {
-        private final VcsLogStorage myHashMap;
+        private final VcsLogStorage myStorage;
         private final Map<VirtualFile, CompressedRefs> myRefs = new HashMap<>();
         private final Map<VirtualFile, List<GraphCommit<Integer>>> myCommits = new HashMap<>();
 
-        public LogInfo(VcsLogStorage hashMap) {
-            myHashMap = hashMap;
+        public LogInfo(VcsLogStorage storage) {
+            myStorage = storage;
         }
 
         void put(VirtualFile root, List<GraphCommit<Integer>> commits) {
@@ -421,7 +418,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
         }
 
         void put(VirtualFile root, Set<VcsRef> refs) {
-            myRefs.put(root, new CompressedRefs(refs, myHashMap));
+            myRefs.put(root, new CompressedRefs(refs, myStorage));
         }
 
         void put(VirtualFile root, CompressedRefs refs) {
