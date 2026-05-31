@@ -32,7 +32,7 @@ public class CompressedRefs {
     private final VcsLogStorage myStorage;
 
     // maps each commit id to the list of tag ids on this commit
-    private final Int2ObjectMap<IntList> myTags = new Int2ObjectOpenHashMap<>();
+    private final Int2ObjectMap<IntArrayList> myTags = new Int2ObjectOpenHashMap<>();
     // maps each commit id to the list of branches on this commit
     private final Int2ObjectMap<List<VcsRef>> myBranches = new Int2ObjectOpenHashMap<>();
 
@@ -52,7 +52,7 @@ public class CompressedRefs {
                 putRefIndex(myTags, ref, myStorage);
             }
         });
-        myTags.values().forEach(intList -> ((IntArrayList) intList).trim());
+        myTags.values().forEach(IntArrayList::trim);
         myStorage.flush();
     }
 
@@ -115,9 +115,9 @@ public class CompressedRefs {
         list.add(ref);
     }
 
-    private static void putRefIndex(Int2ObjectMap<IntList> map, VcsRef ref, VcsLogStorage storage) {
+    private static void putRefIndex(Int2ObjectMap<IntArrayList> map, VcsRef ref, VcsLogStorage storage) {
         int index = storage.getCommitIndex(ref.getCommitHash(), ref.getRoot());
-        IntList list = map.get(index);
+        IntArrayList list = map.get(index);
         if (list == null) {
             map.put(index, list = new IntArrayList());
         }
