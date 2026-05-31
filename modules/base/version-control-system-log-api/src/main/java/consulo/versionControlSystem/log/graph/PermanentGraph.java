@@ -33,7 +33,6 @@ import java.util.function.Predicate;
  * @see VisibleGraph
  */
 public interface PermanentGraph<Id> {
-    
     static <CommitId> PermanentGraph<CommitId> newInstance(
         List<? extends GraphCommit<CommitId>> graphCommits,
         GraphColorManager<CommitId> graphColorManager,
@@ -44,23 +43,18 @@ public interface PermanentGraph<Id> {
         return factory.newInstance(graphCommits, graphColorManager, branchesCommitId);
     }
 
-    
     VisibleGraph<Id> createVisibleGraph(
         SortType sortType,
         @Nullable Set<Id> headsOfVisibleBranches,
         @Nullable Set<Id> matchedCommits
     );
 
-    
     List<GraphCommit<Id>> getAllCommits();
 
-    
     List<Id> getChildren(Id commit);
 
-    
     Set<Id> getContainingBranches(Id commit);
 
-    
     Predicate<Id> getContainedInBranchCondition(Collection<Id> currentBranchHead);
 
     enum SortType {
@@ -68,7 +62,6 @@ public interface PermanentGraph<Id> {
         Bek(VersionControlSystemLogLocalize.graphSortStandardName(), VersionControlSystemLogLocalize.graphSortStandardDescription()),
         LinearBek(VersionControlSystemLogLocalize.graphSortLinearName(), VersionControlSystemLogLocalize.graphSortLinearDescription());
 
-        
         private final LocalizeValue myName;
         
         private final LocalizeValue myDescription;
@@ -78,12 +71,10 @@ public interface PermanentGraph<Id> {
             myDescription = description;
         }
 
-        
         public LocalizeValue getName() {
             return myName;
         }
 
-        
         public LocalizeValue getDescription() {
             return myDescription;
         }

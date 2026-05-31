@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
-  - Copyright 2013-2022 consulo.io
+  - Copyright 2013-2026 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -41,17 +41,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout</artifactId>
         </dependency>
         <dependency>
             <!--obsolete dependency-->
             <groupId>consulo.internal</groupId>
             <artifactId>trove4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
         </dependency>
     </dependencies>
 </project>
