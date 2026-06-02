@@ -20,18 +20,18 @@ heavyProcess.type.processing:
     text: Processing...
 heavyProcess.type.syncing:
     text: Syncing...
-import.popup.hint.action.text:
-    text: Import
 import.popup.hint.action.kind.class:
     text: class
+import.popup.hint.action.text:
+    text: Import
 import.popup.hint.text:
     text: <html><body><a href="action">{3} {0}...</a> {1}? <span style="color:{4}">{2}</span></body></html>
     names:
-        - kind
-        - name
-        - shortcut
-        - actionName
-        - shortcutColor
+    - kind
+    - name
+    - shortcut
+    - actionName
+    - shortcutColor
 import.popup.multiple:
     text: '{0}? (multiple choices...)'
 import.popup.text:

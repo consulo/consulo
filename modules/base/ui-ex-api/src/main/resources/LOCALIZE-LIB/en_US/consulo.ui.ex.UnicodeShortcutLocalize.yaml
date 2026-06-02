@@ -43,7 +43,7 @@ keyboard.backSlash:
 keyboard.backSpace:
     text: ⌫
 keyboard.braceLeft:
-    text: "'{'"
+    text: '''{'''
 keyboard.braceRight:
     text: '}'
 keyboard.c:

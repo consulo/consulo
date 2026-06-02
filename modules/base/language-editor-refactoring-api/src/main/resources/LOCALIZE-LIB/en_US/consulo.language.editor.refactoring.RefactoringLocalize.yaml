@@ -1,5 +1,3 @@
-dialog.message.cannot.inline.reference.from.0:
-    text: Cannot inline reference from {0}
 0.already.contains.a.1:
     text: '{0} already contains a {1}'
 0.already.contains.field.1:
@@ -428,6 +426,8 @@ destination.package:
     text: 'Destination &package:'
 detecting.possible.conflicts:
     text: Detecting possible conflicts...
+dialog.message.cannot.inline.reference.from.0:
+    text: Cannot inline reference from {0}
 dialog.message.file.already.exists.in.directory:
     text: File ''{0}'' already exists in directory ''{1}''
 dialog.message.refactoring.not.available.in.current.scope:

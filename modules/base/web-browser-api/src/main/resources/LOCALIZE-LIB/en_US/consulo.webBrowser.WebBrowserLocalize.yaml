@@ -1,46 +1,46 @@
-browsers.explorer:
-    text: Internet Explorer
-browsers.safari:
-    text: Safari
-browsers.opera:
-    text: Opera
-browsers.firefox:
-    text: Firefox
+action.open.in.browser.action.group.description:
+    text: Open selected file in browser
+action.open.in.browser.action.group.short.text:
+    text: _Browser
+action.open.in.browser.action.group.text:
+    text: Open in _Browser
+browser.error:
+    text: Browser Error
+browser.fix:
+    text: Fix…
+browser.select.in.default.name:
+    text: Web Browser
 browsers.chrome:
     text: Chrome
-display.name.firefox.settings:
-    text: Firefox Settings
+browsers.explorer:
+    text: Internet Explorer
+browsers.firefox:
+    text: Firefox
+browsers.opera:
+    text: Opera
+browsers.safari:
+    text: Safari
+browsers.settings:
+    text: Web Browsers
 chooser.title.select.profiles.ini.file:
     text: Select "profiles.ini" File
+display.name.firefox.settings:
+    text: Firefox Settings
+error.0.browser.path.not.specified:
+    text: '{0} browser path is not specified.'
+error.file.does.not.exist:
+    text: File {0} does not exist.
+error.malformed.url:
+    text: 'Malformed url: {0}'
+error.please.specify.path.to.web.browser:
+    text: Please specify a path to web browser in {0} | Web Browsers
 label.text.path.to.profiles.ini:
     text: 'Path to "profiles.ini":'
 label.text.profile:
     text: 'Profile:'
-browser.error:
-    text: Browser Error
-error.0.browser.path.not.specified:
-  text: '{0} browser path is not specified.'
-title.select.path.to.browser:
-  text: Select Path to Browser
-browsers.settings:
-  text: Web Browsers
-browser.fix:
-  text: Fix…
-error.malformed.url:
-  text: 'Malformed url: {0}'
 title.browser.not.found:
-  text: Browser Not Found
+    text: Browser Not Found
 title.browser.path.not.found:
-  text: Browser Path Not Found
-error.file.does.not.exist:
-  text: File {0} does not exist.
-error.please.specify.path.to.web.browser:
-  text: Please specify a path to web browser in {0} | Web Browsers
-action.open.in.browser.action.group.text:
-  text: Open in _Browser
-action.open.in.browser.action.group.description:
-  text: Open selected file in browser
-action.open.in.browser.action.group.short.text:
-  text: _Browser
-browser.select.in.default.name:
-  text: Web Browser
+    text: Browser Path Not Found
+title.select.path.to.browser:
+    text: Select Path to Browser

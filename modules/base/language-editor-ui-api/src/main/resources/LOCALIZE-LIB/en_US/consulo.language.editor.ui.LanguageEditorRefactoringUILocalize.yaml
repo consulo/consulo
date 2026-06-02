@@ -1,6 +1,6 @@
 javadoc.as.is:
-  text: '&As is'
+    text: '&As is'
 javadoc.copy:
-  text: '&Copy'
+    text: '&Copy'
 javadoc.move:
-  text: '&Move'
+    text: '&Move'

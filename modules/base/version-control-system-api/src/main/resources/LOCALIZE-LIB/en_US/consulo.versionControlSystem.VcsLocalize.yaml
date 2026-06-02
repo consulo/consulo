@@ -1,13 +1,3 @@
-code.vision.author.label:
-    text: Code Author
-code.vision.label.new.code:
-    text: New code
-code.vision.label.single.author.modified:
-    text: "{0} (modified)"
-code.vision.label.multi.author.not.modified:
-    text: "{0} & {1} others"
-code.vision.label.multi.author.modified:
-    text: "{0} & {1} others (modified)"
 action.NotificationAction.VcsRootProblemNotifier.text.configure:
     text: Configure…
 action.NotificationAction.VcsRootProblemNotifier.text.enable.integration:
@@ -187,7 +177,9 @@ add.confirmation.label.text:
 all.vcs.init.message.text:
     text: Initializing VCS...
 amend.commit.load.message.error.text:
-    text: "Could not load commit message of the commit to amend.\n{0}"
+    text: |-
+        Could not load commit message of the commit to amend.
+        {0}
 amend.commit.load.message.error.title:
     text: Commit Message Not Loaded
 amend.commit.load.message.task.title:
@@ -460,6 +452,16 @@ code.smells.error.messages.tab.name:
     text: Code Analysis
 code.smells.review.button:
     text: '&Review'
+code.vision.author.label:
+    text: Code Author
+code.vision.label.multi.author.modified:
+    text: '{0} & {1} others (modified)'
+code.vision.label.multi.author.not.modified:
+    text: '{0} & {1} others'
+code.vision.label.new.code:
+    text: New code
+code.vision.label.single.author.modified:
+    text: '{0} (modified)'
 column.info.configure.vcses.directory:
     text: Directory
 column.name.configure.vcses.vcs:
@@ -778,8 +780,6 @@ history.copy.revision.number:
     text: Copy Revision Number
 history.empty:
     text: History is empty
-ignored.group.description.default.ide.files:
-    text: Default IDE ignored files
 ignored.configure.item.directory:
     text: 'Directory: {0}'
 ignored.configure.item.file:
@@ -800,6 +800,8 @@ ignored.edit.radio.mask:
     text: Ignore all files &matching
 ignored.edit.title:
     text: Ignore Unversioned Files
+ignored.group.description.default.ide.files:
+    text: Default IDE ignored files
 impl.vcs.initialization:
     text: VCS Initialization
 incoming.changes.empty.message:

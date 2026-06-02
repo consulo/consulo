@@ -1,3 +1,7 @@
+action.ImportCoverage.description:
+    text: Import a report collected in CI from disk
+action.ImportCoverage.text:
+    text: Import External Coverage Report…
 action.generate.coverage.report.description:
     text: Export coverage report to HTML
 action.generate.coverage.report.text:
@@ -6,20 +10,16 @@ action.hide.coverage.description:
     text: Close all opened coverage reports
 action.hide.coverage.text:
     text: Hide Coverage
-action.ImportCoverage.description:
-    text: Import a report collected in CI from disk
-action.ImportCoverage.text:
-    text: Import External Coverage Report…
-action.switch.coverage.description:
-    text: Inspect previously opened coverage reports
-action.switch.coverage.text:
-    text: Manage Coverage Reports…
 action.name.cover:
     text: Cover
 action.show.tests.covering.line.description:
     text: Show tests covering line
 action.show.tests.covering.line.text:
     text: Show Tests Covering Line
+action.switch.coverage.description:
+    text: Inspect previously opened coverage reports
+action.switch.coverage.text:
+    text: Manage Coverage Reports…
 branch.coverage.message:
     text: |-
         Hits: {0}

@@ -310,6 +310,8 @@ highlight.overridden.classes.chooser.title:
     text: Choose Classes to Highlight Overridden Methods from
 highlight.thrown.exceptions.chooser.all.entry:
     text: All listed
+hint.text.imports.optimized:
+    text: Imports optimized
 i18n.quickfix.code.panel.resource.bundle.expression.label:
     text: 'Resource bundle &expression:'
 i18n.quickfix.code.panel.title:
@@ -1079,5 +1081,3 @@ unwrap.with.placeholder:
     text: Unwrap ''{0}''
 xml.tag.info.no.attributes:
     text: <no attributes>
-hint.text.imports.optimized:
-    text: Imports optimized

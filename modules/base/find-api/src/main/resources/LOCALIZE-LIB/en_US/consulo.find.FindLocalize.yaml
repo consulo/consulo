@@ -355,12 +355,16 @@ recent.find.usages.action.title:
     text: Recent Find Usages
 results.options.group:
     text: Result options
-search.everywhere.group.name:
-    text: Text
 se.text.header.action.all.filetypes:
     text: All file types
+search.everywhere.group.name:
+    text: Text
 select.next.occurence.not.found.message:
     text: Not found, try again to search from top
+show.in.find.window.button.description:
+    text: Open search results in Find tool window
+show.in.find.window.button.name:
+    text: Open in Find Tool Window
 text.search.action.description:
     text: Search for text across the project in Search Everywhere
 text.search.action.text:
@@ -369,7 +373,3 @@ tooltip.close.search.bar.escape:
     text: Close
 toolwindow.find.display.name:
     text: Find
-show.in.find.window.button.name:
-    text: Open in Find Tool Window
-show.in.find.window.button.description:
-    text: Open search results in Find tool window
