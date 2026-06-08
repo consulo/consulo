@@ -26,44 +26,46 @@ import org.jspecify.annotations.Nullable;
  * @since 2016-06-14
  */
 public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
-  @Deprecated
-  @DeprecationInfo("Use with LocalizeValue parameter")
-  static RadioButton create(String text) {
-    return create(text, false);
-  }
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    static RadioButton create(String text) {
+        return create(text, false);
+    }
 
-  @Deprecated
-  @DeprecationInfo("Use with LocalizeValue parameter")
-  static RadioButton create(String text, boolean selected) {
-    return create(LocalizeValue.of(text), selected);
-  }
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    static RadioButton create(String text, boolean selected) {
+        return create(LocalizeValue.of(text), selected);
+    }
 
-  static RadioButton create(LocalizeValue textValue) {
-    return create(textValue, false);
-  }
+    static RadioButton create(LocalizeValue textValue) {
+        return create(textValue, false);
+    }
 
-  static RadioButton create(LocalizeValue textValue, boolean selected) {
-    return UIInternal.get()._Components_radioButton(textValue, selected);
-  }
+    static RadioButton create(LocalizeValue textValue, boolean selected) {
+        return UIInternal.get()._Components_radioButton(textValue, selected);
+    }
 
-  @Override
-  Boolean getValue();
+    @Override
+    Boolean getValue();
 
-  @Override
-  @RequiredUIAccess
-  default void setValue(@Nullable Boolean value) {
-    setValue(value, true);
-  }
+    @Override
+    @RequiredUIAccess
+    default void setValue(@Nullable Boolean value) {
+        setValue(value, true);
+    }
 
-  @Override
-  @RequiredUIAccess
-  void setValue(@Nullable Boolean value, boolean fireListeners);
-  LocalizeValue getLabelText();
+    @Override
+    @RequiredUIAccess
+    void setValue(@Nullable Boolean value, boolean fireListeners);
 
-  @RequiredUIAccess
-  void setLabelText(LocalizeValue text);
-  default RadioButton toGroup(ValueGroup<Boolean> group) {
-    group.add(this);
-    return this;
-  }
+    LocalizeValue getLabelText();
+
+    @RequiredUIAccess
+    void setLabelText(LocalizeValue text);
+
+    default RadioButton toGroup(ValueGroup<Boolean> group) {
+        group.add(this);
+        return this;
+    }
 }

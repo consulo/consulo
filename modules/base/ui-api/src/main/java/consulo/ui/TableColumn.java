@@ -24,20 +24,21 @@ import java.util.function.Function;
  * @since 2020-09-15
  */
 public interface TableColumn<Value, Item> {
-  class Builder<Value, Item> {
-    private final String myName;
-    private final Function<Item, Value> myConverter;
+    class Builder<Value, Item> {
+        private final String myName;
+        private final Function<Item, Value> myConverter;
 
-    public Builder(String name, Function<Item, Value> converter) {
-      myName = name;
-      myConverter = converter;
+        public Builder(String name, Function<Item, Value> converter) {
+            myName = name;
+            myConverter = converter;
+        }
+
+        public TableColumn<Value, Item> build() {
+            return UIInternal.get()._Components_tableColumBuild(myName, myConverter);
+        }
     }
 
-    public TableColumn<Value, Item> build() {
-      return UIInternal.get()._Components_tableColumBuild(myName, myConverter);
+    static <Value1, Item1> Builder<Value1, Item1> create(String name, Function<Item1, Value1> converter) {
+        return new Builder<>(name, converter);
     }
-  }
-  static <Value1, Item1> Builder<Value1, Item1> create(String name, Function<Item1, Value1> converter) {
-    return new Builder<>(name, converter);
-  }
 }

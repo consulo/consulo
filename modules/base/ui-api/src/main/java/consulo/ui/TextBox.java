@@ -27,6 +27,7 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
     static TextBox create() {
         return create(null);
     }
+
     static TextBox create(@Nullable String text) {
         return UIInternal.get()._Components_textBox(text == null ? "" : text);
     }
@@ -34,6 +35,7 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
     default void setPlaceholder(LocalizeValue text) {
         // unwarranted action
     }
+
     default TextBox withPlaceholder(LocalizeValue text) {
         setPlaceholder(text);
         return this;
@@ -43,6 +45,7 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
     default void setPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
     }
+
     @Deprecated
     default TextBox withPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
@@ -52,6 +55,7 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
     default void setVisibleLength(int columns) {
         // unwarranted action
     }
+
     default TextBox withVisibleLength(int columns) {
         setVisibleLength(columns);
         return this;

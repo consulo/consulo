@@ -28,11 +28,13 @@ public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, 
     static IntBox create() {
         return create(0);
     }
+
     static IntBox create(int value) {
         return UIInternal.get()._Components_intBox(value);
     }
 
     void setPlaceholder(LocalizeValue text);
+
     default IntBox withPlaceholder(LocalizeValue text) {
         setPlaceholder(text);
         return this;
@@ -41,12 +43,14 @@ public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, 
     default void setPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
     }
+
     default IntBox withPlaceholder(@Nullable String text) {
         setPlaceholder(LocalizeValue.ofNullable(text));
         return this;
     }
 
     void setRange(int min, int max);
+
     default IntBox withRange(int min, int max) {
         setRange(min, max);
         return this;

@@ -26,77 +26,88 @@ import java.util.function.Function;
  * @since 2018-06-09
  */
 public final class Alerts {
-  private static final Object ourStableNull = new Object();
-  @Deprecated
-  @DeprecationInfo("Use #okInfo(LocalizeValue)")
-  public static Alert<Object> okInfo(String text) {
-    return okTemplate(LocalizeValue.of(text), o -> o);
-  }
-  @Deprecated
-  @DeprecationInfo("Use #okWarning(LocalizeValue)")
-  public static Alert<Object> okWarning(String text) {
-    return okTemplate(LocalizeValue.of(text), Alert::asWarning);
-  }
-  @Deprecated
-  @DeprecationInfo("Use #okError(LocalizeValue)")
-  public static Alert<Object> okError(String text) {
-    return okTemplate(LocalizeValue.of(text), Alert::asError);
-  }
-  public static Alert<Object> okInfo(LocalizeValue textValue) {
-    return okTemplate(textValue, o -> o);
-  }
-  public static Alert<Object> okWarning(LocalizeValue textValue) {
-    return okTemplate(textValue, Alert::asWarning);
-  }
-  public static Alert<Object> okError(LocalizeValue textValue) {
-    return okTemplate(textValue, Alert::asError);
-  }
-  public static Alert<Object> okQuestion(LocalizeValue textValue) {
-    return okTemplate(textValue, Alert::asQuestion);
-  }
-  private static Alert<Object> okTemplate(LocalizeValue text, Function<Alert<Object>, Alert<Object>> levelSet) {
-    Alert<Object> builder = Alert.create();
-    levelSet.apply(builder);
-    builder.text(text);
+    private static final Object ourStableNull = new Object();
 
-    builder.button(Alert.OK, ourStableNull);
-    builder.asDefaultButton();
-    builder.asExitButton();
-    return builder;
-  }
-  public static Alert<Boolean> okCancel() {
-    Alert<Boolean> builder = Alert.<Boolean>create();
+    @Deprecated
+    @DeprecationInfo("Use #okInfo(LocalizeValue)")
+    public static Alert<Object> okInfo(String text) {
+        return okTemplate(LocalizeValue.of(text), o -> o);
+    }
 
-    builder.button(Alert.OK, Boolean.TRUE);
-    builder.asDefaultButton();
+    @Deprecated
+    @DeprecationInfo("Use #okWarning(LocalizeValue)")
+    public static Alert<Object> okWarning(String text) {
+        return okTemplate(LocalizeValue.of(text), Alert::asWarning);
+    }
 
-    builder.button(Alert.CANCEL, Boolean.FALSE);
-    builder.asExitButton();
+    @Deprecated
+    @DeprecationInfo("Use #okError(LocalizeValue)")
+    public static Alert<Object> okError(String text) {
+        return okTemplate(LocalizeValue.of(text), Alert::asError);
+    }
 
-    return builder;
-  }
-  public static Alert<Boolean> yesNo() {
-    Alert<Boolean> builder = Alert.<Boolean>create();
+    public static Alert<Object> okInfo(LocalizeValue textValue) {
+        return okTemplate(textValue, o -> o);
+    }
 
-    builder.button(Alert.YES, Boolean.TRUE);
-    builder.asDefaultButton();
+    public static Alert<Object> okWarning(LocalizeValue textValue) {
+        return okTemplate(textValue, Alert::asWarning);
+    }
 
-    builder.button(Alert.NO, Boolean.FALSE);
-    builder.asExitButton();
+    public static Alert<Object> okError(LocalizeValue textValue) {
+        return okTemplate(textValue, Alert::asError);
+    }
 
-    return builder;
-  }
-  public static Alert<ThreeState> yesNoCancel() {
-    Alert<ThreeState> builder = Alert.<ThreeState>create();
+    public static Alert<Object> okQuestion(LocalizeValue textValue) {
+        return okTemplate(textValue, Alert::asQuestion);
+    }
 
-    builder.button(Alert.OK, ThreeState.YES);
-    builder.asDefaultButton();
+    private static Alert<Object> okTemplate(LocalizeValue text, Function<Alert<Object>, Alert<Object>> levelSet) {
+        Alert<Object> builder = Alert.create();
+        levelSet.apply(builder);
+        builder.text(text);
 
-    builder.button(Alert.NO, ThreeState.NO);
+        builder.button(Alert.OK, ourStableNull);
+        builder.asDefaultButton();
+        builder.asExitButton();
+        return builder;
+    }
 
-    builder.button(Alert.CANCEL, ThreeState.UNSURE);
-    builder.asExitButton();
+    public static Alert<Boolean> okCancel() {
+        Alert<Boolean> builder = Alert.<Boolean>create();
 
-    return builder;
-  }
+        builder.button(Alert.OK, Boolean.TRUE);
+        builder.asDefaultButton();
+
+        builder.button(Alert.CANCEL, Boolean.FALSE);
+        builder.asExitButton();
+
+        return builder;
+    }
+
+    public static Alert<Boolean> yesNo() {
+        Alert<Boolean> builder = Alert.<Boolean>create();
+
+        builder.button(Alert.YES, Boolean.TRUE);
+        builder.asDefaultButton();
+
+        builder.button(Alert.NO, Boolean.FALSE);
+        builder.asExitButton();
+
+        return builder;
+    }
+
+    public static Alert<ThreeState> yesNoCancel() {
+        Alert<ThreeState> builder = Alert.<ThreeState>create();
+
+        builder.button(Alert.OK, ThreeState.YES);
+        builder.asDefaultButton();
+
+        builder.button(Alert.NO, ThreeState.NO);
+
+        builder.button(Alert.CANCEL, ThreeState.UNSURE);
+        builder.asExitButton();
+
+        return builder;
+    }
 }

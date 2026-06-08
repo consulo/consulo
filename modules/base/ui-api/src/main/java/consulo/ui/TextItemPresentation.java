@@ -23,35 +23,37 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 public interface TextItemPresentation {
-  default TextItemPresentation withIcon(@Nullable Image image) {
-    // unwarranted action
-    return this;
-  }
-  default TextItemPresentation withAntialiasingType(AntialiasingType type) {
-    // unwarranted action
-    return this;
-  }
-  default TextItemPresentation withFont(Font font) {
-    // unwarranted action
-    return this;
-  }
+    default TextItemPresentation withIcon(@Nullable Image image) {
+        // unwarranted action
+        return this;
+    }
 
-  void clearText();
+    default TextItemPresentation withAntialiasingType(AntialiasingType type) {
+        // unwarranted action
+        return this;
+    }
 
-  default void append(String text) {
-    append(text, TextAttribute.REGULAR);
-  }
+    default TextItemPresentation withFont(Font font) {
+        // unwarranted action
+        return this;
+    }
 
-  default void append(String text, TextAttribute textAttribute) {
-    append(LocalizeValue.of(text), textAttribute);
-  }
+    void clearText();
 
-  default void append(LocalizeValue text) {
-    append(text, TextAttribute.REGULAR);
-  }
+    default void append(String text) {
+        append(text, TextAttribute.REGULAR);
+    }
 
-  void append(LocalizeValue text, TextAttribute textAttribute);
+    default void append(String text, TextAttribute textAttribute) {
+        append(LocalizeValue.of(text), textAttribute);
+    }
+
+    default void append(LocalizeValue text) {
+        append(text, TextAttribute.REGULAR);
+    }
+
+    void append(LocalizeValue text, TextAttribute textAttribute);
 }

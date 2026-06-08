@@ -25,15 +25,15 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-06-09
  */
 public interface ColorBox extends ValueComponent<ColorValue> {
-  static ColorBox create() {
-    return create(null);
-  }
+    static ColorBox create() {
+        return create(null);
+    }
 
-  static ColorBox create(@Nullable ColorValue colorValue) {
-    return UIInternal.get()._Components_colorBox(colorValue);
-  }
+    static ColorBox create(@Nullable ColorValue colorValue) {
+        return UIInternal.get()._Components_colorBox(colorValue);
+    }
 
-  void setEditable(boolean editable);
+    void setEditable(boolean editable);
 
-  boolean isEditable();
+    boolean isEditable();
 }

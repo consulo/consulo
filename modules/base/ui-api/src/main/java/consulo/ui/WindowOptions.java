@@ -22,59 +22,59 @@ import org.jspecify.annotations.Nullable;
  * @since 2021-05-03
  */
 public final class WindowOptions extends ComponentOptions {
-  public static final class Builder {
-    private boolean myClosable = true;
-    private boolean myResizable = true;
-    private @Nullable Window myOwner = null;
+    public static final class Builder {
+        private boolean myClosable = true;
+        private boolean myResizable = true;
+        private @Nullable Window myOwner = null;
 
-    private Builder() {
+        private Builder() {
+        }
+
+        public Builder owner(@Nullable Window owner) {
+            myOwner = owner;
+            return this;
+        }
+
+        public Builder disableResize() {
+            myResizable = false;
+            return this;
+        }
+
+        public Builder disableClose() {
+            myClosable = false;
+            return this;
+        }
+
+        public WindowOptions build() {
+            return new WindowOptions(myOwner, myClosable, myResizable);
+        }
     }
 
-    public Builder owner(@Nullable Window owner) {
-      myOwner = owner;
-      return this;
+    public static WindowOptions.Builder builder() {
+        return new Builder();
     }
 
-    public Builder disableResize() {
-      myResizable = false;
-      return this;
+    private final @Nullable Window myOwner;
+    private final boolean myClosable;
+    private final boolean myResizable;
+
+    private WindowOptions(@Nullable Window owner, boolean closable, boolean resizable) {
+        super(true);
+
+        myOwner = owner;
+        myClosable = closable;
+        myResizable = resizable;
     }
 
-    public Builder disableClose() {
-      myClosable = false;
-      return this;
+    public @Nullable Window getOwner() {
+        return myOwner;
     }
 
-    public WindowOptions build() {
-      return new WindowOptions(myOwner, myClosable, myResizable);
+    public boolean isClosable() {
+        return myClosable;
     }
-  }
 
-  public static WindowOptions.Builder builder() {
-    return new Builder();
-  }
-
-  private final @Nullable Window myOwner;
-  private final boolean myClosable;
-  private final boolean myResizable;
-
-  private WindowOptions(@Nullable Window owner, boolean closable, boolean resizable) {
-    super(true);
-    
-    myOwner = owner;
-    myClosable = closable;
-    myResizable = resizable;
-  }
-
-  public @Nullable Window getOwner() {
-    return myOwner;
-  }
-
-  public boolean isClosable() {
-    return myClosable;
-  }
-
-  public boolean isResizable() {
-    return myResizable;
-  }
+    public boolean isResizable() {
+        return myResizable;
+    }
 }

@@ -19,12 +19,12 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 17/08/2021
+ * @since 2021-08-17
  */
 public interface PopupMenu extends Menu {
-  static PopupMenu create(Component target) {
-    return UIInternal.get()._PopupMenu_create(target);
-  }
+    static PopupMenu create(Component target) {
+        return UIInternal.get()._PopupMenu_create(target);
+    }
 
-  void show(int relativeX, int relativeY);
+    void show(int relativeX, int relativeY);
 }

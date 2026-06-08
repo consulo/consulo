@@ -19,10 +19,10 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 03-May-17
+ * @since 2017-05-03
  */
 public class ValueGroups {
-  public static ValueGroup<Boolean> boolGroup() {
-    return UIInternal.get()._ValueGroups_boolGroup();
-  }
+    public static ValueGroup<Boolean> boolGroup() {
+        return UIInternal.get()._ValueGroups_boolGroup();
+    }
 }

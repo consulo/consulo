@@ -20,15 +20,15 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface MenuBar extends Component {
-  static MenuBar create() {
-    return UIInternal.get()._MenuItems_menuBar();
-  }
+    static MenuBar create() {
+        return UIInternal.get()._MenuItems_menuBar();
+    }
 
-  void clear();
+    void clear();
 
-  @RequiredUIAccess
-  MenuBar add(MenuItem menuItem);
+    @RequiredUIAccess
+    MenuBar add(MenuItem menuItem);
 }

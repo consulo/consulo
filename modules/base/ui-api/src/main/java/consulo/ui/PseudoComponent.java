@@ -22,6 +22,6 @@ import consulo.ui.annotation.RequiredUIAccess;
  * @since 2017-02-05
  */
 public interface PseudoComponent {
-  @RequiredUIAccess
-  Component getComponent();
+    @RequiredUIAccess
+    Component getComponent();
 }

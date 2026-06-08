@@ -23,13 +23,14 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface MenuItem extends Component {
-  static MenuItem create(LocalizeValue text) {
-    return UIInternal.get()._MenuItem_create(text);
-  }
-  LocalizeValue getText();
+    static MenuItem create(LocalizeValue text) {
+        return UIInternal.get()._MenuItem_create(text);
+    }
 
-  void setIcon(@Nullable Image icon);
+    LocalizeValue getText();
+
+    void setIcon(@Nullable Image icon);
 }

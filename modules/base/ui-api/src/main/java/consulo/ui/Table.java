@@ -19,13 +19,13 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.model.TableModel;
 
 /**
+ * Table without scrollable layout parent header cannot be painted.
+ *
  * @author VISTALL
  * @since 2020-09-15
- *
- * Table without scrolllable layout parent header can be not painted
  */
 public interface Table<E> extends Component {
-  static <T> Table<T> create(Iterable<? extends TableColumn<?, T>> columns, TableModel<T> model) {
-    return UIInternal.get()._Table_create(columns, model);
-  }
+    static <T> Table<T> create(Iterable<? extends TableColumn<?, T>> columns, TableModel<T> model) {
+        return UIInternal.get()._Table_create(columns, model);
+    }
 }

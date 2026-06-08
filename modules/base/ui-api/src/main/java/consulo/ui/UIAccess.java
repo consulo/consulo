@@ -29,28 +29,28 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2016-06-11
  */
 public interface UIAccess extends Executor {
     Key<UIAccess> KEY = Key.of(UIAccess.class);
 
     /**
-     * @return if current thread can access to ui write mode
+     * @return if current thread has access to UI write mode.
      */
     static boolean isUIThread() {
         return UIInternal.get()._UIAccess_isUIThread();
     }
 
-    @RequiredUIAccess
     @Deprecated
+    @RequiredUIAccess
     static UIAccess get() {
         return current();
     }
 
     /**
-     * If we inside ui thread, we can get ui access
+     * If we're inside UI thread, we can get UI access.
      *
-     * @return ui access - or throw exception
+     * @return ui access - or throw exception.
      */
     @RequiredUIAccess
     static UIAccess current() {
@@ -79,7 +79,7 @@ public interface UIAccess extends Executor {
     }
 
     /**
-     * Calling Runnable#run() will restore event count from initial method call
+     * Calling Runnable#run() will restore event count from initial method call.
      */
     @RequiredUIAccess
     default Runnable markEventCount() {
@@ -91,6 +91,7 @@ public interface UIAccess extends Executor {
     default boolean isValid() {
         return true;
     }
+
     default AsyncResult<Void> give(@RequiredUIAccess Runnable runnable) {
         return give(() -> {
             runnable.run();
@@ -102,12 +103,14 @@ public interface UIAccess extends Executor {
      * prefer {@link #giveAsync(Supplier)}
      */
     <T> AsyncResult<T> give(@RequiredUIAccess Supplier<T> supplier);
+
     default CompletableFuture<?> giveAsync(@RequiredUIAccess Runnable runnable) {
         return giveAsync(() -> {
             runnable.run();
             return null;
         });
     }
+
     <T> CompletableFuture<T> giveAsync(@RequiredUIAccess Supplier<T> supplier);
 
     default void giveAndWait(@RequiredUIAccess Runnable runnable) {
@@ -151,5 +154,6 @@ public interface UIAccess extends Executor {
     default void execute(@RequiredUIAccess Runnable command) {
         give(command);
     }
+
     UIAccessScheduler getScheduler();
 }
