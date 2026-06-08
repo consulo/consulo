@@ -63,7 +63,7 @@
         <maven.assembly.plugin>3.8.0</maven.assembly.plugin>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
-        <maven.consulo.plugin>3.27</maven.consulo.plugin>
+        <maven.consulo.plugin>3.28</maven.consulo.plugin>
         <maven.jar.plugin>3.3.0</maven.jar.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
         <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
@@ -73,7 +73,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
-        <compiler.apt.version>2.0</compiler.apt.version>
+        <compiler.apt.version>3.0</compiler.apt.version>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
@@ -329,7 +329,7 @@
             <dependency>
                 <groupId>com.ibm.icu</groupId>
                 <artifactId>icu4j</artifactId>
-                <version>70.1</version>
+                <version>78.3</version>
             </dependency>
             <dependency>
                 <groupId>ar.com.hjg</groupId>
