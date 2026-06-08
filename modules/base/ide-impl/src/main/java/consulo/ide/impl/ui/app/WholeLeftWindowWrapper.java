@@ -37,17 +37,17 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
     @RequiredUIAccess
     protected Layout buildRootLayout(Disposable uiDisposable) {
         TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-        layout.withProportion(30);
+        layout.setProportion(30);
 
         Couple<Component> components = createComponents(uiDisposable);
 
-        layout.withFirstComponent(components.getFirst());
+        layout.setFirstComponent(components.getFirst());
 
         DockLayout baseRoot = DockLayout.create();
         baseRoot.center(components.getSecond());
         baseRoot.bottom(buildButtonsLayout());
 
-        layout.withSecondComponent(baseRoot);
+        layout.setSecondComponent(baseRoot);
         return layout;
     }
 

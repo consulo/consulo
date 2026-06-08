@@ -43,27 +43,24 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
     }
 
     @Override
-    public TwoComponentSplitLayout withProportion(int percent) {
+    public void setProportion(int percent) {
         toVaadinComponent().setSplitterPosition(percent);
-        return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout withFirstComponent(Component component) {
+    public void setFirstComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToPrimary(vComponent);
-        return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout withSecondComponent(Component component) {
+    public void setSecondComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
-        return this;
     }
 
     @Override

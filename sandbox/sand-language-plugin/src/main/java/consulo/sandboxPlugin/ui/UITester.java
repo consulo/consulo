@@ -74,8 +74,8 @@ public class UITester {
             tabbedLayout.addTab("FoldoutLayout", layout);
 
             TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-            splitLayout.withFirstComponent(DockLayout.create().center(Button.create("Left")));
-            splitLayout.withSecondComponent(DockLayout.create().center(Button.create("Second")));
+            splitLayout.setFirstComponent(DockLayout.create().center(Button.create("Left")));
+            splitLayout.setSecondComponent(DockLayout.create().center(Button.create("Second")));
 
             tabbedLayout.addTab("SplitLayout", splitLayout);
 

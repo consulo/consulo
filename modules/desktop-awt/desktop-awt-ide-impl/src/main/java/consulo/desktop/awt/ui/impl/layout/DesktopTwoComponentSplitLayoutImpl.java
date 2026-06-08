@@ -55,22 +55,19 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
     }
 
     @Override
-    public TwoComponentSplitLayout withProportion(int percent) {
+    public void setProportion(int percent) {
         toAWTComponent().setProportion(percent / 100f);
-        return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout withFirstComponent(Component component) {
+    public void setFirstComponent(Component component) {
         toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));
-        return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout withSecondComponent(Component component) {
+    public void setSecondComponent(Component component) {
         toAWTComponent().setSecondComponent((JComponent) TargetAWT.to(component));
-        return this;
     }
 }
