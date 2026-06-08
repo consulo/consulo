@@ -29,37 +29,34 @@ import consulo.ui.layout.TwoComponentSplitLayout;
  * @since 2018-06-29
  */
 public abstract class WholeLeftWindowWrapper extends WindowWrapper {
-  public WholeLeftWindowWrapper(String title) {
-    super(title);
-  }
+    public WholeLeftWindowWrapper(String title) {
+        super(title);
+    }
 
-  @Override
-  
-  @RequiredUIAccess
-  protected Layout buildRootLayout(Disposable uiDisposable) {
-    TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-    layout.setProportion(30);
+    @Override
+    @RequiredUIAccess
+    protected Layout buildRootLayout(Disposable uiDisposable) {
+        TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+        layout.withProportion(30);
 
-    Couple<Component> compoents = createComponents(uiDisposable);
+        Couple<Component> components = createComponents(uiDisposable);
 
-    layout.setFirstComponent(compoents.getFirst());
+        layout.withFirstComponent(components.getFirst());
 
-    DockLayout baseRoot = DockLayout.create();
-    baseRoot.center(compoents.getSecond());
-    baseRoot.bottom(buildButtonsLayout());
+        DockLayout baseRoot = DockLayout.create();
+        baseRoot.center(components.getSecond());
+        baseRoot.bottom(buildButtonsLayout());
 
-    layout.setSecondComponent(baseRoot);
-    return layout;
-  }
+        layout.withSecondComponent(baseRoot);
+        return layout;
+    }
 
-  
-  @RequiredUIAccess
-  protected abstract Couple<Component> createComponents(Disposable uiDisposable);
+    @RequiredUIAccess
+    protected abstract Couple<Component> createComponents(Disposable uiDisposable);
 
-  @RequiredUIAccess
-  
-  @Override
-  protected final Component createCenterComponent(Disposable uiDisposable) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    @RequiredUIAccess
+    protected final Component createCenterComponent(Disposable uiDisposable) {
+        throw new UnsupportedOperationException();
+    }
 }

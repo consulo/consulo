@@ -47,7 +47,6 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
             myLayoutSupplier = layoutSupplier;
         }
 
-
         Layout get() {
             if (myLayout == null) {
                 myLayout = myLayoutSupplier.get();
@@ -92,7 +91,6 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel, LayoutCons
         }
         return this;
     }
-
 
     @Override
     public Layout swipeLeftTo(String id) {

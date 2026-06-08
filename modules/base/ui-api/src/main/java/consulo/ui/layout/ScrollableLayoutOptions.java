@@ -42,7 +42,7 @@ public final class ScrollableLayoutOptions extends ComponentOptions {
         }
     }
 
-    public static enum ScrollPolicy {
+    public enum ScrollPolicy {
         ALWAYS,
         IF_NEEDED,
         NEVER

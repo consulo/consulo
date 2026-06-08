@@ -32,21 +32,21 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     /**
      * @param percent from 0 to 100
      */
-    TwoComponentSplitLayout setProportion(int percent);
+    TwoComponentSplitLayout withProportion(int percent);
 
     @RequiredUIAccess
-    default TwoComponentSplitLayout setFirstComponent(PseudoComponent component) {
-        return setFirstComponent(component.getComponent());
+    default TwoComponentSplitLayout withFirstComponent(PseudoComponent component) {
+        return withFirstComponent(component.getComponent());
     }
 
     @RequiredUIAccess
-    TwoComponentSplitLayout setFirstComponent(Component component);
+    TwoComponentSplitLayout withFirstComponent(Component component);
 
     @RequiredUIAccess
-    default TwoComponentSplitLayout setSecondComponent(PseudoComponent component) {
-        return setSecondComponent(component.getComponent());
+    default TwoComponentSplitLayout withSecondComponent(PseudoComponent component) {
+        return withSecondComponent(component.getComponent());
     }
 
     @RequiredUIAccess
-    TwoComponentSplitLayout setSecondComponent(Component component);
+    TwoComponentSplitLayout withSecondComponent(Component component);
 }

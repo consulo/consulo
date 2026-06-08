@@ -56,20 +56,20 @@ public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutCompo
     }
 
     @Override
-    public TwoComponentSplitLayout setProportion(int percent) {
+    public TwoComponentSplitLayout withProportion(int percent) {
         return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout setFirstComponent(Component component) {
+    public TwoComponentSplitLayout withFirstComponent(Component component) {
         addImpl(component, "first");
         return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout setSecondComponent(Component component) {
+    public TwoComponentSplitLayout withSecondComponent(Component component) {
         addImpl(component, "second");
         return this;
     }

@@ -19,7 +19,6 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -44,14 +43,14 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
     }
 
     @Override
-    public TwoComponentSplitLayout setProportion(int percent) {
+    public TwoComponentSplitLayout withProportion(int percent) {
         toVaadinComponent().setSplitterPosition(percent);
         return this;
     }
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout setFirstComponent(Component component) {
+    public TwoComponentSplitLayout withFirstComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToPrimary(vComponent);
@@ -60,7 +59,7 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
     @Override
     @RequiredUIAccess
-    public TwoComponentSplitLayout setSecondComponent(Component component) {
+    public TwoComponentSplitLayout withSecondComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
