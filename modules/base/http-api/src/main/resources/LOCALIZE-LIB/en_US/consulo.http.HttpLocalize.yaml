@@ -14,6 +14,8 @@ certificate.certificate.already.exists:
     text: Certificate already exists
 certificate.choose.certificate:
     text: Choose Certificate
+certificate.display.name:
+    text: Server Certificates
 certificate.filter.label:
     text: Certificate files
 certificate.malformed.x509.server.certificate:

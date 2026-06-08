@@ -14,12 +14,9 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.util.xml.serializer.annotation.AbstractCollection;
-import consulo.util.xml.serializer.annotation.Property;
-import consulo.util.xml.serializer.annotation.Tag;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.jspecify.annotations.Nullable;
 
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
@@ -31,7 +28,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedHashSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -54,8 +50,10 @@ import java.util.concurrent.atomic.AtomicReference;
  *    <ol>
  *      <li>{@code useSystemProperties()} methods makes {@code HttpClient} use "Default" SSL context again</li>
  *      <li>{@code setSSLContext()} and pass result of the {@link #getSslContext()}</li>
- *      <li>{@code setSSLSocketFactory()} and specify instance {@code SSLConnectionSocketFactory} which uses result of {@link #getSslContext()}.</li>
- *      <li>{@code setConnectionManager} and initialize it with {@code Registry} that binds aforementioned {@code SSLConnectionSocketFactory} to HTTPS protocol</li>
+ *      <li>{@code setSSLSocketFactory()} and specify instance {@code SSLConnectionSocketFactory}
+ *          which uses result of {@link #getSslContext()}.</li>
+ *      <li>{@code setConnectionManager} and initialize it with {@code Registry} that binds aforementioned
+ *          {@code SSLConnectionSocketFactory} to HTTPS protocol</li>
  *      </ol>
  *    </li>
  * </ol>
@@ -139,6 +137,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      *
      * @return instance of SSLContext with described behavior or default SSL context in case of error
      */
+    @Override
     public synchronized SSLContext getSslContext() {
         if (mySslContext == null) {
             SSLContext context = getSystemSslContext();
@@ -158,7 +157,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
 
                 // For some reason passing `null` as first parameter of SSLContext#init is not enough to
                 // use -Djavax.net.ssl.keyStore VM parameters, although -Djavax.net.ssl.trustStore is used
-                // successfully. See this question on Stackoverflow for details
+                // successfully. See this question on StackOverflow for details
                 // http://stackoverflow.com/questions/23205266/java-key-store-is-not-found-when-default-ssl-context-is-redefined
                 context = getDefaultSslContext();
             }
@@ -167,14 +166,12 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         return mySslContext;
     }
 
-    
     @Override
     public HostnameVerifier getHostnameVerifier() {
         return HOSTNAME_VERIFIER;
     }
 
     @Override
-    
     public SSLContext getSystemSslContext() {
         // NOTE: SSLContext.getDefault() should not be called because it automatically creates
         // default context which can't be initialized twice
@@ -211,7 +208,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
      * @return key managers or {@code null} in case of any error
      */
     @Override
-    public @Nullable KeyManager[] getDefaultKeyManagers() {
+    public KeyManager @Nullable [] getDefaultKeyManagers() {
         String keyStorePath = System.getProperty("javax.net.ssl.keyStore");
         if (keyStorePath != null) {
             LOG.info("Loading custom key store specified with VM options: " + keyStorePath);
@@ -259,23 +256,19 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
         return null;
     }
 
-    
     public String getCacertsPath() {
         return myCacertsPath;
     }
 
-    
     public String getPassword() {
         return myPassword;
     }
 
     @Override
-    
     public HttpConfirmingTrustManagerImplHttp getTrustManager() {
         return myTrustManager;
     }
 
-    
     public HttpConfirmingTrustManagerImplHttp.MutableTrustManagerHttp getCustomTrustManager() {
         return myTrustManager.getCustomManager();
     }
@@ -283,7 +276,7 @@ public class HttpCertificateManagerImpl implements HttpCertificateManager, Persi
     public static boolean showAcceptDialog(Callable<? extends DialogWrapper> dialogFactory) {
         CountDownLatch proceeded = new CountDownLatch(1);
         AtomicBoolean accepted = new AtomicBoolean();
-        AtomicReference<DialogWrapper> dialogRef = new AtomicReference<DialogWrapper>();
+        AtomicReference<DialogWrapper> dialogRef = new AtomicReference<>();
         Runnable showDialog = () -> {
             // skip if certificate was already rejected due to timeout or interrupt
             if (proceeded.getCount() == 0) {
