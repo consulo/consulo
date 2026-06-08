@@ -22,7 +22,7 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2016-06-13
  */
 public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     static TwoComponentSplitLayout create(SplitLayoutPosition position) {
@@ -32,7 +32,7 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
     /**
      * @param percent from 0 to 100
      */
-    void setProportion(int percent);
+    TwoComponentSplitLayout setProportion(int percent);
 
     @RequiredUIAccess
     default TwoComponentSplitLayout setFirstComponent(PseudoComponent component) {

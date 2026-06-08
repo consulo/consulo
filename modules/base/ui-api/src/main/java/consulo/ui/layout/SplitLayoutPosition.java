@@ -20,6 +20,6 @@ package consulo.ui.layout;
  * @since 2019-02-18
  */
 public enum SplitLayoutPosition {
-  HORIZONTAL,
-  VERTICAL
+    HORIZONTAL,
+    VERTICAL
 }

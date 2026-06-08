@@ -23,7 +23,7 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface TabbedLayout extends Layout<LayoutConstraint> {
     static TabbedLayout create() {
@@ -36,16 +36,20 @@ public interface TabbedLayout extends Layout<LayoutConstraint> {
      * @return new tab
      */
     Tab createTab();
+
     @RequiredUIAccess
     default Tab addTab(Tab tab, PseudoComponent component) {
         return addTab(tab, component.getComponent());
     }
+
     @RequiredUIAccess
     default Tab addTab(String tabName, PseudoComponent component) {
         return addTab(tabName, component.getComponent());
     }
+
     @RequiredUIAccess
     Tab addTab(Tab tab, Component component);
+
     @RequiredUIAccess
     Tab addTab(String tabName, Component component);
 

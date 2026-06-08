@@ -24,51 +24,62 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public interface DockLayout extends Layout<StaticPosition> {
     static DockLayout create() {
         return create(UIConstant.DEFAULT_SPACING_PX);
     }
+
     static DockLayout create(int gapInPixels) {
         return UIInternal.get()._Layouts_dock(gapInPixels);
     }
+
     @RequiredUIAccess
     default DockLayout top(PseudoComponent component) {
         return top(component.getComponent());
     }
+
     @RequiredUIAccess
     default DockLayout bottom(PseudoComponent component) {
         return bottom(component.getComponent());
     }
+
     @RequiredUIAccess
     default DockLayout center(PseudoComponent component) {
         return center(component.getComponent());
     }
+
     @RequiredUIAccess
     default DockLayout left(PseudoComponent component) {
         return left(component.getComponent());
     }
+
     @RequiredUIAccess
     default DockLayout right(PseudoComponent component) {
         return right(component.getComponent());
     }
+
     @RequiredUIAccess
     default DockLayout top(Component component) {
         return (DockLayout) add(component, StaticPosition.TOP);
     }
+
     @RequiredUIAccess
     default DockLayout bottom(Component component) {
         return (DockLayout) add(component, StaticPosition.BOTTOM);
     }
+
     @RequiredUIAccess
     default DockLayout center(Component component) {
         return (DockLayout) add(component, StaticPosition.CENTER);
     }
+
     @RequiredUIAccess
     default DockLayout left(Component component) {
         return (DockLayout) add(component, StaticPosition.LEFT);
     }
+
     @RequiredUIAccess
     default DockLayout right(Component component) {
         return (DockLayout) add(component, StaticPosition.RIGHT);

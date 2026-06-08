@@ -19,46 +19,51 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
-import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author VISTALL
- * @since 11-Jun-16
- *
  * For advanced version of label {@link AdvancedLabel}
+ *
+ * @author VISTALL
+ * @since 2016-06-11
  */
 public interface Label extends Component, HasMnemonic, HasComponentStyle<LabelStyle>, HasFocus {
-  static Label create() {
-    return create(LocalizeValue.empty());
-  }
-  @Deprecated
-  static Label create(@Nullable String text) {
-    return create(LocalizeValue.of(StringUtil.notNullize(text)));
-  }
-  static Label create(LocalizeValue value) {
-    return create(value, LabelOptions.builder().build());
-  }
-  static Label create(LocalizeValue value, LabelOptions options) {
-    return UIInternal.get()._Components_label(value, options);
-  }
-  LocalizeValue getText();
+    static Label create() {
+        return create(LocalizeValue.empty());
+    }
 
-  @RequiredUIAccess
-  @Deprecated
-  default void setText(String text) {
-    setText(LocalizeValue.of(text));
-  }
+    @Deprecated
+    static Label create(@Nullable String text) {
+        return create(LocalizeValue.ofNullable(text));
+    }
 
-  @RequiredUIAccess
-  void setText(LocalizeValue text);
+    static Label create(LocalizeValue value) {
+        return create(value, LabelOptions.builder().build());
+    }
 
-  void setImage(@Nullable Image icon);
+    static Label create(LocalizeValue value, LabelOptions options) {
+        return UIInternal.get()._Components_label(value, options);
+    }
 
-  @Nullable Image getImage();
+    LocalizeValue getText();
 
-  void setTarget(@Nullable Component component);
+    @Deprecated
+    @RequiredUIAccess
+    default void setText(String text) {
+        setText(LocalizeValue.of(text));
+    }
 
-  @Nullable Component getTarget();
+    @RequiredUIAccess
+    void setText(LocalizeValue text);
+
+    void setImage(@Nullable Image icon);
+
+    @Nullable
+    Image getImage();
+
+    void setTarget(@Nullable Component component);
+
+    @Nullable
+    Component getTarget();
 }

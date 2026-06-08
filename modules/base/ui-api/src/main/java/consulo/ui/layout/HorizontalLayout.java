@@ -29,23 +29,27 @@ import consulo.ui.internal.UIInternal;
  * Supported constraints {@link StaticPosition#LEFT} {@link StaticPosition#CENTER} {@link StaticPosition#RIGHT}
  *
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 public interface HorizontalLayout extends Layout<StaticPosition>, HasComponentStyle<HorizontalLayoutStyle> {
     static HorizontalLayout create() {
         return create(UIConstant.DEFAULT_SPACING_PX);
     }
+
     static HorizontalLayout create(int gapInPixels) {
         return UIInternal.get()._Layouts_horizontal(gapInPixels);
     }
+
     @RequiredUIAccess
     default HorizontalLayout add(PseudoComponent component) {
         return add(component.getComponent());
     }
+
     @RequiredUIAccess
     default HorizontalLayout add(Component component) {
         return add(component, StaticPosition.LEFT);
     }
+
     @Override
     default HorizontalLayout add(Component component, StaticPosition constraint) {
         return (HorizontalLayout) Layout.super.add(component, constraint);
