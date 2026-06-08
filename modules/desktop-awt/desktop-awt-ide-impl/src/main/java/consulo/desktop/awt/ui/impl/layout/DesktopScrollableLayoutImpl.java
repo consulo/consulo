@@ -21,7 +21,6 @@ import consulo.ui.Component;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
 import org.jspecify.annotations.Nullable;
@@ -65,7 +64,7 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
             case ALWAYS:
                 pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
                 break;
-            case IF_NEED:
+            case IF_NEEDED:
                 pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 break;
             case NEVER:
@@ -77,7 +76,7 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
             case ALWAYS:
                 pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
                 break;
-            case IF_NEED:
+            case IF_NEEDED:
                 pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
                 break;
             case NEVER:

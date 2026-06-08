@@ -28,55 +28,51 @@ import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
-public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements TwoComponentSplitLayout {
-  private final SplitLayoutPosition myPosition;
+public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object>
+    implements TwoComponentSplitLayout {
+    private final SplitLayoutPosition myPosition;
 
-  public DesktopSwtTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
-    myPosition = position;
-  }
+    public DesktopSwtTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
+        myPosition = position;
+    }
 
-  @Override
-  protected Composite createSWT(Composite parent) {
-    return new SashForm(parent, (myPosition == SplitLayoutPosition.VERTICAL ? SWT.VERTICAL : SWT.HORIZONTAL) | SWT.SMOOTH);
-  }
+    @Override
+    protected Composite createSWT(Composite parent) {
+        return new SashForm(parent, (myPosition == SplitLayoutPosition.VERTICAL ? SWT.VERTICAL : SWT.HORIZONTAL) | SWT.SMOOTH);
+    }
 
-  @Override
-  protected Layout createLayout() {
-    return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
-  }
+    @Override
+    protected Layout createLayout() {
+        return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
+    }
 
-  @Override
-  protected void initialize(Composite component) {
-    super.initialize(component);
+    @Override
+    protected void initialize(Composite component) {
+        super.initialize(component);
 
-    ((SashForm) component).setSashWidth(1);
-  }
+        ((SashForm) component).setSashWidth(1);
+    }
 
-  @Override
-  public void setProportion(int percent) {
+    @Override
+    public void setProportion(int percent) {
+    }
 
-  }
+    @Override
+    @RequiredUIAccess
+    public void setFirstComponent(Component component) {
+        addImpl(component, "first");
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public TwoComponentSplitLayout setFirstComponent(Component component) {
-    addImpl(component, "first");
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public void setSecondComponent(Component component) {
+        addImpl(component, "second");
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public TwoComponentSplitLayout setSecondComponent(Component component) {
-    addImpl(component, "second");
-    return this;
-  }
-
-  @Override
-  protected Object convertLayoutData(Object layoutData) {
-    return null;
-  }
+    @Override
+    protected Object convertLayoutData(Object layoutData) {
+        return null;
+    }
 }

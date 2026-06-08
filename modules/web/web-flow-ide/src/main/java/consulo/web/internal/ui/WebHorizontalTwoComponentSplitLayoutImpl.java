@@ -19,7 +19,6 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -28,47 +27,42 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 28/05/2023
+ * @since 2023-05-28
  */
-public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDelegate<WebHorizontalTwoComponentSplitLayoutImpl.Vaadin> implements TwoComponentSplitLayout {
+public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDelegate<WebHorizontalTwoComponentSplitLayoutImpl.Vaadin>
+    implements TwoComponentSplitLayout {
     public class Vaadin extends SplitLayout implements FromVaadinComponentWrapper {
-
         public Vaadin() {
             setOrientation(Orientation.HORIZONTAL);
         }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebHorizontalTwoComponentSplitLayoutImpl.this;
         }
-
     }
-    
+
     @Override
     public void setProportion(int percent) {
         toVaadinComponent().setSplitterPosition(percent);
     }
 
-
-    @RequiredUIAccess
     @Override
-    public TwoComponentSplitLayout setFirstComponent(Component component) {
+    @RequiredUIAccess
+    public void setFirstComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToPrimary(vComponent);
-        return this;
     }
 
-    @RequiredUIAccess
-    
     @Override
-    public TwoComponentSplitLayout setSecondComponent(Component component) {
+    @RequiredUIAccess
+    public void setSecondComponent(Component component) {
         com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
-        return this;
     }
 
-    
     @Override
     public WebHorizontalTwoComponentSplitLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

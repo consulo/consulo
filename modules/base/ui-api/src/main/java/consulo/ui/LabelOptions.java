@@ -17,31 +17,35 @@ package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 03/05/2021
+ * @since 2021-05-03
  */
 public final class LabelOptions extends ComponentOptions {
-  public static final class Builder extends ComponentOptionsBuilder<Builder> {
-    private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
-    public Builder horizontalAlignment(HorizontalAlignment alignment) {
-      myHorizontalAlignment = alignment;
-      return this;
-    }
-    @Override
-    public LabelOptions build() {
-      return new LabelOptions(myBackgroundPaint, myHorizontalAlignment);
-    }
-  }
-  public static Builder builder() {
-    return new Builder();
-  }
+    public static final class Builder extends ComponentOptionsBuilder<Builder> {
+        private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
 
-  private final HorizontalAlignment myHorizontalAlignment;
+        public Builder horizontalAlignment(HorizontalAlignment alignment) {
+            myHorizontalAlignment = alignment;
+            return this;
+        }
 
-  private LabelOptions(boolean backgroundPaint, HorizontalAlignment horizontalAlignment) {
-    super(backgroundPaint);
-    myHorizontalAlignment = horizontalAlignment;
-  }
-  public HorizontalAlignment getHorizontalAlignment() {
-    return myHorizontalAlignment;
-  }
+        @Override
+        public LabelOptions build() {
+            return new LabelOptions(myBackgroundPaint, myHorizontalAlignment);
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    private final HorizontalAlignment myHorizontalAlignment;
+
+    private LabelOptions(boolean backgroundPaint, HorizontalAlignment horizontalAlignment) {
+        super(backgroundPaint);
+        myHorizontalAlignment = horizontalAlignment;
+    }
+
+    public HorizontalAlignment getHorizontalAlignment() {
+        return myHorizontalAlignment;
+    }
 }

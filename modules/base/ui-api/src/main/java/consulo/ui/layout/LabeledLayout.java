@@ -25,7 +25,7 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
+ * @since 2016-06-15
  */
 public interface LabeledLayout extends Layout<LayoutConstraint>, HasComponentStyle<LabeledLayoutStyle> {
     @RequiredUIAccess
@@ -40,13 +40,14 @@ public interface LabeledLayout extends Layout<LayoutConstraint>, HasComponentSty
 
     @Deprecated
     @DeprecationInfo("Use with LocalizeValue parameter")
+    @RequiredUIAccess
     static LabeledLayout create(String label) {
         return create(LocalizeValue.of(label));
     }
 
-    @RequiredUIAccess
     @Deprecated
     @DeprecationInfo("Use with LocalizeValue parameter")
+    @RequiredUIAccess
     static LabeledLayout create(String label, Component component) {
         return create(LocalizeValue.of(label), component);
     }

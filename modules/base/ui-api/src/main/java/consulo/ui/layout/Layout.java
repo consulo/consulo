@@ -16,14 +16,13 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
-import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public interface Layout<C extends LayoutConstraint> extends Component {
     default Layout<C> add(Component component, C constraint) {
@@ -39,8 +38,8 @@ public interface Layout<C extends LayoutConstraint> extends Component {
         throw new AbstractMethodError(getClass().getName());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     default void setEnabledRecursive(boolean value) {
         setEnabled(value);
 

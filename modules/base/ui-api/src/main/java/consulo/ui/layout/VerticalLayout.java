@@ -23,19 +23,22 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2016-06-11
  */
 public interface VerticalLayout extends Layout<LayoutConstraint> {
     static VerticalLayout create() {
         return create(UIConstant.DEFAULT_SPACING_PX);
     }
+
     static VerticalLayout create(int vGap) {
         return UIInternal.get()._Layouts_vertical(vGap);
     }
+
     @RequiredUIAccess
     default VerticalLayout add(PseudoComponent component) {
         return add(component.getComponent());
     }
+
     @RequiredUIAccess
     default VerticalLayout add(Component component) {
         return (VerticalLayout) add(component, LayoutConstraint.NONE);

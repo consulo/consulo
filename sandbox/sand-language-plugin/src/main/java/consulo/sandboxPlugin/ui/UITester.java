@@ -45,9 +45,8 @@ public class UITester {
             super(LocalizeValue.of("UI Tester"));
         }
 
-        @RequiredUIAccess
-        
         @Override
+        @RequiredUIAccess
         public Component createCenterComponent(Disposable uiDisposable) {
             TabbedLayout tabbedLayout = TabbedLayout.create();
 
@@ -229,14 +228,13 @@ public class UITester {
                         for (int i = 0; i < 50; i++) {
                             TreeNode<String> node = nodeFactory.apply("First Child = " + i);
 
-                            List<Image> icons =
-                                List.of(
-                                    PlatformIconGroup.nodesClass(),
-                                    PlatformIconGroup.nodesEnum(),
-                                    PlatformIconGroup.nodesStruct(),
-                                    PlatformIconGroup.nodesInterface(),
-                                    PlatformIconGroup.nodesAttribute()
-                                );
+                            List<Image> icons = List.of(
+                                PlatformIconGroup.nodesClass(),
+                                PlatformIconGroup.nodesEnum(),
+                                PlatformIconGroup.nodesStruct(),
+                                PlatformIconGroup.nodesInterface(),
+                                PlatformIconGroup.nodesAttribute()
+                            );
                             int r = new Random().nextInt(icons.size());
 
                             node.setRenderer((s, textItemPresentation) -> {

@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 23/04/2023
+ * @since 2023-04-23
  */
 public interface LoadingLayout<InnerLayout> extends Layout<LayoutConstraint> {
     static <L extends Layout> LoadingLayout<L> create(L innerLayout, Disposable parent) {
@@ -38,8 +38,7 @@ public interface LoadingLayout<InnerLayout> extends Layout<LayoutConstraint> {
      * Execute valueGetter in another thread, and when value is got - uiSetter will be invoked
      */
     @RequiredUIAccess
-    <Value> Future<Value> startLoading(Supplier<Value> valueGetter,
-                                       @RequiredUIAccess BiConsumer<InnerLayout, Value> uiSetter);
+    <Value> Future<Value> startLoading(Supplier<Value> valueGetter, @RequiredUIAccess BiConsumer<InnerLayout, Value> uiSetter);
 
     @RequiredUIAccess
     void startLoading();

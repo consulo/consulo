@@ -19,47 +19,53 @@ import consulo.ui.ComponentOptions;
 
 /**
  * @author VISTALL
- * @since 30/10/2021
+ * @since 2021-10-30
  */
 public final class ScrollableLayoutOptions extends ComponentOptions {
-  public static class Builder extends ComponentOptionsBuilder<Builder> {
-    private ScrollPolicy myHorizontalScrollPolicy = ScrollPolicy.IF_NEED;
-    private ScrollPolicy myVerticalScrollPolicy = ScrollPolicy.IF_NEED;
-    public Builder horizontalScrollPolicy(ScrollPolicy horizontalScrollPolicy) {
-      myHorizontalScrollPolicy = horizontalScrollPolicy;
-      return this;
-    }
-    public Builder verticalScrollPolicy(ScrollPolicy verticalScrollPolicy) {
-      myVerticalScrollPolicy = verticalScrollPolicy;
-      return this;
-    }
-    @Override
-    public ScrollableLayoutOptions build() {
-      return new ScrollableLayoutOptions(myBackgroundPaint, myHorizontalScrollPolicy, myVerticalScrollPolicy);
-    }
-  }
+    public static class Builder extends ComponentOptionsBuilder<Builder> {
+        private ScrollPolicy myHorizontalScrollPolicy = ScrollPolicy.IF_NEEDED;
+        private ScrollPolicy myVerticalScrollPolicy = ScrollPolicy.IF_NEEDED;
 
-  public static enum ScrollPolicy {
-    ALWAYS,
-    IF_NEED,
-    NEVER
-  }
-  public static Builder builder() {
-    return new Builder();
-  }
+        public Builder horizontalScrollPolicy(ScrollPolicy horizontalScrollPolicy) {
+            myHorizontalScrollPolicy = horizontalScrollPolicy;
+            return this;
+        }
 
-  private final ScrollPolicy myHorizontalScrollPolicy;
-  private final ScrollPolicy myVerticalScrollPolicy;
+        public Builder verticalScrollPolicy(ScrollPolicy verticalScrollPolicy) {
+            myVerticalScrollPolicy = verticalScrollPolicy;
+            return this;
+        }
 
-  private ScrollableLayoutOptions(boolean backgroundPaint, ScrollPolicy horizontalScrollPolicy, ScrollPolicy verticalScrollPolicy) {
-    super(backgroundPaint);
-    myHorizontalScrollPolicy = horizontalScrollPolicy;
-    myVerticalScrollPolicy = verticalScrollPolicy;
-  }
-  public ScrollPolicy getHorizontalScrollPolicy() {
-    return myHorizontalScrollPolicy;
-  }
-  public ScrollPolicy getVerticalScrollPolicy() {
-    return myVerticalScrollPolicy;
-  }
+        @Override
+        public ScrollableLayoutOptions build() {
+            return new ScrollableLayoutOptions(myBackgroundPaint, myHorizontalScrollPolicy, myVerticalScrollPolicy);
+        }
+    }
+
+    public enum ScrollPolicy {
+        ALWAYS,
+        IF_NEEDED,
+        NEVER
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    private final ScrollPolicy myHorizontalScrollPolicy;
+    private final ScrollPolicy myVerticalScrollPolicy;
+
+    private ScrollableLayoutOptions(boolean backgroundPaint, ScrollPolicy horizontalScrollPolicy, ScrollPolicy verticalScrollPolicy) {
+        super(backgroundPaint);
+        myHorizontalScrollPolicy = horizontalScrollPolicy;
+        myVerticalScrollPolicy = verticalScrollPolicy;
+    }
+
+    public ScrollPolicy getHorizontalScrollPolicy() {
+        return myHorizontalScrollPolicy;
+    }
+
+    public ScrollPolicy getVerticalScrollPolicy() {
+        return myVerticalScrollPolicy;
+    }
 }
