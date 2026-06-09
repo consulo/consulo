@@ -24,10 +24,10 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * Simple HTML view. HTML5, CSS3, JS not supported. WebView can be used as replacement, if you need more powerful HTML view.
+ *
  * @author VISTALL
- * @since 24/11/2021
- * <p>
- * Simple html view. HTML5, CSS3, JS not supported. WebView can be used as replacement, if need more powerful html view
+ * @since 2021-11-24
  */
 public interface HtmlView extends Component {
     record RenderData(String html, String inlineCss, URL[] externalCsses) {
@@ -35,15 +35,18 @@ public interface HtmlView extends Component {
             this(html, "", new URL[0]);
         }
     }
+
     static HtmlView create() {
         return UIInternal.get()._Components_htmlView();
     }
+
     CompletableFuture<?> render(RenderData renderData);
 
     /**
      * Use only of result of processing {@link #render(RenderData)}
      */
     void scrollToMarkdownSrcOffset(int offset);
+
     default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
         return addListener(HyperlinkEvent.class, hyperlinkListener);
     }

@@ -27,46 +27,46 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-05-14
  */
 public final class TextAttribute {
-  @Deprecated
-  public static final int STYLE_PLAIN = Font.STYLE_PLAIN;
-  @Deprecated
-  public static final int STYLE_BOLD = Font.STYLE_BOLD;
-  @Deprecated
-  public static final int STYLE_ITALIC = Font.STYLE_ITALIC;
+    @Deprecated
+    public static final int STYLE_PLAIN = Font.STYLE_PLAIN;
+    @Deprecated
+    public static final int STYLE_BOLD = Font.STYLE_BOLD;
+    @Deprecated
+    public static final int STYLE_ITALIC = Font.STYLE_ITALIC;
 
-  public static final TextAttribute REGULAR = new TextAttribute(STYLE_PLAIN, null, null);
-  public static final TextAttribute REGULAR_BOLD = new TextAttribute(STYLE_BOLD, null);
-  public static final TextAttribute REGULAR_ITALIC = new TextAttribute(STYLE_ITALIC, null, null);
-  public static final TextAttribute ERROR = new TextAttribute(STYLE_PLAIN, StandardColors.RED, null);
-  public static final TextAttribute ERROR_BOLD = new TextAttribute(STYLE_BOLD, StandardColors.RED, null);
+    public static final TextAttribute REGULAR = new TextAttribute(STYLE_PLAIN, null, null);
+    public static final TextAttribute REGULAR_BOLD = new TextAttribute(STYLE_BOLD, null);
+    public static final TextAttribute REGULAR_ITALIC = new TextAttribute(STYLE_ITALIC, null, null);
+    public static final TextAttribute ERROR = new TextAttribute(STYLE_PLAIN, StandardColors.RED, null);
+    public static final TextAttribute ERROR_BOLD = new TextAttribute(STYLE_BOLD, StandardColors.RED, null);
 
-  public static final TextAttribute GRAYED = new TextAttribute(STYLE_PLAIN, ComponentColors.DISABLED_TEXT);
+    public static final TextAttribute GRAYED = new TextAttribute(STYLE_PLAIN, ComponentColors.DISABLED_TEXT);
 
-  public static final TextAttribute GRAY = new TextAttribute(STYLE_PLAIN, StandardColors.GRAY);
+    public static final TextAttribute GRAY = new TextAttribute(STYLE_PLAIN, StandardColors.GRAY);
 
-  private final int myStyle;
-  private final @Nullable ColorValue myBackgroundColor;
-  private final @Nullable ColorValue myForegroundColor;
+    private final int myStyle;
+    private final @Nullable ColorValue myBackgroundColor;
+    private final @Nullable ColorValue myForegroundColor;
 
-  public TextAttribute(int style, @Nullable ColorValue foregroundColor) {
-    this(style, foregroundColor, null);
-  }
+    public TextAttribute(int style, @Nullable ColorValue foregroundColor) {
+        this(style, foregroundColor, null);
+    }
 
-  public TextAttribute(int style, @Nullable ColorValue foregroundColor, @Nullable ColorValue backgroundColor) {
-    myStyle = style;
-    myForegroundColor = foregroundColor;
-    myBackgroundColor = backgroundColor;
-  }
+    public TextAttribute(int style, @Nullable ColorValue foregroundColor, @Nullable ColorValue backgroundColor) {
+        myStyle = style;
+        myForegroundColor = foregroundColor;
+        myBackgroundColor = backgroundColor;
+    }
 
-  public int getStyle() {
-    return myStyle;
-  }
+    public int getStyle() {
+        return myStyle;
+    }
 
-  public @Nullable ColorValue getForegroundColor() {
-    return myForegroundColor;
-  }
+    public @Nullable ColorValue getForegroundColor() {
+        return myForegroundColor;
+    }
 
-  public @Nullable ColorValue getBackgroundColor() {
-    return myBackgroundColor;
-  }
+    public @Nullable ColorValue getBackgroundColor() {
+        return myBackgroundColor;
+    }
 }

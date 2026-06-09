@@ -19,13 +19,14 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 22/03/2021
+ * @since 2021-03-22
  */
 public interface PasswordBox extends ValueComponent<String>, HasValidator<String>, HasFocus {
-  static PasswordBox create() {
-    return UIInternal.get()._Components_passwordBox(null);
-  }
-  static PasswordBox create(String password) {
-    return UIInternal.get()._Components_passwordBox(password);
-  }
+    static PasswordBox create() {
+        return UIInternal.get()._Components_passwordBox(null);
+    }
+
+    static PasswordBox create(String password) {
+        return UIInternal.get()._Components_passwordBox(password);
+    }
 }

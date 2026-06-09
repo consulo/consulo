@@ -21,7 +21,7 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface Menu extends MenuItem {
     static Menu create(LocalizeValue text) {

@@ -20,31 +20,31 @@ import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
 /**
- * @author VISTALL
- * @since 2020-11-26
- *
  * Similar component to {@link CheckBox}, but has different cases for usage
  *
  * Read for example {@linkplain https://docs.microsoft.com/ru-ru/windows/uwp/design/controls-and-patterns/toggles}
+ *
+ * @author VISTALL
+ * @since 2020-11-26
  */
 public interface ToggleSwitch extends ValueComponent<Boolean> {
-  static ToggleSwitch create() {
-    return create(false);
-  }
+    static ToggleSwitch create() {
+        return create(false);
+    }
 
-  static ToggleSwitch create(boolean enabled) {
-    return UIInternal.get()._Components_toggleSwitch(enabled);
-  }
+    static ToggleSwitch create(boolean enabled) {
+        return UIInternal.get()._Components_toggleSwitch(enabled);
+    }
 
-  @Override
-  Boolean getValue();
+    @Override
+    Boolean getValue();
 
-  @Override
-  @RequiredUIAccess
-  default void setValue(@Nullable Boolean value) {
-    setValue(value, true);
-  }
+    @Override
+    @RequiredUIAccess
+    default void setValue(@Nullable Boolean value) {
+        setValue(value, true);
+    }
 
-  @RequiredUIAccess
-  void setValue(@Nullable Boolean value, boolean fireListeners);
+    @RequiredUIAccess
+    void setValue(@Nullable Boolean value, boolean fireListeners);
 }

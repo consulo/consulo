@@ -17,7 +17,7 @@ package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 20/12/2025
+ * @since 2025-12-20
  */
 public enum ProgressBarStyle implements ComponentStyle {
     SPINNER,

@@ -24,7 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface Window extends Component, Disposable {
     static Window create(String title, WindowOptions options) {
@@ -52,18 +52,19 @@ public interface Window extends Component, Disposable {
     void setMenuBar(@Nullable MenuBar menuBar);
 
     /**
-     * not block current thread
+     * Doesn't block current thread.
      */
     @RequiredUIAccess
     void show();
 
     /**
-     * Close and dispose resources. Window can't be opened second time
+     * Close and dispose resources. Window can't be opened second time.
      */
     @RequiredUIAccess
     void close();
 
     boolean isActive();
+
     default Disposable addCloseListener(ComponentEventListener<Window, WindowCloseEvent> listener) {
         return addListener(WindowCloseEvent.class, listener);
     }

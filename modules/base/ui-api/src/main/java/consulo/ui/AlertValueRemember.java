@@ -22,15 +22,16 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-01-16
  */
 public interface AlertValueRemember<V> {
-  void setValue(V value);
+    void setValue(V value);
 
-  /**
-   * @return null if no value, dialog will show
-   */
-  @Nullable V getValue();
-  String getMessageBoxText();
+    /**
+     * @return null if no value, dialog will be shown.
+     */
+    @Nullable V getValue();
 
-  default boolean isRememberByDefault() {
-    return false;
-  }
+    String getMessageBoxText();
+
+    default boolean isRememberByDefault() {
+        return false;
+    }
 }

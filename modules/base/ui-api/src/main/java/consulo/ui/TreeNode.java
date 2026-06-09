@@ -31,7 +31,7 @@ public interface TreeNode<T> {
     boolean isLeaf();
 
     /**
-     * @return if rootValue is null and treeNode wrap it
+     * @return if rootValue is null and treeNode wraps it
      */
     @Nullable T getValue();
 }

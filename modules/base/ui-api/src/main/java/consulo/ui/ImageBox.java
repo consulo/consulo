@@ -20,11 +20,12 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2016-06-13
  */
 public interface ImageBox extends Component {
-  static ImageBox create(Image image) {
-    return UIInternal.get()._Components_imageBox(image);
-  }
-  Image getImage();
+    static ImageBox create(Image image) {
+        return UIInternal.get()._Components_imageBox(image);
+    }
+
+    Image getImage();
 }

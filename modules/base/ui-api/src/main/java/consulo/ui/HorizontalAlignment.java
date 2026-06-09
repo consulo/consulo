@@ -17,10 +17,10 @@ package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 27-Oct-17
+ * @since 2017-10-27
  */
 public enum HorizontalAlignment {
-  LEFT,
-  CENTER,
-  RIGHT
+    LEFT,
+    CENTER,
+    RIGHT
 }
