@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.*;
 import org.jspecify.annotations.Nullable;

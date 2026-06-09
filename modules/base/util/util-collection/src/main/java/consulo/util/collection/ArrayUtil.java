@@ -216,7 +216,7 @@ public class ArrayUtil {
         int[] ret = newIntArray(list.size());
         int i = 0;
         for (Integer e : list) {
-            ret[i++] = e.intValue();
+            ret[i++] = e;
         }
         return ret;
     }
@@ -466,7 +466,7 @@ public class ArrayUtil {
         return indexOf(src, obj);
     }
 
-    public static <T> int find(T[] src, T obj) {
+    public static <T> int find(T[] src, @Nullable T obj) {
         for (int i = 0; i < src.length; i++) {
             T o = src[i];
             if (o == null) {
@@ -750,7 +750,7 @@ public class ArrayUtil {
         return -1;
     }
 
-    public static <T> int lastIndexOf(T[] src, T obj) {
+    public static <T> int lastIndexOf(T[] src, @Nullable T obj) {
         for (int i = src.length - 1; i >= 0; i--) {
             T o = src[i];
             if (o == null) {
@@ -805,6 +805,7 @@ public class ArrayUtil {
         return -1;
     }
 
+    @SafeVarargs
     public static <T> boolean contains(@Nullable T o, T... objects) {
         return indexOf(objects, o) >= 0;
     }
@@ -852,20 +853,20 @@ public class ArrayUtil {
         return count == sample.length ? sample : newArray(getComponentType(sample), count);
     }
 
-    public static <T> @Nullable T getFirstElement(@Nullable T[] array) {
+    public static <T> @Nullable T getFirstElement(T @Nullable [] array) {
         return array != null && array.length > 0 ? array[0] : null;
     }
 
-    public static <T> @Nullable T getLastElement(@Nullable T[] array) {
+    public static <T> @Nullable T getLastElement(T @Nullable [] array) {
         return array != null && array.length > 0 ? array[array.length - 1] : null;
     }
 
-    public static int getLastElement(@Nullable int[] array, int defaultValue) {
+    public static int getLastElement(int @Nullable [] array, int defaultValue) {
         return array == null || array.length == 0 ? defaultValue : array[array.length - 1];
     }
 
     @Contract("null -> true")
-    public static <T> boolean isEmpty(@Nullable T[] array) {
+    public static <T> boolean isEmpty(T @Nullable [] array) {
         return array == null || array.length == 0;
     }
 
