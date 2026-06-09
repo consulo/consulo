@@ -4,7 +4,6 @@ package consulo.process;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -412,7 +411,6 @@ public final class CommandLineUtil {
     return numTrailingBackslashes / 2;
   }
 
-  
   public static String getWinShellName() {
     return "cmd.exe";
   }
@@ -456,10 +454,7 @@ public final class CommandLineUtil {
     }
   }
 
-  @Contract(pure = true)
-  public static
-  
-  String escapeParameterOnWindows(String parameter, boolean isWinShell) {
+  public static String escapeParameterOnWindows(String parameter, boolean isWinShell) {
     String s = StringUtil.convertLineSeparators(parameter, "");
     if (s.isEmpty()) return QQ;
     boolean hadLineBreaks = !s.equals(parameter);
@@ -468,9 +463,7 @@ public final class CommandLineUtil {
     return result;
   }
 
-  public static
-  
-  String extractPresentableName(String commandLine) {
+  public static String extractPresentableName(String commandLine) {
     String executable = commandLine.trim();
 
     List<String> words = StringUtil.splitHonorQuotes(executable, ' ');

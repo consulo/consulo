@@ -15,9 +15,9 @@
  */
 package consulo.web.internal.ui.base;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.ui.Component;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 /**
  * @author VISTALL

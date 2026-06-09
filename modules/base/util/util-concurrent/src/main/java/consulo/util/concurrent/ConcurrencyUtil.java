@@ -18,7 +18,6 @@ package consulo.util.concurrent;
 import consulo.util.concurrent.internal.SameThreadExecutorService;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -185,7 +184,6 @@ public class ConcurrencyUtil {
     }
   }
 
-  @Contract(pure = true)
   public static Runnable underThreadNameRunnable(String name, Runnable runnable) {
     return () -> runUnderThreadName(name, runnable);
   }

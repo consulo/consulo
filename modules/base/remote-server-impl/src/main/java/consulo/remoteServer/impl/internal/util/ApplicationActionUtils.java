@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.AppUIExecutor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -15,7 +16,6 @@ import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.ui.ServersTreeNodeSelector;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 public final class ApplicationActionUtils {

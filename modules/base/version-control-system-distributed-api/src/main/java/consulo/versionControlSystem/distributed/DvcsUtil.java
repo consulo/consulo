@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.distributed;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.AccessToken;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.DateFormatUtil;
@@ -55,7 +56,6 @@ import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,6 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 public class DvcsUtil {
-
     private static final Logger LOG = Logger.getInstance(DvcsUtil.class);
 
     private static final Logger LOGGER = Logger.getInstance(DvcsUtil.class);
@@ -90,12 +89,10 @@ public class DvcsUtil {
         return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
     };
 
-    
     public static List<VirtualFile> sortVirtualFilesByPresentation(Collection<VirtualFile> virtualFiles) {
         return ContainerUtil.sorted(virtualFiles, VIRTUAL_FILE_PRESENTATION_COMPARATOR);
     }
 
-    
     public static List<VirtualFile> findVirtualFilesWithRefresh(List<File> files) {
         RefreshVFsSynchronously.refreshFiles(files);
         return ContainerUtil.mapNotNull(files, file -> VirtualFileUtil.findFileByIoFile(file, false));
@@ -109,7 +106,6 @@ public class DvcsUtil {
         return VcsUtil.getShortVcsRootName(project, root);
     }
 
-    
     public static String getShortRepositoryName(Repository repository) {
         return getShortRepositoryName(repository.getProject(), repository.getRoot());
     }
@@ -117,9 +113,11 @@ public class DvcsUtil {
     /**
      * Find the VCS root on which a repository-wide AnAction is to be invoked in a given context.
      */
-    public static @Nullable <T extends Repository> T guessRepositoryForOperation(Project project,
-                                                                       AbstractRepositoryManager<T> manager,
-                                                                       DataContext dataContext) {
+    public static @Nullable <T extends Repository> T guessRepositoryForOperation(
+        Project project,
+        AbstractRepositoryManager<T> manager,
+        DataContext dataContext
+    ) {
         VirtualFile file = dataContext.getData(VirtualFile.KEY);
         T repository = manager.getRepositoryForRootQuick(findVcsRootFor(project, file));
         if (repository != null) {
@@ -159,12 +157,10 @@ public class DvcsUtil {
         return null;
     }
 
-    
     public static String getShortNames(Collection<? extends Repository> repositories) {
         return StringUtil.join(repositories, DvcsUtil::getShortRepositoryName, ", ");
     }
 
-    
     public static String fileOrFolder(VirtualFile file) {
         if (file.isDirectory()) {
             return "folder";
@@ -222,7 +218,6 @@ public class DvcsUtil {
         return result;
     }
 
-    
     public static String getShortHash(String hash) {
         if (hash.length() < SHORT_HASH_LENGTH) {
             LOG.debug("Unexpectedly short hash: [" + hash + "]");
@@ -233,17 +228,14 @@ public class DvcsUtil {
         return hash.substring(0, Math.min(SHORT_HASH_LENGTH, hash.length()));
     }
 
-    
     public static String getDateString(TimedVcsCommit commit) {
         return DateFormatUtil.formatPrettyDateTime(commit.getTimestamp()) + " ";
     }
 
-    
     public static AccessToken workingTreeChangeStarted(Project project) {
         return workingTreeChangeStarted(project, null);
     }
 
-    
     public static AccessToken workingTreeChangeStarted(Project project, @Nullable String activityName) {
         BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.class).batchChangeStarted(project, activityName);
         return new AccessToken() {
@@ -282,10 +274,13 @@ public class DvcsUtil {
         return tryLoadFile(file, null);
     }
 
-    
     public static String tryLoadFile(File file, @Nullable Charset encoding) throws RepoStateException {
-        return tryOrThrow(() -> StringUtil.convertLineSeparators(RawFileLoader.getInstance()
-            .loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)).trim(), file);
+        return tryOrThrow(
+            () -> StringUtil.convertLineSeparators(
+                RawFileLoader.getInstance().loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)
+            ).trim(),
+            file
+        );
     }
 
     @Contract("_ , !null -> !null")
@@ -375,7 +370,11 @@ public class DvcsUtil {
             : manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
     }
 
-    private static @Nullable VirtualFile guessRootForVcs(Project project, @Nullable AbstractVcs vcs, @Nullable String defaultRootPathValue) {
+    private static @Nullable VirtualFile guessRootForVcs(
+        Project project,
+        @Nullable AbstractVcs vcs,
+        @Nullable String defaultRootPathValue
+    ) {
         if (project.isDisposed()) {
             return null;
         }
@@ -497,7 +496,6 @@ public class DvcsUtil {
         return root;
     }
 
-    
     public static <R extends Repository> Map<R, List<VcsFullCommitDetails>> groupCommitsByRoots(
         RepositoryManager<R> repoManager,
         List<? extends VcsFullCommitDetails> commits
@@ -526,17 +524,14 @@ public class DvcsUtil {
         );
     }
 
-    
     public static String joinShortNames(Collection<? extends Repository> repositories) {
         return joinShortNames(repositories, -1);
     }
 
-    
     public static String joinShortNames(Collection<? extends Repository> repositories, int limit) {
         return joinWithAnd(ContainerUtil.map(repositories, repository -> getShortRepositoryName(repository)), limit);
     }
 
-    
     public static String joinWithAnd(List<String> strings, int limit) {
         int size = strings.size();
         if (size == 0) {

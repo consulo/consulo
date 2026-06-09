@@ -15,6 +15,7 @@
  */
 package consulo.externalSystem.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
@@ -83,7 +84,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.PathsList;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -103,7 +103,6 @@ public class ExternalSystemApiUtil {
     private static final Logger LOG = Logger.getInstance(ExternalSystemApiUtil.class);
     private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
 
-    
     private static final Map<String, String> RUNNER_IDS = new HashMap<>();
 
     static {
@@ -115,13 +114,10 @@ public class ExternalSystemApiUtil {
         void execute(ProgressIndicator indicator);
     }
 
-    
     public static final String PATH_SEPARATOR = "/";
 
-    
     private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(?:.*/)?(.+?)(?:-([\\d+](?:\\.[\\d]+)*))?(?:\\.[^\\.]+?)?");
 
-    
     public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<>() {
         @Override
         public int compare(Object o1, Object o2) {
@@ -150,10 +146,8 @@ public class ExternalSystemApiUtil {
         }
     };
 
-    
     private static final Function<DataNode<?>, Key<?>> GROUPER = DataNode::getKey;
 
-    
     private static final Comparator<Object> COMPARABLE_GLUE = (o1, o2) -> ((Comparable)o1).compareTo(o2);
 
     private ExternalSystemApiUtil() {
@@ -489,7 +483,6 @@ public class ExternalSystemApiUtil {
         return PathUtil.getCanonicalPath(p);
     }
 
-    
     public static String getLocalFileSystemPath(VirtualFile file) {
         VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
         if (archiveRoot != null) {
@@ -498,7 +491,6 @@ public class ExternalSystemApiUtil {
         return toCanonicalPath(file.getPath());
     }
 
-    
     public static ExternalSystemManager<?, ?, ?, ?, ?> getManagerStrict(String externalSystemId) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager != null) {
@@ -517,12 +509,10 @@ public class ExternalSystemApiUtil {
         return getManager(externalSystemId.getId());
     }
 
-    
     public static Map<Key<?>, List<DataNode<?>>> group(Collection<DataNode<?>> nodes) {
         return groupBy(nodes, GROUPER);
     }
 
-    
     public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(Collection<DataNode<V>> nodes, Key<K> key) {
         return groupBy(nodes, new Function<DataNode<V>, DataNode<K>>() {
             @Override
@@ -532,7 +522,6 @@ public class ExternalSystemApiUtil {
         });
     }
 
-    
     public static <K, V> Map<K, List<V>> groupBy(Collection<V> nodes, Function<V, K> grouper) {
         Map<K, List<V>> result = new HashMap<>();
         for (V data : nodes) {
@@ -566,7 +555,6 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    
     public static <T> Collection<DataNode<T>> getChildren(DataNode<?> node, Key<T> key) {
         Collection<DataNode<T>> result = null;
         for (DataNode<?> child : node.getChildren()) {
@@ -617,7 +605,6 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    
     public static <T> Collection<DataNode<T>> findAll(DataNode<?> parent, Key<T> key) {
         Collection<DataNode<T>> result = null;
         for (DataNode<?> child : parent.getChildren()) {
@@ -746,7 +733,6 @@ public class ExternalSystemApiUtil {
         }
     }
 
-    
     public static String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath) {
         if (rootProjectPath == null) {
             File rootProjectDir = new File(targetProjectPath);
@@ -827,11 +813,8 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    
-    public static AbstractExternalSystemSettings getSettings(
-        Project project,
-        ProjectSystemId externalSystemId
-    ) throws IllegalArgumentException {
+    public static AbstractExternalSystemSettings getSettings(Project project, ProjectSystemId externalSystemId)
+        throws IllegalArgumentException {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager == null) {
             throw new IllegalArgumentException(String.format(
@@ -843,10 +826,8 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(
-        Project project,
-        ProjectSystemId externalSystemId
-    ) throws IllegalArgumentException {
+    public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(Project project, ProjectSystemId externalSystemId)
+        throws IllegalArgumentException {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager == null) {
             throw new IllegalArgumentException(String.format(

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.parser;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.language.BracePair;
@@ -34,7 +34,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringHash;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.util.*;
@@ -55,7 +54,6 @@ import static consulo.util.lang.StringUtil.isNotEmpty;
  * @author gregsh
  */
 public class GeneratedParserUtilBase {
-
   private static final Logger LOG = Logger.getInstance(GeneratedParserUtilBase.class);
 
   private static final int MAX_RECURSION_LEVEL = StringUtil.parseInt(System.getProperty("grammar.kit.gpub.max.level"), 1000);
@@ -90,10 +88,8 @@ public class GeneratedParserUtilBase {
   };
 
   public interface Hook<T> {
-
     @Contract("_,null,_->null")
     PsiBuilder.Marker run(PsiBuilder builder, PsiBuilder.Marker marker, T param);
-
   }
 
   public static final Hook<WhitespacesAndCommentsBinder> LEFT_BINDER = new Hook<WhitespacesAndCommentsBinder>() {
@@ -1192,7 +1188,6 @@ public class GeneratedParserUtilBase {
       super("DUMMY_BLOCK", Language.ANY);
     }
 
-    
     @Override
     public ASTNode createCompositeNode() {
       return new DummyBlock();
@@ -1204,13 +1199,11 @@ public class GeneratedParserUtilBase {
       super(DUMMY_BLOCK);
     }
 
-    
     @Override
     public PsiReference[] getReferences() {
       return PsiReference.EMPTY_ARRAY;
     }
 
-    
     @Override
     @RequiredReadAction
     public Language getLanguage() {

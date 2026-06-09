@@ -15,6 +15,7 @@
  */
 package consulo.ide.ui.popup;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.dataContext.DataManager;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
@@ -24,7 +25,6 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.PopupUpdateProcessorBase;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;

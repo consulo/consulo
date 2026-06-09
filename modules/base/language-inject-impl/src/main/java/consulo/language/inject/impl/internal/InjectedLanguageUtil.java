@@ -2,6 +2,7 @@
 
 package consulo.language.inject.impl.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
@@ -53,7 +54,6 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -375,7 +375,6 @@ public class InjectedLanguageUtil {
     }
   }
 
-  
   private static InjectionResult getEmptyInjectionResult(PsiFile host) {
     return LanguageCachedValueUtil.getCachedValue(host, () -> CachedValueProvider.Result.createSingleDependency(new InjectionResult(host, null, null), PsiModificationTracker.MODIFICATION_COUNT));
   }
@@ -559,7 +558,6 @@ public class InjectedLanguageUtil {
     return containingFile;
   }
 
-  
   public static Editor getTopLevelEditor(Editor editor) {
     return EditorWindow.getTopLevelEditor(editor);
   }

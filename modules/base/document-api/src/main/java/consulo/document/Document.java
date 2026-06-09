@@ -9,9 +9,8 @@ import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the contents of a text file loaded into memory, and possibly opened in an IDE
@@ -36,13 +35,10 @@ public interface Document extends UserDataHolder {
      *
      * @return document content.
      */
-    @Contract(pure = true)
     default String getText() {
         return getImmutableCharSequence().toString();
     }
 
-    
-    @Contract(pure = true)
     default String getText(TextRange range) {
         return range.substring(getText());
     }
@@ -56,8 +52,6 @@ public interface Document extends UserDataHolder {
      * @return inplace document content.
      * @see #getTextLength()
      */
-    @Contract(pure = true)
-    
     default CharSequence getCharsSequence() {
         return getImmutableCharSequence();
     }
@@ -66,7 +60,6 @@ public interface Document extends UserDataHolder {
      * @return a char sequence representing document content that's guaranteed to be immutable. No read- or write-action is necessary.
      * @see consulo.util.lang.ImmutableCharSequence
      */
-    @Contract(pure = true)
     CharSequence getImmutableCharSequence();
 
     /**
@@ -83,7 +76,6 @@ public interface Document extends UserDataHolder {
      * @return the length of the document text.
      * @see #getCharsSequence()
      */
-    @Contract(pure = true)
     default int getTextLength() {
         return getImmutableCharSequence().length();
     }
@@ -93,7 +85,6 @@ public interface Document extends UserDataHolder {
      *
      * @return the number of lines in the document.
      */
-    @Contract(pure = true)
     int getLineCount();
 
     /**
@@ -103,7 +94,6 @@ public interface Document extends UserDataHolder {
      *               getTextLength()-1)
      * @return the line number corresponding to the offset.
      */
-    @Contract(pure = true)
     int getLineNumber(int offset);
 
     /**
@@ -112,7 +102,6 @@ public interface Document extends UserDataHolder {
      * @param line the line number (from 0 to getLineCount()-1)
      * @return the start offset for the line.
      */
-    @Contract(pure = true)
     int getLineStartOffset(int line);
 
     /**
@@ -121,7 +110,6 @@ public interface Document extends UserDataHolder {
      * @param line the line number (from 0 to getLineCount()-1)
      * @return the end offset for the line.
      */
-    @Contract(pure = true)
     int getLineEndOffset(int line);
 
     /**
@@ -193,7 +181,6 @@ public interface Document extends UserDataHolder {
      * @return {@code true} if the document text is writable, {@code false} if it is read-only.
      * @see #fireReadOnlyModificationAttempt()
      */
-    @Contract(pure = true)
     boolean isWritable();
 
     /**
@@ -204,7 +191,6 @@ public interface Document extends UserDataHolder {
      * @see PsiFile#getModificationStamp()
      * @see VirtualFile#getModificationStamp()
      */
-    @Contract(pure = true)
     long getModificationStamp();
 
     /**
@@ -227,8 +213,10 @@ public interface Document extends UserDataHolder {
     }
 
     /**
-     * Removes a listener for receiving notifications about changes in the document content, previously added via {@link #addDocumentListener(DocumentListener)}.
-     * Don't call this method for listeners added via {@link #addDocumentListener(DocumentListener, Disposable)}, as that might cause memory leaks.
+     * Removes a listener for receiving notifications about changes in the document content, previously added via
+     * {@link #addDocumentListener(DocumentListener)}.
+     * Don't call this method for listeners added via {@link #addDocumentListener(DocumentListener, Disposable)},
+     * as that might cause memory leaks.
      *
      * @param listener the listener instance.
      */
@@ -367,7 +355,6 @@ public interface Document extends UserDataHolder {
         return createRangeMarker(textRange.getStartOffset(), textRange.getEndOffset());
     }
 
-    @Contract(pure = true)
     default int getLineSeparatorLength(int line) {
         return 0;
     }

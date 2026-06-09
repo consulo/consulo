@@ -15,6 +15,7 @@
  */
 package consulo.util.jdom;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharSequenceReader;
 import consulo.util.io.URLUtil;
@@ -31,7 +32,6 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.output.support.AbstractXMLOutputProcessor;
 import org.jdom.output.support.FormatStack;
 import org.jdom.output.support.Walker;
-import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
@@ -95,8 +95,8 @@ public class JDOMUtil {
     return addToHash(0, root, skipEmptyText);
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public static int getTreeHash(Document document) {
     return getTreeHash(document.getRootElement());
   }
@@ -127,11 +127,12 @@ public class JDOMUtil {
     return i * 31 + s.hashCode();
   }
 
-  @SuppressWarnings("unused")
-  @Deprecated
   /**
    * to remove in IDEA 15
-   */ public static Object[] getChildNodesWithAttrs(Element e) {
+   */
+  @Deprecated
+  @SuppressWarnings("unused")
+  public static Object[] getChildNodesWithAttrs(Element e) {
     ArrayList<Object> result = new ArrayList<>();
     result.addAll(e.getContent());
     result.addAll(e.getAttributes());
@@ -566,8 +567,8 @@ public class JDOMUtil {
     return buffer == null ? text : buffer.toString();
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public static List<Element> getChildrenFromAllNamespaces(Element element, String name) {
     List<Element> result = new ArrayList<>();
     for (Element child : element.getChildren()) {
@@ -693,8 +694,8 @@ public class JDOMUtil {
     public boolean hasNullAttributes = false;
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public static org.w3c.dom.Element convertToDOM(Element e) {
     try {
       Document d = new Document();
@@ -716,8 +717,8 @@ public class JDOMUtil {
     }
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public static Element convertFromDOM(org.w3c.dom.Element e) {
     return new DOMBuilder().build(e);
   }
@@ -736,8 +737,8 @@ public class JDOMUtil {
     }
   }
 
-  @SuppressWarnings("unused")
   @Deprecated
+  @SuppressWarnings("unused")
   public static @Nullable Element cloneElement(Element element, ElementFilter elementFilter) {
     Element result = new Element(element.getName(), element.getNamespace());
     List<Attribute> attributes = element.getAttributes();

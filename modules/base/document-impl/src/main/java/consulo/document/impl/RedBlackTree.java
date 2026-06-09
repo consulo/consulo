@@ -3,7 +3,6 @@ package consulo.document.impl;
 
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -295,7 +294,6 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
         private volatile byte myFlags;
         static final byte COLOR_MASK = 1;
 
-        @Contract(pure = true)
         public boolean isFlagSet(byte mask) {
             return BitUtil.isSet(myFlags, mask);
         }
@@ -350,7 +348,6 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
 
         public abstract boolean hasAliveKey(boolean purgeDead);
 
-        @Contract(pure = true)
         public boolean isBlack() {
             return isFlagSet(COLOR_MASK);
         }
@@ -402,7 +399,6 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
         assert isBlack(root);
     }
 
-    @Contract(pure = true)
     private static boolean isBlack(@Nullable Node<?> n) {
         return n == null || n.isBlack();
     }

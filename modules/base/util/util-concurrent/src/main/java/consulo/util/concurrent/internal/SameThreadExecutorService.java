@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.concurrent.internal;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
@@ -35,7 +33,6 @@ public class SameThreadExecutorService extends AbstractExecutorService {
     return true;
   }
 
-  @Contract(pure = true)
   @Override
   public List<Runnable> shutdownNow() {
     return Collections.emptyList();

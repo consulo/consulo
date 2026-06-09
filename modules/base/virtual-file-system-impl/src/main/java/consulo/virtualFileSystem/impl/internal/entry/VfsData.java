@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.entry;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.logging.Logger;
@@ -19,7 +20,6 @@ import consulo.virtualFileSystem.impl.internal.FileNameCache;
 import consulo.virtualFileSystem.impl.internal.PersistentFSImpl;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicIntegerArray;
@@ -171,7 +171,6 @@ public class VfsData {
     segment.myObjectArray.set(offset, data);
   }
 
-  
   CharSequence getNameByFileId(int id) {
     return FileNameCache.getVFileName(getNameId(id));
   }
@@ -395,5 +394,4 @@ public class VfsData {
       return "DirectoryData{" + "myUserMap=" + myUserMap + ", myChildrenIds=" + Arrays.toString(myChildrenIds) + ", myAdoptedNames=" + myAdoptedNames + '}';
     }
   }
-
 }

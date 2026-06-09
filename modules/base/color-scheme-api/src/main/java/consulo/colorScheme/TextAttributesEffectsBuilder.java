@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.colorScheme;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 
@@ -93,7 +93,6 @@ public class TextAttributesEffectsBuilder {
         return mutateBuilder(effectType, effectColor, myEffectsMap::putIfAbsent);
     }
 
-    
     private TextAttributesEffectsBuilder mutateBuilder(
         @Nullable EffectType effectType,
         @Nullable ColorValue effectColor,
@@ -168,7 +167,6 @@ public class TextAttributesEffectsBuilder {
     }
 
     public static class EffectDescriptor {
-        
         public final EffectType effectType;
         
         public final ColorValue effectColor;
@@ -178,7 +176,6 @@ public class TextAttributesEffectsBuilder {
             this.effectColor = effectColor;
         }
 
-        
         static EffectDescriptor create(EffectType effectType, ColorValue effectColor) {
             return new EffectDescriptor(effectType, effectColor);
         }
