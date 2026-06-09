@@ -110,6 +110,7 @@ public class TokenSequence implements TokenList {
                 }
 
                 if (i >= myLexTypes.length - 1) {
+                    resizeLexemes(i * 3 / 2);
                 }
                 int tokenStart = myLexer.getTokenStart();
                 if (tokenStart < offset) {
