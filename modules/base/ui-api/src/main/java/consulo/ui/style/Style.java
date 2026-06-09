@@ -24,9 +24,9 @@ import consulo.ui.image.Image;
  * @since 2016-06-22
  */
 public interface Style {
-    static String LIGHT_ID = "light";
-    static String SEMI_DARK = "semi_dark";
-    static String DARK_ID = "dark";
+    String LIGHT_ID = "light";
+    String SEMI_DARK = "semi_dark";
+    String DARK_ID = "dark";
 
     String getId();
 

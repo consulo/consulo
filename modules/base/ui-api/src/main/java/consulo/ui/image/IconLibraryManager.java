@@ -28,7 +28,7 @@ public interface IconLibraryManager {
     String LIGHT_LIBRARY_ID = "light";
     String DARK_LIBRARY_ID = "dark";
 
-    public static IconLibraryManager get() {
+    static IconLibraryManager get() {
         return UIInternal.get()._IconLibraryManager_get();
     }
 
