@@ -101,7 +101,6 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> newWeakValueHashMap() {
         return new WeakValueHashMap<>(HashingStrategy.<K>canonical());
     }
@@ -111,22 +110,18 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> newWeakHashMap() {
         return newWeakHashMap(4);
     }
 
-    @Contract("_ -> new")
     public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity) {
         return newWeakHashMap(initialCapacity, 0.8f, HashingStrategy.canonical());
     }
 
-    @Contract("_, _, _ -> new")
     public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
         return ourFactory.<K, V>newWeakHashMap(initialCapacity, loadFactor, strategy);
     }
 
-    @Contract(" -> new")
     public static <K, V> Map<K, V> newWeakKeyWeakValueHashMap() {
         return new WeakKeyWeakValueHashMap<>(true);
     }
@@ -136,7 +131,6 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> newSoftValueHashMap() {
         return new SoftValueHashMap<>(HashingStrategy.canonical());
     }
@@ -149,12 +143,10 @@ public final class Maps {
         return new ConcurrentSoftHashMap<>();
     }
 
-    @Contract(" -> new")
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap() {
         return new ConcurrentWeakHashMap<>(0.75f);
     }
 
-    @Contract(" -> new")
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakIdentityMap() {
         return new ConcurrentWeakHashMap<>(HashingStrategy.<K>identity());
     }
@@ -247,12 +239,10 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> newSoftHashMap() {
         return newSoftHashMap(HashingStrategy.canonical());
     }
 
-    @Contract("_ -> new")
     public static <K, V> Map<K, V> newSoftHashMap(HashingStrategy<? super K> strategy) {
         return ourFactory.<K, V>newSoftHashMap(strategy);
     }
@@ -261,7 +251,6 @@ public final class Maps {
         ourFactory.trimToSize(map);
     }
 
-    @Contract("_ -> new")
     public static <K, V> Map<K, V> newLinkedHashMap(Predicate<Map<K, V>> removeEldestEntryFunc) {
         return new LinkedHashMap<>() {
             @Override

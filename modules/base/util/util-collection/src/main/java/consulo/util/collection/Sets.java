@@ -37,7 +37,6 @@ public final class Sets {
         return set == null ? Set.<T>of() : set;
     }
 
-    @Contract(" -> new")
     public static <T> Set<T> newWeakHashSet() {
         return new WeakHashSet<>();
     }

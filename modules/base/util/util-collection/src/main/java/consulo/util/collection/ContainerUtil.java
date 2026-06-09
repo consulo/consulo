@@ -559,17 +559,14 @@ public class ContainerUtil {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> createSoftMap() {
         return Maps.newSoftHashMap();
     }
 
-    @Contract("_ -> new")
     public static <K, V> Map<K, V> createSoftMap(HashingStrategy<? super K> strategy) {
         return Maps.newSoftHashMap(strategy);
     }
 
-    @Contract(" -> new")
     public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap() {
         return createConcurrentSoftKeySoftValueMap(100, 0.75f, Runtime.getRuntime().availableProcessors(), HashingStrategy.canonical());
     }
@@ -608,7 +605,6 @@ public class ContainerUtil {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> createSoftValueMap() {
         return new SoftValueHashMap<>(HashingStrategy.canonical());
     }
@@ -618,25 +614,21 @@ public class ContainerUtil {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     @Deprecated
     public static <K, V> Map<K, V> createWeakMap() {
         return Maps.newWeakHashMap(4);
     }
 
-    @Contract("_ -> new")
     @Deprecated
     public static <K, V> Map<K, V> createWeakMap(int initialCapacity) {
         return Maps.newWeakHashMap(initialCapacity, 0.8f, HashingStrategy.canonical());
     }
 
-    @Contract("_, _, _ -> new")
     @Deprecated
     public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
         return Maps.newWeakHashMap(initialCapacity, loadFactor, strategy);
     }
 
-    @Contract(" -> new")
     public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
         return new WeakKeyWeakValueHashMap<>(true);
     }
@@ -766,7 +758,6 @@ public class ContainerUtil {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     @Deprecated
     public static <K, V> Map<K, V> createWeakValueMap() {
         return Maps.newWeakValueHashMap();
@@ -777,7 +768,6 @@ public class ContainerUtil {
         return Maps.newConcurrentSoftHashMap();
     }
 
-    @Contract(" -> new")
     @Deprecated
     public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
         return Maps.newConcurrentWeakHashMap();
