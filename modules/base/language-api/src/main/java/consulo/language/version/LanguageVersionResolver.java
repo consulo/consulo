@@ -42,8 +42,8 @@ public interface LanguageVersionResolver extends LanguageExtension {
       return Language.ANY;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public LanguageVersion getLanguageVersion(Language language, @Nullable PsiElement element) {
       LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
@@ -54,8 +54,8 @@ public interface LanguageVersionResolver extends LanguageExtension {
       return versions[0];
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public LanguageVersion getLanguageVersion(Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {

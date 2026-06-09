@@ -533,8 +533,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return getViewProvider().isEventSystemEnabled();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public LanguageVersion getLanguageVersion() {
         VirtualFile file = getVirtualFile();
         if (file != null) {
@@ -580,8 +580,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return getViewProvider().findReferenceAt(offset);
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public char[] textToCharArray() {
         return CharArrayUtil.fromSequence(getViewProvider().getContents());
     }

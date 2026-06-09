@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.ast;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
 import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.DummyHolder;
@@ -29,51 +29,47 @@ import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 public class Factory  {
-  private Factory() {}
+  private Factory() {
+  }
 
-  
+  @RequiredReadAction
   public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table, PsiManager manager, PsiFile originalFile) {
     DummyHolder dummyHolder = DummyHolderFactory.createHolder(manager, table, type.getLanguage());
     dummyHolder.setOriginalFile(originalFile);
 
     FileElement holderElement = dummyHolder.getTreeElement();
 
-    LeafElement newElement = ASTFactory.leaf(type, holderElement.getCharTable().intern(
-            buffer, startOffset, endOffset));
+    LeafElement newElement = ASTFactory.leaf(type, holderElement.getCharTable().intern(buffer, startOffset, endOffset));
     holderElement.rawAddChildren(newElement);
     CodeEditUtil.setNodeGenerated(newElement, true);
     return newElement;
   }
 
-  
+  @RequiredReadAction
   public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table, PsiManager manager, boolean generatedFlag) {
     FileElement holderElement = DummyHolderFactory.createHolder(manager, table, type.getLanguage()).getTreeElement();
-    LeafElement newElement = ASTFactory.leaf(type, holderElement.getCharTable().intern(
-            buffer, startOffset, endOffset));
+    LeafElement newElement = ASTFactory.leaf(type, holderElement.getCharTable().intern(buffer, startOffset, endOffset));
     holderElement.rawAddChildren(newElement);
     if(generatedFlag) CodeEditUtil.setNodeGenerated(newElement, true);
     return newElement;
   }
 
-  
+  @RequiredReadAction
   public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, CharTable table, PsiManager manager) {
     return createSingleLeafElement(type, buffer, 0, buffer.length(), table, manager);
   }
 
-  
+  @RequiredReadAction
   public static LeafElement createSingleLeafElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, @Nullable CharTable table, PsiManager manager) {
     return createSingleLeafElement(type, buffer, startOffset, endOffset, table, manager, true);
   }
 
-  
   public static CompositeElement createErrorElement(LocalizeValue description) {
     return new PsiErrorElementImpl(description);
   }
 
-  
-  public static CompositeElement createCompositeElement(IElementType type,
-                                                        CharTable charTableByTree,
-                                                        PsiManager manager) {
+  @RequiredReadAction
+  public static CompositeElement createCompositeElement(IElementType type, CharTable charTableByTree, PsiManager manager) {
     FileElement treeElement = DummyHolderFactory.createHolder(manager, null, charTableByTree).getTreeElement();
     CompositeElement composite = ASTFactory.composite(type);
     treeElement.rawAddChildren(composite);

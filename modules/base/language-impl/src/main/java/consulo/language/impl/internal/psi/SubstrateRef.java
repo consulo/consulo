@@ -76,6 +76,7 @@ public abstract class SubstrateRef {
       }
 
       @Override
+      @RequiredReadAction
       public boolean isValid() {
         FileASTNode fileElement = SharedImplUtil.findFileElement(node);
         PsiElement file = fileElement == null ? null : fileElement.getPsi();
@@ -109,6 +110,7 @@ public abstract class SubstrateRef {
     }
 
     @Override
+    @RequiredReadAction
     public boolean isValid() {
       PsiFileStub<?> fileStub = myStub.getContainingFileStub();
       if (fileStub == null) return false;
@@ -117,6 +119,7 @@ public abstract class SubstrateRef {
     }
 
     @Override
+    @RequiredReadAction
     public PsiFile getContainingFile() {
       PsiFileStub<?> stub = myStub.getContainingFileStub();
       if (stub == null) {

@@ -222,13 +222,11 @@ public class PsiFileFactoryImpl implements PsiFileFactory {
   }
 
   @Override
-  
   public PsiFile createFileFromText(String name, FileType fileType, CharSequence text) {
     return createFileFromText(name, fileType, text, LocalTimeCounter.currentTime(), false);
   }
 
   @Override
-  
   public PsiFile createFileFromText(String name, String text) {
     FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(name);
     if (type.isBinary()) {

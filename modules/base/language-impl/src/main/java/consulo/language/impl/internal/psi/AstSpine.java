@@ -55,7 +55,6 @@ public class AstSpine implements StubbedSpine {
     return index >= myNodes.size() ? null : myNodes.get(index).getElementType();
   }
 
-  
   public List<CompositeElement> getSpineNodes() {
     return myNodes;
   }

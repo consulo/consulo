@@ -197,8 +197,8 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return getViewProvider().isEventSystemEnabled();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public Language getLanguage() {
         return myLanguage;
     }
@@ -253,6 +253,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean requestFocus) {
         PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
     }
@@ -290,8 +291,8 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return getViewProvider().getVirtualFile().isWritable();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public abstract PsiElement[] getChildren();
 
     @RequiredReadAction

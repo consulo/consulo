@@ -15,6 +15,8 @@
  */
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -140,6 +142,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
+  @RequiredReadAction
   public PsiReference findReferenceAt(int offset) {
     return SharedPsiElementImplUtil.findReferenceAt(this, offset);
   }
@@ -172,16 +175,19 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement add(PsiElement element) throws IncorrectOperationException {
     return addInnerBefore(element, null);
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     return addInnerBefore(element, anchor);
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
@@ -195,21 +201,25 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
+  @RequiredWriteAction
   public final PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, null, null);
   }
 
   @Override
+  @RequiredWriteAction
   public final PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
   @Override
+  @RequiredWriteAction
   public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
   }
 
   @Override
+  @RequiredWriteAction
   public void delete() throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null, "Parent not found for " + this);
     CheckUtil.checkWritable(this);
@@ -233,6 +243,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
     return SharedImplUtil.doReplace(this, this, newElement);
   }
@@ -295,11 +306,13 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
+  @RequiredReadAction
   public void navigate(boolean requestFocus) {
     PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
   }
 
   @Override
+  @RequiredReadAction
   public boolean canNavigate() {
     return PsiNavigationSupport.getInstance().canNavigate(this);
   }
@@ -324,6 +337,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
+  @RequiredReadAction
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }
@@ -333,6 +347,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     return this;
   }
 
+  @RequiredWriteAction
   private PsiElement addInnerBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);

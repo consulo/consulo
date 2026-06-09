@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.ast;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.impl.psi.CodeEditUtil;
@@ -35,22 +36,19 @@ public final class ASTFactory {
     return ASTLazyFactory.EP.getValue(type).createLazy(type, text);
   }
 
-  
   public static CompositeElement composite(IElementType type) {
     return ASTCompositeFactory.EP.getValue(type).createComposite(type);
   }
 
-  
+  @RequiredReadAction
   public static LeafElement leaf(IElementType type, CharSequence text) {
     return leaf(type, LanguageVersionUtil.findDefaultVersion(type.getLanguage()), text);
   }
 
-  
   public static LeafElement leaf(IElementType type, LanguageVersion languageVersion, CharSequence text) {
     return ASTLeafFactory.EP.getValue(type).createLeaf(type, languageVersion, text);
   }
 
-  
   public static LeafElement whitespace(CharSequence text) {
     PsiWhiteSpaceImpl w = new PsiWhiteSpaceImpl(WHITESPACES.intern(text));
     CodeEditUtil.setNodeGenerated(w, true);

@@ -15,6 +15,7 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -58,7 +59,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
 
   public PsiInvalidElementAccessException(@Nullable PsiElement element, @Nullable String message, @Nullable Throwable cause) {
     super(null, cause);
-    myElementReference = new SoftReference<PsiElement>(element);
+    myElementReference = new SoftReference<>(element);
 
     if (element == null) {
       myMessage = message;
@@ -84,7 +85,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   }
 
   private PsiInvalidElementAccessException(ASTNode node, @Nullable String message) {
-    myElementReference = new SoftReference<PsiElement>(null);
+    myElementReference = new SoftReference<>(null);
     myMessage = "Element " + node.getClass() + " of type " + node.getElementType() + (message == null ? "" : "; " + message);
     myDiagnostic = createAttachments(findInvalidationTrace(node));
   }
@@ -105,6 +106,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return trace != null || element instanceof PsiFile ? trace : findInvalidationTrace(element.getNode());
   }
 
+  @RequiredReadAction
   private static String getMessageWithReason(
       PsiElement element,
       @Nullable String message,
@@ -155,7 +157,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return null;
   }
 
-
+  @RequiredReadAction
   private static String reason(PsiElement root) {
     if (root == PsiUtilCore.NULL_PSI_ELEMENT) return "NULL_PSI_ELEMENT";
 
@@ -175,7 +177,9 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
       return m;
     }
 
-    while (element != null && !(element instanceof PsiFile)) element = element.getParent();
+    while (element != null && !(element instanceof PsiFile)) {
+      element = element.getParent();
+    }
     PsiFile file = (PsiFile)element;
     if (file == null) return "containing file is null";
 

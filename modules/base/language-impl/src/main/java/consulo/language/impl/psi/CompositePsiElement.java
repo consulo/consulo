@@ -294,6 +294,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean requestFocus) {
         Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
         if (descriptor != null) {
