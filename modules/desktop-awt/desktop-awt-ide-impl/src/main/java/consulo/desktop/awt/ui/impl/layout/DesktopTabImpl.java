@@ -87,10 +87,9 @@ public class DesktopTabImpl implements Tab {
         myRenderer.accept(this, new TextItemPresentation() {
             @Override
             public void clearText() {
-                myTabInfo.setText("");
+                myTabInfo.setText(LocalizeValue.empty());
             }
 
-            
             @Override
             public TextItemPresentation withIcon(@Nullable Image image) {
                 myTabInfo.setIcon(image);

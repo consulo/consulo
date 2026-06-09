@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.font.Font;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -24,70 +25,70 @@ import java.util.Objects;
  * @since 2020-06-04
  */
 public class WebFontImpl implements Font {
-  private final String myFontName;
-  private final int myFontSize;
-  private final int myFontStyle;
+    private final String myFontName;
+    private final int myFontSize;
+    private final int myFontStyle;
 
-  public WebFontImpl(String fontName, int fontSize, int fontStyle) {
-    myFontName = fontName;
-    myFontSize = fontSize;
-    myFontStyle = fontStyle;
-  }
+    public WebFontImpl(String fontName, int fontSize, int fontStyle) {
+        myFontName = fontName;
+        myFontSize = fontSize;
+        myFontStyle = fontStyle;
+    }
 
-  
-  @Override
-  public String getName() {
-    return myFontName;
-  }
+    @Override
+    public String getName() {
+        return myFontName;
+    }
 
-  
-  @Override
-  public String getFontName() {
-    return myFontName;
-  }
+    @Override
+    public String getFontName() {
+        return myFontName;
+    }
 
-  
-  @Override
-  public String getFamily() {
-    return "";
-  }
+    @Override
+    public String getFamily() {
+        return "";
+    }
 
-  @Override
-  public int getFontStyle() {
-    return myFontStyle;
-  }
+    @Override
+    public int getFontStyle() {
+        return myFontStyle;
+    }
 
-  @Override
-  public int getFontSize() {
-    return myFontSize;
-  }
+    @Override
+    public int getFontSize() {
+        return myFontSize;
+    }
 
-  
-  @Override
-  public Font buildNewFont(int newSize) {
-    return new WebFontImpl(myFontName, newSize, myFontStyle);
-  }
+    @Override
+    public Font buildNewFont(int newSize) {
+        return new WebFontImpl(myFontName, newSize, myFontStyle);
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    WebFontImpl webFont = (WebFontImpl)o;
-    return myFontSize == webFont.myFontSize && myFontStyle == webFont.myFontStyle && Objects.equals(myFontName, webFont.myFontName);
-  }
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        WebFontImpl webFont = (WebFontImpl) o;
+        return myFontSize == webFont.myFontSize && myFontStyle == webFont.myFontStyle && Objects.equals(myFontName, webFont.myFontName);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myFontName, myFontSize, myFontStyle);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myFontName, myFontSize, myFontStyle);
+    }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("WebFontImpl{");
-    sb.append("myFontName='").append(myFontName).append('\'');
-    sb.append(", myFontSize=").append(myFontSize);
-    sb.append(", myFontStyle=").append(myFontStyle);
-    sb.append('}');
-    return sb.toString();
-  }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("WebFontImpl{");
+        sb.append("myFontName='").append(myFontName).append('\'');
+        sb.append(", myFontSize=").append(myFontSize);
+        sb.append(", myFontStyle=").append(myFontStyle);
+        sb.append('}');
+        return sb.toString();
+    }
 }

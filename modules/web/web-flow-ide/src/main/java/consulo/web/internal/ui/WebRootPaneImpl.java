@@ -16,32 +16,37 @@
 package consulo.web.internal.ui;
 
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 2023-05-27
  */
-public class WebRootPaneImpl  {
-  private final DockLayout myDockLayout = DockLayout.create();
+public class WebRootPaneImpl {
+    private final DockLayout myDockLayout = DockLayout.create();
 
-  public WebRootPaneImpl() {
-  }
+    public WebRootPaneImpl() {
+    }
 
-  public void setCenterComponent(consulo.ui.Component content) {
-    myDockLayout.center(content);
-  }
+    @RequiredUIAccess
+    public void setCenterComponent(Component content) {
+        myDockLayout.center(content);
+    }
 
-  public void setMenuBar(MenuBar menuBar) {
-    myDockLayout.top(menuBar);
-  }
+    @RequiredUIAccess
+    public void setMenuBar(MenuBar menuBar) {
+        myDockLayout.top(menuBar);
+    }
 
-  public void setStatusBar(UnifiedStatusBarImpl statusBar) {
-    myDockLayout.bottom(statusBar.getUIComponent());
-  }
+    @RequiredUIAccess
+    public void setStatusBar(UnifiedStatusBarImpl statusBar) {
+        myDockLayout.bottom(statusBar.getUIComponent());
+    }
 
-  public consulo.ui.Component getComponent() {
-    return myDockLayout;
-  }
+    public Component getComponent() {
+        return myDockLayout;
+    }
 }

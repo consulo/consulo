@@ -18,6 +18,7 @@ package consulo.web.internal.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.LabelOptions;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.vaadin.VaadinLabelComponentBase;
 import org.jspecify.annotations.Nullable;
 
@@ -26,21 +27,20 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-19
  */
 public class WebLabelImpl extends WebLabelBase<WebLabelImpl.Vaadin> {
-  public class Vaadin extends VaadinLabelComponentBase {
+    public class Vaadin extends VaadinLabelComponentBase {
+        @Override
+        public @Nullable Component toUIComponent() {
+            return WebLabelImpl.this;
+        }
+    }
+
+    @RequiredUIAccess
+    public WebLabelImpl(LocalizeValue text, LabelOptions options) {
+        super(text, options);
+    }
 
     @Override
-    public @Nullable Component toUIComponent() {
-      return WebLabelImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-  }
-
-  public WebLabelImpl(LocalizeValue text, LabelOptions options) {
-    super(text, options);
-  }
-
-  
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
 }

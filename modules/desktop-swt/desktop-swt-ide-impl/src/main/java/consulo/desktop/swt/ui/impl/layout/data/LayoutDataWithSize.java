@@ -22,5 +22,5 @@ import consulo.ui.Size2D;
  * @since 2021-12-18
  */
 public interface LayoutDataWithSize {
-  void setSize(Size2D size);
+    void setSize(Size2D size);
 }

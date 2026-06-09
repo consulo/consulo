@@ -29,28 +29,25 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-18
  */
 public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
-  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+    public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+        @Override
+        public @Nullable Component toUIComponent() {
+            return WebMenuSeparatorImpl.this;
+        }
+    }
 
     @Override
-    public @Nullable Component toUIComponent() {
-      return WebMenuSeparatorImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-  }
 
-  @Override
-  
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    public LocalizeValue getText() {
+        throw new UnsupportedOperationException();
+    }
 
-  
-  @Override
-  public LocalizeValue getText() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setIcon(@Nullable Image icon) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void setIcon(@Nullable Image icon) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public class WebStyleManagerImpl extends StyleManagerImpl {
     private static final WebStyleImpl LIGHT = new WebStyleImpl("light", "Light", false, ColorScheme.Value.LIGHT);
@@ -35,13 +35,11 @@ public class WebStyleManagerImpl extends StyleManagerImpl {
 
     private Style myCurrentStyle = LIGHT;
 
-    
     @Override
     public List<Style> getStyles() {
         return myStyles;
     }
 
-    
     @Override
     public Style getCurrentStyle() {
         return myCurrentStyle;

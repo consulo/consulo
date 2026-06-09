@@ -35,12 +35,12 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 28/05/2023
+ * @since 2023-05-28
  */
 public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVaadinComponentWrapper, LC extends LayoutConstraint>
     extends VaadinComponentDelegate<C> implements Layout<LC> {
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void removeAll() {
         toVaadinComponent().removeAll();
     }
@@ -84,7 +84,7 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
         switch (info.getBorderStyle()) {
             case LINE: {
                 c.addClassName(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
-                
+
                 switch (info.getBorderPosition()) {
                     case TOP:
                         c.addClassName(AuraUtility.Border.TOP);

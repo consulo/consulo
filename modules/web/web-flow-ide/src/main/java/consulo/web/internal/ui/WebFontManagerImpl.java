@@ -30,13 +30,11 @@ public class WebFontManagerImpl implements FontManager {
 
   private static final String DEFAULT_FONT = "Default";
 
-  
   @Override
   public Set<String> getAvailableFontNames() {
     return Collections.singleton(DEFAULT_FONT);
   }
 
-  
   @Override
   public Font createFont(String fontName, int fontSize, int fontStyle) {
     return new WebFontImpl(fontName, fontSize, fontStyle);

@@ -53,7 +53,6 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
         }));
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();

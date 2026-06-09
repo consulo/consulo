@@ -28,18 +28,16 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarImpl.Vaadin> implements ProgressBar {
     public class Vaadin extends com.vaadin.flow.component.progressbar.ProgressBar implements FromVaadinComponentWrapper {
-
         @Override
         public @Nullable Component toUIComponent() {
             return WebProgressBarImpl.this;
         }
     }
 
-  @Override
-  public void addStyle(ProgressBarStyle style) {
-  }
+    @Override
+    public void addStyle(ProgressBarStyle style) {
+    }
 
-  
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();

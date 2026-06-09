@@ -19,7 +19,6 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -66,8 +65,8 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
         return new DesktopSwtTabImpl();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public Tab addTab(Tab tab, Component component) {
         DesktopSwtTabImpl swtTab = (DesktopSwtTabImpl) tab;
 

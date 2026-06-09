@@ -22,13 +22,14 @@ import java.util.function.Supplier;
  * @since 2020-08-09
  */
 class LazyColorValue implements ColorValue {
-  private Supplier<? extends ColorValue> myColorSupplier;
+    private Supplier<? extends ColorValue> myColorSupplier;
 
-  LazyColorValue(Supplier<? extends ColorValue> colorSupplier) {
-    myColorSupplier = colorSupplier;
-  }
-  @Override
-  public RGBColor toRGB() {
-    return myColorSupplier.get().toRGB();
-  }
+    LazyColorValue(Supplier<? extends ColorValue> colorSupplier) {
+        myColorSupplier = colorSupplier;
+    }
+
+    @Override
+    public RGBColor toRGB() {
+        return myColorSupplier.get().toRGB();
+    }
 }

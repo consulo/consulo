@@ -31,87 +31,84 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 16-Jun-16
+ * @since 2016-06-16
  */
 public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
-  private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
+    private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
 
-  private final UI myUI;
+    private final UI myUI;
 
-  public WebUIAccessImpl(UI ui) {
-    myUI = ui;
-  }
+    public WebUIAccessImpl(UI ui) {
+        myUI = ui;
+    }
 
-  @Override
-  public boolean isValid() {
-    return myUI.isAttached() && myUI.getSession() != null;
-  }
+    @Override
+    public boolean isValid() {
+        return myUI.isAttached() && myUI.getSession() != null;
+    }
 
-  
-  @Override
-  public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
-    CompletableFuture<T> result = new CompletableFuture<>();
-    if (isValid()) {
-      myUI.access(() -> {
-        try {
-          result.complete(supplier.get());
+    @Override
+    public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
+        CompletableFuture<T> result = new CompletableFuture<>();
+        if (isValid()) {
+            myUI.access(() -> {
+                try {
+                    result.complete(supplier.get());
+                }
+                catch (Throwable e) {
+                    LOG.error(e);
+                    result.completeExceptionally(e);
+                }
+            });
         }
-        catch (Throwable e) {
-          LOG.error(e);
-          result.completeExceptionally(e);
+        else {
+            result.completeExceptionally(new Exception("ui detached"));
         }
-      });
+        return result;
     }
-    else {
-      result.completeExceptionally(new Exception("ui detached"));
-    }
-    return result;
-  }
 
-  
-  @Override
-  public <T> AsyncResult<T> give(Supplier<T> supplier) {
-    AsyncResult<T> result = AsyncResult.undefined();
-    if (isValid()) {
-      myUI.access(() -> {
-        try {
-          result.setDone(supplier.get());
+    @Override
+    public <T> AsyncResult<T> give(Supplier<T> supplier) {
+        AsyncResult<T> result = AsyncResult.undefined();
+        if (isValid()) {
+            myUI.access(() -> {
+                try {
+                    result.setDone(supplier.get());
+                }
+                catch (Throwable e) {
+                    LOG.error(e);
+                    result.rejectWithThrowable(e);
+                }
+            });
         }
-        catch (Throwable e) {
-          LOG.error(e);
-          result.rejectWithThrowable(e);
+        else {
+            result.setDone();
         }
-      });
+        return result;
     }
-    else {
-      result.setDone();
+
+    @Override
+    public void giveAndWait(Runnable runnable) {
+        ComponentStoreImpl.assertIfInsideSavingSession();
+
+        if (isValid()) {
+            myUI.accessSynchronously(runnable::run);
+        }
     }
-    return result;
-  }
 
-  @Override
-  public void giveAndWait(Runnable runnable) {
-    ComponentStoreImpl.assertIfInsideSavingSession();
-
-    if (isValid()) {
-      myUI.accessSynchronously(runnable::run);
+    public UI getUI() {
+        return myUI;
     }
-  }
 
-  public UI getUI() {
-    return myUI;
-  }
-
-  
-  @Override
-  protected SingleUIAccessScheduler createScheduler() {
-    Application application = Application.get();
-    ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
-    return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-      @Override
-      public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-        Application.get().invokeLater(runnable, modalityState);
-      }
-    };
-  }
+    @Override
+    protected SingleUIAccessScheduler createScheduler() {
+        Application application = Application.get();
+        ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
+            @Override
+            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
+                Application.get().invokeLater(runnable, modalityState);
+            }
+        };
+    }
 }

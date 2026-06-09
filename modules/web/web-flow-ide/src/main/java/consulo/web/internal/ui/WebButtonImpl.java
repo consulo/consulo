@@ -33,7 +33,6 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-18
  */
 public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin> implements Button {
-
     public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
@@ -67,34 +66,31 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         }
     }
 
-    
     @Override
     public LocalizeValue getText() {
         return myTextValue;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setText(LocalizeValue text) {
         myTextValue = text;
         toVaadinComponent().setText(text.get());
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setIcon(@Nullable Image image) {
         // TODO  toVaadinComponent().setIcon(image);
     }
 
     @Override
     public void invoke(InputDetails inputDetails) {
-
     }
 
     @Override

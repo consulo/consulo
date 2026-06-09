@@ -33,7 +33,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayoutImpl.Vaadin> implements ScrollableLayout {
     public class Vaadin extends Div implements FromVaadinComponentWrapper {
-
         @Override
         public @Nullable Component toUIComponent() {
             return WebScrollLayoutImpl.this;
@@ -47,6 +46,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     }
 
     @Override
+    @RequiredUIAccess
     public void remove(Component component) {
         com.vaadin.flow.component.Component vaadinComponent = TargetVaddin.to(component);
         if (vaadinComponent == getFirstChild()) {
@@ -65,8 +65,8 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
         return null;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void removeAll() {
         getVaadinComponent().removeAll();
     }

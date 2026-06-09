@@ -19,7 +19,6 @@ import com.vaadin.flow.component.HasSize;
 import consulo.ui.Component;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TableLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -38,7 +37,6 @@ import java.util.Map;
  * @since 2020-08-25
  */
 public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutImpl.Vaadin> implements TableLayout {
-
     public class Vaadin extends Table implements FromVaadinComponentWrapper {
         private final Map<Component, TableCell> myChildren = new LinkedHashMap<>();
 
@@ -86,9 +84,9 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
         return new Vaadin();
     }
 
-    @RequiredUIAccess
     @Override
-    public TableLayout add(consulo.ui.Component component, TableCell tableCell) {
+    @RequiredUIAccess
+    public TableLayout add(Component component, TableCell tableCell) {
         toVaadinComponent().add(component, tableCell);
         return this;
     }

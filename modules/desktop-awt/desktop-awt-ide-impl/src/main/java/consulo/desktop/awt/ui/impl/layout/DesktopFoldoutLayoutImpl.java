@@ -33,7 +33,8 @@ import java.awt.*;
  * @author VISTALL
  * @since 2020-05-29
  */
-public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLayoutImpl.HideableTitledPanel, LayoutConstraint> implements FoldoutLayout {
+public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLayoutImpl.HideableTitledPanel, LayoutConstraint>
+    implements FoldoutLayout {
     public static class HideableTitledPanel extends JPanel implements FromSwingComponentWrapper {
         private final HideableDecorator myDecorator;
         private final DesktopFoldoutLayoutImpl myFoldoutLayout;
@@ -43,6 +44,7 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
             myFoldoutLayout = foldoutLayout;
             myDecorator = new HideableDecorator(this, title, false) {
                 @Override
+                @RequiredUIAccess
                 protected void on() {
                     super.on();
 
@@ -50,6 +52,7 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
                 }
 
                 @Override
+                @RequiredUIAccess
                 protected void off() {
                     super.off();
 
@@ -89,14 +92,12 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
             myDecorator.setEnabled(enabled);
         }
 
-        
         @Override
         public Component toUIComponent() {
             return myFoldoutLayout;
         }
     }
 
-    
     private LocalizeValue myTitleValue = LocalizeValue.empty();
     private final Component myComponent;
     private final boolean myState;
@@ -119,17 +120,15 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
         getListenerDispatcher(FoldoutLayoutOpenedEvent.class).onEvent(new FoldoutLayoutOpenedEvent(this, state));
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public FoldoutLayout setState(boolean showing) {
         toAWTComponent().setOn(showing);
         return this;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public FoldoutLayout setTitle(LocalizeValue title) {
         myTitleValue = title;
         toAWTComponent().updateTitle();

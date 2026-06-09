@@ -33,9 +33,10 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
-public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, LayoutData> extends SWTComponentDelegate<Composite> implements Layout<C> {
+public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, LayoutData> extends SWTComponentDelegate<Composite>
+    implements Layout<C> {
     private static final String ourNullMapper = "____null____";
 
     private List<Pair<SWTComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
@@ -47,8 +48,8 @@ public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, Layo
         return new Composite(parent, SWT.NONE);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void removeAll() {
         Composite composite = toSWTComponent();
         if (composite != null) {
@@ -123,7 +124,6 @@ public abstract class DesktopSwtLayoutComponent<C extends LayoutConstraint, Layo
         return null;
     }
 
-   
     @Override
     public Layout<C> add(Component component, C constraint) {
         addImpl(component, convertConstraintsToLayoutData(constraint));

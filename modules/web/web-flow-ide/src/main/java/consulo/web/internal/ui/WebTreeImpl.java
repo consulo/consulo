@@ -46,7 +46,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     private static final List CANCELED_RESULT = new ArrayList<>();
 
     @Tag("vaadin-grid-tree-toggle")
-    public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
+    public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component
+        implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
     }
 
     public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
@@ -199,17 +200,19 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
         }
 
-        
         private List<WebTreeNodeImpl<NODE>> fetchChildren(WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
             List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
             Map<String, WebTreeNodeImpl<NODE>> nodeMap = new HashMap<>();
 
             try {
-                myModel.buildChildren(node -> {
-                    WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
-                    list.add(child);
-                    return child;
-                }, parent.getValue());
+                myModel.buildChildren(
+                    node -> {
+                        WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
+                        list.add(child);
+                        return child;
+                    },
+                    parent.getValue()
+                );
             }
             catch (ProcessCanceledException ignored) {
                 return CANCELED_RESULT;
@@ -269,7 +272,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }

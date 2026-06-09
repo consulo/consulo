@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 23/04/2023
+ * @since 2023-04-23
  */
 public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDelegate<AWTLoadingPanel> implements LoadingLayout<L> {
     private final L myInnerLayout;
@@ -50,8 +50,8 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
         return new AWTLoadingPanel(this, (JComponent) TargetAWT.to(myInnerLayout), myParent);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public <Value> Future<Value> startLoading(Supplier<Value> valueGetter, BiConsumer<L, Value> uiSetter) {
         UIAccess uiAccess = UIAccess.current();
 
@@ -65,24 +65,24 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
         });
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void startLoading() {
         myInnerLayout.removeAll();
         toAWTComponent().startLoading();
         forceUpdate();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void startLoading(LocalizeValue loadingText) {
         myInnerLayout.removeAll();
         toAWTComponent().setLoadingText(loadingText.getValue());
         forceUpdate();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void stopLoading(Consumer<L> consumer) {
         consumer.accept(myInnerLayout);
         toAWTComponent().stopLoading();
@@ -94,8 +94,8 @@ public class DesktopAWTLoadingLayout<L extends Layout> extends SwingComponentDel
         toAWTComponent().repaint();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setLoadingText(LocalizeValue loadingText) {
         toAWTComponent().setLoadingText(loadingText.getValue());
     }

@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.TextBoxWithHistory;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.List;
 
@@ -24,11 +25,11 @@ import java.util.List;
  * @since 2020-08-25
  */
 public class WebTextBoxWithHistoryImpl extends WebTextBoxImpl implements TextBoxWithHistory {
+    @RequiredUIAccess
     public WebTextBoxWithHistoryImpl(String text) {
         super(text);
     }
 
-    
     @Override
     public TextBoxWithHistory setHistory(List<String> history) {
         // unsupported

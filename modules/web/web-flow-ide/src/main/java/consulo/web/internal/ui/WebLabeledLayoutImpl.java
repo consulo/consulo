@@ -93,21 +93,19 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void removeAll() {
         getVaadinComponent().setContent(null);
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public LabeledLayout set(Component component) {
         getVaadinComponent().setContent(TargetVaddin.to(component));
         return this;
     }
 
-    
     @Override
     public WebLabeledLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

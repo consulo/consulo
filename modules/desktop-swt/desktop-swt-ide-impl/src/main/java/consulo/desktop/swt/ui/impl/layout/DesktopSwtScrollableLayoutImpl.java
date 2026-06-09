@@ -25,20 +25,20 @@ import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements ScrollableLayout {
-  public DesktopSwtScrollableLayoutImpl(Component component) {
-    addImpl(component, null);
-  }
+    public DesktopSwtScrollableLayoutImpl(Component component) {
+        addImpl(component, null);
+    }
 
-  @Override
-  protected Composite createSWT(Composite parent) {
-    return new Composite(parent, SWT.NO_SCROLL);
-  }
+    @Override
+    protected Composite createSWT(Composite parent) {
+        return new Composite(parent, SWT.NO_SCROLL);
+    }
 
-  @Override
-  protected Layout createLayout() {
-    return new FillLayout(SWT.VERTICAL | SWT.HORIZONTAL);
-  }
+    @Override
+    protected Layout createLayout() {
+        return new FillLayout(SWT.VERTICAL | SWT.HORIZONTAL);
+    }
 }

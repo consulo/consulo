@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 2023-05-27
  */
 public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, StaticPosition> implements DockLayout {
     public WebDockLayoutImpl(int gapInPixels) {
@@ -40,37 +40,25 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
         }
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    
     @Override
     public Layout<StaticPosition> add(Component component, StaticPosition constraint) {
-        BorderLayoutEx.Constraint constraintEx;
-        switch (constraint) {
-            case TOP:
-                constraintEx = BorderLayoutEx.Constraint.NORTH;
-                break;
-            case BOTTOM:
-                constraintEx = BorderLayoutEx.Constraint.SOUTH;
-                break;
-            case LEFT:
-                constraintEx = BorderLayoutEx.Constraint.WEST;
-                break;
-            case RIGHT:
-                constraintEx = BorderLayoutEx.Constraint.EAST;
-                break;
-            case CENTER:
+        BorderLayoutEx.Constraint constraintEx = switch (constraint) {
+            case TOP -> BorderLayoutEx.Constraint.NORTH;
+            case BOTTOM -> BorderLayoutEx.Constraint.SOUTH;
+            case LEFT -> BorderLayoutEx.Constraint.WEST;
+            case RIGHT -> BorderLayoutEx.Constraint.EAST;
+            case CENTER -> {
                 VaadinSizeUtil.setSizeFull(component);
 
-                constraintEx = BorderLayoutEx.Constraint.CENTER;
-                break;
-            default:
-                throw new IllegalArgumentException(constraint.name());
-        }
+                yield BorderLayoutEx.Constraint.CENTER;
+            }
+            default -> throw new IllegalArgumentException(constraint.name());
+        };
 
         return replace(component, constraintEx);
     }

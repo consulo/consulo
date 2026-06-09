@@ -27,7 +27,7 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
+ * @since 2016-06-15
  */
 public class DesktopLabeledLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements LabeledLayout {
     class LabelJPanel extends MyJPanel {

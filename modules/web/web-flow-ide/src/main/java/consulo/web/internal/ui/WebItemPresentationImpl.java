@@ -33,45 +33,44 @@ import java.util.List;
  * @since 2019-02-18
  */
 public class WebItemPresentationImpl implements TextItemPresentation {
-  private Image myIcon;
-  private List<Component> myFragments = new ArrayList<>();
+    private Image myIcon;
+    private List<Component> myFragments = new ArrayList<>();
 
-  
-  @Override
-  public TextItemPresentation withIcon(@Nullable Image image) {
-    myIcon = image;
+    @Override
+    public TextItemPresentation withIcon(@Nullable Image image) {
+        myIcon = image;
 
-    after();
-    return this;
-  }
-
-  @Override
-  public void append(LocalizeValue text, TextAttribute textAttribute) {
-    Span span = new Span(text.get());
-    myFragments.add(span);
-
-    after();
-  }
-
-  @Override
-  public void clearText() {
-    myFragments.clear();
-
-    after();
-  }
-
-  public Component toComponent() {
-    Span span = new Span();
-    span.addClassName("web-icon");
-    if (myIcon != null) {
-      Component image = WebImageConverter.getImageCanvas(myIcon);
-      image.addClassName(AuraUtility.Margin.Right.SMALL);
-      span.add(image);
+        after();
+        return this;
     }
-    span.add(myFragments.toArray(Component[]::new));
-    return span;
-  }
 
-  protected void after() {
-  }
+    @Override
+    public void append(LocalizeValue text, TextAttribute textAttribute) {
+        Span span = new Span(text.get());
+        myFragments.add(span);
+
+        after();
+    }
+
+    @Override
+    public void clearText() {
+        myFragments.clear();
+
+        after();
+    }
+
+    public Component toComponent() {
+        Span span = new Span();
+        span.addClassName("web-icon");
+        if (myIcon != null) {
+            Component image = WebImageConverter.getImageCanvas(myIcon);
+            image.addClassName(AuraUtility.Margin.Right.SMALL);
+            span.add(image);
+        }
+        span.add(myFragments.toArray(Component[]::new));
+        return span;
+    }
+
+    protected void after() {
+    }
 }

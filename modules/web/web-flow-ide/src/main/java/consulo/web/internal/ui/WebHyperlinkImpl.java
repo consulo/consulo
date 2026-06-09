@@ -43,25 +43,23 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
     }
 
     public WebHyperlinkImpl() {
-        toVaadinComponent().addClickListener(event -> {
-            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
-        });
+        toVaadinComponent().addClickListener(
+            event -> getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""))
+        );
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    
     @Override
     public LocalizeValue getText() {
         return LocalizeValue.of(getVaadinComponent().getText());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setText(LocalizeValue text) {
         getVaadinComponent().setText(text.get());
     }

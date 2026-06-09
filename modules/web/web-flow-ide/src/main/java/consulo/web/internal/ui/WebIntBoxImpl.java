@@ -42,7 +42,6 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
         setValue(value, false);
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
@@ -67,7 +66,6 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
     public void setRange(int min, int max) {
     }
 
-    
     @Override
     public Disposable addValidator(Validator<Integer> validator) {
         return () -> {

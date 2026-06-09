@@ -25,14 +25,13 @@ import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2016-06-11
  */
 public class DesktopVerticalLayoutImpl extends DesktopLayoutBase<JPanel, LayoutConstraint> implements VerticalLayout {
     public DesktopVerticalLayoutImpl(int vGap) {
         initDefaultPanel(new consulo.ui.ex.awt.VerticalLayout(JBUI.scale(vGap)));
     }
 
-    
     @Override
     public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
         addImpl(component, null);

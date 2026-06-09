@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements LabeledLayout {
     private final LocalizeValue myLabel;
@@ -55,8 +55,8 @@ public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent<Layou
         return new FillLayout();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public LabeledLayout set(Component component) {
         addImpl(component, null);
         return this;

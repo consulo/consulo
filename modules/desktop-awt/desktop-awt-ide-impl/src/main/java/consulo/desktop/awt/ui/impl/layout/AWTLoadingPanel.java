@@ -27,64 +27,63 @@ import java.awt.*;
 /**
  * @author VISTALL
  * @see JBLoadingPanel
- * @since 23/04/2023
+ * @since 2023-04-23
  */
 public class AWTLoadingPanel extends JPanel implements FromSwingComponentWrapper {
-  private final Component myUIComponent;
-  private final JComponent myInnerComponent;
-  private final LoadingDecorator myDecorator;
+    private final Component myUIComponent;
+    private final JComponent myInnerComponent;
+    private final LoadingDecorator myDecorator;
 
-  public AWTLoadingPanel(Component uiComponent, JComponent inner, Disposable parent) {
-    super(new BorderLayout());
-    myInnerComponent = inner;
-    myUIComponent = uiComponent;
-    myInnerComponent.setOpaque(false);
-    myInnerComponent.setFocusable(false);
-    myDecorator = new LoadingDecorator(inner, parent, -1) {
-      @Override
-      protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
-        NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
-        customizeStatusText(text);
-        return panel;
-      }
-    };
-    add(myDecorator.getComponent(), BorderLayout.CENTER);
-  }
+    public AWTLoadingPanel(Component uiComponent, JComponent inner, Disposable parent) {
+        super(new BorderLayout());
+        myInnerComponent = inner;
+        myUIComponent = uiComponent;
+        myInnerComponent.setOpaque(false);
+        myInnerComponent.setFocusable(false);
+        myDecorator = new LoadingDecorator(inner, parent, -1) {
+            @Override
+            protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
+                NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
+                customizeStatusText(text);
+                return panel;
+            }
+        };
+        add(myDecorator.getComponent(), BorderLayout.CENTER);
+    }
 
-  public static void customizeStatusText(JLabel text) {
-    Font font = text.getFont();
-    text.setFont(font.deriveFont(font.getStyle(), font.getSize() + 6));
-    text.setForeground(ColorUtil.toAlpha(UIUtil.getLabelForeground(), 150));
-  }
+    public static void customizeStatusText(JLabel text) {
+        Font font = text.getFont();
+        text.setFont(font.deriveFont(font.getStyle(), font.getSize() + 6));
+        text.setForeground(ColorUtil.toAlpha(UIUtil.getLabelForeground(), 150));
+    }
 
-  public void setLoadingText(String text) {
-    myDecorator.setLoadingText(text);
-  }
+    public void setLoadingText(String text) {
+        myDecorator.setLoadingText(text);
+    }
 
-  public void stopLoading() {
-    myDecorator.stopLoading();
-  }
+    public void stopLoading() {
+        myDecorator.stopLoading();
+    }
 
-  public boolean isLoading() {
-    return myDecorator.isLoading();
-  }
+    public boolean isLoading() {
+        return myDecorator.isLoading();
+    }
 
-  public void startLoading() {
-    myDecorator.startLoading(false);
-  }
+    public void startLoading() {
+        myDecorator.startLoading(false);
+    }
 
-  public JComponent getContentPanel() {
-    return myInnerComponent;
-  }
+    public JComponent getContentPanel() {
+        return myInnerComponent;
+    }
 
-  @Override
-  public Dimension getPreferredSize() {
-    return getContentPanel().getPreferredSize();
-  }
+    @Override
+    public Dimension getPreferredSize() {
+        return getContentPanel().getPreferredSize();
+    }
 
-  
-  @Override
-  public Component toUIComponent() {
-    return myUIComponent;
-  }
+    @Override
+    public Component toUIComponent() {
+        return myUIComponent;
+    }
 }

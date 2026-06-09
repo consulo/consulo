@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtHorizontalLayoutImpl extends DesktopSwtLayoutComponent<StaticPosition, Object> implements HorizontalLayout {
     public DesktopSwtHorizontalLayoutImpl(int gapInPixels) {
@@ -45,6 +45,5 @@ public class DesktopSwtHorizontalLayoutImpl extends DesktopSwtLayoutComponent<St
 
     @Override
     public void addStyle(HorizontalLayoutStyle style) {
-
     }
 }

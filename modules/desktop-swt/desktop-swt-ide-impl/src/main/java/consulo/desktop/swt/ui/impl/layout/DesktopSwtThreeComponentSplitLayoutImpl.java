@@ -30,58 +30,56 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 12/12/2021
+ * @since 2021-12-12
  */
-public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements ThreeComponentSplitLayout {
-  private final SplitLayoutPosition myPosition;
+public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object>
+    implements ThreeComponentSplitLayout {
+    private final SplitLayoutPosition myPosition;
 
-  public DesktopSwtThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
-    myPosition = position;
-  }
+    public DesktopSwtThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
+        myPosition = position;
+    }
 
-  @Override
-  protected Composite createSWT(Composite parent) {
-    return new SashForm(parent, (myPosition == SplitLayoutPosition.VERTICAL ? SWT.VERTICAL : SWT.HORIZONTAL) | SWT.SMOOTH);
-  }
+    @Override
+    protected Composite createSWT(Composite parent) {
+        return new SashForm(parent, (myPosition == SplitLayoutPosition.VERTICAL ? SWT.VERTICAL : SWT.HORIZONTAL) | SWT.SMOOTH);
+    }
 
-  @Override
-  protected Layout createLayout() {
-    return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
-  }
+    @Override
+    protected Layout createLayout() {
+        return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
+    }
 
-  @Override
-  protected void initialize(Composite component) {
-    super.initialize(component);
+    @Override
+    protected void initialize(Composite component) {
+        super.initialize(component);
 
-    ((SashForm)component).setSashWidth(1);
-  }
+        ((SashForm) component).setSashWidth(1);
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public ThreeComponentSplitLayout setFirstComponent(Component component) {
-    addImpl(component, "first");
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public ThreeComponentSplitLayout setFirstComponent(Component component) {
+        addImpl(component, "first");
+        return this;
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public ThreeComponentSplitLayout setSecondComponent(Component component) {
-    addImpl(component, "second");
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public ThreeComponentSplitLayout setSecondComponent(Component component) {
+        addImpl(component, "second");
+        return this;
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
-    addImpl(component, "center");
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
+        addImpl(component, "center");
+        return this;
+    }
 
-  @Override
-  protected Object convertLayoutData(Object layoutData) {
-    return null;
-  }
+    @Override
+    protected Object convertLayoutData(Object layoutData) {
+        return null;
+    }
 }

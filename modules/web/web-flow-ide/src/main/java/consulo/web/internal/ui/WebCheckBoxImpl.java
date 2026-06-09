@@ -62,23 +62,20 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
 
     @Override
     public void addStyle(CheckBoxStyle style) {
-
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @Override
-    
     public LocalizeValue getLabelText() {
         return toVaadinComponent().getLabelText();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setLabelText(LocalizeValue textValue) {
         UIAccess.assertIsUIThread();
 
