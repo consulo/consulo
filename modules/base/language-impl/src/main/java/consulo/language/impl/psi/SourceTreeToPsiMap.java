@@ -18,8 +18,6 @@ package consulo.language.impl.psi;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.PsiElement;
-
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 public class SourceTreeToPsiMap {
