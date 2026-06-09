@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.event.details.KeyCode;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class KeyCodeImpl implements KeyCode {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

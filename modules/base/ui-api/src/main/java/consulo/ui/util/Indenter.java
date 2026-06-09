@@ -24,13 +24,13 @@ import consulo.ui.layout.WrappedLayout;
 
 /**
  * @author VISTALL
- * @since 01-Aug-22
+ * @since 2022-08-01
  */
 public class Indenter {
-  @RequiredUIAccess
-  public static Component indent(Component target, int count) {
-    WrappedLayout layout = WrappedLayout.create().set(target);
-    layout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE * count);
-    return layout;
-  }
+    @RequiredUIAccess
+    public static Component indent(Component target, int count) {
+        WrappedLayout layout = WrappedLayout.create().set(target);
+        layout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE * count);
+        return layout;
+    }
 }

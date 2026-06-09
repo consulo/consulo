@@ -19,10 +19,10 @@ import consulo.ui.Component;
 
 /**
  * @author VISTALL
- * @since 01/08/2021
+ * @since 2021-08-01
  */
 public final class AttachEvent extends ComponentEvent<Component> {
-  public AttachEvent(Component component) {
-    super(component);
-  }
+    public AttachEvent(Component component) {
+        super(component);
+    }
 }

@@ -25,12 +25,13 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 2016-06-22
  */
 public interface StyleManager {
     static StyleManager get() {
         return UIInternal.get()._StyleManager_get();
     }
+
     List<Style> getStyles();
 
     default @Nullable Style getStyle(String styleId) {
@@ -41,9 +42,11 @@ public interface StyleManager {
         }
         return null;
     }
+
     Style getCurrentStyle();
 
     void setCurrentStyle(Style newStyle);
+
     Disposable addChangeListener(StyleChangeListener listener);
 
     default void refreshAntialiasingType(AntialiasingType antialiasingType) {

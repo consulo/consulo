@@ -28,35 +28,36 @@ import java.util.List;
  * @since 2018-05-15
  */
 public interface MutableListModel<E> extends ListModel<E> {
-  static <T> MutableListModel<T> of(Collection<? extends T> items) {
-    return UIInternal.get()._MutableListModel_create(items);
-  }
-  @Deprecated
-  @DeprecationInfo("Use #of()")
-  static <T> MutableListModel<T> create(Collection<? extends T> items) {
-    return UIInternal.get()._MutableListModel_create(items);
-  }
+    static <T> MutableListModel<T> of(Collection<? extends T> items) {
+        return UIInternal.get()._MutableListModel_create(items);
+    }
 
-  @RequiredUIAccess
-  default void add(E e) {
-    add(e, getSize());
-  }
+    @Deprecated
+    @DeprecationInfo("Use #of()")
+    static <T> MutableListModel<T> create(Collection<? extends T> items) {
+        return UIInternal.get()._MutableListModel_create(items);
+    }
 
-  @RequiredUIAccess
-  void add(E e, int index);
+    @RequiredUIAccess
+    default void add(E e) {
+        add(e, getSize());
+    }
 
-  @RequiredUIAccess
-  void remove(E e);
+    @RequiredUIAccess
+    void add(E e, int index);
 
-  @RequiredUIAccess
-  void removeAll();
+    @RequiredUIAccess
+    void remove(E e);
 
-  /**
-   * @param newItems
-   * @return oldItems
-   */
-  @RequiredUIAccess
-  List<E> replaceAll(Iterable<E> newItems);
+    @RequiredUIAccess
+    void removeAll();
 
-  Disposable adddListener(MutableListModelListener<E> modelListener);
+    /**
+     * @param newItems
+     * @return oldItems
+     */
+    @RequiredUIAccess
+    List<E> replaceAll(Iterable<E> newItems);
+
+    Disposable addListener(MutableListModelListener<E> modelListener);
 }

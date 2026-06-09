@@ -26,13 +26,13 @@ import org.jspecify.annotations.Nullable;
  * @since 2020-11-21
  */
 public final class ClickEvent extends ComponentEvent<Component> {
-  @Deprecated
-  @DeprecationInfo("Use constructor with InputDetails")
-  public ClickEvent(Component component) {
-    super(component);
-  }
+    @Deprecated
+    @DeprecationInfo("Use constructor with InputDetails")
+    public ClickEvent(Component component) {
+        super(component);
+    }
 
-  public ClickEvent(Component component, @Nullable InputDetails inputDetails) {
-    super(component, inputDetails);
-  }
+    public ClickEvent(Component component, @Nullable InputDetails inputDetails) {
+        super(component, inputDetails);
+    }
 }

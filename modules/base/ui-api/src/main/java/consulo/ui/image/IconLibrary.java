@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
  */
 public interface IconLibrary {
     String getId();
+
     LocalizeValue getName();
 
     boolean isDark();

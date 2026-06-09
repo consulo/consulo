@@ -20,34 +20,35 @@ import consulo.ui.color.RGBColor;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 2017-06-22
  */
 public enum StandardColors implements StyleColorValue {
-  WHITE(new RGBColor(255, 255, 255)),
-  BLACK(new RGBColor(0, 0, 0)),
+    WHITE(new RGBColor(255, 255, 255)),
+    BLACK(new RGBColor(0, 0, 0)),
 
-  CYAN(new RGBColor(0, 255, 255)),
-  MAGENTA(new RGBColor(255, 0, 255)),
-  YELLOW(new RGBColor(255, 255, 0)),
-  LIGHT_YELLOW(new RGBColor(255, 255, 204)),
-  
-  ORANGE(new RGBColor(255, 200, 0)),
+    CYAN(new RGBColor(0, 255, 255)),
+    MAGENTA(new RGBColor(255, 0, 255)),
+    YELLOW(new RGBColor(255, 255, 0)),
+    LIGHT_YELLOW(new RGBColor(255, 255, 204)),
 
-  RED(new RGBColor(255, 0, 0)),
-  LIGHT_RED(new RGBColor(255, 204, 204)),
-  GREEN(new RGBColor(0, 255, 0)),
-  BLUE(new RGBColor(0, 0, 255)),
+    ORANGE(new RGBColor(255, 200, 0)),
 
-  GRAY(new RGBColor(128, 128, 128)),
-  LIGHT_GRAY(new RGBColor(192, 192, 192)),
-  DARK_GRAY(new RGBColor(64, 64, 64));
+    RED(new RGBColor(255, 0, 0)),
+    LIGHT_RED(new RGBColor(255, 204, 204)),
+    GREEN(new RGBColor(0, 255, 0)),
+    BLUE(new RGBColor(0, 0, 255)),
 
-  private final ColorValue myStaticValue;
+    GRAY(new RGBColor(128, 128, 128)),
+    LIGHT_GRAY(new RGBColor(192, 192, 192)),
+    DARK_GRAY(new RGBColor(64, 64, 64));
 
-  StandardColors(ColorValue staticValue) {
-    myStaticValue = staticValue;
-  }
-  public ColorValue getStaticValue() {
-    return myStaticValue;
-  }
+    private final ColorValue myStaticValue;
+
+    StandardColors(ColorValue staticValue) {
+        myStaticValue = staticValue;
+    }
+
+    public ColorValue getStaticValue() {
+        return myStaticValue;
+    }
 }

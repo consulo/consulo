@@ -96,7 +96,8 @@ public final class TextWithMnemonic {
             return this;
         }
         String resultText = myText.substring(0, index) + replacement + myText.substring(index + target.length());
-        int resultIndex = myMnemonicIndex < index ? myMnemonicIndex : myMnemonicIndex >= index + target.length() ? myMnemonicIndex - target.length() + replacement.length() : -1;
+        int resultIndex = myMnemonicIndex < index ? myMnemonicIndex
+            : myMnemonicIndex >= index + target.length() ? myMnemonicIndex - target.length() + replacement.length() : -1;
         return new TextWithMnemonic(resultText, resultIndex);
     }
 
@@ -132,6 +133,7 @@ public final class TextWithMnemonic {
     public static TextWithMnemonic parse(@Nullable String text) {
         return parse(text, value -> true);
     }
+
     @Contract(pure = true)
     public static TextWithMnemonic parse(@Nullable String text, IntPredicate indexAllower) {
         if (StringUtil.isEmpty(text)) {
@@ -154,7 +156,9 @@ public final class TextWithMnemonic {
                     if (mnemonicIndex == -1 && (ch == '_' || ch == '&')) {
                         //noinspection AssignmentToForLoopParameter
                         i++;
-                        if (i >= text.length()) break;
+                        if (i >= text.length()) {
+                            break;
+                        }
                         ch = text.charAt(i);
                         if (ch != '_' && ch != '&') {
                             mnemonicIndex = i - 1 - backShift;
@@ -164,7 +168,7 @@ public final class TextWithMnemonic {
                         }
                     }
                 }
-                
+
                 plainText.append(ch);
             }
             return new TextWithMnemonic(plainText.toString(), mnemonicIndex);
@@ -173,7 +177,7 @@ public final class TextWithMnemonic {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

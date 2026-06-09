@@ -21,10 +21,10 @@ import consulo.ui.internal.UIInternal;
 
 /**
  * @author VISTALL
- * @since 16/08/2021
+ * @since 2021-08-16
  */
 public final class ShowNotifier {
-  public static void once(Component component, @RequiredUIAccess Runnable action) {
-    UIInternal.get()._ShowNotifier_once(component, action);
-  }
+    public static void once(Component component, @RequiredUIAccess Runnable action) {
+        UIInternal.get()._ShowNotifier_once(component, action);
+    }
 }

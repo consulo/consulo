@@ -87,7 +87,7 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
   }
 
   @Override
-  public Disposable adddListener(MutableListModelListener<E> modelListener) {
+  public Disposable addListener(MutableListModelListener<E> modelListener) {
     myDispatcher.addListener(modelListener);
     return () -> myDispatcher.removeListener(modelListener);
   }

@@ -25,23 +25,28 @@ import java.util.Map;
  * @since 2020-09-26
  */
 public interface IconLibraryManager {
-  String LIGHT_LIBRARY_ID = "light";
-  String DARK_LIBRARY_ID = "dark";
-  public static IconLibraryManager get() {
-    return UIInternal.get()._IconLibraryManager_get();
-  }
-  Map<String, IconLibrary> getLibraries();
-  String getActiveLibraryId();
-  IconLibrary getActiveLibrary();
-  default Image inverseIcon(Image image) {
-    return image;
-  }
+    String LIGHT_LIBRARY_ID = "light";
+    String DARK_LIBRARY_ID = "dark";
 
-  boolean isFromStyle();
+    public static IconLibraryManager get() {
+        return UIInternal.get()._IconLibraryManager_get();
+    }
 
-  void setActiveLibrary(@Nullable String iconLibraryId);
+    Map<String, IconLibrary> getLibraries();
 
-  void setActiveLibraryFromActiveStyle();
+    String getActiveLibraryId();
 
-  long getModificationCount();
+    IconLibrary getActiveLibrary();
+
+    default Image inverseIcon(Image image) {
+        return image;
+    }
+
+    boolean isFromStyle();
+
+    void setActiveLibrary(@Nullable String iconLibraryId);
+
+    void setActiveLibraryFromActiveStyle();
+
+    long getModificationCount();
 }

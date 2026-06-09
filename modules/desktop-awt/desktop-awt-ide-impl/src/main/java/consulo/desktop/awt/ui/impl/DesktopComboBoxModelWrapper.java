@@ -33,7 +33,7 @@ public class DesktopComboBoxModelWrapper<E> extends AbstractListModel<E> impleme
     myModel = model;
 
     if (model instanceof MutableListModel) {
-      ((MutableListModel)model).adddListener(new MutableListModelListener() {
+      ((MutableListModel)model).addListener(new MutableListModelListener() {
         @Override
         public void itemAdded(Object item) {
           fireContentsChanged(this, -1, -1);

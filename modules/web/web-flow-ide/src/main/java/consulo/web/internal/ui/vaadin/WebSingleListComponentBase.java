@@ -34,57 +34,57 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2019-02-19
  */
-public abstract class WebSingleListComponentBase<V, C extends Component & HasListDataView & HasValue & FromVaadinComponentWrapper> extends VaadinComponentDelegate<C> implements ValueComponent<V> {
-  protected final ListModel<V> myModel;
-  protected TextItemRenderer<V> myRenderer =
-    (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
+public abstract class WebSingleListComponentBase<V, C extends Component & HasListDataView & HasValue & FromVaadinComponentWrapper>
+    extends VaadinComponentDelegate<C> implements ValueComponent<V> {
+    protected final ListModel<V> myModel;
+    protected TextItemRenderer<V> myRenderer =
+        (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
 
-  @SuppressWarnings("unchecked")
-  protected WebSingleListComponentBase(ListModel<V> model) {
-    myModel = model;
-    C component = toVaadinComponent();
-    component.setItems(ContainerUtil.collect(model.iterator()));
+    @SuppressWarnings("unchecked")
+    protected WebSingleListComponentBase(ListModel<V> model) {
+        myModel = model;
+        C component = toVaadinComponent();
+        component.setItems(ContainerUtil.collect(model.iterator()));
 
-    component.addValueChangeListener(event -> {
-      getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()));
-    });
+        component.addValueChangeListener(
+            event -> getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()))
+        );
 
-    if (myModel instanceof MutableListModel mutableListModel) {
-      mutableListModel.adddListener(new MutableListModelListener() {
-        @Override
-        public void itemAdded(Object item) {
-          component.setItems(ContainerUtil.collect(model.iterator()));
+        if (myModel instanceof MutableListModel mutableListModel) {
+            mutableListModel.addListener(new MutableListModelListener() {
+                @Override
+                public void itemAdded(Object item) {
+                    component.setItems(ContainerUtil.collect(model.iterator()));
+                }
+
+                @Override
+                public void itemRemoved(Object item) {
+                    component.setItems(ContainerUtil.collect(model.iterator()));
+                }
+            });
         }
-
-        @Override
-        public void itemRemoved(Object item) {
-          component.setItems(ContainerUtil.collect(model.iterator()));
-        }
-      });
     }
-  }
 
-  
-  //@Override
-  public ListModel<V> getListModel() {
-    return myModel;
-  }
+    //@Override
+    public ListModel<V> getListModel() {
+        return myModel;
+    }
 
-  @RequiredUIAccess
-  public void setValueByIndex(int index) {
-    setValue(myModel.get(index));
-  }
+    @RequiredUIAccess
+    public void setValueByIndex(int index) {
+        setValue(myModel.get(index));
+    }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public @Nullable V getValue() {
-    return (V)toVaadinComponent().getValue();
-  }
+    @Override
+    @SuppressWarnings("unchecked")
+    public @Nullable V getValue() {
+        return (V) toVaadinComponent().getValue();
+    }
 
-  @RequiredUIAccess
-  @Override
-  @SuppressWarnings("unchecked")
-  public void setValue(V value, boolean fireListeners) {
-    getVaadinComponent().setValue(value);
-  }
+    @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void setValue(V value, boolean fireListeners) {
+        getVaadinComponent().setValue(value);
+    }
 }

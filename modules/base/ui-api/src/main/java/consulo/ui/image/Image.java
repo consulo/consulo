@@ -28,63 +28,74 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 2016-06-13
  */
 public interface Image {
-  Image[] EMPTY_ARRAY = new Image[0];
+    Image[] EMPTY_ARRAY = new Image[0];
 
-  int DEFAULT_ICON_SIZE = 16;
+    int DEFAULT_ICON_SIZE = 16;
 
-  enum ImageType {
-    PNG,
-    SVG
-  }
-  @Deprecated
-  static Image create(URL url) throws IOException {
-    return fromUrl(url);
-  }
-  static Image fromUrl(URL url) throws IOException {
-    return UIInternal.get()._Image_fromUrl(url);
-  }
+    enum ImageType {
+        PNG,
+        SVG
+    }
 
-  /**
-   * Return image from bytes. JPG, PNG only
-   */
-  @Deprecated
-  static Image fromBytes(byte[] bytes, int width, int height) throws IOException {
-    return fromBytes(ImageType.PNG, bytes);
-  }
-  @Deprecated
-  @DeprecationInfo("Image#fromBytes(imageType, bytes) - width&height ignored")
-  static Image fromBytes(ImageType imageType, byte[] bytes, int width, int height) throws IOException {
-    return fromBytes(imageType, bytes);
-  }
-  static Image fromBytes(ImageType imageType, byte[] bytes) throws IOException {
-    return fromStream(imageType, new ByteArrayInputStream(bytes));
-  }
-  static Image fromStream(ImageType imageType, InputStream stream) throws IOException {
-    return UIInternal.get()._Image_fromStream(imageType, stream);
-  }
-  static Image lazy(Supplier<Image> imageSupplier) {
-    return UIInternal.get()._Image_lazy(imageSupplier);
-  }
-  static <S> Image stated(ImageState<S> state, Function<S, Image> funcCall) {
-    return UIInternal.get()._Image_stated(state, funcCall);
-  }
-  static EmptyImage empty() {
-    return empty(0);
-  }
-  static EmptyImage empty(int widthAndHeight) {
-    return UIInternal.get()._ImageEffects_empty(widthAndHeight, widthAndHeight);
-  }
-  static EmptyImage empty(int width, int height) {
-    return UIInternal.get()._ImageEffects_empty(width, height);
-  }
+    @Deprecated
+    static Image create(URL url) throws IOException {
+        return fromUrl(url);
+    }
 
-  int getHeight();
+    static Image fromUrl(URL url) throws IOException {
+        return UIInternal.get()._Image_fromUrl(url);
+    }
 
-  int getWidth();
-  default Size2D getSize() {
-    return new Size2D(getWidth(), getHeight());
-  }
+    /**
+     * Return image from bytes. JPG, PNG only
+     */
+    @Deprecated
+    static Image fromBytes(byte[] bytes, int width, int height) throws IOException {
+        return fromBytes(ImageType.PNG, bytes);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Image#fromBytes(imageType, bytes) - width&height ignored")
+    static Image fromBytes(ImageType imageType, byte[] bytes, int width, int height) throws IOException {
+        return fromBytes(imageType, bytes);
+    }
+
+    static Image fromBytes(ImageType imageType, byte[] bytes) throws IOException {
+        return fromStream(imageType, new ByteArrayInputStream(bytes));
+    }
+
+    static Image fromStream(ImageType imageType, InputStream stream) throws IOException {
+        return UIInternal.get()._Image_fromStream(imageType, stream);
+    }
+
+    static Image lazy(Supplier<Image> imageSupplier) {
+        return UIInternal.get()._Image_lazy(imageSupplier);
+    }
+
+    static <S> Image stated(ImageState<S> state, Function<S, Image> funcCall) {
+        return UIInternal.get()._Image_stated(state, funcCall);
+    }
+
+    static EmptyImage empty() {
+        return empty(0);
+    }
+
+    static EmptyImage empty(int widthAndHeight) {
+        return UIInternal.get()._ImageEffects_empty(widthAndHeight, widthAndHeight);
+    }
+
+    static EmptyImage empty(int width, int height) {
+        return UIInternal.get()._ImageEffects_empty(width, height);
+    }
+
+    int getHeight();
+
+    int getWidth();
+
+    default Size2D getSize() {
+        return new Size2D(getWidth(), getHeight());
+    }
 }

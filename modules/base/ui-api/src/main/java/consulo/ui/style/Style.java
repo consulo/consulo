@@ -21,21 +21,25 @@ import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 2016-06-22
  */
 public interface Style {
     static String LIGHT_ID = "light";
     static String SEMI_DARK = "semi_dark";
     static String DARK_ID = "dark";
+
     String getId();
+
     String getName();
+
     default String getIconLibraryId() {
         return IconLibraryManager.LIGHT_LIBRARY_ID;
     }
+
     ColorValue getColorValue(StyleColorValue colorKey);
 
     /**
-     * Try to modify source image to showing in current style. Can return same image. Also step into composite icons
+     * Tries to modify source image to show in current style. Can return same image. Also this is a step into composite icons.
      *
      * @param image source image
      * @return cloned image in current style, or source image
