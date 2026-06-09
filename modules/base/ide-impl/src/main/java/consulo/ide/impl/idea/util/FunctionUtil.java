@@ -55,8 +55,8 @@ public class FunctionUtil {
      * @param r2 second runnable to run
      * @return composed runnable. If one of arguments is null, returns other argument.
      */
-    @Contract("_, null -> param1; null, !null -> param2")
-    public static Runnable composeRunnables(@Nullable Runnable r1, @Nullable Runnable r2) {
+    @Contract("!null, _ -> !null; _, !null -> !null; null, null -> null")
+    public static @Nullable Runnable composeRunnables(@Nullable Runnable r1, @Nullable Runnable r2) {
         if (r2 == null) {
             return r1;
         }

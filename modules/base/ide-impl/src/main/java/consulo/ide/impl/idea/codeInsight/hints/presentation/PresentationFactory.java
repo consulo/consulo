@@ -495,7 +495,6 @@ public class PresentationFactory implements InlayPresentationFactory {
         if (element instanceof Navigatable navigable) {
             CommandProcessor.getInstance().newCommand()
                 .project(element.getProject())
-                .name(LocalizeValue.ofNullable(null))
                 .run(() -> navigable.navigate(true));
         }
     }

@@ -1681,7 +1681,6 @@ public class ContainerUtil extends ContainerUtilRt {
         );
     }
 
-    @Contract(" -> new")
     public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap() {
         return consulo.util.collection.ContainerUtil.createConcurrentSoftKeySoftValueMap();
     }
@@ -1726,7 +1725,6 @@ public class ContainerUtil extends ContainerUtilRt {
         return consulo.util.collection.ContainerUtil.createConcurrentSoftMap();
     }
 
-    @Contract(" -> new")
     public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
         return consulo.util.collection.ContainerUtil.createConcurrentWeakMap();
     }
@@ -1969,7 +1967,6 @@ public class ContainerUtil extends ContainerUtilRt {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> createWeakValueMap() {
         return consulo.util.collection.ContainerUtil.createWeakValueMap();
     }
@@ -1979,13 +1976,11 @@ public class ContainerUtil extends ContainerUtilRt {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     @Deprecated
     public static <K, V> Map<K, V> createSoftMap() {
         return consulo.util.collection.ContainerUtil.createSoftMap();
     }
 
-    @Contract("_ -> new")
     @Deprecated
     public static <K, V> Map<K, V> createSoftMap(HashingStrategy<? super K> strategy) {
         return consulo.util.collection.ContainerUtil.createSoftMap(strategy);
@@ -1996,7 +1991,6 @@ public class ContainerUtil extends ContainerUtilRt {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> createSoftValueMap() {
         //noinspection deprecation
         return consulo.util.collection.ContainerUtil.createSoftValueMap();
@@ -2007,23 +2001,19 @@ public class ContainerUtil extends ContainerUtilRt {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(" -> new")
     public static <K, V> Map<K, V> createWeakMap() {
         return Maps.newWeakHashMap();
     }
 
-    @Contract("_ -> new")
     public static <K, V> Map<K, V> createWeakMap(int initialCapacity) {
         return Maps.newWeakHashMap(initialCapacity);
     }
 
-    @Contract("_, _, _ -> new")
     @Deprecated
     public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
         return Maps.newWeakHashMap(initialCapacity, loadFactor, strategy);
     }
 
-    @Contract(" -> new")
     @Deprecated
     public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
         return consulo.util.collection.ContainerUtil.createWeakKeyWeakValueMap();
