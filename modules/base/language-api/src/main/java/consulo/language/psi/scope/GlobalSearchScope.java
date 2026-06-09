@@ -31,6 +31,7 @@ import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Iterators;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -705,7 +706,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
     @Override
     public Iterator<VirtualFile> iterator() {
-      return Collections.singletonList(myVirtualFile).iterator();
+      return myVirtualFile == null ? Iterators.empty() : List.of(myVirtualFile).iterator();
     }
   }
 

@@ -64,7 +64,7 @@
                         <path>
                             <groupId>com.uber.nullaway</groupId>
                             <artifactId>nullaway</artifactId>
-                            <version>0.13.3</version>
+                            <version>${null.away.version}</version>
                         </path>
                         <path>
                             <groupId>consulo.internal</groupId>
