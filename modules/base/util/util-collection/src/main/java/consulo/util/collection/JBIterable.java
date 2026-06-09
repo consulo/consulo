@@ -622,7 +622,9 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
    * @see JBIterable#map(Function)
    * @see JBIterable#filter(Predicate)
    */
+  @SuppressWarnings("NullAway")
   public final <T> JBIterable<T> filterMap(Function<? super E, @Nullable T> function) {
+    // Transforming nullable into non-nullable with predicate isn't supported by NullAway, so disabling validation
     return map(function).filter(Predicates.<@Nullable T>notNull());
   }
 

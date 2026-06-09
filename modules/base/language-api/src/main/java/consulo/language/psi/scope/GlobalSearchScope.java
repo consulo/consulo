@@ -705,7 +705,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
     @Override
     public Iterator<VirtualFile> iterator() {
-      return Collections.singletonList(myVirtualFile).iterator();
+      return myVirtualFile == null ? List.<VirtualFile>of().iterator() : List.of(myVirtualFile).iterator();
     }
   }
 
