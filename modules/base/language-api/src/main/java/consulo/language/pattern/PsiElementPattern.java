@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -171,6 +172,7 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
   public Self afterLeafSkipping(final ElementPattern skip, final ElementPattern pattern) {
     return with(new PatternCondition<T>("afterLeafSkipping") {
       @Override
+      @RequiredReadAction
       public boolean accepts(T t, ProcessingContext context) {
         PsiElement element = t;
         while (true) {
@@ -193,6 +195,7 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
   public Self beforeLeafSkipping(final ElementPattern skip, final ElementPattern pattern) {
     return with(new PatternCondition<T>("beforeLeafSkipping") {
       @Override
+      @RequiredReadAction
       public boolean accepts(T t, ProcessingContext context) {
         PsiElement element = t;
         while (true) {
@@ -215,6 +218,7 @@ public abstract class PsiElementPattern<T extends PsiElement, Self extends PsiEl
   public Self atStartOf(final ElementPattern pattern) {
     return with(new PatternCondition<T>("atStartOf") {
       @Override
+      @RequiredReadAction
       public boolean accepts(T t, ProcessingContext context) {
         PsiElement element = t;
         while (element != null) {

@@ -20,14 +20,18 @@ import consulo.document.util.ProperTextRange;
 import consulo.language.ast.IElementType;
 
 public class InjectedHighlightTokenInfo {
-    
     public final IElementType type;
     
     public final ProperTextRange rangeInsideInjectionHost;
     public final int shredIndex;
     public final TextAttributes attributes;
 
-    public InjectedHighlightTokenInfo(IElementType type, ProperTextRange rangeInsideInjectionHost, int shredIndex, TextAttributes attributes) {
+    public InjectedHighlightTokenInfo(
+        IElementType type,
+        ProperTextRange rangeInsideInjectionHost,
+        int shredIndex,
+        TextAttributes attributes
+    ) {
         this.type = type;
         this.rangeInsideInjectionHost = rangeInsideInjectionHost;
         this.shredIndex = shredIndex;

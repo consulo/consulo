@@ -36,6 +36,7 @@ public class ScopeFilter extends PositionElementFilter {
     return context != null && getRequiredFilter().isAcceptable(context, context);
   }
 
+  @Override
   public String toString(){
     return "scope(" + getFilter() + ")";
   }

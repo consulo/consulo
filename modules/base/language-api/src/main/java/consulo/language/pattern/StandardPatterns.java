@@ -15,6 +15,7 @@
  */
 package consulo.language.pattern;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
@@ -49,7 +50,7 @@ public class StandardPatterns {
     return new ObjectPattern.Capture<T>(new InitialPatternCondition(Object.class) {
       @Override
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
-        context.put(key, (T)o);
+        context.put(key, (T) o);
         return true;
       }
 
@@ -94,6 +95,7 @@ public class StandardPatterns {
   public static <E> ElementPattern<E> or(final ElementPattern<? extends E>... patterns) {
     return new ObjectPattern.Capture<E>(new InitialPatternConditionPlus(Object.class) {
       @Override
+      @RequiredReadAction
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
         for (ElementPattern pattern : patterns) {
           if (pattern.getCondition().accepts(o, context)) return true;
@@ -123,6 +125,7 @@ public class StandardPatterns {
   public static <E> ElementPattern<E> and(final ElementPattern<? extends E>... patterns) {
     return new ObjectPattern.Capture<E>(new InitialPatternConditionPlus(Object.class) {
       @Override
+      @RequiredReadAction
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
         for (ElementPattern pattern : patterns) {
           if (!pattern.getCondition().accepts(o, context)) return false;
@@ -152,6 +155,7 @@ public class StandardPatterns {
   public static <E> ObjectPattern.Capture<E> not(final ElementPattern<E> pattern) {
     return new ObjectPattern.Capture<E>(new InitialPatternConditionPlus(Object.class) {
       @Override
+      @RequiredReadAction
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
         return !pattern.getCondition().accepts(o, context);
       }
@@ -172,6 +176,7 @@ public class StandardPatterns {
   public static <T> ObjectPattern.Capture<T> optional(final ElementPattern<T> pattern) {
     return new ObjectPattern.Capture<T>(new InitialPatternCondition(Object.class) {
       @Override
+      @RequiredReadAction
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
         pattern.getCondition().accepts(o, context);
         return true;

@@ -16,6 +16,7 @@
 package consulo.language.psi.path;
 
 import consulo.annotation.ReviewAfterIssueFix;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
@@ -36,6 +37,7 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getContentRootForFile(file);
@@ -54,6 +56,7 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
+  @RequiredReadAction
   public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {

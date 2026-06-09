@@ -177,7 +177,7 @@ public abstract class LookAheadLexer extends LexerBase {
     }
 
     protected final void advanceLexer(Lexer lexer) {
-        advanceAs(lexer, lexer.getTokenType());
+        advanceAs(lexer, Objects.requireNonNull(lexer.getTokenType()));
     }
 
     protected final void advanceAs(Lexer lexer, @Nullable IElementType type) {
