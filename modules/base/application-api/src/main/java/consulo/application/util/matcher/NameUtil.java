@@ -3,13 +3,10 @@ package consulo.application.util.matcher;
 
 import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

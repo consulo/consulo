@@ -15,7 +15,7 @@
  */
 package consulo.component.util;
 
-import org.jetbrains.annotations.Contract;
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**

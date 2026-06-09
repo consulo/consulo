@@ -1,10 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.HtmlChunk.Element;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +182,6 @@ public final class HtmlBuilder {
      * @param tag name of the tag to wrap with
      * @return a new Element object that contains chunks from this builder
      */
-    @Contract(pure = true)
     public Element wrapWith(String tag) {
         return HtmlChunk.tag(tag).children(myChunks.toArray(new HtmlChunk[0]));
     }
@@ -193,7 +192,6 @@ public final class HtmlBuilder {
      * @param element name of the tag to wrap with
      * @return a new Element object that contains chunks from this builder
      */
-    @Contract(pure = true)
     public Element wrapWith(HtmlChunk.Element element) {
         return element.children(myChunks.toArray(new HtmlChunk[0]));
     }
@@ -204,7 +202,6 @@ public final class HtmlBuilder {
      * @return a new HTML Element object that wraps BODY Element that contains
      * chunks from this builder
      */
-    @Contract(pure = true)
     public Element wrapWithHtmlBody() {
         return wrapWith("body").wrapWith("html");
     }
@@ -212,7 +209,6 @@ public final class HtmlBuilder {
     /**
      * @return true if no elements were added to this builder
      */
-    @Contract(pure = true)
     public boolean isEmpty() {
         return myChunks.isEmpty();
     }
@@ -234,7 +230,6 @@ public final class HtmlBuilder {
      * @return a rendered HTML representation of all the chunks in this builder.
      */
     @Override
-    @Contract(pure = true)
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (HtmlChunk chunk : myChunks) {

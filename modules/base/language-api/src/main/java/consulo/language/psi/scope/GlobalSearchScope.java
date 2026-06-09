@@ -35,7 +35,6 @@ import consulo.util.collection.Iterators;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -180,7 +179,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return new UnionScope(this, scope);
   }
 
-  @Contract(pure = true)
   public static GlobalSearchScope union(GlobalSearchScope[] scopes) {
     if (scopes.length == 0) {
       throw new IllegalArgumentException("Empty scope array");
@@ -195,7 +193,6 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return (GlobalSearchScope)ProjectScopes.getAllScope(project);
   }
 
-  @Contract(pure = true)
   public static GlobalSearchScope everythingScope(Project project) {
     return (GlobalSearchScope)ProjectScopes.getEverythingScope(project);
   }

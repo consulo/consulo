@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.concurrency;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -28,20 +27,14 @@ import java.util.concurrent.ConcurrentMap;
  */
 @Deprecated
 public class ConcurrentCollectionFactory {
-  
-  @Contract(pure = true)
   public static <T, V> ConcurrentMap<T, V> createMap(HashingStrategy<T> hashStrategy) {
     return Maps.newConcurrentHashMap(hashStrategy);
   }
 
-  
-  @Contract(pure = true)
   public static <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<T> hashStrategy) {
     return Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel, hashStrategy);
   }
 
-  
-  @Contract(pure = true)
   public static <T> Set<T> createConcurrentSet(HashingStrategy<T> hashStrategy) {
     return Sets.newConcurrentHashSet(hashStrategy);
   }

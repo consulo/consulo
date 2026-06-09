@@ -3,7 +3,6 @@ package consulo.application;
 
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.CancellablePromise;
-import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.Callable;
 
@@ -17,7 +16,6 @@ public interface BaseExpirableExecutor<E extends BaseExpirableExecutor<E>> {
   /**
    * @return an executor that no longer invokes the given runnable after the supplied Disposable is disposed
    */
-  @Contract(pure = true)
   E expireWith(Disposable parentDisposable);
 
   /**

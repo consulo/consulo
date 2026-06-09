@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -23,7 +24,6 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,15 +34,12 @@ import java.util.List;
  * @author traff
  */
 public class PathMappingSettings extends AbstractPathMapper implements Cloneable {
-
-  
   private List<PathMapping> myPathMappings;
 
   public PathMappingSettings(@Nullable List<PathMapping> pathMappings) {
     myPathMappings = create(pathMappings);
   }
 
-  
   private static List<PathMapping> create(@Nullable List<PathMapping> mappings) {
     List<PathMapping> result = new ArrayList<>();
     if (mappings != null) {
@@ -59,12 +56,10 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     myPathMappings = new ArrayList<>();
   }
 
-  
   static String norm(String path) {
     return FileUtil.toSystemIndependentName(path);
   }
 
-  
   private static String normLocal(String path) {
     if (Platform.current().os().isWindows()) {
       path = path.toLowerCase();
@@ -103,14 +98,12 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     }
   }
 
-  
   @Override
   public String convertToLocal(String remotePath) {
     String localPath = convertToLocal(remotePath, myPathMappings);
     return localPath != null ? localPath : remotePath;
   }
 
-  
   @Override
   public String convertToRemote(String localPath) {
     String remotePath = convertToRemote(localPath, myPathMappings);
@@ -143,12 +136,10 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
   }
 
   @Override
-  
   protected final Collection<PathMapping> getAvailablePathMappings() {
     return Collections.unmodifiableCollection(myPathMappings);
   }
 
-  
   public List<PathMapping> getPathMappings() {
     return myPathMappings;
   }
@@ -157,7 +148,6 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     myPathMappings = create(pathMappings);
   }
 
-  
   public static String mapToLocal(String path, @Nullable String remoteRoot, @Nullable String localRoot) {
     if (isAnyEmpty(localRoot, remoteRoot)) {
       return path;
@@ -170,7 +160,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
     return path;
   }
 
-  @Contract(value = "null, _ -> true; _, null -> true", pure = true)
+  @Contract("null, _ -> true; _, null -> true")
   public static boolean isAnyEmpty(@Nullable String localRoot, @Nullable String remoteRoot) {
     return StringUtil.isEmpty(localRoot) || StringUtil.isEmpty(remoteRoot);
   }

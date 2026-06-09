@@ -15,10 +15,10 @@
  */
 package consulo.language.psi.stub;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.util.collection.SLRUCache;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.locks.Lock;

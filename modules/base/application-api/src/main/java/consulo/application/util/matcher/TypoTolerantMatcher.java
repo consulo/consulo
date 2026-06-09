@@ -5,7 +5,6 @@ import consulo.util.collection.FList;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
@@ -937,7 +936,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
   }
 
-  @Contract(pure = true)
   public static char [] insert(char [] array, int index, char value) {
     char[] result = new char[array.length + 1];
     System.arraycopy(array, 0, result, 0, index);

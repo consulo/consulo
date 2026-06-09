@@ -15,6 +15,7 @@
  */
 package consulo.language.psi;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.language.Language;
@@ -30,7 +31,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.lang.ref.SoftReference;
 

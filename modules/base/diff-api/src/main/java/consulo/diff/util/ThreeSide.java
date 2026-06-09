@@ -15,8 +15,8 @@
  */
 package consulo.diff.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
@@ -33,7 +33,6 @@ public enum ThreeSide {
     myIndex = index;
   }
 
-  
   public static ThreeSide fromIndex(int index) {
     if (index == 0) return LEFT;
     if (index == 1) return BASE;
@@ -58,7 +57,6 @@ public enum ThreeSide {
     throw new IllegalStateException();
   }
 
-  
   public <T> T selectNotNull(T left, T base, T right) {
     if (myIndex == 0) return left;
     if (myIndex == 1) return base;
@@ -76,7 +74,6 @@ public enum ThreeSide {
     return array[myIndex];
   }
 
-  
   public <T> T selectNotNull(T[] array) {
     assert array.length == 3;
     return array[myIndex];
@@ -87,7 +84,6 @@ public enum ThreeSide {
     return list.get(myIndex);
   }
 
-  
   public <T> T selectNotNull(List<T> list) {
     assert list.size() == 3;
     return list.get(myIndex);
@@ -99,7 +95,6 @@ public enum ThreeSide {
     return index != -1 ? fromIndex(index) : null;
   }
 
-  
   public static <T> List<T> map(Function<ThreeSide, T> function) {
     return ContainerUtil.list(function.apply(LEFT), function.apply(BASE), function.apply(RIGHT));
   }
