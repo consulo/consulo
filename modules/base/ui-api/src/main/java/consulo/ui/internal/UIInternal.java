@@ -44,10 +44,11 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public abstract class UIInternal {
     private static UIInternal ourInstance = PlatformServiceLoader.findImplementation(UIInternal.class, ServiceLoader::load);
+
     public static UIInternal get() {
         return ourInstance;
     }
@@ -93,6 +94,7 @@ public abstract class UIInternal {
     }
 
     public abstract ProgressBar _Components_progressBar();
+
     public abstract IntBox _Components_intBox(int value);
 
     public IntSlider _Components_intSlider(int min, int max, int value) {
@@ -100,6 +102,7 @@ public abstract class UIInternal {
     }
 
     public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
+
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         throw new UnsupportedOperationException();
     }
@@ -181,8 +184,11 @@ public abstract class UIInternal {
     public abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 
     public abstract MenuBar _MenuItems_menuBar();
+
     public abstract StyleManager _StyleManager_get();
+
     public abstract FontManager _FontManager_get();
+
     public abstract Window _Window_create(String title, WindowOptions options);
 
     public abstract @Nullable Window _Window_getActiveWindow();
@@ -206,14 +212,17 @@ public abstract class UIInternal {
 
     public abstract boolean _UIAccess_isUIThread();
 
-    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(@Nullable Image editButtonImage,
-                                                                                String dialogTitle,
-                                                                                Function<String, List<String>> parser,
-                                                                                Function<List<String>, String> joiner);
+    public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(
+        @Nullable Image editButtonImage,
+        String dialogTitle,
+        Function<String, List<String>> parser,
+        Function<List<String>, String> joiner
+    );
 
     public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(@Nullable String text);
 
     public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
+
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         throw new UnsupportedOperationException();
     }
@@ -221,9 +230,11 @@ public abstract class UIInternal {
     public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
         throw new UnsupportedOperationException();
     }
+
     public IconLibraryManager _IconLibraryManager_get() {
         throw new UnsupportedOperationException();
     }
+
     public TaskBar _TaskBar_get() {
         throw new UnsupportedOperationException();
     }
@@ -239,6 +250,7 @@ public abstract class UIInternal {
     public ToggleSwitch _Components_toggleSwitch(boolean selected) {
         throw new UnsupportedOperationException();
     }
+
     public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
         throw new UnsupportedOperationException();
     }
@@ -246,12 +258,15 @@ public abstract class UIInternal {
     public void _ShowNotifier_once(Component component, @RequiredUIAccess Runnable action) {
         throw new UnsupportedOperationException();
     }
+
     public PopupMenu _PopupMenu_create(Component target) {
         throw new UnsupportedOperationException();
     }
+
     public AdvancedLabel _Components_advancedLabel() {
         throw new UnsupportedOperationException();
     }
+
     public HtmlView _Components_htmlView() {
         throw new UnsupportedOperationException();
     }
@@ -259,15 +274,19 @@ public abstract class UIInternal {
     public void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         throw new UnsupportedOperationException();
     }
+
     public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
         throw new UnsupportedOperationException();
     }
+
     public ModalityState _ModalityState_any() {
         throw new UnsupportedOperationException();
     }
+
     public ModalityState _ModalityState_nonModal() {
         throw new UnsupportedOperationException();
     }
+
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         throw new UnsupportedOperationException();
     }

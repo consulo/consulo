@@ -16,25 +16,28 @@
 package consulo.ui.font;
 
 /**
+ * Immutable info about font.
+ *
  * @author VISTALL
  * @since 2020-06-04
- * <p>
- * Immutable info about font
  */
 public interface Font {
-  int STYLE_PLAIN = 1 << 0;
-  int STYLE_BOLD = 1 << 1;
-  int STYLE_ITALIC = 1 << 2;
-  String getName();
-  String getFontName();
-  String getFamily();
+    int STYLE_PLAIN = 1 << 0;
+    int STYLE_BOLD = 1 << 1;
+    int STYLE_ITALIC = 1 << 2;
 
-  int getFontStyle();
+    String getName();
 
-  int getFontSize();
+    String getFontName();
 
-  /**
-   * @return new font with newSize
-   */
-  Font buildNewFont(int newSize);
+    String getFamily();
+
+    int getFontStyle();
+
+    int getFontSize();
+
+    /**
+     * @return new font with newSize
+     */
+    Font buildNewFont(int newSize);
 }

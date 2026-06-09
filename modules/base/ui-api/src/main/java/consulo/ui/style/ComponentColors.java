@@ -17,13 +17,14 @@ package consulo.ui.style;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public enum ComponentColors implements StyleColorValue {
-  BORDER,
-  @Deprecated
-  // Use Use TEXT_FOREGROUND
-  TEXT,
-  TEXT_FOREGROUND,
-  LAYOUT,
-  DISABLED_TEXT}
+    BORDER,
+    @Deprecated
+    // Use Use TEXT_FOREGROUND
+    TEXT,
+    TEXT_FOREGROUND,
+    LAYOUT,
+    DISABLED_TEXT
+}

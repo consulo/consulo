@@ -24,12 +24,15 @@ import java.util.Set;
  * @since 2020-06-04
  */
 public interface FontManager {
-  static FontManager get() {
-    return UIInternal.get()._FontManager_get();
-  }
-  Set<String> getAvailableFontNames();
-  default Font createFont(String fontName, int fontSize) {
-    return createFont(fontName, fontSize, 0);
-  }
-  Font createFont(String fontName, int fontSize, int fontStyle);
+    static FontManager get() {
+        return UIInternal.get()._FontManager_get();
+    }
+
+    Set<String> getAvailableFontNames();
+
+    default Font createFont(String fontName, int fontSize) {
+        return createFont(fontName, fontSize, 0);
+    }
+
+    Font createFont(String fontName, int fontSize, int fontStyle);
 }

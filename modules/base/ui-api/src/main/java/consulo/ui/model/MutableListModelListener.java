@@ -22,7 +22,7 @@ import java.util.EventListener;
  * @since 2018-05-15
  */
 public interface MutableListModelListener<E> extends EventListener {
-  void itemAdded(E item);
+    void itemAdded(E item);
 
-  void itemRemoved(E item);
+    void itemRemoved(E item);
 }

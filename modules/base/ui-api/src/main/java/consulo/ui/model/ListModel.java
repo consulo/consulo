@@ -22,20 +22,22 @@ import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2016-06-12
  */
 public interface ListModel<E> extends Iterable<E> {
-  static <T> ListModel<T> of(Collection<? extends T> items) {
-    return UIInternal.get()._ListModel_create(items);
-  }
-  @Deprecated
-  @DeprecationInfo("Use #of()")
-  static <T> ListModel<T> create(Collection<? extends T> items) {
-    return UIInternal.get()._ListModel_create(items);
-  }
+    static <T> ListModel<T> of(Collection<? extends T> items) {
+        return UIInternal.get()._ListModel_create(items);
+    }
 
-  int getSize();
-  E get(int index);
+    @Deprecated
+    @DeprecationInfo("Use #of()")
+    static <T> ListModel<T> create(Collection<? extends T> items) {
+        return UIInternal.get()._ListModel_create(items);
+    }
 
-  int indexOf(E value);
+    int getSize();
+
+    E get(int index);
+
+    int indexOf(E value);
 }

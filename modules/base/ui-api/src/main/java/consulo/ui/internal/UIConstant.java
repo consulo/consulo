@@ -16,5 +16,5 @@
 package consulo.ui.internal;
 
 public interface UIConstant {
-  static int DEFAULT_SPACING_PX = 5;
+    static int DEFAULT_SPACING_PX = 5;
 }

@@ -24,10 +24,11 @@ import java.util.Collection;
  * @since 2020-09-15
  */
 public interface TableModel<E> {
-  static <T> TableModel<T> of(Collection<? extends T> items) {
-    return UIInternal.get()._TableModel_create(items);
-  }
+    static <T> TableModel<T> of(Collection<? extends T> items) {
+        return UIInternal.get()._TableModel_create(items);
+    }
 
-  int getSize();
-  E get(int index);
+    int getSize();
+
+    E get(int index);
 }

@@ -21,22 +21,23 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 24/11/2021
+ * @since 2021-11-24
  */
 public final class HyperlinkEvent extends ComponentEvent<Component> {
-  private final String myDescription;
+    private final String myDescription;
 
-  @Deprecated
-  public HyperlinkEvent(Component component, String description) {
-    super(component);
-    myDescription = description;
-  }
+    @Deprecated
+    public HyperlinkEvent(Component component, String description) {
+        super(component);
+        myDescription = description;
+    }
 
-  public HyperlinkEvent(Component component, String description, @Nullable InputDetails details) {
-    super(component, details);
-    myDescription = description;
-  }
-  public String getDescription() {
-    return myDescription;
-  }
+    public HyperlinkEvent(Component component, String description, @Nullable InputDetails details) {
+        super(component, details);
+        myDescription = description;
+    }
+
+    public String getDescription() {
+        return myDescription;
+    }
 }

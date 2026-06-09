@@ -33,106 +33,107 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 06-Nov-17
+ * @since 2017-11-06
  */
 public class FormBuilder {
-  public static FormBuilder create() {
-    return new FormBuilder();
-  }
-
-  private int myLineCount;
-  private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
-
-  private @Nullable Component myBottomComponent = null;
-  private List<Component> myBottomComponents = new ArrayList<>();
-
-  private FormBuilder() {
-  }
-
-  @Deprecated
-  @RequiredUIAccess
-  public FormBuilder addLabeled(String labelText, Component component) {
-    if (!myBottomComponents.isEmpty()) {
-      throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
+    public static FormBuilder create() {
+        return new FormBuilder();
     }
 
-    String newLabelText = labelText;
-    if (!StringUtil.endsWithChar(newLabelText, ':')) {
-      newLabelText += ": ";
+    private int myLineCount;
+    private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
+
+    private @Nullable Component myBottomComponent = null;
+    private List<Component> myBottomComponents = new ArrayList<>();
+
+    private FormBuilder() {
     }
 
-    myLayout.add(Label.create(newLabelText), TableLayout.cell(myLineCount, 0));
-    myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+    @Deprecated
+    @RequiredUIAccess
+    public FormBuilder addLabeled(String labelText, Component component) {
+        if (!myBottomComponents.isEmpty()) {
+            throw new IllegalArgumentException("Can't add labeled after adding bottom components");
+        }
 
-    myLineCount++;
-    return this;
-  }
+        String newLabelText = labelText;
+        if (!StringUtil.endsWithChar(newLabelText, ':')) {
+            newLabelText += ": ";
+        }
 
-  @RequiredUIAccess
-  public FormBuilder addLabeled(LocalizeValue labelText, Component component) {
-    if(!myBottomComponents.isEmpty()) {
-      throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
+        myLayout.add(Label.create(newLabelText), TableLayout.cell(myLineCount, 0));
+        myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+
+        myLineCount++;
+        return this;
     }
 
-    Label label = Label.create(labelText);
-    label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+    @RequiredUIAccess
+    public FormBuilder addLabeled(LocalizeValue labelText, Component component) {
+        if (!myBottomComponents.isEmpty()) {
+            throw new IllegalArgumentException("Can't add labeled after adding bottom components");
+        }
 
-    myLayout.add(label, TableLayout.cell(myLineCount, 0));
-    myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+        Label label = Label.create(labelText);
+        label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
 
-    myLineCount++;
-    return this;
-  }
+        myLayout.add(label, TableLayout.cell(myLineCount, 0));
+        myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
 
-  @RequiredUIAccess
-  public FormBuilder addLabeled(Component label, Component component) {
-    if (!myBottomComponents.isEmpty()) {
-      throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
+        myLineCount++;
+        return this;
     }
 
-    label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
-    
-    myLayout.add(label, TableLayout.cell(myLineCount, 0));
-    myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+    @RequiredUIAccess
+    public FormBuilder addLabeled(Component label, Component component) {
+        if (!myBottomComponents.isEmpty()) {
+            throw new IllegalArgumentException("Can't add labeled after adding bottom components");
+        }
 
-    myLineCount++;
-    return this;
-  }
+        label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
 
-  public void setBottom(Component bottomComponent) {
-    if (!myBottomComponents.isEmpty()) {
-      throw new IllegalArgumentException("Bottom components already set");
+        myLayout.add(label, TableLayout.cell(myLineCount, 0));
+        myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+
+        myLineCount++;
+        return this;
     }
 
-    myBottomComponent = bottomComponent;
-  }
+    public void setBottom(Component bottomComponent) {
+        if (!myBottomComponents.isEmpty()) {
+            throw new IllegalArgumentException("Bottom components already set");
+        }
 
-  public void addBottom(Component component) {
-    if (myBottomComponent != null) {
-      throw new IllegalArgumentException("Bottom component already set");
+        myBottomComponent = bottomComponent;
     }
 
-    myBottomComponents.add(component);
-  }
+    public void addBottom(Component component) {
+        if (myBottomComponent != null) {
+            throw new IllegalArgumentException("Bottom component already set");
+        }
 
-  @RequiredUIAccess
-  public Component build() {
-    if(myBottomComponents.isEmpty() && myBottomComponent == null) {
-      return myLayout;
+        myBottomComponents.add(component);
     }
 
-    if (myBottomComponent != null) {
-      DockLayout layout = DockLayout.create();
-      layout.top(myLayout);
-      layout.center(myBottomComponent);
-      return layout;
-    } else {
-      VerticalLayout layout = VerticalLayout.create();
-      layout.add(myLayout);
-      for (Component bottomComponent : myBottomComponents) {
-        layout.add(bottomComponent);
-      }
-      return layout;
+    @RequiredUIAccess
+    public Component build() {
+        if (myBottomComponents.isEmpty() && myBottomComponent == null) {
+            return myLayout;
+        }
+
+        if (myBottomComponent != null) {
+            DockLayout layout = DockLayout.create();
+            layout.top(myLayout);
+            layout.center(myBottomComponent);
+            return layout;
+        }
+        else {
+            VerticalLayout layout = VerticalLayout.create();
+            layout.add(myLayout);
+            for (Component bottomComponent : myBottomComponents) {
+                layout.add(bottomComponent);
+            }
+            return layout;
+        }
     }
-  }
 }

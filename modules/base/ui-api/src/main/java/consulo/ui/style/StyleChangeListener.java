@@ -19,8 +19,8 @@ import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 05-Nov-17
+ * @since 2017-11-05
  */
 public interface StyleChangeListener extends EventListener {
-  void styleChanged(Style oldStyle, Style newStyle);
+    void styleChanged(Style oldStyle, Style newStyle);
 }

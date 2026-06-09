@@ -26,46 +26,54 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-06-09
  */
 public class TraverseUtil {
-  /**
-   * Return {@code true} if a component {@code a} descends from a component {@code b}
-   *
-   * @param a the first component
-   * @param b the second component
-   * @return {@code true} if a component {@code a} descends from a component {@code b}
-   */
-  public static boolean isDescendingFrom(Component a, Component b) {
-    if (a == b) return true;
-    for (Component p = a.getParent(); p != null; p = p.getParent()) {
-      if (p == b) return true;
-    }
-    return false;
-  }
-
-  public static @Nullable Component findUltimateParent(@Nullable Component c) {
-    if (c == null) return null;
-
-    Component eachParent = c;
-    while (true) {
-      if (eachParent.getParent() == null) return eachParent;
-      eachParent = eachParent.getParent();
-    }
-  }
-  
-  @Contract("null -> null")
-  public static @Nullable Window getWindowAncestor(@Nullable Component c) {
-    if (c == null) {
-      return null;
+    /**
+     * Return {@code true} if a component {@code a} descends from a component {@code b}
+     *
+     * @param a the first component
+     * @param b the second component
+     * @return {@code true} if a component {@code a} descends from a component {@code b}
+     */
+    public static boolean isDescendingFrom(Component a, Component b) {
+        if (a == b) {
+            return true;
+        }
+        for (Component p = a.getParent(); p != null; p = p.getParent()) {
+            if (p == b) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    if (c instanceof Window) {
-      return (Window)c;
+    public static @Nullable Component findUltimateParent(@Nullable Component c) {
+        if (c == null) {
+            return null;
+        }
+
+        Component eachParent = c;
+        while (true) {
+            if (eachParent.getParent() == null) {
+                return eachParent;
+            }
+            eachParent = eachParent.getParent();
+        }
     }
 
-    for (Component p = c.getParent(); p != null; p = p.getParent()) {
-      if (p instanceof Window) {
-        return (Window)p;
-      }
+    @Contract("null -> null")
+    public static @Nullable Window getWindowAncestor(@Nullable Component c) {
+        if (c == null) {
+            return null;
+        }
+
+        if (c instanceof Window window) {
+            return window;
+        }
+
+        for (Component p = c.getParent(); p != null; p = p.getParent()) {
+            if (p instanceof Window window) {
+                return window;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 }
