@@ -26,26 +26,25 @@ import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
- * @since 10/07/2021
+ * @since 2021-07-10
  */
 public class DesktopSwtTableLayoutImpl extends DesktopSwtLayoutComponent<TableLayout.TableCell, Object> implements TableLayout {
-  private final StaticPosition myFillOption;
+    private final StaticPosition myFillOption;
 
-  public DesktopSwtTableLayoutImpl(StaticPosition fillOption) {
-    myFillOption = fillOption;
-  }
+    public DesktopSwtTableLayoutImpl(StaticPosition fillOption) {
+        myFillOption = fillOption;
+    }
 
-  @Override
-  protected @Nullable Layout createLayout() {
-    return new GridLayout();
-  }
+    @Override
+    protected @Nullable Layout createLayout() {
+        return new GridLayout();
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public TableLayout add(Component component, TableCell tableCell) {
-    GridData gridData = new GridData();
-    addImpl(component, gridData);
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public TableLayout add(Component component, TableCell tableCell) {
+        GridData gridData = new GridData();
+        addImpl(component, gridData);
+        return this;
+    }
 }

@@ -26,29 +26,28 @@ import consulo.ui.event.GlobalFocusListener;
  * @since 2020-11-21
  */
 public class WebFocusManagerImpl implements FocusManager {
-  public static void register(Component component) {
-//    if(component instanceof FieldEvents.FocusNotifier) {
-//      ((FieldEvents.FocusNotifier)component).addFocusListener(focusEvent -> ourInstance.fireChanged());
-//    }
+    public static void register(Component component) {
+//      if (component instanceof FieldEvents.FocusNotifier focusNotifier) {
+//          focusNotifier.addFocusListener(focusEvent -> ourInstance.fireChanged());
+//      }
 //
-//    if(component instanceof FieldEvents.BlurNotifier) {
-//      ((FieldEvents.BlurNotifier)component).addBlurListener(blurEvent -> ourInstance.fireChanged());
-//    }
-  }
+//      if (component instanceof FieldEvents.BlurNotifier blurNotifier) {
+//          blurNotifier.addBlurListener(blurEvent -> ourInstance.fireChanged());
+//      }
+    }
 
-  public static final WebFocusManagerImpl ourInstance = new WebFocusManagerImpl();
+    public static final WebFocusManagerImpl ourInstance = new WebFocusManagerImpl();
 
-  private final EventDispatcher<GlobalFocusListener> myListeners = EventDispatcher.create(GlobalFocusListener.class);
+    private final EventDispatcher<GlobalFocusListener> myListeners = EventDispatcher.create(GlobalFocusListener.class);
 
-  public void fireChanged() {
-    myListeners.getMulticaster().focusChanged();
-  }
+    public void fireChanged() {
+        myListeners.getMulticaster().focusChanged();
+    }
 
-  
-  @Override
-  public Disposable addListener(GlobalFocusListener focusListener) {
-    Disposable disposable = Disposable.newDisposable();
-    myListeners.addListener(focusListener, disposable);
-    return disposable;
-  }
+    @Override
+    public Disposable addListener(GlobalFocusListener focusListener) {
+        Disposable disposable = Disposable.newDisposable();
+        myListeners.addListener(focusListener, disposable);
+        return disposable;
+    }
 }

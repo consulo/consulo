@@ -22,7 +22,6 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
 
 /**
@@ -47,7 +46,6 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
             return false;
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopTabbedLayoutImpl.this;
@@ -78,7 +76,6 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         return tab;
     }
 
-    
     @Override
     @RequiredUIAccess
     public Tab addTab(String tabName, Component component) {

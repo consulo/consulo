@@ -30,7 +30,7 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 25-Oct-17
+ * @since 2017-10-25
  */
 public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> implements WrappedLayout {
     class MyJPanel extends JPanel implements FromSwingComponentWrapper {
@@ -63,7 +63,6 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
             return getTargetComponent().requestFocus(temporary);
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopWrappedLayoutImpl.this;
@@ -71,7 +70,6 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
     }
 
     public DesktopWrappedLayoutImpl() {
-
     }
 
     @Override
@@ -81,8 +79,8 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
         return panel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public WrappedLayout set(@Nullable Component component) {
         setContent(component == null ? null : (JComponent) TargetAWT.to(component));
         return this;

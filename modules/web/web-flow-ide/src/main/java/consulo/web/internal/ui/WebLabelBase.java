@@ -34,6 +34,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends VaadinComponentDelegate<V> implements Label {
     private Component myLabeledComponent;
 
+    @RequiredUIAccess
     public WebLabelBase(LocalizeValue text, LabelOptions options) {
         setText(text);
         getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());

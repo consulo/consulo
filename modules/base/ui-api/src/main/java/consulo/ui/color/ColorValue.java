@@ -19,29 +19,34 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 2017-10-12
  */
 public interface ColorValue {
-  static ColorValue lazy(Supplier<? extends ColorValue> getter) {
-    return new LazyColorValue(getter);
-  }
-  static ColorValue dummy(String errorMessage) {
-    return new ColorValue() {
-      @Override
-      public RGBColor toRGB() {
-        throw new UnsupportedOperationException(errorMessage);
-      }
-      @Override
-      public ColorValue withAlpha(int value) {
-        throw new UnsupportedOperationException(errorMessage);
-      }
-    };
-  }
-  RGBColor toRGB();
-  default ColorValue withAlpha(float value) {
-    return new WithAlphaColorValue(this, (int)(value * 255 + 0.5f));
-  }
-  default ColorValue withAlpha(int value) {
-    return new WithAlphaColorValue(this, value);
-  }
+    static ColorValue lazy(Supplier<? extends ColorValue> getter) {
+        return new LazyColorValue(getter);
+    }
+
+    static ColorValue dummy(String errorMessage) {
+        return new ColorValue() {
+            @Override
+            public RGBColor toRGB() {
+                throw new UnsupportedOperationException(errorMessage);
+            }
+
+            @Override
+            public ColorValue withAlpha(int value) {
+                throw new UnsupportedOperationException(errorMessage);
+            }
+        };
+    }
+
+    RGBColor toRGB();
+
+    default ColorValue withAlpha(float value) {
+        return new WithAlphaColorValue(this, (int) (value * 255 + 0.5f));
+    }
+
+    default ColorValue withAlpha(int value) {
+        return new WithAlphaColorValue(this, value);
+    }
 }

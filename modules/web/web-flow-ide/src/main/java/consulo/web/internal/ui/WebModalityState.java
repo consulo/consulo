@@ -23,5 +23,5 @@ import consulo.ui.ModalityState;
  * @since 2023-11-10
  */
 public class WebModalityState extends IdeaModalityStateEx implements ModalityState {
-  public static final WebModalityState INSTANCE = new WebModalityState();
+    public static final WebModalityState INSTANCE = new WebModalityState();
 }

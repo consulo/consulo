@@ -27,19 +27,18 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 11/12/2021
+ * @since 2021-11-12
  */
 public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<LayoutConstraint, Object> implements WrappedLayout {
-  @Override
-  protected @Nullable Layout createLayout() {
-    return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
-  }
+    @Override
+    protected @Nullable Layout createLayout() {
+        return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public WrappedLayout set(@Nullable Component component) {
-    addImpl(component, null);
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public WrappedLayout set(@Nullable Component component) {
+        addImpl(component, null);
+        return this;
+    }
 }

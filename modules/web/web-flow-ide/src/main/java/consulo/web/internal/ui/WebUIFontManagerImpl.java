@@ -22,15 +22,14 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 28/05/2023
+ * @since 2023-05-28
  */
 @Singleton
 @ServiceImpl
 public class WebUIFontManagerImpl extends UIFontManagerImpl {
-  
-  @Override
-  protected Pair<String, Integer> resolveSystemFontData() {
-    // TODO wrong
-    return Pair.create("Arial", 12);
-  }
+    @Override
+    protected Pair<String, Integer> resolveSystemFontData() {
+        // TODO wrong
+        return Pair.create("Arial", 12);
+    }
 }

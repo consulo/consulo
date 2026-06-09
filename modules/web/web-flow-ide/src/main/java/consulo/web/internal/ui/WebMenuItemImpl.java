@@ -29,34 +29,32 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-18
  */
 public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaadin> implements MenuItem {
-  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-    private LocalizeValue myText = LocalizeValue.empty();
-    private Image myIcon;
+    public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+        private LocalizeValue myText = LocalizeValue.empty();
+        private Image myIcon;
+
+        @Override
+        public @Nullable Component toUIComponent() {
+            return WebMenuItemImpl.this;
+        }
+    }
+
+    public WebMenuItemImpl(LocalizeValue text) {
+        getVaadinComponent().myText = text;
+    }
 
     @Override
-    public @Nullable Component toUIComponent() {
-      return WebMenuItemImpl.this;
+    public LocalizeValue getText() {
+        return toVaadinComponent().myText;
     }
-  }
 
-  public WebMenuItemImpl(LocalizeValue text) {
-    getVaadinComponent().myText = text;
-  }
+    @Override
+    public void setIcon(@Nullable Image icon) {
+        toVaadinComponent().myIcon = icon;
+    }
 
-  
-  @Override
-  public LocalizeValue getText() {
-    return toVaadinComponent().myText;
-  }
-
-  @Override
-  public void setIcon(@Nullable Image icon) {
-    toVaadinComponent().myIcon = icon;
-  }
-
-  
-  @Override
-  public WebMenuItemImpl.Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    public WebMenuItemImpl.Vaadin createVaadinComponent() {
+        return new Vaadin();
+    }
 }

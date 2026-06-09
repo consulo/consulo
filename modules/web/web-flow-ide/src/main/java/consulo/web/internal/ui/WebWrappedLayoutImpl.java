@@ -17,7 +17,6 @@ package consulo.web.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.WrappedLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
@@ -43,8 +42,8 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
         return new Vaadin();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void removeAll() {
         getVaadinComponent().setContent(null);
     }
@@ -54,8 +53,8 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
         getVaadinComponent().removeIfContent(TargetVaddin.to(component));
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public WrappedLayout set(@Nullable Component component) {
         if (component != null) {
             VaadinSizeUtil.setSizeFull(component);

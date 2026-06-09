@@ -34,108 +34,105 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin> implements Window {
-  public static class Vaadin extends Dialog implements ComponentHolder, FromVaadinComponentWrapper {
-    private Component myComponent;
+    public static class Vaadin extends Dialog implements ComponentHolder, FromVaadinComponentWrapper {
+        private Component myComponent;
+
+        @Override
+        public void setComponent(Component component) {
+            myComponent = component;
+        }
+
+        @Override
+        public Component toUIComponent() {
+            return myComponent;
+        }
+    }
+
+    private boolean myDisposed;
+    private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
+
+    public WebWindowImpl(boolean modal, WindowOptions options) {
+        Vaadin vaadinComponent = getVaadinComponent();
+
+        vaadinComponent.setModal(modal);
+        vaadinComponent.setResizable(options.isResizable());
+        vaadinComponent.setCloseOnEsc(false);
+        vaadinComponent.setCloseOnOutsideClick(false);
+        vaadinComponent.setDraggable(true);
+        if (options.isClosable()) {
+            addCloseDialogButton(vaadinComponent);
+        }
+
+        VaadinSizeUtil.setSizeFull(myRootPanel.getComponent());
+        vaadinComponent.add(TargetVaddin.to(myRootPanel.getComponent()));
+        // TODO vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
+
+        WebFocusManagerImpl.register(toVaadinComponent());
+    }
+
+    private static void addCloseDialogButton(Dialog dialog) {
+        Button closeButton = new Button(new Icon("lumo", "cross"), (e) -> dialog.close());
+        closeButton.addThemeVariants(ButtonVariant.TERTIARY);
+        dialog.getHeader().add(closeButton);
+    }
 
     @Override
-    public void setComponent(Component component) {
-      myComponent = component;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
 
-    
     @Override
-    public Component toUIComponent() {
-      return myComponent;
-    }
-  }
+    @RequiredUIAccess
+    public void show() {
+        if (myDisposed) {
+            throw new IllegalArgumentException("Window already disposed");
+        }
 
-  private boolean myDisposed;
-  private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
-
-  public WebWindowImpl(boolean modal, WindowOptions options) {
-    Vaadin vaadinComponent = getVaadinComponent();
-
-    vaadinComponent.setModal(modal);
-    vaadinComponent.setResizable(options.isResizable());
-    vaadinComponent.setCloseOnEsc(false);
-    vaadinComponent.setCloseOnOutsideClick(false);
-    vaadinComponent.setDraggable(true);
-    if (options.isClosable()) {
-      addCloseDialogButton(vaadinComponent);
+        toVaadinComponent().open();
     }
 
-    VaadinSizeUtil.setSizeFull(myRootPanel.getComponent());
-    vaadinComponent.add(TargetVaddin.to(myRootPanel.getComponent()));
-    // TODO vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
+    @Override
+    @RequiredUIAccess
+    public void close() {
+        getVaadinComponent().close();
 
-    WebFocusManagerImpl.register(toVaadinComponent());
-  }
+        myDisposed = true;
 
-  private static void addCloseDialogButton(Dialog dialog) {
-    Button closeButton = new Button(new Icon("lumo", "cross"), (e) -> dialog.close());
-    closeButton.addThemeVariants(ButtonVariant.TERTIARY);
-    dialog.getHeader().add(closeButton);
-  }
-
-  
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void show() {
-    if (myDisposed) {
-      throw new IllegalArgumentException("Window already disposed");
+        Disposer.dispose(this);
     }
 
-    toVaadinComponent().open();
-  }
+    @Override
+    @RequiredUIAccess
+    public void setTitle(String title) {
+        getVaadinComponent().setHeaderTitle(title);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void close() {
-    getVaadinComponent().close();
+    @Override
+    @RequiredUIAccess
+    public void setContent(Component content) {
+        myRootPanel.setCenterComponent(content);
+    }
 
-    myDisposed = true;
+    @Override
+    @RequiredUIAccess
+    public void setMenuBar(@Nullable MenuBar menuBar) {
+        myRootPanel.setMenuBar(menuBar);
+    }
 
-    Disposer.dispose(this);
-  }
+    @Override
+    public boolean isActive() {
+        return true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setTitle(String title) {
-    getVaadinComponent().setHeaderTitle(title);
-  }
+    @Override
+    public void dispose() {
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setContent(Component content) {
-    myRootPanel.setCenterComponent(content);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setMenuBar(@Nullable MenuBar menuBar) {
-    myRootPanel.setMenuBar(menuBar);
-  }
-
-  @Override
-  public boolean isActive() {
-    return true;
-  }
-
-  @Override
-  public void dispose() {
-
-  }
-
-  @Override
-  public @Nullable Window getParent() {
-    return (Window)super.getParent();
-  }
+    @Override
+    public @Nullable Window getParent() {
+        return (Window) super.getParent();
+    }
 }

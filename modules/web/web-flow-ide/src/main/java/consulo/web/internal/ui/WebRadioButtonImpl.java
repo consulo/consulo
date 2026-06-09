@@ -66,33 +66,30 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
         setValue(selected);
     }
 
-    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    
     @Override
     public Boolean getValue() {
         // TODO
         return Boolean.FALSE;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setValue(Boolean value, boolean fireListeners) {
         // TODO
     }
 
     @Override
-    
     public LocalizeValue getLabelText() {
         return myText;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setLabelText(LocalizeValue text) {
         UIAccess.assertIsUIThread();
 

@@ -36,13 +36,13 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         }
     }
 
+    @RequiredUIAccess
     public WebTextBoxImpl(String text) {
         setValue(text, false);
     }
 
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
-
     }
 
     @Override
@@ -51,7 +51,6 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     }
 
     @Override
-    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
@@ -61,20 +60,18 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         return getVaadinComponent().getValue();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void setValue(String value, boolean fireListeners) {
         getVaadinComponent().setValue(value);
     }
 
     @Override
     public void selectAll() {
-
     }
 
     @Override
     public void setEditable(boolean editable) {
-
     }
 
     @Override
@@ -82,15 +79,14 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         return true;
     }
 
-    
     @Override
     public Disposable addValidator(Validator<String> validator) {
         return () -> {
         };
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean validate() {
         return true;
     }

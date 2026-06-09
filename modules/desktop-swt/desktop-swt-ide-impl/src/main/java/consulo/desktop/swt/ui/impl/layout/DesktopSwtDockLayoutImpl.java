@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<StaticPosition, BorderLayout.BorderData> implements DockLayout {
     public DesktopSwtDockLayoutImpl(int gapInPixels) {
@@ -35,19 +35,13 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<StaticPo
 
     @Override
     public BorderLayout.BorderData convertConstraintsToLayoutData(StaticPosition constraint) {
-        switch (constraint) {
-            case TOP:
-                return new BorderLayout.BorderData(BorderLayout.NORTH);
-            case BOTTOM:
-                return new BorderLayout.BorderData(BorderLayout.SOUTH);
-            case LEFT:
-                return new BorderLayout.BorderData(BorderLayout.WEST);
-            case RIGHT:
-                return new BorderLayout.BorderData(BorderLayout.EAST);
-            case CENTER:
-                return new BorderLayout.BorderData(BorderLayout.CENTER);
-            default:
-                throw new IllegalArgumentException(constraint.name());
-        }
+        return switch (constraint) {
+            case TOP -> new BorderLayout.BorderData(BorderLayout.NORTH);
+            case BOTTOM -> new BorderLayout.BorderData(BorderLayout.SOUTH);
+            case LEFT -> new BorderLayout.BorderData(BorderLayout.WEST);
+            case RIGHT -> new BorderLayout.BorderData(BorderLayout.EAST);
+            case CENTER -> new BorderLayout.BorderData(BorderLayout.CENTER);
+            default -> throw new IllegalArgumentException(constraint.name());
+        };
     }
 }

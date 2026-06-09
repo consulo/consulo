@@ -44,7 +44,6 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
             super.updateUI();
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopLayoutBase.this;
@@ -70,13 +69,12 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         myLayoutManager = layoutManager;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     protected T createComponent() {
         return (T) new MyJPanel(Objects.requireNonNull(myLayoutManager));
     }
 
-    
     @Override
     public Layout<C> add(Component component, C constraint) {
         addImpl(component, convertConstraints(constraint));
@@ -94,9 +92,8 @@ abstract class DesktopLayoutBase<T extends JPanel, C extends LayoutConstraint> e
         panel.repaint();
     }
 
-
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void removeAll() {
         toAWTComponent().removeAll();
     }

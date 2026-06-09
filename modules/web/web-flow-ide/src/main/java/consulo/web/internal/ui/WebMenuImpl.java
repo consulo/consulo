@@ -35,50 +35,47 @@ import java.util.List;
  * @since 2019-02-19
  */
 public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
-  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-    private LocalizeValue myText = LocalizeValue.empty();
-    private List<Component> myMenuItems = new ArrayList<>();
+    public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+        private LocalizeValue myText = LocalizeValue.empty();
+        private List<Component> myMenuItems = new ArrayList<>();
 
-    public void add(MenuItem menuItem) {
-      Component vaadinComponent = TargetVaddin.to(menuItem);
+        public void add(MenuItem menuItem) {
+            Component vaadinComponent = TargetVaddin.to(menuItem);
 
-      myMenuItems.add(vaadinComponent);
+            myMenuItems.add(vaadinComponent);
+        }
+
+        @Override
+        public consulo.ui.@Nullable Component toUIComponent() {
+            return WebMenuImpl.this;
+        }
+    }
+
+    public WebMenuImpl(LocalizeValue text) {
+        getVaadinComponent().myText = text;
     }
 
     @Override
-    public consulo.ui.@Nullable Component toUIComponent() {
-      return WebMenuImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-  }
 
-  public WebMenuImpl(LocalizeValue text) {
-    getVaadinComponent().myText = text;
-  }
+    @Override
+    public void setIcon(@Nullable Image icon) {
+        Vaadin vaadinComponent = getVaadinComponent();
+        //vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
+        // vaadinComponent.markAsDirty();
+    }
 
-  @Override
-  
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @Override
+    @RequiredUIAccess
+    public Menu add(MenuItem menuItem) {
+        getVaadinComponent().add(menuItem);
+        return this;
+    }
 
-  @Override
-  public void setIcon(@Nullable Image icon) {
-    Vaadin vaadinComponent = getVaadinComponent();
-    //vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
-    // vaadinComponent.markAsDirty();
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public Menu add(MenuItem menuItem) {
-    getVaadinComponent().add(menuItem);
-    return this;
-  }
-
-  
-  @Override
-  public LocalizeValue getText() {
-    return getVaadinComponent().myText;
-  }
+    @Override
+    public LocalizeValue getText() {
+        return getVaadinComponent().myText;
+    }
 }

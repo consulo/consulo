@@ -43,7 +43,6 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
         myModel = model;
     }
 
-    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
@@ -67,7 +66,6 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
     public void setValue(Object value, boolean fireListeners) {
     }
 
-    
     @Override
     public WebListBoxImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

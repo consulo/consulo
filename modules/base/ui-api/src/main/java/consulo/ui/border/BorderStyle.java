@@ -17,9 +17,9 @@ package consulo.ui.border;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public enum BorderStyle {
-  LINE,
-  EMPTY
+    LINE,
+    EMPTY
 }

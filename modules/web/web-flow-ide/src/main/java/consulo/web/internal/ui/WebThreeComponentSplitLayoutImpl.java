@@ -29,9 +29,10 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/05/2023
+ * @since 2023-05-29
  */
-public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<WebThreeComponentSplitLayoutImpl.Vaadin> implements ThreeComponentSplitLayout {
+public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<WebThreeComponentSplitLayoutImpl.Vaadin>
+    implements ThreeComponentSplitLayout {
     public class Vaadin extends CompositeComponent implements FromVaadinComponentWrapper {
         private SplitLayout myFirstLayout;
         private SplitLayout mySecondLayout;
@@ -72,8 +73,8 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
         return new Vaadin();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
         if (component != null) {
             com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
@@ -83,9 +84,8 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
         return this;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
         if (component != null) {
             com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
@@ -95,9 +95,8 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
         return this;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
         if (component != null) {
             com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);

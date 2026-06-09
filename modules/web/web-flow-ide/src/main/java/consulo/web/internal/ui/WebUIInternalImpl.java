@@ -49,430 +49,425 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2016-06-11
  */
 public class WebUIInternalImpl extends UIInternal {
-  @Override
-  public CheckBox _Components_checkBox() {
-    return new WebCheckBoxImpl();
-  }
-
-  @Override
-  public DockLayout _Layouts_dock(int gapInPixels) {
-    return new WebDockLayoutImpl(gapInPixels);
-  }
-
-  @Override
-  public WrappedLayout _Layouts_wrapped() {
-    return new WebWrappedLayoutImpl();
-  }
-
-  @Override
-  public VerticalLayout _Layouts_vertical(int vGap) {
-    return new WebVerticalLayoutImpl();
-  }
-
-  @Override
-  public SwipeLayout _Layouts_swipe() {
-    throw notSupported();
-
-    //return new WebSwipeLayoutImpl();
-  }
-
-  @Override
-  public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
-    if (position == SplitLayoutPosition.HORIZONTAL) {
-      return new WebHorizontalTwoComponentSplitLayoutImpl();
+    @Override
+    public CheckBox _Components_checkBox() {
+        return new WebCheckBoxImpl();
     }
-//    else if (position == SplitLayoutPosition.VERTICAL) {
-//      return new WebVerticalTwoComponentSplitLayoutImpl();
-//    }
-    throw notSupported();
-  }
 
-  @Override
-  public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
-    return new WebThreeComponentSplitLayoutImpl();
-  }
-
-  @Override
-  public TabbedLayout _Layouts_tabbed() {
-    return new WebTabbedLayoutImpl();
-  }
-
-  @Override
-  public LabeledLayout _Layouts_labeled(LocalizeValue label) {
-    return new WebLabeledLayoutImpl(label);
-  }
-
-  @Override
-  public TableLayout _Layouts_table(StaticPosition fillOption) {
-    return new WebTableLayoutImpl(fillOption);
-  }
-
-  @Override
-  public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
-    return new WebScrollLayoutImpl(component, options);
-  }
-
-  @Override
-  public Label _Components_label(LocalizeValue text, LabelOptions options) {
-    return new WebLabelImpl(text, options);
-  }
-
-  @Override
-  public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
-    throw notSupported();
-
-    //return new WebHtmlLabelImpl(html, labelOptions);
-  }
-
-  @Override
-  public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
-    return new WebComboBoxImpl<>(model);
-  }
-
-  @Override
-  public TextBox _Components_textBox(String text) {
-    return new WebTextBoxImpl(text);
-  }
-
-  @Override
-  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
-    return new WebTextBoxWithHistoryImpl(text);
-  }
-
-  @Override
-  public ProgressBar _Components_progressBar() {
-    return new WebProgressBarImpl();
-  }
-
-  
-  @Override
-  public IntBox _Components_intBox(int value) {
-    return new WebIntBoxImpl(value);
-  }
-
-  @Override
-  public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
-    return new WebListBoxImpl<>(model);
-  }
-
-  
-  @Override
-  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
-    return new WebRadioButtonImpl(selected, text);
-  }
-
-  @Override
-  public Button _Components_button(LocalizeValue text) {
-    return new WebButtonImpl(text);
-  }
-
-  @Override
-  public Hyperlink _Components_hyperlink(LocalizeValue text) {
-    WebHyperlinkImpl hyperlink = new WebHyperlinkImpl();
-    hyperlink.setText(text);
-    return hyperlink;
-  }
-
-  @Override
-  public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
-    return new WebHorizontalLayoutImpl();
-  }
-
-  @Override
-  public ImageBox _Components_imageBox(Image image) {
-    throw notSupported();
-
-    //return new WebImageBoxImpl(image);
-  }
-
-  @Override
-  public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
-    throw notSupported();
-  }
-
-  @Override
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
-    return new WebTreeImpl<>(rootValue, model, disposable);
-  }
-
-  @Override
-  public Image _Image_fromUrl(URL url) throws IOException {
-    return new WebImageImpl(url);
-  }
-
-  @Override
-  public Image _Image_lazy(Supplier<Image> imageSupplier) {
-    return imageSupplier.get();
-  }
-
-  @Override
-  public Image _ImageEffects_layered(Image[] images) {
-    return new WebLayeredImageImpl(images);
-  }
-
-  @Override
-  public Image _ImageEffects_transparent(Image original, float alpha) {
-    return new WebTransparentImageImpl(original, alpha);
-  }
-
-  @Override
-  public Image _ImageEffects_grayed(Image original) {
-    return original;
-  }
-
-  @Override
-  public Image _ImageEffects_appendRight(Image i0, Image i1) {
-    throw notSupported();
-  }
-
-  @Override
-  public EmptyImage _ImageEffects_empty(int width, int height) {
-    return new WebEmptyImageImpl(width, height);
-  }
-
-  @Override
-  public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    return new WebCanvasImageImpl(width, height, consumer);
-  }
-
-  @Override
-  public Image _ImageEffects_withText(Image baseImage, String text) {
-    return baseImage;
-  }
-
-  @Override
-  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
-    return baseImage;
-  }
-
-  @Override
-  public Image _ImageEffects_resize(Image original, int width, int height) {
-    return new WebResizeImageImpl(original, width, height);
-  }
-
-  @Override
-  public MenuItem _MenuItem_create(LocalizeValue text) {
-    return new WebMenuItemImpl(text);
-  }
-
-  @Override
-  public Menu _Menu_create(LocalizeValue text) {
-    return new WebMenuImpl(text);
-  }
-
-  @Override
-  public MenuSeparator _MenuSeparator_create() {
-    return new WebMenuSeparatorImpl();
-  }
-
-  @Override
-  public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-    return new ValueGroup<Boolean>() {
-      @RequiredUIAccess
-      @Override
-      public void clearValues() {
-
-      }
-
-      
-      @Override
-      public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
-        return this;
-      }
-    };
-  }
-
-  @Override
-  public MenuBar _MenuItems_menuBar() {
-    return new WebMenuBarImpl();
-  }
-
-  
-  @Override
-  public StyleManager _StyleManager_get() {
-    return WebStyleManagerImpl.ourInstance;
-  }
-
-  
-  @Override
-  public FontManager _FontManager_get() {
-    return WebFontManagerImpl.ourInstance;
-  }
-
-  
-  @Override
-  public Window _Window_create(String title, WindowOptions options) {
-    WebWindowImpl window = new WebWindowImpl(true, options);
-    window.setTitle(title);
-    return window;
-  }
-
-  @Override
-  public @Nullable Window _Window_getActiveWindow() {
-    return null;
-  }
-
-  @Override
-  public @Nullable Window _Window_getFocusedWindow() {
-    return null;
-  }
-
-  @Override
-  public <T> Alert<T> _Alerts_create() {
-    throw notSupported();
-  }
-
-  @Override
-  public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
-    return new ImmutableListModelImpl<>(list);
-  }
-
-  @Override
-  public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
-    return new MutableListModelImpl<>(list);
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public UIAccess _UIAccess_get() {
-    UI ui = UI.getCurrent();
-    assert ui != null;
-    WebUIAccessImpl data = ComponentUtil.getData(ui, WebUIAccessImpl.class);
-    if (data != null) {
-      return data;
+    @Override
+    public DockLayout _Layouts_dock(int gapInPixels) {
+        return new WebDockLayoutImpl(gapInPixels);
     }
-    else {
-      WebUIAccessImpl access = new WebUIAccessImpl(ui);
-      ComponentUtil.setData(ui, WebUIAccessImpl.class, access);
-      return access;
+
+    @Override
+    public WrappedLayout _Layouts_wrapped() {
+        return new WebWrappedLayoutImpl();
     }
-  }
 
-  @Override
-  public boolean _UIAccess_isUIThread() {
-    return UI.getCurrent() != null;
-  }
+    @Override
+    public VerticalLayout _Layouts_vertical(int vGap) {
+        return new WebVerticalLayoutImpl();
+    }
 
-  
-  @Override
-  public IconLibraryManager _IconLibraryManager_get() {
-    return WebIconLibraryManagerImpl.ourInstance;
-  }
+    @Override
+    public SwipeLayout _Layouts_swipe() {
+        throw notSupported();
 
-  @Override
-  public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
-    return new WebImageKeyImpl(groupId, imageId, width, height);
-  }
+        //return new WebSwipeLayoutImpl();
+    }
 
-  @Override
-  public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
-                                                                     String dialogTitle,
-                                                                     Function<String, List<String>> parser,
-                                                                     Function<List<String>, String> joiner) {
-    throw notSupported();
-  }
+    @Override
+    public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
+        if (position == SplitLayoutPosition.HORIZONTAL) {
+            return new WebHorizontalTwoComponentSplitLayoutImpl();
+        }
+        //else if (position == SplitLayoutPosition.VERTICAL) {
+        //    return new WebVerticalTwoComponentSplitLayoutImpl();
+        //}
+        throw notSupported();
+    }
 
-  @Override
-  public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
-    throw notSupported();
-    //return new WebTextBoxWithExtensionsImpl(text);
-  }
+    @Override
+    public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
+        return new WebThreeComponentSplitLayoutImpl();
+    }
 
-  @Override
-  public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
-    throw notSupported();
-    //return new WebFoldoutLayoutImpl();
-  }
+    @Override
+    public TabbedLayout _Layouts_tabbed() {
+        return new WebTabbedLayoutImpl();
+    }
 
-  @Override
-  public ToggleSwitch _Components_toggleSwitch(boolean selected) {
-    throw notSupported();
-    //return new WebToggleSwitchImpl(selected);
-  }
+    @Override
+    public LabeledLayout _Layouts_labeled(LocalizeValue label) {
+        return new WebLabeledLayoutImpl(label);
+    }
 
-  
-  @Override
-  public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
-    throw notSupported();
-    //return new WebPasswordBoxImpl(StringUtil.notNullize(passwordText));
-  }
+    @Override
+    public TableLayout _Layouts_table(StaticPosition fillOption) {
+        return new WebTableLayoutImpl(fillOption);
+    }
 
-  @Override
-  public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
-    throw notSupported();
-    //return new WebTableImpl<>();
-  }
+    @Override
+    public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
+        return new WebScrollLayoutImpl(component, options);
+    }
 
-  @Override
-  public IntSlider _Components_intSlider(int min, int max, int value) {
-    throw notSupported();
-    //return new WebIntSliderImpl(min, max, value);
-  }
+    @Override
+    public Label _Components_label(LocalizeValue text, LabelOptions options) {
+        return new WebLabelImpl(text, options);
+    }
 
-  @Override
-  public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
-    throw notSupported();
-    //return new WebTableColumn<>(name, converter);
-  }
+    @Override
+    public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
+        throw notSupported();
 
-  @Override
-  public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
-    throw notSupported();
-    //return new WebTableModel<>(list);
-  }
+        //return new WebHtmlLabelImpl(html, labelOptions);
+    }
 
-  @Override
-  public FocusManager _FocusManager_get() {
-    return WebFocusManagerImpl.ourInstance;
-  }
+    @Override
+    public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+        return new WebComboBoxImpl<>(model);
+    }
 
-  
-  @Override
-  public PopupMenu _PopupMenu_create(Component target) {
-    throw notSupported();
-    //return new WebPopupMenuImpl(target);
-  }
+    @Override
+    @RequiredUIAccess
+    public TextBox _Components_textBox(String text) {
+        return new WebTextBoxImpl(text);
+    }
 
-  @Override
-  public void _ShowNotifier_once(Component component, Runnable action) {
-    action.run();
+    @Override
+    @RequiredUIAccess
+    public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+        return new WebTextBoxWithHistoryImpl(text);
+    }
 
-    // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, not on visible
-//    com.vaadin.ui.Component vaadinComponent = TargetVaddin.to(component);
-//
-//    SimpleReference<Registration> ref = SimpleReference.create();
-//
-//    Registration registration = vaadinComponent.addAttachListener(attachEvent -> {
-//      UIAccess uiAccess = UIAccess.current();
-//
-//      uiAccess.give(() -> {
-//        ref.get().remove();
-//
-//        action.run();
-//      });
-//    });
-//    ref.set(registration);
-//
-//    action.run();
-  }
+    @Override
+    public ProgressBar _Components_progressBar() {
+        return new WebProgressBarImpl();
+    }
 
-  
-  @Override
-  public ModalityState _ModalityState_any() {
-    return WebModalityState.INSTANCE;
-  }
+    @Override
+    @RequiredUIAccess
+    public IntBox _Components_intBox(int value) {
+        return new WebIntBoxImpl(value);
+    }
 
-  
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return WebModalityState.INSTANCE;
-  }
+    @Override
+    public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+        return new WebListBoxImpl<>(model);
+    }
 
-  private RuntimeException notSupported() {
-    return new UnsupportedOperationException();
-  }
+    @Override
+    @RequiredUIAccess
+    public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
+        return new WebRadioButtonImpl(selected, text);
+    }
+
+    @Override
+    public Button _Components_button(LocalizeValue text) {
+        return new WebButtonImpl(text);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Hyperlink _Components_hyperlink(LocalizeValue text) {
+        WebHyperlinkImpl hyperlink = new WebHyperlinkImpl();
+        hyperlink.setText(text);
+        return hyperlink;
+    }
+
+    @Override
+    public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+        return new WebHorizontalLayoutImpl();
+    }
+
+    @Override
+    public ImageBox _Components_imageBox(Image image) {
+        throw notSupported();
+
+        //return new WebImageBoxImpl(image);
+    }
+
+    @Override
+    public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+        throw notSupported();
+    }
+
+    @Override
+    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+        return new WebTreeImpl<>(rootValue, model, disposable);
+    }
+
+    @Override
+    public Image _Image_fromUrl(URL url) throws IOException {
+        return new WebImageImpl(url);
+    }
+
+    @Override
+    public Image _Image_lazy(Supplier<Image> imageSupplier) {
+        return imageSupplier.get();
+    }
+
+    @Override
+    public Image _ImageEffects_layered(Image[] images) {
+        return new WebLayeredImageImpl(images);
+    }
+
+    @Override
+    public Image _ImageEffects_transparent(Image original, float alpha) {
+        return new WebTransparentImageImpl(original, alpha);
+    }
+
+    @Override
+    public Image _ImageEffects_grayed(Image original) {
+        return original;
+    }
+
+    @Override
+    public Image _ImageEffects_appendRight(Image i0, Image i1) {
+        throw notSupported();
+    }
+
+    @Override
+    public EmptyImage _ImageEffects_empty(int width, int height) {
+        return new WebEmptyImageImpl(width, height);
+    }
+
+    @Override
+    public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
+        return new WebCanvasImageImpl(width, height, consumer);
+    }
+
+    @Override
+    public Image _ImageEffects_withText(Image baseImage, String text) {
+        return baseImage;
+    }
+
+    @Override
+    public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+        return baseImage;
+    }
+
+    @Override
+    public Image _ImageEffects_resize(Image original, int width, int height) {
+        return new WebResizeImageImpl(original, width, height);
+    }
+
+    @Override
+    public MenuItem _MenuItem_create(LocalizeValue text) {
+        return new WebMenuItemImpl(text);
+    }
+
+    @Override
+    public Menu _Menu_create(LocalizeValue text) {
+        return new WebMenuImpl(text);
+    }
+
+    @Override
+    public MenuSeparator _MenuSeparator_create() {
+        return new WebMenuSeparatorImpl();
+    }
+
+    @Override
+    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
+        return new ValueGroup<>() {
+            @Override
+            @RequiredUIAccess
+            public void clearValues() {
+            }
+
+            @Override
+            public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
+                return this;
+            }
+        };
+    }
+
+    @Override
+    public MenuBar _MenuItems_menuBar() {
+        return new WebMenuBarImpl();
+    }
+
+    @Override
+    public StyleManager _StyleManager_get() {
+        return WebStyleManagerImpl.ourInstance;
+    }
+
+    @Override
+    public FontManager _FontManager_get() {
+        return WebFontManagerImpl.ourInstance;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Window _Window_create(String title, WindowOptions options) {
+        WebWindowImpl window = new WebWindowImpl(true, options);
+        window.setTitle(title);
+        return window;
+    }
+
+    @Override
+    public @Nullable Window _Window_getActiveWindow() {
+        return null;
+    }
+
+    @Override
+    public @Nullable Window _Window_getFocusedWindow() {
+        return null;
+    }
+
+    @Override
+    public <T> Alert<T> _Alerts_create() {
+        throw notSupported();
+    }
+
+    @Override
+    public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
+        return new ImmutableListModelImpl<>(list);
+    }
+
+    @Override
+    public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
+        return new MutableListModelImpl<>(list);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public UIAccess _UIAccess_get() {
+        UI ui = UI.getCurrent();
+        assert ui != null;
+        WebUIAccessImpl data = ComponentUtil.getData(ui, WebUIAccessImpl.class);
+        if (data != null) {
+            return data;
+        }
+        else {
+            WebUIAccessImpl access = new WebUIAccessImpl(ui);
+            ComponentUtil.setData(ui, WebUIAccessImpl.class, access);
+            return access;
+        }
+    }
+
+    @Override
+    public boolean _UIAccess_isUIThread() {
+        return UI.getCurrent() != null;
+    }
+
+    @Override
+    public IconLibraryManager _IconLibraryManager_get() {
+        return WebIconLibraryManagerImpl.ourInstance;
+    }
+
+    @Override
+    public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
+        return new WebImageKeyImpl(groupId, imageId, width, height);
+    }
+
+    @Override
+    public TextBoxWithExpandAction _Components_textBoxWithExpandAction(
+        Image editButtonImage,
+        String dialogTitle,
+        Function<String, List<String>> parser,
+        Function<List<String>, String> joiner
+    ) {
+        throw notSupported();
+    }
+
+    @Override
+    public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
+        throw notSupported();
+        //return new WebTextBoxWithExtensionsImpl(text);
+    }
+
+    @Override
+    public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
+        throw notSupported();
+        //return new WebFoldoutLayoutImpl();
+    }
+
+    @Override
+    public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+        throw notSupported();
+        //return new WebToggleSwitchImpl(selected);
+    }
+
+    @Override
+    public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
+        throw notSupported();
+        //return new WebPasswordBoxImpl(StringUtil.notNullize(passwordText));
+    }
+
+    @Override
+    public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
+        throw notSupported();
+        //return new WebTableImpl<>();
+    }
+
+    @Override
+    public IntSlider _Components_intSlider(int min, int max, int value) {
+        throw notSupported();
+        //return new WebIntSliderImpl(min, max, value);
+    }
+
+    @Override
+    public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+        throw notSupported();
+        //return new WebTableColumn<>(name, converter);
+    }
+
+    @Override
+    public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
+        throw notSupported();
+        //return new WebTableModel<>(list);
+    }
+
+    @Override
+    public FocusManager _FocusManager_get() {
+        return WebFocusManagerImpl.ourInstance;
+    }
+
+    @Override
+    public PopupMenu _PopupMenu_create(Component target) {
+        throw notSupported();
+        //return new WebPopupMenuImpl(target);
+    }
+
+    @Override
+    public void _ShowNotifier_once(Component component, Runnable action) {
+        action.run();
+
+        // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, not on visible
+        //com.vaadin.ui.Component vaadinComponent = TargetVaadin.to(component);
+        //
+        //SimpleReference<Registration> ref = SimpleReference.create();
+        //
+        //Registration registration = vaadinComponent.addAttachListener(attachEvent -> {
+        //    UIAccess uiAccess = UIAccess.current();
+        //
+        //    uiAccess.give(() -> {
+        //        ref.get().remove();
+        //
+        //        action.run();
+        //    });
+        //});
+        //ref.set(registration);
+        //
+        //action.run();
+    }
+
+    @Override
+    public ModalityState _ModalityState_any() {
+        return WebModalityState.INSTANCE;
+    }
+
+    @Override
+    public ModalityState _ModalityState_nonModal() {
+        return WebModalityState.INSTANCE;
+    }
+
+    private RuntimeException notSupported() {
+        return new UnsupportedOperationException();
+    }
 }

@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import org.jspecify.annotations.Nullable;
@@ -43,24 +42,22 @@ public class DesktopThreeComponentSplitLayoutImpl extends SwingComponentDelegate
         return new ThreeComponentsSplitter(myPosition == SplitLayoutPosition.VERTICAL);
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
         toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));
         return this;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
         toAWTComponent().setInnerComponent((JComponent) TargetAWT.to(component));
         return this;
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
         toAWTComponent().setLastComponent((JComponent) TargetAWT.to(component));
         return this;

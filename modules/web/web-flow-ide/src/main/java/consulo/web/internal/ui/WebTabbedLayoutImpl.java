@@ -39,12 +39,10 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     }
 
     @Override
-    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    
     @Override
     public Tab createTab() {
         return new WebTabImpl(this);

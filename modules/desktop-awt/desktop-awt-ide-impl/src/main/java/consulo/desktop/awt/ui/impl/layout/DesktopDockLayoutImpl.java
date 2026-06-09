@@ -26,7 +26,7 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosition> implements DockLayout {
     public DesktopDockLayoutImpl(int gapInPixels) {
@@ -35,23 +35,16 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
 
     @Override
     protected Object convertConstraints(StaticPosition constraint) {
-        switch (constraint) {
-            case TOP:
-                return BorderLayout.NORTH;
-            case BOTTOM:
-                return BorderLayout.SOUTH;
-            case LEFT:
-                return BorderLayout.WEST;
-            case RIGHT:
-                return BorderLayout.EAST;
-            case CENTER:
-                return BorderLayout.CENTER;
-            default:
-                throw new IllegalArgumentException(constraint.name());
-        }
+        return switch (constraint) {
+            case TOP -> BorderLayout.NORTH;
+            case BOTTOM -> BorderLayout.SOUTH;
+            case LEFT -> BorderLayout.WEST;
+            case RIGHT -> BorderLayout.EAST;
+            case CENTER -> BorderLayout.CENTER;
+            default -> throw new IllegalArgumentException(constraint.name());
+        };
     }
 
-    
     @Override
     public Layout<StaticPosition> add(Component component, StaticPosition constraint) {
         set(component, convertConstraints(constraint));

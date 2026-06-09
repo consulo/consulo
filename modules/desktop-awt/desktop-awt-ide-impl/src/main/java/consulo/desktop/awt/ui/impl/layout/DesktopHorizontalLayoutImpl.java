@@ -46,15 +46,11 @@ public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase<JPanel, Stati
 
     @Override
     protected Object convertConstraints(StaticPosition constraint) {
-        switch (constraint) {
-            case LEFT:
-                return consulo.ui.ex.awt.HorizontalLayout.LEFT;
-            case RIGHT:
-                return consulo.ui.ex.awt.HorizontalLayout.RIGHT;
-            case CENTER:
-                return consulo.ui.ex.awt.HorizontalLayout.CENTER;
-            default:
-                throw new IllegalArgumentException(constraint.name());
-        }
+        return switch (constraint) {
+            case LEFT -> consulo.ui.ex.awt.HorizontalLayout.LEFT;
+            case RIGHT -> consulo.ui.ex.awt.HorizontalLayout.RIGHT;
+            case CENTER -> consulo.ui.ex.awt.HorizontalLayout.CENTER;
+            default -> throw new IllegalArgumentException(constraint.name());
+        };
     }
 }

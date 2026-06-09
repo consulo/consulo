@@ -25,35 +25,31 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/05/2023
+ * @since 2023-05-29
  */
 public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
-  public class Vaadin extends com.vaadin.flow.component.menubar.MenuBar implements FromVaadinComponentWrapper {
+    public class Vaadin extends com.vaadin.flow.component.menubar.MenuBar implements FromVaadinComponentWrapper {
+        @Override
+        public @Nullable Component toUIComponent() {
+            return WebMenuBarImpl.this;
+        }
+    }
+
+    public WebMenuBarImpl() {
+    }
 
     @Override
-    public @Nullable Component toUIComponent() {
-      return WebMenuBarImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
-  }
 
-  public WebMenuBarImpl() {
+    @Override
+    public void clear() {
+    }
 
-  }
-
-  
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
-  @Override
-  public void clear() {
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public MenuBar add(MenuItem menuItem) {
-    return this;
-  }
+    @Override
+    @RequiredUIAccess
+    public MenuBar add(MenuItem menuItem) {
+        return this;
+    }
 }

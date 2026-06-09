@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2017-09-15
  */
 public class WebStyleImpl implements Style {
     private Map<StyleColorValue, ColorValue> myColors = new HashMap<>();
@@ -62,19 +62,16 @@ public class WebStyleImpl implements Style {
         return myIsDark;
     }
 
-    
     @Override
     public String getId() {
         return myId;
     }
 
-    
     @Override
     public String getName() {
         return myName;
     }
 
-    
     @Override
     public ColorValue getColorValue(StyleColorValue colorKey) {
         ColorValue colorValue = myColors.get(colorKey);
