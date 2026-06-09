@@ -28,7 +28,6 @@ import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,52 +39,40 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class InspectionManager {
     public interface ProblemDescriptorBuilder {
-        
         default ProblemDescriptorBuilder range(PsiElement element) {
             return range(element, element);
         }
 
-        
         ProblemDescriptorBuilder range(PsiElement element, @Nullable TextRange rangeInElement);
 
-        
         ProblemDescriptorBuilder range(PsiElement startElement, PsiElement endElement);
 
-        
         ProblemDescriptorBuilder highlightType(ProblemHighlightType highlightType);
 
-        
         ProblemDescriptorBuilder afterEndOfLine();
 
-        
         default ProblemDescriptorBuilder afterEndOfLine(boolean isAfterEndOfLine) {
             return isAfterEndOfLine ? afterEndOfLine() : this;
         }
 
-        
         ProblemDescriptorBuilder onTheFly();
 
-        
         default ProblemDescriptorBuilder onTheFly(boolean onTheFly) {
             return onTheFly ? onTheFly() : this;
         }
 
-        
         default ProblemDescriptorBuilder hideTooltip() {
             return showTooltip(false);
         }
 
-        
         ProblemDescriptorBuilder showTooltip(boolean showTooltip);
 
-        
         ProblemDescriptorBuilder withFix(LocalQuickFix fix);
 
         default ProblemDescriptorBuilder withOptionalFix(@Nullable LocalQuickFix fix) {
             return fix != null ? withFix(fix) : this;
         }
 
-        
         default ProblemDescriptorBuilder withFixes(LocalQuickFix... fixes) {
             if (fixes == null || fixes.length == 0) {
                 return this;
@@ -93,10 +80,8 @@ public abstract class InspectionManager {
             return fixes.length == 1 ? withFix(fixes[0]) : withFixes(Arrays.asList(fixes));
         }
 
-        
         ProblemDescriptorBuilder withFixes(Collection<? extends LocalQuickFix> localQuickFixes);
 
-        
         @RequiredReadAction
         ProblemDescriptor create();
     }
@@ -105,7 +90,6 @@ public abstract class InspectionManager {
         return project.getInstance(InspectionManager.class);
     }
 
-    
     public abstract Project getProject();
 
     /**
@@ -119,21 +103,17 @@ public abstract class InspectionManager {
         Object state
     );
 
-    
     @UsedInPlugin
     public abstract ProblemsHolder createProblemsHolder(PsiFile file, boolean onTheFly);
 
-    @Contract(pure = true)
     public abstract ProblemDescriptorBuilder newProblemDescriptor(LocalizeValue descriptionTemplate);
 
-    @Contract(pure = true)
     public abstract ModuleProblemDescriptor createProblemDescriptor(
         String descriptionTemplate,
         Module module,
         QuickFix<?>... fixes
     );
 
-    
     public abstract CommonProblemDescriptor createProblemDescriptor(String descriptionTemplate, QuickFix... fixes);
 
     /**
@@ -147,7 +127,6 @@ public abstract class InspectionManager {
      */
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -166,7 +145,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -185,7 +163,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -206,7 +183,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement startElement,
@@ -226,7 +202,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -246,7 +221,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -267,7 +241,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -284,7 +257,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -301,7 +273,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -320,7 +291,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement startElement,
@@ -338,7 +308,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -356,7 +325,6 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
         PsiElement psiElement,
@@ -373,7 +341,6 @@ public abstract class InspectionManager {
             .create();
     }
 
-    
     public abstract GlobalInspectionContext createNewGlobalContext(boolean reuse);
 
     public abstract String getCurrentProfile();

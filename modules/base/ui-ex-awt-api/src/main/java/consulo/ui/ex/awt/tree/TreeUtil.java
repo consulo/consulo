@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.tree;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
@@ -27,7 +28,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Range;
-import org.jetbrains.annotations.Contract;
 
 import javax.accessibility.AccessibleContext;
 
@@ -62,14 +62,12 @@ public final class TreeUtil {
     private TreeUtil() {
     }
 
-    
     public static JBTreeTraverser<Object> treeTraverser(JTree tree) {
         TreeModel model = tree.getModel();
         Object root = model.getRoot();
         return JBTreeTraverser.from(node -> nodeChildren(node, model)).withRoot(root);
     }
 
-    
     public static JBTreeTraverser<TreePath> treePathTraverser(JTree tree) {
         TreeModel model = tree.getModel();
         Object root = model.getRoot();
@@ -78,18 +76,15 @@ public final class TreeUtil {
             .withRoot(rootPath);
     }
 
-    
     public static JBIterable<Object> nodeChildren(@Nullable Object node, TreeModel model) {
         int count = model.getChildCount(node);
         return count == 0 ? JBIterable.empty() : NUMBERS.take(count).map(index -> model.getChild(node, index));
     }
 
-    
     public static JBTreeTraverser<TreeNode> treeNodeTraverser(@Nullable TreeNode treeNode) {
         return JBTreeTraverser.<TreeNode>from(node -> nodeChildren(node)).withRoot(treeNode);
     }
 
-    
     public static JBIterable<TreeNode> nodeChildren(@Nullable TreeNode treeNode) {
         int count = treeNode == null ? 0 : treeNode.getChildCount();
         return count == 0 ? JBIterable.empty() : NUMBERS.take(count).map(index -> treeNode.getChildAt(index));
@@ -199,7 +194,6 @@ public final class TreeUtil {
         }
     }
 
-    
     public static TreePath getPath(TreeNode aRootNode, TreeNode aNode) {
         TreeNode[] nodes = getPathFromRootTo(aRootNode, aNode, true);
         return new TreePath(nodes);
@@ -237,13 +231,11 @@ public final class TreeUtil {
         return false;
     }
 
-    
     public static TreePath getPathFromRoot(TreeNode node) {
         TreeNode[] path = getPathFromRootTo(null, node, false);
         return new TreePath(path);
     }
 
-    
     private static TreeNode[] getPathFromRootTo(@Nullable TreeNode root, TreeNode node, boolean includeRoot) {
         int height = 0;
         for (TreeNode n = node; n != root; n = n.getParent()) {
@@ -308,7 +300,6 @@ public final class TreeUtil {
         }
     }
 
-    
     public static TreePath findCommonPath(TreePath[] treePaths) {
         LOG.assertTrue(areComponentsEqual(treePaths, 0));
         TreePath result = new TreePath(treePaths[0].getPathComponent(0));
@@ -320,13 +311,11 @@ public final class TreeUtil {
         return result;
     }
 
-    
     public static ActionCallback selectFirstNode(JTree tree) {
         TreePath selectionPath = getFirstNodePath(tree);
         return selectPath(tree, selectionPath);
     }
 
-    
     public static TreePath getFirstNodePath(JTree tree) {
         TreeModel model = tree.getModel();
         Object root = model.getRoot();
@@ -337,7 +326,6 @@ public final class TreeUtil {
         return selectionPath;
     }
 
-    
     public static TreePath getFirstLeafNodePath(JTree tree) {
         TreeModel model = tree.getModel();
         Object root = model.getRoot();
@@ -350,7 +338,6 @@ public final class TreeUtil {
         return selectionPath;
     }
 
-    
     private static IndexTreePathState removeLastPathComponent(DefaultTreeModel model, TreePath pathToBeRemoved) {
         IndexTreePathState selectionState = new IndexTreePathState(pathToBeRemoved);
         if (((MutableTreeNode)pathToBeRemoved.getLastPathComponent()).getParent() == null) {
@@ -376,7 +363,6 @@ public final class TreeUtil {
         return true;
     }
 
-    
     private static TreePath[] removeDuplicates(TreePath[] paths) {
         ArrayList<TreePath> result = new ArrayList<>();
         for (TreePath path : paths) {
@@ -387,7 +373,6 @@ public final class TreeUtil {
         return result.toArray(new TreePath[0]);
     }
 
-    
     public static TreePath[] selectMaximals(@Nullable TreePath[] paths) {
         if (paths == null) {
             return new TreePath[0];
@@ -471,12 +456,10 @@ public final class TreeUtil {
         tree.scrollPathToVisible(paths[0]);
     }
 
-    
     public static AsyncResult<Void> selectPath(JTree tree, TreePath path) {
         return selectPath(tree, path, true);
     }
 
-    
     public static AsyncResult<Void> selectPath(JTree tree, TreePath path, boolean center) {
         tree.makeVisible(path);
         if (center) {
@@ -488,7 +471,6 @@ public final class TreeUtil {
         }
     }
 
-    
     public static ActionCallback moveDown(JTree tree) {
         int size = tree.getRowCount();
         int row = tree.getLeadSelectionRow();
@@ -501,7 +483,6 @@ public final class TreeUtil {
         }
     }
 
-    
     public static ActionCallback moveUp(JTree tree) {
         int row = tree.getLeadSelectionRow();
         if (row > 0) {
@@ -513,7 +494,6 @@ public final class TreeUtil {
         }
     }
 
-    
     public static ActionCallback movePageUp(JTree tree) {
         int visible = getVisibleRowCount(tree);
         if (visible <= 0) {
@@ -526,7 +506,6 @@ public final class TreeUtil {
         return showAndSelect(tree, top, bottom, row, getSelectedRow(tree));
     }
 
-    
     public static ActionCallback movePageDown(JTree tree) {
         int visible = getVisibleRowCount(tree);
         if (visible <= 0) {
@@ -540,27 +519,22 @@ public final class TreeUtil {
         return showAndSelect(tree, top, bottom, index, getSelectedRow(tree));
     }
 
-    
     private static AsyncResult<Void> moveHome(JTree tree) {
         return showRowCentred(tree, 0);
     }
 
-    
     private static AsyncResult<Void> moveEnd(JTree tree) {
         return showRowCentred(tree, tree.getRowCount() - 1);
     }
 
-    
     private static AsyncResult<Void> showRowCentred(JTree tree, int row) {
         return showRowCentered(tree, row, true);
     }
 
-    
     public static AsyncResult<Void> showRowCentered(JTree tree, int row, boolean centerHorizontally) {
         return showRowCentered(tree, row, centerHorizontally, true);
     }
 
-    
     public static AsyncResult<Void> showRowCentered(
         JTree tree,
         int row,
@@ -574,12 +548,10 @@ public final class TreeUtil {
         return showAndSelect(tree, top, bottom, row, -1, false, scroll, false);
     }
 
-    
     public static AsyncResult<Void> showAndSelect(JTree tree, int top, int bottom, int row, int previous) {
         return showAndSelect(tree, top, bottom, row, previous, false);
     }
 
-    
     public static AsyncResult<Void> showAndSelect(
         JTree tree,
         int top,
@@ -591,7 +563,6 @@ public final class TreeUtil {
         return showAndSelect(tree, top, bottom, row, previous, addToSelection, true, false);
     }
 
-    
     public static AsyncResult<Void> showAndSelect(
         JTree tree,
         int top,
@@ -604,7 +575,6 @@ public final class TreeUtil {
         return showAndSelect(tree, top, bottom, row, previous, addToSelection, scroll, false);
     }
 
-    
     public static AsyncResult<Void> showAndSelect(
         JTree tree,
         int top,
@@ -983,7 +953,6 @@ public final class TreeUtil {
         selectNode(tree, treeNode);
     }
 
-    
     public static List<TreeNode> listChildren(TreeNode node) {
         //ApplicationManager.getApplication().assertIsDispatchThread();
         int size = node.getChildCount();
@@ -1086,12 +1055,10 @@ public final class TreeUtil {
         return promise;
     }
 
-    
     public static AsyncResult<Void> selectInTree(DefaultMutableTreeNode node, boolean requestFocus, JTree tree) {
         return selectInTree(node, requestFocus, tree, true);
     }
 
-    
     public static AsyncResult<Void> selectInTree(
         @Nullable DefaultMutableTreeNode node,
         boolean requestFocus,
@@ -1110,7 +1077,6 @@ public final class TreeUtil {
         return selectPath(tree, treePath, center);
     }
 
-    
     public static ActionCallback selectInTree(
         ComponentManager project,
         @Nullable DefaultMutableTreeNode node,
@@ -1209,7 +1175,6 @@ public final class TreeUtil {
         return getSelection(tree, path -> isViewable(tree, path) && root.isDescendant(path), mapper);
     }
 
-    
     private static <T> List<T> getSelection(
         JTree tree,
         Predicate<? super TreePath> filter,
@@ -1319,7 +1284,6 @@ public final class TreeUtil {
         }
     }
 
-    
     public static RelativePoint getPointForSelection(JTree aTree) {
         int[] rows = aTree.getSelectionRows();
         if (rows == null || rows.length == 0) {
@@ -1328,19 +1292,16 @@ public final class TreeUtil {
         return getPointForRow(aTree, rows[rows.length - 1]);
     }
 
-    
     public static RelativePoint getPointForRow(JTree aTree, int aRow) {
         return getPointForPath(aTree, aTree.getPathForRow(aRow));
     }
 
-    
     public static RelativePoint getPointForPath(JTree aTree, TreePath path) {
         Rectangle rowBounds = aTree.getPathBounds(path);
         rowBounds.x += 20;
         return getPointForBounds(aTree, rowBounds);
     }
 
-    
     public static RelativePoint getPointForBounds(JComponent aComponent, Rectangle aBounds) {
         return new RelativePoint(aComponent, new Point(aBounds.x, (int)aBounds.getMaxY()));
     }
@@ -1458,7 +1419,6 @@ public final class TreeUtil {
         return ObjectUtil.binarySearch(0, parent.getChildCount(), mid -> comparator.compare((T)parent.getChildAt(mid), key));
     }
 
-    
     public static Comparator<TreePath> getDisplayOrderComparator(JTree tree) {
         return Comparator.comparingInt(tree::getRowForPath);
     }
@@ -1535,7 +1495,6 @@ public final class TreeUtil {
         return promiseMakeVisibleOne(tree, visitor, null);
     }
 
-    
     private static Promise<TreePath> promiseMakeVisibleOne(
         JTree tree,
         TreeVisitor visitor,
@@ -1865,7 +1824,6 @@ public final class TreeUtil {
         return null;
     }
 
-    
     private static Deque<TreePath> children(TreeModel model, TreePath path) {
         Object object = path.getLastPathComponent();
         int count = model.getChildCount(object);

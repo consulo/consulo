@@ -2,13 +2,11 @@
 package consulo.ui.ex.awt;
 
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.util.List;
 
 public class MutableCollectionComboBoxModel<T> extends CollectionComboBoxModel<T> implements MutableComboBoxModel<T> {
-    @Contract(mutates = "param1")
     public MutableCollectionComboBoxModel(List<T> items) {
         super(items);
     }
@@ -17,7 +15,6 @@ public class MutableCollectionComboBoxModel<T> extends CollectionComboBoxModel<T
         super();
     }
 
-    @Contract(mutates = "param1")
     public MutableCollectionComboBoxModel(List<T> items, @Nullable T selection) {
         super(items, selection);
     }
@@ -53,8 +50,8 @@ public class MutableCollectionComboBoxModel<T> extends CollectionComboBoxModel<T
         add(item);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void removeElement(Object obj) {
         T item = ((T) obj);
         remove(item);

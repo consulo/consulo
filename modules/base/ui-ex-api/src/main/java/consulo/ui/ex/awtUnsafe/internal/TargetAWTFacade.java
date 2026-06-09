@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awtUnsafe.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
@@ -25,7 +26,6 @@ import consulo.ui.cursor.Cursor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,10 +35,8 @@ import java.awt.*;
  * @since 2019-02-16
  */
 public interface TargetAWTFacade {
-   
     Dimension to(Size2D size);
 
-   
     Color to(RGBColor color);
 
     @Contract("null -> null")
@@ -53,7 +51,6 @@ public interface TargetAWTFacade {
     @Contract("null -> null")
     Component from(java.awt.@Nullable Component component);
 
-   
     default Component wrap(java.awt.Component component) {
         throw new UnsupportedOperationException();
     }
@@ -76,7 +73,6 @@ public interface TargetAWTFacade {
     @Contract("null -> null")
     Image from(@Nullable Icon icon);
 
-   
     java.awt.Font to(Font font);
 
     default java.awt.Image toAWTImage(Image image) {

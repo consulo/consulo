@@ -18,7 +18,6 @@ package consulo.util.collection;
 import consulo.util.collection.impl.list.LockFreeCopyOnWriteArrayList;
 import consulo.util.collection.impl.list.SortedList;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -41,22 +40,18 @@ public final class Lists {
      * N.B. Avoid using {@code list.toArray(new T[list.size()])} on this list because it is inherently racey and
      * therefore can return array with null elements at the end.
      */
-    @Contract(pure = true)
     public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList() {
         return new LockFreeCopyOnWriteArrayList<>();
     }
 
-    @Contract(pure = true)
     public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList(Collection<? extends T> c) {
         return new LockFreeCopyOnWriteArrayList<>(c);
     }
 
-    @Contract(pure = true)
     public static <T> List<T> newSortedList(Comparator<T> comparator) {
         return new SortedList<>(comparator);
     }
 
-    @Contract(pure = true)
     public static <T> List<T> notNullize(@Nullable List<T> list) {
         return list == null ? List.of() : list;
     }
@@ -65,7 +60,6 @@ public final class Lists {
         quickSort(list, (o1, o2) -> weighterFunc.applyAsInt(o2) - weighterFunc.applyAsInt(o1));
     }
 
-    @Contract(pure = true)
     @SafeVarargs
     public static <T> List<T> append(List<? extends T> list, T... values) {
         return ContainerUtil.concat(list, List.of(values));
@@ -164,7 +158,6 @@ public final class Lists {
      * @return read-only list consisting of the elements with nulls filtered out
      */
     @SafeVarargs
-    @Contract(pure = true)
     public static <T> List<T> packNullables(T... elements) {
         List<T> list = new ArrayList<>();
         for (T element : elements) {
@@ -173,7 +166,6 @@ public final class Lists {
         return list.isEmpty() ? List.of() : list;
     }
 
-    @Contract(pure = true)
     public static <T> int indexOfIdentity(List<? extends T> list, T element) {
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
             if (list.get(i) == element) {
@@ -183,7 +175,6 @@ public final class Lists {
         return -1;
     }
 
-    @Contract(pure = true)
     public static <T> Iterable<T> iterateBackward(List<? extends T> list) {
         return new Iterable<>() {
             @Override
@@ -210,14 +201,12 @@ public final class Lists {
         };
     }
 
-    @Contract(pure = true)
     public static <T, U extends T> @Nullable U findLastInstance(List<T> list, Class<U> clazz) {
         int i = lastIndexOf(list, clazz::isInstance);
         //noinspection unchecked
         return i < 0 ? null : (U) list.get(i);
     }
 
-    @Contract(pure = true)
     public static <T> int lastIndexOf(List<T> list, Predicate<? super T> condition) {
         for (int i = list.size() - 1; i >= 0; i--) {
             T t = list.get(i);
@@ -237,12 +226,10 @@ public final class Lists {
      * @param <T>      type of list
      * @return new list with no more than {@code maxItems} first elements
      */
-    @Contract(pure = true)
     public static <T> List<T> getFirstItems(List<T> items, int maxItems) {
         return items.subList(0, Math.min(maxItems, items.size()));
     }
 
-    @Contract(pure = true)
     public static <T> List<T> mergeSortedLists(
         List<? extends T> list1,
         List<? extends T> list2,

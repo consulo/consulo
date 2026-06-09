@@ -6,7 +6,6 @@ import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.StandardPatterns;
-import org.jetbrains.annotations.Contract;
 
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
@@ -92,19 +91,13 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
     endBatch();
   }
 
-  @Contract(pure = true)
-  
   public abstract CompletionResultSet withPrefixMatcher(PrefixMatcher matcher);
 
   /**
    * Creates a default camel-hump prefix matcher based on given prefix
    */
-  @Contract(pure = true)
-  
   public abstract CompletionResultSet withPrefixMatcher(String prefix);
 
-  
-  @Contract(pure = true)
   public abstract CompletionResultSet withRelevanceSorter(CompletionSorter sorter);
 
   public abstract void addLookupAdvertisement(String text);
@@ -113,11 +106,8 @@ public abstract class CompletionResultSet implements Consumer<LookupElement> {
    * @return A result set with the same prefix, but the lookup strings will be matched case-insensitively. Their lookup strings will
    * remain as they are though, so upon insertion the prefix case will be changed.
    */
-  @Contract(pure = true)
-  
   public abstract CompletionResultSet caseInsensitive();
 
-  
   public PrefixMatcher getPrefixMatcher() {
     return myPrefixMatcher;
   }
