@@ -29,7 +29,7 @@ public final class RGBColor implements Serializable, ColorValue {
     }
 
     public static RGBColor fromFloatValues(float r, float g, float b, float a) {
-        return new RGBColor((int) (r * 255 + 0.5), (int) (g * 255 + 0.5), (int) (b * 255 + 0.5), (int) (b * 255 + 0.5));
+        return new RGBColor((int) (r * 255 + 0.5), (int) (g * 255 + 0.5), (int) (b * 255 + 0.5), (int) (a * 255 + 0.5));
     }
 
     public static RGBColor fromRGBValue(int rgb) {
@@ -44,16 +44,12 @@ public final class RGBColor implements Serializable, ColorValue {
     }
 
     /**
-     * Converts a <code>String</code> to an integer and returns the
-     * specified opaque <code>Color</code>. This method handles string
-     * formats that are used to represent octal and hexadecimal numbers.
+     * Converts a <code>String</code> to an integer and returns the specified opaque <code>Color</code>.
+     * This method handles string formats that are used to represent octal and hexadecimal numbers.
      *
-     * @param nm a <code>String</code> that represents
-     *           an opaque color as a 24-bit integer
+     * @param nm a <code>String</code> that represents an opaque color as a 24-bit integer
      * @return the new <code>Color</code> object.
-     * @throws NumberFormatException if the specified string cannot
-     *                               be interpreted as a decimal,
-     *                               octal, or hexadecimal integer.
+     * @throws NumberFormatException if the specified string cannot be interpreted as a decimal, octal, or hexadecimal integer.
      * @see Integer#decode
      */
     public static RGBColor decode(String nm) {
