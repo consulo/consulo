@@ -18,6 +18,7 @@ package consulo.versionControlSystem.impl.internal.ui.awt;
 import consulo.dataContext.DataProvider;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
@@ -114,10 +115,12 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     myCommitMessageArea.setCaretPosition(0);
   }
 
+  @Override
   protected String getDimensionServiceKey() {
     return "VCS.ChangeListViewerDialog";
   }
 
+  @Override
   public Object getData(Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
       return myChanges;
@@ -134,6 +137,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     myConverter = converter;
   }
 
+  @Override
   public JComponent createCenterPanel() {
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
@@ -158,6 +162,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
+      @RequiredUIAccess
       protected void showDiffForChanges(Change[] changesArray, int indexInSelection) {
         if (myInAir && (myConverter != null)) {
           Change[] convertedChanges = new Change[changesArray.length];
@@ -208,6 +213,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
     return myChangesBrowser.getPreferredFocusedComponent();
   }

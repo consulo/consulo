@@ -722,7 +722,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         }
 
         @Override
-        @RequiredUIAccess
         public void update(AnActionEvent e) {
             if (myShortcut) {
                 // consume shortcut even if there are nothing to do - avoid calling some other action
