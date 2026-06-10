@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIterator;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Functions;
@@ -195,7 +194,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   private static final class Empty extends JBIterable {
     @Override
     public Iterator iterator() {
-      return EmptyIterator.getInstance();
+      return Collections.emptyIterator();
     }
   }
 

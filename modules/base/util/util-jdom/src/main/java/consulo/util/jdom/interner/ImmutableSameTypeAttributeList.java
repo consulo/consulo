@@ -13,7 +13,6 @@
 // limitations under the License.
 package consulo.util.jdom.interner;
 
-import consulo.util.collection.Iterators;
 import consulo.util.lang.Comparing;
 import org.jdom.Attribute;
 import org.jdom.AttributeType;
@@ -89,7 +88,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
 
   @Override
   public Iterator<Attribute> iterator() {
-    if (isEmpty()) return Iterators.empty();
+    if (isEmpty()) return Collections.emptyIterator();
     return new Iterator<Attribute>() {
       int i;
       @Override
@@ -253,5 +252,4 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   public boolean retainAll(Collection<?> c) {
     throw ImmutableElement.immutableError(this);
   }
-
 }
