@@ -38,7 +38,7 @@ public class Comparing {
   }
 
   @Contract("null,!null -> false; !null,null -> false; null,null -> true")
-  public static boolean equal(CharSequence s1, CharSequence s2) {
+  public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2) {
     return StringUtil.equal(s1, s2, true);
   }
 
