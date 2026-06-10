@@ -40,7 +40,7 @@ public interface ArchiveFile {
 
     @Override
     public Iterator<? extends ArchiveEntry> entries() {
-`      return Collections.emptyIterator();
+      return Collections.emptyIterator();
     }
 
     @Override

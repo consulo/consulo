@@ -833,15 +833,14 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    * @return {@code true} if the specified object is equal to this list
    */
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof List)) {
+    if (!(o instanceof List<?> list)) {
       return false;
     }
 
-    List<?> list = (List<?>)o;
     Iterator<?> it = list.iterator();
     for (Object element : array) {
       if (!it.hasNext() || !eq(element, it.next())) {
