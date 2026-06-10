@@ -10,6 +10,8 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelListener;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.ide.navigationToolbar.NavBarModelExtensions;
+import consulo.language.psi.*;
+import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
