@@ -35,7 +35,7 @@ public interface NavigatableFileEditor extends FileEditor {
   /**
    * Navigate editor to the given navigable if {@link #canNavigateTo(Navigatable)} is true
    *
-   * @param navigable navigation target
+   * @param navigatable navigation target
    */
-  void navigateTo(Navigatable navigable);
+  void navigateTo(Navigatable navigatable);
 }

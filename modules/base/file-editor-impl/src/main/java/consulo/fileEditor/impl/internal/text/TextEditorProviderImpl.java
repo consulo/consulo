@@ -261,7 +261,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        public void navigateTo(Navigatable navigable) {
+        public void navigateTo(Navigatable navigatable) {
         }
     }
 }

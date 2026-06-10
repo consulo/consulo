@@ -59,7 +59,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     
     private final TextEditorComponent myComponent;
 
-    
     public final VirtualFile myFile;
 
     private final AsyncEditorLoaderImpl myAsyncLoader;
@@ -79,7 +78,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         myAsyncLoader.start();
     }
 
-    
     public Runnable loadEditorInBackground() {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
@@ -88,7 +86,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         return () -> editor.setHighlighter(highlighter);
     }
 
-    
     protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
         return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
     }
@@ -98,7 +95,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public JComponent getComponent() {
         return myComponent.getComponentContainer().getComponent();
     }
@@ -114,13 +110,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public JComponent getPreferredFocusedComponent() {
         return getActiveEditor().getContentComponent();
     }
 
     @Override
-    
     public Editor getEditor() {
         return getActiveEditor();
     }
@@ -133,13 +127,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    
     public String getName() {
         return "Text";
     }
 
     @Override
-    
     public FileEditorState getState(FileEditorStateLevel level) {
         return myAsyncLoader.getEditorState(level);
     }
@@ -222,12 +214,13 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
 
     @Override
     public boolean canNavigateTo(Navigatable navigatable) {
-        return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor) navigatable).getLine() != -1 || ((OpenFileDescriptor) navigatable).getOffset() >= 0);
+        return navigatable instanceof OpenFileDescriptor fileDescriptor
+            && (fileDescriptor.getLine() != -1 || fileDescriptor.getOffset() >= 0);
     }
 
     @Override
-    public void navigateTo(Navigatable navigable) {
-        ((OpenFileDescriptorImpl) navigable).navigateIn(getEditor());
+    public void navigateTo(Navigatable navigatable) {
+        ((OpenFileDescriptorImpl) navigatable).navigateIn(getEditor());
     }
 
     @Override

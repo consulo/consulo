@@ -34,7 +34,7 @@ public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
     @Override
     protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         XValue value = node.getValueContainer();
-        XNavigatable navigable = sourcePosition -> {
+        XNavigatable navigatable = sourcePosition -> {
             if (sourcePosition != null) {
                 AppUIUtil.invokeOnEdt(() -> {
                     Project project = node.getTree().getProject();
@@ -46,8 +46,8 @@ public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
                 });
             }
         };
-        startComputingSourcePosition(value, navigable);
+        startComputingSourcePosition(value, navigatable);
     }
 
-    protected abstract void startComputingSourcePosition(XValue value, XNavigatable navigable);
+    protected abstract void startComputingSourcePosition(XValue value, XNavigatable navigatable);
 }

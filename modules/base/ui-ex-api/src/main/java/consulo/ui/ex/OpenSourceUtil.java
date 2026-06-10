@@ -35,31 +35,31 @@ public class OpenSourceUtil {
   /**
    * Equivalent to navigate(true, navigables)
    *
-   * @param navigables elements navigate to
+   * @param navigatables elements navigate to
    *
    * @see OpenSourceUtil#navigate(boolean, Navigatable...)
    */
-  public static void navigate(Navigatable... navigables) {
-    navigate(true, navigables);
+  public static void navigate(Navigatable... navigatables) {
+    navigate(true, navigatables);
   }
 
-  public static void navigate(boolean requestFocus, Navigatable... navigables) {
-    if (navigables == null) return;
-    for (Navigatable navigable : navigables) {
-      if (navigable.canNavigate()) {
-        navigable.navigate(requestFocus);
+  public static void navigate(boolean requestFocus, Navigatable... navigatables) {
+    if (navigatables == null) return;
+    for (Navigatable navigatable : navigatables) {
+      if (navigatable.canNavigate()) {
+        navigatable.navigate(requestFocus);
       }
     }
   }
 
-  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable... navigables) {
-    if (navigables == null) return;
-    for (Navigatable navigable : navigables) {
-      if (navigable.canNavigate()) {
-        if (tryNotToScroll && navigable instanceof StatePreservingNavigatable) {
-          ((StatePreservingNavigatable)navigable).navigate(requestFocus, true);
+  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable... navigatables) {
+    if (navigatables == null) return;
+    for (Navigatable navigatable : navigatables) {
+      if (navigatable.canNavigate()) {
+        if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable statePreservingNavigatable) {
+          statePreservingNavigatable.navigate(requestFocus, true);
         } else {
-          navigable.navigate(requestFocus);
+          navigatable.navigate(requestFocus);
         }
       }
     }
