@@ -427,8 +427,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         myInlayModel.addListener(new InlayModel.SimpleAdapter() {
             @Override
-            public void onUpdated(Inlay inlay) {
-                onInlayUpdated(inlay);
+            public void onUpdated(Inlay inlay, int changeFlags) {
+                onInlayUpdated(inlay, changeFlags);
             }
         }, myCaretModel);
 
@@ -591,8 +591,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @RequiredUIAccess
-    private void onInlayUpdated(Inlay inlay) {
-        if (myDocument.isInEventsHandling() || myDocument.isInBulkUpdate()) {
+    private void onInlayUpdated(Inlay inlay, int changeFlags) {
+        if (myDocument.isInBulkUpdate() || myInlayModel.isInBatchMode()) {
+            return;
+        }
+        if ((changeFlags & InlayModel.ChangeFlags.GUTTER_ICON_PROVIDER_CHANGED) != 0) {
+            updateGutterSize();
+        }
+        if (myDocument.isInEventsHandling() ||
+            (changeFlags & (InlayModel.ChangeFlags.WIDTH_CHANGED | InlayModel.ChangeFlags.HEIGHT_CHANGED)) == 0) {
             return;
         }
         validateSize();
