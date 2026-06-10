@@ -15,10 +15,10 @@
  */
 package consulo.diff.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.util.lang.Couple;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
@@ -33,19 +33,16 @@ public enum Side {
     myIndex = index;
   }
 
-  
   public static Side fromIndex(int index) {
     if (index == 0) return LEFT;
     if (index == 1) return RIGHT;
     throw new IndexOutOfBoundsException("index: " + index);
   }
 
-  
   public static Side fromLeft(boolean isLeft) {
     return isLeft ? LEFT : RIGHT;
   }
 
-  
   public static Side fromRight(boolean isRight) {
     return isRight ? RIGHT : LEFT;
   }
@@ -58,12 +55,10 @@ public enum Side {
     return myIndex == 0;
   }
 
-  
   public Side other() {
     return isLeft() ? RIGHT : LEFT;
   }
 
-  
   public Side other(boolean other) {
     return other ? other() : this;
   }
@@ -81,7 +76,6 @@ public enum Side {
     return isLeft() ? left : right;
   }
 
-  
   public <T> T selectNotNull(T left, T right) {
     return isLeft() ? left : right;
   }
@@ -101,7 +95,6 @@ public enum Side {
     return array[myIndex];
   }
 
-  
   public <T> T selectNotNull(T[] array) {
     assert array.length == 2;
     return array[myIndex];
@@ -112,7 +105,6 @@ public enum Side {
     return list.get(myIndex);
   }
 
-  
   public <T> T selectNotNull(List<T> list) {
     assert list.size() == 2;
     return list.get(myIndex);
@@ -122,7 +114,6 @@ public enum Side {
     return isLeft() ? region.first : region.second;
   }
 
-  
   public <T> T selectNotNull(Couple<T> region) {
     return isLeft() ? region.first : region.second;
   }

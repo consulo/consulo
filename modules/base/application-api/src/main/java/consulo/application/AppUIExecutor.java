@@ -3,7 +3,6 @@ package consulo.application;
 
 import consulo.component.ComponentManager;
 import consulo.ui.ModalityState;
-import org.jetbrains.annotations.Contract;
 
 /**
  * An executor that invokes given runnables on Swing Event Dispatch thread when all constraints of a given set are satisfied at the same time.
@@ -52,20 +51,17 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @return an executor that should always invoke the given runnable later. Otherwise, if {@link #execute} is called
    * on dispatch thread already, and all others constraints are met, the runnable would be executed immediately.
    */
-  @Contract(pure = true)
   AppUIExecutor later();
 
   /**
    * @return an executor that invokes runnables only when all documents are committed. Automatically expires when the project is disposed.
    * @see PsiDocumentManager#hasUncommitedDocuments()
    */
-  @Contract(pure = true)
   AppUIExecutor withDocumentsCommitted(ComponentManager project);
 
   /**
    * @return an executor that invokes runnables only when indices have been built and are available to use. Automatically expires when the project is disposed.
    * @see consulo.ide.impl.idea.openapi.project.DumbService#isDumb(Project)
    */
-  @Contract(pure = true)
   AppUIExecutor inSmartMode(ComponentManager project);
 }

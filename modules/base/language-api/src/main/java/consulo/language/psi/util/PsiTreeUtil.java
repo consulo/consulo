@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.document.util.TextRange;
@@ -36,7 +37,6 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
@@ -1347,9 +1347,9 @@ public class PsiTreeUtil {
         return true;
     }
 
-    @SafeVarargs
     @Contract("null, _ -> null")
     @RequiredReadAction
+    @SafeVarargs
     public static @Nullable PsiElement skipSiblingsBackward(@Nullable PsiElement element, Class<? extends PsiElement>... elementClasses) {
         if (element == null) {
             return null;
@@ -1361,7 +1361,6 @@ public class PsiTreeUtil {
         }
         return null;
     }
-
 
     @RequiredReadAction
     public static <T extends PsiElement> Iterator<T> childIterator(final PsiElement element, final Class<T> aClass) {

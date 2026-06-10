@@ -15,9 +15,9 @@
  */
 package consulo.component.util.localize;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.platform.Platform;
 
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;

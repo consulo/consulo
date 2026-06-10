@@ -15,17 +15,16 @@
  */
 package consulo.application.progress;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.function.ThrowableSupplier;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -356,9 +355,9 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      */
     public abstract <T, E extends Throwable> T computePrioritized(ThrowableSupplier<T, E> computable) throws E;
 
-    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Contract("null -> null; !null -> !null")
     public abstract WrappedProgressIndicator wrapProgressIndicator(@Nullable ProgressIndicator indicator);
 
-    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Contract("null -> null; !null -> !null")
     public abstract ProgressIndicator unwrapProgressIndicator(WrappedProgressIndicator indicator);
 }

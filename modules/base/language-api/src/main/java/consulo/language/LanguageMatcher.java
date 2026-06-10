@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language;
 
-import org.jetbrains.annotations.Contract;
-
 public abstract class LanguageMatcher {
 
   LanguageMatcher() {
@@ -17,8 +15,6 @@ public abstract class LanguageMatcher {
    * <li>X is a {@linkplain MetaLanguage#matchesLanguage metalanguage of L}</li>
    * </ul>
    */
-  @Contract(pure = true)
-  
   public static LanguageMatcher match(Language language) {
     if (language instanceof MetaLanguage) {
       return new MetaLanguageMatcher((MetaLanguage)language);
@@ -35,8 +31,6 @@ public abstract class LanguageMatcher {
    * <li>X is a {@linkplain MetaLanguage#matchesLanguage metalanguage of L} or one of its base languages</li>
    * </ul>
    */
-  @Contract(pure = true)
-  
   public static LanguageMatcher matchWithDialects(Language language) {
     if (language instanceof MetaLanguage) {
       return new MetaLanguageKindMatcher((MetaLanguage)language);

@@ -15,11 +15,11 @@
  */
 package consulo.language.codeStyle;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 /**
  * @author yole
@@ -32,7 +32,7 @@ public interface ASTBlock extends Block {
      */
     @Contract("null -> null")
     static @Nullable ASTNode getNode(@Nullable Block block) {
-        return block instanceof ASTBlock ? ((ASTBlock) block).getNode() : null;
+        return block instanceof ASTBlock astBlock ? astBlock.getNode() : null;
     }
 
     /**

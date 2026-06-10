@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.language.psi.cache;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.util.CachedValueBase;
 import consulo.application.util.CachedValue;
@@ -20,7 +21,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.reflect.ReflectionUtil;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
 import org.jspecify.annotations.Nullable;
@@ -413,5 +413,4 @@ public final class IdempotenceChecker {
       return "ResultWithLog{" + result + (log.isEmpty() ? "" : ", log='\n" + printLog() + '\'') + '}';
     }
   }
-
 }

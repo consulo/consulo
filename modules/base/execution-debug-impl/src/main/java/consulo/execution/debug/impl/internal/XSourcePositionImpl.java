@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.impl.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.ReadAction;
 import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.document.Document;
@@ -21,7 +22,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 public abstract class XSourcePositionImpl implements XSourcePosition {
     private final VirtualFile myFile;
@@ -31,7 +31,6 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
     }
 
     @Override
-    
     public VirtualFile getFile() {
         return myFile;
     }

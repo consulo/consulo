@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.impl.internal.memory.ui;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -25,7 +26,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -40,7 +40,6 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
     protected static final int DEFAULT_BATCH_SIZE = Integer.MAX_VALUE;
     private static final int INITIAL_TIME = 0;
 
-    
     protected final Project myProject;
     protected final SingleAlarmWithMutableDelay mySingleAlarm;
 
@@ -171,7 +170,6 @@ public abstract class ClassesFilteredViewBase extends BorderLayoutPanel implemen
         return myFilterTextField;
     }
 
-    
     protected ClassesTable createClassesTable(MemoryViewManagerState memoryViewManagerState) {
         return new ClassesTable(myProject, this, memoryViewManagerState.isShowWithDiffOnly,
             memoryViewManagerState.isShowWithInstancesOnly, memoryViewManagerState.isShowTrackedOnly

@@ -1,6 +1,6 @@
 package consulo.language.dataFlow;
 
-import org.jetbrains.annotations.Contract;
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;

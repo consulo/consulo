@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle.lineIndent;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -23,7 +24,6 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.Indent;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import static consulo.language.codeStyle.Indent.Type;
 import static consulo.language.codeStyle.Indent.Type.*;
@@ -226,8 +226,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
   }
 
   protected boolean isColonAfterLabelOrCase(SemanticEditorPosition position, SemanticEditorPositionFactory factory) {
-    return position.isAt(Colon) && getPosition(factory, position.getStartOffset()).isAfterOnSameLine(SwitchCase,
-                                                                                                     SwitchDefault);
+    return position.isAt(Colon) && getPosition(factory, position.getStartOffset()).isAfterOnSameLine(SwitchCase, SwitchDefault);
   }
 
   protected boolean isInsideForLikeConstruction(SemanticEditorPosition position) {
@@ -247,8 +246,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
    * @param factory
    * @param position the position in the code block
    */
-  protected int getBlockStatementStartOffset(SemanticEditorPositionFactory factory,
-                                             SemanticEditorPosition position) {
+  protected int getBlockStatementStartOffset(SemanticEditorPositionFactory factory, SemanticEditorPosition position) {
     moveBeforeEndLineComments(position);
     position.moveBeforeOptional(BlockOpeningBrace);
     if (position.isAt(Whitespace)) {

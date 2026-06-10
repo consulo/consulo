@@ -18,7 +18,6 @@ package consulo.application;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Callable;
@@ -47,7 +46,6 @@ public final class ReadAction<T> {
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Runnable in non-blocking read action on a background thread.
      */
-    @Contract(pure = true)
     public static NonBlockingReadAction<Void> nonBlocking(@RequiredReadAction Runnable task) {
         return nonBlocking(() -> {
             task.run();
@@ -58,7 +56,6 @@ public final class ReadAction<T> {
     /**
      * Create an {@link NonBlockingReadAction} builder to run the given Callable in a non-blocking read action on a background thread.
      */
-    @Contract(pure = true)
     public static <T> NonBlockingReadAction<T> nonBlocking(@RequiredReadAction Callable<T> task) {
         return AsyncExecutionService.getService().buildNonBlockingReadAction(task);
     }
