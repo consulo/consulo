@@ -21,7 +21,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -48,7 +48,7 @@ public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutIm
 
     @Override
     public HorizontalLayout add(Component component, StaticPosition constraint) {
-        toVaadinComponent().add(TargetVaddin.to(component));
+        toVaadinComponent().add(TargetVaadin.to(component));
         return this;
     }
 

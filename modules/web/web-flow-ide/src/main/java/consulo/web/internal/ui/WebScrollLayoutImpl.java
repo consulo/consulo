@@ -19,11 +19,10 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.html.Div;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.ScrollableLayoutOptions;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
@@ -40,7 +39,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     }
 
     public WebScrollLayoutImpl(Component component, ScrollableLayoutOptions options) {
-        HasSize content = (HasSize) TargetVaddin.to(component);
+        HasSize content = (HasSize) TargetVaadin.to(component);
         content.setSizeFull();
         getVaadinComponent().add((com.vaadin.flow.component.Component) content);
     }
@@ -48,7 +47,7 @@ public class WebScrollLayoutImpl extends VaadinComponentDelegate<WebScrollLayout
     @Override
     @RequiredUIAccess
     public void remove(Component component) {
-        com.vaadin.flow.component.Component vaadinComponent = TargetVaddin.to(component);
+        com.vaadin.flow.component.Component vaadinComponent = TargetVaadin.to(component);
         if (vaadinComponent == getFirstChild()) {
             removeAll();
         }

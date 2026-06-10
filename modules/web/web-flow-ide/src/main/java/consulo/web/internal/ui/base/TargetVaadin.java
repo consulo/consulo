@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2018-05-10
  */
-public class TargetVaddin {
+public class TargetVaadin {
   @Contract("null -> null")
   public static com.vaadin.flow.component.Component to(@Nullable Component component) {
     if (component == null) {

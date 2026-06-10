@@ -27,7 +27,7 @@ import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.ComponentHolder;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
@@ -67,7 +67,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         }
 
         VaadinSizeUtil.setSizeFull(myRootPanel.getComponent());
-        vaadinComponent.add(TargetVaddin.to(myRootPanel.getComponent()));
+        vaadinComponent.add(TargetVaadin.to(myRootPanel.getComponent()));
         // TODO vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
 
         WebFocusManagerImpl.register(toVaadinComponent());

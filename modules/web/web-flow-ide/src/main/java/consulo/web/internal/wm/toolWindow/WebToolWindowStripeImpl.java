@@ -19,7 +19,7 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import consulo.ui.Component;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
@@ -67,7 +67,7 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
     vaadinComponent.myButtons.sort(comparator::compare);
 
     for (ToolWindowStripeButton stripeButton : vaadinComponent.myButtons) {
-      vaadinComponent.add(TargetVaddin.to(stripeButton.getComponent()));
+      vaadinComponent.add(TargetVaadin.to(stripeButton.getComponent()));
     }
   }
 }

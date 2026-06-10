@@ -21,7 +21,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 import org.vaadin.stefan.table.Table;
@@ -43,7 +43,7 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
         public void add(Component component, TableCell cell) {
             myChildren.put(component, cell);
 
-            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
             ((HasSize) vComponent).setSizeFull();
             validate(cell).add(vComponent);
         }
