@@ -17,27 +17,27 @@ package consulo.web.internal.ui.vaadin;
 
 import com.vaadin.flow.component.HasSize;
 import consulo.ui.Component;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 
 /**
  * @author VISTALL
- * @since 29/05/2023
+ * @since 2023-05-29
  */
 public class VaadinSizeUtil {
   public static void setSizeFull(Component component) {
-    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+    com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
 
     ((HasSize)vComponent).setSizeFull();
   }
 
   public static void setWidthFull(Component component) {
-    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+    com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
 
     ((HasSize)vComponent).setWidthFull();
   }
 
   public static void setHeightFull(Component component) {
-    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+    com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
 
     ((HasSize)vComponent).setHeightFull();
   }

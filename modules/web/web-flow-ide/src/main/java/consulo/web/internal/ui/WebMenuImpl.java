@@ -22,7 +22,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.SimpleComponent;
 import org.jspecify.annotations.Nullable;
@@ -40,7 +40,7 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
         private List<Component> myMenuItems = new ArrayList<>();
 
         public void add(MenuItem menuItem) {
-            Component vaadinComponent = TargetVaddin.to(menuItem);
+            Component vaadinComponent = TargetVaadin.to(menuItem);
 
             myMenuItems.add(vaadinComponent);
         }

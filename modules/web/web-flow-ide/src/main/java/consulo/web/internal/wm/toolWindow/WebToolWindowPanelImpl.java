@@ -27,7 +27,7 @@ import consulo.ui.ex.toolWindow.*;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.InitiableComponent;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
@@ -218,13 +218,13 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     public WebToolWindowPanelImpl() {
         Vaadin vaadinComponent = getVaadinComponent();
 
-        vaadinComponent.myTopDiv.add(TargetVaddin.to(myTopStripe));
-        vaadinComponent.myCenterDiv.add(TargetVaddin.to(myLeftStripe));
+        vaadinComponent.myTopDiv.add(TargetVaadin.to(myTopStripe));
+        vaadinComponent.myCenterDiv.add(TargetVaadin.to(myLeftStripe));
         VaadinSizeUtil.setWidthFull(myHorizontalSplitter);
-        com.vaadin.flow.component.Component splitter = TargetVaddin.to(myHorizontalSplitter);
+        com.vaadin.flow.component.Component splitter = TargetVaadin.to(myHorizontalSplitter);
         vaadinComponent.myCenterDiv.add(splitter);
-        vaadinComponent.myCenterDiv.add(TargetVaddin.to(myRightStripe));
-        vaadinComponent.myBottomDiv.add(TargetVaddin.to(myBottomStripe));
+        vaadinComponent.myCenterDiv.add(TargetVaadin.to(myRightStripe));
+        vaadinComponent.myBottomDiv.add(TargetVaadin.to(myBottomStripe));
 
         // tttttttttttttttttttttttttttttttt
         // l                              r

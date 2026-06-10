@@ -23,10 +23,9 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
-import consulo.ui.layout.LayoutStyle;
 import consulo.util.lang.ObjectUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 
 import java.util.Map;
@@ -48,7 +47,7 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
     @Override
     public void remove(consulo.ui.Component component) {
         if (component.getParent() == this) {
-            toVaadinComponent().remove(TargetVaddin.to(component));
+            toVaadinComponent().remove(TargetVaadin.to(component));
         }
     }
 

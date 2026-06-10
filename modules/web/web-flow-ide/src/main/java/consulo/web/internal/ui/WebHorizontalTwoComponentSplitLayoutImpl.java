@@ -21,7 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
     @Override
     @RequiredUIAccess
     public void setFirstComponent(Component component) {
-        com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+        com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToPrimary(vComponent);
     }
@@ -58,7 +58,7 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
     @Override
     @RequiredUIAccess
     public void setSecondComponent(Component component) {
-        com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+        com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
         ((HasSize) vComponent).setSizeFull();
         toVaadinComponent().addToSecondary(vComponent);
     }

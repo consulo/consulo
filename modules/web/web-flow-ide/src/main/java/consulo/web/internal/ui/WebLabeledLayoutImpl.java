@@ -24,9 +24,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
-import consulo.ui.layout.LayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
@@ -102,7 +101,7 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
     @Override
     @RequiredUIAccess
     public LabeledLayout set(Component component) {
-        getVaadinComponent().setContent(TargetVaddin.to(component));
+        getVaadinComponent().setContent(TargetVaadin.to(component));
         return this;
     }
 

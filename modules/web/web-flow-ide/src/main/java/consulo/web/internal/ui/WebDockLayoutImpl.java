@@ -20,7 +20,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.vaadin.BorderLayoutEx;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
@@ -67,7 +67,7 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
         toVaadinComponent().setComponent(null, constraint);
 
         if (child != null) {
-            toVaadinComponent().addComponent(TargetVaddin.to(child), constraint);
+            toVaadinComponent().addComponent(TargetVaadin.to(child), constraint);
         }
 
         return this;

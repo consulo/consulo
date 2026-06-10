@@ -19,10 +19,9 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.CompositeComponent;
 import org.jspecify.annotations.Nullable;
@@ -77,7 +76,7 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     @RequiredUIAccess
     public ThreeComponentSplitLayout setFirstComponent(@Nullable Component component) {
         if (component != null) {
-            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
             ((HasSize) vComponent).setSizeFull();
             toVaadinComponent().addFirst(vComponent);
         }
@@ -88,7 +87,7 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     @RequiredUIAccess
     public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
         if (component != null) {
-            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
             ((HasSize) vComponent).setSizeFull();
             toVaadinComponent().addCenter(vComponent);
         }
@@ -99,7 +98,7 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
     @RequiredUIAccess
     public ThreeComponentSplitLayout setSecondComponent(@Nullable Component component) {
         if (component != null) {
-            com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+            com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
             ((HasSize) vComponent).setSizeFull();
             toVaadinComponent().addSecond(vComponent);
         }

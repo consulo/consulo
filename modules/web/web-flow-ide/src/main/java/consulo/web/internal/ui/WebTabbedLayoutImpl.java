@@ -19,10 +19,9 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TabbedLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
@@ -56,7 +55,7 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         com.vaadin.flow.component.tabs.Tab vaadinTab = new com.vaadin.flow.component.tabs.Tab();
         webTab.setVaadinTab(vaadinTab);
         webTab.update();
-        toVaadinComponent().add(vaadinTab, TargetVaddin.to(component));
+        toVaadinComponent().add(vaadinTab, TargetVaadin.to(component));
         return tab;
     }
 

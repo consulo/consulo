@@ -18,10 +18,9 @@ package consulo.web.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
-import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
@@ -44,7 +43,7 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
 
     @Override
     public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
-        toVaadinComponent().add(TargetVaddin.to(component));
+        toVaadinComponent().add(TargetVaadin.to(component));
         return this;
     }
 

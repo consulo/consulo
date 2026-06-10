@@ -31,7 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.internal.servlet.VaadinRootLayout;
 import consulo.web.internal.ui.WebRootPaneImpl;
-import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.TargetVaadin;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -39,7 +39,7 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 24-Sep-17
+ * @since 2017-09-24
  */
 public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     private final Project myProject;
@@ -74,14 +74,13 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
         myRootView.update();
 
-        myRootLayout.update(TargetVaddin.to(myRootView.getRootPanel().getComponent()));
+        myRootLayout.update(TargetVaadin.to(myRootView.getRootPanel().getComponent()));
     }
 
     public WebRootPaneImpl getRootPanel() {
         return myRootView.getRootPanel();
     }
 
-    
     @Override
     public Window getWindow() {
         return (Window) Objects.requireNonNull(myRootLayout).toUIComponent();
@@ -110,12 +109,10 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Override
     public void setFrameTitle(String title) {
-
     }
 
     @Override
     public void setFileTitle(String fileTitle, File ioFile) {
-
     }
 
     @Override
@@ -130,6 +127,5 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Override
     public void dispose() {
-
     }
 }
