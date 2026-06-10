@@ -32,12 +32,12 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.output.support.AbstractXMLOutputProcessor;
 import org.jdom.output.support.FormatStack;
 import org.jdom.output.support.Walker;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
@@ -581,8 +581,8 @@ public class JDOMUtil {
 
   private static class XmlProcessor extends AbstractXMLOutputProcessor {
     @Override
-    protected void attributeEscapedEntitiesFilter(Writer out, FormatStack fstack, String value) throws IOException {
-      if (!fstack.getEscapeOutput()) {
+    protected void attributeEscapedEntitiesFilter(Writer out, FormatStack fStack, String value) throws IOException {
+      if (!fStack.getEscapeOutput()) {
         // no escaping...
         write(out, value);
         return;
@@ -592,11 +592,11 @@ public class JDOMUtil {
     }
 
     @Override
-    protected Walker buildWalker(FormatStack fstack, List<? extends Content> content, boolean escape) {
-      if (fstack.getTextMode() != Format.TextMode.TRIM) {
-        throw new IllegalArgumentException("not trim mode unsupported: " + fstack.getTextMode());
+    protected Walker buildWalker(FormatStack fStack, List<? extends Content> content, boolean escape) {
+      if (fStack.getTextMode() != Format.TextMode.TRIM) {
+        throw new IllegalArgumentException("not trim mode unsupported: " + fStack.getTextMode());
       }
-      return new CustomWalker(content, fstack, escape);
+      return new CustomWalker(content, fStack, escape);
     }
   }
 
@@ -818,7 +818,7 @@ public class JDOMUtil {
   //}
 
   /**
-   * Not required if you use XmlSerializator.
+   * Not required if you use XmlSerializer.
    *
    * @see XmlStringUtil#escapeIllegalXmlChars(String)
    */

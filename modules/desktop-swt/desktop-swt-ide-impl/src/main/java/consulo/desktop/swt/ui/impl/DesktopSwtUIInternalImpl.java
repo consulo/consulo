@@ -37,9 +37,9 @@ import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.style.StyleManager;
-import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -49,308 +49,305 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 2021-04-29
  */
 public class DesktopSwtUIInternalImpl extends UIInternal {
-  
-  @Override
-  public IconLibraryManager _IconLibraryManager_get() {
-    return DesktopSwtIconLibraryManager.INSTANCE;
-  }
-
-  @Override
-  public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
-    return new DesktopSwtImageKeyImpl(groupId, imageId, width, height);
-  }
-
-  @Override
-  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
-    // TODO impl it
-    return baseImage;
-  }
-
-  @Override
-  public CheckBox _Components_checkBox() {
-    return new DesktopSwtCheckBoxImpl();
-  }
-
-  @Override
-  public DockLayout _Layouts_dock(int gapInPixels) {
-    return new DesktopSwtDockLayoutImpl(gapInPixels);
-  }
-
-  @Override
-  public WrappedLayout _Layouts_wrapped() {
-    return new DesktopSwtWrappedLayoutImpl();
-  }
-
-  @Override
-  public VerticalLayout _Layouts_vertical(int vGap) {
-    return new DesktopSwtVerticalLayoutImpl(vGap);
-  }
-
-  @Override
-  public SwipeLayout _Layouts_swipe() {
-    return null;
-  }
-
-  @Override
-  public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
-    return new DesktopSwtTwoComponentSplitLayoutImpl(position);
-  }
-
-  @Override
-  public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
-    return new DesktopSwtThreeComponentSplitLayoutImpl(position);
-  }
-
-  @Override
-  public TabbedLayout _Layouts_tabbed() {
-    return new DesktopSwtTabbedLayoutImpl();
-  }
-
-  @Override
-  public LabeledLayout _Layouts_labeled(LocalizeValue label) {
-    return new DesktopSwtLabeledLayoutImpl(label);
-  }
-
-  @Override
-  public TableLayout _Layouts_table(StaticPosition fillOption) {
-    return new DesktopSwtTableLayoutImpl(fillOption);
-  }
-
-  @Override
-  public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
-    return new DesktopSwtScrollableLayoutImpl(component);
-  }
-
-  @Override
-  public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
-    return new DesktopSwtHorizontalLayoutImpl(gapInPixesl);
-  }
-
-  @Override
-  public Label _Components_label(LocalizeValue text, LabelOptions options) {
-    return new DesktopSwtLabelImpl(text);
-  }
-
-  @Override
-  public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions options) {
-    return null;
-  }
-
-  @Override
-  public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
-    return new DesktopSwtComboBoxImpl<>(model);
-  }
-
-  @Override
-  public TextBox _Components_textBox(String text) {
-    return new DesktopSwtTextBoxImpl(text);
-  }
-
-  @Override
-  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
-    return new DesktopSwtTextBoxWithHistoryImpl(text);
-  }
-
-  @Override
-  public ProgressBar _Components_progressBar() {
-    return new DesktopSwtProgressBarImpl();
-  }
-
-  
-  @Override
-  public IntBox _Components_intBox(int value) {
-    return new DesktopSwtIntBoxImpl(value);
-  }
-
-  @Override
-  public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
-    return new DesktopSwtListBoxImpl<E>(model);
-  }
-
-  @Override
-  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
-    return new DesktopSwtRadioButtonImpl(text, selected);
-  }
-
-  @Override
-  public Button _Components_button(LocalizeValue text) {
-    return new DesktopSwtButtonImpl(text);
-  }
-
-  @Override
-  public Hyperlink _Components_hyperlink(LocalizeValue text) {
-    return new DesktopSwtHyperlinkImpl(text);
-  }
-
-  @Override
-  public ImageBox _Components_imageBox(Image image) {
-    return null;
-  }
-
-  @Override
-  public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
-    return null;
-  }
-
-  @Override
-  public Image _Image_lazy(Supplier<Image> imageSupplier) {
-    return imageSupplier.get();
-  }
-
-  @Override
-  public Image _ImageEffects_layered(Image[] images) {
-    return new DesktopSwtLayeredImageImpl(images);
-  }
-
-  @Override
-  public Image _ImageEffects_transparent(Image original, float alpha) {
-    return new DesktopSwtTransparentImageImpl(original, alpha);
-  }
-
-  @Override
-  public Image _ImageEffects_grayed(Image original) {
-    return original;
-  }
-
-  @Override
-  public Image _ImageEffects_appendRight(Image i0, Image i1) {
-    return i1;
-  }
-
-  @Override
-  public EmptyImage _ImageEffects_empty(int width, int height) {
-    return new DesktopSwtEmptyImageImpl(width, height);
-  }
-
-  @Override
-  public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    return Image.empty(width, height);
-  }
-
-  @Override
-  public Image _ImageEffects_withText(Image baseImage, String text) {
-    return baseImage;
-  }
-
-  @Override
-  public Image _ImageEffects_resize(Image original, int width, int height) {
-    return new DesktopSwtResizeImageImpl(original, width, height);
-  }
-
-  @Override
-  public Menu _Menu_create(LocalizeValue text) {
-    return null;
-  }
-
-  @Override
-  public MenuSeparator _MenuSeparator_create() {
-    return null;
-  }
-
-  @Override
-  public ValueGroup<Boolean> _ValueGroups_boolGroup() {
-    return new DesktopSwtBoolValueGroup();
-  }
-
-  @Override
-  public MenuBar _MenuItems_menuBar() {
-    return new DesktopSwtMenuBar();
-  }
-
-  
-  @Override
-  public StyleManager _StyleManager_get() {
-    return DesktopSwtStyleManagerImpl.INSTANCE;
-  }
-
-  
-  @Override
-  public FontManager _FontManager_get() {
-    return DesktopSwtFontManagerImpl.INSTANCE;
-  }
-
-  @Override
-  public FocusManager _FocusManager_get() {
-    return DesktopSwtFocusManagerImpl.INSTANCE;
-  }
-
-  
-  @Override
-  public Window _Window_create(String title, WindowOptions options) {
-    return new DesktopSwtWindowImpl(title, options);
-  }
-
-  @Override
-  public @Nullable Window _Window_getActiveWindow() {
-    Display display = DesktopSwtUIAccess.INSTANCE.getDisplay();
-
-    Shell activeShell = display.getActiveShell();
-
-    if(activeShell != null) {
-      return (Window)TargetSWT.from(activeShell);
+    @Override
+    public IconLibraryManager _IconLibraryManager_get() {
+        return DesktopSwtIconLibraryManager.INSTANCE;
     }
-    return null;
-  }
 
-  @Override
-  public <T> Alert<T> _Alerts_create() {
-    return null;
-  }
+    @Override
+    public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
+        return new DesktopSwtImageKeyImpl(groupId, imageId, width, height);
+    }
 
-  @Override
-  public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
-    return new ImmutableListModelImpl<>(list);
-  }
+    @Override
+    public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+        // TODO impl it
+        return baseImage;
+    }
 
-  @Override
-  public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
-    return new MutableListModelImpl<>(list);
-  }
+    @Override
+    public CheckBox _Components_checkBox() {
+        return new DesktopSwtCheckBoxImpl();
+    }
 
-  @RequiredUIAccess
-  
-  @Override
-  public UIAccess _UIAccess_get() {
-    return DesktopSwtUIAccess.INSTANCE;
-  }
+    @Override
+    public DockLayout _Layouts_dock(int gapInPixels) {
+        return new DesktopSwtDockLayoutImpl(gapInPixels);
+    }
 
-  @Override
-  public boolean _UIAccess_isUIThread() {
-    return Thread.currentThread().equals(Display.getDefault().getThread());
-  }
+    @Override
+    public WrappedLayout _Layouts_wrapped() {
+        return new DesktopSwtWrappedLayoutImpl();
+    }
 
-  @Override
-  public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
-    return null;
-  }
+    @Override
+    public VerticalLayout _Layouts_vertical(int vGap) {
+        return new DesktopSwtVerticalLayoutImpl(vGap);
+    }
 
-  @Override
-  public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
-    return null;
-  }
+    @Override
+    public SwipeLayout _Layouts_swipe() {
+        return null;
+    }
 
-  @Override
-  public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
-    return null;
-  }
+    @Override
+    public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
+        return new DesktopSwtTwoComponentSplitLayoutImpl(position);
+    }
 
-  @Override
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
-    return new DesktopSwtTreeImpl<E>(rootValue, model);
-  }
+    @Override
+    public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
+        return new DesktopSwtThreeComponentSplitLayoutImpl(position);
+    }
 
-  
-  @Override
-  public ModalityState _ModalityState_any() {
-    return ModalityStateImpl.ANY;
-  }
+    @Override
+    public TabbedLayout _Layouts_tabbed() {
+        return new DesktopSwtTabbedLayoutImpl();
+    }
 
-  
-  @Override
-  public ModalityState _ModalityState_nonModal() {
-    return ModalityStateImpl.NON_MODAL;
-  }
+    @Override
+    public LabeledLayout _Layouts_labeled(LocalizeValue label) {
+        return new DesktopSwtLabeledLayoutImpl(label);
+    }
+
+    @Override
+    public TableLayout _Layouts_table(StaticPosition fillOption) {
+        return new DesktopSwtTableLayoutImpl(fillOption);
+    }
+
+    @Override
+    public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
+        return new DesktopSwtScrollableLayoutImpl(component);
+    }
+
+    @Override
+    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+        return new DesktopSwtHorizontalLayoutImpl(gapInPixels);
+    }
+
+    @Override
+    public Label _Components_label(LocalizeValue text, LabelOptions options) {
+        return new DesktopSwtLabelImpl(text);
+    }
+
+    @Override
+    public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions options) {
+        return null;
+    }
+
+    @Override
+    public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+        return new DesktopSwtComboBoxImpl<>(model);
+    }
+
+    @Override
+    public TextBox _Components_textBox(String text) {
+        return new DesktopSwtTextBoxImpl(text);
+    }
+
+    @Override
+    public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+        return new DesktopSwtTextBoxWithHistoryImpl(text);
+    }
+
+    @Override
+    public ProgressBar _Components_progressBar() {
+        return new DesktopSwtProgressBarImpl();
+    }
+
+    @Override
+    public IntBox _Components_intBox(int value) {
+        return new DesktopSwtIntBoxImpl(value);
+    }
+
+    @Override
+    public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+        return new DesktopSwtListBoxImpl<E>(model);
+    }
+
+    @Override
+    public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
+        return new DesktopSwtRadioButtonImpl(text, selected);
+    }
+
+    @Override
+    public Button _Components_button(LocalizeValue text) {
+        return new DesktopSwtButtonImpl(text);
+    }
+
+    @Override
+    public Hyperlink _Components_hyperlink(LocalizeValue text) {
+        return new DesktopSwtHyperlinkImpl(text);
+    }
+
+    @Override
+    public ImageBox _Components_imageBox(Image image) {
+        return null;
+    }
+
+    @Override
+    public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
+        return null;
+    }
+
+    @Override
+    public Image _Image_lazy(Supplier<Image> imageSupplier) {
+        return imageSupplier.get();
+    }
+
+    @Override
+    public Image _ImageEffects_layered(Image[] images) {
+        return new DesktopSwtLayeredImageImpl(images);
+    }
+
+    @Override
+    public Image _ImageEffects_transparent(Image original, float alpha) {
+        return new DesktopSwtTransparentImageImpl(original, alpha);
+    }
+
+    @Override
+    public Image _ImageEffects_grayed(Image original) {
+        return original;
+    }
+
+    @Override
+    public Image _ImageEffects_appendRight(Image i0, Image i1) {
+        return i1;
+    }
+
+    @Override
+    public EmptyImage _ImageEffects_empty(int width, int height) {
+        return new DesktopSwtEmptyImageImpl(width, height);
+    }
+
+    @Override
+    public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
+        return Image.empty(width, height);
+    }
+
+    @Override
+    public Image _ImageEffects_withText(Image baseImage, String text) {
+        return baseImage;
+    }
+
+    @Override
+    public Image _ImageEffects_resize(Image original, int width, int height) {
+        return new DesktopSwtResizeImageImpl(original, width, height);
+    }
+
+    @Override
+    public Menu _Menu_create(LocalizeValue text) {
+        return null;
+    }
+
+    @Override
+    public MenuSeparator _MenuSeparator_create() {
+        return null;
+    }
+
+    @Override
+    public ValueGroup<Boolean> _ValueGroups_boolGroup() {
+        return new DesktopSwtBoolValueGroup();
+    }
+
+    @Override
+    public MenuBar _MenuItems_menuBar() {
+        return new DesktopSwtMenuBar();
+    }
+
+    @Override
+    public StyleManager _StyleManager_get() {
+        return DesktopSwtStyleManagerImpl.INSTANCE;
+    }
+
+    @Override
+    public FontManager _FontManager_get() {
+        return DesktopSwtFontManagerImpl.INSTANCE;
+    }
+
+    @Override
+    public FocusManager _FocusManager_get() {
+        return DesktopSwtFocusManagerImpl.INSTANCE;
+    }
+
+    @Override
+    public Window _Window_create(String title, WindowOptions options) {
+        return new DesktopSwtWindowImpl(title, options);
+    }
+
+    @Override
+    public @Nullable Window _Window_getActiveWindow() {
+        Display display = DesktopSwtUIAccess.INSTANCE.getDisplay();
+
+        Shell activeShell = display.getActiveShell();
+
+        if (activeShell != null) {
+            return (Window) TargetSWT.from(activeShell);
+        }
+        return null;
+    }
+
+    @Override
+    public <T> Alert<T> _Alerts_create() {
+        return null;
+    }
+
+    @Override
+    public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
+        return new ImmutableListModelImpl<>(list);
+    }
+
+    @Override
+    public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
+        return new MutableListModelImpl<>(list);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public UIAccess _UIAccess_get() {
+        return DesktopSwtUIAccess.INSTANCE;
+    }
+
+    @Override
+    public boolean _UIAccess_isUIThread() {
+        return Thread.currentThread().equals(Display.getDefault().getThread());
+    }
+
+    @Override
+    public TextBoxWithExpandAction _Components_textBoxWithExpandAction(
+        Image editButtonImage,
+        String dialogTitle,
+        Function<String, List<String>> parser,
+        Function<List<String>, String> joiner
+    ) {
+        return null;
+    }
+
+    @Override
+    public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
+        return null;
+    }
+
+    @Override
+    public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
+        return null;
+    }
+
+    @Override
+    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+        return new DesktopSwtTreeImpl<>(rootValue, model);
+    }
+
+    @Override
+    public ModalityState _ModalityState_any() {
+        return ModalityStateImpl.ANY;
+    }
+
+    @Override
+    public ModalityState _ModalityState_nonModal() {
+        return ModalityStateImpl.NON_MODAL;
+    }
 }

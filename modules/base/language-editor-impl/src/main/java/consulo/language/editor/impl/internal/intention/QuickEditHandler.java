@@ -67,8 +67,8 @@ import consulo.util.lang.*;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +90,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     private final LightVirtualFile myNewVirtualFile;
 
     private final long myOrigCreationStamp;
-    private FileEditorWindow mySplittedWindow;
+    private FileEditorWindow mySplitWindow;
     private boolean myCommittingToOriginal;
 
     private final PsiFile myInjectedFile;
@@ -262,7 +262,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             FileEditor[] editors = fileEditorManager.getEditors(myNewVirtualFile);
             if (editors.length == 0) {
                 FileEditorWindow curWindow = fileEditorManager.getCurrentWindow();
-                mySplittedWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
+                mySplitWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
             }
             Editor editor = fileEditorManager.openTextEditor(OpenFileDescriptorFactory.getInstance(myProject)
                 .builder(myNewVirtualFile)
@@ -321,15 +321,15 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
     private void closeEditor() {
         boolean unsplit = false;
-        if (mySplittedWindow != null && !mySplittedWindow.isDisposed()) {
-            FileEditorWithProviderComposite[] editors = mySplittedWindow.getEditors();
+        if (mySplitWindow != null && !mySplitWindow.isDisposed()) {
+            FileEditorWithProviderComposite[] editors = mySplitWindow.getEditors();
             if (editors.length == 1 && Comparing.equal(editors[0].getFile(), myNewVirtualFile)) {
                 unsplit = true;
             }
         }
         FileEditorManager.getInstance(myProject).closeFile(myNewVirtualFile);
         if (unsplit) {
-            for (FileEditorWindow editorWindow : mySplittedWindow.findSiblings()) {
+            for (FileEditorWindow editorWindow : mySplitWindow.findSiblings()) {
                 editorWindow.unsplit(true);
             }
         }

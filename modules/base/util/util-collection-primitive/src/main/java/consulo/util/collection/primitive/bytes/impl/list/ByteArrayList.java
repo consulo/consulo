@@ -85,7 +85,7 @@ public class ByteArrayList implements ByteList, Cloneable {
   // sizing
 
   /**
-   * Grow the internal array as needed to accomodate the specified
+   * Grow the internal array as needed to accommodate the specified
    * number of elements.  The size of the array doubles on each
    * resize unless <tt>capacity</tt> requires more than twice the
    * current capacity.
@@ -355,7 +355,7 @@ public class ByteArrayList implements ByteList, Cloneable {
   /**
    * Sets the size of the list to 0, but does not change its
    * capacity.  This method can be used as an alternative to the
-   * {@link #clear clear} method if you want to recyle a list without
+   * {@link #clear clear} method if you want to recycle a list without
    * allocating new backing arrays.
    *
    * @see #clear
@@ -368,7 +368,7 @@ public class ByteArrayList implements ByteList, Cloneable {
   /**
    * Sets the size of the list to 0, but does not change its
    * capacity.  This method can be used as an alternative to the
-   * {@link #clear clear} method if you want to recyle a list
+   * {@link #clear clear} method if you want to recycle a list
    * without allocating new backing arrays.  This method differs
    * from {@link #reset reset} in that it does not clear the old
    * values in the backing array.  Thus, it is possible for {@link
@@ -612,7 +612,7 @@ public class ByteArrayList implements ByteList, Cloneable {
   // sorting
 
   /**
-   * Sort the values in the list (ascending) using the Sun quicksort
+   * Sort the values in the list (ascending) using the Sun quick-sort
    * implementation.
    *
    * @see java.util.Arrays#sort
@@ -622,8 +622,7 @@ public class ByteArrayList implements ByteList, Cloneable {
   }
 
   /**
-   * Sort a slice of the list (ascending) using the Sun quicksort
-   * implementation.
+   * Sort a slice of the list (ascending) using the Sun quick-sort implementation.
    *
    * @param fromIndex the index at which to start sorting (inclusive)
    * @param toIndex   the index at which to stop sorting (exclusive)

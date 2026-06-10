@@ -1145,24 +1145,24 @@ public class ContainerUtil {
         return true;
     }
 
-    public static <K, V> Map<K, V> newMapFromValues(Iterator<V> values, Function<V, K> keyConvertor) {
+    public static <K, V> Map<K, V> newMapFromValues(Iterator<V> values, Function<V, K> keyConverter) {
         Map<K, V> map = new HashMap<>();
-        fillMapWithValues(map, values, keyConvertor);
+        fillMapWithValues(map, values, keyConverter);
         return map;
     }
 
-    public static <K, V> void fillMapWithValues(Map<K, V> map, Iterator<V> values, Function<V, K> keyConvertor) {
+    public static <K, V> void fillMapWithValues(Map<K, V> map, Iterator<V> values, Function<V, K> keyConverter) {
         while (values.hasNext()) {
             V value = values.next();
-            map.put(keyConvertor.apply(value), value);
+            map.put(keyConverter.apply(value), value);
         }
     }
 
-    public static <K, V> Map<K, Set<V>> classify(Iterator<V> iterator, Function<V, K> keyConvertor) {
+    public static <K, V> Map<K, Set<V>> classify(Iterator<V> iterator, Function<V, K> keyConverter) {
         Map<K, Set<V>> hashMap = new LinkedHashMap<>();
         while (iterator.hasNext()) {
             V value = iterator.next();
-            K key = keyConvertor.apply(value);
+            K key = keyConverter.apply(value);
             Set<V> set = hashMap.get(key);
             if (set == null) {
                 hashMap.put(key, set = new LinkedHashSet<>()); // ordered set!!

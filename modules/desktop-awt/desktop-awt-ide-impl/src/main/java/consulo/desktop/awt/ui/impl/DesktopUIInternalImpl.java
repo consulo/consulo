@@ -77,7 +77,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 public class DesktopUIInternalImpl extends UIInternal {
     @Override
@@ -91,7 +91,11 @@ public class DesktopUIInternalImpl extends UIInternal {
             SVGLoader loader = new SVGLoader();
             SVGDocument document = loader.load(url);
             FloatSize size = document.size();
-            return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference("url", url.toString(), document, null), (int) size.getWidth(), (int) size.getHeight());
+            return new DesktopAWTSimpleImageImpl(
+                new DesktopAWTSVGImageReference("url", url.toString(), document, null),
+                (int) size.getWidth(),
+                (int) size.getHeight()
+            );
         }
         else {
             BufferedImage image;
@@ -101,9 +105,11 @@ public class DesktopUIInternalImpl extends UIInternal {
 
             int width = image.getWidth(null);
             int height = image.getHeight(null);
-            return new DesktopAWTSimpleImageImpl(new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
+            return new DesktopAWTSimpleImageImpl(
+                new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
                 width,
-                height);
+                height
+            );
         }
     }
 
@@ -114,14 +120,20 @@ public class DesktopUIInternalImpl extends UIInternal {
                 SVGLoader loader = new SVGLoader();
                 SVGDocument document = loader.load(stream);
                 FloatSize size = document.size();
-                return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference("bytes", "[]", document, null), (int) size.getWidth(), (int) size.getHeight());
+                return new DesktopAWTSimpleImageImpl(
+                    new DesktopAWTSVGImageReference("bytes", "[]", document, null),
+                    (int) size.getWidth(),
+                    (int) size.getHeight()
+                );
             default:
                 BufferedImage image = ImageIO.read(stream);
                 int width = image.getWidth(null);
                 int height = image.getHeight(null);
-                return new DesktopAWTSimpleImageImpl(new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
+                return new DesktopAWTSimpleImageImpl(
+                    new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
                     width,
-                    height);
+                    height
+                );
         }
     }
 
@@ -233,19 +245,16 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopMenuBarImpl();
     }
 
-    
     @Override
     public StyleManager _StyleManager_get() {
         return DesktopStyleManagerImpl.ourInstance;
     }
 
-    
     @Override
     public FontManager _FontManager_get() {
         return DesktopFontManagerImpl.ourInstance;
     }
 
-    
     @Override
     public Window _Window_create(String title, WindowOptions options) {
         return new DesktopWindowWrapper(title, options);
@@ -358,7 +367,7 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopProgressBarImpl();
     }
 
-    
+
     @Override
     public IntBox _Components_intBox(int value) {
         return new DesktopIntBoxImpl(value);
@@ -390,8 +399,8 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
-        return new DesktopHorizontalLayoutImpl(gapInPixesl);
+    public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
+        return new DesktopHorizontalLayoutImpl(gapInPixels);
     }
 
     @Override
@@ -404,9 +413,8 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopColorBoxImpl(colorValue);
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public UIAccess _UIAccess_get() {
         return AWTUIAccessImpl.ourInstance;
     }
@@ -422,10 +430,12 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
-                                                                       String dialogTitle,
-                                                                       Function<String, List<String>> parser,
-                                                                       Function<List<String>, String> joiner) {
+    public TextBoxWithExpandAction _Components_textBoxWithExpandAction(
+        Image editButtonImage,
+        String dialogTitle,
+        Function<String, List<String>> parser,
+        Function<List<String>, String> joiner
+    ) {
         return DesktopTextBoxWithExpandAction.create(editButtonImage, dialogTitle, parser, joiner);
     }
 
@@ -439,18 +449,17 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopFoldoutLayoutImpl(titleValue, component, show);
     }
 
-    
     @Override
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         return new DesktopStatedImageImpl<>(state, funcCall);
     }
 
     @Override
-    public <V, E> TableColumn<V, E> _Components_tableColumBuild(String name, Function<E, V> converter) {
+    public <V, E> TableColumn<V, E> _Components_tableColumnBuild(String name, Function<E, V> converter) {
         return new DesktopTableColumnInfo<>(name, converter);
     }
 
-    
+
     @Override
     public IconLibraryManager _IconLibraryManager_get() {
         return DesktopIconLibraryManagerImpl.ourInstance;
@@ -461,7 +470,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopAWTImageKey(null, groupId, imageId, width, height);
     }
 
-    
     @Override
     public TaskBar _TaskBar_get() {
         return DesktopTaskBarImpl.ourInstance;
@@ -487,7 +495,6 @@ public class DesktopUIInternalImpl extends UIInternal {
         return new DesktopToggleSwitchImpl(selected);
     }
 
-    
     @Override
     public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
         return new DesktopPasswordBoxImpl(passwordText);
@@ -500,37 +507,31 @@ public class DesktopUIInternalImpl extends UIInternal {
         UiNotifyConnector.doWhenFirstShown(awtComponent, action);
     }
 
-    
     @Override
     public AdvancedLabel _Components_advancedLabel() {
         return new DesktopAdvancedLabelImpl();
     }
 
-    
     @Override
     public HtmlView _Components_htmlView() {
         return new DesktopAWTHtmlViewImpl();
     }
 
-    
     @Override
     public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
         return new DesktopAWTLoadingLayout<>(innerLayout, parent);
     }
 
-    
     @Override
     public ModalityState _ModalityState_any() {
         return ModalityStateImpl.ANY;
     }
 
-    
     @Override
     public ModalityState _ModalityState_nonModal() {
         return ModalityStateImpl.NON_MODAL;
     }
 
-    
     @Override
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         return new DesktopDatePickerImpl(datePattern);

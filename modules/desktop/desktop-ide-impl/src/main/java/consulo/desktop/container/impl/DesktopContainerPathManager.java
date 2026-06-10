@@ -247,14 +247,14 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     String propertyValue = selectPropertyValue(CONSULO_PLUGINS_PATHS);
     if (propertyValue != null) {
       if (propertyValue.contains(File.pathSeparator)) {
-        String[] splittedPaths = propertyValue.split(File.pathSeparator);
-        for (int i = 0; i < splittedPaths.length; i++) {
-          String splitValue = splittedPaths[i];
+        String[] splitPaths = propertyValue.split(File.pathSeparator);
+        for (int i = 0; i < splitPaths.length; i++) {
+          String splitValue = splitPaths[i];
 
-          splittedPaths[i] = getAbsolutePath(trimPathQuotes(splitValue));
+          splitPaths[i] = getAbsolutePath(trimPathQuotes(splitValue));
         }
 
-        ourPluginsPaths = splittedPaths;
+        ourPluginsPaths = splitPaths;
       }
       else {
         ourPluginsPaths = new String[]{getAbsolutePath(trimPathQuotes(propertyValue))};

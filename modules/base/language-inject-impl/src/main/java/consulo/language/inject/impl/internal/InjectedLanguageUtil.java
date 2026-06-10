@@ -263,10 +263,10 @@ public class InjectedLanguageUtil {
     if (!(document instanceof DocumentWindowImpl)) return hostEditor;
     DocumentWindowImpl documentWindow = (DocumentWindowImpl)document;
     if (hostCaret.hasSelection()) {
-      int selstart = hostCaret.getSelectionStart();
-      if (selstart != -1) {
-        int selend = Math.max(selstart, hostCaret.getSelectionEnd());
-        if (!documentWindow.containsRange(selstart, selend)) {
+      int selStart = hostCaret.getSelectionStart();
+      if (selStart != -1) {
+        int selEnd = Math.max(selStart, hostCaret.getSelectionEnd());
+        if (!documentWindow.containsRange(selStart, selEnd)) {
           // selection spreads out the injected editor range
           return hostEditor;
         }

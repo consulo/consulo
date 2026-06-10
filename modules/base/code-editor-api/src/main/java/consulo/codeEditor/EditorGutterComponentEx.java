@@ -31,7 +31,6 @@ public interface EditorGutterComponentEx extends EditorGutter {
 
     @Nullable FoldRegion findFoldingAnchorAt(int x, int y);
 
-    
     List<GutterMark> getGutterRenderers(int line);
 
     int getWhitespaceSeparatorOffset();
@@ -58,9 +57,9 @@ public interface EditorGutterComponentEx extends EditorGutter {
     }
 
     @Deprecated
-    default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2) {
-        setLineNumberConverter(convertFromOperator(lineNumberConvertor1),
-            lineNumberConvertor2 == null ? null : convertFromOperator(lineNumberConvertor2));
+    default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConverter1, @Nullable IntUnaryOperator lineNumberConverter2) {
+        setLineNumberConverter(convertFromOperator(lineNumberConverter1),
+            lineNumberConverter2 == null ? null : convertFromOperator(lineNumberConverter2));
     }
 
     private static LineNumberConverter convertFromOperator(IntUnaryOperator operator) {

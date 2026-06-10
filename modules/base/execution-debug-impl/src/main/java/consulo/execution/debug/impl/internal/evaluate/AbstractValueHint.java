@@ -46,8 +46,8 @@ import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -226,7 +226,7 @@ public abstract class AbstractValueHint {
             }
         });
 
-        // editor may be disposed before later invokator process this action
+        // Editor may be disposed before invoker later processes this action
         if (myEditor.isDisposed() || myEditor.getComponent().getRootPane() == null) {
             return false;
         }

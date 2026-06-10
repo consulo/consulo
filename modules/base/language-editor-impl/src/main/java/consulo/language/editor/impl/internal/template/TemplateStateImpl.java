@@ -445,7 +445,7 @@ public class TemplateStateImpl implements TemplateState {
             LOG.assertTrue(myTemplateRange.isValid(), getRangesDebugInfo());
             calcResults(false);
             LOG.assertTrue(myTemplateRange.isValid(), getRangesDebugInfo());
-            calcResults(false);  //Fixed SCR #[vk500] : all variables should be recalced twice on start.
+            calcResults(false);  //Fixed SCR #[vk500] : all variables should be recalculated twice on start.
             LOG.assertTrue(myTemplateRange.isValid(), getRangesDebugInfo());
             doReformat(null);
 
@@ -847,7 +847,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     /**
-     * Must be invoked on every segment change in order to avoid ovelapping editing segment with its neibours
+     * Must be invoked on every segment change in order to avoid overlapping editing segment with its neighbours
      */
     private void fixOverlappedSegments(int currentSegment) {
         if (currentSegment >= 0) {
@@ -1148,13 +1148,14 @@ public class TemplateStateImpl implements TemplateState {
             offset = mySegments.getSegmentStart(endSegmentNumber);
         }
         else {
-            if (!myTemplate.isSelectionTemplate() && !myTemplate.isInline()) { //do not move caret to the end of range for selection templates
+            if (!myTemplate.isSelectionTemplate() && !myTemplate.isInline()) {
+                //do not move caret to the end of range for selection templates
                 offset = myTemplateRange.getEndOffset();
             }
         }
 
         if (isMultiCaretMode() && getCurrentVariableNumber() > -1) {
-            offset = -1; //do not move caret in multicaret mode if at least one tab had been made already
+            offset = -1; //do not move caret in multi-caret mode if at least one tab had been made already
         }
 
         if (offset >= 0) {

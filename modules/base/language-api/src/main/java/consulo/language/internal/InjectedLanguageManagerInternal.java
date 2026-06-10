@@ -57,7 +57,7 @@ public interface InjectedLanguageManagerInternal extends InjectedLanguageManager
      * Unlike {@link MultiHostRegistrar#startInjecting(Language)} this method doesn't inject the full blown file in the other language.
      * Instead, it just marks some range as a reference in some language.
      * For example, you can inject file reference into string literal.
-     * After that, it won't be highlighted as an injected fragment but still can be subject to e.g. "Goto declaraion" action.
+     * After that, it won't be highlighted as an injected fragment but still can be subject to e.g. "Goto declaration" action.
      */
     void injectReference(MultiHostRegistrar registrar,
                          Language language,

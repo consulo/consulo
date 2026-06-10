@@ -34,7 +34,7 @@ public interface TableColumn<Value, Item> {
         }
 
         public TableColumn<Value, Item> build() {
-            return UIInternal.get()._Components_tableColumBuild(myName, myConverter);
+            return UIInternal.get()._Components_tableColumnBuild(myName, myConverter);
         }
     }
 

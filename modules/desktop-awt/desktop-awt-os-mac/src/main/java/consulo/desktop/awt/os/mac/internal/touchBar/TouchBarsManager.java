@@ -157,7 +157,7 @@ final class TouchBarsManager {
 
                 TBPanel toShow = candidateActions.getTouchbar(0/*ourLastModifiersEx*/, true);
                 if (toShow instanceof TBPanelActionGroup && ((TBPanelActionGroup) toShow).updateAutoCloseAndCheck()) {
-                    // touchbar of component p is autoclosed, skip this candidate
+                    // touchbar of component p is auto-closed, skip this candidate
                     continue;
                 }
 
@@ -249,7 +249,7 @@ final class TouchBarsManager {
     }
 
     static synchronized void clearAll() {
-        LOG.debug("Clear all actions (disable touchbar suppoprt)");
+        LOG.debug("Clear all actions (disable touchbar support)");
 
         ourStacks.forEach((w, s) -> {
             NST.setTouchBar(w, null);

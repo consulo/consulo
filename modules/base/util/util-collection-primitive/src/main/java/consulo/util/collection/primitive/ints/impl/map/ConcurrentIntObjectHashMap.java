@@ -120,7 +120,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash
 
   /**
-   * Number of CPUS, to place bounds on some sizings
+   * Number of CPUs, to place bounds on some sizings
    */
   static final int NCPU = Runtime.getRuntime().availableProcessors();
 
@@ -1046,9 +1046,9 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   /**
    * Adds to count, and if table is too small and not already
    * resizing, initiates transfer. If already resizing, helps
-   * perform transfer if work is available.  Rechecks occupancy
+   * perform transfer if work is available. Rechecks occupancy
    * after a transfer to see if another resize is already needed
-   * because resizings are lagging additions.
+   * because resizes are lagging additions.
    *
    * @param x     the count to add
    * @param check if <0, don't check resize, if <= 1 only check if uncontended
@@ -1114,7 +1114,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
   }
 
   /**
-   * Tries to presize table to accommodate the given number of elements.
+   * Tries to pre-size table to accommodate the given number of elements.
    *
    * @param size number of elements (doesn't need to be perfectly accurate)
    */
@@ -2156,7 +2156,7 @@ public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> 
    * Normally, iteration proceeds bin-by-bin traversing lists.
    * However, if the table has been resized, then all future steps
    * must traverse both the bin at the current index as well as at
-   * (index + baseSize); and so on for further resizings. To
+   * (index + baseSize); and so on for further resizes. To
    * paranoically cope with potential sharing by users of iterators
    * across threads, iteration terminates if a bounds checks fails
    * for a table read.

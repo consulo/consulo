@@ -61,8 +61,8 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -882,7 +882,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         return !(document instanceof DocumentEx documentEx && documentEx.isInEventsHandling()) && !isInUncommittedSet(document);
     }
 
-    
     private static Document getTopLevelDocument(Document document) {
         return document instanceof DocumentWindow ? ((DocumentWindow) document).getDelegate() : document;
     }

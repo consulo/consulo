@@ -87,7 +87,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
+  public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
     return null;
   }
 

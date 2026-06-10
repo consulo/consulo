@@ -116,7 +116,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass) {
         return null;
     }
 

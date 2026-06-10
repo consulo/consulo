@@ -109,9 +109,9 @@ public class DFAEngine<E> {
 
                 if (count > limit || (System.nanoTime() - startTime) > TIME_LIMIT) {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Iteration count exceeded on worklist");
+                        LOG.debug("Iteration count exceeded on work-list");
                     }
-                    throw new DFALimitExceededException("Iteration count exceeded on worklist");
+                    throw new DFALimitExceededException("Iteration count exceeded on work-list");
                 }
             }
         }

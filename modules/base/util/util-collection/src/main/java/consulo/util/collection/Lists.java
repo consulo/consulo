@@ -56,8 +56,8 @@ public final class Lists {
         return list == null ? List.of() : list;
     }
 
-    public static <T> void weightSort(List<T> list, ToIntFunction<T> weighterFunc) {
-        quickSort(list, (o1, o2) -> weighterFunc.applyAsInt(o2) - weighterFunc.applyAsInt(o1));
+    public static <T> void weightSort(List<T> list, ToIntFunction<T> weigherFunc) {
+        quickSort(list, (o1, o2) -> weigherFunc.applyAsInt(o2) - weigherFunc.applyAsInt(o1));
     }
 
     @SafeVarargs

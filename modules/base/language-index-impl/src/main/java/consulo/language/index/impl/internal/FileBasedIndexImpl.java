@@ -84,10 +84,10 @@ import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.lang.ref.SoftReference;
@@ -123,7 +123,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private static final String CORRUPTION_MARKER_NAME = "corruption.marker";
     private static final ThreadLocal<Stack<DumbModeAccessType>> ourDumbModeAccessTypeStack = ThreadLocal.withInitial(Stack::new);
 
-    
     private final Application myApplication;
     
     private final NotificationService myNotificationService;
@@ -401,11 +400,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         initIndexStorage(extension, version, state);
     }
 
-    private static <K, V> void initIndexStorage(
-        FileBasedIndexExtension<K, V> extension,
-        int version,
-        IndexConfiguration state
-    ) throws IOException {
+    private static <K, V> void initIndexStorage(FileBasedIndexExtension<K, V> extension, int version, IndexConfiguration state)
+        throws IOException {
         VfsAwareMapIndexStorage<K, V> storage = null;
         ID<K, V> name = extension.getName();
         boolean contentHashesEnumeratorOk = false;
@@ -677,7 +673,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Override
-    
     @RequiredReadAction
     public <K> Collection<K> getAllKeys(ID<K, ?> indexId, Project project) {
         Set<K> allKeys = new HashSet<>();
@@ -698,12 +693,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
     @Override
     @RequiredReadAction
-    public <K> boolean processAllKeys(
-        ID<K, ?> indexId,
-        Predicate<? super K> processor,
-        SearchScope scope,
-        @Nullable IdFilter idFilter
-    ) {
+    public <K> boolean processAllKeys(ID<K, ?> indexId, Predicate<? super K> processor, SearchScope scope, @Nullable IdFilter idFilter) {
         try {
             waitUntilIndicesAreInitialized();
             UpdatableIndex<K, ?, FileContent> index = getIndex(indexId);
@@ -860,7 +850,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         throw IndexNotReadyException.create(cause);
     }
 
-    
     @Override
     @RequiredReadAction
     public <K, V> List<V> getValues(ID<K, V> indexId, K dataKey, SearchScope filter) {
@@ -893,14 +882,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return values;
     }
 
-    
     @Override
     @RequiredReadAction
-    public <K, V> Collection<VirtualFile> getContainingFiles(
-        ID<K, V> indexId,
-        K dataKey,
-        SearchScope filter
-    ) {
+    public <K, V> Collection<VirtualFile> getContainingFiles(ID<K, V> indexId, K dataKey, SearchScope filter) {
         Set<VirtualFile> files = new HashSet<>();
         processValuesInScope(
             indexId,
@@ -967,12 +951,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
      * to this project.
      */
     @RequiredReadAction
-    public <K, V> boolean processAllValues(
-        ID<K, V> indexId,
-        K key,
-        Project project,
-        IdValueProcessor<? super V> processor
-    ) {
+    public <K, V> boolean processAllValues(ID<K, V> indexId, K key, Project project, IdValueProcessor<? super V> processor) {
         return processValueIterator(
             indexId,
             key,
@@ -1266,7 +1245,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         @Nullable Predicate<? super V> valueChecker,
         @Nullable ProjectIndexableFilesFilter projectFilesFilter
     ) {
-        ThrowableFunction<UpdatableIndex<K, V, FileContent>, IntSet, StorageException> convertor =
+        ThrowableFunction<UpdatableIndex<K, V, FileContent>, IntSet, StorageException> converter =
             index -> InvertedIndexUtil.collectInputIdsContainingAllKeys(
                 index,
                 dataKeys,
@@ -1278,7 +1257,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 projectFilesFilter == null ? null : projectFilesFilter::containsFileId
             );
 
-        return processExceptions(indexId, null, filter, convertor);
+        return processExceptions(indexId, null, filter, converter);
     }
 
     private static boolean processVirtualFiles(
@@ -1515,7 +1494,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         Project project,
         VirtualFile vFile
     ) {
-        PsiFile dominantContentFile = project == null ? null : findLatestKnownPsiForUncomittedDocument(document, project);
+        PsiFile dominantContentFile = project == null ? null : findLatestKnownPsiForUncommittedDocument(document, project);
 
         DocumentContent content;
         if (dominantContentFile != null && dominantContentFile.getViewProvider()
@@ -2356,7 +2335,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return IndexInfrastructure.findFileById((PersistentFS) ManagingFS.getInstance(), id);
     }
 
-    private static @Nullable PsiFile findLatestKnownPsiForUncomittedDocument(Document doc, Project project) {
+    private static @Nullable PsiFile findLatestKnownPsiForUncommittedDocument(Document doc, Project project) {
         return PsiDocumentManager.getInstance(project).getCachedPsiFile(doc);
     }
 

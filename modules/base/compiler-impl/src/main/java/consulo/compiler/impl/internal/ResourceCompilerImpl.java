@@ -242,7 +242,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         }
 
         public String getSourceFileUrl() {
-            // do not use mySourseFile.getUrl() directly as it requires read action
+            // do not use mySourceFile.getUrl() directly as it requires read action
             return VirtualFileManager.constructUrl(mySourceFile.getFileSystem().getProtocol(), myFromPath);
         }
     }

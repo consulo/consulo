@@ -1017,7 +1017,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * resizing, initiates transfer. If already resizing, helps
    * perform transfer if work is available.  Rechecks occupancy
    * after a transfer to see if another resize is already needed
-   * because resizings are lagging additions.
+   * because resizes are lagging additions.
    *
    * @param x     the count to add
    * @param check if <0, don't check resize, if <= 1 only check if uncontended
@@ -1083,7 +1083,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   }
 
   /**
-   * Tries to presize table to accommodate the given number of elements.
+   * Tries to pre-size table to accommodate the given number of elements.
    *
    * @param size number of elements (doesn't need to be perfectly accurate)
    */

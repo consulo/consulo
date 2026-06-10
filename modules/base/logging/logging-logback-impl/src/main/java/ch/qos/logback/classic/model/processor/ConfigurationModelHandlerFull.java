@@ -73,7 +73,7 @@ public class ConfigurationModelHandlerFull extends  ConfigurationModelHandler {
 
             ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(rocTask,
                     duration.getMilliseconds(), duration.getMilliseconds(), TimeUnit.MILLISECONDS);
-            rocTask.setScheduredFuture(scheduledFuture);
+            rocTask.setScheduledFuture(scheduledFuture);
             context.addScheduledFuture(scheduledFuture);
         }
     }

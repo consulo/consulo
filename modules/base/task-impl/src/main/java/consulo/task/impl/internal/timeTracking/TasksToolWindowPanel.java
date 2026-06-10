@@ -140,7 +140,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
         if (timeManagementExist()) {
             group.add(
-                new AnAction("Post work item to bugtracker", "Post work item to bugtracker", PlatformIconGroup.actionsExport()) {
+                new AnAction("Post work item to bug-tracker", "Post work item to bug-tracker", PlatformIconGroup.actionsExport()) {
                     @Override
                     @RequiredUIAccess
                     public void actionPerformed(AnActionEvent e) {

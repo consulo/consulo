@@ -29,7 +29,6 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -55,13 +54,10 @@ public abstract class CompilerManager {
 
     public abstract boolean isCompilationActive();
 
-    
     public abstract Collection<FileType> getRegisteredInputTypes(TranslatingCompiler compiler);
 
-    
     public abstract Collection<FileType> getRegisteredOutputTypes(TranslatingCompiler compiler);
 
-    
     @Deprecated
     @DeprecationInfo("Use Compiler extension point")
     public abstract Compiler[] getAllCompilers();
@@ -221,18 +217,16 @@ public abstract class CompilerManager {
     public abstract ExcludedEntriesConfiguration getExcludedEntriesConfiguration();
 
     /*
-     * Convetience methods for creating frequently-used compile scopes
+     * Convenience methods for creating frequently-used compile scopes
      */
     
     public abstract CompileScope createFilesCompileScope(VirtualFile[] files);
 
-    
     @RequiredReadAction
     public CompileScope createProjectCompileScope() {
         return createProjectCompileScope(true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createProjectCompileScope(boolean includeTestScope);
 
@@ -242,7 +236,6 @@ public abstract class CompilerManager {
         return createModuleCompileScope(module, includeDependentModules, true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createModuleCompileScope(
         Module module,
@@ -256,7 +249,6 @@ public abstract class CompilerManager {
         return createModulesCompileScope(modules, includeDependentModules, true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createModulesCompileScope(
         Module[] modules,
@@ -264,7 +256,6 @@ public abstract class CompilerManager {
         boolean includeTestScope
     );
 
-    
     @RequiredReadAction
     public CompileScope createModuleGroupCompileScope(
         Project project,
@@ -274,7 +265,6 @@ public abstract class CompilerManager {
         return createModuleGroupCompileScope(project, modules, includeDependentModules, true);
     }
 
-    
     @RequiredReadAction
     public abstract CompileScope createModuleGroupCompileScope(
         Project project,

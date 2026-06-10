@@ -479,14 +479,14 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
             return myState;
         }
 
-        public void setState(State newState, GeneralIdBasedToSMTRunnerEventsConvertor convertor) {
+        public void setState(State newState, GeneralIdBasedToSMTRunnerEventsConvertor converter) {
             // allowed sequences: NOT_RUNNING -> RUNNING or IGNORED; RUNNING -> FINISHED, FAILED or IGNORED; FINISHED <-> FAILED; IGNORED -> FINISHED
             if (myState == State.NOT_RUNNING && newState != State.RUNNING && newState != State.IGNORED ||
                 myState == State.RUNNING && newState != State.FINISHED && newState != State.FAILED && newState != State.IGNORED ||
                 myState == State.FINISHED && newState != State.FAILED ||
                 myState == State.FAILED && newState != State.FINISHED ||
                 myState == State.IGNORED && newState != State.FINISHED) {
-                convertor.logProblem("Illegal state change [" + myState + " -> " + newState + "]: " + toString(), false);
+                converter.logProblem("Illegal state change [" + myState + " -> " + newState + "]: " + toString(), false);
             }
 
             if (myState.ordinal() < newState.ordinal()) {
