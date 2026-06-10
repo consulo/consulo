@@ -26,11 +26,11 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.AppliedSplitPatchHunk;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.HunkStatus;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.jspecify.annotations.Nullable;
 
 public class PatchChangeBuilder {
   
@@ -38,7 +38,7 @@ public class PatchChangeBuilder {
   
   private final List<Hunk> myHunks = new ArrayList<>();
   
-  private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
+  private final LineNumberConvertor.Builder myConverter = new LineNumberConvertor.Builder();
   
   private final IntList myChangedLines = IntLists.newArrayList();
 
@@ -92,8 +92,8 @@ public class PatchChangeBuilder {
       appendLines(hunk.getInsertedLines());
       int hunkEnd = totalLines;
 
-      myConvertor.put1(deletion, beforeRange.start + contextBefore.size(), insertion - deletion);
-      myConvertor.put2(insertion, afterRange.start + contextBefore.size(), hunkEnd - insertion);
+      myConverter.put1(deletion, beforeRange.start + contextBefore.size(), insertion - deletion);
+      myConverter.put2(insertion, afterRange.start + contextBefore.size(), hunkEnd - insertion);
 
       addContext(contextAfter, beforeRange.end - contextAfter.size(), afterRange.end - contextAfter.size());
       lastBeforeLine = beforeRange.end - 1;
@@ -106,8 +106,8 @@ public class PatchChangeBuilder {
   }
 
   private void addContext(List<String> context, int beforeLineNumber, int afterLineNumber) {
-    myConvertor.put1(totalLines, beforeLineNumber, context.size());
-    myConvertor.put2(totalLines, afterLineNumber, context.size());
+    myConverter.put1(totalLines, beforeLineNumber, context.size());
+    myConverter.put2(totalLines, afterLineNumber, context.size());
     appendLines(context);
   }
 
@@ -140,7 +140,7 @@ public class PatchChangeBuilder {
 
   
   public LineNumberConvertor getLineConvertor() {
-    return myConvertor.build();
+    return myConverter.build();
   }
 
   

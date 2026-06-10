@@ -22,8 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.util.concurrent.AtomicFieldUpdater;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountedCompleter;
@@ -35,7 +35,7 @@ import java.util.function.Predicate;
  * The series of splits lead to linked list of forked sub tasks, each of which is a CountedCompleter of its own,
  * having this task as its parent.
  * After the first pass on the array, this task attempts to steal work from the recently forked off sub tasks,
- * by traversing the linked subtasks list, unforking each subtask and calling execAndForkSubTasks() on each recursively.
+ * by traversing the linked subtasks list, un-forking each subtask and calling execAndForkSubTasks() on each recursively.
  * After that, the task completes itself.
  * The process of completing traverses task parent hierarchy, decrementing each pending count until it either
  * decrements not-zero pending count and stops or
@@ -221,7 +221,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     }
   }
 
-  // tries to unfork, execute and re-link subtasks
+  // tries to un-fork, execute and re-link subtasks
   private Throwable tryToExecAllList() {
     ApplierCompleter<T> right = this;
     Throwable result = throwable;

@@ -17,7 +17,7 @@ public class mxMultiplicity {
   protected String type;
 
   /**
-   * Optional string that specifies the attributename to be passed to
+   * Optional string that specifies the attribute-name to be passed to
    * mxCell.is to check if the rule applies to a cell.
    */
   protected String attr;

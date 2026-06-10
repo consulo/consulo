@@ -21,7 +21,6 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -31,7 +30,7 @@ import static consulo.util.concurrent.coroutine.step.CodeExecution.consume;
 /********************************************************************
  * A {@link Coroutine} step that loops over another step (which may be a
  * subroutine) as long as a predicate yields TRUE for the input value and/or the
- * current continuation. The looped step get's the loop input value as it's
+ * current continuation. The looped step gets the loop input value as it's
  * input on the first iteration and must return a value of the same type which
  * will then be used to test the condition before the next loop run.
  *

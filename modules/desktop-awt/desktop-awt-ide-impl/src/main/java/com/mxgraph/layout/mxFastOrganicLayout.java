@@ -37,7 +37,7 @@ public class mxFastOrganicLayout extends mxGraphLayout {
 
   /**
    * The force constant by which the attractive forces are divided and the
-   * replusive forces are multiple by the square of. The value equates to the
+   * repulsive forces are multiple by the square of. The value equates to the
    * average radius there is of free space around each node. Default is 50.
    */
   protected double forceConstant = 50;
@@ -504,7 +504,7 @@ public class mxFastOrganicLayout extends mxGraphLayout {
     // force of the edge connecting them
     for (int i = 0; i < vertexArray.length; i++) {
       for (int k = 0; k < neighbours[i].length; k++) {
-        // Get the index of the othe cell in the vertex array
+        // Get the index of the other cell in the vertex array
         int j = neighbours[i][k];
 
         // Do not proceed self-loops

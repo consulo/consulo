@@ -24,7 +24,6 @@ import consulo.navigation.Navigatable;
  * @author spleaner
  */
 public interface NavigatableFileEditor extends FileEditor {
-
   /**
    * Check whatever the editor can navigate to the given element
    *
@@ -34,9 +33,9 @@ public interface NavigatableFileEditor extends FileEditor {
   boolean canNavigateTo(Navigatable navigatable);
 
   /**
-   * Navigate editor to the given navigatable if {@link #canNavigateTo(Navigatable)} is true
+   * Navigate editor to the given navigable if {@link #canNavigateTo(Navigatable)} is true
    *
-   * @param navigatable navigation target
+   * @param navigable navigation target
    */
-  void navigateTo(Navigatable navigatable);
+  void navigateTo(Navigatable navigable);
 }

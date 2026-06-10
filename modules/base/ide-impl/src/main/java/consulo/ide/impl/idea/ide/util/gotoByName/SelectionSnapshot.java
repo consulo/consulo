@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * ffrom kotlin
+ * From kotlin
  */
 public class SelectionSnapshot {
   private final String pattern;
@@ -30,7 +30,6 @@ public class SelectionSnapshot {
     this.chosenElements = chosenElements;
   }
 
-  
   public Set<Object> getChosenElements() {
     return chosenElements;
   }

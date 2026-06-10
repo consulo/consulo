@@ -17,7 +17,7 @@ import consulo.language.ast.IElementType;
  * that will create the custom storage.
  * <p>
  * As an example, see {@link org.jetbrains.plugins.textmate.language.syntax.lexer.TextMateHighlightingLexer},
- * that lexes files with unregistered (whitout index) element types and
+ * that lexes files with unregistered (without index) element types and
  * its data storage ({@link org.jetbrains.plugins.textmate.language.syntax.lexer.TextMateLexerDataStorage}
  * serializes/deserializes them to/from strings.
  *

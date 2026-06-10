@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Baseclass for all timer-based animations. Fires mxEvent.DONE when the
+ * Base class for all timer-based animations. Fires mxEvent.DONE when the
  * stopAnimation method is called. Implement updateAnimation for the
  * actual animation or listen to mxEvent.EXECUTE.
  */
@@ -67,11 +67,9 @@ public class mxAnimation extends mxEventSource {
   public void startAnimation() {
     if (timer == null) {
       timer = new Timer(delay, new ActionListener() {
-
         public void actionPerformed(ActionEvent e) {
           updateAnimation();
         }
-
       });
 
       timer.start();
@@ -79,7 +77,7 @@ public class mxAnimation extends mxEventSource {
   }
 
   /**
-   * Hook for subclassers to implement the animation. Invoke stopAnimation
+   * Hook for subclasses to implement the animation. Invoke stopAnimation
    * when finished, startAnimation to resume. This is called whenever the
    * timer fires and fires an mxEvent.EXECUTE event with no properties.
    */
@@ -97,5 +95,4 @@ public class mxAnimation extends mxEventSource {
       fireEvent(new mxEventObject(mxEvent.DONE));
     }
   }
-
 }

@@ -17,8 +17,8 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
-import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
+import consulo.project.ui.notification.Notification;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
@@ -34,7 +34,7 @@ public class FailureImpl implements Failure {
   private final List<? extends Failure> myCauses;
   private final @Nullable Throwable myError;
   private final @Nullable Notification myNotification;
-  private final @Nullable Navigatable myNavigatable;
+  private final @Nullable Navigatable myNavigable;
 
   public FailureImpl(@BuildEventsNls.Message String message, Throwable error) {
     this(message, null, Collections.emptyList(), error, null, null);
@@ -43,8 +43,8 @@ public class FailureImpl implements Failure {
   public FailureImpl(@BuildEventsNls.Message String message,
                      Throwable error,
                      @Nullable Notification notification,
-                     @Nullable Navigatable navigatable) {
-    this(message, null, Collections.emptyList(), error, notification, navigatable);
+                     @Nullable Navigatable navigable) {
+    this(message, null, Collections.emptyList(), error, notification, navigable);
   }
 
   public FailureImpl(@BuildEventsNls.Message String message, @BuildEventsNls.Description String description) {
@@ -62,13 +62,13 @@ public class FailureImpl implements Failure {
                       List<? extends Failure> causes,
                       @Nullable Throwable error,
                       @Nullable Notification notification,
-                      @Nullable Navigatable navigatable) {
+                      @Nullable Navigatable navigable) {
     myMessage = message;
     myDescription = description;
     myCauses = causes;
     myError = error;
     myNotification = notification;
-    myNavigatable = navigatable;
+    myNavigable = navigable;
   }
 
   @Override
@@ -98,6 +98,6 @@ public class FailureImpl implements Failure {
 
   @Override
   public @Nullable Navigatable getNavigatable() {
-    return myNavigatable;
+    return myNavigable;
   }
 }

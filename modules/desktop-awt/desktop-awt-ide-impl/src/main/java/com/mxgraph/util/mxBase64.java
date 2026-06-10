@@ -32,7 +32,7 @@ import java.util.Arrays;
  * format types. The methods not used can simply be commented out.<br><br>
  * <p/>
  * There is also a "fast" version of all decode methods that works the same way as the normal ones, but
- * har a few demands on the decoded input. Normally though, these fast verions should be used if the source if
+ * har a few demands on the decoded input. Normally though, these fast versions should be used if the source if
  * the input is known and it hasn't bee tampered with.<br><br>
  * <p/>
  * If you find the code useful or you find a bug, please send me a note at base64 @ miginfocom . com.
@@ -107,7 +107,7 @@ public class mxBase64 {
 
     // Encode even 24-bits
     for (int s = 0, d = 0, cc = 0; s < eLen; ) {
-      // Copy next three bytes into lower 24 bits of int, paying attension to sign.
+      // Copy next three bytes into lower 24 bits of int, paying attention to sign.
       int i = (sArr[s++] & 0xff) << 16 | (sArr[s++] & 0xff) << 8 | (sArr[s++] & 0xff);
 
       // Encode the int into four chars
@@ -145,7 +145,7 @@ public class mxBase64 {
    *
    * @param sArr The source array. <code>null</code> or length 0 will return an empty array.
    * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
-   *         (including '=') isn't divideable by 4.  (I.e. definitely corrupted).
+   *         (including '=') isn't divisible by 4.  (I.e. definitely corrupted).
    */
   public final static byte[] decode(char[] sArr) {
     // Check special case
@@ -161,7 +161,7 @@ public class mxBase64 {
       if (IA[sArr[i]] < 0) sepCnt++;
     }
 
-    // Check so that legal chars (including '=') are evenly divideable by 4 as specified in RFC 2045.
+    // Check so that legal chars (including '=') are evenly divisible by 4 as specified in RFC 2045.
     if ((sLen - sepCnt) % 4 != 0) return null;
 
     int pad = 0;
@@ -196,7 +196,7 @@ public class mxBase64 {
   }
 
   /**
-   * Decodes a BASE64 encoded char array that is known to be resonably well formatted. The method is about twice as
+   * Decodes a BASE64 encoded char array that is known to be reasonably well formatted. The method is about twice as
    * fast as {@link #decode(char[])}. The preconditions are:<br>
    * + The array must have a line length of 76 chars OR no line separators at all (one line).<br>
    * + Line separator must be "\r\n", as specified in RFC 2045
@@ -285,7 +285,7 @@ public class mxBase64 {
 
     // Encode even 24-bits
     for (int s = 0, d = 0, cc = 0; s < eLen; ) {
-      // Copy next three bytes into lower 24 bits of int, paying attension to sign.
+      // Copy next three bytes into lower 24 bits of int, paying attention to sign.
       int i = (sArr[s++] & 0xff) << 16 | (sArr[s++] & 0xff) << 8 | (sArr[s++] & 0xff);
 
       // Encode the int into four chars
@@ -323,7 +323,7 @@ public class mxBase64 {
    *
    * @param sArr The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
    * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
-   *         (including '=') isn't divideable by 4. (I.e. definitely corrupted).
+   *         (including '=') isn't divisible by 4. (I.e. definitely corrupted).
    */
   public final static byte[] decode(byte[] sArr) {
     // Check special case
@@ -338,7 +338,7 @@ public class mxBase64 {
       if (IA[sArr[i] & 0xff] < 0) sepCnt++;
     }
 
-    // Check so that legal chars (including '=') are evenly divideable by 4 as specified in RFC 2045.
+    // Check so that legal chars (including '=') are evenly divisible by 4 as specified in RFC 2045.
     if ((sLen - sepCnt) % 4 != 0) return null;
 
     int pad = 0;
@@ -375,7 +375,7 @@ public class mxBase64 {
   }
 
   /**
-   * Decodes a BASE64 encoded byte array that is known to be resonably well formatted. The method is about twice as
+   * Decodes a BASE64 encoded byte array that is known to be reasonably well formatted. The method is about twice as
    * fast as {@link #decode(byte[])}. The preconditions are:<br>
    * + The array must have a line length of 76 chars OR no line separators at all (one line).<br>
    * + Line separator must be "\r\n", as specified in RFC 2045
@@ -465,7 +465,7 @@ public class mxBase64 {
    *
    * @param str The source string. <code>null</code> or length 0 will return an empty array.
    * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
-   *         (including '=') isn't divideable by 4.  (I.e. definitely corrupted).
+   *         (including '=') isn't divisible by 4.  (I.e. definitely corrupted).
    */
   public final static byte[] decode(String str) {
     // Check special case
@@ -481,7 +481,7 @@ public class mxBase64 {
       if (IA[str.charAt(i)] < 0) sepCnt++;
     }
 
-    // Check so that legal chars (including '=') are evenly divideable by 4 as specified in RFC 2045.
+    // Check so that legal chars (including '=') are evenly divisible by 4 as specified in RFC 2045.
     if ((sLen - sepCnt) % 4 != 0) return null;
 
     // Count '=' at end
@@ -517,7 +517,7 @@ public class mxBase64 {
   }
 
   /**
-   * Decodes a BASE64 encoded string that is known to be resonably well formatted. The method is about twice as
+   * Decodes a BASE64 encoded string that is known to be reasonably well formatted. The method is about twice as
    * fast as {@link #decode(String)}. The preconditions are:<br>
    * + The array must have a line length of 76 chars OR no line separators at all (one line).<br>
    * + Line separator must be "\r\n", as specified in RFC 2045

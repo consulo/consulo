@@ -35,10 +35,10 @@ public class mxPngTextDecoder {
     if (!stream.markSupported()) {
       stream = new BufferedInputStream(stream);
     }
-    DataInputStream distream = new DataInputStream(stream);
+    DataInputStream diStream = new DataInputStream(stream);
 
     try {
-      long magic = distream.readLong();
+      long magic = diStream.readLong();
       if (magic != 0x89504e470d0a1a0aL) {
         throw new RuntimeException("PNGImageDecoder0");
       }
@@ -50,11 +50,11 @@ public class mxPngTextDecoder {
 
     do {
       try {
-        int length = distream.readInt();
-        int type = distream.readInt();
+        int length = diStream.readInt();
+        int type = diStream.readInt();
         byte[] data = new byte[length];
-        distream.readFully(data);
-        distream.readInt(); // Move past the crc
+        diStream.readFully(data);
+        diStream.readInt(); // Move past the crc
 
         if (type == PNG_CHUNK_IEND) {
           return result;

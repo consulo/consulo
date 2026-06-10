@@ -35,7 +35,7 @@ public class VirtualFileRule implements GetDataRule<VirtualFile> {
 
   @Override
   public VirtualFile getData(DataProvider dataProvider) {
-    // Try to detect multiselection.
+    // Try to detect multi-selection.
     PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
     if (psiElements != null) {
       for (PsiElement elem : psiElements) {

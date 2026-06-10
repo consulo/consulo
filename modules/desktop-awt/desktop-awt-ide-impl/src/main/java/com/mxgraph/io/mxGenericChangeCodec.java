@@ -10,13 +10,10 @@ import java.util.Map;
 
 /**
  * Codec for mxChildChanges. This class is created and registered
- * dynamically at load time and used implicitely via mxCodec
+ * dynamically at load time and used implicitly via mxCodec
  * and the mxCodecRegistry.
  */
 public class mxGenericChangeCodec extends mxObjectCodec {
-  /**
-   *
-   */
   protected String fieldName;
 
   /**
@@ -29,8 +26,8 @@ public class mxGenericChangeCodec extends mxObjectCodec {
   /**
    * Constructs a new model codec for the given arguments.
    */
-  public mxGenericChangeCodec(Object template, String[] exclude, String[] idrefs, Map<String, String> mapping, String fieldName) {
-    super(template, exclude, idrefs, mapping);
+  public mxGenericChangeCodec(Object template, String[] exclude, String[] idRefs, Map<String, String> mapping, String fieldName) {
+    super(template, exclude, idRefs, mapping);
 
     this.fieldName = fieldName;
   }

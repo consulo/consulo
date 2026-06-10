@@ -43,9 +43,9 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -226,8 +226,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    public void navigateTo(Navigatable navigatable) {
-        ((OpenFileDescriptorImpl) navigatable).navigateIn(getEditor());
+    public void navigateTo(Navigatable navigable) {
+        ((OpenFileDescriptorImpl) navigable).navigateIn(getEditor());
     }
 
     @Override

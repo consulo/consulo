@@ -16,7 +16,6 @@
 package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestSuiteStarted;
-
 import org.jspecify.annotations.Nullable;
 
 public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
@@ -25,25 +24,25 @@ public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
         @Nullable String id,
         @Nullable String parentId,
         @Nullable String locationUrl,
-        @Nullable String metainfo,
+        @Nullable String metaInfo,
         @Nullable String nodeType,
         @Nullable String nodeArgs,
         boolean running
     ) {
-        super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
+        super(name, id, parentId, locationUrl, metaInfo, nodeType, nodeArgs, running);
     }
 
     public TestSuiteStartedEvent(TestSuiteStarted suiteStarted, @Nullable String locationUrl) {
         this(suiteStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(suiteStarted));
     }
 
-    public TestSuiteStartedEvent(TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+    public TestSuiteStartedEvent(TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metaInfo) {
         super(
             suiteStarted.getSuiteName(),
             TreeNodeEvent.getNodeId(suiteStarted),
             getParentNodeId(suiteStarted),
             locationUrl,
-            metainfo,
+            metaInfo,
             BaseStartedNodeEvent.getNodeType(suiteStarted),
             BaseStartedNodeEvent.getNodeArgs(suiteStarted),
             BaseStartedNodeEvent.isRunning(suiteStarted)
@@ -54,7 +53,7 @@ public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
         this(name, locationUrl, null);
     }
 
-    public TestSuiteStartedEvent(String name, @Nullable String locationUrl, @Nullable String metainfo) {
-        super(name, null, null, locationUrl, metainfo, null, null, true);
+    public TestSuiteStartedEvent(String name, @Nullable String locationUrl, @Nullable String metaInfo) {
+        super(name, null, null, locationUrl, metaInfo, null, null, true);
     }
 }

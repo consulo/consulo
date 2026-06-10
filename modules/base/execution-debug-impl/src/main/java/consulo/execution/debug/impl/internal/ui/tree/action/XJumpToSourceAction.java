@@ -33,8 +33,8 @@ public class XJumpToSourceAction extends XJumpToSourceActionBase {
     }
 
     @Override
-    protected void startComputingSourcePosition(XValue value, XNavigatable navigatable) {
-        value.computeSourcePosition(navigatable);
+    protected void startComputingSourcePosition(XValue value, XNavigatable navigable) {
+        value.computeSourcePosition(navigable);
     }
 
     @Override

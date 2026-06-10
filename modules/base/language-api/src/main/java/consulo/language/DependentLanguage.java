@@ -18,7 +18,7 @@ package consulo.language;
 import consulo.language.template.TemplateLanguage;
 
 /**
- * A language that isn't meant to be a file's toplevel language, and it can't be injected. Probably,
+ * A language that isn't meant to be a file's top-level language, and it can't be injected. Probably,
  * it's a language of some chameleon (see {@link ChameleonTrasformer})
  *
  * @see TemplateLanguage

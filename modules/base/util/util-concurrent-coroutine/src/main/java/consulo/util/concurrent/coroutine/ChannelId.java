@@ -30,7 +30,7 @@ import java.util.Objects;
  * <p>
  * Instances of a default implementation of string-based IDs can be created
  * through the generic factory method {@link #channel(String, Class)}. Please
- * check the method comment for informations about the constraints imposed by
+ * check the method comment for information about the constraints imposed by
  * that implementation. There are also some derived factory methods for common
  * datatypes like {@link #stringChannel(String)}.
  * </p>
@@ -38,7 +38,6 @@ import java.util.Objects;
  * @author eso
  */
 public interface ChannelId<T> {
-
 	/**
 	 * Creates a channel ID with a boolean datatype.
 	 *
@@ -54,7 +53,7 @@ public interface ChannelId<T> {
 	 * Creates a new channel ID from an identifier string. Channel IDs with the
 	 * same identifier string are considered equal and will therefore give
 	 * access to the same channel in a {@link CoroutineContext}. IDs aren't
-	 * cached so that invocations with the the same string and datatyoe will
+	 * cached so that invocations with the the same string and datatype will
 	 * return different instances which are considered equal (see below). To
 	 * avoid name clashes in complex scenarios the ID names should be selected
 	 * appropriately, e.g. by using namespaces. The implementation doesn't

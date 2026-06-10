@@ -19,7 +19,6 @@ package consulo.versionControlSystem.change;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,7 +28,7 @@ public interface ContentRevision {
   /**
    * Content of the revision. Implementers are encouraged to lazy implement this especially when it requires connection to the
    * version control server or something.
-   * Might return null in case if file path denotes a directory or content is impossible to retreive.
+   * Might return null in case if file path denotes a directory or content is impossible to retrieve.
    *
    * @return content of the revision
    * @throws VcsException in case when content retrieval fails

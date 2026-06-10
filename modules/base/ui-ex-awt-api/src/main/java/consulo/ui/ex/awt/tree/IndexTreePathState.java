@@ -21,11 +21,11 @@ import javax.swing.tree.TreePath;
 
 public class IndexTreePathState implements TreePathState {
   private final TreePath mySelectionPath;
-  private final int[] myIndicies;
+  private final int[] myIndices;
 
   public IndexTreePathState(TreePath path) {
     mySelectionPath = path;
-    myIndicies = pathToChildIndecies(path);
+    myIndices = pathToChildIndices(path);
   }
 
   public TreePath getRestoredPath() {
@@ -35,7 +35,7 @@ public class IndexTreePathState implements TreePathState {
     TreePath newSelection = TreeUtil.getPathFromRoot(aliveAncestor);
     int childrenLeft = aliveAncestor.getChildCount();
     if (childrenLeft != 0) {
-      int newSelectedChildIndex = Math.min(myIndicies[aliveIndex + 1], childrenLeft - 1);
+      int newSelectedChildIndex = Math.min(myIndices[aliveIndex + 1], childrenLeft - 1);
       newSelection = newSelection.pathByAddingChild(aliveAncestor.getChildAt(newSelectedChildIndex));
     }
     return newSelection;
@@ -54,7 +54,7 @@ public class IndexTreePathState implements TreePathState {
     return nodes.length - 1;
   }
 
-  private static int[] pathToChildIndecies(TreePath path) {
+  private static int[] pathToChildIndices(TreePath path) {
     int[] result = new int[path.getPathCount()];
     for (int i = 0; i < path.getPathCount(); i++) {
       TreeNode node = (TreeNode) path.getPathComponent(i);

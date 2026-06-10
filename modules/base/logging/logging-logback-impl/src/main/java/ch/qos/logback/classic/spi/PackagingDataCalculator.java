@@ -22,7 +22,7 @@ import java.util.Map;
 
 // import java.security.AccessControlException; import java.security.AccessController;import java.security.PrivilegedAction;
 /**
- * Given a classname locate associated PackageInfo (jar name, version name).
+ * Given a class-name locate associated PackageInfo (jar name, version name).
  *
  * @author James Strachan
  * @Ceki G&uuml;lc&uuml;
@@ -88,9 +88,9 @@ public class PackagingDataCalculator {
                 // + 1);
             }
             StackTraceElementProxy step = stepArray[stepFirstCommon + i];
-            String stepClassname = step.ste.getClassName();
+            String stepClassName = step.ste.getClassName();
 
-            if (callerClass != null && stepClassname.equals(callerClass.getName())) {
+            if (callerClass != null && stepClassName.equals(callerClass.getName())) {
                 // see also LBCLASSIC-263
                 lastExactClassLoader = callerClass.getClassLoader();
                 if (firsExactClassLoader == null) {

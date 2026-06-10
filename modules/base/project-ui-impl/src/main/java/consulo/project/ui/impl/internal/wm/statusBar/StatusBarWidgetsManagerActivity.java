@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.ui.impl.internal;
+package consulo.project.ui.impl.internal.wm.statusBar;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.internal.ProjectFrameAllocator;
 import consulo.project.startup.PostStartupActivity;
+import consulo.project.ui.wm.StatusBarWidgetsManager;
 import consulo.ui.UIAccess;
 
 /**
  * @author VISTALL
- * @since 2024-08-10
+ * @since 2024-08-08
  */
-@ExtensionImpl(order = "after InitToolWindows")
-public class IdeFrameInitializeActitivy implements PostStartupActivity, DumbAware {
+@ExtensionImpl(id = "StatusBarWidgetsManager", order = "after InitToolWindows")
+public class StatusBarWidgetsManagerActivity implements PostStartupActivity, DumbAware {
     @Override
     public void runActivity(Project project, UIAccess uiAccess) {
-        ProjectFrameAllocator allocator = project.getInstance(ProjectFrameAllocator.class);
+        StatusBarWidgetsManager statusBarWidgetsManager = project.getInstance(StatusBarWidgetsManager.class);
 
-        uiAccess.give(allocator::initializeFrame);
+        statusBarWidgetsManager.updateAllWidgets(uiAccess);
     }
 }

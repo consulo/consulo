@@ -14,12 +14,11 @@ import java.util.List;
 
 /**
  * Provides various edge styles to be used as the values for
- * mxConstants.STYLE_EDGE in a cell style. Alternatevly, the mxConstants.
+ * mxConstants.STYLE_EDGE in a cell style. Alternatively, the mxConstants.
  * EDGESTYLE_* constants can be used to reference an edge style via the
  * mxStyleRegistry.
  */
 public class mxEdgeStyle {
-
   /**
    * Defines the requirements for an edge style function.
    */
@@ -51,7 +50,6 @@ public class mxEdgeStyle {
    * schema diagrams).
    */
   public static mxEdgeStyleFunction EntityRelation = new mxEdgeStyleFunction() {
-
     /* (non-Javadoc)
      * @see com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction#apply(com.mxgraph.view.mxCellState, com.mxgraph.view.mxCellState, com.mxgraph.view.mxCellState, java.util.List, java.util.List)
      */
@@ -431,7 +429,7 @@ public class mxEdgeStyle {
      * @see com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction#apply(com.mxgraph.view.mxCellState, com.mxgraph.view.mxCellState, com.mxgraph.view.mxCellState, java.util.List, java.util.List)
      */
     public void apply(mxCellState state, mxCellState source, mxCellState target, List<mxPoint> hints, List<mxPoint> result) {
-      // Creates array of all way- and terminalpoints
+      // Creates array of all way- and terminal points
       List<mxPoint> pts = state.absolutePoints;
       boolean horizontal = true;
       mxPoint hint = null;
@@ -593,7 +591,7 @@ public class mxEdgeStyle {
       {1057, 2561, 1090, 514, 2568, 2308}}};
 
   /**
-   * Overriden routing patterns for orthogonal connections
+   * Overridden routing patterns for orthogonal connections
    * where the vertices have
    */
   public static int[][][] inlineRoutePatterns =
@@ -876,7 +874,6 @@ public class mxEdgeStyle {
         int[] routePattern = getRoutePattern(dir, quad, dx, dy);
 
         if (dx == 0 || dy == 0) {
-
         }
 
         wayPoints1[0][0] = geo[0][0];

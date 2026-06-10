@@ -21,7 +21,6 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.StatePreservingNavigatable;
 
 public class OpenSourceUtil {
-
   private OpenSourceUtil() {
   }
 
@@ -34,33 +33,33 @@ public class OpenSourceUtil {
   }
 
   /**
-   * Equivalent to navigate(true, navigatables)
+   * Equivalent to navigate(true, navigables)
    *
-   * @param navigatables elements navigate to
+   * @param navigables elements navigate to
    *
    * @see OpenSourceUtil#navigate(boolean, Navigatable...)
    */
-  public static void navigate(Navigatable...navigatables) {
-    navigate(true, navigatables);
+  public static void navigate(Navigatable... navigables) {
+    navigate(true, navigables);
   }
 
-  public static void navigate(boolean requestFocus, Navigatable...navigatables) {
-    if (navigatables == null) return;
-    for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
-        navigatable.navigate(requestFocus);
+  public static void navigate(boolean requestFocus, Navigatable... navigables) {
+    if (navigables == null) return;
+    for (Navigatable navigable : navigables) {
+      if (navigable.canNavigate()) {
+        navigable.navigate(requestFocus);
       }
     }
   }
 
-  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable...navigatables) {
-    if (navigatables == null) return;
-    for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
-        if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable) {
-          ((StatePreservingNavigatable)navigatable).navigate(requestFocus, true);
+  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable... navigables) {
+    if (navigables == null) return;
+    for (Navigatable navigable : navigables) {
+      if (navigable.canNavigate()) {
+        if (tryNotToScroll && navigable instanceof StatePreservingNavigatable) {
+          ((StatePreservingNavigatable)navigable).navigate(requestFocus, true);
         } else {
-          navigatable.navigate(requestFocus);
+          navigable.navigate(requestFocus);
         }
       }
     }

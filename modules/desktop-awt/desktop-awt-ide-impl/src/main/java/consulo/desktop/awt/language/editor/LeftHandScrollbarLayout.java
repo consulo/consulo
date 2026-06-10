@@ -27,7 +27,7 @@ import java.awt.*;
  */
 public class LeftHandScrollbarLayout extends ScrollPaneLayout {
   /**
-   * The scrollpane's viewport child.
+   * The scroll-pane's viewport child.
    * Default is an empty <code>JViewport</code>.
    * 
    * @see javax.swing.JScrollPane#setViewport
@@ -35,7 +35,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
   protected JViewport viewport;
 
   /**
-   * The scrollpane's vertical scrollbar child.
+   * The scroll-pane's vertical scrollbar child.
    * Default is a <code>JScrollBar</code>.
    * 
    * @see javax.swing.JScrollPane#setVerticalScrollBar
@@ -43,7 +43,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
   protected JScrollBar vsb;
 
   /**
-   * The scrollpane's horizontal scrollbar child.
+   * The scroll-pane's horizontal scrollbar child.
    * Default is a <code>JScrollBar</code>.
    * 
    * @see javax.swing.JScrollPane#setHorizontalScrollBar
@@ -128,7 +128,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
    *         // do some extra work here ...
    *     }
    * };
-   * scrollpane.setLayout(mySPLayout):
+   * scrollPane.setLayout(mySPLayout):
    * </pre>
    */
   @Override
@@ -311,7 +311,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
    * Sets the horizontal scrollbar-display policy.
    * The options are:<ul>
    * <li>JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-   * <li>JScrollPane.HOTRIZONTAL_SCROLLBAR_NEVER
+   * <li>JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
    * <li>JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
    * </ul>
    * Note: Applications should use the <code>JScrollPane</code> version
@@ -544,7 +544,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
 
   /**
    * The minimum size of a <code>ScrollPane</code> is the size of the insets
-   * plus minimum size of the viewport, plus the scrollpane's
+   * plus minimum size of the viewport, plus the scroll-pane's
    * viewportBorder insets, plus the minimum size
    * of the visible headers, plus the minimum size of the
    * scrollbars whose displayPolicy isn't NEVER.
@@ -620,7 +620,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
   }
 
   /**
-   * Lays out the scrollpane. The positioning of components depends on
+   * Lays out the scroll-pane. The positioning of components depends on
    * the following constraints:
    * <ul>
    * <li> The row header, if present and visible, gets its preferred
@@ -637,7 +637,7 @@ public class LeftHandScrollbarLayout extends ScrollPaneLayout {
    * <li> If a horizontal scrollbar is needed, it is treated like the
    * column header (see the paragraph above regarding the vertical scrollbar).
    * <p/>
-   * <li> If the scrollpane has a non-<code>null</code>
+   * <li> If the scroll-pane has a non-<code>null</code>
    * <code>viewportBorder</code>, then space is allocated for that.
    * <p/>
    * <li> The viewport gets the space available after accounting for
