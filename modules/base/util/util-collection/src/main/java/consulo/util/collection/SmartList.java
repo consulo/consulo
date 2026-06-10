@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIteratorBase;
 import org.jspecify.annotations.Nullable;
 
@@ -210,7 +209,7 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
     @Override
     public Iterator<E> iterator() {
         if (mySize == 0) {
-            return EmptyIterator.getInstance();
+            return Collections.emptyIterator();
         }
         if (mySize == 1) {
             return new SingletonIterator();
@@ -303,7 +302,7 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(@Nullable Object o) {
         if (mySize == 0) {
             return -1;
         }
@@ -340,17 +339,17 @@ public class SmartList<E extends @Nullable Object> extends AbstractList<E> imple
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }
 
-        if (o instanceof SmartList) {
-            return equalsWithSmartList((SmartList) o);
+        if (o instanceof SmartList smartList) {
+            return equalsWithSmartList(smartList);
         }
 
-        if (o instanceof ArrayList) {
-            return equalsWithList((ArrayList) o);
+        if (o instanceof ArrayList arrayList) {
+            return equalsWithList(arrayList);
         }
 
         return super.equals(o);

@@ -15,8 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.util.collection.impl.EmptyIterator;
-
 import java.util.Iterator;
 import java.util.PrimitiveIterator;
 import java.util.function.Function;
@@ -27,10 +25,6 @@ import java.util.function.IntFunction;
  * @since 2022-03-13
  */
 public final class Iterators {
-    public static <T> Iterator<T> empty() {
-        return EmptyIterator.getInstance();
-    }
-
     public static <U> Iterator<U> mapIterator(PrimitiveIterator.OfInt iterator, IntFunction<? extends U> mapper) {
         return new Iterator<>() {
             @Override

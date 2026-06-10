@@ -7,7 +7,6 @@ import consulo.language.ast.*;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.collection.FilteredTraverserBase;
-import consulo.util.collection.Iterators;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -15,6 +14,7 @@ import consulo.util.lang.ThreadLocalCachedValue;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
@@ -363,7 +363,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
                     SimpleReference<T[]> ref = SimpleReference.create();
                     int count = structure.getChildren(node, ref);
                     if (count == 0) {
-                        return Iterators.empty();
+                        return Collections.emptyIterator();
                     }
                     T[] array = ref.requiredGet();
                     LinkedList<T> list = new LinkedList<>();

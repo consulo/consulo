@@ -15,16 +15,14 @@
  */
 package consulo.virtualFileSystem.archive;
 
-import consulo.util.collection.Iterators;
-
 import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Iterator;
 
 public interface ArchiveFile {
   ArchiveFile EMPTY = new ArchiveFile() {
-    
     @Override
     public String getName() {
       throw new UnsupportedOperationException();
@@ -40,10 +38,9 @@ public interface ArchiveFile {
       return null;
     }
 
-    
     @Override
     public Iterator<? extends ArchiveEntry> entries() {
-      return Iterators.empty();
+`      return Collections.emptyIterator();
     }
 
     @Override
@@ -53,18 +50,15 @@ public interface ArchiveFile {
 
     @Override
     public void close() {
-
     }
   };
 
-  
   String getName();
 
   @Nullable ArchiveEntry getEntry(String name);
 
   @Nullable InputStream getInputStream(ArchiveEntry entry) throws IOException;
 
-  
   Iterator<? extends ArchiveEntry> entries();
 
   int getSize();

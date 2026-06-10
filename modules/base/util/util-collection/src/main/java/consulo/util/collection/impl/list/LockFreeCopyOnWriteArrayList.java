@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.util.collection.impl.list;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ConcurrentList;
-import consulo.util.collection.impl.EmptyIterator;
-import consulo.util.collection.impl.EmptyListIterator;
-
 import org.jspecify.annotations.Nullable;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.*;
@@ -89,7 +86,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
   /**
    * Test for equality, coping with nulls.
    */
-  private static boolean eq(Object o1, Object o2) {
+  private static boolean eq(@Nullable Object o1, @Nullable Object o2) {
     return o1 == null ? o2 == null : o1.equals(o2);
   }
 
@@ -103,7 +100,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    * @param fence    one past last index to search
    * @return index of element, or -1 if absent
    */
-  private static int indexOf(Object o, Object[] elements, int index, int fence) {
+  private static int indexOf(@Nullable Object o, Object[] elements, int index, int fence) {
     if (o == null) {
       for (int i = index; i < fence; i++) {
         if (elements[i] == null) {
@@ -129,7 +126,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    * @param index    first index to search
    * @return index of element, or -1 if absent
    */
-  private static int lastIndexOf(Object o, Object[] elements, int index) {
+  private static int lastIndexOf(@Nullable Object o, Object[] elements, int index) {
     if (o == null) {
       for (int i = index; i >= 0; i--) {
         if (elements[i] == null) {
@@ -815,6 +812,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    *
    * @return a string representation of this list
    */
+  @Override
   public String toString() {
     return Arrays.toString(array);
   }
@@ -834,6 +832,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    * @param o the object to be compared for equality with this list
    * @return {@code true} if the specified object is equal to this list
    */
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
@@ -859,6 +858,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
    *
    * @return the hash code value for this list
    */
+  @Override
   public int hashCode() {
     int hashCode = 1;
     for (Object obj : array) {
@@ -880,7 +880,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
   @Override
   public Iterator<E> iterator() {
     Object[] elements = array;
-    if (elements.length == 0) return EmptyIterator.getInstance();
+    if (elements.length == 0) return Collections.emptyIterator();
 
     return new COWIterator(elements, 0);
   }
@@ -916,7 +916,7 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
       throw new IndexOutOfBoundsException("Index: " + index);
     }
 
-    return elements.length == 0 ? EmptyListIterator.<E>getInstance() : new COWIterator(elements, index);
+    return elements.length == 0 ? Collections.emptyListIterator() : new COWIterator(elements, index);
   }
 
   private class COWIterator implements ListIterator<E> {
