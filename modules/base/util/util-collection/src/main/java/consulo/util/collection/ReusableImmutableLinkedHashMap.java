@@ -15,10 +15,10 @@
  */
 package consulo.util.collection;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.impl.map.ReusableLinkedHashtable;
 import consulo.util.collection.impl.map.ReusableLinkedHashtableUser;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -123,7 +123,6 @@ public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> exten
      * @param key a key to exclude from the result
      * @return an {@code ImmutableLinkedHashMap} which contains all the entries of the current map except the supplied key
      */
-    @Contract(pure = true)
     @Override
     public ReusableImmutableLinkedHashMap<K, V> without(K key) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;
@@ -164,7 +163,6 @@ public class ReusableImmutableLinkedHashMap<K, V extends @Nullable Object> exten
      * @param value a value to associate with the key.
      * @return an {@code ImmutableLinkedHashMap} which contains all the entries of the current map plus the supplied mapping.
      */
-    @Contract(pure = true)
     @Override
     public ReusableImmutableLinkedHashMap<K, V> with(K key, V value) {
         ReusableLinkedHashtable<K, V>.Range range = myRange;

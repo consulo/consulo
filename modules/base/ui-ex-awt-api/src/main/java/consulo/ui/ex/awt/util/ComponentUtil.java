@@ -2,9 +2,8 @@
 package consulo.ui.ex.awt.util;
 
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.Contract;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -75,7 +74,6 @@ public final class ComponentUtil {
    * @return a component of the specified type, or {@code null} if the search is failed
    * @see SwingUtilities#getAncestorOfClass
    */
-  @Contract(pure = true)
   public static <T> @Nullable T getParentOfType(Class<? extends T> type, Component component) {
     while (component != null) {
       if (type.isInstance(component)) {

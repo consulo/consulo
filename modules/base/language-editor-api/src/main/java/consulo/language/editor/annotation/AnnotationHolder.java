@@ -3,11 +3,10 @@ package consulo.language.editor.annotation;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -190,7 +189,6 @@ public interface AnnotationHolder {
         @Nullable String htmlTooltip
     );
 
-    
     AnnotationSession getCurrentAnnotationSession();
 
     boolean isBatchMode();
@@ -206,8 +204,6 @@ public interface AnnotationHolder {
      * visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)} or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newAnnotation(HighlightSeverity severity, LocalizeValue message) {
         return newOfSeverity(severity, message);
     }
@@ -224,8 +220,6 @@ public interface AnnotationHolder {
      * or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newOfSeverity(HighlightSeverity severity, LocalizeValue message) {
         throw new IllegalStateException("Please do not override AnnotationHolder, use the standard provided one instead");
     }
@@ -241,8 +235,6 @@ public interface AnnotationHolder {
      * or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newError(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.ERROR, message);
     }
@@ -258,8 +250,6 @@ public interface AnnotationHolder {
      * or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newWarn(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.WARNING, message);
     }
@@ -275,8 +265,6 @@ public interface AnnotationHolder {
      * or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newWeakWarn(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.WEAK_WARNING, message);
     }
@@ -292,8 +280,6 @@ public interface AnnotationHolder {
      * or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newInfo(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.INFORMATION, message);
     }
@@ -309,8 +295,6 @@ public interface AnnotationHolder {
      * visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)} or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     @Deprecated
     @DeprecationInfo("Use newOfSeverity(HighlightSeverity, LocalizeValue)")
     default AnnotationBuilder newAnnotation(HighlightSeverity severity, String message) {
@@ -327,8 +311,6 @@ public interface AnnotationHolder {
      * visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)} or similar method explicitly only if target element differs from current element.
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
-    @Contract(pure = true)
-    
     default AnnotationBuilder newSilentAnnotation(HighlightSeverity severity) {
         throw new IllegalStateException("Please do not override AnnotationHolder, use the standard provided one instead");
     }

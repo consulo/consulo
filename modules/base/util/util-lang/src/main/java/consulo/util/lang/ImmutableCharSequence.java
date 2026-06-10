@@ -15,8 +15,6 @@
  */
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
-
 public abstract class ImmutableCharSequence implements CharSequence {
 
     public static CharSequence asImmutable(CharSequence cs) {
@@ -30,7 +28,6 @@ public abstract class ImmutableCharSequence implements CharSequence {
         return cs instanceof CharSequenceSubSequence && isImmutable(((CharSequenceSubSequence) cs).getBaseSequence());
     }
 
-    @Contract(pure = true)
     public ImmutableCharSequence replace(int start, int end, CharSequence seq) {
         return delete(start, end).insert(start, seq);
     }

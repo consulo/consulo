@@ -1,8 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import org.jetbrains.annotations.Contract;
-
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.util.*;
 
@@ -15,19 +14,17 @@ public class Comparing {
   private Comparing() {
   }
 
-  @Contract(value = "null,!null -> false; !null,null -> false; null,null -> true", pure = true)
+  @Contract("null,!null -> false; !null,null -> false; null,null -> true")
   public static <T> boolean equal(@Nullable T arg1, @Nullable T arg2) {
     if (arg1 == arg2) return true;
     if (arg1 == null || arg2 == null) {
       return false;
     }
-    if (arg1 instanceof Object[] && arg2 instanceof Object[]) {
-      Object[] arr1 = (Object[])arg1;
-      Object[] arr2 = (Object[])arg2;
+    if (arg1 instanceof Object[] arr1 && arg2 instanceof Object[] arr2) {
       return Arrays.equals(arr1, arr2);
     }
-    if (arg1 instanceof CharSequence && arg2 instanceof CharSequence) {
-      return equal((CharSequence)arg1, (CharSequence)arg2, true);
+    if (arg1 instanceof CharSequence cs1 && arg2 instanceof CharSequence cs2) {
+      return equal(cs1, cs2, true);
     }
     return arg1.equals(arg2);
   }
@@ -40,22 +37,22 @@ public class Comparing {
     return Arrays.equals(arr1, arr2);
   }
 
-  @Contract(value = "null,!null -> false; !null,null -> false; null,null -> true", pure = true)
-  public static boolean equal(CharSequence s1, CharSequence s2) {
+  @Contract("null,!null -> false; !null,null -> false; null,null -> true")
+  public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2) {
     return StringUtil.equal(s1, s2, true);
   }
 
-  @Contract(value = "null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true", pure = true)
+  @Contract("null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true")
   public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
     return StringUtil.equal(s1, s2, caseSensitive);
   }
 
-  @Contract(value = "null,!null -> false; !null,null -> false; null,null -> true", pure = true)
+  @Contract("null,!null -> false; !null,null -> false; null,null -> true")
   public static boolean equal(@Nullable String arg1, @Nullable String arg2) {
     return arg1 == null ? arg2 == null : arg1.equals(arg2);
   }
 
-  @Contract(value = "null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true", pure = true)
+  @Contract("null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true")
   public static boolean equal(@Nullable String arg1, @Nullable String arg2, boolean caseSensitive) {
     return arg1 == null ? arg2 == null : caseSensitive ? arg1.equals(arg2) : arg1.equalsIgnoreCase(arg2);
   }

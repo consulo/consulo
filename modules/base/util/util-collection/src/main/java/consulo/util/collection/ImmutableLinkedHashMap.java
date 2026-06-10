@@ -15,9 +15,9 @@
  */
 package consulo.util.collection;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.impl.map.ReusableLinkedHashtable;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -108,7 +108,6 @@ public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends Abstr
      * @param key a key to exclude from the result
      * @return an {@code SimpleImmutableLinkedHashMap} which contains all the entries of the current map except the supplied key
      */
-    @Contract(pure = true)
     @Override
     public ImmutableLinkedHashMap<K, V> without(K key) {
         if (isEmpty()) {
@@ -141,7 +140,6 @@ public class ImmutableLinkedHashMap<K, V extends @Nullable Object> extends Abstr
      * @param value a value to associate with the key.
      * @return an {@code SimpleImmutableLinkedHashMap} which contains all the entries of the current map plus the supplied mapping.
      */
-    @Contract(pure = true)
     @Override
     public ImmutableLinkedHashMap<K, V> with(K key, V value) {
         if (isEmpty()) {

@@ -15,10 +15,10 @@
  */
 package consulo.util.lang.xml;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.internal.Verifier;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 
@@ -70,7 +70,6 @@ public class XmlStringUtil {
      * @param toIndex   an index where the text ends (excluded).
      * @return          the text with escapes.
      */
-    @Contract(pure = true)
     public static String escapeText(CharSequence value, int fromIndex, int toIndex) {
         if (!needsTextEscapes(value, fromIndex, toIndex)) {
             return value.subSequence(fromIndex, toIndex).toString();
@@ -90,7 +89,6 @@ public class XmlStringUtil {
      * @param builder a {@code StringBuilder} to append escaped text to.
      * @return        the {@code StringBuilder} from {@code builder} param after appending the text with escapes.
      */
-    @Contract(mutates = "param2")
     public static StringBuilder escapeText(CharSequence value, StringBuilder builder) {
         return escapeText(value, 0, value.length(), builder);
     }
@@ -109,7 +107,6 @@ public class XmlStringUtil {
      * @param builder   a {@code StringBuilder} to append escaped text to.
      * @return          the {@code StringBuilder} from {@code builder} param after appending the text with escapes.
      */
-    @Contract(mutates = "param4")
     public static StringBuilder escapeText(CharSequence value, int fromIndex, int toIndex, StringBuilder builder) {
         builder.ensureCapacity(builder.length() + toIndex - fromIndex);
         for (int i = fromIndex; i < toIndex; i++) {
@@ -157,7 +154,6 @@ public class XmlStringUtil {
      * @param quote     a character used to surround attribute value.
      * @return          the attribute value with escapes.
      */
-    @Contract(pure = true)
     public static String escapeAttr(CharSequence value, int fromIndex, int toIndex, char quote) {
         if (!needsAttrEscapes(value, fromIndex, toIndex, quote)) {
             return value.subSequence(fromIndex, toIndex).toString();
@@ -180,7 +176,6 @@ public class XmlStringUtil {
      * @param builder a {@code StringBuilder} to append escaped attribute value to.
      * @return        the {@code StringBuilder} from {@code builder} param after appending the attribute value with escapes.
      */
-    @Contract(mutates = "param3")
     public static StringBuilder escapeAttr(CharSequence value, char quote, StringBuilder builder) {
         return escapeAttr(value, 0, value.length(), quote, builder);
     }
@@ -202,7 +197,6 @@ public class XmlStringUtil {
      * @param builder   a {@code StringBuilder} to append escaped attribute value to.
      * @return          the {@code StringBuilder} from {@code builder} param after appending the attribute value with escapes.
      */
-    @Contract(mutates = "param5")
     public static StringBuilder escapeAttr(
         CharSequence value,
         int fromIndex,
@@ -238,17 +232,15 @@ public class XmlStringUtil {
         return builder;
     }
 
-    @Contract(pure = true)
     private static boolean needsTextEscapes(CharSequence value, int fromIndex, int toIndex) {
         return StringUtil.indexOfAny(value, "<>&", fromIndex, toIndex) >= 0;
     }
 
-    @Contract(pure = true)
     private static boolean needsAttrEscapes(CharSequence value, int fromIndex, int toIndex, char quote) {
         return StringUtil.indexOfAny(value, quote == '"' ? "\"\n\r&" : "'\n\r&", fromIndex, toIndex) >= 0;
     }
 
-    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @Contract("null -> null; !null -> !null")
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
     @SuppressWarnings("deprecation")
@@ -256,7 +248,7 @@ public class XmlStringUtil {
         return escapeString(str, false);
     }
 
-    @Contract(value = "null,_ -> null; !null,_ -> !null", pure = true)
+    @Contract("null,_ -> null; !null,_ -> !null")
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
     @SuppressWarnings("deprecation")
@@ -264,7 +256,7 @@ public class XmlStringUtil {
         return escapeString(str, escapeWhiteSpace, true);
     }
 
-    @Contract(value = "null,_,_ -> null; !null,_,_ -> !null", pure = true)
+    @Contract("null,_,_ -> null; !null,_,_ -> !null")
     @Deprecated
     @DeprecationInfo("Use #escapeText or #escapeAttr")
     @SuppressWarnings("deprecation")

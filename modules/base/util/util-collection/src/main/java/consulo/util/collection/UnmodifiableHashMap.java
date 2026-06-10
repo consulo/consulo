@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.collection;
 
-import org.jetbrains.annotations.Contract;
+import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -164,7 +164,6 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
      * @param key a key to exclude from the result
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map except the supplied key
      */
-    @Contract(pure = true)
     @Override
     public UnmodifiableHashMap<K, V> without(K key) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);
@@ -220,7 +219,6 @@ public final class UnmodifiableHashMap<K, V extends @Nullable Object> extends Ab
      * @param value a value to associate with the key
      * @return an {@code UnmodifiableHashMap} which contains all the entries as this map plus the supplied mapping.
      */
-    @Contract(pure = true)
     @Override
     public UnmodifiableHashMap<K, V> with(K key, @Nullable V value) {
         int pos = data.length == 0 ? -1 : tablePos(strategy, data, key);

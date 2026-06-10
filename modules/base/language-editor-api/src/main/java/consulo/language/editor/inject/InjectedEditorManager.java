@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inject;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Caret;
@@ -22,11 +23,10 @@ import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 /**
  * @author VISTALL
- * @since 20-Apr-22
+ * @since 2022-04-20
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedEditorManager {

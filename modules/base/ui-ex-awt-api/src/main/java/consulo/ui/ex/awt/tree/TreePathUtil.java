@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.tree;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;

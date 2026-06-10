@@ -18,7 +18,6 @@ package consulo.util.collection;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.*;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,47 +59,38 @@ public final class Maps {
         return cacheOrGet((Map<K, V>)map, key, defaultValue);
     }
 
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, 1f, map, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(int initialCapacity, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(initialCapacity, 1f, null, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(int initialCapacity, float loadFactor, HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(initialCapacity, loadFactor, null, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newHashMap(HashingStrategy<K> hashingStrategy) {
         return ourFactory.newHashMapWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, 1f, null, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> Map<K, V> newLinkedHashMap(HashingStrategy<K> hashingStrategy) {
         return new LinkedHashMap<>(hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentHashMap() {
         return new java.util.concurrent.ConcurrentHashMap<>();
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakValueHashMap() {
         return new ConcurrentWeakValueHashMap<>();
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftValueHashMap() {
         return new ConcurrentSoftValueHashMap<>();
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap(HashingStrategy<K> hashingStrategy) {
         return new ConcurrentWeakHashMap<>(hashingStrategy);
     }
@@ -110,7 +100,6 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newWeakValueHashMap() {
         return new WeakValueHashMap<>(HashingStrategy.<K>canonical());
     }
@@ -120,22 +109,18 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newWeakHashMap() {
         return newWeakHashMap(4);
     }
 
-    @Contract(value = "_ -> new", pure = true)
     public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity) {
         return newWeakHashMap(initialCapacity, 0.8f, HashingStrategy.canonical());
     }
 
-    @Contract(value = "_, _, _ -> new", pure = true)
     public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
         return ourFactory.<K, V>newWeakHashMap(initialCapacity, loadFactor, strategy);
     }
 
-    @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newWeakKeyWeakValueHashMap() {
         return new WeakKeyWeakValueHashMap<>(true);
     }
@@ -145,7 +130,6 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newSoftValueHashMap() {
         return new SoftValueHashMap<>(HashingStrategy.canonical());
     }
@@ -154,32 +138,26 @@ public final class Maps {
         return new WeakKeySoftValueHashMap<>();
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftHashMap() {
         return new ConcurrentSoftHashMap<>();
     }
 
-    @Contract(value = " -> new", pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap() {
         return new ConcurrentWeakHashMap<>(0.75f);
     }
 
-    @Contract(value = " -> new", pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakIdentityMap() {
         return new ConcurrentWeakHashMap<>(HashingStrategy.<K>identity());
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap() {
         return newConcurrentWeakKeyWeakValueHashMap(HashingStrategy.<K>canonical());
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap(HashingStrategy<K> strategy) {
         return new ConcurrentWeakKeyWeakValueHashMap<>(100, 0.75f, Runtime.getRuntime().availableProcessors(), strategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftHashMap(
         int initialCapacity,
         float loadFactor,
@@ -189,7 +167,6 @@ public final class Maps {
         return new ConcurrentSoftHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakHashMap(
         int initialCapacity,
         float loadFactor,
@@ -199,7 +176,6 @@ public final class Maps {
         return new ConcurrentWeakHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeySoftValueHashMap() {
         return newConcurrentWeakKeySoftValueHashMap(
             100,
@@ -209,7 +185,6 @@ public final class Maps {
         );
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeySoftValueHashMap(
         int initialCapacity,
         float loadFactor,
@@ -219,17 +194,14 @@ public final class Maps {
         return new ConcurrentWeakKeySoftValueHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
     }
 
-    @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(int initialCapacity) {
         return new java.util.concurrent.ConcurrentHashMap<>(initialCapacity);
     }
 
-    @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
         return new java.util.concurrent.ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
     }
 
-    @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(
         int initialCapacity,
         float loadFactor,
@@ -239,12 +211,10 @@ public final class Maps {
         return new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashStrategy);
     }
 
-    @Contract(pure = true)
     public static <T, V> ConcurrentMap<T, V> newConcurrentHashMap(HashingStrategy<T> hashStrategy) {
         return new ConcurrentHashMap<>(hashStrategy);
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap() {
         return new ConcurrentSoftKeySoftValueHashMap<>(
             100,
@@ -254,7 +224,6 @@ public final class Maps {
         );
     }
 
-    @Contract(pure = true)
     public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap(
         int initialCapacity,
         float loadFactor,
@@ -269,12 +238,10 @@ public final class Maps {
      * Null keys are NOT allowed
      * Null values are allowed
      */
-    @Contract(value = " -> new", pure = true)
     public static <K, V> Map<K, V> newSoftHashMap() {
         return newSoftHashMap(HashingStrategy.canonical());
     }
 
-    @Contract(value = "_ -> new", pure = true)
     public static <K, V> Map<K, V> newSoftHashMap(HashingStrategy<? super K> strategy) {
         return ourFactory.<K, V>newSoftHashMap(strategy);
     }
@@ -283,7 +250,6 @@ public final class Maps {
         ourFactory.trimToSize(map);
     }
 
-    @Contract(value = "_ -> new", pure = true)
     public static <K, V> Map<K, V> newLinkedHashMap(Predicate<Map<K, V>> removeEldestEntryFunc) {
         return new LinkedHashMap<>() {
             @Override
@@ -293,12 +259,10 @@ public final class Maps {
         };
     }
 
-    @Contract(pure = true)
     public static <K, V> Map<K, V> notNullize(@Nullable Map<K, V> map) {
         return map == null ? Collections.emptyMap() : map;
     }
 
-    @Contract(pure = true)
     public static <A, B> Map<B, A> reverseMap(Map<A, B> map) {
         Map<B, A> result = new HashMap<>();
         for (Map.Entry<A, B> entry : map.entrySet()) {
