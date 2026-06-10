@@ -48,7 +48,6 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -156,15 +155,12 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         myViewer.setDoubleClickHandler(getDoubleClickHandler());
     }
 
-    
     protected abstract DefaultTreeModel buildTreeModel(List<T> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten);
 
-    
     protected abstract List<T> getSelectedObjects(ChangesBrowserNode<T> node);
 
     protected abstract @Nullable T getLeadSelectedObject(ChangesBrowserNode node);
 
-    
     protected Runnable getDoubleClickHandler() {
         return this::showDiff;
     }
@@ -205,7 +201,6 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
     }
 
     @Override
-    
     public JScrollPane getViewerScrollPane() {
         return myViewerScrollPane;
     }
@@ -289,6 +284,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         }
     }
 
+    @RequiredUIAccess
     protected void showDiffForChanges(Change[] changesArray, int indexInSelection) {
         ShowDiffContext context = new ShowDiffContext(isInFrame() ? DiffDialogHints.FRAME : DiffDialogHints.MODAL);
 
@@ -309,6 +305,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         return ShowDiffAction.canShowDiff(myProject, getChangesSelection().getChanges());
     }
 
+    @RequiredUIAccess
     protected void showDiff() {
         ChangesSelection selection = getChangesSelection();
         List<Change> changes = selection.getChanges();
@@ -319,7 +316,6 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         afterDiffRefresh();
     }
 
-    
     protected ChangesSelection getChangesSelection() {
         Change leadSelection = ObjectUtil.tryCast(myViewer.getLeadSelection(), Change.class);
         List<Change> changes = getSelectedChanges();
@@ -369,7 +365,6 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         myViewer.setAlwaysExpandList(value);
     }
 
-    
     protected JComponent createToolbar() {
         DefaultActionGroup toolbarGroups = new DefaultActionGroup();
         myToolBarGroup = new DefaultActionGroup();
@@ -407,24 +402,19 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         toolBarGroup.add(myDiffAction);
     }
 
-    
     public Set<AbstractVcs> getAffectedVcses() {
         return ChangesUtil.getAffectedVcses(getCurrentDisplayedChanges(), myProject);
     }
 
-    
     public abstract List<Change> getCurrentIncludedChanges();
 
     @Override
-    
     public List<Change> getCurrentDisplayedChanges() {
         return mySelectedChangeList != null ? new ArrayList<>(mySelectedChangeList.getChanges()) : Collections.emptyList();
     }
 
-    
     public abstract List<T> getCurrentDisplayedObjects();
 
-    
     public List<VirtualFile> getIncludedUnversionedFiles() {
         return Collections.emptyList();
     }
@@ -464,13 +454,10 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
     }
 
     @Override
-    
     public abstract List<Change> getSelectedChanges();
 
-    
     public abstract List<Change> getAllChanges();
 
-    
     protected Stream<VirtualFile> getSelectedFiles() {
         return Stream.concat(
             getAfterRevisionsFiles(getSelectedChanges().stream()),
@@ -496,8 +483,6 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ty
         myViewer.setSelectionMode(mode);
     }
 
-    @Contract(pure = true)
-    
     protected static <T> List<Change> findChanges(Collection<T> items) {
         return ContainerUtil.findAll(items, Change.class);
     }

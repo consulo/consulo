@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.fragment;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
@@ -36,17 +37,13 @@ import consulo.diff.PrevNextDifferenceIterable;
 import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.LineFragment;
-import consulo.diff.internal.DiffLanguageUtil;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.action.AllLinesIterator;
 import consulo.diff.impl.internal.action.BufferedLineIterator;
 import consulo.diff.impl.internal.fragment.*;
 import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
-import consulo.diff.internal.DiffImplUtil;
+import consulo.diff.internal.*;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
-import consulo.diff.internal.HighlightPolicy;
-import consulo.diff.internal.IgnorePolicy;
-import consulo.diff.internal.LineNumberConvertor;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.old.LineTokenizerOld;
 import consulo.diff.request.ContentDiffRequest;
@@ -78,7 +75,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.util.*;
@@ -89,26 +85,22 @@ import static consulo.diff.internal.DiffImplUtil.getLinesContent;
 public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     public static final Logger LOG = Logger.getInstance(UnifiedDiffViewer.class);
 
-    
     protected final EditorEx myEditor;
-    
+
     protected final Document myDocument;
-    
+
     private final UnifiedDiffPanel myPanel;
 
-    
     private final SetEditorSettingsAction myEditorSettingsAction;
-    
+
     private final PrevNextDifferenceIterable myPrevNextDifferenceIterable;
-    
+
     private final MyStatusPanel myStatusPanel;
 
-    
     private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
-    
+
     private final MyFoldingModel myFoldingModel;
 
-    
     protected Side myMasterSide = Side.RIGHT;
 
     private @Nullable ChangedBlockData myChangedBlockData;
@@ -219,7 +211,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         myDocument.addDocumentListener(new MyOnesideDocumentListener());
     }
 
-    
     @Override
     @RequiredUIAccess
     public List<AnAction> createToolbarActions() {
@@ -238,7 +229,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return group;
     }
 
-    
     @Override
     @RequiredUIAccess
     public List<AnAction> createPopupActions() {
@@ -257,7 +247,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return group;
     }
 
-    
     @RequiredUIAccess
     protected List<AnAction> createEditorPopupActions() {
         List<AnAction> group = new ArrayList<>();
@@ -290,7 +279,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
-    
     protected Runnable performRediff(ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
@@ -418,7 +406,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return new UnifiedEditorHighlighter(myDocument, highlighter1, highlighter2, ranges, textLength);
     }
 
-    
     private Runnable apply(
         CombinedEditorData data,
         List<ChangedBlock> blocks,
@@ -506,7 +493,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         };
     }
 
-    
     private RangeMarker createGuardedBlock(int start, int end) {
         RangeMarker block = myDocument.createGuardedBlock(start, end);
         block.setGreedyToLeft(true);
@@ -515,15 +501,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Contract("!null, _ -> !null")
-    private static IntUnaryOperator mergeConverters(
-        IntUnaryOperator convertor,
-        IntUnaryOperator separatorLines
-    ) {
-        return value -> convertor.applyAsInt(separatorLines.applyAsInt(value));
+    private static IntUnaryOperator mergeConverters(IntUnaryOperator converter, IntUnaryOperator separatorLines) {
+        return value -> converter.applyAsInt(separatorLines.applyAsInt(value));
     }
 
     /*
-     * This convertor returns -1 if exact matching is impossible
+     * This converter returns -1 if exact matching is impossible
      */
     @RequiredUIAccess
     public int transferLineToOnesideStrict(Side side, int line) {
@@ -531,12 +514,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return -1;
         }
 
-        LineNumberConvertor lineConvertor = myChangedBlockData.getLineNumberConvertor();
-        return side.isLeft() ? lineConvertor.convertInv1(line) : lineConvertor.convertInv2(line);
+        LineNumberConvertor lineConverter = myChangedBlockData.getLineNumberConvertor();
+        return side.isLeft() ? lineConverter.convertInv1(line) : lineConverter.convertInv2(line);
     }
 
     /*
-     * This convertor returns -1 if exact matching is impossible
+     * This converter returns -1 if exact matching is impossible
      */
     @RequiredUIAccess
     public int transferLineFromOnesideStrict(Side side, int line) {
@@ -544,12 +527,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return -1;
         }
 
-        LineNumberConvertor lineConvertor = myChangedBlockData.getLineNumberConvertor();
-        return side.isLeft() ? lineConvertor.convert1(line) : lineConvertor.convert2(line);
+        LineNumberConvertor lineConverter = myChangedBlockData.getLineNumberConvertor();
+        return side.isLeft() ? lineConverter.convert1(line) : lineConverter.convert2(line);
     }
 
     /*
-     * This convertor returns 'good enough' position, even if exact matching is impossible
+     * This converter returns 'good enough' position, even if exact matching is impossible
      */
     @RequiredUIAccess
     public int transferLineToOneside(Side side, int line) {
@@ -557,15 +540,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return line;
         }
 
-        LineNumberConvertor lineConvertor = myChangedBlockData.getLineNumberConvertor();
-        return side.isLeft() ? lineConvertor.convertApproximateInv1(line) : lineConvertor.convertApproximateInv2(line);
+        LineNumberConvertor lineConverter = myChangedBlockData.getLineNumberConvertor();
+        return side.isLeft() ? lineConverter.convertApproximateInv1(line) : lineConverter.convertApproximateInv2(line);
     }
 
     /*
-     * This convertor returns 'good enough' position, even if exact matching is impossible
+     * This converter returns 'good enough' position, even if exact matching is impossible
      */
     @RequiredUIAccess
-    
     public Pair<int[], Side> transferLineFromOneside(int line) {
         int[] lines = new int[2];
 
@@ -713,8 +695,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     protected void onDocumentChange(DocumentEvent e) {
         if (myDuringTwosideDocumentModification) {
             return;
@@ -731,7 +713,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     //
 
     private abstract class ApplySelectedChangesActionBase extends AnAction implements DumbAware {
-        
         protected final Side myModifiedSide;
         protected final boolean myShortcut;
 
@@ -896,22 +877,18 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     // Impl
     //
 
-    
     public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
-    
     public FoldingModelSupport.Settings getFoldingModelSettings() {
         return TextDiffViewerUtil.getFoldingModelSettings(myContext);
     }
 
-    
     private DiffImplUtil.DiffConfig getDiffConfig() {
         return new DiffImplUtil.DiffConfig(getIgnorePolicy(), getHighlightPolicy());
     }
 
-    
     private HighlightPolicy getHighlightPolicy() {
         HighlightPolicy policy = getTextSettings().getHighlightPolicy();
         if (policy == HighlightPolicy.DO_NOT_HIGHLIGHT) {
@@ -920,7 +897,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return policy;
     }
 
-    
     private IgnorePolicy getIgnorePolicy() {
         IgnorePolicy policy = getTextSettings().getIgnorePolicy();
         if (policy == IgnorePolicy.IGNORE_WHITESPACES_CHUNKS) {
@@ -933,38 +909,31 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     // Getters
     //
 
-    
     public Side getMasterSide() {
         return myMasterSide;
     }
 
-    
     public EditorEx getEditor() {
         return myEditor;
     }
 
-    
     protected List<? extends EditorEx> getEditors() {
         return Collections.singletonList(myEditor);
     }
 
-    
     protected List<? extends DocumentContent> getContents() {
         //noinspection unchecked
         return (List<? extends DocumentContent>)(List)myRequest.getContents();
     }
 
-    
     protected DocumentContent getContent(Side side) {
         return side.select(getContents());
     }
 
-    
     protected DocumentContent getContent1() {
         return getContent(Side.LEFT);
     }
 
-    
     protected DocumentContent getContent2() {
         return getContent(Side.RIGHT);
     }
@@ -974,7 +943,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return myChangedBlockData == null ? null : myChangedBlockData.getDiffChanges();
     }
 
-    
     @Override
     public JComponent getComponent() {
         return myPanel;
@@ -988,7 +956,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return myEditor.getContentComponent();
     }
 
-    
     @Override
     protected JComponent getStatusPanel() {
         return myStatusPanel;
@@ -1001,7 +968,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             && DiffImplUtil.canMakeWritable(getDocument(side));
     }
 
-    
     public Document getDocument(Side side) {
         return getContent(side).getDocument();
     }
@@ -1035,7 +1001,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return null;
     }
 
-    
     @RequiredUIAccess
     private List<UnifiedDiffChange> getSelectedChanges() {
         if (myChangedBlockData == null) {
@@ -1064,15 +1029,15 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         int line1 = pair.first[0];
         int line2 = pair.first[1];
 
-        Navigatable navigatable1 = getContent1().getNavigatable(new LineCol(line1, position.column));
-        Navigatable navigatable2 = getContent2().getNavigatable(new LineCol(line2, position.column));
-        if (navigatable1 == null) {
-            return navigatable2;
+        Navigatable navigable1 = getContent1().getNavigatable(new LineCol(line1, position.column));
+        Navigatable navigable2 = getContent2().getNavigatable(new LineCol(line2, position.column));
+        if (navigable1 == null) {
+            return navigable2;
         }
-        if (navigatable2 == null) {
-            return navigatable1;
+        if (navigable2 == null) {
+            return navigable1;
         }
-        return pair.second.select(navigatable1, navigatable2);
+        return pair.second.select(navigable1, navigable2);
     }
 
     public static boolean canShowRequest(DiffContext context, DiffRequest request) {
@@ -1084,14 +1049,13 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     //
 
     private class MyPrevNextDifferenceIterable extends PrevNextDifferenceIterableBase<UnifiedDiffChange> {
-        
+
         @Override
         @RequiredUIAccess
         protected List<UnifiedDiffChange> getChanges() {
             return consulo.ide.impl.idea.util.containers.ContainerUtil.notNullize(getDiffChanges());
         }
 
-        
         @Override
         protected EditorEx getEditor() {
             return myEditor;
@@ -1140,13 +1104,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             super(getTextSettings());
         }
 
-        
         @Override
         protected HighlightPolicy getCurrentSetting() {
             return getHighlightPolicy();
         }
 
-        
         @Override
         protected List<HighlightPolicy> getAvailableSettings() {
             ArrayList<HighlightPolicy> settings = ContainerUtil.newArrayList(HighlightPolicy.values());
@@ -1166,13 +1128,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             super(getTextSettings());
         }
 
-        
         @Override
         protected IgnorePolicy getCurrentSetting() {
             return getIgnorePolicy();
         }
 
-        
         @Override
         protected List<IgnorePolicy> getAvailableSettings() {
             ArrayList<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
@@ -1217,7 +1177,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     //
 
     private class ChangedLinesIterator extends BufferedLineIterator {
-        
+
         private final List<UnifiedDiffChange> myChanges;
 
         private int myIndex = 0;
@@ -1294,7 +1254,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     private static class TwosideDocumentData {
-        
         private final UnifiedFragmentBuilder myBuilder;
         private final @Nullable EditorHighlighter myHighlighter;
         private final @Nullable UnifiedEditorRangeHighlighter myRangeHighlighter;
@@ -1309,7 +1268,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             myRangeHighlighter = rangeHighlighter;
         }
 
-        
+
         public UnifiedFragmentBuilder getBuilder() {
             return myBuilder;
         }
@@ -1324,37 +1283,33 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     private static class ChangedBlockData {
-        
         private final List<UnifiedDiffChange> myDiffChanges;
-        
+
         private final List<RangeMarker> myGuardedRangeBlocks;
-        
+
         private final LineNumberConvertor myLineNumberConvertor;
         private final boolean myIsContentsEqual;
 
         public ChangedBlockData(
             List<UnifiedDiffChange> diffChanges,
             List<RangeMarker> guarderRangeBlocks,
-            LineNumberConvertor lineNumberConvertor,
+            LineNumberConvertor lineNumberConverter,
             boolean isContentsEqual
         ) {
             myDiffChanges = diffChanges;
             myGuardedRangeBlocks = guarderRangeBlocks;
-            myLineNumberConvertor = lineNumberConvertor;
+            myLineNumberConvertor = lineNumberConverter;
             myIsContentsEqual = isContentsEqual;
         }
 
-        
         public List<UnifiedDiffChange> getDiffChanges() {
             return myDiffChanges;
         }
 
-        
         public List<RangeMarker> getGuardedRangeBlocks() {
             return myGuardedRangeBlocks;
         }
 
-        
         public LineNumberConvertor getLineNumberConvertor() {
             return myLineNumberConvertor;
         }
@@ -1365,14 +1320,13 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     private static class CombinedEditorData {
-        
         private final CharSequence myText;
         private final @Nullable EditorHighlighter myHighlighter;
         private final @Nullable UnifiedEditorRangeHighlighter myRangeHighlighter;
         private final @Nullable FileType myFileType;
-        
+
         private final IntUnaryOperator myLineConvertor1;
-        
+
         private final IntUnaryOperator myLineConvertor2;
 
         public CombinedEditorData(
@@ -1380,18 +1334,17 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             @Nullable EditorHighlighter highlighter,
             @Nullable UnifiedEditorRangeHighlighter rangeHighlighter,
             @Nullable FileType fileType,
-            IntUnaryOperator convertor1,
-            IntUnaryOperator convertor2
+            IntUnaryOperator converter1,
+            IntUnaryOperator converter2
         ) {
             myText = text;
             myHighlighter = highlighter;
             myRangeHighlighter = rangeHighlighter;
             myFileType = fileType;
-            myLineConvertor1 = convertor1;
-            myLineConvertor2 = convertor2;
+            myLineConvertor1 = converter1;
+            myLineConvertor2 = converter2;
         }
 
-        
         public CharSequence getText() {
             return myText;
         }
@@ -1408,19 +1361,16 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return myFileType;
         }
 
-        
         public IntUnaryOperator getLineConvertor1() {
             return myLineConvertor1;
         }
 
-        
         public IntUnaryOperator getLineConvertor2() {
             return myLineConvertor2;
         }
     }
 
     private class MyInitialScrollHelper extends InitialScrollPositionSupport.TwosideInitialScrollHelper {
-        
         @Override
         protected List<? extends Editor> getEditors() {
             return UnifiedDiffViewer.this.getEditors();
@@ -1469,7 +1419,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return true;
         }
 
-        
+
         private LogicalPosition getPosition(int line, int column) {
             if (line == -1) {
                 return new LogicalPosition(0, 0);
@@ -1552,6 +1502,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             super(new EditorEx[]{editor}, disposable);
         }
 
+        @RequiredUIAccess
         public void install(
             @Nullable List<LineRange> changedLines,
             UserDataHolder context,
@@ -1564,7 +1515,6 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             install(it, context, settings);
         }
 
-        
         public IntUnaryOperator getLineNumberConvertor() {
             return getLineConvertor(0);
         }

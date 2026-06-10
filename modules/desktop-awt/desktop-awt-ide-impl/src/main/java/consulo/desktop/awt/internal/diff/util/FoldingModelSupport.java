@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
@@ -36,7 +37,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.util.List;
@@ -61,7 +61,6 @@ public class FoldingModelSupport {
     
     protected final EditorEx[] myEditors;
 
-    
     protected final List<FoldedBlock[]> myFoldings = new ArrayList<>();
 
     private boolean myDuringSynchronize;
@@ -88,11 +87,7 @@ public class FoldingModelSupport {
      * Iterator returns ranges of changed lines: start1, end1, start2, end2, ...
      */
     @RequiredUIAccess
-    protected void install(
-        @Nullable Iterator<int[]> changedLines,
-        UserDataHolder context,
-        Settings settings
-    ) {
+    protected void install(@Nullable Iterator<int[]> changedLines, UserDataHolder context, Settings settings) {
         UIAccess.assertIsUIThread();
 
         if (changedLines == null) {
@@ -111,18 +106,13 @@ public class FoldingModelSupport {
     }
 
     private class FoldingBuilder {
-        
         private final Settings mySettings;
         
         private final ExpandSuggester myExpandSuggester;
 
-        
         private final int[] myLineCount;
 
-        public FoldingBuilder(
-            UserDataHolder context,
-            Settings settings
-        ) {
+        public FoldingBuilder(UserDataHolder context, Settings settings) {
             myExpandSuggester = new ExpandSuggester(context.getUserData(CACHE_KEY), settings.defaultExpanded);
             mySettings = settings;
 
@@ -294,7 +284,6 @@ public class FoldingModelSupport {
         }
     }
 
-    
     protected IntUnaryOperator getLineConvertor(int index) {
         return value -> {
             updateLineNumbers(false);
@@ -544,7 +533,6 @@ public class FoldingModelSupport {
         context.putUserData(CACHE_KEY, getFoldingCache(settings));
     }
 
-    
     private FoldingCache getFoldingCache(Settings settings) {
         return ReadAction.compute(() -> {
             List<FoldedRangeState>[] result = new List[myCount];
@@ -555,7 +543,6 @@ public class FoldingModelSupport {
         });
     }
 
-    
     @RequiredReadAction
     private List<FoldedRangeState> getFoldedRanges(int index, Settings settings) {
         Application.get().assertReadAccessAllowed();
@@ -627,10 +614,8 @@ public class FoldingModelSupport {
     // Impl
     //
 
-    
     private Iterable<FoldedBlock> getFoldedBlocks() {
         return new Iterable<>() {
-            
             @Override
             public Iterator<FoldedBlock> iterator() {
                 return new Iterator<>() {
@@ -668,7 +653,6 @@ public class FoldingModelSupport {
     }
 
     protected class FoldedBlock {
-        
         private final FoldRegion[] myRegions;
         
         private final int[] myLines;
@@ -722,7 +706,6 @@ public class FoldingModelSupport {
             return myLines[index];
         }
 
-        
         private BooleanSupplier getHighlighterCondition(FoldedBlock[] block, int index) {
             return () -> {
                 if (!myEditors[index].getFoldingModel().isFoldingEnabled()) {

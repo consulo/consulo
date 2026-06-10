@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.find;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.Application;
@@ -93,7 +94,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -1586,12 +1586,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     @Override
-    
     public String getStringToFind() {
         return mySearchComponent.getText();
     }
 
-    
     private String getStringToReplace() {
         return myReplaceComponent.getText();
     }

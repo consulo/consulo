@@ -21,9 +21,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -36,11 +35,9 @@ import java.util.List;
  * (font style, foreground and background color, effect type and color).
  */
 public final class IterationState {
-
     private static final Logger LOG = Logger.getInstance(IterationState.class);
     private static final Comparator<RangeHighlighterEx> BY_AFFECTED_END_OFFSET_REVERSED = (r1, r2) -> r2.getAffectedAreaEndOffset() - r1.getAffectedAreaEndOffset();
 
-    @Contract(pure = true)
     public static Comparator<RangeHighlighterEx> createByLayerThenByAttributesComparator(EditorColorsScheme scheme) {
         CodeEditorInternalHelper helper = CodeEditorInternalHelper.getInstance();
         return (o1, o2) -> {

@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.language.inject.impl.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretEvent;
@@ -10,7 +10,6 @@ import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.language.editor.inject.EditorWindow;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +57,12 @@ class CaretModelWindow implements CaretModel {
     }
 
     @Override
-    
     public LogicalPosition getLogicalPosition() {
         LogicalPosition hostPos = myDelegate.getLogicalPosition();
         return myEditorWindow.hostToInjected(hostPos);
     }
 
     @Override
-    
     public VisualPosition getVisualPosition() {
         LogicalPosition logicalPosition = getLogicalPosition();
         return myEditorWindow.logicalToVisualPosition(logicalPosition);
@@ -93,7 +90,11 @@ class CaretModelWindow implements CaretModel {
                 }
                 Caret caret = e.getCaret();
                 assert caret != null;
-                CaretEvent event = new CaretEvent(createInjectedCaret(caret), myEditorWindow.hostToInjected(e.getOldPosition()), myEditorWindow.hostToInjected(e.getNewPosition()));
+                CaretEvent event = new CaretEvent(
+                    createInjectedCaret(caret),
+                    myEditorWindow.hostToInjected(e.getOldPosition()),
+                    myEditorWindow.hostToInjected(e.getNewPosition())
+                );
                 listener.caretPositionChanged(event);
             }
         };
@@ -141,13 +142,11 @@ class CaretModelWindow implements CaretModel {
         return myDelegate.getMaxCaretCount();
     }
 
-    
     @Override
     public Caret getCurrentCaret() {
         return createInjectedCaret(myDelegate.getCurrentCaret());
     }
 
-    
     @Override
     public Caret getPrimaryCaret() {
         return createInjectedCaret(myDelegate.getPrimaryCaret());
@@ -158,7 +157,6 @@ class CaretModelWindow implements CaretModel {
         return myDelegate.getCaretCount();
     }
 
-    
     @Override
     public List<Caret> getAllCarets() {
         List<Caret> hostCarets = myDelegate.getAllCarets();
@@ -216,7 +214,11 @@ class CaretModelWindow implements CaretModel {
     private List<CaretState> convertCaretStates(List<? extends CaretState> caretStates) {
         List<CaretState> convertedStates = new ArrayList<>(caretStates.size());
         for (CaretState state : caretStates) {
-            convertedStates.add(new CaretState(injectedToHost(state.getCaretPosition()), injectedToHost(state.getSelectionStart()), injectedToHost(state.getSelectionEnd())));
+            convertedStates.add(new CaretState(
+                injectedToHost(state.getCaretPosition()),
+                injectedToHost(state.getSelectionStart()),
+                injectedToHost(state.getSelectionEnd())
+            ));
         }
         return convertedStates;
     }
@@ -225,13 +227,16 @@ class CaretModelWindow implements CaretModel {
         return position == null ? null : myEditorWindow.injectedToHost(position);
     }
 
-    
     @Override
     public List<CaretState> getCaretsAndSelections() {
         List<CaretState> caretsAndSelections = myDelegate.getCaretsAndSelections();
         List<CaretState> convertedStates = new ArrayList<>(caretsAndSelections.size());
         for (CaretState state : caretsAndSelections) {
-            convertedStates.add(new CaretState(hostToInjected(state.getCaretPosition()), hostToInjected(state.getSelectionStart()), hostToInjected(state.getSelectionEnd())));
+            convertedStates.add(new CaretState(
+                hostToInjected(state.getCaretPosition()),
+                hostToInjected(state.getSelectionStart()),
+                hostToInjected(state.getSelectionEnd())
+            ));
         }
         return convertedStates;
     }

@@ -1,6 +1,7 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.desktop.awt.editor.impl.view;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.AccessToken;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -46,7 +47,6 @@ import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;

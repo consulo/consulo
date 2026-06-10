@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.facade;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.container.StartupError;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
@@ -37,7 +38,6 @@ import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,8 +59,8 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
             super(window);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void setTitle(String title) {
         }
     }
@@ -82,7 +82,6 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
         }
     }
 
-   
     @Override
     public Component wrap(java.awt.Component component) {
         return new TempComponentWrapper(component);
@@ -94,13 +93,11 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
     }
 
     @Override
-   
     public java.awt.Dimension to(Size2D size) {
         return JBUI.size(size.width(), size.height());
     }
 
     @Override
-   
     public java.awt.Color to(RGBColor color) {
         return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
@@ -287,7 +284,6 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
         throw new IllegalArgumentException(icon + "' is not supported");
     }
 
-   
     @Override
     public Font to(consulo.ui.font.Font font) {
         if (font instanceof DesktopFontImpl) {

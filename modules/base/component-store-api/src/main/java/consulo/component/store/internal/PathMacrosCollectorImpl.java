@@ -15,9 +15,9 @@
  */
 package consulo.component.store.internal;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.component.macro.PathMacroMap;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;

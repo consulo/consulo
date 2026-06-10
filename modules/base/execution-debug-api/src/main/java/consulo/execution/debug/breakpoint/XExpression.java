@@ -15,10 +15,10 @@
  */
 package consulo.execution.debug.breakpoint;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**

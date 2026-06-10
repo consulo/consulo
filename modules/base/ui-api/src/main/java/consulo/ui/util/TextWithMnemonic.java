@@ -3,7 +3,6 @@ package consulo.ui.util;
 
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.function.IntPredicate;
 
@@ -114,7 +113,6 @@ public final class TextWithMnemonic {
      * @param text a plain text to create a TextWithMnemonic object from
      * @return new TextWithMnemonic object which has no mnemonic
      */
-    @Contract(pure = true)
     public static TextWithMnemonic fromPlainText(String text) {
         return new TextWithMnemonic(text, -1);
     }
@@ -129,12 +127,10 @@ public final class TextWithMnemonic {
      * @param text text to parse
      * @return TextWithMnemonic object which corresponds to the parsed text.
      */
-    @Contract(pure = true)
     public static TextWithMnemonic parse(@Nullable String text) {
         return parse(text, value -> true);
     }
 
-    @Contract(pure = true)
     public static TextWithMnemonic parse(@Nullable String text, IntPredicate indexAllower) {
         if (StringUtil.isEmpty(text)) {
             return ourNull;

@@ -15,10 +15,10 @@
  */
 package consulo.util.io;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;

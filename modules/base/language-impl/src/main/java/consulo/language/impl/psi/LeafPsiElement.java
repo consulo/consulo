@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.impl.psi;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiNavigationSupport;
@@ -41,7 +41,6 @@ import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.project.internal.SingleProjectHolder;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 public class LeafPsiElement extends LeafElement implements consulo.language.psi.LeafPsiElement, NavigationItem {
@@ -51,21 +50,20 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     super(type, text);
   }
 
-  @RequiredReadAction
   @Override
-  
+  @RequiredReadAction
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getFirstChild() {
     return null;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getLastChild() {
     return null;
   }
@@ -79,14 +77,14 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     return SharedImplUtil.getParent(this);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getNextSibling() {
     return SharedImplUtil.getNextSibling(this);
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement getPrevSibling() {
     return SharedImplUtil.getPrevSibling(this);
   }
@@ -113,14 +111,14 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     throw new PsiInvalidElementAccessException(this, builder.toString());
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiElement findElementAt(int offset) {
     return this;
   }
 
-  @RequiredReadAction
   @Override
+  @RequiredReadAction
   public PsiReference findReferenceAt(int offset) {
     return SharedPsiElementImplUtil.findReferenceAt(this, offset);
   }
@@ -147,7 +145,6 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
   }
 
   @Override
-  
   public PsiReference[] getReferences() {
     return SharedPsiElementImplUtil.getReferences(this);
   }
@@ -157,14 +154,14 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
@@ -174,26 +171,26 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public void delete() throws IncorrectOperationException {
     LOG.assertTrue(getTreeParent() != null);
     CheckUtil.checkWritable(this);
@@ -206,14 +203,14 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     CheckUtil.checkWritable(this);
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
     return SharedImplUtil.doReplace(this, this, newElement);
   }
@@ -255,19 +252,16 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
   }
 
   @Override
-  
   public GlobalSearchScope getResolveScope() {
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
 
   @Override
-  
   public Project getProject() {
     Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
@@ -278,16 +272,14 @@ public class LeafPsiElement extends LeafElement implements consulo.language.psi.
     return manager.getProject();
   }
 
-  @RequiredReadAction
   @Override
-  
+  @RequiredReadAction
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
 
-  @RequiredReadAction
-  
   @Override
+  @RequiredReadAction
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }

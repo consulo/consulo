@@ -13,14 +13,12 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,7 +224,6 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return doCreateAnnotation(severity, range, message, wrapXml(message), callerClass, "createAnnotation");
     }
 
-    @Contract(pure = true)
     private static @Nullable String wrapXml(@Nullable String message) {
         return message == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(message));
     }
@@ -308,7 +305,6 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return !isEmpty();
     }
 
-    
     @Override
     public AnnotationSession getCurrentAnnotationSession() {
         return myAnnotationSession;
@@ -334,7 +330,6 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         );
     }
 
-    
     @Override
     public AnnotationBuilder newSilentAnnotation(HighlightSeverity severity) {
         return new AnnotationBuilderImpl(

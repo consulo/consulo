@@ -15,11 +15,11 @@
  */
 package consulo.colorScheme;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 

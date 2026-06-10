@@ -15,11 +15,11 @@
  */
 package consulo.codeEditor;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
 import consulo.project.Project;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 

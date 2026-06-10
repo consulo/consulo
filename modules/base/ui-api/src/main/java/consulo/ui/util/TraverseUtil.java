@@ -15,9 +15,9 @@
  */
 package consulo.ui.util;
 
+import com.uber.nullaway.annotations.Contract;
 import consulo.ui.Component;
 import consulo.ui.Window;
-import org.jetbrains.annotations.Contract;
 
 import org.jspecify.annotations.Nullable;
 

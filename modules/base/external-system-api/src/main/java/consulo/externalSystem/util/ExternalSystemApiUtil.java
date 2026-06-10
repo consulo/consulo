@@ -15,9 +15,10 @@
  */
 package consulo.externalSystem.util;
 
-import consulo.application.AccessRule;
+import com.uber.nullaway.annotations.Contract;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.ReadAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -83,7 +84,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.PathsList;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -103,7 +103,6 @@ public class ExternalSystemApiUtil {
     private static final Logger LOG = Logger.getInstance(ExternalSystemApiUtil.class);
     private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
 
-    
     private static final Map<String, String> RUNNER_IDS = new HashMap<>();
 
     static {
@@ -115,13 +114,10 @@ public class ExternalSystemApiUtil {
         void execute(ProgressIndicator indicator);
     }
 
-    
     public static final String PATH_SEPARATOR = "/";
 
-    
     private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(?:.*/)?(.+?)(?:-([\\d+](?:\\.[\\d]+)*))?(?:\\.[^\\.]+?)?");
 
-    
     public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<>() {
         @Override
         public int compare(Object o1, Object o2) {
@@ -150,11 +146,9 @@ public class ExternalSystemApiUtil {
         }
     };
 
-    
     private static final Function<DataNode<?>, Key<?>> GROUPER = DataNode::getKey;
 
-    
-    private static final Comparator<Object> COMPARABLE_GLUE = (o1, o2) -> ((Comparable)o1).compareTo(o2);
+    private static final Comparator<Object> COMPARABLE_GLUE = (o1, o2) -> ((Comparable) o1).compareTo(o2);
 
     private ExternalSystemApiUtil() {
     }
@@ -263,7 +257,7 @@ public class ExternalSystemApiUtil {
             }
         };
 
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+        UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
             String title = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
             switch (progressExecutionMode) {
                 case MODAL_SYNC:
@@ -329,7 +323,7 @@ public class ExternalSystemApiUtil {
         String name = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
         RunnerAndConfigurationSettings settings =
             RunManager.getInstance(project).createRunConfiguration(name, configurationType.getFactory());
-        ExternalSystemRunConfiguration runConfiguration = (ExternalSystemRunConfiguration)settings.getConfiguration();
+        ExternalSystemRunConfiguration runConfiguration = (ExternalSystemRunConfiguration) settings.getConfiguration();
         runConfiguration.getSettings().setExternalProjectPath(taskSettings.getExternalProjectPath());
         runConfiguration.getSettings().setTaskNames(new ArrayList<>(taskSettings.getTaskNames()));
         runConfiguration.getSettings().setTaskDescriptions(new ArrayList<>(taskSettings.getTaskDescriptions()));
@@ -391,7 +385,7 @@ public class ExternalSystemApiUtil {
             if (content.getComponent() instanceof DataProvider dataProvider) {
                 Object data = dataProvider.getData(key);
                 if (data != null && clazz.isInstance(data)) {
-                    return (T)data;
+                    return (T) data;
                 }
             }
         }
@@ -414,7 +408,6 @@ public class ExternalSystemApiUtil {
         return toolWindow;
     }
 
-    
     public static String extractNameFromPath(String path) {
         String strippedPath = stripPath(path);
         int i = strippedPath.lastIndexOf(PATH_SEPARATOR);
@@ -428,7 +421,6 @@ public class ExternalSystemApiUtil {
         return result;
     }
 
-    
     private static String stripPath(String path) {
         String[] endingsToStrip = {"/", "!", ".jar"};
         StringBuilder buffer = new StringBuilder(path);
@@ -440,7 +432,6 @@ public class ExternalSystemApiUtil {
         return buffer.toString();
     }
 
-    
     public static String getLibraryName(Library library) {
         String result = library.getName();
         if (result != null) {
@@ -489,7 +480,6 @@ public class ExternalSystemApiUtil {
         return PathUtil.getCanonicalPath(p);
     }
 
-    
     public static String getLocalFileSystemPath(VirtualFile file) {
         VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
         if (archiveRoot != null) {
@@ -498,7 +488,6 @@ public class ExternalSystemApiUtil {
         return toCanonicalPath(file.getPath());
     }
 
-    
     public static ExternalSystemManager<?, ?, ?, ?, ?> getManagerStrict(String externalSystemId) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager != null) {
@@ -517,12 +506,10 @@ public class ExternalSystemApiUtil {
         return getManager(externalSystemId.getId());
     }
 
-    
     public static Map<Key<?>, List<DataNode<?>>> group(Collection<DataNode<?>> nodes) {
         return groupBy(nodes, GROUPER);
     }
 
-    
     public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(Collection<DataNode<V>> nodes, Key<K> key) {
         return groupBy(nodes, new Function<DataNode<V>, DataNode<K>>() {
             @Override
@@ -532,7 +519,6 @@ public class ExternalSystemApiUtil {
         });
     }
 
-    
     public static <K, V> Map<K, List<V>> groupBy(Collection<V> nodes, Function<V, K> grouper) {
         Map<K, List<V>> result = new HashMap<>();
         for (V data : nodes) {
@@ -566,7 +552,6 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    
     public static <T> Collection<DataNode<T>> getChildren(DataNode<?> node, Key<T> key) {
         Collection<DataNode<T>> result = null;
         for (DataNode<?> child : node.getChildren()) {
@@ -576,7 +561,7 @@ public class ExternalSystemApiUtil {
             if (result == null) {
                 result = new ArrayList<>();
             }
-            result.add((DataNode<T>)child);
+            result.add((DataNode<T>) child);
         }
         return result == null ? Collections.<DataNode<T>>emptyList() : result;
     }
@@ -585,7 +570,7 @@ public class ExternalSystemApiUtil {
     public static @Nullable <T> DataNode<T> find(DataNode<?> node, Key<T> key) {
         for (DataNode<?> child : node.getChildren()) {
             if (key.equals(child.getKey())) {
-                return (DataNode<T>)child;
+                return (DataNode<T>) child;
             }
         }
         return null;
@@ -594,8 +579,8 @@ public class ExternalSystemApiUtil {
     @SuppressWarnings("unchecked")
     public static @Nullable <T> DataNode<T> find(DataNode<?> node, Key<T> key, Predicate<DataNode<T>> predicate) {
         for (DataNode<?> child : node.getChildren()) {
-            if (key.equals(child.getKey()) && predicate.test((DataNode<T>)child)) {
-                return (DataNode<T>)child;
+            if (key.equals(child.getKey()) && predicate.test((DataNode<T>) child)) {
+                return (DataNode<T>) child;
             }
         }
         return null;
@@ -612,12 +597,12 @@ public class ExternalSystemApiUtil {
         if (parent == null) {
             return null;
         }
-        return key.equals(parent.getKey())
-            && (predicate == null || predicate.test((DataNode<T>)parent)) ? (DataNode<T>)parent : findParent(parent, key, predicate);
+        return key.equals(parent.getKey()) && (predicate == null || predicate.test((DataNode<T>) parent))
+            ? (DataNode<T>) parent
+            : findParent(parent, key, predicate);
     }
 
     @SuppressWarnings("unchecked")
-    
     public static <T> Collection<DataNode<T>> findAll(DataNode<?> parent, Key<T> key) {
         Collection<DataNode<T>> result = null;
         for (DataNode<?> child : parent.getChildren()) {
@@ -627,7 +612,7 @@ public class ExternalSystemApiUtil {
             if (result == null) {
                 result = new ArrayList<>();
             }
-            result.add((DataNode<T>)child);
+            result.add((DataNode<T>) child);
         }
         return result == null ? Collections.<DataNode<T>>emptyList() : result;
     }
@@ -746,7 +731,6 @@ public class ExternalSystemApiUtil {
         }
     }
 
-    
     public static String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath) {
         if (rootProjectPath == null) {
             File rootProjectDir = new File(targetProjectPath);
@@ -784,11 +768,7 @@ public class ExternalSystemApiUtil {
      * <code>null</code> if it's not possible to find a root project's config path on the basis of the
      * given path
      */
-    public static @Nullable String getRootProjectPath(
-        String externalProjectPath,
-        ProjectSystemId externalSystemId,
-        Project project
-    ) {
+    public static @Nullable String getRootProjectPath(String externalProjectPath, ProjectSystemId externalSystemId, Project project) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager == null) {
             return null;
@@ -806,7 +786,6 @@ public class ExternalSystemApiUtil {
      * @return error message for the given exception
      */
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "IOResourceOpenedButNotSafelyClosed"})
-    
     public static String buildErrorMessage(Throwable e) {
         Throwable unwrapped = RemoteUtil.unwrap(e);
         String reason = unwrapped.getLocalizedMessage();
@@ -827,11 +806,8 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    
-    public static AbstractExternalSystemSettings getSettings(
-        Project project,
-        ProjectSystemId externalSystemId
-    ) throws IllegalArgumentException {
+    public static AbstractExternalSystemSettings getSettings(Project project, ProjectSystemId externalSystemId)
+        throws IllegalArgumentException {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager == null) {
             throw new IllegalArgumentException(String.format(
@@ -843,10 +819,8 @@ public class ExternalSystemApiUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(
-        Project project,
-        ProjectSystemId externalSystemId
-    ) throws IllegalArgumentException {
+    public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(Project project, ProjectSystemId externalSystemId)
+        throws IllegalArgumentException {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
         if (manager == null) {
             throw new IllegalArgumentException(String.format(
@@ -854,7 +828,7 @@ public class ExternalSystemApiUtil {
                 externalSystemId.getDisplayName()
             ));
         }
-        return (S)manager.getLocalSettingsProvider().apply(project);
+        return (S) manager.getLocalSettingsProvider().apply(project);
     }
 
     @SuppressWarnings("unchecked")
@@ -871,11 +845,11 @@ public class ExternalSystemApiUtil {
                 externalSystemId.getDisplayName()
             ));
         }
-        return (S)manager.getExecutionSettingsProvider().apply(Pair.create(project, linkedProjectPath));
+        return (S) manager.getExecutionSettingsProvider().apply(Pair.create(project, linkedProjectPath));
     }
 
-    @Contract("null -> false, _")
-    public static String getExtensionSystemOption(@Nullable Module module, String key) {
+    @Contract("null, _ -> null")
+    public static @Nullable String getExtensionSystemOption(@Nullable Module module, String key) {
         if (module == null) {
             return null;
         }
@@ -923,6 +897,6 @@ public class ExternalSystemApiUtil {
     }
 
     private static @Nullable VirtualFile findLocalFileByPathUnderReadAction(String path) {
-        return AccessRule.read(() -> StandardFileSystems.local().findFileByPath(path));
+        return ReadAction.compute(() -> StandardFileSystems.local().findFileByPath(path));
     }
 }
