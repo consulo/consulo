@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
-import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsSwicher;
+import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsSwitcher;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.CustomStatusBarWidget;
@@ -43,7 +43,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -107,7 +106,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     centerPanel().add(myInfoAndProgressPanel.getUIComponent());
 
     if (master == null) {
-      UnifiedToolWindowsSwicher swicher = new UnifiedToolWindowsSwicher(this);
+      UnifiedToolWindowsSwitcher swicher = new UnifiedToolWindowsSwitcher(this);
       swicher.update();
 
       Disposer.register(this, swicher);

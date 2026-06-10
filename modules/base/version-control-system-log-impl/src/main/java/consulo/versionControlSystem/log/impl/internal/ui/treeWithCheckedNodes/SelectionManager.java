@@ -36,16 +36,16 @@ import java.util.function.Function;
  */
 public class SelectionManager {
   private final SelectedState<VirtualFile> myState;
-  private final Function<DefaultMutableTreeNode, VirtualFile> myNodeConvertor;
+  private final Function<DefaultMutableTreeNode, VirtualFile> myNodeConverter;
   private PlusMinus<VirtualFile> mySelectionChangeListener;
 
-  public SelectionManager(int selectedSize, int queueSize, Function<DefaultMutableTreeNode, VirtualFile> nodeConvertor) {
-    myNodeConvertor = nodeConvertor;
+  public SelectionManager(int selectedSize, int queueSize, Function<DefaultMutableTreeNode, VirtualFile> nodeConverter) {
+    myNodeConverter = nodeConverter;
     myState = new SelectedState<>(selectedSize, queueSize);
   }
 
   public void toggleSelection(DefaultMutableTreeNode node) {
-    StateWorker stateWorker = new StateWorker(node, myNodeConvertor);
+    StateWorker stateWorker = new StateWorker(node, myNodeConverter);
     VirtualFile vf = stateWorker.getVf();
     if (vf == null) return;
 
@@ -113,7 +113,7 @@ public class SelectionManager {
   }
 
   public TreeNodeState getState(DefaultMutableTreeNode node) {
-    return getStateImpl(new StateWorker(node, myNodeConvertor));
+    return getStateImpl(new StateWorker(node, myNodeConverter));
   }
 
   private TreeNodeState getStateImpl(StateWorker stateWorker) {
@@ -153,13 +153,13 @@ public class SelectionManager {
 
   private static class StateWorker {
     private final DefaultMutableTreeNode myNode;
-    private final Function<DefaultMutableTreeNode, VirtualFile> myConvertor;
+    private final Function<DefaultMutableTreeNode, VirtualFile> myConverter;
     private VirtualFile myVf;
 
-    private StateWorker(DefaultMutableTreeNode node, Function<DefaultMutableTreeNode, VirtualFile> convertor) {
+    private StateWorker(DefaultMutableTreeNode node, Function<DefaultMutableTreeNode, VirtualFile> converter) {
       myNode = node;
-      myConvertor = convertor;
-      myVf = myConvertor.apply(node);
+      myConverter = converter;
+      myVf = myConverter.apply(node);
     }
 
     public VirtualFile getVf() {
@@ -170,7 +170,7 @@ public class SelectionManager {
       DefaultMutableTreeNode current = (DefaultMutableTreeNode) myNode.getParent();
       // up cycle
       while (current != null) {
-        VirtualFile file = myConvertor.apply(current);
+        VirtualFile file = myConverter.apply(current);
         if (file == null) return;
 
         TreeNodeState state = states.get(file);

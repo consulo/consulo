@@ -47,7 +47,8 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.component.Component & FromVaadinComponentWrapper> implements Component, DataObjectHolder, ToVaddinComponentWrapper {
+public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.component.Component & FromVaadinComponentWrapper>
+    implements Component, DataObjectHolder, ToVaadinComponentWrapper {
     private T myVaadinComponent;
 
     private Font myFont = FontManager.get().createFont("?", 12);

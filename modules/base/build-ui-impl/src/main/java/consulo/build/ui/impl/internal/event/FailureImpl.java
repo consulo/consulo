@@ -17,8 +17,8 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
-import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
+import consulo.project.ui.notification.Notification;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
@@ -28,7 +28,6 @@ import java.util.List;
  * @author Vladislav.Soroka
  */
 public class FailureImpl implements Failure {
-
   private final @BuildEventsNls.Message String myMessage;
   private final @BuildEventsNls.Description String myDescription;
   private final List<? extends Failure> myCauses;
@@ -40,10 +39,12 @@ public class FailureImpl implements Failure {
     this(message, null, Collections.emptyList(), error, null, null);
   }
 
-  public FailureImpl(@BuildEventsNls.Message String message,
-                     Throwable error,
-                     @Nullable Notification notification,
-                     @Nullable Navigatable navigatable) {
+  public FailureImpl(
+    @BuildEventsNls.Message String message,
+    Throwable error,
+    @Nullable Notification notification,
+    @Nullable Navigatable navigatable
+  ) {
     this(message, null, Collections.emptyList(), error, notification, navigatable);
   }
 
@@ -57,12 +58,14 @@ public class FailureImpl implements Failure {
     this(message, description, causes, null, null, null);
   }
 
-  public FailureImpl(@BuildEventsNls.Message String message,
-                      @BuildEventsNls.Description String description,
-                      List<? extends Failure> causes,
-                      @Nullable Throwable error,
-                      @Nullable Notification notification,
-                      @Nullable Navigatable navigatable) {
+  public FailureImpl(
+    @BuildEventsNls.Message String message,
+    @BuildEventsNls.Description String description,
+    List<? extends Failure> causes,
+    @Nullable Throwable error,
+    @Nullable Notification notification,
+    @Nullable Navigatable navigatable
+  ) {
     myMessage = message;
     myDescription = description;
     myCauses = causes;

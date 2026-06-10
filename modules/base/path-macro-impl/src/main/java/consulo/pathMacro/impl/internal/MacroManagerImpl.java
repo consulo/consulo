@@ -33,8 +33,8 @@ import consulo.util.collection.ConvertingIterator;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.util.*;
 import java.util.function.Function;
@@ -42,7 +42,7 @@ import java.util.function.Function;
 @Singleton
 @ServiceImpl
 public final class MacroManagerImpl implements MacroManager {
-  private final List<Macro> myPredefinedMacroes = new ArrayList<>();
+  private final List<Macro> myPredefinedMacros = new ArrayList<>();
 
   public MacroManagerImpl() {
     registerMacro(new SourcepathMacro());
@@ -99,12 +99,12 @@ public final class MacroManagerImpl implements MacroManager {
   }
 
   private void registerMacro(Macro macro) {
-    myPredefinedMacroes.add(macro);
+    myPredefinedMacros.add(macro);
   }
 
   @Override
   public Collection<Macro> getMacros() {
-    return ContainerUtil.concat(myPredefinedMacroes, Application.get().getExtensionPoint(Macro.class).getExtensionList());
+    return ContainerUtil.concat(myPredefinedMacros, Application.get().getExtensionPoint(Macro.class).getExtensionList());
   }
 
   @Override
@@ -150,7 +150,7 @@ public final class MacroManagerImpl implements MacroManager {
       if (str.contains(name)) {
         String expanded = macro.expand(dataContext);
         //if (dataContext instanceof DataManagerImpl.MyDataContext) {
-        //  // hack: macro.expand() can cause UI events such as showing dialogs ('Prompt' macro) which may 'invalidate' the datacontext
+        //  // hack: macro.expand() can cause UI events such as showing dialogs ('Prompt' macro) which may 'invalidate' the data-context
         //  // since we know exactly that context is valid, we need to update its event count
         //  ((DataManagerImpl.MyDataContext)dataContext).setEventCount(IdeEventQueue.getInstance().getEventCount());
         //}
@@ -191,12 +191,12 @@ public final class MacroManagerImpl implements MacroManager {
 
   @Override
   public String expandSilentMarcos(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.ExecutionCancelledException {
-    Function<Macro, Macro> convertor = macro -> {
+    Function<Macro, Macro> converter = macro -> {
       if (macro instanceof PromptingMacro) {
         return new Macro.Silent(macro, "");
       }
       return macro;
     };
-    return expandMacroSet(str, firstQueueExpand, dataContext, ConvertingIterator.create(getMacros().iterator(), convertor));
+    return expandMacroSet(str, firstQueueExpand, dataContext, ConvertingIterator.create(getMacros().iterator(), converter));
   }
 }

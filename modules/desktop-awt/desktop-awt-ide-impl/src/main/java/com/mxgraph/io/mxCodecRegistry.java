@@ -20,7 +20,7 @@ public class mxCodecRegistry {
   protected static Hashtable<String, mxObjectCodec> codecs = new Hashtable<String, mxObjectCodec>();
 
   /**
-   * Maps from classnames to codecnames.
+   * Maps from class-names to codec-names.
    */
   protected static Hashtable<String, String> aliases = new Hashtable<String, String>();
 
@@ -57,17 +57,17 @@ public class mxCodecRegistry {
   /**
    * Registers a new codec and associates the name of the template constructor
    * in the codec with the codec object. Automatically creates an alias if the
-   * codename and the classname are not equal.
+   * codename and the class-name are not equal.
    */
   public static mxObjectCodec register(mxObjectCodec codec) {
     if (codec != null) {
       String name = codec.getName();
       codecs.put(name, codec);
 
-      String classname = getName(codec.getTemplate());
+      String className = getName(codec.getTemplate());
 
-      if (!classname.equals(name)) {
-        addAlias(classname, name);
+      if (!className.equals(name)) {
+        addAlias(className, name);
       }
     }
 
@@ -75,10 +75,10 @@ public class mxCodecRegistry {
   }
 
   /**
-   * Adds an alias for mapping a classname to a codecname.
+   * Adds an alias for mapping a class-name to a codec-name.
    */
-  public static void addAlias(String classname, String codecname) {
-    aliases.put(classname, codecname);
+  public static void addAlias(String className, String codecName) {
+    aliases.put(className, codecName);
   }
 
   /**
@@ -118,10 +118,10 @@ public class mxCodecRegistry {
   /**
    * Adds the given package name to the list of known package names.
    *
-   * @param packagename Name of the package to be added.
+   * @param packageName Name of the package to be added.
    */
-  public static void addPackage(String packagename) {
-    packages.add(packagename);
+  public static void addPackage(String packageName) {
+    packages.add(packageName);
   }
 
   /**
@@ -183,7 +183,7 @@ public class mxCodecRegistry {
    * Returns the name that identifies the codec associated
    * with the given instance..
    * <p/>
-   * The I/O system uses unqualified classnames, eg. for a
+   * The I/O system uses unqualified class-names, eg. for a
    * <code>com.mxgraph.model.mxCell</code> this returns
    * <code>mxCell</code>.
    *

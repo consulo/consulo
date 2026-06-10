@@ -6,7 +6,6 @@ import consulo.application.AccessRule;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
-import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelListener;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
@@ -39,7 +38,7 @@ public class NavBarModel {
     private List<Object> myModel = Collections.emptyList();
     private int mySelectedIndex;
     private final Project myProject;
-    private final NavBarModelListener myNotificator;
+    private final NavBarModelListener myNotifier;
     private final NavBarModelBuilder myBuilder;
     private boolean myChanged = true;
     private boolean updated = false;
@@ -51,9 +50,9 @@ public class NavBarModel {
         this(project, project.getMessageBus().syncPublisher(NavBarModelListener.class), NavBarModelBuilder.getInstance());
     }
 
-    protected NavBarModel(Project project, NavBarModelListener notificator, NavBarModelBuilder builder) {
+    protected NavBarModel(Project project, NavBarModelListener notifier, NavBarModelBuilder builder) {
         myProject = project;
-        myNotificator = notificator;
+        myNotifier = notifier;
         myBuilder = builder;
         myTreeAnchorizer = TreeAnchorizer.getService();
     }
@@ -223,14 +222,14 @@ public class NavBarModel {
     protected void setModel(List<Object> model, boolean force) {
         if (!model.equals(TreeAnchorizer.retrieveList(myTreeAnchorizer, myModel))) {
             myModel = TreeAnchorizer.anchorizeList(myTreeAnchorizer, model);
-            myNotificator.modelChanged();
+            myNotifier.modelChanged();
 
             mySelectedIndex = myModel.size() - 1;
-            myNotificator.selectionChanged();
+            myNotifier.selectionChanged();
         }
         else if (force) {
             myModel = TreeAnchorizer.anchorizeList(myTreeAnchorizer, model);
-            myNotificator.modelChanged();
+            myNotifier.modelChanged();
         }
     }
 
@@ -321,7 +320,7 @@ public class NavBarModel {
     public void setSelectedIndex(int selectedIndex) {
         if (mySelectedIndex != selectedIndex) {
             mySelectedIndex = selectedIndex;
-            myNotificator.selectionChanged();
+            myNotifier.selectionChanged();
         }
     }
 

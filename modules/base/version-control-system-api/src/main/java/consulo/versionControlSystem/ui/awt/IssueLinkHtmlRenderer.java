@@ -37,7 +37,7 @@ public class IssueLinkHtmlRenderer {
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
-    public static String formatTextWithLinks(Project project, String c, Function<String, String> convertor) {
+    public static String formatTextWithLinks(Project project, String c, Function<String, String> converter) {
         if (c == null) {
             return "";
         }
@@ -49,14 +49,14 @@ public class IssueLinkHtmlRenderer {
         int pos = 0;
         for (IssueNavigationConfiguration.LinkMatch match : list) {
             TextRange range = match.getRange();
-            commentBuilder.append(convertor.apply(comment.substring(pos, range.getStartOffset())));
+            commentBuilder.append(converter.apply(comment.substring(pos, range.getStartOffset())));
             commentBuilder.append("<a href=\"");
             XmlStringUtil.escapeAttr(match.getTargetUrl(), '"', commentBuilder);
             commentBuilder.append("\">");
             commentBuilder.append(range.substring(comment)).append("</a>");
             pos = range.getEndOffset();
         }
-        commentBuilder.append(convertor.apply(comment.substring(pos)));
+        commentBuilder.append(converter.apply(comment.substring(pos)));
         comment = commentBuilder.toString();
 
         return comment.replace("\n", "<br>");

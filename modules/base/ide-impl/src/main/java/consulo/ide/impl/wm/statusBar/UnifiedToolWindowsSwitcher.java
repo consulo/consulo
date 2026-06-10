@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.internal.ui.base;
+package consulo.ide.impl.wm.statusBar;
 
-import com.vaadin.flow.component.Component;
+import consulo.project.ui.wm.StatusBar;
 
 /**
  * @author VISTALL
- * @since 2019-02-17
+ * @since 2023-11-13
  */
-public interface ToVaddinComponentWrapper {
-  
-  Component toVaadinComponent();
+public class UnifiedToolWindowsSwitcher extends BaseToolWindowsSwitcher {
+  public UnifiedToolWindowsSwitcher(StatusBar statusBar) {
+    super(statusBar);
+  }
 }

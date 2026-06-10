@@ -40,7 +40,7 @@ public class mxMinimumCycleRemover implements mxHierarchicalLayoutStage {
   }
 
   /**
-   * Produces the layer assignmment using the graph information specified
+   * Produces the layer assignment using the graph information specified
    */
   public void execute(Object parent) {
     mxGraphHierarchyModel model = layout.getModel();

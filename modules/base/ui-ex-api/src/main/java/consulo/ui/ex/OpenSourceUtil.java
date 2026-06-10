@@ -21,7 +21,6 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.StatePreservingNavigatable;
 
 public class OpenSourceUtil {
-
   private OpenSourceUtil() {
   }
 
@@ -34,17 +33,17 @@ public class OpenSourceUtil {
   }
 
   /**
-   * Equivalent to navigate(true, navigatables)
+   * Equivalent to navigate(true, navigables)
    *
    * @param navigatables elements navigate to
    *
    * @see OpenSourceUtil#navigate(boolean, Navigatable...)
    */
-  public static void navigate(Navigatable...navigatables) {
+  public static void navigate(Navigatable... navigatables) {
     navigate(true, navigatables);
   }
 
-  public static void navigate(boolean requestFocus, Navigatable...navigatables) {
+  public static void navigate(boolean requestFocus, Navigatable... navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {
@@ -53,12 +52,12 @@ public class OpenSourceUtil {
     }
   }
 
-  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable...navigatables) {
+  public static void navigate(boolean requestFocus, boolean tryNotToScroll, Navigatable... navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {
-        if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable) {
-          ((StatePreservingNavigatable)navigatable).navigate(requestFocus, true);
+        if (tryNotToScroll && navigatable instanceof StatePreservingNavigatable statePreservingNavigatable) {
+          statePreservingNavigatable.navigate(requestFocus, true);
         } else {
           navigatable.navigate(requestFocus);
         }

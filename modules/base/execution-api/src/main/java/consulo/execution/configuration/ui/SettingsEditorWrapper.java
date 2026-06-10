@@ -21,22 +21,21 @@ import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.util.function.Function;
 
 public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
-
   private static final Logger LOG = Logger.getInstance(SettingsEditorWrapper.class);
 
-  private final Function<Src, Dst> mySrcToDstConvertor;
+  private final Function<Src, Dst> mySrcToDstConverter;
   private final SettingsEditor<Dst> myWrapped;
 
   private final SettingsEditorListener<Dst> myListener;
 
-  public SettingsEditorWrapper(SettingsEditor<Dst> wrapped, Function<Src, Dst> convertor) {
-    mySrcToDstConvertor = convertor;
+  public SettingsEditorWrapper(SettingsEditor<Dst> wrapped, Function<Src, Dst> converter) {
+    mySrcToDstConverter = converter;
     myWrapped = wrapped;
     myListener = settingsEditor -> fireEditorStateChanged();
     myWrapped.addSettingsEditorListener(myListener);
@@ -44,12 +43,12 @@ public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
 
   @Override
   public void resetEditorFrom(Src src) {
-    myWrapped.resetFrom(mySrcToDstConvertor.apply(src));
+    myWrapped.resetFrom(mySrcToDstConverter.apply(src));
   }
 
   @Override
   public void applyEditorTo(Src src) throws ConfigurationException {
-    myWrapped.applyTo(mySrcToDstConvertor.apply(src));
+    myWrapped.applyTo(mySrcToDstConverter.apply(src));
   }
 
   @Override
@@ -58,8 +57,8 @@ public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
     return myWrapped.createEditor();
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   protected @Nullable Component createUIComponent() {
     return myWrapped.createUIComponent();
   }

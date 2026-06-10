@@ -22,6 +22,7 @@ import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 
 public class CopyrightProfile implements Comparable<CopyrightProfile> {
+  @SuppressWarnings("SpellCheckingInspection")
   public static final String DEFAULT_COPYRIGHT_NOTICE = EntityUtil.encode("Copyright (c) $today.year. Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" +
                                                                           "Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan. \n" +
                                                                           "Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna. \n" +

@@ -31,7 +31,7 @@ public abstract class TodoCacheManager {
   }
 
   /**
-   * @return all files that contains todoitems under project
+   * @return all files that contains todo-items under project
    */
   public abstract PsiFile[] getFilesWithTodoItems();
 

@@ -31,16 +31,16 @@ public interface CacheManager {
     return project.getInstance(CacheManager.class);
   }
 
-  PsiFile[] getFilesWithWord(String word, short occurenceMask, GlobalSearchScope scope, boolean caseSensitively);
+  PsiFile[] getFilesWithWord(String word, short occurrenceMask, GlobalSearchScope scope, boolean caseSensitively);
 
   VirtualFile[] getVirtualFilesWithWord(String word,
-                                        short occurenceMask,
+                                        short occurrenceMask,
                                         GlobalSearchScope scope,
                                         boolean caseSensitively);
 
   boolean processFilesWithWord(Predicate<PsiFile> processor,
                                String word,
-                               short occurenceMask,
+                               short occurrenceMask,
                                GlobalSearchScope scope,
                                boolean caseSensitively);
 }

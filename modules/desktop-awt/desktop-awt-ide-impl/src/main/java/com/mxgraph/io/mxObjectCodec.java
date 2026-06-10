@@ -76,16 +76,16 @@ public class mxObjectCodec {
   /**
    * Constructs a new codec for the specified template object. The variables
    * in the optional exclude array are ignored by the codec. Variables in the
-   * optional idrefs array are turned into references in the XML. The
+   * optional idRefs array are turned into references in the XML. The
    * optional mapping may be used to map from variable names to XML
    * attributes. The argument is created as follows:
    *
    * @param template Prototypical instance of the object to be encoded/decoded.
-   * @param exclude  Optional array of fieldnames to be ignored.
-   * @param idrefs   Optional array of fieldnames to be converted to/from references.
-   * @param mapping  Optional mapping from field- to attributenames.
+   * @param exclude  Optional array of field-names to be ignored.
+   * @param idRefs   Optional array of field-names to be converted to/from references.
+   * @param mapping  Optional mapping from field- to attribute-names.
    */
-  public mxObjectCodec(Object template, String[] exclude, String[] idrefs, Map<String, String> mapping) {
+  public mxObjectCodec(Object template, String[] exclude, String[] idRefs, Map<String, String> mapping) {
     this.template = template;
 
     if (exclude != null) {
@@ -99,11 +99,11 @@ public class mxObjectCodec {
       this.exclude = EMPTY_SET;
     }
 
-    if (idrefs != null) {
+    if (idRefs != null) {
       this.idrefs = new HashSet<String>();
 
-      for (int i = 0; i < idrefs.length; i++) {
-        this.idrefs.add(idrefs[i]);
+      for (int i = 0; i < idRefs.length; i++) {
+        this.idrefs.add(idRefs[i]);
       }
     }
     else {

@@ -14,9 +14,9 @@ import java.util.*;
 /**
  * Extends mxEventSource to implement a graph model. The graph model acts as
  * a wrapper around the cells which are in charge of storing the actual graph
- * datastructure. The model acts as a transactional wrapper with event
+ * data-structure. The model acts as a transactional wrapper with event
  * notification for all changes, whereas the cells contain the atomic
- * operations for updating the actual datastructure.
+ * operations for updating the actual data-structure.
  * <p/>
  * Layers:
  * <p/>
@@ -237,13 +237,13 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel, Serial
 
   /**
    * Inner callback to change the root of the model and update the internal
-   * datastructures, such as cells and nextId. Returns the previous root.
+   * data-structures, such as cells and nextId. Returns the previous root.
    */
   protected Object rootChanged(Object root) {
     Object oldRoot = this.root;
     this.root = (mxICell)root;
 
-    // Resets counters and datastructures
+    // Resets counters and data-structures
     nextId = 0;
     cells = null;
     cellAdded(root);

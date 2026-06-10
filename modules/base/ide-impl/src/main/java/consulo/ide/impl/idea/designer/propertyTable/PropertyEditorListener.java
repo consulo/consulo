@@ -25,7 +25,7 @@ public interface PropertyEditorListener extends EventListener {
   /**
    * This method is invoked when user finished editing.
    * For example, user pressed "Enter" in text field or selected
-   * somthing from combo box. This doesn't mean that editing
+   * something from combo box. This doesn't mean that editing
    * is cancelled. PropertyInspector, for example, applies
    * new value and continue editing.
    */

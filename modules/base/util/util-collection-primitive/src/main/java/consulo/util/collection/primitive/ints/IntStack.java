@@ -35,9 +35,9 @@ public class IntStack implements IntCollection {
 
   public void push(int t) {
     if (size >= data.length) {
-      int[] newdata = new int[data.length * 3 / 2];
-      System.arraycopy(data, 0, newdata, 0, size);
-      data = newdata;
+      int[] newData = new int[data.length * 3 / 2];
+      System.arraycopy(data, 0, newData, 0, size);
+      data = newData;
     }
     data[size++] = t;
   }

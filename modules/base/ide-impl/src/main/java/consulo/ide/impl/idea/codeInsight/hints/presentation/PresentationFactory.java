@@ -492,10 +492,10 @@ public class PresentationFactory implements InlayPresentationFactory {
 
     private void navigateInternal(Supplier<PsiElement> resolve) {
         PsiElement element = resolve.get();
-        if (element instanceof Navigatable navigable) {
+        if (element instanceof Navigatable navigatable) {
             CommandProcessor.getInstance().newCommand()
                 .project(element.getProject())
-                .run(() -> navigable.navigate(true));
+                .run(() -> navigatable.navigate(true));
         }
     }
 

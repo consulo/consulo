@@ -38,7 +38,7 @@ interface ComponentAdapter<T> {
    * @return the component instance.
    * @throws PicoInitializationException if the component could not be instantiated.
    * @throws PicoIntrospectionException  if the component has dependencies which could not be resolved, or
-   *                                     instantiation of the component lead to an ambigous situation within the
+   *                                     instantiation of the component lead to an ambiguous situation within the
    *                                     container.
    */
   T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException;

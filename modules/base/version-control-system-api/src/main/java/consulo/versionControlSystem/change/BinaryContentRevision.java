@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.VcsException;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -27,7 +25,7 @@ public interface BinaryContentRevision extends ContentRevision {
   /**
    * Content of the revision. Implementers are encouraged to lazy implement this especially when it requires connection to the
    * version control server or something.
-   * Might return null in case if file path denotes a directory or content is impossible to retreive.
+   * Might return null in case if file path denotes a directory or content is impossible to retrieve.
    *
    * @return content of the revision
    * @throws VcsException in case when content retrieval fails

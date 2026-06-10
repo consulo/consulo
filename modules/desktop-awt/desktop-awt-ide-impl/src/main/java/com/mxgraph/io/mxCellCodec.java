@@ -13,11 +13,10 @@ import java.util.Map;
 
 /**
  * Codec for mxCells. This class is created and registered
- * dynamically at load time and used implicitely via mxCodec
+ * dynamically at load time and used implicitly via mxCodec
  * and the mxCodecRegistry.
  */
 public class mxCellCodec extends mxObjectCodec {
-
   /**
    * Constructs a new cell codec.
    */
@@ -35,8 +34,8 @@ public class mxCellCodec extends mxObjectCodec {
   /**
    * Constructs a new cell codec for the given arguments.
    */
-  public mxCellCodec(Object template, String[] exclude, String[] idrefs, Map<String, String> mapping) {
-    super(template, exclude, idrefs, mapping);
+  public mxCellCodec(Object template, String[] exclude, String[] idRefs, Map<String, String> mapping) {
+    super(template, exclude, idRefs, mapping);
   }
 
   /**
@@ -86,11 +85,11 @@ public class mxCellCodec extends mxObjectCodec {
 
     if (obj instanceof mxCell) {
       mxCell cell = (mxCell)obj;
-      String classname = getName();
+      String className = getName();
       String nodeName = node.getNodeName();
 
       // Handles aliased names
-      if (!nodeName.equals(classname)) {
+      if (!nodeName.equals(className)) {
         String tmp = mxCodecRegistry.aliases.get(nodeName);
 
         if (tmp != null) {
@@ -98,10 +97,10 @@ public class mxCellCodec extends mxObjectCodec {
         }
       }
 
-      if (!nodeName.equals(classname)) {
+      if (!nodeName.equals(className)) {
         // Passes the inner graphical annotation node to the
         // object codec for further processing of the cell.
-        Node tmp = inner.getElementsByTagName(classname).item(0);
+        Node tmp = inner.getElementsByTagName(className).item(0);
 
         if (tmp != null && tmp.getParentNode() == node) {
           inner = (Element)tmp;

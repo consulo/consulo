@@ -15,10 +15,10 @@
  */
 package consulo.ui.ex.keymap;
 
+import consulo.component.util.pointer.Named;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
-import consulo.component.util.pointer.Named;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public interface Keymap extends Named {
 
   /**
    * @return all keyboard shortcuts for the action with the specified <code>actionId</code>
-   * or an ampty array if the action doesn't have any keyboard shortcut.
+   * or an empty array if the action doesn't have any keyboard shortcut.
    */
   Shortcut[] getShortcuts(String actionId);
 

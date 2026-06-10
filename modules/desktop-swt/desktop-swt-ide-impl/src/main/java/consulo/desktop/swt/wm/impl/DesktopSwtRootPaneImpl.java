@@ -20,18 +20,17 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
-
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 12/12/2021
+ * @since 2021-12-12
  */
 public class DesktopSwtRootPaneImpl {
   private DockLayout myDockLayout = DockLayout.create();
 
   public void setSizeFull() {
-   // TargetVaddin.to(myDockLayout).setSizeFull();
+    //TargetVaadin.to(myDockLayout).setSizeFull();
   }
 
   @RequiredUIAccess

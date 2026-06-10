@@ -20,11 +20,10 @@ package consulo.logging.internal;
  * @since 2019-08-10
  */
 public interface LoggerFactoryProvider {
-    static int HIGHT_PRIORITY = 100;
+    static int HIGH_PRIORITY = 100;
     static int DEFAULT_PRIORITY = 1;
     static int DISABLE_PRIORITY = -100;
 
-    
     LoggerFactory create();
 
     default int getPriority() {

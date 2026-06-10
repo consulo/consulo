@@ -28,17 +28,17 @@ public class ListSpeedSearch<T> extends SpeedSearchBase<JList<T>> {
     }
 
     
-    public static <T> ListSpeedSearch<T> installOn(JList<T> list, @Nullable Function<? super T, String> convertor) {
-        ListSpeedSearch<T> search = new ListSpeedSearch<>(list, null, convertor);
+    public static <T> ListSpeedSearch<T> installOn(JList<T> list, @Nullable Function<? super T, String> converter) {
+        ListSpeedSearch<T> search = new ListSpeedSearch<>(list, null, converter);
         search.setupListeners();
         return search;
     }
 
     private final Function<? super T, String> myToStringConverter;
 
-    public ListSpeedSearch(JList<T> component, @SuppressWarnings("unused") Void sig, Function<? super T, String> convertor) {
+    public ListSpeedSearch(JList<T> component, @SuppressWarnings("unused") Void sig, Function<? super T, String> converter) {
         super(component, sig);
-        myToStringConverter = convertor;
+        myToStringConverter = converter;
     }
 
     @Deprecated
@@ -48,9 +48,9 @@ public class ListSpeedSearch<T> extends SpeedSearchBase<JList<T>> {
     }
 
     @Deprecated
-    public ListSpeedSearch(JList<T> component, Function<? super T, String> convertor) {
+    public ListSpeedSearch(JList<T> component, Function<? super T, String> converter) {
         super(component);
-        myToStringConverter = convertor;
+        myToStringConverter = converter;
     }
 
     @Override

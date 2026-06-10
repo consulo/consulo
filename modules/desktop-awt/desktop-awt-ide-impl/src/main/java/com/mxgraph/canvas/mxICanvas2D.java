@@ -28,7 +28,7 @@ public interface mxICanvas2D {
   void restore();
 
   /**
-   * Uniformaly scales the canvas by the given amount.
+   * Uniformly scales the canvas by the given amount.
    *
    * @param value The new scale value.
    */
@@ -86,21 +86,21 @@ public interface mxICanvas2D {
   void setDashPattern(String value);
 
   /**
-   * Sets the linecap. This should default to "flat" if unset.
+   * Sets the line-cap. This should default to "flat" if unset.
    *
    * @param value "flat", "square" or "round".
    */
   void setLineCap(String value);
 
   /**
-   * Sets the linejoin. This should default to "miter" if unset.
+   * Sets the line-join. This should default to "miter" if unset.
    *
    * @param value "miter", "round" or "bevel".
    */
   void setLineJoin(String value);
 
   /**
-   * Sets the miterlimit. This should default to 10 if unset.
+   * Sets the miter-limit. This should default to 10 if unset.
    *
    * @param value
    */

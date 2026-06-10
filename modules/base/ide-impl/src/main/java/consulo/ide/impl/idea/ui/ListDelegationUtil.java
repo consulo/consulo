@@ -25,7 +25,7 @@ import java.awt.event.KeyListener;
 
 /**
  * A simple way to delegate standard actions of a JList such as move up, down, home, end, page up, page down
- * to another component. Example, a focused textfield re-sends these actions to unfocused popup with a JList inside
+ * to another component. Example, a focused text-field re-sends these actions to unfocused popup with a JList inside
  * <p>
  * Use returned ActionCallback object to unsubscribe the listener
  *

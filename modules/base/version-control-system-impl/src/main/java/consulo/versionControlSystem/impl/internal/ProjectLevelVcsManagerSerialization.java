@@ -20,15 +20,15 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
-import java.util.HashMap;
 import org.jdom.Element;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectLevelVcsManagerSerialization {
   private static final String OPTIONS_SETTING = "OptionsSetting";
   private static final String CONFIRMATIONS_SETTING = "ConfirmationsSetting";
-  private static final String VALUE_ATTTIBUTE = "value";
+  private static final String VALUE_ATTRIBUTE = "value";
   private static final String ID_ATTRIBUTE = "id";
 
   // read-only can be kept here
@@ -49,7 +49,7 @@ public class ProjectLevelVcsManagerSerialization {
     Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
     for (Element subElement : element.getChildren(OPTIONS_SETTING)) {
       String id = subElement.getAttributeValue(ID_ATTRIBUTE);
-      String value = subElement.getAttributeValue(VALUE_ATTTIBUTE);
+      String value = subElement.getAttributeValue(VALUE_ATTRIBUTE);
       if (id != null && value != null) {
         try {
           getOrCreateOption(options, id).setValue(Boolean.parseBoolean(value));
@@ -61,7 +61,7 @@ public class ProjectLevelVcsManagerSerialization {
     myReadValue.clear();
     for (Element subElement : element.getChildren(CONFIRMATIONS_SETTING)) {
       String id = subElement.getAttributeValue(ID_ATTRIBUTE);
-      String value = subElement.getAttributeValue(VALUE_ATTTIBUTE);
+      String value = subElement.getAttributeValue(VALUE_ATTRIBUTE);
       if (id != null && value != null) {
         try {
           myReadValue.put(id, VcsShowConfirmationOption.Value.fromString(value));
@@ -80,7 +80,7 @@ public class ProjectLevelVcsManagerSerialization {
       if (!setting.getValue()) {
         Element settingElement = new Element(OPTIONS_SETTING);
         element.addContent(settingElement);
-        settingElement.setAttribute(VALUE_ATTTIBUTE, Boolean.toString(setting.getValue()));
+        settingElement.setAttribute(VALUE_ATTRIBUTE, Boolean.toString(setting.getValue()));
         settingElement.setAttribute(ID_ATTRIBUTE, setting.getDisplayName());
       }
     }
@@ -89,7 +89,7 @@ public class ProjectLevelVcsManagerSerialization {
       if (setting.getValue() != VcsShowConfirmationOption.Value.SHOW_CONFIRMATION) {
         Element settingElement = new Element(CONFIRMATIONS_SETTING);
         element.addContent(settingElement);
-        settingElement.setAttribute(VALUE_ATTTIBUTE, setting.getValue().toString());
+        settingElement.setAttribute(VALUE_ATTRIBUTE, setting.getValue().toString());
         settingElement.setAttribute(ID_ATTRIBUTE, setting.getDisplayName());
       }
     }

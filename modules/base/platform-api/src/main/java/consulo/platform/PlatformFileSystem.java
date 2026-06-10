@@ -18,11 +18,7 @@ package consulo.platform;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -36,7 +32,7 @@ public interface PlatformFileSystem {
     boolean areSymLinksSupported();
 
     /**
-     * @return image filemanager image for file. If return null it will use default icon from IDE
+     * @return image file-manager image for file. If return null it will use default icon from IDE
      */
     default @Nullable Image getImage(Path file) {
         return null;

@@ -16,8 +16,8 @@
 package consulo.language.codeStyle.impl.internal.formatting;
 
 import consulo.document.Document;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.internal.AbstractBlockWrapper;
 import consulo.language.codeStyle.internal.AlignmentImpl;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
@@ -38,7 +38,7 @@ public interface BlockAlignmentProcessor {
 
     /**
      * This value should be used to indicate that alignment of the target block can't be performed because it doesn't have
-     * a counterparty (e.g. we want to align two blocks and this value is returned after processing the first of them).
+     * a counterpart (e.g. we want to align two blocks and this value is returned after processing the first of them).
      */
     TARGET_BLOCK_PROCESSED_NOT_ALIGNED,
 

@@ -31,13 +31,13 @@ import org.jspecify.annotations.Nullable;
  * This service provides utility methods for that.
  *
  * @author Denis Zhdanov
- * @since 9/4/12 11:12 AM
+ * @since 2012-09-04
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface MemberOrderService {
 
   /**
-   * Tries to find an element at the given context which should be the previous sibling for the given 'member'element according to the
+   * Tries to find an element at the given context which should be the previous sibling for the given member-element according to the
    * {@link CommonCodeStyleSettings#getArrangementSettings() user-defined arrangement rules}.
    * <p/>
    * E.g. the IDE might generate given 'member' element and wants to know element after which it should be inserted

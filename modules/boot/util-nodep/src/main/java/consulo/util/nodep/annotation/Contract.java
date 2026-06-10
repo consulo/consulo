@@ -16,7 +16,7 @@
 package consulo.util.nodep.annotation;
 
 /**
- * Reproduction of org.jetbrains.annotations.Contract for Nullaway.
+ * Reproduction of org.jetbrains.annotations.Contract for NullAway.
  *
  * @author UNV
  * @since 2026-03-13

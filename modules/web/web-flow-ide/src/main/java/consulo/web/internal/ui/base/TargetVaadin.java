@@ -30,11 +30,11 @@ public class TargetVaadin {
       return null;
     }
 
-    if (component instanceof ToVaddinComponentWrapper) {
-      return ((ToVaddinComponentWrapper)component).toVaadinComponent();
+    if (component instanceof ToVaadinComponentWrapper toVaadinComponentWrapper) {
+      return toVaadinComponentWrapper.toVaadinComponent();
     }
 
-    throw new UnsupportedOperationException("Component " + component + " is not impl ToVaddinComponentWrapper");
+    throw new UnsupportedOperationException("Component " + component + " is not impl ToVaadinComponentWrapper");
   }
 
   @Contract("null -> null")
