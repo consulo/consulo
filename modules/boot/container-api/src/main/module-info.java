@@ -33,6 +33,7 @@ module consulo.container.api {
         consulo.desktop.swt.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.external.service.impl,
+        consulo.language.api,
         consulo.test.impl,
         consulo.logging.logback.impl,
         consulo.ide.impl;

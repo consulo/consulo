@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi;
 
+import consulo.container.classloader.PluginClassLoader;
 import consulo.util.collection.FList;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
@@ -12,6 +13,8 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import org.jspecify.annotations.Nullable;
+
+import java.lang.invoke.MethodHandles;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
@@ -75,7 +78,11 @@ public final class DebugReflectionUtil {
   }
 
   private static boolean isInitialized(Class<?> root) {
-    return !UnsafeDelegate.get().shouldBeInitialized(root);
+    ClassLoader classLoader = root.getClassLoader();
+    if (classLoader instanceof PluginClassLoader loader) {
+      return loader.hasLoadedClass(root.getName());
+    }
+    return true;
   }
 
   private static final Key<Boolean> REPORTED_LEAKED = Key.create("REPORTED_LEAKED");
