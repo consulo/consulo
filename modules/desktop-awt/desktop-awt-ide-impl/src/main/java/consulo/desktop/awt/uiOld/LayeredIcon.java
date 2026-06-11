@@ -135,7 +135,7 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
 
     public void setIcon(Icon icon, int layer, int hShift, int vShift) {
         if (icon instanceof LayeredIcon layeredIcon) {
-            layeredIcon.checkIHaventIconInsideMe(this);
+            layeredIcon.checkIHaveNoIconInsideMe(this);
         }
         myIcons[layer] = icon;
         myScaledIcons = null;
@@ -201,11 +201,11 @@ public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
         setIcon(icon, layer, x, y);
     }
 
-    private void checkIHaventIconInsideMe(Icon icon) {
+    private void checkIHaveNoIconInsideMe(Icon icon) {
         LOG.assertTrue(icon != this);
         for (Icon child : myIcons) {
             if (child instanceof LayeredIcon layeredIcon) {
-                layeredIcon.checkIHaventIconInsideMe(icon);
+                layeredIcon.checkIHaveNoIconInsideMe(icon);
             }
         }
     }

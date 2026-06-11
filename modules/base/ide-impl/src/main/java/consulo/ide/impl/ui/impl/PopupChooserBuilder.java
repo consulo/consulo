@@ -1,5 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.ui.impl;
 
 import consulo.annotation.DeprecationInfo;
@@ -155,13 +154,11 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    
     public PopupChooserBuilder<T> setTitle(String title) {
         myTitle = title;
         return this;
     }
 
-    
     public PopupChooserBuilder<T> addAdditionalChooseKeystroke(@Nullable KeyStroke keyStroke) {
         if (keyStroke != null) {
             myAdditionalKeystrokes.add(keyStroke);
@@ -179,14 +176,12 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return myChooserComponent.getComponent();
     }
 
-    
     @Override
     public IPopupChooserBuilder<T> setItemChosenCallback(Consumer<? super T> callback) {
         myChooserComponent.setItemChosenCallback(callback);
         return this;
     }
 
-    
     @Override
     public IPopupChooserBuilder<T> setItemsChosenCallback(Consumer<? super Set<T>> callback) {
         myChooserComponent.setItemsChosenCallback(callback);
@@ -194,27 +189,23 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    
     public PopupChooserBuilder<T> setItemChoosenCallback(Runnable runnable) {
         myItemChosenRunnable = runnable;
         return this;
     }
 
     @Override
-    
     public PopupChooserBuilder<T> setSouthComponent(JComponent cmp) {
         mySouthComponent = cmp;
         return this;
     }
 
     @Override
-    
     public PopupChooserBuilder<T> setCouldPin(@Nullable Processor<? super JBPopup> callback) {
         myCouldPin = callback;
         return this;
     }
 
-    
     public PopupChooserBuilder<T> setEastComponent(JComponent cmp) {
         myEastComponent = cmp;
         return this;
@@ -304,7 +295,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     }
 
     @Override
-    
     public JBPopup createPopup() {
         JPanel contentPane = new JPanel(new BorderLayout());
         if (!myForceMovable && myTitle != null) {
@@ -472,14 +462,12 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
-    
     public PopupChooserBuilder<T> setFocusOwners(Component[] focusOwners) {
         myFocusOwners = focusOwners;
         return this;
     }
 
     @Override
-    
     public PopupChooserBuilder<T> setAdText(String ad) {
         setAdText(ad, SwingConstants.LEFT);
         return this;
@@ -558,7 +546,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return myChooserComponent.getBackgroundUpdater();
     }
 
-    
     @Override
     public PopupChooserBuilder<T> setHeaderLeftActions(List<? extends AnAction> headerLeftActions) {
         if (myHeaderLeftActions.isEmpty()) {
@@ -568,7 +555,6 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
         return this;
     }
 
-    
     @Override
     public PopupChooserBuilder<T> setHeaderRightActions(List<? extends AnAction> headerRightActions) {
         if (myHeaderRightActions.isEmpty()) {

@@ -219,12 +219,12 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
         return new Dimension(width, height);
       }
       else {
-        int heigth = Math.max(firstSize.height, Math.max(lastSize.height, innerSize.height));
+        int height = Math.max(firstSize.height, Math.max(lastSize.height, innerSize.height));
         int width = visibleDividersCount() * dividerWidth;
         width += firstSize.width;
         width += lastSize.width;
         width += innerSize.width;
-        return new Dimension(width, heigth);
+        return new Dimension(width, height);
       }
     }
     return super.getMinimumSize();
@@ -244,25 +244,25 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
     int dividerWidth = getDividerWidth();
     int dividersCount = visibleDividersCount();
 
-    int firstCompontSize;
+    int firstComponentSize;
     int lastComponentSize;
     int innerComponentSize;
     if(componentSize <= dividersCount * dividerWidth) {
-      firstCompontSize = 0;
+      firstComponentSize = 0;
       lastComponentSize = 0;
       innerComponentSize = 0;
       dividerWidth = componentSize;
     }
     else {
-      firstCompontSize = getFirstSize();
+      firstComponentSize = getFirstSize();
       lastComponentSize = getLastSize();
-      int sizeLack = firstCompontSize + lastComponentSize - (componentSize - dividersCount * dividerWidth - myMinSize);
+      int sizeLack = firstComponentSize + lastComponentSize - (componentSize - dividersCount * dividerWidth - myMinSize);
       if (sizeLack > 0) {
         // Lacking size. Reduce first & last component's size, inner -> MIN_SIZE
-        double firstSizeRatio = (double)firstCompontSize / (firstCompontSize + lastComponentSize);
-        if (firstCompontSize > 0) {
-          firstCompontSize -= sizeLack * firstSizeRatio;
-          firstCompontSize = Math.max(myMinSize, firstCompontSize);
+        double firstSizeRatio = (double)firstComponentSize / (firstComponentSize + lastComponentSize);
+        if (firstComponentSize > 0) {
+          firstComponentSize -= sizeLack * firstSizeRatio;
+          firstComponentSize = Math.max(myMinSize, firstComponentSize);
         }
         if (lastComponentSize > 0) {
           lastComponentSize -= sizeLack * (1 - firstSizeRatio);
@@ -278,14 +278,14 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
         lastComponentSize += innerComponentSize;
         innerComponentSize = 0;
         if (!lastVisible()) {
-          firstCompontSize = componentSize;
+          firstComponentSize = componentSize;
         }
       }
     }
 
     if (getOrientation()) {
-      int space = firstCompontSize;
-      firstRect.setBounds(0, 0, width, firstCompontSize);
+      int space = firstComponentSize;
+      firstRect.setBounds(0, 0, width, firstComponentSize);
       if (firstDividerVisible()) {
         firstDividerRect.setBounds(0, space, width, dividerWidth);
         space += dividerWidth;
@@ -302,8 +302,8 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
       lastRect.setBounds(0, space, width, lastComponentSize);
     }
     else {
-      int space = firstCompontSize;
-      firstRect.setBounds(0, 0, firstCompontSize, height);
+      int space = firstComponentSize;
+      firstRect.setBounds(0, 0, firstComponentSize, height);
 
       if (firstDividerVisible()) {
         firstDividerRect.setBounds(space, 0, dividerWidth, height);
@@ -381,9 +381,8 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   }
 
   /**
-   * Sets component which is located as the "first" splitted area. The method doesn't validate and
+   * Sets component which is located as the "first" split area. The method doesn't validate and
    * repaint the splitter. If there is already
-   *
    */
   public void setFirstComponent(@Nullable JComponent component) {
     if (myFirstComponent != component) {
@@ -403,9 +402,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   }
 
   /**
-   * Sets component which is located as the "secont" splitted area. The method doesn't validate and
-   * repaint the splitter.
-   *
+   * Sets component which is located as the "second" split area. The method doesn't validate and repaint the splitter.
    */
   public void setLastComponent(@Nullable JComponent component) {
     if (myLastComponent != component) {
@@ -425,9 +422,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   }
 
   /**
-   * Sets component which is located as the "inner" splitted area. The method doesn't validate and
-   * repaint the splitter.
-   *
+   * Sets component which is located as the "inner" split area. The method doesn't validate and repaint the splitter.
    */
   public void setInnerComponent(@Nullable JComponent component) {
     if (myInnerComponent != component) {

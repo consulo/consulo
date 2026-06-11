@@ -41,7 +41,7 @@ public class mxChildChangeCodec extends mxObjectCodec {
       return true;
     }
 
-    return idrefs.contains(attr);
+    return idRefs.contains(attr);
   }
 
   /* (non-Javadoc)

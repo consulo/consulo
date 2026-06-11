@@ -51,7 +51,6 @@ import java.util.*;
  * @see mxICostFunction
  */
 public class mxGraphAnalysis {
-
   /**
    * Holds the shared instance of this class.
    */
@@ -97,15 +96,15 @@ public class mxGraphAnalysis {
    * @see #createPriorityQueue()
    */
   public Object[] getShortestPath(mxGraph graph, Object from, Object to, mxICostFunction cf, int steps, boolean directed) {
-    // Sets up a pqueue and a hashtable to store the predecessor for each
-    // cell in tha graph traversal. The pqueue is initialized
-    // with the from element at prio 0.
+    // Sets up a pQueue and a hashtable to store the predecessor for each
+    // cell in tha graph traversal. The pQueue is initialized
+    // with the from element at priority 0.
     mxGraphView view = graph.getView();
     mxFibonacciHeap q = createPriorityQueue();
     Hashtable<Object, Object> pred = new Hashtable<Object, Object>();
     q.decreaseKey(q.getNode(from, true), 0); // Inserts automatically
 
-    // The main loop of the dijkstra algorithm is based on the pqueue being
+    // The main loop of the dijkstra algorithm is based on the pQueue being
     // updated with the actual shortest distance to the source vertex.
     for (int j = 0; j < steps; j++) {
       mxFibonacciHeap.Node node = q.removeMin();
@@ -127,19 +126,19 @@ public class mxGraphAnalysis {
           if (opp != null && opp.length > 0) {
             Object neighbour = opp[0];
 
-            // Updates the priority in the pqueue for the opposite node
+            // Updates the priority in the pQueue for the opposite node
             // to be the distance of this step plus the cost to
-            // traverese the edge to the neighbour. Note that the
+            // traverse the edge to the neighbour. Note that the
             // priority queue will make sure that in the next step the
-            // node with the smallest prio will be traversed.
+            // node with the smallest priority will be traversed.
             if (neighbour != null && neighbour != obj && neighbour != from) {
-              double newPrio = prio + ((cf != null) ? cf.getCost(view.getState(e[i])) : 1);
+              double newPriority = prio + ((cf != null) ? cf.getCost(view.getState(e[i])) : 1);
               node = q.getNode(neighbour, true);
-              double oldPrio = node.getKey();
+              double oldPriority = node.getKey();
 
-              if (newPrio < oldPrio) {
+              if (newPriority < oldPriority) {
                 pred.put(neighbour, e[i]);
-                q.decreaseKey(node, newPrio);
+                q.decreaseKey(node, newPriority);
               }
             }
           }
@@ -151,7 +150,7 @@ public class mxGraphAnalysis {
       }
     }
 
-    // Constructs a path array by walking backwards through the predessecor
+    // Constructs a path array by walking backwards through the predecessor
     // map and filling up a list of edges, which is subsequently returned.
     ArrayList<Object> list = new ArrayList<Object>(2 * steps);
     Object obj = to;
@@ -180,9 +179,9 @@ public class mxGraphAnalysis {
    * Returns the minimum spanning tree (MST) for the graph defined by G=(E,V).
    * The MST is defined as the set of all vertices with minimal lengths that
    * forms no cycles in G.<br>
-   * This implementation is based on the algorihm by Prim-Jarnik. It uses
-   * O(|E|+|V|log|V|) time when used with a Fibonacci heap and a graph whith a
-   * double linked-list datastructure, as is the case with the default
+   * This implementation is based on the algorithm by Prim-Jarnik. It uses
+   * O(|E|+|V|log|V|) time when used with a Fibonacci heap and a graph with a
+   * double linked-list data-structure, as is the case with the default
    * implementation.
    *
    * @param graph the object that describes the graph
@@ -194,9 +193,9 @@ public class mxGraphAnalysis {
   public Object[] getMinimumSpanningTree(mxGraph graph, Object[] v, mxICostFunction cf, boolean directed) {
     ArrayList<Object> mst = new ArrayList<Object>(v.length);
 
-    // Sets up a pqueue and a hashtable to store the predecessor for each
-    // cell in tha graph traversal. The pqueue is initialized
-    // with the from element at prio 0.
+    // Sets up a pQueue and a hashtable to store the predecessor for each
+    // cell in tha graph traversal. The pQueue is initialized
+    // with the from element at priority 0.
     mxFibonacciHeap q = createPriorityQueue();
     Hashtable<Object, Object> pred = new Hashtable<Object, Object>();
     Object u = v[0];
@@ -206,7 +205,7 @@ public class mxGraphAnalysis {
       q.getNode(v[i], true);
     }
 
-    // The main loop of the dijkstra algorithm is based on the pqueue being
+    // The main loop of the dijkstra algorithm is based on the pQueue being
     // updated with the actual shortest distance to the source vertex.
     while (!q.isEmpty()) {
       mxFibonacciHeap.Node node = q.removeMin();
@@ -225,21 +224,21 @@ public class mxGraphAnalysis {
         for (int i = 0; i < e.length; i++) {
           Object neighbour = opp[i];
 
-          // Updates the priority in the pqueue for the opposite node
+          // Updates the priority in the pQueue for the opposite node
           // to be the distance of this step plus the cost to
-          // traverese the edge to the neighbour. Note that the
+          // traverse the edge to the neighbour. Note that the
           // priority queue will make sure that in the next step the
-          // node with the smallest prio will be traversed.
+          // node with the smallest priority will be traversed.
           if (neighbour != null && neighbour != u) {
             node = q.getNode(neighbour, false);
 
             if (node != null) {
-              double newPrio = cf.getCost(graph.getView().getState(e[i]));
-              double oldPrio = node.getKey();
+              double newPriority = cf.getCost(graph.getView().getState(e[i]));
+              double oldPriority = node.getKey();
 
-              if (newPrio < oldPrio) {
+              if (newPriority < oldPriority) {
                 pred.put(neighbour, e[i]);
-                q.decreaseKey(node, newPrio);
+                q.decreaseKey(node, newPriority);
               }
             }
           }
@@ -252,12 +251,12 @@ public class mxGraphAnalysis {
 
   /**
    * Returns the minimum spanning tree (MST) for the graph defined by G=(E,V).
-   * The MST is defined as the set of all vertices with minimal lenths that
+   * The MST is defined as the set of all vertices with minimal lengths that
    * forms no cycles in G.<br>
-   * This implementation is based on the algorihm by Kruskal. It uses
+   * This implementation is based on the algorithm by Kruskal. It uses
    * O(|E|log|E|)=O(|E|log|V|) time for sorting the edges, O(|V|) create sets,
    * O(|E|) find and O(|V|) union calls on the union find structure, thus
-   * yielding no more than O(|E|log|V|) steps. For a faster implementatin
+   * yielding no more than O(|E|log|V|) steps. For a faster implementation
    *
    * @param graph The object that contains the graph.
    * @param v     The vertices of the graph.
@@ -335,17 +334,12 @@ public class mxGraphAnalysis {
     List<mxCellState> result = Arrays.asList(states);
 
     Collections.sort(result, new Comparator<mxCellState>() {
-
-      /**
-       *
-       */
       public int compare(mxCellState o1, mxCellState o2) {
         Double d1 = new Double(cf.getCost(o1));
         Double d2 = new Double(cf.getCost(o2));
 
         return d1.compareTo(d2);
       }
-
     });
 
     return (mxCellState[])result.toArray();
@@ -370,7 +364,7 @@ public class mxGraphAnalysis {
   }
 
   /**
-   * Hook for subclassers to provide a custom union find structure.
+   * Hook for subclasses to provide a custom union find structure.
    *
    * @param v the array of all elements
    * @return Returns a union find structure for <code>v</code>
@@ -380,10 +374,9 @@ public class mxGraphAnalysis {
   }
 
   /**
-   * Hook for subclassers to provide a custom fibonacci heap.
+   * Hook for subclasses to provide a custom fibonacci heap.
    */
   protected mxFibonacciHeap createPriorityQueue() {
     return new mxFibonacciHeap();
   }
-
 }

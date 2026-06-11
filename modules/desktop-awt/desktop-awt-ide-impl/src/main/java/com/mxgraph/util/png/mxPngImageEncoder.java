@@ -187,8 +187,7 @@ class ChunkStream extends OutputStream implements DataOutput {
   }
 
   /**
-   * this doesnt do much, its main purpose is to stop complaints
-   * about 'outputStream not closed...'.
+   * This doesn't do much, its main purpose is to stop complaints about 'outputStream not closed...'.
    *
    * @throws IOException
    */
@@ -332,7 +331,7 @@ public class mxPngImageEncoder {
   private DataOutputStream dataOutput;
 
   /**
-   * The OutputStream associcted with this ImageEncoder.
+   * The OutputStream associated with this ImageEncoder.
    */
   protected OutputStream output;
 
@@ -906,14 +905,13 @@ public class mxPngImageEncoder {
     this.bitShift = 0;
 
     // Allow user to override the bit depth of gray images
-    if (param instanceof mxPngEncodeParam.Gray) {
-      mxPngEncodeParam.Gray paramg = (mxPngEncodeParam.Gray)param;
-      if (paramg.isBitDepthSet()) {
-        this.bitDepth = paramg.getBitDepth();
+    if (param instanceof mxPngEncodeParam.Gray paramGray) {
+      if (paramGray.isBitDepthSet()) {
+        this.bitDepth = paramGray.getBitDepth();
       }
 
-      if (paramg.isBitShiftSet()) {
-        this.bitShift = paramg.getBitShift();
+      if (paramGray.isBitShiftSet()) {
+        this.bitShift = paramGray.getBitShift();
       }
     }
 
@@ -980,11 +978,10 @@ public class mxPngImageEncoder {
         param = new mxPngEncodeParam.Palette();
       }
 
-      if (param instanceof mxPngEncodeParam.Palette) {
+      if (param instanceof mxPngEncodeParam.Palette paletteParam) {
         // If palette not set in param, create one from the ColorModel.
-        mxPngEncodeParam.Palette parami = (mxPngEncodeParam.Palette)param;
-        if (parami.isPaletteSet()) {
-          int[] palette = parami.getPalette();
+        if (paletteParam.isPaletteSet()) {
+          int[] palette = paletteParam.getPalette();
           size = palette.length / 3;
 
           int index = 0;

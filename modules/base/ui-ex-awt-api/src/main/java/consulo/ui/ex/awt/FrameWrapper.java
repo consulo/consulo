@@ -34,7 +34,10 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.util.ActionUtil;
-import consulo.ui.ex.awt.internal.*;
+import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
+import consulo.ui.ex.awt.internal.InternalPopupUtil;
+import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
@@ -260,7 +263,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     return getPeerFactory().createJDialog(this, parent);
   }
 
-  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
+  public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
     return null;
   }
 
@@ -281,8 +284,8 @@ public class FrameWrapper implements Disposable, DataProvider {
     myComponent = component;
   }
 
-  public void setPreferredFocusedComponent(JComponent preferedFocus) {
-    myPreferredFocus = preferedFocus;
+  public void setPreferredFocusedComponent(JComponent preferredFocus) {
+    myPreferredFocus = preferredFocus;
   }
 
   public JComponent getPreferredFocusedComponent() {

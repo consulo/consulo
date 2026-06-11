@@ -58,6 +58,7 @@ public class PorterStemmerUtil {
     return str;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static String step1a(String str) {
     // SSES -> SS
     if (str.endsWith("sses")) {
@@ -106,7 +107,7 @@ public class PorterStemmerUtil {
     if (str.endsWith("at") || str.endsWith("bl") || str.endsWith("iz")) {
       return str + "e";
     }
-    else if ((endsWithDoubleConsonent(str)) && (!(str.endsWith("l") || str.endsWith("s") || str.endsWith("z")))) {
+    else if ((endsWithDoubleConsonant(str)) && (!(str.endsWith("l") || str.endsWith("s") || str.endsWith("z")))) {
       return str.substring(0, str.length() - 1);
     }
     else if ((stringMeasure(str) == 1) && (endsWithCVC(str))) {
@@ -125,6 +126,7 @@ public class PorterStemmerUtil {
     return str;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static String step2(String str) {
     // (m > 0) ATIONAL -> ATE
     if ((str.endsWith("ational")) && (stringMeasure(str.substring(0, str.length() - 5)) > 0)) {
@@ -209,6 +211,7 @@ public class PorterStemmerUtil {
     return str;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static String step3(String str) {
     // (m > 0) ICATE -> IC
     if ((str.endsWith("icate")) && (stringMeasure(str.substring(0, str.length() - 3)) > 0)) {
@@ -241,6 +244,7 @@ public class PorterStemmerUtil {
     return str;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static String step4(String str) {
     if ((str.endsWith("al")) && (stringMeasure(str.substring(0, str.length() - 2)) > 1)) {
       return str.substring(0, str.length() - 2);
@@ -337,7 +341,7 @@ public class PorterStemmerUtil {
 
   private static String step5b(String str) {
     // (m > 1 and *d and *L) ->
-    if (str.endsWith("l") && stringMeasure(str.substring(0, str.length() - 1)) > 1 && endsWithDoubleConsonent(str)) {
+    if (str.endsWith("l") && stringMeasure(str.substring(0, str.length() - 1)) > 1 && endsWithDoubleConsonant(str)) {
       return str.substring(0, str.length() - 1);
     }
     else {
@@ -345,10 +349,11 @@ public class PorterStemmerUtil {
     }
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   private static boolean containsVowel(String str) {
-    char[] strchars = str.toCharArray();
-    for (char strchar : strchars) {
-      if (isVowel(strchar)) return true;
+    char[] strChars = str.toCharArray();
+    for (char strChar : strChars) {
+      if (isVowel(strChar)) return true;
     }
     // no aeiou but there is y
     if (str.indexOf('y') > -1) {
@@ -368,7 +373,7 @@ public class PorterStemmerUtil {
     }
   }
 
-  private static boolean endsWithDoubleConsonent(String str) {
+  private static boolean endsWithDoubleConsonant(String str) {
     char c = str.charAt(str.length() - 1);
     if (str.length() > 1 && c == str.charAt(str.length() - 2)) {
       if (!containsVowel(str.substring(str.length() - 2))) {
@@ -382,10 +387,10 @@ public class PorterStemmerUtil {
   private static int stringMeasure(String str) {
     int count = 0;
     boolean vowelSeen = false;
-    char[] strchars = str.toCharArray();
+    char[] strChars = str.toCharArray();
 
-    for (char strchar : strchars) {
-      if (isVowel(strchar)) {
+    for (char strChar : strChars) {
+      if (isVowel(strChar)) {
         vowelSeen = true;
       }
       else if (vowelSeen) {

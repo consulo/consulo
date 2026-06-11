@@ -498,7 +498,7 @@ public class mxConstants {
   /**
    * Defines the key for the imageWidth style. The type of this value is
    * <code>int</code>, the value is the image width in pixels and must be
-   * greated than 0.
+   * greater than 0.
    */
   public static String STYLE_IMAGE_WIDTH = "imageWidth";
 
@@ -843,7 +843,7 @@ public class mxConstants {
   public static String STYLE_FONTSTYLE = "fontStyle";
 
   /**
-   * Defines the key for the autosize style. This specifies if a cell should be
+   * Defines the key for the auto-size style. This specifies if a cell should be
    * resized automatically if the value has changed. Possible values are 0 or 1.
    * Default is 0. See mxGraph.isAutoSizeCell. This is normally combined with
    * STYLE_RESIZABLE to disable manual sizing.

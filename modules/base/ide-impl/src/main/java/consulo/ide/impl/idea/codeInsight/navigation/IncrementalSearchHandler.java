@@ -243,7 +243,7 @@ public class IncrementalSearchHandler {
             buf.append("\\w");
           }
           else if ("{}[].+^$*()?".indexOf(ch) != -1) {
-            // do not bother with other metachars
+            // do not bother with other meta-chars
             buf.append('\\');
           }
           buf.append(ch);

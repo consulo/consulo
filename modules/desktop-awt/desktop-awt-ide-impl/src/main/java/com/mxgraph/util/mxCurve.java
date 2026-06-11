@@ -5,8 +5,8 @@
 package com.mxgraph.util;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class mxCurve {
   /**
@@ -43,7 +43,6 @@ public class mxCurve {
    * Defines the key for the label curve index
    */
   public static String LABEL_CURVE = "Label_curve";
-  ;
 
   /**
    * Indicates that an invalid position on a curve was requested
@@ -466,9 +465,7 @@ public class mxCurve {
       }
 
       if (hitPoint != null) {
-
       }
-
     }
 
     return null;
@@ -651,8 +648,8 @@ public class mxCurve {
       double offsetLen = Math.sqrt((orthOffsetPointX - startSegPt.getX()) * (orthOffsetPointX - startSegPt.getX()) +
                                    (orthOffsetPointY - startSegPt.getY()) * (orthOffsetPointY - startSegPt.getY()));
       double proportionAlongSeg = offsetLen / segmentLen;
-      double segProportingDiff = currentIntervals[closestSegment + 1] - currentIntervals[closestSegment];
-      distAlongEdge = currentIntervals[closestSegment] + segProportingDiff * proportionAlongSeg;
+      double segProportionDiff = currentIntervals[closestSegment + 1] - currentIntervals[closestSegment];
+      distAlongEdge = currentIntervals[closestSegment] + segProportionDiff * proportionAlongSeg;
     }
 
     if (distAlongEdge > 1.0) {
@@ -703,7 +700,7 @@ public class mxCurve {
 
     // Store the last two spline positions. If the next position is
     // very close to where the extrapolation of the last two points
-    // then double the interval. This diviation is terms the "flatness".
+    // then double the interval. This deviation is terms the "flatness".
     // There is a range where the interval is kept the same, any
     // variation from this range of flatness invokes a proportional
     // adjustment to try to reenter the range without
@@ -714,7 +711,7 @@ public class mxCurve {
     // distance is too computationally intensive
     double minDeviation = 0.15;
     double maxDeviation = 0.3;
-    double preferedDeviation = (maxDeviation + minDeviation) / 2.0;
+    double preferredDeviation = (maxDeviation + minDeviation) / 2.0;
 
     // x1, y1 are the position two iterations ago, x2, y2
     // the position on the last iteration
@@ -764,7 +761,7 @@ public class mxCurve {
         // is more than the 1D deviation allowed
         // go back and re-calculate with a smaller interval
         // It's possible that the edge has curved too fast
-        // for the algorithmn. If the interval is
+        // for the algorithm. If the interval is
         // reduced to less than the minimum permitted
         // interval, it may be that it's impossible
         // to get within the deviation because of
@@ -794,8 +791,8 @@ public class mxCurve {
           interval *= intervalChange;
         }
         else {
-          // Try to keep the deviation around the prefered value
-          double errorRatio = preferedDeviation / Math.max(diffX, diffY);
+          // Try to keep the deviation around the preferred value
+          double errorRatio = preferredDeviation / Math.max(diffX, diffY);
           intervalChange = errorRatio / 4.0;
           interval *= intervalChange;
         }

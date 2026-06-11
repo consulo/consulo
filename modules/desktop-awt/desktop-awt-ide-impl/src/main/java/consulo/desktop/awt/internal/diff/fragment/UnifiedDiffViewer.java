@@ -1287,7 +1287,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
         private final List<RangeMarker> myGuardedRangeBlocks;
 
-        private final LineNumberConvertor myLineNumberConvertor;
+        private final LineNumberConvertor myLineNumberConverter;
         private final boolean myIsContentsEqual;
 
         public ChangedBlockData(
@@ -1298,7 +1298,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         ) {
             myDiffChanges = diffChanges;
             myGuardedRangeBlocks = guarderRangeBlocks;
-            myLineNumberConvertor = lineNumberConverter;
+            myLineNumberConverter = lineNumberConverter;
             myIsContentsEqual = isContentsEqual;
         }
 
@@ -1311,7 +1311,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         }
 
         public LineNumberConvertor getLineNumberConvertor() {
-            return myLineNumberConvertor;
+            return myLineNumberConverter;
         }
 
         public boolean isContentsEqual() {
@@ -1506,7 +1506,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         public void install(
             @Nullable List<LineRange> changedLines,
             UserDataHolder context,
-            FoldingModelSupport.Settings settings
+            Settings settings
         ) {
             Iterator<int[]> it = map(changedLines, line -> new int[]{
                 line.start,

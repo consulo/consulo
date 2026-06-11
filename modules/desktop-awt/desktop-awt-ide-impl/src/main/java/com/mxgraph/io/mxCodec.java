@@ -97,7 +97,7 @@ public class mxCodec {
   }
 
   /**
-   * Assoiates the given object with the given ID.
+   * Associates the given object with the given ID.
    *
    * @param id     ID for the object to be associated with.
    * @param object Object to be associated with the ID.
@@ -139,7 +139,7 @@ public class mxCodec {
   }
 
   /**
-   * Hook for subclassers to implement a custom lookup mechanism for cell IDs.
+   * Hook for subclasses to implement a custom lookup mechanism for cell IDs.
    * This implementation always returns null.
    *
    * @param id ID of the object to be returned.
@@ -168,7 +168,7 @@ public class mxCodec {
    * Parameters:
    * <p/>
    * id - String that contains the ID.
-   * attr - Optional string for the attributename. Default is id.
+   * attr - Optional string for the attribute-name. Default is id.
    */
   public Node getElementById(String id, String attr) {
     if (attr == null) {
@@ -214,7 +214,7 @@ public class mxCodec {
   }
 
   /**
-   * Hook for subclassers to implement a custom method for retrieving IDs from
+   * Hook for subclasses to implement a custom method for retrieving IDs from
    * objects. This implementation always returns null.
    *
    * @param obj Object whose ID should be returned.
@@ -272,7 +272,7 @@ public class mxCodec {
    * object was given.
    *
    * @param node XML node to be decoded.
-   * @param into Optional object to be decodec into.
+   * @param into Optional object to be decoded into.
    * @return Returns an object that represents the given node.
    */
   public Object decode(Node node, Object into) {
@@ -301,7 +301,7 @@ public class mxCodec {
 
   /**
    * Encoding of cell hierarchies is built-into the core, but is a
-   * higher-level function that needs to be explicitely used by the
+   * higher-level function that needs to be explicitly used by the
    * respective object encoders (eg. mxModelCodec, mxChildChangeCodec
    * and mxRootChangeCodec). This implementation writes the given cell
    * and its children as a (flat) sequence into the given node. The
@@ -312,7 +312,7 @@ public class mxCodec {
    * @param cell            mxCell to be encoded.
    * @param node            Parent XML node to add the encoded cell into.
    * @param includeChildren Boolean indicating if the method
-   *                        should include all descendents.
+   *                        should include all descendants.
    */
   public void encodeCell(mxICell cell, Node node, boolean includeChildren) {
     node.appendChild(encode(cell));

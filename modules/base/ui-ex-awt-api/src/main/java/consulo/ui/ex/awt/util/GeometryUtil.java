@@ -250,14 +250,13 @@ public class GeometryUtil implements SwingConstants {
     sorter.put(getDistance(aSegment, northEast), northEast);
 
     return ((OrientedPoint) sorter.get(sorter.firstKey())).getOrientation();
-
   }
 
   private static Double getDistance(Line2D aSegment, Point aPoint) {
-    double lenght1 = getLineLength(aSegment.getX1(), aSegment.getY1(), aPoint.getX(), aPoint.getY());
-    double lenght2 = getLineLength(aSegment.getX2(), aSegment.getY2(), aPoint.getX(), aPoint.getY());
+    double length1 = getLineLength(aSegment.getX1(), aSegment.getY1(), aPoint.getX(), aPoint.getY());
+    double length2 = getLineLength(aSegment.getX2(), aSegment.getY2(), aPoint.getX(), aPoint.getY());
 
-    return lenght1 + lenght2;
+    return length1 + length2;
   }
 
   public static double getLineLength(double aX1, double aY1, double aX2, double aY2) {

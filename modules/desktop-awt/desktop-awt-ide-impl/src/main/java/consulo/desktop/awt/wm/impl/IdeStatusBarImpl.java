@@ -20,11 +20,11 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
 import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
@@ -72,7 +72,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
 
     private static final int MIN_ICON_HEIGHT = 24 + 1 + 1;
 
-    
     private final Application myApplication;
     private IdeFrame myFrame;
 
@@ -182,12 +181,12 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         updateUI();
 
         if (master == null) {
-            DesktopToolWindowsSwicher swicher = new DesktopToolWindowsSwicher(this);
-            swicher.update();
+            DesktopToolWindowsSwitcher switcher = new DesktopToolWindowsSwitcher(this);
+            switcher.update();
 
-            Disposer.register(this, swicher);
+            Disposer.register(this, switcher);
 
-            leftPanel().add(TargetAWT.to(swicher.getUIComponent()));
+            leftPanel().add(TargetAWT.to(switcher.getUIComponent()));
         }
 
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
@@ -491,7 +490,6 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         updateChildren(IdeStatusBarImpl::updateWidgets);
     }
 
-    
     @Override
     @SuppressWarnings("unchecked")
     public <W extends StatusBarWidget> Optional<W> findWidget(Predicate<StatusBarWidget> predicate) {

@@ -585,7 +585,7 @@ public class mxGraphHierarchyModel {
   /**
    * Defines the interface that visitors use to perform operations upon the
    * graph information during depth first search (dfs) or other tree-traversal
-   * strategies implemented by subclassers.
+   * strategies implemented by subclasses.
    */
   public interface CellVisitor {
 

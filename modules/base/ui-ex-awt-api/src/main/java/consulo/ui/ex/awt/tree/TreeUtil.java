@@ -28,11 +28,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Range;
-
-import javax.accessibility.AccessibleContext;
-
 import org.jspecify.annotations.Nullable;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -1016,7 +1014,7 @@ public final class TreeUtil {
      * Expands n levels of the tree counting from the root
      *
      * @param tree   to expand nodes of
-     * @param levels depths of the expantion
+     * @param levels depths of the expansion
      */
     public static void expand(JTree tree, int levels) {
         promiseExpand(tree, levels);

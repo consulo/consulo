@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.generation;
 
 import consulo.application.util.registry.Registry;
@@ -29,7 +28,10 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.*;
-import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.internal.IndentData;
 import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.editor.inject.EditorWindow;
@@ -163,7 +165,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
             block.commenterStateMap = new HashMap<>();
             CharSequence chars = document.getCharsSequence();
 
-            boolean singleline = startLine == endLine;
+            boolean singleLine = startLine == endLine;
             int offset = document.getLineStartOffset(startLine);
             offset = CharArrayUtil.shiftForward(chars, offset, " \t");
 
@@ -192,7 +194,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
                 }
 
                 block.commenters[line - startLine] = commenter;
-                if (!isLineCommented(block, line, commenter) && (singleline || !isLineEmpty(document, line))) {
+                if (!isLineCommented(block, line, commenter) && (singleLine || !isLineEmpty(document, line))) {
                     allLinesCommented = false;
                     if (commenter instanceof IndentedCommenter) {
                         Boolean value = ((IndentedCommenter) commenter).forceIndentedLineComment();

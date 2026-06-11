@@ -684,7 +684,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
         for (String actionId : ownActionIds) {
             Element actionElement = new Element(ACTION);
             actionElement.setAttribute(ID_ATTRIBUTE, actionId);
-            // Save keyboad shortcuts
+            // Save keyboard shortcuts
             Shortcut[] shortcuts = getShortcuts(actionId);
             for (Shortcut shortcut : shortcuts) {
                 if (shortcut instanceof KeyboardShortcut) {

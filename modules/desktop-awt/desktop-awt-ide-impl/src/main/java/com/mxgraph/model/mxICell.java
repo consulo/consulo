@@ -83,7 +83,7 @@ public interface mxICell {
   boolean isConnectable();
 
   /**
-   * Returns true if the cell is visibile.
+   * Returns true if the cell is visible.
    *
    * @return Returns the visible state.
    */
@@ -229,8 +229,7 @@ public interface mxICell {
   /**
    * Returns the edge at the specified index in the edge array.
    *
-   * @param index Integer that specifies the index of the edge to be
-   *              returned.
+   * @param index Integer that specifies the index of the edge to be returned.
    * @return Returns the edge at the given index.
    */
   mxICell getEdgeAt(int index);

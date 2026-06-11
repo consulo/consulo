@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.desktop.awt.editor.impl;
 
 import com.jetbrains.FontExtensions;
@@ -15,6 +14,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.FoldingUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
@@ -23,7 +23,6 @@ import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
@@ -33,12 +32,10 @@ import consulo.document.MarkupIterator;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
 import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
-import consulo.codeEditor.markup.NonHideableIconGutterMark;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
@@ -291,7 +288,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 Image image = ImageUtil.toBufferedImage(getDragImage(getGutterRenderer(info.getPoint())));
                 return new DnDImage(image, new Point(image.getWidth(null) / 2, image.getHeight(null) / 2));
             })
-            .enableAsNativeTarget() // required to accept dragging from editor (as editor component doesn't use DnDSupport to implement drag'n'drop)
+            .enableAsNativeTarget() // required to accept dragging from editor (as editor component doesn't use DnDSupport to implement drag&drop)
             .install();
     }
 

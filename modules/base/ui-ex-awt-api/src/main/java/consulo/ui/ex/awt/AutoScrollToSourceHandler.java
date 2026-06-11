@@ -176,7 +176,7 @@ public abstract class AutoScrollToSourceHandler {
             VirtualFile vFile = context.getData(VirtualFile.KEY);
             if (vFile != null) {
                 // Attempt to navigate to the virtual file with unknown file type will show a modal dialog
-                // asking to register some file type for this file. This behaviour is undesirable when autoscrolling.
+                // asking to register some file type for this file. This behaviour is undesirable when auto-scrolling.
                 if (vFile.getFileType() == UnknownFileType.INSTANCE || vFile.getFileType() instanceof INativeFileType) {
                     return;
                 }
@@ -192,7 +192,7 @@ public abstract class AutoScrollToSourceHandler {
                     return;
                 }
                 for (Navigatable navigatable : navigatables) {
-                    // we are not going to open modal dialog during autoscrolling
+                    // we are not going to open modal dialog during auto-scrolling
                     if (!navigatable.canNavigateToSource()) {
                         return;
                     }

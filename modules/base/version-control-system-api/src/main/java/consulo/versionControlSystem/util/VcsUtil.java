@@ -338,7 +338,6 @@ public class VcsUtil {
         return VcsContextFactory.getInstance().createFilePathOnDeleted(new File(path), isDirectory);
     }
 
-    
     public static FilePath getFilePath(VirtualFile parent, String name) {
         return VcsContextFactory.getInstance().createFilePathOn(parent, name);
     }
@@ -403,7 +402,7 @@ public class VcsUtil {
 
     /**
      * Sort file paths so that paths under the same root are placed from the
-     * outermost to the innermost (farest from the root).
+     * outermost to the innermost (farthest from the root).
      *
      * @param files An array of file paths to be sorted. Sorting is done over the parameter.
      * @return Sorted array of the file paths.
@@ -425,7 +424,7 @@ public class VcsUtil {
     /**
      * @param e ActionEvent object
      * @return <code>VirtualFile</code> available in the current context.
-     * Returns not <code>null</code> if and only if exectly one file is available.
+     * Returns not <code>null</code> if and only if exactly one file is available.
      */
     public static @Nullable VirtualFile getOneVirtualFile(AnActionEvent e) {
         VirtualFile[] files = getVirtualFiles(e);
@@ -611,7 +610,6 @@ public class VcsUtil {
         return file.getName() + " (" + file.getParent() + ")";
     }
 
-    
     public static Collection<VcsDirectoryMapping> findRoots(VirtualFile rootDir, Project project) throws IllegalArgumentException {
         if (!rootDir.isDirectory()) {
             throw new IllegalArgumentException("Can't find VCS at the target file system path. Reason: expected to find a directory there but it's not. The path: " + rootDir.getParent());
@@ -628,12 +626,10 @@ public class VcsUtil {
         return result;
     }
 
-    
     public static List<VcsDirectoryMapping> addMapping(List<? extends VcsDirectoryMapping> existingMappings, String path, String vcs) {
         return addMapping(existingMappings, new VcsDirectoryMapping(path, vcs));
     }
 
-    
     public static List<VcsDirectoryMapping> addMapping(List<? extends VcsDirectoryMapping> existingMappings, VcsDirectoryMapping newMapping) {
         List<VcsDirectoryMapping> mappings = new ArrayList<>(existingMappings);
         for (Iterator<VcsDirectoryMapping> iterator = mappings.iterator(); iterator.hasNext(); ) {
@@ -664,12 +660,10 @@ public class VcsUtil {
         return items == null || !items.findAny().isPresent();
     }
 
-    
     public static <T> Stream<T> notNullize(@Nullable Stream<T> items) {
         return ObjectUtil.notNull(items, Stream.empty());
     }
 
-    
     public static <T> Stream<T> toStream(@Nullable T... items) {
         return items == null ? Stream.empty() : Stream.of(items);
     }
@@ -684,7 +678,6 @@ public class VcsUtil {
         return toStream(streams).reduce(Stream.empty(), Stream::concat);
     }
 
-    
     public static String trimCommitMessageToSaneSize(String message) {
         int nthLine = nthIndexOf(message, '\n', MAX_COMMIT_MESSAGE_LINES);
         if (nthLine != -1 && nthLine < MAX_COMMIT_MESSAGE_LENGTH) {
@@ -696,7 +689,6 @@ public class VcsUtil {
         return message;
     }
 
-    
     public static VirtualFile resolveSymlinkIfNeeded(Project project, VirtualFile file) {
         VirtualFile symlink = resolveSymlink(project, file);
         return symlink != null ? symlink : file;
@@ -749,7 +741,6 @@ public class VcsUtil {
         WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
     }
 
-    
     public static String getShortVcsRootName(Project project, VirtualFile root) {
         VirtualFile projectDir = project.getBaseDir();
 
@@ -764,7 +755,6 @@ public class VcsUtil {
         return repositoryPath.isEmpty() ? root.getName() : repositoryPath;
     }
 
-    
     public static List<Change> createChangesWithCurrentContentForFile(FilePath filePath,
                                                                       @Nullable ContentRevision beforeContentRevision) {
         return Collections.singletonList(new Change(beforeContentRevision, CurrentContentRevision.create(filePath)));

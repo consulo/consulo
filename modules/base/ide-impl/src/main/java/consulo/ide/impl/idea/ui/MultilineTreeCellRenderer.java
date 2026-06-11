@@ -401,7 +401,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
 
             @Override
             public void addNotify() {
-                super.addNotify();    //To change body of overriden methods use Options | File Templates.
+                super.addNotify();    //To change body of overridden methods use Options | File Templates.
                 if (myAddRemoveCounter == 0) {
                     myShouldResetCaches = true;
                 }
@@ -410,7 +410,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
 
             @Override
             public void removeNotify() {
-                super.removeNotify();    //To change body of overriden methods use Options | File Templates.
+                super.removeNotify();    //To change body of overridden methods use Options | File Templates.
                 myAddRemoveCounter--;
             }
         };

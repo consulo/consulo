@@ -30,6 +30,7 @@ import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.OwnerOptional;
@@ -37,13 +38,9 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
-import consulo.ui.ex.action.touchBar.TouchBarController;
-import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -59,6 +56,7 @@ import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
@@ -71,9 +69,11 @@ import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -302,7 +302,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-    
     @Deprecated
     private AbstractDialog createDialog(@Nullable Window owner) {
         return createDialog(owner, DialogWrapper.IdeModalityType.IDE);
@@ -443,7 +442,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDialog.setResizable(resizable);
     }
 
-    
     @Override
     public Point getLocation() {
         return myDialog.getLocation();
@@ -522,7 +520,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         return result;
     }
 
-    
     @Override
     @RequiredUIAccess
     public AsyncResult<Void> showAsync() {
@@ -837,7 +834,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             return SoftReference.dereference(myProject);
         }
 
-        
         @Override
         public IdeFocusManager getFocusManager() {
             Project project = getProject();
@@ -1023,7 +1019,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 putClientProperty("DIALOG_ROOT_PANE", true);
             }
 
-            
             @Override
             protected JLayeredPane createLayeredPane() {
                 JLayeredPane p = new JBLayeredPane();
@@ -1069,7 +1064,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 super.setContentPane(contentPane);
                 if (contentPane != null) {
                     contentPane.addMouseMotionListener(new MouseMotionAdapter() {
-                    }); // listen to mouse motino events for a11y
+                    }); // listen to mouse motion events for a11y
                 }
             }
 
@@ -1080,7 +1075,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
         }
 
-        
         private static WindowStateService getWindowStateService(@Nullable Project project) {
             return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
         }

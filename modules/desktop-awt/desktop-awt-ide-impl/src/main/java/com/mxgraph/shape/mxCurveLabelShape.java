@@ -241,11 +241,11 @@ public class mxCurveLabelShape implements mxITextShape {
           for (int j = 0; j < gv.getNumGlyphs(); j++) {
             Shape shape = gv.getGlyphOutline(j, -vectorOffset, 0);
 
-            LabelGlyphCache qlyph = new LabelGlyphCache();
-            glyphList.add(qlyph);
-            qlyph.glyphShape = shape;
+            LabelGlyphCache glyph = new LabelGlyphCache();
+            glyphList.add(glyph);
+            glyph.glyphShape = shape;
             mxRectangle size = new mxRectangle(gv.getGlyphLogicalBounds(j).getBounds2D());
-            qlyph.labelGlyphBounds = size;
+            glyph.labelGlyphBounds = size;
             labelSize += size.getWidth();
             vectorOffset += size.getWidth();
 
@@ -393,7 +393,7 @@ public class mxCurveLabelShape implements mxITextShape {
       maxX += 2 * scale;
       maxY += 2 * scale;
 
-      // Hook for sub-classers
+      // Hook for subclasses
       postprocessGlyph(curve, label, j, currentPos);
 
       // Need to allow for text on inside of curve bends. Need to get the
@@ -473,8 +473,7 @@ public class mxCurveLabelShape implements mxITextShape {
   }
 
   /**
-   * Hook for sub-classers to perform additional processing on
-   * each glyph
+   * Hook for subclasses to perform additional processing on each glyph.
    *
    * @param curve      The curve object holding the label curve
    * @param label      the text label of the curve
@@ -485,8 +484,7 @@ public class mxCurveLabelShape implements mxITextShape {
   }
 
   /**
-   * Returns whether or not the rectangle passed in hits any part of this
-   * curve.
+   * Returns whether or not the rectangle passed in hits any part of this curve.
    *
    * @param rect the rectangle to detect for a hit
    * @return whether or not the rectangle hits this curve
@@ -547,7 +545,7 @@ public class mxCurveLabelShape implements mxITextShape {
     public mxRectangle labelGlyphBounds;
 
     /**
-     * The un-rotated rectangle that just bounds this character
+     * The unrotated rectangle that just bounds this character
      */
     public mxRectangle drawingBounds;
 
@@ -557,8 +555,7 @@ public class mxCurveLabelShape implements mxITextShape {
     public String glyph;
 
     /**
-     * A line parallel to the curve segment at which the element is to be
-     * drawn
+     * A line parallel to the curve segment at which the element is to be drawn
      */
     public mxLine glyphGeometry;
 
@@ -583,7 +580,6 @@ public class mxCurveLabelShape implements mxITextShape {
     public double endBuffer = LABEL_BUFFER;
 
     public double defaultInterGlyphSpace = 0;
-    ;
   }
 
   public mxRectangle getLabelBounds() {

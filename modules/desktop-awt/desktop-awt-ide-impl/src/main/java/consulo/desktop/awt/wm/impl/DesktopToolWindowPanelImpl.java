@@ -22,7 +22,6 @@ import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
@@ -33,6 +32,7 @@ import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -44,8 +44,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.ref.Reference;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * This panel contains all tool stripes and JLayeredPanel at the center area. All tool windows are
@@ -90,7 +90,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
     private boolean myStripesOverlayed;
     private final Disposable myDisposable = Disposable.newDisposable();
-    private boolean myWidescreen;
+    private boolean myWideScreen;
     private boolean myLeftHorizontalSplit;
     private boolean myRightHorizontalSplit;
 
@@ -113,10 +113,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         myHorizontalSplitter.setDividerWidth(0);
         myHorizontalSplitter.setDividerMouseZoneSize(Registry.intValue("ide.splitter.mouseZone"));
         myHorizontalSplitter.setBackground(Color.gray);
-        myWidescreen = UISettings.getInstance().getWideScreenSupport();
+        myWideScreen = UISettings.getInstance().getWideScreenSupport();
         myLeftHorizontalSplit = UISettings.getInstance().getLeftHorizontalSplit();
         myRightHorizontalSplit = UISettings.getInstance().getRightHorizontalSplit();
-        if (myWidescreen) {
+        if (myWideScreen) {
             myHorizontalSplitter.setInnerComponent(myVerticalSplitter);
         }
         else {
@@ -138,7 +138,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
         // Layered pane
 
-        myLayeredPane = new MyLayeredPane(myWidescreen ? myHorizontalSplitter : myVerticalSplitter);
+        myLayeredPane = new MyLayeredPane(myWideScreen ? myHorizontalSplitter : myVerticalSplitter);
 
         // Compose layout
 
@@ -492,7 +492,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     private void setDocumentComponent(JComponent component) {
-        (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).setInnerComponent(component);
+        (myWideScreen ? myVerticalSplitter : myHorizontalSplitter).setInnerComponent(component);
     }
 
     private void updateToolStripesVisibility() {
@@ -654,10 +654,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
     private void updateLayout() {
         UISettings uiSettings = UISettings.getInstance();
-        if (myWidescreen != uiSettings.getWideScreenSupport()) {
-            JComponent documentComponent = (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).getInnerComponent();
-            myWidescreen = uiSettings.getWideScreenSupport();
-            if (myWidescreen) {
+        if (myWideScreen != uiSettings.getWideScreenSupport()) {
+            JComponent documentComponent = (myWideScreen ? myVerticalSplitter : myHorizontalSplitter).getInnerComponent();
+            myWideScreen = uiSettings.getWideScreenSupport();
+            if (myWideScreen) {
                 myVerticalSplitter.setInnerComponent(null);
                 myHorizontalSplitter.setInnerComponent(myVerticalSplitter);
             }
@@ -665,8 +665,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 myHorizontalSplitter.setInnerComponent(null);
                 myVerticalSplitter.setInnerComponent(myHorizontalSplitter);
             }
-            myLayeredPane.remove(myWidescreen ? myVerticalSplitter : myHorizontalSplitter);
-            myLayeredPane.add(myWidescreen ? myHorizontalSplitter : myVerticalSplitter, DEFAULT_LAYER);
+            myLayeredPane.remove(myWideScreen ? myVerticalSplitter : myHorizontalSplitter);
+            myLayeredPane.add(myWideScreen ? myHorizontalSplitter : myVerticalSplitter, DEFAULT_LAYER);
             setDocumentComponent(documentComponent);
         }
         if (myLeftHorizontalSplit != uiSettings.getLeftHorizontalSplit()) {

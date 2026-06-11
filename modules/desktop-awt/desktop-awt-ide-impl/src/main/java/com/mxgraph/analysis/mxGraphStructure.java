@@ -88,8 +88,6 @@ public class mxGraphStructure {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param parent
@@ -131,8 +129,6 @@ public class mxGraphStructure {
 
   }
 
-  ;
-
   /**
    * A helper function for getting a leaf vertex (degree <= 1), not taking into account edge direction - for internal use
    *
@@ -156,8 +152,6 @@ public class mxGraphStructure {
 
     return null;
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -195,8 +189,6 @@ public class mxGraphStructure {
     return true;
   }
 
-  ;
-
   /**
    * @param aGraph
    * @return true if the graph has the structure of a tree, regardless of edge direction
@@ -208,8 +200,6 @@ public class mxGraphStructure {
 
     return false;
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -247,21 +237,18 @@ public class mxGraphStructure {
     return bestVertex;
   }
 
-  ;
-
   /**
    * @param graph
    * @param sourceVertex
    * @param targetVertex
-   * @return Returns true if the two vertices are connected directly by an edge. If directed, the result is true if they are connected by an edge that points from source to target, if false direction isn't takein into account, just connectivity.
+   * @return Returns true if the two vertices are connected directly by an edge. If directed, the result is true if they are connected
+   * by an edge that points from source to target, if false direction isn't taken into account, just connectivity.
    */
   public static boolean areConnected(mxAnalysisGraph aGraph, Object sourceVertex, Object targetVertex) {
     Object currEdges[] = aGraph.getEdges(sourceVertex, aGraph.getGraph().getDefaultParent(), true, true, false, true);
     List<Object> neighborList = Arrays.asList(aGraph.getOpposites(currEdges, sourceVertex, true, true));
     return neighborList.contains(targetVertex);
   }
-
-  ;
 
   /**
    * @param graph Make a graph simple (remove parallel edges and self loops)
@@ -308,8 +295,6 @@ public class mxGraphStructure {
     graph.removeCells(duplEdges);
   }
 
-  ;
-
   /**
    * Makes the graph connected
    *
@@ -338,8 +323,6 @@ public class mxGraphStructure {
       graph.insertEdge(parent, null, aGraph.getGenerator().getNewEdgeValue(aGraph), sourceVertex, targetVertex);
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -402,8 +385,6 @@ public class mxGraphStructure {
     return (Object[][])result;
   }
 
-  ;
-
   /**
    * Makes a tree graph directed from the source to the leaves
    *
@@ -453,8 +434,6 @@ public class mxGraphStructure {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param vertexOne
@@ -482,8 +461,6 @@ public class mxGraphStructure {
 
     return null;
   }
-
-  ;
 
   /**
    * @param graph
@@ -523,13 +500,12 @@ public class mxGraphStructure {
     }
   }
 
-  ;
-
   /**
    * @param graph
    * @param parent
    * @param properties
-   * @return A helper function for <b>isDirectedCyclic</b> and it isn't for general use. It returns a node that hasn't incoming or outgoing edges. It could be considered a "leaf" in a directed graph, but this definition isn't formal.
+   * @return A helper function for <b>isDirectedCyclic</b> and it isn't for general use. It returns a node that has no incoming
+   * or outgoing edges. It could be considered a "leaf" in a directed graph, but this definition isn't formal.
    */
   public static Object getDirectedLeaf(mxAnalysisGraph aGraph, Object parent) {
     Object[] vertices = aGraph.getChildVertices(parent);
@@ -548,8 +524,6 @@ public class mxGraphStructure {
 
     return null;
   }
-
-  ;
 
   /**
    * Makes the complement of <b>aGraph</b>
@@ -619,8 +593,6 @@ public class mxGraphStructure {
     }
   }
 
-  ;
-
   /**
    * @param aGraph - the graph to search
    * @param value  - desired value
@@ -647,8 +619,6 @@ public class mxGraphStructure {
     }
     return null;
   }
-
-  ;
 
   /**
    * Sets the style of the graph to that as in GraphEditor
@@ -692,8 +662,6 @@ public class mxGraphStructure {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @return the regularity of the graph
@@ -717,8 +685,6 @@ public class mxGraphStructure {
     return regularity;
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param vertex
@@ -737,8 +703,6 @@ public class mxGraphStructure {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param vertex
@@ -752,8 +716,6 @@ public class mxGraphStructure {
       return aGraph.getEdges(vertex, aGraph.getGraph().getDefaultParent(), true, true, true, true).length;
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -789,8 +751,6 @@ public class mxGraphStructure {
     return false;
   }
 
-  ;
-
   /**
    * @param aGraph
    * @return all cut vertices of <b>aGraph</b>
@@ -808,8 +768,6 @@ public class mxGraphStructure {
 
     return cutVertexList.toArray();
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -863,8 +821,6 @@ public class mxGraphStructure {
     return false;
   }
 
-  ;
-
   /**
    * @param aGraph
    * @return all cut edges of <b>aGraph</b>
@@ -882,8 +838,6 @@ public class mxGraphStructure {
 
     return cutEdgeList.toArray();
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -911,8 +865,6 @@ public class mxGraphStructure {
     return sourceList.toArray();
   }
 
-  ;
-
   /**
    * @param aGraph
    * @return all sink vertices of <b>aGraph</b>
@@ -939,8 +891,6 @@ public class mxGraphStructure {
     return sourceList.toArray();
   }
 
-  ;
-
   /**
    * @param aGraph
    * @return true if <b>aGraph</b> is biconnected
@@ -955,6 +905,4 @@ public class mxGraphStructure {
       return false;
     }
   }
-
-  ;
-};
+}

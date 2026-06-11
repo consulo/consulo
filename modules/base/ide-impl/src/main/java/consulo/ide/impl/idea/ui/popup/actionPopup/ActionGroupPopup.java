@@ -212,14 +212,14 @@ public class ActionGroupPopup extends ListPopupImpl {
         boolean autoSelection
     ) {
         Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        consulo.ui.Component uiCompoment = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
-        if (component == null && uiCompoment != null) {
-            component = TargetAWT.to(uiCompoment);
+        consulo.ui.Component uiComponent = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
+        if (component == null && uiComponent != null) {
+            component = TargetAWT.to(uiComponent);
         }
 
         LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
-        java.util.List<ActionPopupItem> items = ActionPopupStep.createActionItems(
+        List<ActionPopupItem> items = ActionPopupStep.createActionItems(
             actionGroup,
             dataContext,
             showNumbers,
