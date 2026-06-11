@@ -98,7 +98,7 @@ public class DataNode<T> implements Serializable {
   /**
    * This class is a generic holder for any kind of project data. That project data might originate from different locations, e.g.
    * core ide plugins, non-core ide plugins, third-party plugins etc. That means that when a service from a core plugin needs to
-   * unmarshal {@link DataNode} object, its content should not be unmarshalled as well because its class might be unavailable here.
+   * unmarshal {@link DataNode} object, its content should not be unmarshaled as well because its class might be unavailable here.
    * <p/>
    * That's why the content is delivered as a raw byte array and this method allows to build actual java object from it using
    * the right class loader.
