@@ -104,7 +104,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     myManager = CopyrightManager.getInstance(project);
     myFileType = fileType;
 
-    // no comboboxes for template
+    // no combo-boxes for template
     if (optionName.equals(CopyrightFileConfigManager.LANG_TEMPLATE)) {
       myUseDefaultSettingsRadioButton.setVisible(false);
       myUseCustomFormattingOptionsRadioButton.setVisible(false);
@@ -201,7 +201,6 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   public void addAdditionalComponents(JPanel additionalPanel) {
-
   }
 
   public void addLocationInFile(String[] locations) {
@@ -348,7 +347,6 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     WriteAction.run(() -> myDocument.setText(defaultCopyrightText));
   }
 
-  
   @Override
   public LocalizeValue getDisplayName() {
     if (myFileType instanceof LanguageFileType) {
@@ -357,8 +355,8 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     return myFileType.getDisplayName();
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public JComponent createComponent() {
     initEditor();
     return mainPanel;
@@ -377,8 +375,8 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void disposeUIResources() {
     if (myEditor != null) {
       EditorFactory.getInstance().releaseEditor(myEditor);
@@ -386,8 +384,8 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public boolean isModified() {
     if (myFileType == null) {
       return !myManager.getCopyrightFileConfigManager().getTemplateOptions().equals(getOptions());
@@ -397,8 +395,8 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     CopyrightFileConfigManager copyrightFileConfigManager = myManager.getCopyrightFileConfigManager();
     if (myFileType == null) {
@@ -409,8 +407,8 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     }
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void reset() {
     CopyrightFileConfig options = myFileType == null ? myManager.getCopyrightFileConfigManager().getTemplateOptions() : myManager.getCopyrightFileConfigManager().getOptions(myFileType);
     boolean isBlock = options.isBlock();
@@ -469,7 +467,6 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  
   public String getId() {
     return getHelpTopic() + "." + myFileType.getId();
   }

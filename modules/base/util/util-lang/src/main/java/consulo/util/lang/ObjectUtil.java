@@ -3,6 +3,7 @@ package consulo.util.lang;
 
 import com.uber.nullaway.annotations.Contract;
 import org.jspecify.annotations.Nullable;
+
 import java.lang.ref.Reference;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
@@ -109,7 +110,7 @@ public class ObjectUtil {
   /**
    * Performs binary search on the range [fromIndex, toIndex)
    *
-   * @param indexComparator a comparator which receives a middle index and returns the result of comparision of the value at this index and the goal value
+   * @param indexComparator a comparator which receives a middle index and returns the result of comparison of the value at this index and the goal value
    *                        (e.g 0 if found, -1 if the value[middleIndex] < goal, or 1 if value[middleIndex] > goal)
    * @return index for which {@code indexComparator} returned 0 or {@code -insertionIndex-1} if wasn't found
    * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)
@@ -157,10 +158,10 @@ public class ObjectUtil {
     return null;
   }
 
-  public static @Nullable <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> convertor) {
+  public static @Nullable <T, S> S doIfCast(@Nullable Object obj, Class<T> clazz, Function<? super T, ? extends S> converter) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
-      return convertor.apply((T)obj);
+      return converter.apply((T)obj);
     }
     return null;
   }
@@ -202,7 +203,8 @@ public class ObjectUtil {
   /**
    * Performs binary search on the range [fromIndex, toIndex)
    *
-   * @param indexComparator a comparator which receives a middle index and returns the result of comparision of the value at this index and the goal value
+   * @param indexComparator a comparator which receives a middle index and returns the result of comparison
+   *                        of the value at this index and the goal value
    *                        (e.g 0 if found, -1 if the value[middleIndex] < goal, or 1 if value[middleIndex] > goal)
    * @return index for which {@code indexComparator} returned 0 or {@code -insertionIndex-1} if wasn't found
    * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)

@@ -412,7 +412,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+    public <Value, Item> TableColumn<Value, Item> _Components_tableColumnBuild(String name, Function<Item, Value> converter) {
         throw notSupported();
         //return new WebTableColumn<>(name, converter);
     }

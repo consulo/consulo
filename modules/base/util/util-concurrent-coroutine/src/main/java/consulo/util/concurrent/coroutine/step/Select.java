@@ -61,7 +61,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	private final List<Coroutine<? super I, ? extends O>> aCoroutines =
 		new ArrayList<>();
 
-	private Predicate<Continuation<?>> pSelectCritiera = c -> true;
+	private Predicate<Continuation<?>> pSelectCriteria = c -> true;
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -88,7 +88,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	private Select(Select<I, O> rOther) {
 		aCoroutines.addAll(rOther.aCoroutines);
 
-		pSelectCritiera = rOther.pSelectCritiera;
+		pSelectCriteria = rOther.pSelectCriteria;
 	}
 
 	//~ Static methods ---------------------------------------------------------
@@ -176,7 +176,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	}
 
 	/***************************************
-	 * Adds a condition for the result selection. If a succefully finished
+	 * Adds a condition for the result selection. If a successfully finished
 	 * continuation matches the given predicate it will be selected as the step
 	 * result.
 	 *
@@ -188,7 +188,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	public Select<I, O> when(Predicate<Continuation<?>> pSelectCriteria) {
 		Select<I, O> aSelect = new Select<>(aCoroutines);
 
-		aSelect.pSelectCritiera = pSelectCriteria;
+		aSelect.pSelectCriteria = pSelectCriteria;
 
 		return aSelect;
 	}
@@ -218,7 +218,8 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	void selectAsync(I rInput, @Nullable CoroutineStep<O, ?> rNextStep, Continuation<?> rContinuation) {
 		Selection<O, O, O> aSelection =
 			Selection.ofSingleValue(this, rNextStep, rContinuation,
-				pSelectCritiera);
+				pSelectCriteria
+			);
 
 		rContinuation.suspendTo(aSelection);
 

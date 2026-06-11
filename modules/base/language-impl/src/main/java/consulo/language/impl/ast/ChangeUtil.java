@@ -21,7 +21,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.TreeCopyHandler;
 import consulo.language.ast.TreeGenerator;
 import consulo.language.impl.DebugUtil;
-import consulo.language.pom.PomTransactionBase;
 import consulo.language.impl.internal.pom.TreeChangeEventImpl;
 import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.DummyHolder;
@@ -29,6 +28,7 @@ import consulo.language.impl.psi.DummyHolderFactory;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.pom.PomManager;
 import consulo.language.pom.PomModel;
+import consulo.language.pom.PomTransactionBase;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.event.PomModelEvent;
 import consulo.language.pom.event.TreeChangeEvent;
@@ -36,7 +36,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.CharTable;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -144,7 +143,7 @@ public class ChangeUtil {
         DummyHolder holder = DummyHolderFactory.createHolder(original.getManager(), null, original.getLanguage());
         FileElement holderElement = holder.getTreeElement();
         TreeElement treeElement = generateTreeElement(original, holderElement.getCharTable(), original.getManager());
-        //  TreeElement treePrev = treeElement.getTreePrev(); // This is hack to support bug used in formater
+        //  TreeElement treePrev = treeElement.getTreePrev(); // This is hack to support bug used in formatter
         holderElement.rawAddChildren(treeElement);
         TreeUtil.clearCaches(holderElement);
         //  treeElement.setTreePrev(treePrev);

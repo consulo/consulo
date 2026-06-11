@@ -16,13 +16,12 @@
 
 package consulo.language.codeStyle.internal;
 
-import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.IndentInfo;
-
 import org.jspecify.annotations.Nullable;
 
 public class LeafBlockWrapper extends AbstractBlockWrapper {
@@ -83,7 +82,7 @@ public class LeafBlockWrapper extends AbstractBlockWrapper {
     // public
     //  void foo() {}
     //
-    // 'public void' here is a single 'leaf' token and it's second part 'void' is preceeded by tabulaton symbol. Hence, we need
+    // 'public void' here is a single 'leaf' token and it's second part 'void' is preceded by tabulation symbol. Hence, we need
     // correctly calculate number of symbols occupied by the current token at last line.
     int start = containsLineFeeds ? model.getLineStartOffset(lastLineNumber) : textRange.getStartOffset();
     int symbols = 0;

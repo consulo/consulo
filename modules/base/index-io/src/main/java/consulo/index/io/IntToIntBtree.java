@@ -254,24 +254,17 @@ public class IntToIntBtree {
     long leafNodesCapacity2 = (long)leafPages * maxLeafNodes;
     int usedPercent = (int)((count * 100L) / leafNodesCapacity);
     int usedPercent2 = (int)((count * 100L) / leafNodesCapacity2);
-    IOStatistics.dump("pagecount:" +
-                      pagesCount +
-                      ", height:" +
-                      height +
-                      ", movedMembers:" +
-                      movedMembersCount +
-                      ", optimized inserts:" +
-                      myOptimizedInserts +
-                      ", hash steps:" +
-                      maxStepsSearchedInHash +
-                      ", avg search in hash:" +
-                      (hashSearchRequests != 0 ? totalHashStepsSearched / hashSearchRequests : 0) +
-                      ", leaf pages used:" +
-                      usedPercent +
-                      "%, leaf pages used if sorted: " +
-                      usedPercent2 +
-                      "%, size:" +
-                      storage.length());
+    IOStatistics.dump(
+      "pageCount: " + pagesCount +
+        ", height: " + height +
+        ", movedMembers: " + movedMembersCount +
+        ", optimized inserts: " + myOptimizedInserts +
+        ", hash steps: " + maxStepsSearchedInHash +
+        ", avg search in hash: " + (hashSearchRequests != 0 ? totalHashStepsSearched / hashSearchRequests : 0) +
+        ", leaf pages used: " + usedPercent + "%" +
+        ", leaf pages used if sorted: " + usedPercent2 + "%" +
+        ", size: " + storage.length()
+    );
   }
 
   private void flushCachedMappings() {

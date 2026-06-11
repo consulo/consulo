@@ -13,11 +13,6 @@
  */
 package ch.qos.logback.classic.joran;
 
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.joran.spi.ConfigurationWatchList;
@@ -28,6 +23,11 @@ import ch.qos.logback.core.model.ModelUtil;
 import ch.qos.logback.core.spi.ConfigurationEvent;
 import ch.qos.logback.core.spi.ContextAwareBase;
 import ch.qos.logback.core.status.StatusUtil;
+
+import java.io.File;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 import static ch.qos.logback.core.spi.ConfigurationEvent.newConfigurationChangeDetectorRunningEvent;
 import static ch.qos.logback.core.spi.ConfigurationEvent.newConfigurationEndedSuccessfullyEvent;
@@ -90,7 +90,7 @@ public class ReconfigureOnChangeTask extends ContextAwareBase implements Runnabl
         JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(context);
         StatusUtil statusUtil = new StatusUtil(context);
-        Model failsafeTop = jc.recallSafeConfiguration();
+        Model failSafeTop = jc.recallSafeConfiguration();
         URL mainURL = ConfigurationWatchListUtil.getMainWatchURL(context);
         addInfo("Resetting loggerContext ["+lc.getName()+"]");
         lc.reset();
@@ -99,37 +99,37 @@ public class ReconfigureOnChangeTask extends ContextAwareBase implements Runnabl
             jc.doConfigure(mainConfigurationURL);
             // e.g. IncludeAction will add a status regarding XML parsing errors but no exception will reach here
             if (statusUtil.hasXMLParsingErrors(threshold)) {
-                fallbackConfiguration(lc, failsafeTop, mainURL);
+                fallbackConfiguration(lc, failSafeTop, mainURL);
             }
         } catch (JoranException e) {
             addWarn("Exception occurred during reconfiguration", e);
-            fallbackConfiguration(lc, failsafeTop, mainURL);
+            fallbackConfiguration(lc, failSafeTop, mainURL);
         }
     }
 
-    private void fallbackConfiguration(LoggerContext lc, Model failsafeTop, URL mainURL) {
-        // failsafe events are used only in case of errors. Therefore, we must *not*
+    private void fallbackConfiguration(LoggerContext lc, Model failSafeTop, URL mainURL) {
+        // failSafe events are used only in case of errors. Therefore, we must *not*
         // invoke file inclusion since the included files may be the cause of the error.
 
-        // List<SaxEvent> failsafeEvents = removeIncludeEvents(eventList);
+        // List<SaxEvent> failSafeEvents = removeIncludeEvents(eventList);
         JoranConfigurator joranConfigurator = new JoranConfigurator();
         joranConfigurator.setContext(context);
         ConfigurationWatchList oldCWL = ConfigurationWatchListUtil.getConfigurationWatchList(context);
         ConfigurationWatchList newCWL = oldCWL.buildClone();
 
-        if (failsafeTop == null) {
+        if (failSafeTop == null) {
             addWarn("No previous configuration to fall back on.");
             return;
         } else {
             addWarn(FALLING_BACK_TO_SAFE_CONFIGURATION);
-            addInfo("Safe model "+failsafeTop);
+            addInfo("Safe model "+failSafeTop);
             try {
                 lc.reset();
                 ConfigurationWatchListUtil.registerConfigurationWatchList(context, newCWL);
-                ModelUtil.resetForReuse(failsafeTop);
-                joranConfigurator.processModel(failsafeTop);
+                ModelUtil.resetForReuse(failSafeTop);
+                joranConfigurator.processModel(failSafeTop);
                 addInfo(RE_REGISTERING_PREVIOUS_SAFE_CONFIGURATION);
-                joranConfigurator.registerSafeConfiguration(failsafeTop);
+                joranConfigurator.registerSafeConfiguration(failSafeTop);
                 context.fireConfigurationEvent(newConfigurationEndedSuccessfullyEvent(this));
             } catch (Exception e) {
                 addError("Unexpected exception thrown by a configuration considered safe.", e);
@@ -142,7 +142,7 @@ public class ReconfigureOnChangeTask extends ContextAwareBase implements Runnabl
         return "ReconfigureOnChangeTask(born:" + birthdate + ")";
     }
 
-    public void setScheduredFuture(ScheduledFuture<?> aScheduledFuture) {
+    public void setScheduledFuture(ScheduledFuture<?> aScheduledFuture) {
         this.scheduledFuture = aScheduledFuture;
     }
 }

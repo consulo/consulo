@@ -813,7 +813,7 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   }
 
   /**
-   * Synonym for {@code toList().toAfunctionrray)}.
+   * Synonym for {@code toList().toFunctionArray)}.
    *
    * @see List#toArray(Object[])
    */
@@ -861,18 +861,18 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
   }
 
   /**
-   * A synonym for {@code toMap(Convertor.SELF, toValue)}
+   * A synonym for {@code toMap(Function.identity(), toValue)}
    *
-   * @see JBIterable#toMap(Convertor, Convertor)
+   * @see JBIterable#toMap(Function, Function)
    */
   public final <V> Map<E, V> toMap(Function<E, V> toValue) {
     return toMap(Function.identity(), toValue);
   }
 
   /**
-   * A synonym for {@code toMap(toKey, Convertor.SELF)}
+   * A synonym for {@code toMap(toKey, Function.identity())}
    *
-   * @see JBIterable#toMap(Convertor, Convertor)
+   * @see JBIterable#toMap(Function, Function)
    */
   public final <K> Map<K, E> toReverseMap(Function<E, K> toKey) {
     return toMap(toKey, Function.identity());

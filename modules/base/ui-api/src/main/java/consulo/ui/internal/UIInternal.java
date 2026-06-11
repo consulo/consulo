@@ -79,7 +79,7 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
+    public abstract HorizontalLayout _Layouts_horizontal(int gapInPixels);
 
     public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
 
@@ -227,7 +227,7 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+    public <Value, Item> TableColumn<Value, Item> _Components_tableColumnBuild(String name, Function<Item, Value> converter) {
         throw new UnsupportedOperationException();
     }
 

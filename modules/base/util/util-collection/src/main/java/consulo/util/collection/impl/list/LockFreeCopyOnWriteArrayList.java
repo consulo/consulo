@@ -515,13 +515,13 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
       if (fromIndex < 0 || toIndex > len || toIndex < fromIndex) {
         throw new IndexOutOfBoundsException();
       }
-      int newlen = len - (toIndex - fromIndex);
+      int newLen = len - (toIndex - fromIndex);
       int numMoved = len - toIndex;
       if (numMoved == 0) {
-        newElements = Arrays.copyOf(elements, newlen, Object[].class);
+        newElements = Arrays.copyOf(elements, newLen, Object[].class);
       }
       else {
-        newElements = new Object[newlen];
+        newElements = new Object[newLen];
         System.arraycopy(elements, 0, newElements, 0, fromIndex);
         System.arraycopy(elements, toIndex, newElements, fromIndex, numMoved);
       }
@@ -657,17 +657,17 @@ public class LockFreeCopyOnWriteArrayList<E> implements List<E>, RandomAccess, C
       return null;
     }
     // temp array holds those elements we know we want to keep
-    int newlen = 0;
+    int newLen = 0;
     Object[] temp = new Object[len];
     for (Object element : elements) {
       if (c.contains(element)) {
-        temp[newlen++] = element;
+        temp[newLen++] = element;
       }
     }
-    if (newlen == len) {
+    if (newLen == len) {
       return null;
     }
-    return Arrays.copyOf(temp, newlen, Object[].class);
+    return Arrays.copyOf(temp, newLen, Object[].class);
   }
 
   /**

@@ -181,8 +181,8 @@ public abstract class AbstractStorage implements Closeable, Forceable {
         LOG.info("Compact failed: " + e.getMessage());
       }
 
-      long timedelta = System.currentTimeMillis() - start;
-      LOG.info("Done compacting in " + timedelta + "msec.");
+      long timeDelta = System.currentTimeMillis() - start;
+      LOG.info("Done compacting in " + timeDelta + "msec.");
     }
   }
 

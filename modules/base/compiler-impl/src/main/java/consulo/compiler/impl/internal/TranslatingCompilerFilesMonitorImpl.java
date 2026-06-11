@@ -54,9 +54,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -104,7 +104,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             return value;
         }
 
-        
         @Override
         public Outputs get(Integer key) {
             Outputs value = super.get(key);
@@ -112,7 +111,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             return value;
         }
 
-        
         @Override
         public Outputs createValue(Integer projectId) {
             VirtualFile projectDir = VirtualFileManager.getInstance().findFileById(projectId);
@@ -342,7 +340,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                                     System.out.println(message);
                                 }
                             }
-                            // must be gagbage entry, should cleanup
+                            // must be garbage entry, should cleanup
                             zombieEntries.add(outputPath);
                         }
                     }
@@ -405,7 +403,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         }
 
                         String outputPath = item.getOutputPath();
-                        if (outputPath != null) { // can be null for packageinfo
+                        if (outputPath != null) { // can be null for package-info
                             VirtualFile outputFile = lfs.findFileByPath(outputPath);
 
                             //assert outputFile != null : "Virtual file was not found for \"" + outputPath + "\"";
@@ -591,7 +589,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Override
     public void scanSourceContent(
-        ProjectRef projRef,
+        ProjectRef projectRef,
         Collection<VirtualFile> roots,
         int totalRootCount,
         boolean isNewRoots
@@ -599,17 +597,17 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         if (roots.isEmpty()) {
             return;
         }
-        int projectId = getProjectId(projRef.get());
+        int projectId = getProjectId(projectRef.get());
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Scanning source content for project projectId=" + projectId + "; url=" + projRef.get().getPresentableUrl());
+            LOG.debug("Scanning source content for project projectId=" + projectId + "; url=" + projectRef.get().getPresentableUrl());
         }
 
-        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(projRef.get()).getFileIndex();
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(projectRef.get()).getFileIndex();
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         int processed = 0;
         for (VirtualFile srcRoot : roots) {
             if (indicator != null) {
-                projRef.get();
+                projectRef.get();
                 indicator.setText2(LocalizeValue.ofNullable(srcRoot.getPresentableUrl()));
                 indicator.setFraction(++processed / (double) totalRootCount);
             }
@@ -626,7 +624,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                             }
                         }
                         else {
-                            projRef.get();
+                            projectRef.get();
                         }
                         return true;
                     }
@@ -643,7 +641,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                         int fileId = getFileId(file);
                         if (fileId > 0 /*file is valid*/) {
                             if (file.isDirectory()) {
-                                projRef.get();
+                                projectRef.get();
                             }
                             else if (!isMarkedForRecompilation(projectId, fileId)) {
                                 TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
@@ -980,16 +978,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 }
                 else {
                     TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(outFile);
-                    String classname = outputInfo != null ? outputInfo.getClassName() : null;
-                    markOutputPathForDeletion(projectId, outFile, classname, mySrcUrl);
+                    String className = outputInfo != null ? outputInfo.getClassName() : null;
+                    markOutputPathForDeletion(projectId, outFile, className, mySrcUrl);
                 }
             }
             return true;
         }
     }
 
-    private void markOutputPathForDeletion(int projectId, VirtualFile outputPath, String classname, String srcUrl) {
-        SourceUrlClassNamePair pair = new SourceUrlClassNamePair(srcUrl, classname);
+    private void markOutputPathForDeletion(int projectId, VirtualFile outputPath, String className, String srcUrl) {
+        SourceUrlClassNamePair pair = new SourceUrlClassNamePair(srcUrl, className);
         synchronized (myDataLock) {
             Outputs outputs = myOutputsToDelete.get(projectId);
             try {
@@ -1078,5 +1076,4 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             }
         }
     }
-
 }

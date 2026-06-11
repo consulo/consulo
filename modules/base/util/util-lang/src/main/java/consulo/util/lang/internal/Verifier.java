@@ -366,7 +366,7 @@ final public class Verifier {
   private static final byte MASKXMLLETTERORDIGIT = MASKXMLLETTER | MASKXMLDIGIT;
 
   /**
-   * Ensure instantation cannot occur.
+   * Ensure instantiation cannot occur.
    */
   private Verifier() {
   }
@@ -1018,7 +1018,7 @@ final public class Verifier {
    */
   public static boolean isXMLExtender(char c) {
     /*
-     * This function is not accellerated by the bitmask system because
+     * This function is not accelerated by the bitmask system because
      * there are no longer any actual calls to it from the JDOM code.
      * It used to be called by the isXMLNameCharacter() method before
      * the bitmask optimization. Now the VerifierBuilder code actually

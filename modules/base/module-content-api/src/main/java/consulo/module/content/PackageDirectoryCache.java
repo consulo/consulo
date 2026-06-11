@@ -21,8 +21,8 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -43,7 +43,6 @@ public class PackageDirectoryCache {
     myNonExistentPackages.clear();
   }
 
-  
   public List<VirtualFile> getDirectoriesByPackageName(String packageName) {
     PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptyList() : info.myPackageDirectories;
@@ -96,19 +95,19 @@ public class PackageDirectoryCache {
   }
 
   private class PackageInfo {
-    final String myQname;
+    final String myQName;
     final List<VirtualFile> myPackageDirectories;
     final Supplier<MultiMap<String, VirtualFile>> mySubPackages;
 
-    PackageInfo(String qname, List<VirtualFile> packageDirectories) {
-      myQname = qname;
+    PackageInfo(String qName, List<VirtualFile> packageDirectories) {
+      myQName = qName;
       myPackageDirectories = packageDirectories;
       mySubPackages = LazyValue.notNull(() -> {
         MultiMap<String, VirtualFile> result = MultiMap.createLinked();
         for (VirtualFile directory : myPackageDirectories) {
           for (VirtualFile child : directory.getRequiredChildren()) {
             String childName = child.getName();
-            String packageName = myQname.isEmpty() ? childName : myQname + "." + childName;
+            String packageName = myQName.isEmpty() ? childName : myQName + "." + childName;
             if (child.isDirectory() && isPackageDirectory(child, packageName)) {
               result.putValue(childName, child);
             }

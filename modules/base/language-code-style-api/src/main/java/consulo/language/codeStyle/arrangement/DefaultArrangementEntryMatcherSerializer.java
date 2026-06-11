@@ -28,20 +28,18 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jdom.Element;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Denis Zhdanov
- * @since 7/19/12 1:00 PM
+ * @since 2012-07-19
  */
 public class DefaultArrangementEntryMatcherSerializer {
-
   private static final Comparator<ArrangementMatchCondition> CONDITION_COMPARATOR = new Comparator<ArrangementMatchCondition>() {
-
     @Override
     public int compare(ArrangementMatchCondition c1, ArrangementMatchCondition c2) {
       boolean isAtom1 = c1 instanceof ArrangementAtomMatchCondition;
@@ -105,9 +103,9 @@ public class DefaultArrangementEntryMatcherSerializer {
     if (COMPOSITE_CONDITION_NAME.equals(name)) {
       ArrangementCompositeMatchCondition composite = new ArrangementCompositeMatchCondition();
       for (Object child : matcherElement.getChildren()) {
-        ArrangementMatchCondition deserialised = deserializeCondition((Element)child);
-        if (deserialised != null) {
-          composite.addOperand(deserialised);
+        ArrangementMatchCondition deserialized = deserializeCondition((Element)child);
+        if (deserialized != null) {
+          composite.addOperand(deserialized);
         }
       }
       return composite;

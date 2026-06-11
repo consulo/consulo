@@ -16,9 +16,9 @@
 package consulo.ui.image;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.internal.UIInternal;
-import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.color.ColorValue;
+import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.internal.UIInternal;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -104,15 +104,15 @@ public final class ImageEffects {
         return UIInternal.get()._ImageEffects_colorize(baseImage, colorValue);
     }
 
-    public static Image colorFilled(int width, int heght, ColorValue colorValue) {
-        return canvas(width, heght, ctx -> {
+    public static Image colorFilled(int width, int height, ColorValue colorValue) {
+        return canvas(width, height, ctx -> {
             ctx.setFillStyle(colorValue);
-            ctx.fillRect(0, 0, width, heght);
+            ctx.fillRect(0, 0, width, height);
         });
     }
 
-    public static Image twoColorFilled(int width, int heght, ColorValue colorValue1, ColorValue colorValue2) {
-        return canvas(width, heght, ctx -> {
+    public static Image twoColorFilled(int width, int height, ColorValue colorValue1, ColorValue colorValue2) {
+        return canvas(width, height, ctx -> {
             ctx.beginPath();
             ctx.setFillStyle(colorValue1);
             ctx.moveTo(0, 0);

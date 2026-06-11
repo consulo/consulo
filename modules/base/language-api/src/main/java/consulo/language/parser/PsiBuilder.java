@@ -26,7 +26,6 @@ import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -131,9 +130,9 @@ public interface PsiBuilder extends UserDataHolder {
     @Nullable String getTokenText();
 
     /**
-     * Returns the char sequencr of the current token from the lexer.
+     * Returns the char sequence of the current token from the lexer.
      *
-     * @return the token char sequencr, or null when the token stream is over.
+     * @return the token char sequence, or null when the token stream is over.
      */
     default @Nullable CharSequence getTokenSequence() {
         return getTokenText();
@@ -350,7 +349,6 @@ public interface PsiBuilder extends UserDataHolder {
 
     @Nullable PsiFile getContainingFile();
 
-    
     Lexer getLexer();
 
     void registerWhitespaceToken(IElementType type);

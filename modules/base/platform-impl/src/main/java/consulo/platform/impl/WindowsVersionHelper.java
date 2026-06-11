@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 24.01.15
+ * @since 2015-01-24
  */
 public class WindowsVersionHelper {
     public interface Version extends Library {
@@ -44,9 +44,11 @@ public class WindowsVersionHelper {
     }
 
     public static class VS_FIXEDFILEINFO extends com.sun.jna.Structure {
-        private static final List __FIELDS =
-            Arrays.asList("dwSignature", "dwStrucVersion", "dwFileVersionMS", "dwFileVersionLS", "dwProductVersionMS", "dwProductVersionLS", "dwFileFlagsMask", "dwFileFlags", "dwFileOS", "dwFileType",
-                "dwFileSubtype", "dwFileDateMS", "dwFileDateLS");
+        private static final List __FIELDS = Arrays.asList(
+            "dwSignature", "dwStrucVersion", "dwFileVersionMS", "dwFileVersionLS",
+            "dwProductVersionMS", "dwProductVersionLS", "dwFileFlagsMask", "dwFileFlags",
+            "dwFileOS", "dwFileType", "dwFileSubtype", "dwFileDateMS", "dwFileDateLS"
+        );
 
         public int dwSignature;
         public int dwStrucVersion;
@@ -72,18 +74,17 @@ public class WindowsVersionHelper {
         }
     }
 
-    
     public static VS_FIXEDFILEINFO getVersionRaw(String path) {
         path = path.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 
         int dwDummy = 0;
-        int versionlength = Version.INSTANCE.GetFileVersionInfoSizeW(path, dwDummy);
+        int versionLength = Version.INSTANCE.GetFileVersionInfoSizeW(path, dwDummy);
 
-        Pointer lpData = new Memory(versionlength);
+        Pointer lpData = new Memory(versionLength);
 
         PointerByReference lplpBuffer = new PointerByReference();
         IntByReference puLen = new IntByReference();
-        Version.INSTANCE.GetFileVersionInfoW(path, 0, versionlength, lpData);
+        Version.INSTANCE.GetFileVersionInfoW(path, 0, versionLength, lpData);
         Version.INSTANCE.VerQueryValueW(lpData, "\\", lplpBuffer, puLen);
 
         VS_FIXEDFILEINFO lplpBufStructure = new VS_FIXEDFILEINFO(lplpBuffer.getValue());
@@ -91,7 +92,6 @@ public class WindowsVersionHelper {
         return lplpBufStructure;
     }
 
-    
     public static String getVersion(String path, int parts) {
         VS_FIXEDFILEINFO rawVersion = getVersionRaw(path);
 

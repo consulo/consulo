@@ -77,7 +77,7 @@ public class GeneralCommandLine implements UserDataHolder {
   private Charset myCharset = defaultCharset();
   private boolean myRedirectErrorStream = false;
   private Map<Object, Object> myUserData = null;
-  private String mySudoPromt = null;
+  private String mySudoPrompt = null;
 
   public GeneralCommandLine() {
   }
@@ -163,18 +163,15 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
-  
   public GeneralCommandLine withEnvironment(String key, String value) {
     getEnvironment().put(key, value);
     return this;
   }
 
-  
   public ParentEnvironmentType getParentEnvironmentType() {
     return myParentEnvironmentType;
   }
 
-  
   public GeneralCommandLine withParentEnvironmentType(ParentEnvironmentType type) {
     myParentEnvironmentType = type;
     return this;
@@ -225,13 +222,11 @@ public class GeneralCommandLine implements UserDataHolder {
     myProgramParams.add(parameter);
   }
 
-  
   public GeneralCommandLine withParameters(String... parameters) {
     for (String parameter : parameters) addParameter(parameter);
     return this;
   }
 
-  
   public GeneralCommandLine withParameters(List<String> parameters) {
     for (String parameter : parameters) addParameter(parameter);
     return this;
@@ -241,12 +236,10 @@ public class GeneralCommandLine implements UserDataHolder {
     return myProgramParams;
   }
 
-  
   public Charset getCharset() {
     return myCharset;
   }
 
-  
   public GeneralCommandLine withCharset(Charset charset) {
     myCharset = charset;
     return this;
@@ -260,7 +253,6 @@ public class GeneralCommandLine implements UserDataHolder {
     return myRedirectErrorStream;
   }
 
-  
   public GeneralCommandLine withRedirectErrorStream(boolean redirectErrorStream) {
     myRedirectErrorStream = redirectErrorStream;
     return this;
@@ -271,7 +263,7 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   public String getSudoPromt() {
-    return mySudoPromt;
+    return mySudoPrompt;
   }
 
   /**
@@ -279,10 +271,10 @@ public class GeneralCommandLine implements UserDataHolder {
    * <p>
    * No shell substitutions, input/output redirects, etc. in the command are applied.
    *
-   * @param sudoPromt      the prompt string for the users
+   * @param sudoPrompt      the prompt string for the users
    */
-  public GeneralCommandLine withSudo(String sudoPromt) {
-    mySudoPromt = sudoPromt;
+  public GeneralCommandLine withSudo(String sudoPrompt) {
+    mySudoPrompt = sudoPrompt;
     return this;
   }
 
@@ -334,7 +326,6 @@ public class GeneralCommandLine implements UserDataHolder {
     return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), filePathSeparator), "\n");
   }
 
-  
   protected Process startProcess(List<String> commands) throws IOException {
     ProcessBuilder builder = new ProcessBuilder(commands);
     setupEnvironment(builder.environment());
@@ -456,7 +447,6 @@ public class GeneralCommandLine implements UserDataHolder {
     return myExecutable == null ? null : myExecutable.toString();
   }
 
-  
   @Deprecated
   @DeprecationInfo("Use #withExecutablePath()")
   public GeneralCommandLine withExePath(String exePath) {
@@ -475,14 +465,12 @@ public class GeneralCommandLine implements UserDataHolder {
     return myWorkingDirectory == null ? null : myWorkingDirectory.toFile();
   }
 
-  
   @Deprecated
   @DeprecationInfo("Use #withWorkingDirectory()")
   public GeneralCommandLine withWorkDirectory(@Nullable String path) {
     return withWorkDirectory(path != null ? new File(path) : null);
   }
 
-  
   @Deprecated
   @DeprecationInfo("Use #withWorkingDirectory()")
   public GeneralCommandLine withWorkDirectory(@Nullable File workDirectory) {
@@ -502,7 +490,6 @@ public class GeneralCommandLine implements UserDataHolder {
     withWorkDirectory(workDirectory);
   }
 
-  
   @Deprecated
   @DeprecationInfo("Use consulo.process.ProcessHandlerBuilderFactory since it can be run on remote host")
   public Process createProcess() throws ExecutionException {
@@ -542,7 +529,6 @@ public class GeneralCommandLine implements UserDataHolder {
     return myParentEnvironmentType != ParentEnvironmentType.NONE;
   }
 
-  
   @Deprecated
   @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)")
   public GeneralCommandLine withPassParentEnvironment(boolean passParentEnvironment) {
@@ -550,7 +536,6 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
-  
   @Deprecated
   @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)")
   public void setPassParentEnvironment(boolean passParentEnvironment) {

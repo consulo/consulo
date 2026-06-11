@@ -55,6 +55,7 @@ public final class X11Hacking {
   /**
    * List of all known tile WM, can be updated later
    */
+  @SuppressWarnings("SpellCheckingInspection")
   private static final Set<String> TILE_WM = Set.of(
     "awesome",
     "bspwm",

@@ -18,10 +18,10 @@ import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntIterator;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -76,10 +76,10 @@ public class DuplocatorHashCallback implements FragmentsCollector {
     if (fragments == null) {
       if (!myReadOnly) { //do not add new hash-codes
         List<List<PsiFragment>> list = new ArrayList<>();
-        List<PsiFragment> listf = new ArrayList<>();
+        List<PsiFragment> listF = new ArrayList<>();
 
-        listf.add(frag);
-        list.add(listf);
+        listF.add(frag);
+        list.add(listF);
 
         myDuplicates.put(hash, list);
       }
@@ -227,11 +227,11 @@ public class DuplocatorHashCallback implements FragmentsCollector {
 
       @Override
       public UsageInfo[] getUsageOccurences(int pattern) {
-        PsiFragment[] occs = getFragmentOccurences(pattern);
-        UsageInfo[] infos = new UsageInfo[occs.length];
+        PsiFragment[] occurrences = getFragmentOccurences(pattern);
+        UsageInfo[] infos = new UsageInfo[occurrences.length];
 
         for (int i = 0; i < infos.length; i++) {
-          infos[i] = occs[i].getUsageInfo();
+          infos[i] = occurrences[i].getUsageInfo();
         }
 
         return infos;
@@ -247,15 +247,15 @@ public class DuplocatorHashCallback implements FragmentsCollector {
 
       private GroupNodeDescription cacheGroupNodeDescription(int pattern) {
         Set<PsiFile> files = new HashSet<>();
-        PsiFragment[] occurencies = getFragmentOccurences(pattern);
-        for (PsiFragment occurency : occurencies) {
-          PsiFile file = occurency.getFile();
+        PsiFragment[] occurrences = getFragmentOccurences(pattern);
+        for (PsiFragment occurrence : occurrences) {
+          PsiFile file = occurrence.getFile();
           if (file != null) {
             files.add(file);
           }
         }
         int fileCount = files.size();
-        PsiFile psiFile = occurencies[0].getFile();
+        PsiFile psiFile = occurrences[0].getFile();
         DuplicatesProfile profile = DuplicatesProfileCache.getProfile(this, pattern);
         String comment = profile != null ? profile.getComment(this, pattern) : "";
         GroupNodeDescription description = new GroupNodeDescription(fileCount, psiFile != null ? psiFile.getName() : "unknown", comment);

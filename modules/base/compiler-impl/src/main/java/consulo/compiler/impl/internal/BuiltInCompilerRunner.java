@@ -80,7 +80,6 @@ public class BuiltInCompilerRunner implements CompilerRunner {
 
     private static final YesResult ALWAYS_YES = new YesResult(PlatformIconGroup.actionsCompile());
 
-    
     private final Project myProject;
     private final CompilerManager myCompilerManager;
 
@@ -90,13 +89,11 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         myCompilerManager = compilerManager;
     }
 
-    
     @Override
     public Result checkAvailable(DataContext dataContext) {
         return ALWAYS_YES;
     }
 
-    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("BuiltIn");
@@ -481,7 +478,8 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                         );
                     }
                     if (errorCount == 0) {
-                        // perform update only if there were no errors, so it is guaranteed that the file was processd by all neccesary compilers
+                        // perform update only if there were no errors, so it is guaranteed
+                        // that the file was processed by all necessary compilers
                         sink.flushPostponedItems();
                     }
                 }
@@ -1035,7 +1033,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                     //String path = file.getPath();
                     //String outputDir = myOutputFinder.lookupOutputPath(path);
                     //if (outputDir != null) {
-                    //  context.updateZippedOuput(outputDir, path.substring(outputDir.length() + 1));
+                    //  context.updateZippedOutput(outputDir, path.substring(outputDir.length() + 1));
                     //}
                 }
       /*LocalFileSystem.getInstance().refreshFiles(vFiles);

@@ -111,7 +111,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       }
     });
 
-    expacndChecked(tree);
+    expandChecked(tree);
 
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(tree);
     scrollPane.setPreferredSize(new Dimension(400, 400));
@@ -119,7 +119,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
     return panel;
   }
 
-  private static void expacndChecked(Tree tree) {
+  private static void expandChecked(Tree tree) {
     TreeNode root = (TreeNode)tree.getModel().getRoot();
     Enumeration factories = root.children();
     ArrayList<TreeNode[]> toExpand = new ArrayList<>();
@@ -181,7 +181,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
   }
 
   private boolean isConfigurationAssigned(RunConfiguration configuration) {
-    java.util.List<T> tasks = RunManagerEx.getInstanceEx(myProject).getBeforeRunTasks(configuration, getTaskID());
+    List<T> tasks = RunManagerEx.getInstanceEx(myProject).getBeforeRunTasks(configuration, getTaskID());
     for (T task : tasks) {
       if (isRunning(task))
         return true;
