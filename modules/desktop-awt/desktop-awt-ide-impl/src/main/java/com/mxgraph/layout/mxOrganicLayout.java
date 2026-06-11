@@ -863,11 +863,11 @@ public class mxOrganicLayout extends mxGraphLayout {
    */
   protected double getEdgeCrossing(int i) {
     // TODO Could have a cost function per edge
-    int n = 0; // counts energy of edgecrossings through edge i
+    int n = 0; // counts energy of edge-crossings through edge i
 
     // max and min variable for minimum bounding rectangles overlapping
     // checks
-    double minjX, minjY, miniX, miniY, maxjX, maxjY, maxiX, maxiY;
+    double minJX, minJY, minIX, minIY, maxJX, maxJY, maxIX, maxIY;
 
     if (isOptimizeEdgeCrossing) {
       double iP1X = v[e[i].source].x;
@@ -888,42 +888,42 @@ public class mxOrganicLayout extends mxGraphLayout {
           // processing
           // Some long code to avoid a Math.max call...
           if (iP1X < iP2X) {
-            miniX = iP1X;
-            maxiX = iP2X;
+            minIX = iP1X;
+            maxIX = iP2X;
           }
           else {
-            miniX = iP2X;
-            maxiX = iP1X;
+            minIX = iP2X;
+            maxIX = iP1X;
           }
           if (jP1X < jP2X) {
-            minjX = jP1X;
-            maxjX = jP2X;
+            minJX = jP1X;
+            maxJX = jP2X;
           }
           else {
-            minjX = jP2X;
-            maxjX = jP1X;
+            minJX = jP2X;
+            maxJX = jP1X;
           }
-          if (maxiX < minjX || miniX > maxjX) {
+          if (maxIX < minJX || minIX > maxJX) {
             continue;
           }
 
           if (iP1Y < iP2Y) {
-            miniY = iP1Y;
-            maxiY = iP2Y;
+            minIY = iP1Y;
+            maxIY = iP2Y;
           }
           else {
-            miniY = iP2Y;
-            maxiY = iP1Y;
+            minIY = iP2Y;
+            maxIY = iP1Y;
           }
           if (jP1Y < jP2Y) {
-            minjY = jP1Y;
-            maxjY = jP2Y;
+            minJY = jP1Y;
+            maxJY = jP2Y;
           }
           else {
-            minjY = jP2Y;
-            maxjY = jP1Y;
+            minJY = jP2Y;
+            maxJY = jP1Y;
           }
-          if (maxiY < minjY || miniY > maxjY) {
+          if (maxIY < minJY || minIY > maxJY) {
             continue;
           }
 

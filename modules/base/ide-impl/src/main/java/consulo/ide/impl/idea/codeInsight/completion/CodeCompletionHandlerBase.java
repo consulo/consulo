@@ -1,5 +1,4 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.application.AppUIExecutor;
@@ -48,8 +47,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -67,11 +66,10 @@ public class CodeCompletionHandlerBase {
      */
     public static final Key<Boolean> DIRECT_INSERTION = Key.create("CodeCompletionHandlerBase.directInsertion");
 
-    
     final CompletionType completionType;
     final boolean invokedExplicitly;
     final boolean synchronous;
-    final boolean autopopup;
+    final boolean autoPopup;
     private static int ourAutoInsertItemTimeout = 2000;
 
     public static CodeCompletionHandlerBase createHandler(CompletionType completionType) {
@@ -81,7 +79,7 @@ public class CodeCompletionHandlerBase {
     public static CodeCompletionHandlerBase createHandler(
         CompletionType completionType,
         boolean invokedExplicitly,
-        boolean autopopup,
+        boolean autoPopup,
         boolean synchronous
     ) {
         AnAction codeCompletionAction = ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION);
@@ -90,7 +88,7 @@ public class CodeCompletionHandlerBase {
         //}
         assert (codeCompletionAction instanceof BaseCodeCompletionAction);
         BaseCodeCompletionAction baseCodeCompletionAction = (BaseCodeCompletionAction)codeCompletionAction;
-        return baseCodeCompletionAction.createHandler(completionType, invokedExplicitly, autopopup, synchronous);
+        return baseCodeCompletionAction.createHandler(completionType, invokedExplicitly, autoPopup, synchronous);
     }
 
     public CodeCompletionHandlerBase(CompletionType completionType) {
@@ -100,18 +98,18 @@ public class CodeCompletionHandlerBase {
     public CodeCompletionHandlerBase(
         CompletionType completionType,
         boolean invokedExplicitly,
-        boolean autopopup,
+        boolean autoPopup,
         boolean synchronous
     ) {
         this.completionType = completionType;
         this.invokedExplicitly = invokedExplicitly;
-        this.autopopup = autopopup;
+        this.autoPopup = autoPopup;
         this.synchronous = synchronous;
 
         if (invokedExplicitly) {
             assert synchronous;
         }
-        if (autopopup) {
+        if (autoPopup) {
             assert !invokedExplicitly;
         }
     }
@@ -195,7 +193,7 @@ public class CodeCompletionHandlerBase {
             doComplete(context, hasModifiers, hasValidContext, startingTime);
         };
         try {
-            if (autopopup) {
+            if (autoPopup) {
                 CommandProcessor.getInstance().runUndoTransparentAction(initCmd);
             }
             else {
@@ -220,13 +218,12 @@ public class CodeCompletionHandlerBase {
         }
     }
 
-    
     private LookupEx obtainLookup(Editor editor, Project project) {
         CompletionAssertions.checkEditorValid(editor);
         LookupEx existing = LookupManager.getActiveLookup(editor);
         if (existing != null && existing.isCompletion()) {
             existing.markReused();
-            if (!autopopup) {
+            if (!autoPopup) {
                 existing.setFocusDegree(LookupFocusDegree.FOCUSED);
             }
             return existing;
@@ -238,7 +235,7 @@ public class CodeCompletionHandlerBase {
             lookup.setCancelOnClickOutside(true);
             lookup.setCancelOnOtherWindowOpen(true);
         }
-        lookup.setFocusDegree(autopopup ? LookupFocusDegree.UNFOCUSED : LookupFocusDegree.FOCUSED);
+        lookup.setFocusDegree(autoPopup ? LookupFocusDegree.UNFOCUSED : LookupFocusDegree.FOCUSED);
         return lookup;
     }
 
@@ -718,7 +715,6 @@ public class CodeCompletionHandlerBase {
         return context;
     }
 
-    
     private static WatchingInsertionContext createInsertionContext(
         @Nullable Lookup lookup,
         LookupElement item,

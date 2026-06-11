@@ -14,8 +14,8 @@ import com.mxgraph.view.mxPerimeter.mxPerimeterFunction;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Implements a view for the graph. This class is in charge of computing the
@@ -31,7 +31,7 @@ import java.util.List;
  * <code>edit</code> property contains the mxUndoableEdit which contains the
  * mxCurrentRootChange.
  * <p/>
- * mxEvent.SCALE_AND_TRANSLATE fires after the scale and transle have been
+ * mxEvent.SCALE_AND_TRANSLATE fires after the scale and translate have been
  * changed in scaleAndTranslate. The <code>scale</code>, <code>previousScale</code>,
  * <code>translate</code> and <code>previousTranslate</code> properties contain
  * the new and previous scale and translate, respectively.
@@ -524,7 +524,7 @@ public class mxGraphView extends mxEventSource {
   public mxRectangle validatePoints(mxCellState parentState, Object cell) {
     mxIGraphModel model = graph.getModel();
     mxCellState state = getState(cell);
-    mxRectangle bbox = null;
+    mxRectangle bBox = null;
 
     if (state != null) {
       if (state.isInvalid()) {
@@ -575,7 +575,7 @@ public class mxGraphView extends mxEventSource {
 
       if (model.isEdge(cell) || model.isVertex(cell)) {
         updateLabelBounds(state);
-        bbox = new mxRectangle(updateBoundingBox(state));
+        bBox = new mxRectangle(updateBoundingBox(state));
       }
     }
 
@@ -587,17 +587,17 @@ public class mxGraphView extends mxEventSource {
         mxRectangle bounds = validatePoints(state, child);
 
         if (bounds != null) {
-          if (bbox == null) {
-            bbox = bounds;
+          if (bBox == null) {
+            bBox = bounds;
           }
           else {
-            bbox.add(bounds);
+            bBox.add(bounds);
           }
         }
       }
     }
 
-    return bbox;
+    return bBox;
   }
 
   /**
@@ -638,7 +638,7 @@ public class mxGraphView extends mxEventSource {
       // font can cause the displayed lines to change based on scale. A factor
       // is used to allow for different overalls widths, it ensures the largest
       // font size/scale factor still stays within the bounds. All this ensures
-      // the wrapped lines are constant overing scaling, at the expense the
+      // the wrapped lines are constant over scaling, at the expense the
       // label bounds will vary.
       String[] lines =
               mxUtils.wordWrap(label, mxUtils.getFontMetrics(mxUtils.getFont(state.getStyle())), w * mxConstants.LABEL_SCALE_BUFFER);
@@ -725,7 +725,7 @@ public class mxGraphView extends mxEventSource {
         ms = (int)Math.round(mxConstants.DEFAULT_MARKERSIZE * scale);
       }
 
-      // Adds the strokewidth
+      // Adds the stroke-width
       rect.grow(ms + strokeWidth);
 
       // Adds worst case border for an arrow shape
@@ -781,11 +781,11 @@ public class mxGraphView extends mxEventSource {
     // Adds the rotated bounds to the bounding box if the
     // shape is rotated
     double rotation = mxUtils.getDouble(style, mxConstants.STYLE_ROTATION);
-    mxRectangle bbox = mxUtils.getBoundingBox(rect, rotation);
+    mxRectangle bBox = mxUtils.getBoundingBox(rect, rotation);
 
     // Add the rotated bounding box to the non-rotated so
     // that all handles are also covered
-    rect.add(bbox);
+    rect.add(bBox);
 
     // Unifies the cell bounds and the label bounds
     if (!graph.isLabelClipped(state.getCell())) {
@@ -1336,23 +1336,23 @@ public class mxGraphView extends mxEventSource {
 
         px -= x1;
         py -= y1;
-        double projlenSq = 0;
+        double projLenSq = 0;
 
         px = xSegment - px;
         py = ySegment - py;
-        double dotprod = px * xSegment + py * ySegment;
+        double dotProd = px * xSegment + py * ySegment;
 
-        if (dotprod <= 0.0) {
-          projlenSq = 0;
+        if (dotProd <= 0.0) {
+          projLenSq = 0;
         }
         else {
-          projlenSq = dotprod * dotprod / (xSegment * xSegment + ySegment * ySegment);
+          projLenSq = dotProd * dotProd / (xSegment * xSegment + ySegment * ySegment);
         }
 
-        double projlen = Math.sqrt(projlenSq);
+        double projLen = Math.sqrt(projLenSq);
 
-        if (projlen > seg) {
-          projlen = seg;
+        if (projLen > seg) {
+          projLen = seg;
         }
 
         double yDistance = Line2D.ptLineDist(p0.getX(), p0.getY(), pe.getX(), pe.getY(), x, y);
@@ -1363,7 +1363,7 @@ public class mxGraphView extends mxEventSource {
         }
 
         // Constructs the relative point for the label
-        return new mxPoint(Math.round(((totalLength / 2 - length - projlen) / totalLength) * -2), Math.round(yDistance / scale));
+        return new mxPoint(Math.round(((totalLength / 2 - length - projLen) / totalLength) * -2), Math.round(yDistance / scale));
       }
     }
 
@@ -1538,7 +1538,5 @@ public class mxGraphView extends mxEventSource {
       String eventName = (up) ? mxEvent.UP : mxEvent.DOWN;
       view.fireEvent(new mxEventObject(eventName, "root", view.currentRoot, "previous", previous));
     }
-
   }
-
 }

@@ -37,12 +37,6 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.versionControlSystem.UpToDateLineNumberProvider;
-import consulo.versionControlSystem.impl.internal.annotate.AnnotateToggleAction;
-import consulo.versionControlSystem.history.TextRevisionNumber;
-import consulo.versionControlSystem.internal.BackgroundableActionLock;
-import consulo.versionControlSystem.internal.UpToDateLineNumberProviderImpl;
-import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -61,10 +55,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.VcsNotifier;
+import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.AnnotationProviderEx;
 import consulo.versionControlSystem.annotate.FileAnnotation;
@@ -74,7 +65,12 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.diff.VcsDiffDataKeys;
+import consulo.versionControlSystem.history.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.impl.internal.annotate.AnnotateToggleAction;
+import consulo.versionControlSystem.internal.BackgroundableActionLock;
+import consulo.versionControlSystem.internal.UpToDateLineNumberProviderImpl;
+import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -607,7 +603,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
             for (int i = start; i <= end; i++) {
                 if (isLineChanged(i)) {
-                    return true; // TODO: a single request to LineNumberConvertor
+                    return true; // TODO: a single request to LineNumberConverter
                 }
             }
             return myLocalChangesProvider.isRangeChanged(line1, line2);

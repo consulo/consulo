@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.compiler.ModuleCompilerPathsManager;
@@ -68,9 +67,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         myFilter = LanguageContentFolderScopes.productionAndTest();
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public Component createUIComponentImpl(Disposable parentUIDisposable) {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
@@ -159,7 +157,6 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         }
     }
 
-    
     public Module getModule() {
         return getModel().getModule();
     }
@@ -202,8 +199,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         return commitableFieldPanel;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         if (myInheritCompilerOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
@@ -241,7 +238,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     @RequiredUIAccess
     public void moduleStateChanged() {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-        //if content enties tree was changed
+        // If content of entire tree was changed
         myCbExcludeOutput.setValue(moduleCompilerPathsManager.isExcludeOutput());
     }
 

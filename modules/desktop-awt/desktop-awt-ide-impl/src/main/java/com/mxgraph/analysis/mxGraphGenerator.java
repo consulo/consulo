@@ -41,8 +41,6 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param numVertexes
@@ -59,8 +57,6 @@ public class mxGraphGenerator {
       graph.insertVertex(parent, null, Integer.toString(i), i * 50, 0, 25, 25);
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -92,8 +88,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -136,10 +130,9 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
-   * Sets the physical spacing between vertices in a grid graph. This works for now only for a graph generated with mxGraphCreator.getGridGraph() only after creating the graph
+   * Sets the physical spacing between vertices in a grid graph. This works for now only for a graph
+   * generated with mxGraphCreator.getGridGraph() only after creating the graph.
    *
    * @param aGraph
    * @param xSpacing   - horizontal spacing between vertices
@@ -167,8 +160,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -207,11 +198,9 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
-   * Sets the physical spacing between vertices in a bipartite graph. This works for now only for a graph generated with mxGraphCreator.getBipartiteGraph()
-   * only after creating the graph
+   * Sets the physical spacing between vertices in a bipartite graph. This works for now only for a graph
+   * generated with mxGraphCreator.getBipartiteGraph() only after creating the graph.
    *
    * @param aGraph
    * @param numVerticesGroup1 - number of vertices in group 1
@@ -262,8 +251,6 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param numVerticesGroup1 number of vertices in group 1
@@ -292,8 +279,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -333,8 +318,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -440,8 +423,6 @@ public class mxGraphGenerator {
     return possibleMoves.toArray();
   }
 
-  ;
-
   /**
    * use this only with the grid graph, and various chess-board graphs, because of vertex ordering
    *
@@ -466,8 +447,6 @@ public class mxGraphGenerator {
     return coords;
   }
 
-  ;
-
   /**
    * use this only with the grid graph and various chess-board graphs, because of vertex ordering
    *
@@ -488,8 +467,6 @@ public class mxGraphGenerator {
 
     return vertices[value];
   }
-
-  ;
 
   /**
    * @param xDim
@@ -528,8 +505,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -628,8 +603,6 @@ public class mxGraphGenerator {
     return possibleMoves.toArray();
   }
 
-  ;
-
   /**
    * @param aGraph Returns a Petersen graph
    */
@@ -659,8 +632,6 @@ public class mxGraphGenerator {
     graph.insertEdge(parent, null, getNewEdgeValue(aGraph), vertices[7], vertices[8]);
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param numVertices Returns a path graph
@@ -682,8 +653,6 @@ public class mxGraphGenerator {
       graph.insertEdge(parent, null, getNewEdgeValue(aGraph), vertices[i], vertices[i + 1]);
     }
   }
-
-  ;
 
   /**
    * Sets the physical spacing between vertices in a path graph. This works for now only for a graph generated with mxGraphCreator.getPathGraph()
@@ -711,8 +680,6 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param numVertices Returns a star graph
@@ -738,10 +705,9 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
-   * Sets the physical size of a star graph. This works for now only for a graph generated with mxGraphCreator.getStarGraph() and getWheelGraph()
+   * Sets the physical size of a star graph. This works for now only for a graph
+   * generated with mxGraphCreator.getStarGraph() and getWheelGraph().
    *
    * @param aGraph
    * @param graphSize
@@ -782,8 +748,6 @@ public class mxGraphGenerator {
     geometry.setY(centerY);
   }
 
-  ;
-
   /**
    * @param aGraph
    * @param numVertices Returns a wheel graph. Note that numVertices has to be at least 4.
@@ -814,8 +778,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -857,8 +819,6 @@ public class mxGraphGenerator {
       graph.insertEdge(parent, null, getNewEdgeValue(aGraph), oldVertex, currVertex);
     }
   }
-
-  ;
 
   /**
    * @param aGraph
@@ -907,12 +867,11 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   //NOTE the inside code is delicate, so please change it only if you know what you're doing
 
   /**
-   * Sets the layout of a windmill graph. Use this method only for graphs generated with mxGraphGenerator.getWindmillGraph() and getFriendshitWindmillGraph()
+   * Sets the layout of a windmill graph. Use this method only for graphs generated with mxGraphGenerator.getWindmillGraph()
+   * and getFriendshitWindmillGraph().
    *
    * @param aGraph
    * @param numBranches
@@ -990,10 +949,9 @@ public class mxGraphGenerator {
     geometry.setY(centerY);
   }
 
-  ;
-
   /**
-   * A helper function that calculates the ring size for a windmill graph, based on the index of a vertex in a brach and branch size. - for internal use
+   * A helper function that calculates the ring size for a windmill graph, based on the index of a vertex in a branch and branch size.
+   * - for internal use
    *
    * @param currVertex - starting from 1
    * @param branchSize - starting from 1
@@ -1020,8 +978,6 @@ public class mxGraphGenerator {
     }
     return (((float)Math.pow(currIndex, 0.75) / (float)Math.pow(middleIndex, 0.75)) * fullSize);
   }
-
-  ;
 
   /**
    * Generates a random graph
@@ -1074,8 +1030,6 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
    * Generates a random tree graph
    *
@@ -1104,8 +1058,6 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
    * Creates a new edge value based on graph properties in mxAnalysisGraph. Used mostly when creating new edges during graph generation.
    *
@@ -1121,8 +1073,6 @@ public class mxGraphGenerator {
       return null;
     }
   }
-
-  ;
 
   /**
    * @param graph
@@ -1140,13 +1090,9 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   public mxGeneratorFunction getGeneratorFunction() {
     return this.generatorFunction;
   }
-
-  ;
 
   /**
    * @param minValue
@@ -1165,8 +1111,6 @@ public class mxGraphGenerator {
     currValue = minValue + (int)Math.round((Math.random() * (maxValue - minValue)));
     return currValue;
   }
-
-  ;
 
   /**
    * @param graph
@@ -1214,8 +1158,6 @@ public class mxGraphGenerator {
       }
     }
   }
-
-  ;
 
   //TODO make a double check to avoid unnecessary cases of throwing an exception (if the algorithm can't work out a solution, try a mirrored strategy)
 
@@ -1277,8 +1219,6 @@ public class mxGraphGenerator {
     }
   }
 
-  ;
-
   /**
    * Helper function for Knights Tour - for internal use
    *
@@ -1314,8 +1254,6 @@ public class mxGraphGenerator {
     }
     return currVertex;
   }
-
-  ;
 
   /**
    * Helper function for Knights Tour - for internal use
@@ -1416,8 +1354,6 @@ public class mxGraphGenerator {
     return possibleMoveCount;
   }
 
-  ;
-
   /**
    * Helper function for Knights Tour - for internal use
    *
@@ -1443,6 +1379,4 @@ public class mxGraphGenerator {
   public void setCostFunction(mxCostFunction costFunction) {
     this.costFunction = costFunction;
   }
-
-  ;
-};
+}

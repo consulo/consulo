@@ -77,9 +77,9 @@ import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -475,7 +475,6 @@ public class FindManagerImpl extends FindManager {
         return isWordStart && isWordEnd;
     }
 
-    
     private static FindModel normalizeIfMultilined(FindModel findmodel) {
         if (findmodel.isMultiline()) {
             FindModel model = new FindModel();
@@ -535,7 +534,6 @@ public class FindManagerImpl extends FindManager {
         return new FindResultImpl(index, index + toFind.length());
     }
 
-    
     private static StringSearcher createStringSearcher(FindModel model) {
         return new StringSearcher(model.getStringToFind(), model.isCaseSensitive(), model.isForward());
     }
@@ -579,7 +577,6 @@ public class FindManagerImpl extends FindManager {
 
     private static final Key<CommentsLiteralsSearchData> ourCommentsLiteralsSearchDataKey = Key.create("comments.literals.search.data");
 
-    
     private FindResult findInCommentsAndLiterals(
         CharSequence text,
         char[] textArray,

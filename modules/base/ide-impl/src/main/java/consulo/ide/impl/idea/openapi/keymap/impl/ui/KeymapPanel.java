@@ -19,7 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.configurable.*;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
@@ -60,15 +63,18 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.*;
@@ -773,7 +779,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             }
         }
 
-        // if shortcut is aleady registered to this action, just select it in the list
+        // if shortcut is already registered to this action, just select it in the list
 
         Shortcut[] shortcuts = mySelectedKeymap.getShortcuts(actionId);
         for (Shortcut shortcut1 : shortcuts) {

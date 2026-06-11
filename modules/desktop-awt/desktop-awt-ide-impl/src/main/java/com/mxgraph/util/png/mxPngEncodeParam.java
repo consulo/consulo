@@ -1429,7 +1429,7 @@ public abstract class mxPngEncodeParam {
    *                      the initial <code>bytesPerPixel</code> bytes are zero.
    * @param scratchRows   An array of 5 <code>byte</code> arrays of
    *                      length at least <code>bytesPerRow +
-   *                      bytesPerPixel</code>, useable to hold temporary results.
+   *                      bytesPerPixel</code>, usable to hold temporary results.
    *                      The filtered row will be returned as one of the entries
    *                      of this array.  The returned filtered data should start
    *                      at index <code>bytesPerPixel</code>; The initial
@@ -1446,13 +1446,13 @@ public abstract class mxPngEncodeParam {
   public int filterRow(byte[] currRow, byte[] prevRow, byte[][] scratchRows, int bytesPerRow, int bytesPerPixel) {
 
     int[] badness = {0, 0, 0, 0, 0};
-    int curr, left, up, upleft, diff;
+    int curr, left, up, upLeft, diff;
     int pa, pb, pc;
     for (int i = bytesPerPixel; i < bytesPerRow + bytesPerPixel; i++) {
       curr = currRow[i] & 0xff;
       left = currRow[i - bytesPerPixel] & 0xff;
       up = prevRow[i] & 0xff;
-      upleft = prevRow[i - bytesPerPixel] & 0xff;
+      upLeft = prevRow[i - bytesPerPixel] & 0xff;
 
       // no filter
       badness[0] += curr;
@@ -1472,13 +1472,13 @@ public abstract class mxPngEncodeParam {
       scratchRows[3][i] = (byte)diff;
       badness[3] += (diff >= 0) ? diff : -diff;
 
-      // paeth filter
+      // Paeth filter
 
-      // Original code much simplier but doesn't take full
+      // Original code much simpler but doesn't take full
       // advantage of relationship between pa/b/c and
       // information gleaned in abs operations.
-      /// pa = up  -upleft;
-      /// pb = left-upleft;
+      /// pa = up  -upLeft;
+      /// pb = left-upLeft;
       /// pc = pa+pb;
       /// pa = abs(pa);
       /// pb = abs(pb);
@@ -1488,10 +1488,10 @@ public abstract class mxPngEncodeParam {
       /// else if (pb <= pc)
       ///   diff = curr-up;
       /// else
-      ///   diff = curr-upleft;
+      ///   diff = curr-upLeft;
 
-      pa = up - upleft;
-      pb = left - upleft;
+      pa = up - upLeft;
+      pb = left - upLeft;
       if (pa < 0) {
         if (pb < 0) {
           // both pa & pb neg so pc is always greater than or
@@ -1514,7 +1514,7 @@ public abstract class mxPngEncodeParam {
               diff = curr - left;
             }
             else {
-              diff = curr - upleft;
+              diff = curr - upLeft;
             }
           }
           else
@@ -1524,7 +1524,7 @@ public abstract class mxPngEncodeParam {
               diff = curr - up;
             }
             else {
-              diff = curr - upleft;
+              diff = curr - upLeft;
             }
         }
       }
@@ -1544,7 +1544,7 @@ public abstract class mxPngEncodeParam {
               diff = curr - up;
             }
             else {
-              diff = curr - upleft;
+              diff = curr - upLeft;
             }
           }
           else {
@@ -1554,7 +1554,7 @@ public abstract class mxPngEncodeParam {
               diff = curr - up;
             }
             else {
-              diff = curr - upleft;
+              diff = curr - upLeft;
             }
           }
         }

@@ -223,8 +223,8 @@ public class mxSelectionCellsHandler implements MouseListener, MouseMotionListen
   }
 
   /**
-   * Dispatches the mousepressed event to the subhandles. This is
-   * called from the connection handler as subhandles have precedence
+   * Dispatches the mouse-pressed event to the sub-handles. This is
+   * called from the connection handler as sub-handles have precedence
    * over the connection handler.
    */
   public void mousePressed(MouseEvent e) {

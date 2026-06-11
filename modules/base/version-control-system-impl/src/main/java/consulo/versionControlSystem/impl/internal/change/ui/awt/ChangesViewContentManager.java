@@ -42,9 +42,9 @@ import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.change.ChangesViewContentFactory;
 import consulo.versionControlSystem.change.ChangesViewContentProvider;
 import consulo.versionControlSystem.internal.ChangesViewContentI;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -162,7 +162,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
 
         LocalizeValue displayName;
         Image image;
-        boolean avaliable = vcses.length > 0;
+        boolean available = vcses.length > 0;
 
         if (vcses.length == 1) {
             AbstractVcs vcs = vcses[0];
@@ -177,10 +177,10 @@ public class ChangesViewContentManager implements ChangesViewContentI, Disposabl
         if (myToolWindow != null) {
             myToolWindow.setIcon(image);
             myToolWindow.setDisplayName(displayName);
-            myToolWindow.setAvailable(avaliable, null);
+            myToolWindow.setAvailable(available, null);
         }
         else {
-            myAlreadyLoadedState = Trinity.create(image, displayName, avaliable);
+            myAlreadyLoadedState = Trinity.create(image, displayName, available);
         }
     }
 

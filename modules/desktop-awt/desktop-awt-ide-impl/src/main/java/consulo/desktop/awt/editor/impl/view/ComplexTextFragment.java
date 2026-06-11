@@ -300,7 +300,7 @@ public final class ComplexTextFragment extends TextFragment {
         ourCharsProcessed += charCount;
         ourGlyphsProcessed += glyphCount;
         if (++ourDrawingCount == 10000) {
-            LOG.debug("Text rendering stats: " + ourCharsProcessed + " chars, " + ourGlyphsProcessed + " glyps, ratio - " +
+            LOG.debug("Text rendering stats: " + ourCharsProcessed + " chars, " + ourGlyphsProcessed + " glyphs, ratio - " +
                 ((float) ourGlyphsProcessed) / ourCharsProcessed);
             ourDrawingCount = 0;
             ourCharsProcessed = 0;

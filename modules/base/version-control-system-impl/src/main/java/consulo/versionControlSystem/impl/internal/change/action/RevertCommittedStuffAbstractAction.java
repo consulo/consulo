@@ -47,15 +47,15 @@ import java.util.List;
 import java.util.function.Function;
 
 abstract class RevertCommittedStuffAbstractAction extends AnAction implements DumbAware {
-    private final Function<AnActionEvent, Change[]> myForUpdateConvertor;
-    private final Function<AnActionEvent, Change[]> myForPerformConvertor;
+    private final Function<AnActionEvent, Change[]> myForUpdateConverter;
+    private final Function<AnActionEvent, Change[]> myForPerformConverter;
 
     public RevertCommittedStuffAbstractAction(
-        Function<AnActionEvent, Change[]> forUpdateConvertor,
-        Function<AnActionEvent, Change[]> forPerformConvertor
+        Function<AnActionEvent, Change[]> forUpdateConverter,
+        Function<AnActionEvent, Change[]> forPerformConverter
     ) {
-        myForUpdateConvertor = forUpdateConvertor;
-        myForPerformConvertor = forPerformConvertor;
+        myForUpdateConverter = forUpdateConverter;
+        myForPerformConverter = forPerformConverter;
     }
 
     @Override
@@ -64,7 +64,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
         final Project project = e.getRequiredData(Project.KEY);
         final VirtualFile baseDir = project.getBaseDir();
         assert baseDir != null;
-        Change[] changes = myForPerformConvertor.apply(e);
+        Change[] changes = myForPerformConverter.apply(e);
         if (changes == null || changes.length == 0) {
             return;
         }
@@ -127,7 +127,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
 
     @Override
     public void update(AnActionEvent e) {
-        Change[] changes = myForUpdateConvertor.apply(e);
+        Change[] changes = myForUpdateConverter.apply(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && changes != null && changes.length > 0);
     }
 }

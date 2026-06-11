@@ -42,8 +42,8 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.concurrent.AsyncResult;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -52,7 +52,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 13/12/2021
+ * @since 2021-12-13
  */
 @Singleton
 @ServiceImpl
@@ -78,9 +78,8 @@ public class DesktopAwtDialogService implements DialogService {
             myDialogWrapper = new DialogWrapperImpl(component, descriptor, this);
         }
 
-        @RequiredUIAccess
-        
         @Override
+        @RequiredUIAccess
         public CompletableFuture<DialogValue> showAsync() {
             CompletableFuture<DialogValue> result = new CompletableFuture<>();
 
@@ -158,7 +157,6 @@ public class DesktopAwtDialogService implements DialogService {
             }
         }
 
-        
         @Override
         protected Action[] createActions() {
             throw new UnsupportedOperationException();
@@ -250,13 +248,11 @@ public class DesktopAwtDialogService implements DialogService {
         }
     }
 
-    
     @Override
     public Dialog build(DialogDescriptor descriptor) {
         return new DialogImpl(descriptor);
     }
 
-    
     @Override
     public Dialog build(Component parent, DialogDescriptor descriptor) {
         return new DialogImpl(TargetAWT.to(parent), descriptor);
@@ -266,7 +262,7 @@ public class DesktopAwtDialogService implements DialogService {
     @Override
     public Dialog build(WindowOwner windowOwner, DialogDescriptor descriptor) {
         if (!(windowOwner instanceof Project project)) {
-            throw new IllegalArgumentException("Expecte instance of Project");
+            throw new IllegalArgumentException("Project instance expected");
         }
         return new DialogImpl(project, descriptor);
     }

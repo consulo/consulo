@@ -31,7 +31,7 @@ public class mxSwimlaneManager extends mxEventSource {
   protected boolean enabled;
 
   /**
-   * Optional string that specifies the attributename to be passed to
+   * Optional string that specifies the attribute-name to be passed to
    * mxCell.is to check if the rule applies to a cell.
    */
   protected boolean horizontal;
@@ -225,7 +225,7 @@ public class mxSwimlaneManager extends mxEventSource {
       }
     }
 
-    // Applies the size of the refernece to the newly added swimlane
+    // Applies the size of the reference to the newly added swimlane
     if (geo != null) {
       boolean parentHorizontal = (parent != null) ? isCellHorizontal(parent) : horizontal;
       resizeSwimlane(swimlane, geo.getWidth(), geo.getHeight(), parentHorizontal);

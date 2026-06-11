@@ -34,9 +34,8 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
+public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
     private class ToolWindowAction extends DumbAwareAction {
-        
         private final ToolWindow myToolWindow;
 
         public ToolWindowAction(ToolWindow toolWindow) {
@@ -44,8 +43,8 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
             myToolWindow = toolWindow;
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             if (popup != null) {
                 popup.closeOk(null);
@@ -66,7 +65,7 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
     private final Alarm myAlarm;
 
     @RequiredUIAccess
-    public DesktopToolWindowsSwicher(StatusBar statusBar) {
+    public DesktopToolWindowsSwitcher(StatusBar statusBar) {
         super(statusBar);
 
         myAlarm = new Alarm(this);
@@ -82,34 +81,35 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
             }
         }.setActionTrigger(MouseEvent.MOUSE_PRESSED);
 
-        IdeEventQueue.getInstance().addDispatcher(e -> {
-            if (e instanceof MouseEvent) {
-                MouseEvent mouseEvent = (MouseEvent) e;
-                if (mouseEvent.getComponent() == null || !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(),
-                    SwingUtilities.getWindowAncestor(awtLabel))) {
-                    return false;
-                }
-
-                if (e.getID() == MouseEvent.MOUSE_MOVED && awtLabel.isShowing()) {
-                    Point p = mouseEvent.getLocationOnScreen();
-                    Point screen = awtLabel.getLocationOnScreen();
-                    if (new Rectangle(screen.x - 4, screen.y - 2, awtLabel.getWidth() + 4, awtLabel.getHeight() + 4).contains(p)) {
-                        mouseEntered();
-                        wasExited = false;
+        IdeEventQueue.getInstance().addDispatcher(
+            e -> {
+                if (e instanceof MouseEvent) {
+                    MouseEvent mouseEvent = (MouseEvent) e;
+                    if (mouseEvent.getComponent() == null
+                        || !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), SwingUtilities.getWindowAncestor(awtLabel))) {
+                        return false;
                     }
-                    else {
-                        if (!wasExited) {
+
+                    if (e.getID() == MouseEvent.MOUSE_MOVED && awtLabel.isShowing()) {
+                        Point p = mouseEvent.getLocationOnScreen();
+                        Point screen = awtLabel.getLocationOnScreen();
+                        if (new Rectangle(screen.x - 4, screen.y - 2, awtLabel.getWidth() + 4, awtLabel.getHeight() + 4).contains(p)) {
+                            mouseEntered();
+                            wasExited = false;
+                        }
+                        else if (!wasExited) {
                             wasExited = mouseExited(p);
                         }
                     }
+                    else if (e.getID() == MouseEvent.MOUSE_EXITED) {
+                        //mouse exits WND
+                        mouseExited(mouseEvent.getLocationOnScreen());
+                    }
                 }
-                else if (e.getID() == MouseEvent.MOUSE_EXITED) {
-                    //mouse exits WND
-                    mouseExited(mouseEvent.getLocationOnScreen());
-                }
-            }
-            return false;
-        }, this);
+                return false;
+            },
+            this
+        );
     }
 
     public boolean mouseExited(Point currentLocationOnScreen) {

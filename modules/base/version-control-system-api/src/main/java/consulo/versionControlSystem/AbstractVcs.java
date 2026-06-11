@@ -65,7 +65,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     protected static final String ourIntegerPattern = "\\d+";
 
-    
     protected final Project myProject;
     private final String myName;
     private final VcsKey myKey;
@@ -84,7 +83,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         myKey = new VcsKey(myName);
     }
 
-    
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowchanges();
     }
@@ -106,7 +104,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     protected void deactivate() {
     }
 
-    
     public final String getId() {
         return myName;
     }
@@ -117,7 +114,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return getId();
     }
 
-    
     public abstract LocalizeValue getDisplayName();
 
     /**
@@ -200,7 +196,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * <p>
      * Returns the interface for performing checkin / commit / submit operations.
      *
-     * @return the checkin interface, or null if checkins are not supported by the VCS.
+     * @return the checkin interface, or null if check-ins are not supported by the VCS.
      */
     public @Nullable CheckinEnvironment getCheckinEnvironment() {
         return myCheckinEnvironment;
@@ -231,7 +227,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return null;
     }
 
-    
     public LocalizeValue getMenuItemText() {
         return getDisplayName();
     }
@@ -304,7 +299,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
      * (in particular, the VCS can show a confirmation to the user by itself)
      */
     @RequiredUIAccess
-    
+
     public ThreeState mayRemoveChangeList(LocalChangeList list, boolean explicitly) {
         return ThreeState.UNSURE;
     }
@@ -428,7 +423,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     /**
      * Checks if the specified directory is managed by this version control system (regardless of the
-     * project VCS configuration). For example, for CVS this checks the presense of "CVS" admin directories.
+     * project VCS configuration). For example, for CVS this checks the presence of "CVS" admin directories.
      * This method is used for VCS autodetection during initial project creation and VCS configuration.
      *
      * @param dir the directory to check.
@@ -459,8 +454,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     }
 
     public interface RootsConvertor {
-
-        
         List<VirtualFile> convertRoots(List<VirtualFile> result);
     }
 
@@ -478,15 +471,13 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return false;
     }
 
-    
-    public <S> List<S> filterUniqueRoots(List<S> in, Function<S, VirtualFile> convertor) {
-        new FilterDescendantVirtualFileConvertible<>(convertor, FilePathComparator.getInstance()).doFilter(in);
+    public <S> List<S> filterUniqueRoots(List<S> in, Function<S, VirtualFile> converter) {
+        new FilterDescendantVirtualFileConvertible<>(converter, FilePathComparator.getInstance()).doFilter(in);
         return in;
     }
 
-    
-    public static <S> List<S> filterUniqueRootsDefault(List<S> in, Function<S, VirtualFile> convertor) {
-        new FilterDescendantVirtualFileConvertible<>(convertor, FilePathComparator.getInstance()).doFilter(in);
+    public static <S> List<S> filterUniqueRootsDefault(List<S> in, Function<S, VirtualFile> converter) {
+        new FilterDescendantVirtualFileConvertible<>(converter, FilePathComparator.getInstance()).doFilter(in);
         return in;
     }
 
@@ -494,7 +485,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return null;
     }
 
-    
     public Project getProject() {
         return myProject;
     }
@@ -503,7 +493,6 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return new VcsKey(name);
     }
 
-    
     public final VcsKey getKeyInstanceMethod() {
         return myKey;
     }
@@ -554,23 +543,23 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     }
 
     public void setCheckinEnvironment(CheckinEnvironment checkinEnvironment) {
-      if (myCheckinEnvironment != null) {
-        throw new IllegalStateException("Attempt to redefine checkin environment");
-      }
+        if (myCheckinEnvironment != null) {
+            throw new IllegalStateException("Attempt to redefine checkin environment");
+        }
         myCheckinEnvironment = checkinEnvironment;
     }
 
     public void setUpdateEnvironment(UpdateEnvironment updateEnvironment) {
-      if (myUpdateEnvironment != null) {
-        throw new IllegalStateException("Attempt to redefine update environment");
-      }
+        if (myUpdateEnvironment != null) {
+            throw new IllegalStateException("Attempt to redefine update environment");
+        }
         myUpdateEnvironment = updateEnvironment;
     }
 
     public void setRollbackEnvironment(RollbackEnvironment rollbackEnvironment) {
-      if (myRollbackEnvironment != null) {
-        throw new IllegalStateException("Attempt to redefine rollback environment");
-      }
+        if (myRollbackEnvironment != null) {
+            throw new IllegalStateException("Attempt to redefine rollback environment");
+        }
         myRollbackEnvironment = rollbackEnvironment;
     }
 
@@ -592,7 +581,9 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     }
 
     /**
-     * @return whether {@link consulo.versionControlSystem.change.VcsDirtyScopeManager} should preserve file path cases on case-insensitive systems.
+     * @return whether {@link consulo.versionControlSystem.change.VcsDirtyScopeManager} should preserve file path cases
+     * on case-insensitive systems.
+     *
      * @see #createDirtyScope
      */
     public boolean needsCaseSensitiveDirtyScope() {
@@ -608,18 +599,18 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AbstractVcs that = (AbstractVcs) o;
 
-      if (!myKey.equals(that.myKey)) {
-        return false;
-      }
+        if (!myKey.equals(that.myKey)) {
+            return false;
+        }
 
         return true;
     }

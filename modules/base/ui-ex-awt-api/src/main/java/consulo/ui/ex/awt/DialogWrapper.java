@@ -57,8 +57,8 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.TimeoutUtil;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -913,7 +913,7 @@ public abstract class DialogWrapper {
 
     /**
      * Dispose the wrapped and releases all resources allocated be the wrapper to help
-     * more effecient garbage collection. You should never invoke this method twice or
+     * more efficient garbage collection. You should never invoke this method twice or
      * invoke any method of the wrapper after invocation of <code>dispose</code>.
      *
      * @throws IllegalStateException if the dialog is disposed not on the event dispatch thread

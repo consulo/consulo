@@ -1,17 +1,17 @@
 package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.application.ReadAction;
+import consulo.application.util.registry.Registry;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
-import consulo.application.util.registry.Registry;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.logging.Logger;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -186,7 +186,7 @@ public class LocalChangeListImpl extends LocalChangeList {
 
     for (Change oldChange : myChangesBeforeUpdate.values()) {
       if (Comparing.equal(oldChange, change)) {
-        LOG.debug("[process change] adding bacuae equal to old: " + ChangesUtil.getFilePath(oldChange).getPath());
+        LOG.debug("[process change] adding because equal to old: " + ChangesUtil.getFilePath(oldChange).getPath());
         addChange(change);
         return true;
       }

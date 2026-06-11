@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.codeEditor.*;
@@ -40,8 +39,8 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -297,7 +296,7 @@ public class SimpleEditorPreview implements PreviewPanel {
 
         Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(page);
 
-        // sort highlights to avoid overlappings
+        // sort highlights to avoid overlapping
         Collections.sort(highlights, Comparator.comparingInt(HighlightData::getStartOffset));
         for (int i = highlights.size() - 1; i >= 0; i--) {
             HighlightData highlightData = highlights.get(i);

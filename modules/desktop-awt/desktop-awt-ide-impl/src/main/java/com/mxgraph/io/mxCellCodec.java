@@ -154,8 +154,8 @@ public class mxCellCodec extends mxObjectCodec {
       // Preprocesses and removes all Id-references
       // in order to use the correct encoder (this)
       // for the known references to cells (all).
-      if (inner != null && idrefs != null) {
-        Iterator<String> it = idrefs.iterator();
+      if (inner != null && idRefs != null) {
+        Iterator<String> it = idRefs.iterator();
 
         while (it.hasNext()) {
           String attr = it.next();

@@ -30,7 +30,7 @@ import java.util.Arrays;
  * using an <code>Arc2D</code> in float precision.
  * <p/>
  * <p><b>Warning</b> : An elliptical arc may be composed of several
- * path segments. For futher details, see the SVG Appendix&nbsp;F.6
+ * path segments. For further details, see the SVG Appendix&nbsp;F.6
  *
  * @author <a href="mailto:Thierry.Kormann@sophia.inria.fr">Thierry Kormann</a>
  * @version $Id: ExtendedGeneralPath.java,v 1.1 2012/11/15 13:26:45 gaudenz Exp $
@@ -113,7 +113,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
       return;
     }
 
-    checkMoveTo(); // check if prev command was moveto
+    checkMoveTo(); // check if prev command was moveTo
 
     // Get the current (x, y) coordinates of the path
     double x0 = cx;
@@ -256,7 +256,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
    * Delegates to the enclosed <code>GeneralPath</code>.
    */
   public synchronized void moveTo(float x, float y) {
-    // Don't add moveto to general path unless there is a reason.
+    // Don't add moveTo to general path unless there is a reason.
     makeRoom(2);
     types[numSeg++] = PathIterator.SEG_MOVETO;
     cx = mx = values[numVals++] = x;
@@ -268,7 +268,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
    * Delegates to the enclosed <code>GeneralPath</code>.
    */
   public synchronized void lineTo(float x, float y) {
-    checkMoveTo(); // check if prev command was moveto
+    checkMoveTo(); // check if prev command was moveTo
     path.lineTo(x, y);
 
     makeRoom(2);
@@ -281,7 +281,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
    * Delegates to the enclosed <code>GeneralPath</code>.
    */
   public synchronized void quadTo(float x1, float y1, float x2, float y2) {
-    checkMoveTo(); // check if prev command was moveto
+    checkMoveTo(); // check if prev command was moveTo
     path.quadTo(x1, y1, x2, y2);
 
     makeRoom(4);
@@ -296,7 +296,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
    * Delegates to the enclosed <code>GeneralPath</code>.
    */
   public synchronized void curveTo(float x1, float y1, float x2, float y2, float x3, float y3) {
-    checkMoveTo(); // check if prev command was moveto
+    checkMoveTo(); // check if prev command was moveTo
     path.curveTo(x1, y1, x2, y2, x3, y3);
 
     makeRoom(6);
@@ -316,7 +316,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
     // Don't double close path.
     if ((numSeg != 0) && (types[numSeg - 1] == PathIterator.SEG_CLOSE)) return;
 
-    // Only close path if the previous command wasn't a moveto
+    // Only close path if the previous command wasn't a moveTo
     if ((numSeg != 0) && (types[numSeg - 1] != PathIterator.SEG_MOVETO)) path.closePath();
 
     makeRoom(0);
@@ -326,7 +326,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
   }
 
   /**
-   * Checks if previous command was a moveto command,
+   * Checks if previous command was a moveTo command,
    * skipping a close command (if present).
    */
   protected void checkMoveTo() {
@@ -370,11 +370,11 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
           double x = vals[0];
           double y = vals[1];
           if ((x != cx) || (y != cy)) {
-            // Change MOVETO to LINETO.
+            // Change moveTo to lineTo.
             type = PathIterator.SEG_LINETO;
           }
           else {
-            // Redundent segment (move to current loc) drop it...
+            // Redundant segment (move to current loc) drop it...
             if (pi.isDone()) break; // Nothing interesting
             type = pi.currentSegment(vals);
             pi.next();
@@ -417,7 +417,7 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
           float x = vals[0];
           float y = vals[1];
           if ((x != cx) || (y != cy)) {
-            // Change MOVETO to LINETO.
+            // Change moveTo to lineTo.
             type = PathIterator.SEG_LINETO;
           }
           else {
@@ -725,18 +725,18 @@ public class ExtendedGeneralPath implements Shape, Cloneable {
 
     int newSize = numVals + numValues;
     if (newSize > values.length) {
-      int nlen = values.length * 2;
-      if (nlen < newSize) nlen = newSize;
+      int nLen = values.length * 2;
+      if (nLen < newSize) nLen = newSize;
 
-      float[] nvals = new float[nlen];
-      System.arraycopy(values, 0, nvals, 0, numVals);
-      values = nvals;
+      float[] nVals = new float[nLen];
+      System.arraycopy(values, 0, nVals, 0, numVals);
+      values = nVals;
     }
 
     if (numSeg == types.length) {
-      int[] ntypes = new int[types.length * 2];
-      System.arraycopy(types, 0, ntypes, 0, types.length);
-      types = ntypes;
+      int[] nTypes = new int[types.length * 2];
+      System.arraycopy(types, 0, nTypes, 0, types.length);
+      types = nTypes;
     }
   }
 }

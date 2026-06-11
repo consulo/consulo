@@ -500,7 +500,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                             if (pointerInfo != null && myFocusPoint.equals(pointerInfo.getLocation())) {
                                 // Ignore the loss of focus if the mouse hasn't moved between the last dropdown resize
                                 // and the loss of focus event. This happens in focus follows mouse mode if the mouse is
-                                // over the dropdown and it resizes to leave the mouse outside the dropdown.
+                                // over the drop-down and it resizes to leave the mouse outside the dropdown.
                                 ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
                                 myFocusPoint = null;
                                 return;

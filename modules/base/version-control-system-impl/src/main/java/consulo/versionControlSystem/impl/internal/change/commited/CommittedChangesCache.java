@@ -50,10 +50,10 @@ import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -1028,7 +1028,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   private void refreshCacheAsync(final ChangesCacheFile cache,
                                  final boolean initIfEmpty,
                                  final @Nullable RefreshResultConsumer consumer,
-                                 boolean asynch) {
+                                 boolean async) {
     try {
       if (!initIfEmpty && cache.isEmpty()) {
         return;
@@ -1066,7 +1066,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
         }
       }
     };
-    if (asynch) {
+    if (async) {
       myTaskQueue.run(task);
     }
     else {

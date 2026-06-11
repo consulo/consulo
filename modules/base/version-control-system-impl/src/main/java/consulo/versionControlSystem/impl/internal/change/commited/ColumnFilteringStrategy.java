@@ -29,6 +29,7 @@ import consulo.versionControlSystem.change.commited.CommittedChangesFilterPriori
 import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -37,7 +38,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.util.*;
 import java.util.function.Function;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -49,7 +49,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   private final ChangeListColumn myColumn;
   private final Class<? extends CommittedChangesProvider> myProviderClass;
   private final MyListModel myModel;
-  private final CommittedChangeListToStringConvertor ourConvertorInstance = new CommittedChangeListToStringConvertor();
+  private final CommittedChangeListToStringConverter ourConvertorInstance = new CommittedChangeListToStringConverter();
 
   private Object[] myPrefferedSelection;
 
@@ -139,7 +139,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
     myValueList.repaint();
   }
 
-  private class CommittedChangeListToStringConvertor implements Function<CommittedChangeList, String> {
+  private class CommittedChangeListToStringConverter implements Function<CommittedChangeList, String> {
     @Override
     public String apply(CommittedChangeList o) {
       if (myProviderClass == null || myProviderClass.isInstance(o.getVcs().getCommittedChangesProvider())) {
@@ -150,7 +150,6 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   }
 
   @Override
-  
   public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
     Object[] selection = myValueList.getSelectedValues();
     if (myValueList.getSelectedIndex() == 0 || selection.length == 0) {

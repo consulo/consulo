@@ -17,8 +17,8 @@ import org.w3c.dom.Element;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Implements a graph object that allows to create diagrams from a graph model
@@ -225,7 +225,7 @@ public class mxGraph extends mxEventSource {
 
   /**
    * Specifies the alternate edge style to be used if the main control point
-   * on an edge is being doubleclicked. Default is null.
+   * on an edge is being double-clicked. Default is null.
    */
   protected String alternateEdgeStyle;
 

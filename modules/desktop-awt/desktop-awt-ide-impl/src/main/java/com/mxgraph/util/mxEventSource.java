@@ -102,7 +102,7 @@ public class mxEventSource {
   /**
    * Function: removeListener
    * <p/>
-   * Removes all occurances of the given listener from the list of listeners.
+   * Removes all occurrences of the given listener from the list of listeners.
    */
   public void removeListener(mxIEventListener listener) {
     removeListener(listener, null);
@@ -111,7 +111,7 @@ public class mxEventSource {
   /**
    * Function: removeListener
    * <p/>
-   * Removes all occurances of the given listener from the list of listeners.
+   * Removes all occurrences of the given listener from the list of listeners.
    */
   public void removeListener(mxIEventListener listener, String eventName) {
     if (eventListeners != null) {
