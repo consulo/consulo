@@ -23,6 +23,7 @@ import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
 import consulo.platform.Platform;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -72,6 +73,7 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
         }
 
         @Override
+        @RequiredUIAccess
         public void navigate(boolean requestFocus) {
             Platform.current().openInBrowser(getUrl());
         }

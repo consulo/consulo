@@ -7,6 +7,5 @@ import consulo.build.ui.issue.BuildIssue;
  * @author Vladislav.Soroka
  */
 public interface BuildIssueEvent extends MessageEvent {
-  
-  BuildIssue getIssue();
+    BuildIssue getIssue();
 }

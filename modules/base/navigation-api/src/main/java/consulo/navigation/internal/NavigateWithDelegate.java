@@ -22,7 +22,6 @@ import consulo.navigation.Navigatable;
  * @since 2025-09-04
  */
 public interface NavigateWithDelegate extends Navigatable {
-    
     default Navigatable getDelegate() {
         return this;
     }

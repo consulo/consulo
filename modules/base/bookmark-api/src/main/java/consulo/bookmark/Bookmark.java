@@ -25,32 +25,29 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 10-Aug-22
+ * @since 2022-08-10
  */
 public interface Bookmark extends Navigatable {
-  @Nullable Document getDocument();
+    @Nullable
+    Document getDocument();
 
-  
-  VirtualFile getFile();
+    VirtualFile getFile();
 
-  
-  @Deprecated(forRemoval = true)
-  default Image getIcon() {
-    return getIcon(true);
-  }
+    @Deprecated(forRemoval = true)
+    default Image getIcon() {
+        return getIcon(true);
+    }
 
-  String getDescription();
+    String getDescription();
 
-  char getMnemonic();
+    char getMnemonic();
 
-  
-  Image getIcon(boolean gutter);
+    Image getIcon(boolean gutter);
 
-  boolean isValid();
+    boolean isValid();
 
-  int getLine();
+    int getLine();
 
-  @RequiredReadAction
-  
-  String getQualifiedName();
+    @RequiredReadAction
+    String getQualifiedName();
 }

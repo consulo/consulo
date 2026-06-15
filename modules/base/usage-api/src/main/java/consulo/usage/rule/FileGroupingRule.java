@@ -26,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
@@ -39,128 +40,132 @@ import org.jspecify.annotations.Nullable;
  * @author max
  */
 public class FileGroupingRule extends SingleParentUsageGroupingRule implements DumbAware {
-  private final Project myProject;
-
-  public FileGroupingRule(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public @Nullable UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
-    VirtualFile virtualFile;
-    if (usage instanceof UsageInFile && (virtualFile = ((UsageInFile)usage).getFile()) != null) {
-      return new FileUsageGroup(myProject, virtualFile);
-    }
-    return null;
-  }
-
-  public static class FileUsageGroup implements UsageGroup, TypeSafeDataProvider, NamedPresentably {
     private final Project myProject;
-    private final VirtualFile myFile;
-    private String myPresentableName;
-    private Image myIcon;
 
-    public FileUsageGroup(Project project, VirtualFile file) {
-      myProject = project;
-      myFile = file instanceof VirtualFileWindow ? ((VirtualFileWindow)file).getDelegate() : file;
-      myPresentableName = myFile.getName();
-      update();
-    }
-
-    private Image getIconImpl() {
-      return VirtualFileManager.getInstance().getFileIcon(myFile, myProject, Iconable.ICON_FLAG_READ_STATUS);
+    public FileGroupingRule(Project project) {
+        myProject = project;
     }
 
     @Override
-    public void update() {
-      if (isValid()) {
-        myIcon = getIconImpl();
-        myPresentableName = myFile.getName();
-      }
+    public @Nullable UsageGroup getParentGroupFor(Usage usage, UsageTarget[] targets) {
+        VirtualFile virtualFile;
+        if (usage instanceof UsageInFile && (virtualFile = ((UsageInFile) usage).getFile()) != null) {
+            return new FileUsageGroup(myProject, virtualFile);
+        }
+        return null;
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof FileUsageGroup)) return false;
+    public static class FileUsageGroup implements UsageGroup, TypeSafeDataProvider, NamedPresentably {
+        private final Project myProject;
+        private final VirtualFile myFile;
+        private String myPresentableName;
+        private Image myIcon;
 
-      FileUsageGroup fileUsageGroup = (FileUsageGroup)o;
+        public FileUsageGroup(Project project, VirtualFile file) {
+            myProject = project;
+            myFile = file instanceof VirtualFileWindow ? ((VirtualFileWindow) file).getDelegate() : file;
+            myPresentableName = myFile.getName();
+            update();
+        }
 
-      return myFile.equals(fileUsageGroup.myFile);
+        private Image getIconImpl() {
+            return VirtualFileManager.getInstance().getFileIcon(myFile, myProject, Iconable.ICON_FLAG_READ_STATUS);
+        }
+
+        @Override
+        public void update() {
+            if (isValid()) {
+                myIcon = getIconImpl();
+                myPresentableName = myFile.getName();
+            }
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+            return o instanceof FileUsageGroup that
+                && myFile.equals(that.myFile);
+        }
+
+        @Override
+        public int hashCode() {
+            return myFile.hashCode();
+        }
+
+        @Override
+        public Image getIcon() {
+            return myIcon;
+        }
+
+        @Override
+        public String getText(UsageView view) {
+            return myPresentableName;
+        }
+
+        @Override
+        public FileStatus getFileStatus() {
+            return isValid() ? FileStatusManager.getInstance(myProject).getStatus(myFile) : null;
+        }
+
+        @Override
+        public boolean isValid() {
+            return myFile.isValid();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void navigate(boolean focus) throws UnsupportedOperationException {
+            FileEditorManager.getInstance(myProject).openFile(myFile, focus);
+        }
+
+        @Override
+        @RequiredReadAction
+        public boolean canNavigate() {
+            return myFile.isValid();
+        }
+
+        @Override
+        @RequiredReadAction
+        public boolean canNavigateToSource() {
+            return canNavigate();
+        }
+
+        @Override
+        public int compareTo(UsageGroup otherGroup) {
+            int compareTexts = getText(null).compareToIgnoreCase(otherGroup.getText(null));
+            if (compareTexts != 0) {
+                return compareTexts;
+            }
+            if (otherGroup instanceof FileUsageGroup) {
+                return myFile.getPath().compareTo(((FileUsageGroup) otherGroup).myFile.getPath());
+            }
+            return 0;
+        }
+
+        @Override
+        @RequiredReadAction
+        public void calcData(Key<?> key, DataSink sink) {
+            if (!isValid()) {
+                return;
+            }
+            if (key == VirtualFile.KEY) {
+                sink.put(VirtualFile.KEY, myFile);
+            }
+            if (key == PsiElement.KEY) {
+                sink.put(PsiElement.KEY, getPsiFile());
+            }
+        }
+
+        @RequiredReadAction
+        public @Nullable PsiFile getPsiFile() {
+            return myFile.isValid() ? PsiManager.getInstance(myProject).findFile(myFile) : null;
+        }
+
+        @Override
+        public String getPresentableName() {
+            return myPresentableName;
+        }
     }
-
-    @Override
-    public int hashCode() {
-      return myFile.hashCode();
-    }
-
-    @Override
-    public Image getIcon() {
-      return myIcon;
-    }
-
-    @Override
-    
-    public String getText(UsageView view) {
-      return myPresentableName;
-    }
-
-    @Override
-    public FileStatus getFileStatus() {
-      return isValid() ? FileStatusManager.getInstance(myProject).getStatus(myFile) : null;
-    }
-
-    @Override
-    public boolean isValid() {
-      return myFile.isValid();
-    }
-
-    @Override
-    public void navigate(boolean focus) throws UnsupportedOperationException {
-      FileEditorManager.getInstance(myProject).openFile(myFile, focus);
-    }
-
-    @Override
-    public boolean canNavigate() {
-      return myFile.isValid();
-    }
-
-    @Override
-    public boolean canNavigateToSource() {
-      return canNavigate();
-    }
-
-    @Override
-    public int compareTo(UsageGroup otherGroup) {
-      int compareTexts = getText(null).compareToIgnoreCase(otherGroup.getText(null));
-      if (compareTexts != 0) return compareTexts;
-      if (otherGroup instanceof FileUsageGroup) {
-        return myFile.getPath().compareTo(((FileUsageGroup)otherGroup).myFile.getPath());
-      }
-      return 0;
-    }
-
-    @Override
-    @RequiredReadAction
-    public void calcData(Key<?> key, DataSink sink) {
-      if (!isValid()) return;
-      if (key == VirtualFile.KEY) {
-        sink.put(VirtualFile.KEY, myFile);
-      }
-      if (key == PsiElement.KEY) {
-        sink.put(PsiElement.KEY, getPsiFile());
-      }
-    }
-
-    @RequiredReadAction
-    public @Nullable PsiFile getPsiFile() {
-      return myFile.isValid() ? PsiManager.getInstance(myProject).findFile(myFile) : null;
-    }
-
-    @Override
-    
-    public String getPresentableName() {
-      return myPresentableName;
-    }
-  }
 }

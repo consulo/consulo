@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
@@ -26,6 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
 import consulo.ui.image.Image;
@@ -38,230 +38,253 @@ import java.util.Map;
 import java.util.Set;
 
 public class DirectoryNode extends PackageDependenciesNode {
+    private final String myDirName;
+    private PsiDirectory myDirectory;
 
-  private final String myDirName;
-  private PsiDirectory myDirectory;
+    private DirectoryNode myCompactedDirNode;
+    private DirectoryNode myWrapper;
 
-  private DirectoryNode myCompactedDirNode;
-  private DirectoryNode myWrapper;
+    private boolean myCompactPackages = true;
+    private String myFQName = null;
+    private final VirtualFile myVDirectory;
 
-  private boolean myCompactPackages = true;
-  private String myFQName = null;
-  private final VirtualFile myVDirectory;
+    public DirectoryNode(
+        VirtualFile aDirectory,
+        Project project,
+        boolean compactPackages,
+        boolean showFQName,
+        VirtualFile baseDir, VirtualFile[] contentRoots
+    ) {
+        super(project);
+        myVDirectory = aDirectory;
+        ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
+        ProjectFileIndex index = projectRootManager.getFileIndex();
+        String dirName = aDirectory.getName();
+        if (showFQName) {
+            VirtualFile contentRoot = index.getContentRootForFile(myVDirectory);
+            if (contentRoot != null) {
+                if (Comparing.equal(myVDirectory, contentRoot)) {
+                    myFQName = dirName;
+                }
+                else {
+                    VirtualFile sourceRoot = index.getSourceRootForFile(myVDirectory);
+                    if (Comparing.equal(myVDirectory, sourceRoot)) {
+                        myFQName = VirtualFileUtil.getRelativePath(myVDirectory, contentRoot, '/');
+                    }
+                    else if (sourceRoot != null) {
+                        myFQName = VirtualFileUtil.getRelativePath(myVDirectory, sourceRoot, '/');
+                    }
+                    else {
+                        myFQName = VirtualFileUtil.getRelativePath(myVDirectory, contentRoot, '/');
+                    }
+                }
 
-  public DirectoryNode(VirtualFile aDirectory,
-                       Project project,
-                       boolean compactPackages,
-                       boolean showFQName,
-                       VirtualFile baseDir, VirtualFile[] contentRoots) {
-    super(project);
-    myVDirectory = aDirectory;
-    ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
-    ProjectFileIndex index = projectRootManager.getFileIndex();
-    String dirName = aDirectory.getName();
-    if (showFQName) {
-      VirtualFile contentRoot = index.getContentRootForFile(myVDirectory);
-      if (contentRoot != null) {
-        if (Comparing.equal(myVDirectory, contentRoot)) {
-          myFQName = dirName;
+                if (contentRoots.length > 1 && ProjectRootsUtil.isModuleContentRoot(myVDirectory, project)) {
+                    myFQName = getContentRootName(baseDir, myFQName);
+                }
+            }
+            else {
+                myFQName = FilePatternPackageSet.getLibRelativePath(myVDirectory, index);
+            }
+            dirName = myFQName;
         }
         else {
-          VirtualFile sourceRoot = index.getSourceRootForFile(myVDirectory);
-          if (Comparing.equal(myVDirectory, sourceRoot)) {
-            myFQName = VirtualFileUtil.getRelativePath(myVDirectory, contentRoot, '/');
-          }
-          else if (sourceRoot != null) {
-            myFQName = VirtualFileUtil.getRelativePath(myVDirectory, sourceRoot, '/');
-          }
-          else {
-            myFQName = VirtualFileUtil.getRelativePath(myVDirectory, contentRoot, '/');
-          }
+            if (contentRoots.length > 1 && ProjectRootsUtil.isModuleContentRoot(myVDirectory, project)) {
+                dirName = getContentRootName(baseDir, dirName);
+            }
         }
-
-        if (contentRoots.length > 1 && ProjectRootsUtil.isModuleContentRoot(myVDirectory, project)) {
-          myFQName = getContentRootName(baseDir, myFQName);
-        }
-      }
-      else {
-        myFQName = FilePatternPackageSet.getLibRelativePath(myVDirectory, index);
-      }
-      dirName = myFQName;
-    } else {
-      if (contentRoots.length > 1 && ProjectRootsUtil.isModuleContentRoot(myVDirectory, project)) {
-        dirName = getContentRootName(baseDir, dirName);
-      }
+        myDirName = dirName;
+        myCompactPackages = compactPackages;
     }
-    myDirName = dirName;
-    myCompactPackages = compactPackages;
-  }
 
-  private String getContentRootName(VirtualFile baseDir, String dirName) {
-    if (baseDir != null) {
-      if (!Comparing.equal(myVDirectory, baseDir)) {
-        if (VirtualFileUtil.isAncestor(baseDir, myVDirectory, false)) {
-          return VirtualFileUtil.getRelativePath(myVDirectory, baseDir, '/');
+    private String getContentRootName(VirtualFile baseDir, String dirName) {
+        if (baseDir != null) {
+            if (!Comparing.equal(myVDirectory, baseDir)) {
+                if (VirtualFileUtil.isAncestor(baseDir, myVDirectory, false)) {
+                    return VirtualFileUtil.getRelativePath(myVDirectory, baseDir, '/');
+                }
+                else {
+                    return myVDirectory.getPresentableUrl();
+                }
+            }
         }
         else {
-          return myVDirectory.getPresentableUrl();
+            return myVDirectory.getPresentableUrl();
         }
-      }
-    } else {
-      return myVDirectory.getPresentableUrl();
-    }
-    return dirName;
-  }
-
-  @Override
-  public void fillFiles(Set<PsiFile> set, boolean recursively) {
-    super.fillFiles(set, recursively);
-    int count = getChildCount();
-    for (int i = 0; i < count; i++) {
-      PackageDependenciesNode child = (PackageDependenciesNode)getChildAt(i);
-      if (child instanceof FileNode || recursively) {
-        child.fillFiles(set, true);
-      }
-    }
-  }
-
-  public String toString() {
-    if (myFQName != null) return myFQName;
-    if (myCompactPackages && myCompactedDirNode != null) {
-      return myDirName + "/" + myCompactedDirNode.getDirName();
-    }
-    return myDirName;
-  }
-
-  public String getDirName() {
-    if (myVDirectory == null || !myVDirectory.isValid()) return "";
-    if (myCompactPackages && myCompactedDirNode != null) {
-      return myVDirectory.getName() + "/" + myCompactedDirNode.getDirName();
-    }
-    return myDirName;
-  }
-
-  public String getFQName() {
-    ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
-    VirtualFile directory = myVDirectory;
-    VirtualFile contentRoot = index.getContentRootForFile(directory);
-    if (Comparing.equal(directory, contentRoot)) {
-      return "";
-    }
-    if (contentRoot == null) {
-      return "";
-    }
-    return VirtualFileUtil.getRelativePath(directory, contentRoot, '/');
-  }
-
-  @Override
-  public PsiElement getPsiElement() {
-    return getTargetDirectory();
-  }
-
-  private @Nullable PsiDirectory getPsiDirectory() {
-    if (myDirectory == null) {
-      if (myVDirectory.isValid() && !myProject.isDisposed()) {
-        myDirectory = PsiManager.getInstance(myProject).findDirectory(myVDirectory);
-      }
-    }
-    return myDirectory;
-  }
-
-  public PsiDirectory getTargetDirectory() {
-    DirectoryNode dirNode = this;
-    while (dirNode.getCompactedDirNode() != null) {
-      dirNode = dirNode.getCompactedDirNode();
-      assert dirNode != null;
+        return dirName;
     }
 
-    return dirNode.getPsiDirectory();
-  }
-
-  @Override
-  public int getWeight() {
-    return 3;
-  }
-
-  public boolean equals(Object o) {
-    if (isEquals()) {
-      return super.equals(o);
+    @Override
+    public void fillFiles(Set<PsiFile> set, boolean recursively) {
+        super.fillFiles(set, recursively);
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            PackageDependenciesNode child = (PackageDependenciesNode) getChildAt(i);
+            if (child instanceof FileNode || recursively) {
+                child.fillFiles(set, true);
+            }
+        }
     }
-    if (this == o) return true;
-    if (!(o instanceof DirectoryNode)) return false;
 
-    DirectoryNode packageNode = (DirectoryNode)o;
-
-    if (!toString().equals(packageNode.toString())) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    return toString().hashCode();
-  }
-
-  @Override
-  public Image getIcon() {
-    if (myDirectory != null) {
-      return IconDescriptorUpdaters.getIcon(myDirectory, 0);
+    @Override
+    public String toString() {
+        if (myFQName != null) {
+            return myFQName;
+        }
+        if (myCompactPackages && myCompactedDirNode != null) {
+            return myDirName + "/" + myCompactedDirNode.getDirName();
+        }
+        return myDirName;
     }
-    return AllIcons.Nodes.TreeOpen;
-  }
 
-  public void setCompactedDirNode(DirectoryNode compactedDirNode) {
-    if (myCompactedDirNode != null) {
-      myCompactedDirNode.myWrapper = null;
+    public String getDirName() {
+        if (myVDirectory == null || !myVDirectory.isValid()) {
+            return "";
+        }
+        if (myCompactPackages && myCompactedDirNode != null) {
+            return myVDirectory.getName() + "/" + myCompactedDirNode.getDirName();
+        }
+        return myDirName;
     }
-    myCompactedDirNode = compactedDirNode;
-    if (myCompactedDirNode != null) {
-      myCompactedDirNode.myWrapper = this;
+
+    public String getFQName() {
+        ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
+        VirtualFile directory = myVDirectory;
+        VirtualFile contentRoot = index.getContentRootForFile(directory);
+        if (Comparing.equal(directory, contentRoot)) {
+            return "";
+        }
+        if (contentRoot == null) {
+            return "";
+        }
+        return VirtualFileUtil.getRelativePath(directory, contentRoot, '/');
     }
-  }
 
-  public DirectoryNode getWrapper() {
-    return myWrapper;
-  }
-
-  public @Nullable DirectoryNode getCompactedDirNode() {
-    return myCompactPackages ? myCompactedDirNode : null;
-  }
-
-  public void removeUpReference() {
-    myWrapper = null;
-  }
-
-  @Override
-  public boolean isValid() {
-    return myVDirectory != null && myVDirectory.isValid();
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return false;
-  }
-
-  @Override
-  public String getComment() {
-    if (myVDirectory != null && myVDirectory.isValid() && !myProject.isDisposed()) {
-      PsiDirectory directory = getPsiDirectory();
-      if (directory != null) {
-        return BaseProjectViewDirectoryHelper.getLocationString(directory);
-      }
+    @Override
+    @RequiredReadAction
+    public PsiElement getPsiElement() {
+        return getTargetDirectory();
     }
-    return super.getComment();
-  }
 
-  @Override
-  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
-    Set<PsiFile> files = deps.keySet();
-    for (PsiFile file : files) {
-      if (file.getContainingDirectory() == getPsiDirectory()) {
+    @RequiredReadAction
+    private @Nullable PsiDirectory getPsiDirectory() {
+        if (myDirectory == null) {
+            if (myVDirectory.isValid() && !myProject.isDisposed()) {
+                myDirectory = PsiManager.getInstance(myProject).findDirectory(myVDirectory);
+            }
+        }
+        return myDirectory;
+    }
+
+    @RequiredReadAction
+    public PsiDirectory getTargetDirectory() {
+        DirectoryNode dirNode = this;
+        while (dirNode.getCompactedDirNode() != null) {
+            dirNode = dirNode.getCompactedDirNode();
+            assert dirNode != null;
+        }
+
+        return dirNode.getPsiDirectory();
+    }
+
+    @Override
+    public int getWeight() {
+        return 3;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (isEquals()) {
+            return super.equals(o);
+        }
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DirectoryNode)) {
+            return false;
+        }
+
+        DirectoryNode packageNode = (DirectoryNode) o;
+
+        if (!toString().equals(packageNode.toString())) {
+            return false;
+        }
+
         return true;
-      }
     }
-    return false;
-  }
 
-  public VirtualFile getDirectory() {
-    return myVDirectory;
-  }
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override
+    @RequiredReadAction
+    public Image getIcon() {
+        if (myDirectory != null) {
+            return IconDescriptorUpdaters.getIcon(myDirectory, 0);
+        }
+        return PlatformIconGroup.nodesTreeopen();
+    }
+
+    public void setCompactedDirNode(DirectoryNode compactedDirNode) {
+        if (myCompactedDirNode != null) {
+            myCompactedDirNode.myWrapper = null;
+        }
+        myCompactedDirNode = compactedDirNode;
+        if (myCompactedDirNode != null) {
+            myCompactedDirNode.myWrapper = this;
+        }
+    }
+
+    public DirectoryNode getWrapper() {
+        return myWrapper;
+    }
+
+    public @Nullable DirectoryNode getCompactedDirNode() {
+        return myCompactPackages ? myCompactedDirNode : null;
+    }
+
+    public void removeUpReference() {
+        myWrapper = null;
+    }
+
+    @Override
+    public boolean isValid() {
+        return myVDirectory != null && myVDirectory.isValid();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        return false;
+    }
+
+    @Override
+    @RequiredReadAction
+    public String getComment() {
+        if (myVDirectory != null && myVDirectory.isValid() && !myProject.isDisposed()) {
+            PsiDirectory directory = getPsiDirectory();
+            if (directory != null) {
+                return BaseProjectViewDirectoryHelper.getLocationString(directory);
+            }
+        }
+        return super.getComment();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
+        Set<PsiFile> files = deps.keySet();
+        for (PsiFile file : files) {
+            if (file.getContainingDirectory() == getPsiDirectory()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public VirtualFile getDirectory() {
+        return myVDirectory;
+    }
 }

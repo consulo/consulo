@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.internal.LibraryEx;
@@ -57,9 +56,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         this(project, (LibraryGroupElement) value, viewSettings);
     }
 
-    @RequiredReadAction
     @Override
-    
+    @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue().getModule();
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -143,6 +141,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         return ProjectSettingsService.getInstance(myProject).canOpenModuleLibrarySettings();
     }

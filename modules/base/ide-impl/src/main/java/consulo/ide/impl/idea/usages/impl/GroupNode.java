@@ -73,12 +73,10 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         }
     }
 
-    
     List<Node> getChildren() {
         return myChildren;
     }
 
-    
     @SuppressWarnings("unchecked")
     List<Node> getSwingChildren() {
         // on java 9 - children is Vector<TreeNode>
@@ -86,7 +84,6 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return ObjectUtil.notNull(children, Collections.<Node>emptyList());
     }
 
-    
     GroupNode addOrGetGroup(UsageGroup group, int ruleIndex, Consumer<? super Node> edtInsertedUnderQueue) {
         GroupNode newNode;
         synchronized (this) {
@@ -204,11 +201,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
      * @param parent    the parent
      * @param nodes     must all be children of parent
      */
-    private static void removeNodesFromParent(
-        DefaultTreeModel treeModel,
-        GroupNode parent,
-        List<? extends MutableTreeNode> nodes
-    ) {
+    private static void removeNodesFromParent(DefaultTreeModel treeModel, GroupNode parent, List<? extends MutableTreeNode> nodes) {
         int count = nodes.size();
         if (count == 0) {
             return;
@@ -226,7 +219,6 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         treeModel.nodesWereRemoved(parent, indices, nodes.toArray());
     }
 
-    
     UsageNode addOrGetUsage(Usage usage, boolean filterDuplicateLines, Consumer<? super Node> edtInsertedUnderQueue) {
         UsageNode newNode;
         synchronized (this) {
@@ -376,6 +368,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         if (getGroup() != null) {
             getGroup().navigate(requestFocus);
@@ -404,13 +397,11 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return true;
     }
 
-    
     @Override
     protected String getText(UsageView view) {
         return getGroup().getText(view);
     }
 
-    
     public synchronized Collection<GroupNode> getSubGroups() {
         List<GroupNode> list = new ArrayList<>();
         for (Node n : myChildren) {
@@ -421,7 +412,6 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return list;
     }
 
-    
     public synchronized Collection<UsageNode> getUsageNodes() {
         List<UsageNode> list = new ArrayList<>();
         for (Node n : myChildren) {
@@ -432,7 +422,6 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         return list;
     }
 
-    
     static Root createRoot() {
         return new Root();
     }
@@ -443,7 +432,6 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
             return "Root " + super.toString();
         }
 
-        
         @Override
         protected String getText(UsageView view) {
             return "";

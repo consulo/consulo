@@ -37,6 +37,7 @@ import consulo.navigation.NavigationItem;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
@@ -183,16 +184,19 @@ public class BookmarkImpl implements Bookmark {
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         return myTarget.canNavigate();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
         return myTarget.canNavigateToSource();
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         myTarget.navigate(requestFocus);
     }

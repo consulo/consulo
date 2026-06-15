@@ -9,77 +9,72 @@ import org.jspecify.annotations.Nullable;
  * @author Vladislav.Soroka
  */
 public abstract class AbstractBuildEvent implements BuildEvent {
+    private final
+    Object myEventId;
+    private @Nullable Object myParentId;
+    private final long myEventTime;
+    private final @BuildEventsNls.Message String myMessage;
+    private @Nullable @BuildEventsNls.Hint String myHint;
+    private @Nullable @BuildEventsNls.Description String myDescription;
 
-  private final 
-  Object myEventId;
-  private @Nullable Object myParentId;
-  private final long myEventTime;
-  private final 
-  @BuildEventsNls.Message String myMessage;
-  private @Nullable @BuildEventsNls.Hint String myHint;
-  private @Nullable @BuildEventsNls.Description String myDescription;
+    public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
+        myEventId = eventId;
+        myParentId = parentId;
+        myEventTime = eventTime;
+        myMessage = message;
+    }
 
-  public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
-    myEventId = eventId;
-    myParentId = parentId;
-    myEventTime = eventTime;
-    myMessage = message;
-  }
+    @Override
+    public Object getId() {
+        return myEventId;
+    }
 
-  @Override
-  public 
-  Object getId() {
-    return myEventId;
-  }
+    @Override
+    public @Nullable Object getParentId() {
+        return myParentId;
+    }
 
-  @Override
-  public @Nullable Object getParentId() {
-    return myParentId;
-  }
+    public void setParentId(@Nullable Object parentId) {
+        myParentId = parentId;
+    }
 
-  public void setParentId(@Nullable Object parentId) {
-    myParentId = parentId;
-  }
+    @Override
+    public long getEventTime() {
+        return myEventTime;
+    }
 
-  @Override
-  public long getEventTime() {
-    return myEventTime;
-  }
+    @Override
+    public @BuildEventsNls.Message String getMessage() {
+        return myMessage;
+    }
 
-  @Override
-  public 
-  @BuildEventsNls.Message String getMessage() {
-    return myMessage;
-  }
+    @Override
+    public @Nullable String getHint() {
+        return myHint;
+    }
 
-  @Override
-  public @Nullable String getHint() {
-    return myHint;
-  }
+    public void setHint(@Nullable @BuildEventsNls.Hint String hint) {
+        myHint = hint;
+    }
 
-  public void setHint(@Nullable @BuildEventsNls.Hint String hint) {
-    myHint = hint;
-  }
+    @Override
+    public @Nullable @BuildEventsNls.Description String getDescription() {
+        return myDescription;
+    }
 
-  @Override
-  public @Nullable @BuildEventsNls.Description String getDescription() {
-    return myDescription;
-  }
+    public void setDescription(@Nullable @BuildEventsNls.Description String description) {
+        myDescription = description;
+    }
 
-  public void setDescription(@Nullable @BuildEventsNls.Description String description) {
-    myDescription = description;
-  }
-
-  
-  @Override
-  public String toString() {
-    return getClass().getSimpleName() + "{" +
-           "myEventId=" + myEventId +
-           ", myParentId=" + myParentId +
-           ", myEventTime=" + myEventTime +
-           ", myMessage='" + myMessage + '\'' +
-           ", myHint='" + myHint + '\'' +
-           ", myDescription='" + myDescription + '\'' +
-           '}';
-  }
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+            "myEventId=" + myEventId +
+            ", myParentId=" + myParentId +
+            ", myEventTime=" + myEventTime +
+            ", myMessage='" + myMessage + '\'' +
+            ", myHint='" + myHint + '\'' +
+            ", myDescription='" + myDescription + '\'' +
+            '}';
+    }
 }
