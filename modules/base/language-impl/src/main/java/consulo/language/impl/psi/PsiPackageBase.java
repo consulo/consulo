@@ -30,6 +30,7 @@ import consulo.module.content.DirectoryIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -138,8 +139,8 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     public void handleQualifiedNameChange(String newQualifiedName) {
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public @Nullable PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
         PsiDirectory[] dirs = getDirectories();
@@ -232,7 +233,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -268,7 +268,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return null;
     }
 
-    
     @Override
     @RequiredReadAction
     public char[] textToCharArray() {
@@ -395,7 +394,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
         Collection<PsiDirectory> allDirectories = getAllDirectories(true);
         if (!allDirectories.isEmpty()) {

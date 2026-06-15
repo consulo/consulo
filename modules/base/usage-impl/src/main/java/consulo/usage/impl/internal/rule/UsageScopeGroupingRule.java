@@ -15,10 +15,12 @@
  */
 package consulo.usage.impl.internal.rule;
 
-import consulo.application.AllIcons;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.content.TestSourcesFilter;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
@@ -29,109 +31,126 @@ import consulo.usage.UsageView;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public class UsageScopeGroupingRule implements UsageGroupingRule {
-  @Override
-  public UsageGroup groupUsage(Usage usage) {
-    if (!(usage instanceof PsiElementUsage)) {
-      return null;
-    }
-    PsiElementUsage elementUsage = (PsiElementUsage)usage;
-
-    PsiElement element = elementUsage.getElement();
-    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
-
-    if (virtualFile == null) {
-      return null;
-    }
-    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
-    boolean isInLib = fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInLibrarySource(virtualFile);
-    if (isInLib) return LIBRARY;
-    boolean isInTest = TestSourcesFilter.isTestSources(virtualFile, element.getProject());
-    return isInTest ? TEST : PRODUCTION;
-  }
-
-  private static final UsageScopeGroup TEST = new UsageScopeGroup(0) {
     @Override
-    public Image getIcon() {
-      return AllIcons.Nodes.TestPackage;
+    @RequiredReadAction
+    public UsageGroup groupUsage(Usage usage) {
+        if (!(usage instanceof PsiElementUsage)) {
+            return null;
+        }
+        PsiElementUsage elementUsage = (PsiElementUsage) usage;
+
+        PsiElement element = elementUsage.getElement();
+        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
+
+        if (virtualFile == null) {
+            return null;
+        }
+        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
+        boolean isInLib = fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInLibrarySource(virtualFile);
+        if (isInLib) {
+            return LIBRARY;
+        }
+        boolean isInTest = TestSourcesFilter.isTestSources(virtualFile, element.getProject());
+        return isInTest ? TEST : PRODUCTION;
     }
 
-    @Override
-    
-    public String getText(UsageView view) {
-      return "Test";
-    }
-  };
-  private static final UsageScopeGroup PRODUCTION = new UsageScopeGroup(1) {
-    @Override
-    public Image getIcon() {
-      return AllIcons.Nodes.Package;
-    }
+    private static final UsageScopeGroup TEST = new UsageScopeGroup(0) {
+        @Override
+        public Image getIcon() {
+            return PlatformIconGroup.nodesPackage();
+        }
 
-    @Override
-    
-    public String getText(UsageView view) {
-      return "Production";
-    }
-  };
-  private static final UsageScopeGroup LIBRARY = new UsageScopeGroup(2) {
-    @Override
-    public Image getIcon() {
-      return AllIcons.Nodes.PpLib;
-    }
+        @Override
+        public String getText(UsageView view) {
+            return "Test";
+        }
+    };
 
-    @Override
-    
-    public String getText(UsageView view) {
-      return "Library";
-    }
-  };
-  private abstract static class UsageScopeGroup implements UsageGroup {
-    private final int myCode;
+    private static final UsageScopeGroup PRODUCTION = new UsageScopeGroup(1) {
+        @Override
+        public Image getIcon() {
+            return PlatformIconGroup.nodesPackage();
+        }
 
-    private UsageScopeGroup(int code) {
-      myCode = code;
-    }
+        @Override
+        public String getText(UsageView view) {
+            return "Production";
+        }
+    };
 
-    @Override
-    public void update() {
-    }
+    private static final UsageScopeGroup LIBRARY = new UsageScopeGroup(2) {
+        @Override
+        public Image getIcon() {
+            return PlatformIconGroup.nodesPplib();
+        }
 
-    @Override
-    public FileStatus getFileStatus() {
-      return null;
-    }
+        @Override
+        public String getText(UsageView view) {
+            return "Library";
+        }
+    };
 
-    @Override
-    public boolean isValid() { return true; }
-    @Override
-    public void navigate(boolean focus) { }
-    @Override
-    public boolean canNavigate() { return false; }
+    private abstract static class UsageScopeGroup implements UsageGroup {
+        private final int myCode;
 
-    @Override
-    public boolean canNavigateToSource() {
-      return false;
-    }
+        private UsageScopeGroup(int code) {
+            myCode = code;
+        }
 
-    @Override
-    public int compareTo(UsageGroup usageGroup) {
-      return getText(null).compareTo(usageGroup.getText(null));
-    }
+        @Override
+        public void update() {
+        }
 
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof UsageScopeGroup)) return false;
-      UsageScopeGroup usageTypeGroup = (UsageScopeGroup)o;
-      return myCode == usageTypeGroup.myCode;
-    }
+        @Override
+        public FileStatus getFileStatus() {
+            return null;
+        }
 
-    public int hashCode() {
-      return myCode;
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void navigate(boolean focus) {
+        }
+
+        @Override
+        @RequiredReadAction
+        public boolean canNavigate() {
+            return false;
+        }
+
+        @Override
+        @RequiredReadAction
+        public boolean canNavigateToSource() {
+            return false;
+        }
+
+        @Override
+        public int compareTo(UsageGroup usageGroup) {
+            return getText(null).compareTo(usageGroup.getText(null));
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+            return o instanceof UsageScopeGroup that
+                && myCode == that.myCode;
+        }
+
+        @Override
+        public int hashCode() {
+            return myCode;
+        }
     }
-  }
 }

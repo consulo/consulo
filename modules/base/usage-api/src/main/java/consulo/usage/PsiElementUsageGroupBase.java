@@ -23,6 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.navigation.NavigationItem;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.dataholder.Key;
@@ -86,7 +87,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void navigate(boolean focus) throws UnsupportedOperationException {
         if (canNavigate()) {
             getElement().navigate(focus);

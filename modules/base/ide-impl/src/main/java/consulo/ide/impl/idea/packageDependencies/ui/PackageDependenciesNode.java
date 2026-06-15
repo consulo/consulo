@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
@@ -24,6 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
@@ -35,189 +37,204 @@ import javax.swing.tree.MutableTreeNode;
 import java.util.*;
 
 public class PackageDependenciesNode extends DefaultMutableTreeNode implements Navigatable {
-  private static final Image EMPTY_ICON = Image.empty(0, Image.DEFAULT_ICON_SIZE);
+    private static final Image EMPTY_ICON = Image.empty(0, Image.DEFAULT_ICON_SIZE);
 
-  protected static final ColorValue NOT_CHANGED = ColorValue.dummy("must be never called");
+    protected static final ColorValue NOT_CHANGED = ColorValue.dummy("must be never called");
 
-  private Set<VirtualFile> myRegisteredFiles = null;
-  private boolean myHasUnmarked = false;
-  private boolean myHasMarked = false;
-  private boolean myEquals;
-  protected ColorValue myColor = null;
-  protected Project myProject;
-  private boolean mySorted;
+    private Set<VirtualFile> myRegisteredFiles = null;
+    private boolean myHasUnmarked = false;
+    private boolean myHasMarked = false;
+    private boolean myEquals;
+    protected ColorValue myColor = null;
+    protected Project myProject;
+    private boolean mySorted;
 
-  public PackageDependenciesNode(Project project) {
-    myProject = project;
-  }
-
-  public void setEquals(boolean equals) {
-    myEquals = equals;
-  }
-
-  public boolean isEquals() {
-    return myEquals;
-  }
-
-  public void fillFiles(Set<PsiFile> set, boolean recursively) {
-    PsiManager psiManager = PsiManager.getInstance(myProject);
-    for (VirtualFile vFile : getRegisteredFiles()) {
-      PsiFile psiFile = psiManager.findFile(vFile);
-      if (psiFile != null && psiFile.isValid()) {
-        set.add(psiFile);
-      }
+    public PackageDependenciesNode(Project project) {
+        myProject = project;
     }
-  }
 
-  public void addFile(VirtualFile file, boolean isMarked) {
-    getRegisteredFiles().add(file);
-    updateMarked(!isMarked, isMarked);
-  }
-
-  public Image getIcon() {
-    return EMPTY_ICON;
-  }
-
-  public int getWeight() {
-    return 0;
-  }
-
-  public boolean hasUnmarked() {
-    return myHasUnmarked;
-  }
-
-  public boolean hasMarked() {
-    return myHasMarked;
-  }
-
-  public @Nullable PsiElement getPsiElement() {
-    return null;
-  }
-
-  public @Nullable ColorValue getColor() {
-    return myColor;
-  }
-
-  public void updateColor() {
-    myColor = null;
-  }
-
-  public int getContainingFiles() {
-    int result = 0;
-    for (int i = 0; i < getChildCount(); i++) {
-      result += ((PackageDependenciesNode)getChildAt(i)).getContainingFiles();
+    public void setEquals(boolean equals) {
+        myEquals = equals;
     }
-    return result;
-  }
 
-  public String getPresentableFilesCount() {
-    int filesCount = getContainingFiles();
-    return filesCount > 0 ? " (" + AnalysisScopeLocalize.packageDependenciesNodeItemsCount(filesCount).get() + ")" : "";
-  }
-
-  @Override
-  public void add(MutableTreeNode newChild) {
-    super.add(newChild);
-    boolean hasUnmarked = ((PackageDependenciesNode)newChild).hasUnmarked();
-    boolean hasMarked = ((PackageDependenciesNode)newChild).hasMarked();
-    updateMarked(hasUnmarked, hasMarked);
-  }
-
-  private void updateMarked(boolean hasUnmarked, boolean hasMarked) {
-    if (hasUnmarked && !myHasUnmarked || hasMarked && !myHasMarked) {
-      myHasUnmarked |= hasUnmarked;
-      myHasMarked |= hasMarked;
-      PackageDependenciesNode parent = (PackageDependenciesNode)getParent();
-      if (parent != null) {
-        parent.updateMarked(myHasUnmarked, myHasMarked);
-      }
+    public boolean isEquals() {
+        return myEquals;
     }
-  }
 
-  @Override
-  public void navigate(boolean focus) {
-    if (canNavigate()) {
-      openTextEditor(focus);
+    public void fillFiles(Set<PsiFile> set, boolean recursively) {
+        PsiManager psiManager = PsiManager.getInstance(myProject);
+        for (VirtualFile vFile : getRegisteredFiles()) {
+            PsiFile psiFile = psiManager.findFile(vFile);
+            if (psiFile != null && psiFile.isValid()) {
+                set.add(psiFile);
+            }
+        }
     }
-  }
 
-  private @Nullable Editor openTextEditor(boolean focus) {
-    OpenFileDescriptorImpl descriptor = getDescriptor();
-    if (descriptor != null) {
-      return FileEditorManager.getInstance(getProject()).openTextEditor(descriptor, focus);
+    public void addFile(VirtualFile file, boolean isMarked) {
+        getRegisteredFiles().add(file);
+        updateMarked(!isMarked, isMarked);
     }
-    return null;
-  }
 
-  @Override
-  public boolean canNavigate() {
-    if (getProject() == null) return false;
-    PsiElement psiElement = getPsiElement();
-    if (psiElement == null) return false;
-    VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
-    return virtualFile != null && virtualFile.isValid();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
-  }
-
-  private @Nullable Project getProject() {
-    PsiElement psiElement = getPsiElement();
-    if (psiElement == null || psiElement.getContainingFile() == null) {
-      return null;
+    public Image getIcon() {
+        return EMPTY_ICON;
     }
-    return psiElement.getContainingFile().getProject();
-  }
 
-  private @Nullable OpenFileDescriptorImpl getDescriptor() {
-    if (getProject() == null) return null;
-    PsiElement psiElement = getPsiElement();
-    if (psiElement == null) return null;
-    VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
-    if (virtualFile == null || !virtualFile.isValid()) return null;
-    return new OpenFileDescriptorImpl(getProject(), virtualFile, psiElement.getTextOffset());
-  }
-
-  @Override
-  public Object getUserObject() {
-    return toString();
-  }
-
-  public boolean isValid() {
-    return true;
-  }
-
-  public Set<VirtualFile> getRegisteredFiles() {
-    if (myRegisteredFiles == null) {
-      myRegisteredFiles = new HashSet<VirtualFile>();
+    public int getWeight() {
+        return 0;
     }
-    return myRegisteredFiles;
-  }
 
-  public @Nullable String getComment() {
-    return null;
-  }
+    public boolean hasUnmarked() {
+        return myHasUnmarked;
+    }
 
-  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
-    return false;
-  }
+    public boolean hasMarked() {
+        return myHasMarked;
+    }
 
-  public boolean isSorted() {
-    return mySorted;
-  }
+    public @Nullable PsiElement getPsiElement() {
+        return null;
+    }
 
-  public void setSorted(boolean sorted) {
-    mySorted = sorted;
-  }
+    public @Nullable ColorValue getColor() {
+        return myColor;
+    }
 
-  public void sortChildren() {
-    if (isSorted()) return;
-    List children = TreeUtil.listChildren(this);
-    Collections.sort(children, new DependencyNodeComparator());
-    removeAllChildren();
-    TreeUtil.addChildrenTo(this, children);
-    setSorted(true);
-  }
+    public void updateColor() {
+        myColor = null;
+    }
+
+    public int getContainingFiles() {
+        int result = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            result += ((PackageDependenciesNode) getChildAt(i)).getContainingFiles();
+        }
+        return result;
+    }
+
+    public String getPresentableFilesCount() {
+        int filesCount = getContainingFiles();
+        return filesCount > 0 ? " (" + AnalysisScopeLocalize.packageDependenciesNodeItemsCount(filesCount).get() + ")" : "";
+    }
+
+    @Override
+    public void add(MutableTreeNode newChild) {
+        super.add(newChild);
+        boolean hasUnmarked = ((PackageDependenciesNode) newChild).hasUnmarked();
+        boolean hasMarked = ((PackageDependenciesNode) newChild).hasMarked();
+        updateMarked(hasUnmarked, hasMarked);
+    }
+
+    private void updateMarked(boolean hasUnmarked, boolean hasMarked) {
+        if (hasUnmarked && !myHasUnmarked || hasMarked && !myHasMarked) {
+            myHasUnmarked |= hasUnmarked;
+            myHasMarked |= hasMarked;
+            PackageDependenciesNode parent = (PackageDependenciesNode) getParent();
+            if (parent != null) {
+                parent.updateMarked(myHasUnmarked, myHasMarked);
+            }
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void navigate(boolean focus) {
+        if (canNavigate()) {
+            openTextEditor(focus);
+        }
+    }
+
+    private @Nullable Editor openTextEditor(boolean focus) {
+        OpenFileDescriptorImpl descriptor = getDescriptor();
+        if (descriptor != null) {
+            return FileEditorManager.getInstance(getProject()).openTextEditor(descriptor, focus);
+        }
+        return null;
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigate() {
+        if (getProject() == null) {
+            return false;
+        }
+        PsiElement psiElement = getPsiElement();
+        if (psiElement == null) {
+            return false;
+        }
+        VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
+        return virtualFile != null && virtualFile.isValid();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean canNavigateToSource() {
+        return canNavigate();
+    }
+
+    private @Nullable Project getProject() {
+        PsiElement psiElement = getPsiElement();
+        if (psiElement == null || psiElement.getContainingFile() == null) {
+            return null;
+        }
+        return psiElement.getContainingFile().getProject();
+    }
+
+    private @Nullable OpenFileDescriptorImpl getDescriptor() {
+        if (getProject() == null) {
+            return null;
+        }
+        PsiElement psiElement = getPsiElement();
+        if (psiElement == null) {
+            return null;
+        }
+        VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
+        if (virtualFile == null || !virtualFile.isValid()) {
+            return null;
+        }
+        return new OpenFileDescriptorImpl(getProject(), virtualFile, psiElement.getTextOffset());
+    }
+
+    @Override
+    public Object getUserObject() {
+        return toString();
+    }
+
+    public boolean isValid() {
+        return true;
+    }
+
+    public Set<VirtualFile> getRegisteredFiles() {
+        if (myRegisteredFiles == null) {
+            myRegisteredFiles = new HashSet<VirtualFile>();
+        }
+        return myRegisteredFiles;
+    }
+
+    public @Nullable String getComment() {
+        return null;
+    }
+
+    public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
+        return false;
+    }
+
+    public boolean isSorted() {
+        return mySorted;
+    }
+
+    public void setSorted(boolean sorted) {
+        mySorted = sorted;
+    }
+
+    public void sortChildren() {
+        if (isSorted()) {
+            return;
+        }
+        List children = TreeUtil.listChildren(this);
+        Collections.sort(children, new DependencyNodeComparator());
+        removeAllChildren();
+        TreeUtil.addChildrenTo(this, children);
+        setSorted(true);
+    }
 }

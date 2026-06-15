@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.navigation.NavigatableWithText;
 import consulo.language.psi.PsiFile;
@@ -48,11 +49,13 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         return myModule != null && !myModule.isDisposed();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
         return false;
     }

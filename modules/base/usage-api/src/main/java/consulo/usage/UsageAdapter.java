@@ -15,11 +15,12 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.FileEditorLocation;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class UsageAdapter implements Usage {
     @Override
-    
     public UsagePresentation getPresentation() {
         throw new IllegalAccessError();
     }
@@ -48,15 +49,18 @@ public class UsageAdapter implements Usage {
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(boolean requestFocus) {
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         return false;
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
         return false;
     }
