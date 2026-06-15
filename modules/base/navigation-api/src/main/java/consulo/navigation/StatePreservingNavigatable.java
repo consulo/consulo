@@ -16,7 +16,6 @@
 package consulo.navigation;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.annotation.access.RequiredReadAction;
 
 /**
  * Navigable that saves cursor position in the editor when navigating to
@@ -28,6 +27,4 @@ import consulo.annotation.access.RequiredReadAction;
 @DeprecationInfo("Use StatePreservingNavigable, typo-corrected class name")
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public interface StatePreservingNavigatable extends StatePreservingNavigable {
-    @RequiredReadAction
-    void navigate(boolean requestFocus, boolean preserveState);
 }
