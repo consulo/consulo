@@ -21,6 +21,7 @@ package consulo.navigation;
  *
  * @author Konstantin Bulenkov
  */
-public interface StatePreservingNavigatable extends Navigatable {
-  void navigate(boolean requestFocus, boolean preserveState);
+public interface StatePreservingNavigatable extends StatePreservingNavigable {
+    @Override
+    void navigate(boolean requestFocus, boolean preserveState);
 }
