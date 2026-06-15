@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,15 @@
  */
 package consulo.navigation;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 
-@Deprecated
-@DeprecationInfo("Use NonNavigable, typo-corrected name")
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public final class NonNavigatable extends NonNavigable {
-    NonNavigatable() {
-    }
+/**
+ * Navigable that saves cursor position in the editor when navigating to
+ * already opened documents
+ *
+ * @author Konstantin Bulenkov
+ */
+public interface StatePreservingNavigable extends Navigatable {
+    @RequiredReadAction
+    void navigate(boolean requestFocus, boolean preserveState);
 }

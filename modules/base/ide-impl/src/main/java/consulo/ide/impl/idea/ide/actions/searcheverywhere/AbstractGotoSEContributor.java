@@ -26,7 +26,7 @@ import consulo.language.psi.util.EditSourceUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -332,9 +332,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             }
 
             PsiElement psiElement = preparePsi(element, modifiers, searchText);
-            Navigatable extNavigatable = createExtendedNavigatable(psiElement, searchText, modifiers);
-            if (extNavigatable != null && extNavigatable.canNavigate()) {
-                extNavigatable.navigate(true);
+            Navigable extNavigable = createExtendedNavigable(psiElement, searchText, modifiers);
+            if (extNavigable != null && extNavigable.canNavigate()) {
+                extNavigable.navigate(true);
                 return true;
             }
 
@@ -387,7 +387,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return 50;
     }
 
-    protected @Nullable Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
+    @RequiredReadAction
+    protected @Nullable Navigable createExtendedNavigable(PsiElement psi, String searchText, int modifiers) {
         VirtualFile file = PsiUtilCore.getVirtualFile(psi);
         Couple<Integer> position = getLineAndColumn(searchText);
         boolean positionSpecified = position.first >= 0 || position.second >= 0;

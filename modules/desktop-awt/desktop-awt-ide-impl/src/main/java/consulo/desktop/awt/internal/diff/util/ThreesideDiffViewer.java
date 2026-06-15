@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
+import consulo.desktop.awt.internal.diff.EditorHolder;
+import consulo.desktop.awt.internal.diff.EditorHolderFactory;
+import consulo.desktop.awt.internal.diff.util.side.ThreesideContentPanel;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffDialogHints;
@@ -26,11 +29,8 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.diff.util.ThreeSide;
 import consulo.disposer.Disposer;
-import consulo.desktop.awt.internal.diff.EditorHolder;
-import consulo.desktop.awt.internal.diff.EditorHolderFactory;
-import consulo.desktop.awt.internal.diff.util.side.ThreesideContentPanel;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -43,205 +43,218 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ThreesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  
-  protected final SimpleDiffPanel myPanel;
-  
-  protected final ThreesideContentPanel myContentPanel;
 
-  
-  private final List<T> myHolders;
+    protected final SimpleDiffPanel myPanel;
 
-  
-  private final FocusTrackerSupport<ThreeSide> myFocusTrackerSupport;
+    protected final ThreesideContentPanel myContentPanel;
 
-  public ThreesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
-    super(context, request);
 
-    myHolders = createEditorHolders(factory);
+    private final List<T> myHolders;
 
-    myFocusTrackerSupport = new FocusTrackerSupport.Threeside(myHolders);
-    myContentPanel = new ThreesideContentPanel.Holders(myHolders);
 
-    myPanel = new SimpleDiffPanel(myContentPanel, this, context);
-  }
+    private final FocusTrackerSupport<ThreeSide> myFocusTrackerSupport;
 
-  @RequiredUIAccess
-  @Override
-  protected void onInit() {
-    super.onInit();
-    myPanel.setPersistentNotifications(AWTDiffUtil.getCustomNotifications(myContext, myRequest));
-    myContentPanel.setTitles(createTitles());
-  }
+    public ThreesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
+        super(context, request);
 
-  @Override
-  @RequiredUIAccess
-  protected void onDispose() {
-    destroyEditorHolders();
-    super.onDispose();
-  }
+        myHolders = createEditorHolders(factory);
 
-  @Override
-  @RequiredUIAccess
-  protected void processContextHints() {
-    super.processContextHints();
-    myFocusTrackerSupport.processContextHints(myRequest, myContext);
-  }
+        myFocusTrackerSupport = new FocusTrackerSupport.Threeside(myHolders);
+        myContentPanel = new ThreesideContentPanel.Holders(myHolders);
 
-  @Override
-  @RequiredUIAccess
-  protected void updateContextHints() {
-    super.updateContextHints();
-    myFocusTrackerSupport.updateContextHints(myRequest, myContext);
-  }
-
-  
-  protected List<T> createEditorHolders(EditorHolderFactory<T> factory) {
-    List<DiffContent> contents = myRequest.getContents();
-
-    List<T> holders = new ArrayList<>(3);
-    for (int i = 0; i < 3; i++) {
-      DiffContent content = contents.get(i);
-      holders.add(factory.create(content, myContext));
+        myPanel = new SimpleDiffPanel(myContentPanel, this, context);
     }
-    return holders;
-  }
 
-  private void destroyEditorHolders() {
-    for (T holder : myHolders) {
-      Disposer.dispose(holder);
-    }
-  }
-
-  
-  protected List<JComponent> createTitles() {
-    return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createSimpleTitles(myRequest));
-  }
-
-  //
-  // Getters
-  //
-
-  
-  @Override
-  public JComponent getComponent() {
-    return myPanel;
-  }
-
-  @Override
-  public @Nullable JComponent getPreferredFocusedComponent() {
-    if (!myPanel.isGoodContent()) return null;
-    return getCurrentEditorHolder().getPreferredFocusedComponent();
-  }
-
-  
-  public ThreeSide getCurrentSide() {
-    return myFocusTrackerSupport.getCurrentSide();
-  }
-
-  protected void setCurrentSide(ThreeSide side) {
-    myFocusTrackerSupport.setCurrentSide(side);
-  }
-
-  
-  protected List<T> getEditorHolders() {
-    return myHolders;
-  }
-
-  
-  protected T getCurrentEditorHolder() {
-    return getCurrentSide().select(getEditorHolders());
-  }
-
-  @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    if (VirtualFile.KEY == dataId) {
-      return DiffImplUtil.getVirtualFile(myRequest, getCurrentSide());
-    }
-    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
-      return getCurrentSide().select(myRequest.getContents());
-    }
-    return super.getData(dataId);
-  }
-
-  //
-  // Misc
-  //
-
-  @Override
-  protected @Nullable Navigatable getNavigatable() {
-    return getCurrentSide().select(getRequest().getContents()).getNavigatable();
-  }
-
-  public static <T extends EditorHolder> boolean canShowRequest(DiffContext context,
-                                                                DiffRequest request,
-                                                                EditorHolderFactory<T> factory) {
-    if (!(request instanceof ContentDiffRequest)) return false;
-
-    List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
-    if (contents.size() != 3) return false;
-
-    boolean canShow = true;
-    boolean wantShow = false;
-    for (DiffContent content : contents) {
-      canShow &= factory.canShowContent(content, context);
-      wantShow |= factory.wantShowContent(content, context);
-    }
-    return canShow && wantShow;
-  }
-
-  //
-  // Actions
-  //
-
-  protected enum PartialDiffMode {LEFT_BASE, BASE_RIGHT, LEFT_RIGHT}
-  protected class ShowPartialDiffAction extends DumbAwareAction {
-    
-    protected final ThreeSide mySide1;
-    
-    protected final ThreeSide mySide2;
-
-    public ShowPartialDiffAction(PartialDiffMode mode) {
-      String id;
-      switch (mode) {
-        case LEFT_BASE:
-          mySide1 = ThreeSide.LEFT;
-          mySide2 = ThreeSide.BASE;
-          id = "Diff.ComparePartial.Base.Left";
-          break;
-        case BASE_RIGHT:
-          mySide1 = ThreeSide.BASE;
-          mySide2 = ThreeSide.RIGHT;
-          id = "Diff.ComparePartial.Base.Right";
-          break;
-        case LEFT_RIGHT:
-          mySide1 = ThreeSide.LEFT;
-          mySide2 = ThreeSide.RIGHT;
-          id = "Diff.ComparePartial.Left.Right";
-          break;
-        default:
-          throw new IllegalArgumentException();
-      }
-      ActionImplUtil.copyFrom(this, id);
+    @RequiredUIAccess
+    @Override
+    protected void onInit() {
+        super.onInit();
+        myPanel.setPersistentNotifications(AWTDiffUtil.getCustomNotifications(myContext, myRequest));
+        myContentPanel.setTitles(createTitles());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
-      DiffRequest request = createRequest();
-      DiffManager.getInstance().showDiff(myProject, request, new DiffDialogHints(null, myPanel));
+    protected void onDispose() {
+        destroyEditorHolders();
+        super.onDispose();
     }
 
-    
-    protected SimpleDiffRequest createRequest() {
-      List<DiffContent> contents = myRequest.getContents();
-      List<String> titles = myRequest.getContentTitles();
-      return new SimpleDiffRequest(
-        myRequest.getTitle(),
-        mySide1.select(contents),
-        mySide2.select(contents),
-        mySide1.select(titles),
-        mySide2.select(titles)
-      );
+    @Override
+    @RequiredUIAccess
+    protected void processContextHints() {
+        super.processContextHints();
+        myFocusTrackerSupport.processContextHints(myRequest, myContext);
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    protected void updateContextHints() {
+        super.updateContextHints();
+        myFocusTrackerSupport.updateContextHints(myRequest, myContext);
+    }
+
+
+    protected List<T> createEditorHolders(EditorHolderFactory<T> factory) {
+        List<DiffContent> contents = myRequest.getContents();
+
+        List<T> holders = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            DiffContent content = contents.get(i);
+            holders.add(factory.create(content, myContext));
+        }
+        return holders;
+    }
+
+    private void destroyEditorHolders() {
+        for (T holder : myHolders) {
+            Disposer.dispose(holder);
+        }
+    }
+
+
+    protected List<JComponent> createTitles() {
+        return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createSimpleTitles(myRequest));
+    }
+
+    //
+    // Getters
+    //
+
+
+    @Override
+    public JComponent getComponent() {
+        return myPanel;
+    }
+
+    @Override
+    public @Nullable JComponent getPreferredFocusedComponent() {
+        if (!myPanel.isGoodContent()) {
+            return null;
+        }
+        return getCurrentEditorHolder().getPreferredFocusedComponent();
+    }
+
+
+    public ThreeSide getCurrentSide() {
+        return myFocusTrackerSupport.getCurrentSide();
+    }
+
+    protected void setCurrentSide(ThreeSide side) {
+        myFocusTrackerSupport.setCurrentSide(side);
+    }
+
+
+    protected List<T> getEditorHolders() {
+        return myHolders;
+    }
+
+
+    protected T getCurrentEditorHolder() {
+        return getCurrentSide().select(getEditorHolders());
+    }
+
+    @Override
+    public @Nullable Object getData(Key<?> dataId) {
+        if (VirtualFile.KEY == dataId) {
+            return DiffImplUtil.getVirtualFile(myRequest, getCurrentSide());
+        }
+        else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
+            return getCurrentSide().select(myRequest.getContents());
+        }
+        return super.getData(dataId);
+    }
+
+    //
+    // Misc
+    //
+
+    @Override
+    protected @Nullable Navigable getNavigable() {
+        return getCurrentSide().select(getRequest().getContents()).getNavigable();
+    }
+
+    public static <T extends EditorHolder> boolean canShowRequest(
+        DiffContext context,
+        DiffRequest request,
+        EditorHolderFactory<T> factory
+    ) {
+        if (!(request instanceof ContentDiffRequest contentDiffRequest)) {
+            return false;
+        }
+
+        List<DiffContent> contents = contentDiffRequest.getContents();
+        if (contents.size() != 3) {
+            return false;
+        }
+
+        boolean canShow = true;
+        boolean wantShow = false;
+        for (DiffContent content : contents) {
+            canShow &= factory.canShowContent(content, context);
+            wantShow |= factory.wantShowContent(content, context);
+        }
+        return canShow && wantShow;
+    }
+
+    //
+    // Actions
+    //
+
+    protected enum PartialDiffMode {
+        LEFT_BASE,
+        BASE_RIGHT,
+        LEFT_RIGHT
+    }
+
+    protected class ShowPartialDiffAction extends DumbAwareAction {
+
+        protected final ThreeSide mySide1;
+
+        protected final ThreeSide mySide2;
+
+        public ShowPartialDiffAction(PartialDiffMode mode) {
+            String id;
+            switch (mode) {
+                case LEFT_BASE:
+                    mySide1 = ThreeSide.LEFT;
+                    mySide2 = ThreeSide.BASE;
+                    id = "Diff.ComparePartial.Base.Left";
+                    break;
+                case BASE_RIGHT:
+                    mySide1 = ThreeSide.BASE;
+                    mySide2 = ThreeSide.RIGHT;
+                    id = "Diff.ComparePartial.Base.Right";
+                    break;
+                case LEFT_RIGHT:
+                    mySide1 = ThreeSide.LEFT;
+                    mySide2 = ThreeSide.RIGHT;
+                    id = "Diff.ComparePartial.Left.Right";
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+            ActionImplUtil.copyFrom(this, id);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            DiffRequest request = createRequest();
+            DiffManager.getInstance().showDiff(myProject, request, new DiffDialogHints(null, myPanel));
+        }
+
+
+        protected SimpleDiffRequest createRequest() {
+            List<DiffContent> contents = myRequest.getContents();
+            List<String> titles = myRequest.getContentTitles();
+            return new SimpleDiffRequest(
+                myRequest.getTitle(),
+                mySide1.select(contents),
+                mySide2.select(contents),
+                mySide1.select(titles),
+                mySide2.select(titles)
+            );
+        }
+    }
 }

@@ -15,17 +15,13 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import consulo.util.concurrent.Promise;
-
-import javax.swing.tree.TreePath;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author Sergey.Malenkov
  */
-public interface Navigatable {
-  
-  Promise<TreePath> nextTreePath(TreePath path, Object object);
-
-  
-  Promise<TreePath> prevTreePath(TreePath path, Object object);
+@Deprecated
+@DeprecationInfo("Use Navigable, typo-corrected name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public interface Navigatable extends Navigable {
 }

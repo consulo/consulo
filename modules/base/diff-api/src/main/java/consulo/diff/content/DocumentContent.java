@@ -15,62 +15,71 @@
  */
 package consulo.diff.content;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.diff.util.LineCol;
 import consulo.document.Document;
-import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.platform.LineSeparator;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.nio.charset.Charset;
 
 public interface DocumentContent extends DiffContent {
-  /**
-   * Represents this content as Document
-   */
-  Document getDocument();
+    /**
+     * Represents this content as Document
+     */
+    Document getDocument();
 
-  /**
-   * This file could be used for better syntax highlighting.
-   * Some file types can't be highlighted properly depending only on their FileType (ex: SQL dialects, PHP templates).
-   */
-  default @Nullable VirtualFile getHighlightFile() {
-    return null;
-  }
+    /**
+     * This file could be used for better syntax highlighting.
+     * Some file types can't be highlighted properly depending only on their FileType (ex: SQL dialects, PHP templates).
+     */
+    default @Nullable VirtualFile getHighlightFile() {
+        return null;
+    }
 
-  /**
-   * Provides a way to open given text place in editor
-   */
-  default @Nullable Navigatable getNavigatable(LineCol position) {
-    return null;
-  }
+    /**
+     * Provides a way to open given text place in editor
+     */
+    default @Nullable Navigable getNavigable(LineCol position) {
+        return null;
+    }
 
-  /**
-   * @return original file line separator
-   */
-  default @Nullable LineSeparator getLineSeparator() {
-    return null;
-  }
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getNavigatable(LineCol position) {
+        return (Navigatable) getNavigable(position);
+    }
 
-  /**
-   * @return original file charset
-   */
-  default @Nullable Charset getCharset() {
-    return null;
-  }
+    /**
+     * @return original file line separator
+     */
+    default @Nullable LineSeparator getLineSeparator() {
+        return null;
+    }
 
-  /**
-   * @return original file byte order mark
-   */
-  default @Nullable Boolean hasBom() {
-    return null;
-  }
+    /**
+     * @return original file charset
+     */
+    default @Nullable Charset getCharset() {
+        return null;
+    }
 
-  @Deprecated
-  default @Nullable OpenFileDescriptor getOpenFileDescriptor(int offset) {
-    LineCol position = LineCol.fromOffset(getDocument(), offset);
-    return ObjectUtil.tryCast(getNavigatable(position), OpenFileDescriptor.class);
-  }
+    /**
+     * @return original file byte order mark
+     */
+    default @Nullable Boolean hasBom() {
+        return null;
+    }
+
+    @Deprecated
+    default @Nullable OpenFileDescriptor getOpenFileDescriptor(int offset) {
+        LineCol position = LineCol.fromOffset(getDocument(), offset);
+        return ObjectUtil.tryCast(getNavigable(position), OpenFileDescriptor.class);
+    }
 }

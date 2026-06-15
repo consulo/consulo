@@ -16,8 +16,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -112,8 +114,8 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
 
     @Override
     @RequiredReadAction
-    protected @Nullable Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
-        Navigatable res = super.createExtendedNavigatable(psi, searchText, modifiers);
+    protected @Nullable Navigable createExtendedNavigable(PsiElement psi, String searchText, int modifiers) {
+        Navigable res = super.createExtendedNavigable(psi, searchText, modifiers);
         if (res != null) {
             return res;
         }
@@ -121,22 +123,24 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         VirtualFile file = PsiUtilCore.getVirtualFile(psi);
         String memberName = getMemberName(searchText);
         if (file != null && memberName != null) {
-            Navigatable delegate = GotoClassAction.findMember(memberName, searchText, psi, file);
+            Navigable delegate = GotoClassAction.findMember(memberName, searchText, psi, file);
             if (delegate != null) {
                 return new Navigatable() {
                     @Override
+                    @RequiredUIAccess
                     public void navigate(boolean requestFocus) {
                         PopupNavigationUtil.activateFileWithPsiElement(psi, openInCurrentWindow(modifiers));
                         delegate.navigate(true);
-
                     }
 
                     @Override
+                    @RequiredReadAction
                     public boolean canNavigate() {
                         return delegate.canNavigate();
                     }
 
                     @Override
+                    @RequiredReadAction
                     public boolean canNavigateToSource() {
                         return delegate.canNavigateToSource();
                     }

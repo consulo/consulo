@@ -21,11 +21,10 @@ import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -47,15 +46,15 @@ public interface CompileContext extends UserDataHolder {
     void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum);
 
     /**
-     * Allows to add a message to be shown in Compiler message view, with a specified Navigatable
+     * Allows to add a message to be shown in Compiler message view, with a specified Navigable
      * that is used to navigate to the error location.
      *
-     * @param category    the category of a message (information, error, warning).
-     * @param message     the text of the message.
-     * @param url         a url to the file to which the message applies, null if not available.
-     * @param lineNum     a line number, -1 if not available.
-     * @param columnNum   a column number, -1 if not available.
-     * @param navigatable the navigatable pointing to the error location.
+     * @param category  the category of a message (information, error, warning).
+     * @param message   the text of the message.
+     * @param url       a url to the file to which the message applies, null if not available.
+     * @param lineNum   a line number, -1 if not available.
+     * @param columnNum a column number, -1 if not available.
+     * @param navigable the navigable pointing to the error location.
      */
     @Deprecated
     @DeprecationInfo("Use newError/newWarning/newInfo()...add()")
@@ -65,7 +64,7 @@ public interface CompileContext extends UserDataHolder {
         @Nullable String url,
         int lineNum,
         int columnNum,
-        Navigatable navigatable
+        Navigable navigable
     );
 
     /**

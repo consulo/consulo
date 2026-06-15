@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.navigation.Navigable;
 
 /**
@@ -23,8 +22,20 @@ import consulo.navigation.Navigable;
  *
  * @author spleaner
  */
-@Deprecated
-@DeprecationInfo("Use NavigableFileEditor, typo-corrected name")
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public interface NavigatableFileEditor extends NavigableFileEditor {
+public interface NavigableFileEditor extends FileEditor {
+    /**
+     * Check whatever the editor can navigate to the given element
+     *
+     * @param navigable
+     * @return true if editor can navigate, false otherwise
+     */
+    boolean canNavigateTo(Navigable navigable);
+
+    /**
+     * Navigate editor to the given navigable if {@link #canNavigateTo(Navigable)} is true
+     *
+     * @param navigable navigation target
+     */
+    void navigateTo(Navigable navigable);
 }
+

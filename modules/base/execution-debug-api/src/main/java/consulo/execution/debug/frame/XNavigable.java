@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.navigation;
+package consulo.execution.debug.frame;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.execution.debug.XSourcePosition;
 
-@Deprecated
-@DeprecationInfo("Use NonNavigable, typo-corrected name")
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public final class NonNavigatable extends NonNavigable {
-    NonNavigatable() {
-    }
+import org.jspecify.annotations.Nullable;
+
+/**
+ * @author nik
+ */
+public interface XNavigable {
+    void setSourcePosition(@Nullable XSourcePosition sourcePosition);
 }

@@ -29,7 +29,7 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.disposer.Disposer;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -39,128 +39,127 @@ import javax.swing.*;
 import java.util.List;
 
 public abstract class OnesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  
-  protected final SimpleDiffPanel myPanel;
-  
-  protected final OnesideContentPanel myContentPanel;
+    protected final SimpleDiffPanel myPanel;
 
-  
-  private final Side mySide;
-  
-  private final T myHolder;
+    protected final OnesideContentPanel myContentPanel;
 
-  public OnesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
-    super(context, request);
+    private final Side mySide;
 
-    mySide = Side.fromRight(myRequest.getContents().get(0) instanceof EmptyContent);
-    myHolder = createEditorHolder(factory);
+    private final T myHolder;
 
-    myContentPanel = OnesideContentPanel.createFromHolder(myHolder);
+    public OnesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
+        super(context, request);
 
-    myPanel = new SimpleDiffPanel(myContentPanel, this, context);
-  }
+        mySide = Side.fromRight(myRequest.getContents().get(0) instanceof EmptyContent);
+        myHolder = createEditorHolder(factory);
 
-  @Override
-  @RequiredUIAccess
-  protected void onInit() {
-    super.onInit();
-    myPanel.setPersistentNotifications(AWTDiffUtil.getCustomNotifications(myContext, myRequest));
-    myContentPanel.setTitle(createTitle());
-  }
+        myContentPanel = OnesideContentPanel.createFromHolder(myHolder);
 
-  @Override
-  @RequiredUIAccess
-  protected void onDispose() {
-    destroyEditorHolder();
-    super.onDispose();
-  }
-
-  //
-  // Editors
-  //
-
-  
-  protected T createEditorHolder(EditorHolderFactory<T> factory) {
-    DiffContent content = mySide.select(myRequest.getContents());
-    return factory.create(content, myContext);
-  }
-
-  private void destroyEditorHolder() {
-    Disposer.dispose(myHolder);
-  }
-
-  protected @Nullable JComponent createTitle() {
-    List<JComponent> simpleTitles = AWTDiffUtil.createSimpleTitles(myRequest);
-    return mySide.select(simpleTitles);
-  }
-
-  //
-  // Getters
-  //
-
-  
-  @Override
-  public JComponent getComponent() {
-    return myPanel;
-  }
-
-  @Override
-  public @Nullable JComponent getPreferredFocusedComponent() {
-    if (!myPanel.isGoodContent()) return null;
-    return getEditorHolder().getPreferredFocusedComponent();
-  }
-
-  
-  public Side getSide() {
-    return mySide;
-  }
-
-  
-  protected DiffContent getContent() {
-    return mySide.select(myRequest.getContents());
-  }
-
-  
-  protected T getEditorHolder() {
-    return myHolder;
-  }
-
-  @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    if (VirtualFile.KEY == dataId) {
-      return DiffImplUtil.getVirtualFile(myRequest, mySide);
+        myPanel = new SimpleDiffPanel(myContentPanel, this, context);
     }
-    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
-      return getContent();
+
+    @Override
+    @RequiredUIAccess
+    protected void onInit() {
+        super.onInit();
+        myPanel.setPersistentNotifications(AWTDiffUtil.getCustomNotifications(myContext, myRequest));
+        myContentPanel.setTitle(createTitle());
     }
-    return super.getData(dataId);
-  }
 
-  //
-  // Misc
-  //
-
-  @Override
-  protected @Nullable Navigatable getNavigatable() {
-    return getContent().getNavigatable();
-  }
-
-  public static <T extends EditorHolder> boolean canShowRequest(
-    DiffContext context,
-    DiffRequest request,
-    EditorHolderFactory<T> factory
-  ) {
-    if (!(request instanceof ContentDiffRequest)) return false;
-
-    List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
-    if (contents.size() != 2) return false;
-
-    DiffContent content1 = contents.get(0);
-    DiffContent content2 = contents.get(1);
-
-    if (content1 instanceof EmptyContent) {
-      return factory.canShowContent(content2, context) && factory.wantShowContent(content2, context);
+    @Override
+    @RequiredUIAccess
+    protected void onDispose() {
+        destroyEditorHolder();
+        super.onDispose();
     }
-    return content2 instanceof EmptyContent && factory.canShowContent(content1, context) && factory.wantShowContent(content1, context);
-  }
+
+    //
+    // Editors
+    //
+
+    protected T createEditorHolder(EditorHolderFactory<T> factory) {
+        DiffContent content = mySide.select(myRequest.getContents());
+        return factory.create(content, myContext);
+    }
+
+    private void destroyEditorHolder() {
+        Disposer.dispose(myHolder);
+    }
+
+    protected @Nullable JComponent createTitle() {
+        List<JComponent> simpleTitles = AWTDiffUtil.createSimpleTitles(myRequest);
+        return mySide.select(simpleTitles);
+    }
+
+    //
+    // Getters
+    //
+
+    @Override
+    public JComponent getComponent() {
+        return myPanel;
+    }
+
+    @Override
+    public @Nullable JComponent getPreferredFocusedComponent() {
+        if (!myPanel.isGoodContent()) {
+            return null;
+        }
+        return getEditorHolder().getPreferredFocusedComponent();
+    }
+
+    public Side getSide() {
+        return mySide;
+    }
+
+    protected DiffContent getContent() {
+        return mySide.select(myRequest.getContents());
+    }
+
+    protected T getEditorHolder() {
+        return myHolder;
+    }
+
+    @Override
+    public @Nullable Object getData(Key<?> dataId) {
+        if (VirtualFile.KEY == dataId) {
+            return DiffImplUtil.getVirtualFile(myRequest, mySide);
+        }
+        else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
+            return getContent();
+        }
+        return super.getData(dataId);
+    }
+
+    //
+    // Misc
+    //
+
+    @Override
+    protected @Nullable Navigable getNavigable() {
+        return getContent().getNavigable();
+    }
+
+    public static <T extends EditorHolder> boolean canShowRequest(
+        DiffContext context,
+        DiffRequest request,
+        EditorHolderFactory<T> factory
+    ) {
+        if (!(request instanceof ContentDiffRequest contentDiffRequest)) {
+            return false;
+        }
+
+        List<DiffContent> contents = contentDiffRequest.getContents();
+        if (contents.size() != 2) {
+            return false;
+        }
+
+        DiffContent content1 = contents.get(0);
+        DiffContent content2 = contents.get(1);
+
+        if (content1 instanceof EmptyContent) {
+            return factory.canShowContent(content2, context) && factory.wantShowContent(content2, context);
+        }
+        return content2 instanceof EmptyContent && factory.canShowContent(content1, context) && factory.wantShowContent(content1, context);
+    }
 }

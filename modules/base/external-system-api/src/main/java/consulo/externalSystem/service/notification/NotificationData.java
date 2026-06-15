@@ -15,11 +15,14 @@
  */
 package consulo.externalSystem.service.notification;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,152 +31,165 @@ import java.util.Map;
 
 /**
  * @author Vladislav.Soroka
- * @since 3/28/14
+ * @since 2017-03-28
  */
 public class NotificationData {
+    private String myTitle;
 
-  
-  private String myTitle;
-  
-  private String myMessage;
-  
-  private NotificationCategory myNotificationCategory;
-  
-  private final NotificationSource myNotificationSource;
-  
-  private NotificationListener myListener;
-  private @Nullable String myFilePath;
-  private @Nullable Navigatable navigatable;
-  private int myLine;
-  private int myColumn;
-  private boolean myBalloonNotification;
+    private String myMessage;
 
-  private final Map<String, NotificationListener> myListenerMap;
+    private NotificationCategory myNotificationCategory;
 
-  public NotificationData(String title,
-                          String message,
-                          NotificationCategory notificationCategory,
-                          NotificationSource notificationSource) {
-    this(title, message, notificationCategory, notificationSource, null, -1, -1, false);
-  }
+    private final NotificationSource myNotificationSource;
 
-  public NotificationData(String title,
-                          String message,
-                          NotificationCategory notificationCategory,
-                          NotificationSource notificationSource,
-                          @Nullable String filePath,
-                          int line,
-                          int column,
-                          boolean balloonNotification) {
-    myTitle = title;
-    myMessage = message;
-    myNotificationCategory = notificationCategory;
-    myNotificationSource = notificationSource;
-    myListenerMap = new HashMap<>();
-    myListener = new NotificationListener.Adapter() {
-      @Override
-      protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
-        if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
+    private NotificationListener myListener;
+    private @Nullable String myFilePath;
+    private @Nullable Navigable myNavigable;
+    private int myLine;
+    private int myColumn;
+    private boolean myBalloonNotification;
 
-        NotificationListener notificationListener = myListenerMap.get(event.getDescription());
-        if (notificationListener != null) {
-          notificationListener.hyperlinkUpdate(notification, event);
-        }
-      }
-    };
-    myFilePath = filePath;
-    myLine = line;
-    myColumn = column;
-    myBalloonNotification = balloonNotification;
-  }
+    private final Map<String, NotificationListener> myListenerMap;
 
-  
-  public String getTitle() {
-    return myTitle;
-  }
+    public NotificationData(
+        String title,
+        String message,
+        NotificationCategory notificationCategory,
+        NotificationSource notificationSource
+    ) {
+        this(title, message, notificationCategory, notificationSource, null, -1, -1, false);
+    }
 
-  public void setTitle(String title) {
-    myTitle = title;
-  }
+    public NotificationData(
+        String title,
+        String message,
+        NotificationCategory notificationCategory,
+        NotificationSource notificationSource,
+        @Nullable String filePath,
+        int line,
+        int column,
+        boolean balloonNotification
+    ) {
+        myTitle = title;
+        myMessage = message;
+        myNotificationCategory = notificationCategory;
+        myNotificationSource = notificationSource;
+        myListenerMap = new HashMap<>();
+        myListener = new NotificationListener.Adapter() {
+            @Override
+            @RequiredUIAccess
+            protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
+                if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
+                    return;
+                }
 
-  
-  public String getMessage() {
-    return myMessage;
-  }
+                NotificationListener notificationListener = myListenerMap.get(event.getDescription());
+                if (notificationListener != null) {
+                    notificationListener.hyperlinkUpdate(notification, event);
+                }
+            }
+        };
+        myFilePath = filePath;
+        myLine = line;
+        myColumn = column;
+        myBalloonNotification = balloonNotification;
+    }
 
-  public void setMessage(String message) {
-    myMessage = message;
-  }
+    public String getTitle() {
+        return myTitle;
+    }
 
-  
-  public NotificationCategory getNotificationCategory() {
-    return myNotificationCategory;
-  }
+    public void setTitle(String title) {
+        myTitle = title;
+    }
 
-  public void setNotificationCategory(NotificationCategory notificationCategory) {
-    myNotificationCategory = notificationCategory;
-  }
+    public String getMessage() {
+        return myMessage;
+    }
 
-  
-  public NotificationSource getNotificationSource() {
-    return myNotificationSource;
-  }
+    public void setMessage(String message) {
+        myMessage = message;
+    }
 
-  
-  public NotificationListener getListener() {
-    return myListener;
-  }
+    public NotificationCategory getNotificationCategory() {
+        return myNotificationCategory;
+    }
 
-  public @Nullable String getFilePath() {
-    return myFilePath;
-  }
+    public void setNotificationCategory(NotificationCategory notificationCategory) {
+        myNotificationCategory = notificationCategory;
+    }
 
-  public void setFilePath(@Nullable String filePath) {
-    myFilePath = filePath;
-  }
+    public NotificationSource getNotificationSource() {
+        return myNotificationSource;
+    }
 
-  
-  public Integer getLine() {
-    return myLine;
-  }
+    public NotificationListener getListener() {
+        return myListener;
+    }
 
-  public void setLine(int line) {
-    myLine = line;
-  }
+    public @Nullable String getFilePath() {
+        return myFilePath;
+    }
 
-  public int getColumn() {
-    return myColumn;
-  }
+    public void setFilePath(@Nullable String filePath) {
+        myFilePath = filePath;
+    }
 
-  public void setColumn(int column) {
-    myColumn = column;
-  }
+    public Integer getLine() {
+        return myLine;
+    }
 
-  public boolean isBalloonNotification() {
-    return myBalloonNotification;
-  }
+    public void setLine(int line) {
+        myLine = line;
+    }
 
-  public void setBalloonNotification(boolean balloonNotification) {
-    myBalloonNotification = balloonNotification;
-  }
+    public int getColumn() {
+        return myColumn;
+    }
 
-  public void setListener(String listenerId, NotificationListener listener) {
-    myListenerMap.put(listenerId, listener);
-  }
+    public void setColumn(int column) {
+        myColumn = column;
+    }
 
-  public boolean hasLinks() {
-    return !myListenerMap.isEmpty();
-  }
+    public boolean isBalloonNotification() {
+        return myBalloonNotification;
+    }
 
-  public List<String> getRegisteredListenerIds() {
-    return new ArrayList<>(myListenerMap.keySet());
-  }
+    public void setBalloonNotification(boolean balloonNotification) {
+        myBalloonNotification = balloonNotification;
+    }
 
-  public @Nullable Navigatable getNavigatable() {
-    return navigatable;
-  }
+    public void setListener(String listenerId, NotificationListener listener) {
+        myListenerMap.put(listenerId, listener);
+    }
 
-  public void setNavigatable(@Nullable Navigatable navigatable) {
-    this.navigatable = navigatable;
-  }
+    public boolean hasLinks() {
+        return !myListenerMap.isEmpty();
+    }
+
+    public List<String> getRegisteredListenerIds() {
+        return new ArrayList<>(myListenerMap.keySet());
+    }
+
+    public @Nullable Navigable getNavigable() {
+        return myNavigable;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public @Nullable Navigatable getNavigatable() {
+        return (Navigatable) myNavigable;
+    }
+
+    public void setNavigable(@Nullable Navigable navigable) {
+        this.myNavigable = navigable;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #setNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public void setNavigatable(@Nullable Navigable navigable) {
+        this.myNavigable = navigable;
+    }
 }

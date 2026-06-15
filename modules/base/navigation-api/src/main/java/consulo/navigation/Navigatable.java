@@ -15,39 +15,11 @@
  */
 package consulo.navigation;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.util.dataholder.Key;
+import consulo.annotation.DeprecationInfo;
 
-public interface Navigatable {
-  Navigatable[] EMPTY_ARRAY = new Navigatable[0];
-
-  static Key<Navigatable> KEY = Key.create(Navigatable.class);
-
-  static Key<Navigatable[]> KEY_OF_ARRAY = Key.create(Navigatable[].class);
-
-  /**
-   * Open editor and select/navigate to the object there if possible.
-   * Just do nothing if navigation is not possible like in case of a package
-   *
-   * @param requestFocus <code>true</code> if focus requesting is necessary
-   */
-  @RequiredReadAction
-  void navigate(boolean requestFocus);
-
-  /**
-   * @return <code>false</code> if navigation is not possible for any reason.
-   */
-  @RequiredReadAction
-  default boolean canNavigate() {
-    return true;
-  }
-
-  /**
-   * @return <code>false</code> if navigation to source is not possible for any reason.
-   * Source means some kind of editor
-   */
-  @RequiredReadAction
-  default boolean canNavigateToSource() {
-    return canNavigate();
-  }
+@Deprecated
+@DeprecationInfo("Use Navigable, typo-corrected class name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public interface Navigatable extends Navigable {
+    Navigatable[] EMPTY_ARRAY = new Navigatable[0];
 }

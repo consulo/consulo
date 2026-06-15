@@ -48,6 +48,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.LocationPresentation;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -392,7 +393,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         TreePath[] deepestPath = {null};
         TreeVisitor visitor = path -> {
             Object last = path.getLastPathComponent();
-            Object userObject = StructureViewComponent.unwrapNavigatable(last);
+            Object userObject = StructureViewComponent.unwrapNavigable(last);
             Object value = StructureViewComponent.unwrapValue(last);
             if (Comparing.equal(value, element)
                 || userObject instanceof AbstractTreeNode abstractTreeNode && abstractTreeNode.canRepresent(element)) {
@@ -597,12 +598,12 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             if (PsiElement.KEY_OF_ARRAY == dataId) {
                 return PsiUtilCore.toPsiElementArray(getSelectedElements().filter(PsiElement.class).toList());
             }
-            if (Navigatable.KEY == dataId) {
-                return getSelectedElements().filter(Navigatable.class).first();
+            if (Navigable.KEY == dataId) {
+                return getSelectedElements().filter(Navigable.class).first();
             }
-            if (Navigatable.KEY_OF_ARRAY == dataId) {
-                List<Navigatable> result = getSelectedElements().filter(Navigatable.class).toList();
-                return result.isEmpty() ? null : result.toArray(new Navigatable[0]);
+            if (Navigable.KEY_OF_ARRAY == dataId) {
+                List<Navigable> result = getSelectedElements().filter(Navigable.class).toList();
+                return result.isEmpty() ? null : result.toArray(Navigatable[]::new);
             }
             if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
                 return myPopup;
@@ -750,7 +751,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     private @Nullable AbstractTreeNode getSelectedNode() {
         TreePath path = myTree.getSelectionPath();
-        Object o = StructureViewComponent.unwrapNavigatable(path == null ? null : path.getLastPathComponent());
+        Object o = StructureViewComponent.unwrapNavigable(path == null ? null : path.getLastPathComponent());
         return o instanceof AbstractTreeNode treeNode ? treeNode : null;
     }
 

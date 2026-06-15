@@ -18,16 +18,15 @@ package consulo.compiler;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ArrayUtil;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public abstract class ProblemsView {
         int type,
         String[] text,
         @Nullable String groupName,
-        @Nullable Navigatable navigatable,
+        @Nullable Navigable navigable,
         @Nullable String exportTextPrefix,
         @Nullable String rendererTextPrefix
     );

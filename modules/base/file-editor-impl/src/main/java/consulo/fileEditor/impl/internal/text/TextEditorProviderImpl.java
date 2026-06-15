@@ -26,7 +26,7 @@ import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.fileEditor.text.TextEditorState;
 import consulo.logging.Logger;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -61,16 +61,14 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
     }
 
-    @RequiredUIAccess
     @Override
-    
+    @RequiredUIAccess
     public FileEditor createEditor(Project project, VirtualFile file) {
         LOG.assertTrue(accept(project, file));
         return new TextEditorImpl(project, file, this);
     }
 
     @Override
-    
     public TextEditor getTextEditor(Editor editor) {
         TextEditor textEditor = editor.getUserData(TEXT_EDITOR_KEY);
         if (textEditor == null) {
@@ -81,7 +79,6 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         return textEditor;
     }
 
-    
     protected EditorWrapper createWrapperForEditor(Editor editor) {
         return new EditorWrapper(editor);
     }
@@ -148,13 +145,11 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        
         public Editor getEditor() {
             return myEditor;
         }
 
         @Override
-        
         public JComponent getComponent() {
             return myEditor.getComponent();
         }
@@ -256,12 +251,12 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         }
 
         @Override
-        public boolean canNavigateTo(Navigatable navigatable) {
+        public boolean canNavigateTo(Navigable navigable) {
             return false;
         }
 
         @Override
-        public void navigateTo(Navigatable navigatable) {
+        public void navigateTo(Navigable navigable) {
         }
     }
 }

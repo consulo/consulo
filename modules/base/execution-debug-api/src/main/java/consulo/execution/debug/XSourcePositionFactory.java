@@ -15,10 +15,12 @@
  */
 package consulo.execution.debug;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -60,7 +62,14 @@ public interface XSourcePositionFactory {
 
     @Nullable XSourcePosition createPositionByElement(@Nullable PsiElement element);
 
-    
     @UsedInPlugin
-    Navigatable createDefaultNavigatable(Project project, XSourcePosition position);
+    Navigable createDefaultNavigable(Project project, XSourcePosition position);
+
+    @Deprecated
+    @DeprecationInfo("Use #createDefaultNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    @UsedInPlugin
+    default Navigatable createDefaultNavigatable(Project project, XSourcePosition position) {
+        return (Navigatable) createDefaultNavigable(project, position);
+    }
 }

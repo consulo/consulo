@@ -16,6 +16,7 @@
 package consulo.desktop.awt.internal.diff.fragment;
 
 import com.uber.nullaway.annotations.Contract;
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
@@ -60,6 +61,7 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -982,8 +984,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     @Override
     @RequiredUIAccess
-    protected @Nullable Navigatable getNavigatable() {
-        return getNavigatable(myEditor.getCaretModel().getOffset());
+    protected @Nullable Navigable getNavigable() {
+        return getNavigable(myEditor.getCaretModel().getOffset());
     }
 
     @RequiredUIAccess
@@ -1023,14 +1025,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @RequiredUIAccess
-    protected @Nullable Navigatable getNavigatable(int offset) {
+    protected @Nullable Navigable getNavigable(int offset) {
         LogicalPosition position = myEditor.offsetToLogicalPosition(offset);
         Pair<int[], Side> pair = transferLineFromOneside(position.line);
         int line1 = pair.first[0];
         int line2 = pair.first[1];
 
-        Navigatable navigable1 = getContent1().getNavigatable(new LineCol(line1, position.column));
-        Navigatable navigable2 = getContent2().getNavigatable(new LineCol(line2, position.column));
+        Navigable navigable1 = getContent1().getNavigable(new LineCol(line1, position.column));
+        Navigable navigable2 = getContent2().getNavigable(new LineCol(line2, position.column));
         if (navigable1 == null) {
             return navigable2;
         }
@@ -1038,6 +1040,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             return navigable1;
         }
         return pair.second.select(navigable1, navigable2);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    @RequiredUIAccess
+    protected @Nullable Navigatable getNavigatable(int offset) {
+        return (Navigatable) getNavigable(offset);
     }
 
     public static boolean canShowRequest(DiffContext context, DiffRequest request) {
@@ -1079,12 +1089,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
     private class MyOpenInEditorWithMouseAction extends OpenInEditorWithMouseAction {
         @Override
-        protected Navigatable getNavigatable(Editor editor, int line) {
+        protected Navigable getNavigable(Editor editor, int line) {
             if (editor != myEditor) {
                 return null;
             }
 
-            return getNavigatable(myEditor, line);
+            return getNavigable(myEditor, line);
         }
     }
 
@@ -1325,9 +1335,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         private final @Nullable UnifiedEditorRangeHighlighter myRangeHighlighter;
         private final @Nullable FileType myFileType;
 
-        private final IntUnaryOperator myLineConvertor1;
+        private final IntUnaryOperator myLineConverter1;
 
-        private final IntUnaryOperator myLineConvertor2;
+        private final IntUnaryOperator myLineConverter2;
 
         public CombinedEditorData(
             CharSequence text,
@@ -1341,8 +1351,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             myHighlighter = highlighter;
             myRangeHighlighter = rangeHighlighter;
             myFileType = fileType;
-            myLineConvertor1 = converter1;
-            myLineConvertor2 = converter2;
+            myLineConverter1 = converter1;
+            myLineConverter2 = converter2;
         }
 
         public CharSequence getText() {
@@ -1362,11 +1372,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         }
 
         public IntUnaryOperator getLineConvertor1() {
-            return myLineConvertor1;
+            return myLineConverter1;
         }
 
         public IntUnaryOperator getLineConvertor2() {
-            return myLineConvertor2;
+            return myLineConverter2;
         }
     }
 

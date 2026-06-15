@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
 import consulo.ide.impl.idea.ide.errorTreeView.NavigatableMessageElement;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeRenderer;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
@@ -44,125 +44,130 @@ import java.awt.*;
  * @since 2014-03-24
  */
 public class NotificationMessageElement extends NavigatableMessageElement {
-  public static final String MSG_STYLE = "messageStyle";
-  public static final String LINK_STYLE = "linkStyle";
+    public static final String MSG_STYLE = "messageStyle";
+    public static final String LINK_STYLE = "linkStyle";
 
-  
-  private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
-  
-  private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
+    private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
 
-  public NotificationMessageElement(final ErrorTreeElementKind kind,
-                                    @Nullable GroupingElement parent,
-                                    String[] message,
-                                    Navigatable navigatable,
-                                    String exportText,
-                                    String rendererTextPrefix) {
-    super(kind, parent, message, navigatable, exportText, rendererTextPrefix);
-    myLeftTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
-      @Override
-      public void customizeCellRenderer(SimpleColoredComponent renderer,
-                                        JTree tree,
-                                        Object value,
-                                        boolean selected,
-                                        boolean expanded,
-                                        boolean leaf,
-                                        int row,
-                                        boolean hasFocus) {
-        renderer.setIcon(getIcon(kind));
-        renderer.setFont(tree.getFont());
-        renderer.append(NewErrorTreeRenderer.calcPrefix(NotificationMessageElement.this));
-      }
+    private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
 
-      
-      private Image getIcon(ErrorTreeElementKind kind) {
-        Image icon = Image.empty(Image.DEFAULT_ICON_SIZE);
-        switch (kind) {
-          case INFO:
-            icon = PlatformIconGroup.generalInformation();
-            break;
-          case ERROR:
-            icon = PlatformIconGroup.generalError();
-            break;
-          case WARNING:
-            icon = PlatformIconGroup.generalWarning();
-            break;
-          case NOTE:
-            icon = PlatformIconGroup.actionsIntentionbulb();
-            break;
-          case GENERIC:
-            break;
-        }
-        return icon;
-      }
-    };
+    public NotificationMessageElement(
+        final ErrorTreeElementKind kind,
+        @Nullable GroupingElement parent,
+        String[] message,
+        Navigable navigable,
+        String exportText,
+        String rendererTextPrefix
+    ) {
+        super(kind, parent, message, navigable, exportText, rendererTextPrefix);
+        myLeftTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
+            @Override
+            public void customizeCellRenderer(
+                SimpleColoredComponent renderer,
+                JTree tree,
+                Object value,
+                boolean selected,
+                boolean expanded,
+                boolean leaf,
+                int row,
+                boolean hasFocus
+            ) {
+                renderer.setIcon(getIcon(kind));
+                renderer.setFont(tree.getFont());
+                renderer.append(NewErrorTreeRenderer.calcPrefix(NotificationMessageElement.this));
+            }
 
-    myRightTreeCellRenderer = new MyCustomizeColoredTreeCellRendererReplacement();
-  }
 
-  @Override
-  public @Nullable CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
-    return myRightTreeCellRenderer;
-  }
+            private Image getIcon(ErrorTreeElementKind kind) {
+                Image icon = Image.empty(Image.DEFAULT_ICON_SIZE);
+                switch (kind) {
+                    case INFO:
+                        icon = PlatformIconGroup.generalInformation();
+                        break;
+                    case ERROR:
+                        icon = PlatformIconGroup.generalError();
+                        break;
+                    case WARNING:
+                        icon = PlatformIconGroup.generalWarning();
+                        break;
+                    case NOTE:
+                        icon = PlatformIconGroup.actionsIntentionbulb();
+                        break;
+                    case GENERIC:
+                        break;
+                }
+                return icon;
+            }
+        };
 
-  @Override
-  public @Nullable CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
-    return myLeftTreeCellRenderer;
-  }
-
-  protected JEditorPane installJep(JEditorPane myEditorPane) {
-    String message = StringUtil.join(this.getText(), "<br>");
-    myEditorPane.setEditable(false);
-    myEditorPane.setOpaque(false);
-    myEditorPane.setEditorKit(JBHtmlEditorKit.create());
-    myEditorPane.setHighlighter(null);
-
-    StyleSheet styleSheet = ((HTMLDocument)myEditorPane.getDocument()).getStyleSheet();
-    Style style = styleSheet.addStyle(MSG_STYLE, null);
-    styleSheet.addStyle(LINK_STYLE, style);
-    myEditorPane.setText(message);
-
-    return myEditorPane;
-  }
-
-  protected void updateStyle(JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
-    HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
-    Style style = htmlDocument.getStyleSheet().getStyle(MSG_STYLE);
-    if (value instanceof LoadingNode) {
-      StyleConstants.setForeground(style, JBColor.GRAY);
-    }
-    else {
-      if (selected) {
-        StyleConstants.setForeground(style, hasFocus ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeTextForeground());
-      }
-      else {
-        StyleConstants.setForeground(style, UIUtil.getTreeTextForeground());
-      }
-    }
-
-    editorPane.setOpaque(false);
-
-    htmlDocument.setCharacterAttributes(0, htmlDocument.getLength(), style, false);
-  }
-
-  private class MyCustomizeColoredTreeCellRendererReplacement extends CustomizeColoredTreeCellRendererReplacement {
-    
-    private final JEditorPane myEditorPane;
-
-    private MyCustomizeColoredTreeCellRendererReplacement() {
-      myEditorPane = installJep(new JEditorPane());
+        myRightTreeCellRenderer = new MyCustomizeColoredTreeCellRendererReplacement();
     }
 
     @Override
-    public Component getTreeCellRendererComponent(JTree tree,
-                                                  Object value,
-                                                  boolean selected,
-                                                  boolean expanded,
-                                                  boolean leaf,
-                                                  int row,
-                                                  boolean hasFocus) {
-      updateStyle(myEditorPane, tree, value, selected, hasFocus);
-      return myEditorPane;
+    public @Nullable CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
+        return myRightTreeCellRenderer;
     }
-  }
+
+    @Override
+    public @Nullable CustomizeColoredTreeCellRenderer getLeftSelfRenderer() {
+        return myLeftTreeCellRenderer;
+    }
+
+    protected JEditorPane installJep(JEditorPane myEditorPane) {
+        String message = StringUtil.join(this.getText(), "<br>");
+        myEditorPane.setEditable(false);
+        myEditorPane.setOpaque(false);
+        myEditorPane.setEditorKit(JBHtmlEditorKit.create());
+        myEditorPane.setHighlighter(null);
+
+        StyleSheet styleSheet = ((HTMLDocument) myEditorPane.getDocument()).getStyleSheet();
+        Style style = styleSheet.addStyle(MSG_STYLE, null);
+        styleSheet.addStyle(LINK_STYLE, style);
+        myEditorPane.setText(message);
+
+        return myEditorPane;
+    }
+
+    protected void updateStyle(JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+        HTMLDocument htmlDocument = (HTMLDocument) editorPane.getDocument();
+        Style style = htmlDocument.getStyleSheet().getStyle(MSG_STYLE);
+        if (value instanceof LoadingNode) {
+            StyleConstants.setForeground(style, JBColor.GRAY);
+        }
+        else {
+            if (selected) {
+                StyleConstants.setForeground(style, hasFocus ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeTextForeground());
+            }
+            else {
+                StyleConstants.setForeground(style, UIUtil.getTreeTextForeground());
+            }
+        }
+
+        editorPane.setOpaque(false);
+
+        htmlDocument.setCharacterAttributes(0, htmlDocument.getLength(), style, false);
+    }
+
+    private class MyCustomizeColoredTreeCellRendererReplacement extends CustomizeColoredTreeCellRendererReplacement {
+
+        private final JEditorPane myEditorPane;
+
+        private MyCustomizeColoredTreeCellRendererReplacement() {
+            myEditorPane = installJep(new JEditorPane());
+        }
+
+        @Override
+        public Component getTreeCellRendererComponent(
+            JTree tree,
+            Object value,
+            boolean selected,
+            boolean expanded,
+            boolean leaf,
+            int row,
+            boolean hasFocus
+        ) {
+            updateStyle(myEditorPane, tree, value, selected, hasFocus);
+            return myEditorPane;
+        }
+    }
 }

@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi;
 
-import consulo.navigation.NavigationItem;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author yole
  */
-public interface NavigatablePsiElement extends PsiElement, NavigationItem {
+@Deprecated
+@DeprecationInfo("Use NavigablePsiElement, typo-corrected name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public interface NavigatablePsiElement extends NavigablePsiElement {
   NavigatablePsiElement[] EMPTY_ARRAY = new NavigatablePsiElement[0];
 }

@@ -19,9 +19,10 @@ import consulo.application.SaveAndSyncHandler;
 import consulo.diff.content.DiffContentBase;
 import consulo.diff.content.FileContent;
 import consulo.diff.internal.DiffImplUtil;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
@@ -30,58 +31,65 @@ import org.jspecify.annotations.Nullable;
  * Allows to compare files
  */
 public class FileContentImpl extends DiffContentBase implements FileContent {
-  
-  private final VirtualFile myFile;
-  private final @Nullable Project myProject;
-  
-  private final FileType myType;
-  private final @Nullable VirtualFile myHighlightFile;
+    private final VirtualFile myFile;
+    private final @Nullable Project myProject;
 
-  public FileContentImpl(@Nullable Project project, VirtualFile file) {
-    this(project, file, getHighlightFile(file));
-  }
+    private final FileType myType;
+    private final @Nullable VirtualFile myHighlightFile;
 
-  public FileContentImpl(@Nullable Project project,
-                         VirtualFile file,
-                         @Nullable VirtualFile highlightFile) {
-    assert file.isValid() && !file.isDirectory();
-    myFile = file;
-    myProject = project;
-    myType = file.getFileType();
-    myHighlightFile = highlightFile;
-  }
+    public FileContentImpl(@Nullable Project project, VirtualFile file) {
+        this(project, file, getHighlightFile(file));
+    }
 
-  @Override
-  public @Nullable Navigatable getNavigatable() {
-    if (myProject == null || myProject.isDefault()) return null;
-    if (myHighlightFile == null || !myHighlightFile.isValid()) return null;
-    return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myHighlightFile).build();
-  }
+    public FileContentImpl(
+        @Nullable Project project,
+        VirtualFile file,
+        @Nullable VirtualFile highlightFile
+    ) {
+        assert file.isValid() && !file.isDirectory();
+        myFile = file;
+        myProject = project;
+        myType = file.getFileType();
+        myHighlightFile = highlightFile;
+    }
 
-  private static @Nullable VirtualFile getHighlightFile(VirtualFile file) {
-    if (file.isInLocalFileSystem()) return file;
-    return null;
-  }
+    @Override
+    public @Nullable Navigable getNavigable() {
+        if (myProject == null || myProject.isDefault()) {
+            return null;
+        }
+        if (myHighlightFile == null || !myHighlightFile.isValid()) {
+            return null;
+        }
+        return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myHighlightFile).build();
+    }
 
-  
-  @Override
-  public VirtualFile getFile() {
-    return myFile;
-  }
+    private static @Nullable VirtualFile getHighlightFile(VirtualFile file) {
+        if (file.isInLocalFileSystem()) {
+            return file;
+        }
+        return null;
+    }
 
-  
-  @Override
-  public FileType getContentType() {
-    return myType;
-  }
+    @Override
+    public VirtualFile getFile() {
+        return myFile;
+    }
 
-  
-  public String getFilePath() {
-    return myFile.getPath();
-  }
+    @Override
+    public FileType getContentType() {
+        return myType;
+    }
 
-  @Override
-  public void onAssigned(boolean isAssigned) {
-    if (isAssigned && SaveAndSyncHandler.getInstance().isSyncOnFrameActivation()) DiffImplUtil.markDirtyAndRefresh(true, false, false, myFile);
-  }
+    public String getFilePath() {
+        return myFile.getPath();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void onAssigned(boolean isAssigned) {
+        if (isAssigned && SaveAndSyncHandler.getInstance().isSyncOnFrameActivation()) {
+            DiffImplUtil.markDirtyAndRefresh(true, false, false, myFile);
+        }
+    }
 }

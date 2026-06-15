@@ -2,6 +2,7 @@
 package consulo.ui.ex.awt.tree;
 
 import com.uber.nullaway.annotations.Contract;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
@@ -11,6 +12,7 @@ import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -55,7 +57,7 @@ public final class TreeUtil {
     private static final String TREE_UTIL_SCROLL_TIME_STAMP = "TreeUtil.scrollTimeStamp";
     private static final JBIterable<Integer> NUMBERS = JBIterable.generate(0, i -> i + 1);
     private static final Key<Function<TreePath, Navigatable>> NAVIGATABLE_PROVIDER =
-        Key.create("TreeUtil: convert TreePath to Navigatable");
+        Key.create("TreeUtil: convert TreePath to Navigable");
 
     private TreeUtil() {
     }
@@ -1935,15 +1937,25 @@ public final class TreeUtil {
     }
 
     /**
-     * @return a navigatable object that corresponds to the specified path,  or {@code null} otherwise
+     * @return a navigable object that corresponds to the specified path,  or {@code null} otherwise
      */
-    public static @Nullable Navigatable getNavigatable(JTree tree, @Nullable TreePath path) {
+    public static @Nullable Navigable getNavigable(JTree tree, @Nullable TreePath path) {
         Function<? super TreePath, ? extends Navigatable> supplier = UIUtil.getClientProperty(tree, NAVIGATABLE_PROVIDER);
-        return supplier != null ? supplier.apply(path) : getLastUserObject(Navigatable.class, path);
+        return supplier != null ? supplier.apply(path) : getLastUserObject(Navigable.class, path);
     }
 
     /**
-     * Sets the mapping function that provides a navigatable object for a tree path.
+     * @return a navigatable object that corresponds to the specified path,  or {@code null} otherwise
+     */
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public static @Nullable Navigatable getNavigatable(JTree tree, @Nullable TreePath path) {
+        return (@Nullable Navigatable) getNavigable(tree, path);
+    }
+
+    /**
+     * Sets the mapping function that provides a navigable object for a tree path.
      */
     public static void setNavigatableProvider(JTree tree, Function<? super TreePath, ? extends Navigatable> provider) {
         tree.putClientProperty(NAVIGATABLE_PROVIDER, provider);

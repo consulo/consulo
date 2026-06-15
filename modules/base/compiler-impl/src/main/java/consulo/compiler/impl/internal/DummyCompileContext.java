@@ -23,7 +23,7 @@ import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -57,7 +57,7 @@ public class DummyCompileContext implements CompileContext {
         @Nullable String url,
         int lineNum,
         int columnNum,
-        Navigatable navigatable
+        Navigable navigable
     ) {
     }
 

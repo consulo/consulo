@@ -15,7 +15,9 @@
  */
 package consulo.diff.content;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.diff.request.DiffRequest;
+import consulo.navigation.Navigable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,21 +33,29 @@ import org.jspecify.annotations.Nullable;
  * @see DiffRequest
  */
 public interface DiffContent extends UserDataHolder {
-  @Nullable FileType getContentType();
+    @Nullable
+    FileType getContentType();
 
-  /**
-   * Provides a way to open related content in editor
-   */
-  @Nullable Navigatable getNavigatable();
+    /**
+     * Provides a way to open related content in editor
+     */
+    @Nullable Navigable getNavigable();
 
-  /**
-   * @see DiffRequest#onAssigned(boolean)
-   */
-  @RequiredUIAccess
-  void onAssigned(boolean isAssigned);
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getNavigatable() {
+        return (Navigatable) getNavigable();
+    }
 
-  @Deprecated
-  default @Nullable OpenFileDescriptor getOpenFileDescriptor() {
-    return ObjectUtil.tryCast(getNavigatable(), OpenFileDescriptor.class);
-  }
+    /**
+     * @see DiffRequest#onAssigned(boolean)
+     */
+    @RequiredUIAccess
+    void onAssigned(boolean isAssigned);
+
+    @Deprecated
+    default @Nullable OpenFileDescriptor getOpenFileDescriptor() {
+        return ObjectUtil.tryCast(getNavigable(), OpenFileDescriptor.class);
+    }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
@@ -25,6 +26,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 
@@ -33,12 +35,11 @@ import org.jspecify.annotations.Nullable;
 public class ProblemDescriptorBase extends CommonProblemDescriptorBase implements ProblemDescriptor {
     private static final Logger LOG = Logger.getInstance(ProblemDescriptorBase.class);
 
-    
     private final SmartPsiElementPointer myStartSmartPointer;
     private final @Nullable SmartPsiElementPointer myEndSmartPointer;
 
     private final ProblemHighlightType myHighlightType;
-    private Navigatable myNavigatable;
+    private Navigable myNavigable;
     private final boolean myAfterEndOfLine;
     private final TextRange myTextRangeInElement;
     private final boolean myShowTooltip;
@@ -218,12 +219,26 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorBase implement
         return new TextRange(textRange.getStartOffset(), endElement.getTextRange().getEndOffset());
     }
 
-    public Navigatable getNavigatable() {
-        return myNavigatable;
+    public Navigable getNavigable() {
+        return myNavigable;
     }
 
-    public void setNavigatable(Navigatable navigatable) {
-        myNavigatable = navigatable;
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public Navigatable getNavigatable() {
+        return (Navigatable) myNavigable;
+    }
+
+    public void setNavigable(Navigable navigable) {
+        myNavigable = navigable;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #setNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public void setNavigatable(Navigable navigable) {
+        myNavigable = navigable;
     }
 
     @Override

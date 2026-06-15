@@ -15,82 +15,91 @@
  */
 package consulo.ui.ex;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 
 public interface OccurenceNavigator {
-  OccurenceNavigator EMPTY = new OccurenceNavigator() {
-    @Override
-    public boolean hasNextOccurence() {
-      return false;
+    OccurenceNavigator EMPTY = new OccurenceNavigator() {
+        @Override
+        public boolean hasNextOccurence() {
+            return false;
+        }
+
+        @Override
+        public boolean hasPreviousOccurence() {
+            return false;
+        }
+
+        @Override
+        public OccurenceInfo goNextOccurence() {
+            return null;
+        }
+
+        @Override
+        public OccurenceInfo goPreviousOccurence() {
+            return null;
+        }
+
+        @Override
+        public String getNextOccurenceActionName() {
+            return "";
+        }
+
+        @Override
+        public String getPreviousOccurenceActionName() {
+            return "";
+        }
+    };
+
+    class OccurenceInfo {
+        private final Navigable myNavigable;
+        private final int myOccurrenceNumber;
+        private final int myOccurrencesCount;
+
+        public OccurenceInfo(Navigable navigable, int occurrenceNumber, int occurrencesCount) {
+            myNavigable = navigable;
+            myOccurrenceNumber = occurrenceNumber;
+            myOccurrencesCount = occurrencesCount;
+        }
+
+        private OccurenceInfo(int occurrenceNumber, int occurrencesCount) {
+            this(null, occurrenceNumber, occurrencesCount);
+        }
+
+        public static OccurenceInfo position(int occurrenceNumber, int occurrencesCount) {
+            return new OccurenceInfo(occurrenceNumber, occurrencesCount);
+        }
+
+        public Navigable getNavigable() {
+            return myNavigable;
+        }
+
+        @Deprecated
+        @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+        @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+        public Navigatable getNavigateable() {
+            return (Navigatable) getNavigable();
+        }
+
+        public int getOccurenceNumber() {
+            return myOccurrenceNumber;
+        }
+
+        public int getOccurencesCount() {
+            return myOccurrencesCount;
+        }
     }
 
-    @Override
-    public boolean hasPreviousOccurence() {
-      return false;
-    }
+    boolean hasNextOccurence();
 
-    @Override
-    public OccurenceInfo goNextOccurence() {
-      return null;
-    }
+    boolean hasPreviousOccurence();
 
-    @Override
-    public OccurenceInfo goPreviousOccurence() {
-      return null;
-    }
+    OccurenceInfo goNextOccurence();
 
-    @Override
-    public String getNextOccurenceActionName() {
-      return "";
-    }
+    OccurenceInfo goPreviousOccurence();
 
-    @Override
-    public String getPreviousOccurenceActionName() {
-      return "";
-    }
-  };
+    String getNextOccurenceActionName();
 
-  class OccurenceInfo {
-    private final Navigatable myNavigateable;
-    private final int myOccurrenceNumber;
-    private final int myOccurrencesCount;
-
-    public OccurenceInfo(Navigatable navigateable, int occurrenceNumber, int occurrencesCount) {
-      myNavigateable = navigateable;
-      myOccurrenceNumber = occurrenceNumber;
-      myOccurrencesCount = occurrencesCount;
-    }
-
-    private OccurenceInfo(int occurrenceNumber, int occurrencesCount) {
-      this(null, occurrenceNumber, occurrencesCount);
-    }
-
-    public static OccurenceInfo position(int occurrenceNumber, int occurrencesCount) {
-      return new OccurenceInfo(occurrenceNumber, occurrencesCount);
-    }
-
-    public Navigatable getNavigateable() {
-      return myNavigateable;
-    }
-
-    public int getOccurenceNumber() {
-      return myOccurrenceNumber;
-    }
-
-    public int getOccurencesCount() {
-      return myOccurrencesCount;
-    }
-  }
-
-  boolean hasNextOccurence();
-
-  boolean hasPreviousOccurence();
-
-  OccurenceInfo goNextOccurence();
-
-  OccurenceInfo goPreviousOccurence();
-
-  String getNextOccurenceActionName();
-
-  String getPreviousOccurenceActionName();
+    String getPreviousOccurenceActionName();
 }

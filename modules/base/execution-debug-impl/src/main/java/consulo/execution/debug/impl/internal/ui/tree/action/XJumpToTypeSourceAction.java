@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal.ui.tree.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.XDebuggerActions;
-import consulo.execution.debug.frame.XNavigatable;
+import consulo.execution.debug.frame.XNavigable;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
@@ -33,8 +33,8 @@ public class XJumpToTypeSourceAction extends XJumpToSourceActionBase {
     }
 
     @Override
-    protected void startComputingSourcePosition(XValue value, XNavigatable navigatable) {
-        value.computeTypeSourcePosition(navigatable);
+    protected void startComputingSourcePosition(XValue value, XNavigable navigable) {
+        value.computeTypeSourcePosition(navigable);
     }
 
     @Override

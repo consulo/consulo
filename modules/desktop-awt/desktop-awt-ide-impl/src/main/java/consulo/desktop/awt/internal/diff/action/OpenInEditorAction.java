@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.diff.DiffContext;
@@ -23,6 +24,7 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,69 +36,77 @@ import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 public class OpenInEditorAction extends EditSourceAction implements DumbAware {
-  public static final Key<OpenInEditorAction> KEY = Key.create("DiffOpenInEditorAction");
+    public static final Key<OpenInEditorAction> KEY = Key.create("DiffOpenInEditorAction");
 
-  private final @Nullable Runnable myAfterRunnable;
+    private final @Nullable Runnable myAfterRunnable;
 
-  public OpenInEditorAction(@Nullable Runnable afterRunnable) {
-    ActionUtil.copyFrom(this, IdeActions.ACTION_EDIT_SOURCE);
-    myAfterRunnable = afterRunnable;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    if (!e.isFromActionToolbar()) {
-      e.getPresentation().setEnabledAndVisible(true);
-      return;
+    public OpenInEditorAction(@Nullable Runnable afterRunnable) {
+        ActionUtil.copyFrom(this, IdeActions.ACTION_EDIT_SOURCE);
+        myAfterRunnable = afterRunnable;
     }
 
-    DiffRequest request = e.getData(DiffDataKeys.DIFF_REQUEST);
-    DiffContext context = e.getData(DiffDataKeys.DIFF_CONTEXT);
+    @Override
+    public void update(AnActionEvent e) {
+        if (!e.isFromActionToolbar()) {
+            e.getPresentation().setEnabledAndVisible(true);
+            return;
+        }
 
-    if (DiffImplUtil.isUserDataFlagSet(DiffUserDataKeys.GO_TO_SOURCE_DISABLE, request, context)) {
-      e.getPresentation().setEnabledAndVisible(false);
+        DiffRequest request = e.getData(DiffDataKeys.DIFF_REQUEST);
+        DiffContext context = e.getData(DiffDataKeys.DIFF_CONTEXT);
+
+        if (DiffImplUtil.isUserDataFlagSet(DiffUserDataKeys.GO_TO_SOURCE_DISABLE, request, context)) {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
+
+        if (e.getData(Project.KEY) == null) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        Navigatable[] navigatables = ReadAction.compute(() -> e.getData(DiffDataKeys.NAVIGABLE_ARRAY));
+        if (navigatables == null || !ContainerUtil.exists(navigatables, Navigable::canNavigate)) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
+        e.getPresentation().setEnabledAndVisible(true);
     }
 
-    if (e.getData(Project.KEY) == null) {
-      e.getPresentation().setVisible(true);
-      e.getPresentation().setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+
+        Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGABLE_ARRAY);
+        if (navigatables == null) {
+            return;
+        }
+
+        openEditor(project, navigatables);
     }
 
-    Navigatable[] navigatables = ReadAction.compute(() -> e.getData(DiffDataKeys.NAVIGATABLE_ARRAY));
-    if (navigatables == null || !ContainerUtil.exists(navigatables, Navigatable::canNavigate)) {
-      e.getPresentation().setVisible(true);
-      e.getPresentation().setEnabled(false);
-      return;
+    @RequiredReadAction
+    public void openEditor(Project project, Navigable navigable) {
+        openEditor(project, new Navigatable[]{(Navigatable) navigable});
     }
 
-    e.getPresentation().setEnabledAndVisible(true);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return;
-
-    Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGATABLE_ARRAY);
-    if (navigatables == null) return;
-
-    openEditor(project, navigatables);
-  }
-
-  public void openEditor(Project project, Navigatable navigatable) {
-    openEditor(project, new Navigatable[]{navigatable});
-  }
-
-  public void openEditor(Project project, Navigatable[] navigatables) {
-    boolean success = false;
-    for (Navigatable navigatable : navigatables) {
-      if (navigatable.canNavigate()) {
-        navigatable.navigate(true);
-        success = true;
-      }
+    @RequiredReadAction
+    public void openEditor(Project project, Navigatable[] navigatables) {
+        boolean success = false;
+        for (Navigable navigable : navigatables) {
+            if (navigable.canNavigate()) {
+                navigable.navigate(true);
+                success = true;
+            }
+        }
+        if (success && myAfterRunnable != null) {
+            myAfterRunnable.run();
+        }
     }
-    if (success && myAfterRunnable != null) myAfterRunnable.run();
-  }
 }

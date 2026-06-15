@@ -18,7 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.localize.CompilerLocalize;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,11 +27,10 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public final class CompilerMessageImpl implements CompilerMessage {
-    
     private final Project myProject;
     
     private final CompilerMessageCategory myCategory;
-    private @Nullable Navigatable myNavigatable;
+    private @Nullable Navigable myNavigable;
     
     private final String myMessage;
     private final @Nullable VirtualFile myFile;
@@ -49,40 +48,38 @@ public final class CompilerMessageImpl implements CompilerMessage {
         @Nullable VirtualFile file,
         int row,
         int column,
-        @Nullable Navigatable navigatable
+        @Nullable Navigable navigable
     ) {
         myProject = project;
         myCategory = category;
-        myNavigatable = navigatable;
+        myNavigable = navigable;
         myMessage = message == null ? "" : message;
         myRow = row;
         myColumn = column;
         myFile = file;
     }
 
-    
     @Override
     public CompilerMessageCategory getCategory() {
         return myCategory;
     }
 
-    
     @Override
     public String getMessage() {
         return myMessage;
     }
 
     @Override
-    public @Nullable Navigatable getNavigatable() {
-        if (myNavigatable != null) {
-            return myNavigatable;
+    public @Nullable Navigable getNavigable() {
+        if (myNavigable != null) {
+            return myNavigable;
         }
         VirtualFile virtualFile = getVirtualFile();
         if (virtualFile != null && virtualFile.isValid()) {
             int line = getLine() - 1; // editor lines are zero-based
             if (line >= 0) {
                 OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(myProject);
-                return myNavigatable = factory.newBuilder(virtualFile).line(line).column(Math.max(0, getColumn() - 1)).build();
+                return myNavigable = factory.newBuilder(virtualFile).line(line).column(Math.max(0, getColumn() - 1)).build();
             }
         }
         return null;

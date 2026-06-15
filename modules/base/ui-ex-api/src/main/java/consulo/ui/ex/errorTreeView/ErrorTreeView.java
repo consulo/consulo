@@ -16,37 +16,46 @@
 package consulo.ui.ex.errorTreeView;
 
 import consulo.disposer.Disposable;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 
 public interface ErrorTreeView extends Disposable {
-  Key<Object> CURRENT_EXCEPTION_DATA_KEY = Key.create("CURRENT_EXCEPTION_DATA");
+    Key<Object> CURRENT_EXCEPTION_DATA_KEY = Key.create("CURRENT_EXCEPTION_DATA");
 
-  /**
-   * If file is not null, allows to navigate to this file, line, column
-   */
-  void addMessage(int type, String[] text, @Nullable VirtualFile file, int line, int column, @Nullable Object data);
+    /**
+     * If file is not null, allows to navigate to this file, line, column
+     */
+    void addMessage(int type, String[] text, @Nullable VirtualFile file, int line, int column, @Nullable Object data);
 
-  /**
-   * Allows adding messages related to other files under 'underFileGroup'
-   */
-  void addMessage(int type, String[] text, @Nullable VirtualFile underFileGroup, @Nullable VirtualFile file, int line, int column, @Nullable Object data);
+    /**
+     * Allows adding messages related to other files under 'underFileGroup'
+     */
+    void addMessage(
+        int type,
+        String[] text,
+        @Nullable VirtualFile underFileGroup,
+        @Nullable VirtualFile file,
+        int line,
+        int column,
+        @Nullable Object data
+    );
 
-  /**
-   * add message, allowing navigation via custom Navigatable object
-   */
-  void addMessage(int type,
-                  String[] text,
-                  @Nullable String groupName,
-                  Navigatable navigatable,
-                  @Nullable String exportTextPrefix,
-                  @Nullable String rendererTextPrefix,
-                  @Nullable Object data);
+    /**
+     * add message, allowing navigation via custom Navigable object
+     */
+    void addMessage(
+        int type,
+        String[] text,
+        @Nullable String groupName,
+        Navigable navigable,
+        @Nullable String exportTextPrefix,
+        @Nullable String rendererTextPrefix,
+        @Nullable Object data
+    );
 
-  
-  JComponent getComponent();
+    JComponent getComponent();
 }

@@ -20,7 +20,7 @@ import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.compiler.ProblemsView;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.logging.Logger;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.project.ui.view.MessageView;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -50,28 +50,28 @@ public class ProblemsViewImpl extends ProblemsView {
     public static final Logger LOGGER = Logger.getInstance(ProblemsViewImpl.class);
 
     private static class TempMessage {
-        final int type;
+        final int myType;
         
-        final String[] text;
-        final @Nullable String groupName;
-        final @Nullable Navigatable navigatable;
-        final @Nullable String exportTextPrefix;
-        final @Nullable String rendererTextPrefix;
+        final String[] myText;
+        final @Nullable String myGroupName;
+        final @Nullable Navigable myNavigable;
+        final @Nullable String myExportTextPrefix;
+        final @Nullable String myRendererTextPrefix;
 
         private TempMessage(
             int type,
             String[] text,
             @Nullable String groupName,
-            @Nullable Navigatable navigatable,
+            @Nullable Navigable navigable,
             @Nullable String exportTextPrefix,
             @Nullable String rendererTextPrefix
         ) {
-            this.type = type;
-            this.text = text;
-            this.groupName = groupName;
-            this.navigatable = navigatable;
-            this.exportTextPrefix = exportTextPrefix;
-            this.rendererTextPrefix = rendererTextPrefix;
+            this.myType = type;
+            this.myText = text;
+            this.myGroupName = groupName;
+            this.myNavigable = navigable;
+            this.myExportTextPrefix = exportTextPrefix;
+            this.myRendererTextPrefix = rendererTextPrefix;
         }
     }
 
@@ -107,11 +107,11 @@ public class ProblemsViewImpl extends ProblemsView {
         int type,
         String[] text,
         @Nullable String groupName,
-        @Nullable Navigatable navigatable,
+        @Nullable Navigable navigable,
         @Nullable String exportTextPrefix,
         @Nullable String rendererTextPrefix
     ) {
-        TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
+        TempMessage message = new TempMessage(type, text, groupName, navigable, exportTextPrefix, rendererTextPrefix);
 
         myTempMessages.add(message);
 
@@ -121,11 +121,11 @@ public class ProblemsViewImpl extends ProblemsView {
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void showOrHide(boolean hide) {
         ToolWindow toolWindow = MessageView.getInstance(myProject).getToolWindow();
-        // dont try hide if toolwindow closed
+        // Don't try hide if toolwindow closed
         if (hide && !toolWindow.isVisible()) {
             return;
         }
@@ -160,19 +160,19 @@ public class ProblemsViewImpl extends ProblemsView {
     }
 
     private static void addMessage(ProblemsViewPanel problemsViewPanel, TempMessage tempMessage) {
-        if (tempMessage.navigatable != null) {
+        if (tempMessage.myNavigable != null) {
             problemsViewPanel.addMessage(
-                tempMessage.type,
-                tempMessage.text,
-                tempMessage.groupName,
-                tempMessage.navigatable,
-                tempMessage.exportTextPrefix,
-                tempMessage.rendererTextPrefix,
+                tempMessage.myType,
+                tempMessage.myText,
+                tempMessage.myGroupName,
+                tempMessage.myNavigable,
+                tempMessage.myExportTextPrefix,
+                tempMessage.myRendererTextPrefix,
                 null
             );
         }
         else {
-            problemsViewPanel.addMessage(tempMessage.type, tempMessage.text, null, -1, -1, null);
+            problemsViewPanel.addMessage(tempMessage.myType, tempMessage.myText, null, -1, -1, null);
         }
     }
 

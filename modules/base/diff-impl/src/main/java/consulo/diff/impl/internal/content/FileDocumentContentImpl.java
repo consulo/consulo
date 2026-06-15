@@ -20,50 +20,54 @@ import consulo.diff.content.FileContent;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.LineCol;
 import consulo.document.Document;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.platform.LineSeparator;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import org.jspecify.annotations.Nullable;
 
 public class FileDocumentContentImpl extends DocumentContentImpl implements FileContent {
-  
-  private final VirtualFile myFile;
+    private final VirtualFile myFile;
 
-  public FileDocumentContentImpl(@Nullable Project project,
-                                 Document document,
-                                 VirtualFile file) {
-    super(project, document, file.getFileType(), file, getSeparator(file), file.getCharset(), file.getBOM() != null);
-    myFile = file;
-  }
+    public FileDocumentContentImpl(@Nullable Project project, Document document, VirtualFile file) {
+        super(project, document, file.getFileType(), file, getSeparator(file), file.getCharset(), file.getBOM() != null);
+        myFile = file;
+    }
 
-  @Override
-  public @Nullable Navigatable getNavigatable(LineCol position) {
-    Project project = getProject();
-    if (project == null || project.isDefault() || !myFile.isValid()) return null;
-    return OpenFileDescriptorFactory.getInstance(project)
-                                    .newBuilder(myFile)
-                                    .line(position.line)
-                                    .column(position.column)
-                                    .build();
-  }
+    @Override
+    public @Nullable Navigable getNavigable(LineCol position) {
+        Project project = getProject();
+        if (project == null || project.isDefault() || !myFile.isValid()) {
+            return null;
+        }
+        return OpenFileDescriptorFactory.getInstance(project)
+            .newBuilder(myFile)
+            .line(position.line)
+            .column(position.column)
+            .build();
+    }
 
-  private static @Nullable LineSeparator getSeparator(VirtualFile file) {
-    String s = LoadTextUtil.detectLineSeparator(file, true);
-    if (s == null) return null;
-    return LineSeparator.fromString(s);
-  }
+    private static @Nullable LineSeparator getSeparator(VirtualFile file) {
+        String s = LoadTextUtil.detectLineSeparator(file, true);
+        if (s == null) {
+            return null;
+        }
+        return LineSeparator.fromString(s);
+    }
 
-  
-  @Override
-  public VirtualFile getFile() {
-    return myFile;
-  }
+    @Override
+    public VirtualFile getFile() {
+        return myFile;
+    }
 
-  @Override
-  public void onAssigned(boolean isAssigned) {
-    if (isAssigned && SaveAndSyncHandler.getInstance().isSyncOnFrameActivation()) DiffImplUtil.markDirtyAndRefresh(true, false, false, myFile);
-  }
+    @Override
+    @RequiredUIAccess
+    public void onAssigned(boolean isAssigned) {
+        if (isAssigned && SaveAndSyncHandler.getInstance().isSyncOnFrameActivation()) {
+            DiffImplUtil.markDirtyAndRefresh(true, false, false, myFile);
+        }
+    }
 }

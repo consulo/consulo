@@ -15,20 +15,19 @@
  */
 package consulo.diff.content;
 
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
-
 import org.jspecify.annotations.Nullable;
 
 public abstract class DiffContentBase extends UserDataHolderBase implements DiffContent {
-  @Override
-  public @Nullable Navigatable getNavigatable() {
-    return null;
-  }
+    @Override
+    public @Nullable Navigable getNavigable() {
+        return null;
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void onAssigned(boolean isAssigned) {
-  }
+    @Override
+    @RequiredUIAccess
+    public void onAssigned(boolean isAssigned) {
+    }
 }

@@ -25,14 +25,13 @@ import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.util.collection.OrderedSet;
@@ -193,10 +192,10 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         String url,
         int lineNum,
         int columnNum,
-        Navigatable navigatable
+        Navigable navigable
     ) {
         CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
+            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigable);
         addMessage(msg);
     }
 

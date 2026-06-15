@@ -2,6 +2,7 @@
 package consulo.execution.debug.impl.internal;
 
 import com.uber.nullaway.annotations.Contract;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ReadAction;
 import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.document.Document;
@@ -14,8 +15,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.navigation.Navigatable;
-import consulo.navigation.NonNavigatable;
+import consulo.navigation.Navigable;
+import consulo.navigation.NonNavigable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -112,18 +113,17 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
                 return myDelegate.getValue().getOffset();
             }
 
-            
             @Override
-            public Navigatable createNavigatable(Project project) {
+            @RequiredReadAction
+            public Navigable createNavigable(Project project) {
                 // no need to create delegate here, it may be expensive
                 if (myDelegate.isComputed()) {
-                    return myDelegate.getValue().createNavigatable(project);
+                    return myDelegate.getValue().createNavigable(project);
                 }
-                PsiElement elem = pointer.getElement();
-                if (elem instanceof Navigatable) {
-                    return ((Navigatable) elem);
+                if (pointer.getElement() instanceof Navigable navigable) {
+                    return navigable;
                 }
-                return NonNavigatable.INSTANCE;
+                return NonNavigable.INSTANCE;
             }
         };
     }
@@ -187,12 +187,10 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
     }
 
     @Override
-    
-    public Navigatable createNavigatable(Project project) {
-        return new XSourcePositionFactoryImpl.XSourcePositionNavigatable(project, this);
+    public Navigable createNavigable(Project project) {
+        return new XSourcePositionFactoryImpl.XSourcePositionNavigable(project, this);
     }
 
-    
     public static OpenFileDescriptor createOpenFileDescriptor(Project project, XSourcePosition position) {
         OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(project);
 

@@ -15,12 +15,14 @@
  */
 package consulo.diff.dir;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.content.DiffContent;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -38,113 +40,122 @@ import java.util.concurrent.Callable;
  * @author Konstantin Bulenkov
  */
 public abstract class DiffElement<T> {
-  public static final DiffElement[] EMPTY_ARRAY = new DiffElement[0];
+    public static final DiffElement[] EMPTY_ARRAY = new DiffElement[0];
 
-  public abstract String getPath();
+    public abstract String getPath();
 
-  
-  public abstract String getName();
+    public abstract String getName();
 
-  public String getPresentablePath() {
-    return getName();
-  }
-
-  public abstract long getSize();
-
-  public abstract long getTimeStamp();
-
-  public FileType getFileType() {
-    return FileTypeRegistry.getInstance().getFileTypeByFileName(getName());
-  }
-
-  public abstract boolean isContainer();
-
-  public abstract DiffElement[] getChildren() throws IOException;
-
-  public @Nullable Navigatable getNavigatable(@Nullable Project project) {
-    return null;
-  }
-
-  /**
-   * Returns content data as byte array. Can be null, if element for example is a container
-   * @return content byte array
-   * @throws IOException when reading
-   */
-  public abstract @Nullable byte[] getContent() throws IOException;
-
-  
-  public Charset getCharset() {
-    return EncodingManager.getInstance().getDefaultCharset();
-  }
-
-  public abstract T getValue();
-
-  public String getSeparator() {
-    return "/";
-  }
-
-  public @Nullable Image getIcon() {
-    return null;
-  }
-
-  /**
-   * Called in background thread without ReadLock OR in EDT
-   *
-   * @see DiffRequestProducer#process
-   */
-  public DiffContent createDiffContent(@Nullable Project project, ProgressIndicator indicator)
-          throws DiffRequestProducerException, ProcessCanceledException {
-    try {
-      T src = getValue();
-      if (src instanceof VirtualFile) {
-        return DiffContentFactory.getInstance().create(project, (VirtualFile)src);
-      }
-
-      byte[] content = getContent();
-      if (content == null) throw new DiffRequestProducerException("Can't get content");
-
-      return DiffContentFactory.getInstance().create(new String(content, getCharset()), getFileType());
+    public String getPresentablePath() {
+        return getName();
     }
-    catch (IOException e) {
-      throw new DiffRequestProducerException(e);
+
+    public abstract long getSize();
+
+    public abstract long getTimeStamp();
+
+    public FileType getFileType() {
+        return FileTypeRegistry.getInstance().getFileTypeByFileName(getName());
     }
-  }
 
-  public @Nullable Callable<DiffElement<T>> getElementChooser(Project project) {
-    return null;
-  }
+    public abstract boolean isContainer();
 
-  /**
-   * Defines is it possible to perform such operations as copy or delete through Diff Panel
-   *
-   * @return <code>true</code> if copy, delete, etc operations are allowed,
-   *        <code>false</code> otherwise
-   */
-  public boolean isOperationsEnabled() {
-    return false;
-  }
+    public abstract DiffElement[] getChildren() throws IOException;
 
-  /**
-   * Copies element to the container.
-   *
-   * @param container file directory or other container
-   * @param relativePath relative path from root
-   * @return <code>true</code> if coping was completed successfully,
-   *        <code>false</code> otherwise
-   */
-  public @Nullable DiffElement<?> copyTo(DiffElement<T> container, String relativePath) {
-    return null;
-  }
+    public @Nullable Navigable getNavigable(@Nullable Project project) {
+        return null;
+    }
 
-  /**
-   * Deletes element
-   * @return <code>true</code> if deletion was completed successfully,
-   *        <code>false</code> otherwise
-   */
-  public boolean delete() {
-    return false;
-  }
+    @Deprecated
+    @DeprecationInfo("Use #NAVIGABLE_ARRAY with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public final @Nullable Navigatable getNavigatable(@Nullable Project project) {
+        return (Navigatable) getNavigable(project);
+    }
 
-  public void refresh(boolean userInitiated) throws IOException{
-  }
+    /**
+     * Returns content data as byte array. Can be null, if element for example is a container
+     *
+     * @return content byte array
+     * @throws IOException when reading
+     */
+    public abstract byte @Nullable [] getContent() throws IOException;
+
+    public Charset getCharset() {
+        return EncodingManager.getInstance().getDefaultCharset();
+    }
+
+    public abstract T getValue();
+
+    public String getSeparator() {
+        return "/";
+    }
+
+    public @Nullable Image getIcon() {
+        return null;
+    }
+
+    /**
+     * Called in background thread without ReadLock OR in EDT
+     *
+     * @see DiffRequestProducer#process
+     */
+    public DiffContent createDiffContent(@Nullable Project project, ProgressIndicator indicator)
+        throws DiffRequestProducerException, ProcessCanceledException {
+        try {
+            T src = getValue();
+            if (src instanceof VirtualFile) {
+                return DiffContentFactory.getInstance().create(project, (VirtualFile) src);
+            }
+
+            byte[] content = getContent();
+            if (content == null) {
+                throw new DiffRequestProducerException("Can't get content");
+            }
+
+            return DiffContentFactory.getInstance().create(new String(content, getCharset()), getFileType());
+        }
+        catch (IOException e) {
+            throw new DiffRequestProducerException(e);
+        }
+    }
+
+    public @Nullable Callable<DiffElement<T>> getElementChooser(Project project) {
+        return null;
+    }
+
+    /**
+     * Defines is it possible to perform such operations as copy or delete through Diff Panel
+     *
+     * @return <code>true</code> if copy, delete, etc operations are allowed,
+     * <code>false</code> otherwise
+     */
+    public boolean isOperationsEnabled() {
+        return false;
+    }
+
+    /**
+     * Copies element to the container.
+     *
+     * @param container    file directory or other container
+     * @param relativePath relative path from root
+     * @return <code>true</code> if coping was completed successfully,
+     * <code>false</code> otherwise
+     */
+    public @Nullable DiffElement<?> copyTo(DiffElement<T> container, String relativePath) {
+        return null;
+    }
+
+    /**
+     * Deletes element
+     *
+     * @return <code>true</code> if deletion was completed successfully,
+     * <code>false</code> otherwise
+     */
+    public boolean delete() {
+        return false;
+    }
+
+    public void refresh(boolean userInitiated) throws IOException {
+    }
 }

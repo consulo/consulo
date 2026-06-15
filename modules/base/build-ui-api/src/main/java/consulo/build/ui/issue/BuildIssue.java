@@ -15,27 +15,35 @@
  */
 package consulo.build.ui.issue;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
+ * From kotlin
+ *
  * @author VISTALL
- * @since 14/01/2021
- * <p>
- * from kotlin
+ * @since 2021-01-14
  */
 public interface BuildIssue {
-  
-  String getTitle();
+    String getTitle();
 
-  
-  String getDescription();
+    String getDescription();
 
-  
-  List<BuildIssueQuickFix> getQuickFixes();
+    List<BuildIssueQuickFix> getQuickFixes();
 
-  @Nullable Navigatable getNavigatable(Project project);
+    @Nullable
+    Navigable getNavigable(Project project);
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getNavigatable(Project project) {
+        return (Navigatable) getNavigable(project);
+    }
 }

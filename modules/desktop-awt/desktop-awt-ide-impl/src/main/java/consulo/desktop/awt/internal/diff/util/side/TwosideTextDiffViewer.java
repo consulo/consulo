@@ -41,7 +41,7 @@ import consulo.diff.util.LineCol;
 import consulo.diff.util.Side;
 import consulo.document.event.DocumentEvent;
 import consulo.logging.Logger;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -55,14 +55,11 @@ import java.util.List;
 public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditorHolder> {
     public static final Logger LOG = Logger.getInstance(TwosideTextDiffViewer.class);
 
-   
     private final List<? extends EditorEx> myEditableEditors;
     private @Nullable List<? extends EditorEx> myEditors;
 
-   
     protected final SetEditorSettingsAction myEditorSettingsAction;
 
-   
     private final MyVisibleAreaListener myVisibleAreaListener = new MyVisibleAreaListener();
 
     private SyncScrollSupport.@Nullable TwosideSyncScrollSupport mySyncScrollSupport;
@@ -103,7 +100,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         super.onDispose();
     }
 
-   
     @Override
     protected List<TextEditorHolder> createEditorHolders(EditorHolderFactory<TextEditorHolder> factory) {
         List<TextEditorHolder> holders = super.createEditorHolders(factory);
@@ -124,7 +120,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return holders;
     }
 
-   
     @Override
     protected List<JComponent> createTitles() {
         return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createTextTitles(myRequest, getEditors()));
@@ -134,12 +129,10 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Diff
     //
 
-   
     public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
-   
     protected List<AnAction> createEditorPopupActions() {
         return TextDiffViewerUtil.createEditorPopupActions();
     }
@@ -194,13 +187,11 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Getters
     //
 
-   
     protected List<? extends DocumentContent> getContents() {
         //noinspection unchecked
         return (List) myRequest.getContents();
     }
 
-   
     public List<? extends EditorEx> getEditors() {
         if (myEditors == null) {
             myEditors = ContainerUtil.map(getEditorHolders(), holder -> holder.getEditor());
@@ -208,32 +199,26 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return myEditors;
     }
 
-   
     protected List<? extends EditorEx> getEditableEditors() {
         return myEditableEditors;
     }
 
-   
     public EditorEx getCurrentEditor() {
         return getEditor(getCurrentSide());
     }
 
-   
     public DocumentContent getCurrentContent() {
         return getContent(getCurrentSide());
     }
 
-   
     public EditorEx getEditor1() {
         return getEditor(Side.LEFT);
     }
 
-   
     public EditorEx getEditor2() {
         return getEditor(Side.RIGHT);
     }
 
-   
     public EditorEx getEditor(Side side) {
         return side.select(getEditors());
     }
@@ -243,12 +228,10 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return side.select(getContents());
     }
 
-   
     public DocumentContent getContent1() {
         return getContent(Side.LEFT);
     }
 
-   
     public DocumentContent getContent2() {
         return getContent(Side.RIGHT);
     }
@@ -262,7 +245,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
     @RequiredUIAccess
-   
     protected LineCol transferPosition(Side baseSide, LineCol position) {
         if (mySyncScrollSupport == null) {
             return position;
@@ -285,17 +267,17 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
     @Override
     @RequiredUIAccess
-    protected @Nullable Navigatable getNavigatable() {
+    protected @Nullable Navigable getNavigable() {
         Side side = getCurrentSide();
 
         LineCol position = LineCol.fromCaret(getEditor(side));
-        Navigatable navigatable = getContent(side).getNavigatable(position);
-        if (navigatable != null) {
-            return navigatable;
+        Navigable navigable = getContent(side).getNavigable(position);
+        if (navigable != null) {
+            return navigable;
         }
 
         LineCol otherPosition = transferPosition(side, position);
-        return getContent(side.other()).getNavigatable(otherPosition);
+        return getContent(side.other()).getNavigable(otherPosition);
     }
 
     public static boolean canShowRequest(DiffContext context, DiffRequest request) {
@@ -334,13 +316,13 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
     private class MyOpenInEditorWithMouseAction extends OpenInEditorWithMouseAction {
         @Override
-        protected Navigatable getNavigatable(Editor editor, int line) {
+        protected Navigable getNavigable(Editor editor, int line) {
             Side side = Side.fromValue(getEditors(), editor);
             if (side == null) {
                 return null;
             }
 
-            return getContent(side).getNavigatable(new LineCol(line));
+            return getContent(side).getNavigable(new LineCol(line));
         }
     }
 
