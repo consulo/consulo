@@ -15,6 +15,7 @@
  */
 package consulo.language;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.Application;
 import consulo.language.file.LanguageFileType;
@@ -137,6 +138,8 @@ public abstract class Language extends UserDataHolderBase {
     /**
      * @return collection of all languages registered so far.
      */
+    @Deprecated
+    @DeprecationInfo("Use LanguageRegistry")
     public static Collection<Language> getRegisteredLanguages() {
         return Collections.unmodifiableCollection(ourRegisteredLanguages.values());
     }
@@ -322,6 +325,8 @@ public abstract class Language extends UserDataHolderBase {
         return false;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use LanguageRegistry")
     public static @Nullable Language findLanguageByID(String id) {
         Collection<Language> languages = getRegisteredLanguages();
         for (Language language : languages) {

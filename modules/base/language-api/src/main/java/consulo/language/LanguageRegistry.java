@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,22 @@
  */
 package consulo.language;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.pointer.NamedPointer;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 18:31/31.08.13
+ * @since 2026-06-16
  */
-public class LanguagePointerUtil {
-  private static final Map<String, NamedPointer<Language>> ourPointersCache = new ConcurrentHashMap<>();
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface LanguageRegistry {
+    @Nullable Language findLanguage(String languageId);
 
-  
-  public static NamedPointer<Language> createPointer(String name) {
-    NamedPointer<Language> languageNamedPointer = ourPointersCache.get(name);
-    if(languageNamedPointer != null) {
-      return languageNamedPointer;
-    }
-    languageNamedPointer = new LanguagePointerImpl(name);
-    ourPointersCache.put(name, languageNamedPointer);
-    return languageNamedPointer;
-  }
+    NamedPointer<Language> createLanguagePointer(String languageId);
+
+    Collection<Language> getLanguages();
 }

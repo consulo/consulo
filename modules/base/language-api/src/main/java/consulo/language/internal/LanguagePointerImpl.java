@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language;
+package consulo.language.internal;
 
 import consulo.component.util.pointer.NamedPointer;
+import consulo.language.Language;
+import consulo.language.LanguageRegistry;
+import consulo.util.lang.lazy.ClearableLazyValue;
 import consulo.util.lang.lazy.LazyValue;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -25,22 +29,29 @@ import java.util.function.Supplier;
  * @since 2013-08-31
  */
 class LanguagePointerImpl implements NamedPointer<Language> {
-  private String myId;
+    private String myId;
 
-  private final Supplier<Language> myValue;
+    private final LanguageRegistry myLanguageRegistry;
 
-  public LanguagePointerImpl(String id) {
-    myId = id;
-    myValue = LazyValue.nullable(() -> Language.findLanguageByID(myId));
-  }
+    private final ClearableLazyValue<Language> myValue;
 
-  @Override
-  public String getName() {
-    return myId;
-  }
+    public LanguagePointerImpl(String id, LanguageRegistry languageRegistry) {
+        myId = id;
+        myLanguageRegistry = languageRegistry;
+        myValue = ClearableLazyValue.nullable(() -> myLanguageRegistry.findLanguage(id));
+    }
 
-  @Override
-  public Language get() {
-    return myValue.get();
-  }
+    public void reset() {
+        myValue.clear();
+    }
+
+    @Override
+    public String getName() {
+        return myId;
+    }
+
+    @Override
+    public @Nullable Language get() {
+        return myValue.get();
+    }
 }
