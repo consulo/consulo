@@ -15,30 +15,17 @@
  */
 package consulo.language.ast;
 
-import consulo.language.Language;
+import consulo.language.internal.TokenTypeInternal;
 
-/**
- * The standard lexer token types common to all languages.
- */
-public interface TokenType {
-  /**
-   * Token type for a sequence of whitespace characters.
-   */
-  IElementType WHITE_SPACE = new IElementType("WHITE_SPACE", Language.ANY);
-
-  /**
-   * Token type for a character which is not valid in the position where it was encountered,
-   * according to the language grammar.
-   */
-  IElementType BAD_CHARACTER = new IElementType("BAD_CHARACTER", Language.ANY);
-
-  /**
-   * Internal token type used by the code formatter.
-   */
-  IElementType NEW_LINE_INDENT = new IElementType("NEW_LINE_INDENT", Language.ANY);
-
-  IElementType ERROR_ELEMENT = new IElementType("ERROR_ELEMENT", Language.ANY);
-
-  IElementType CODE_FRAGMENT = new IFileElementType("CODE_FRAGMENT", Language.ANY);
-  IElementType DUMMY_HOLDER = new IFileElementType("DUMMY_HOLDER", Language.ANY);
+public sealed interface TokenType permits TokenTypeInternal, StandardTokenTypes {
+    @Deprecated
+    IElementType WHITE_SPACE = StandardTokenTypes.WHITE_SPACE;
+    @Deprecated
+    IElementType BAD_CHARACTER = StandardTokenTypes.BAD_CHARACTER;
+    @Deprecated
+    IElementType ERROR_ELEMENT = StandardTokenTypes.ERROR_ELEMENT;
+    @Deprecated
+    IElementType CODE_FRAGMENT = StandardTokenTypes.CODE_FRAGMENT;
+    @Deprecated
+    IElementType DUMMY_HOLDER = StandardTokenTypes.DUMMY_HOLDER;
 }

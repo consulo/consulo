@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet.lexer;
 
-import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
+import consulo.language.ast.StandardTokenTypes;
 
 /**
  * @author max
  */
-public interface ScopeTokenTypes extends TokenType {
+public interface ScopeTokenTypes extends StandardTokenTypes {
   IElementType IDENTIFIER = new ScopeTokenType("Scope.IDENTIFIER");
   IElementType INTEGER_LITERAL = new ScopeTokenType("Scope.INTEGER_LITERAL");
   IElementType OROR = new ScopeTokenType("Scope.OROR");
