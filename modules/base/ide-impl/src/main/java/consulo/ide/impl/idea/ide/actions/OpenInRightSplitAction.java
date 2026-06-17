@@ -21,7 +21,7 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -31,7 +31,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -52,7 +51,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
-        Navigatable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigatable.class);
+        Navigable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigable.class);
 
         FileEditorWindow editorWindow = openInRightSplit(project, file, element, true);
         if (element == null && editorWindow != null) {
@@ -85,7 +84,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
     public static @Nullable FileEditorWindow openInRightSplit(
         Project project,
         VirtualFile file,
-        @Nullable Navigatable element,
+        @Nullable Navigable element,
         boolean requestFocus
     ) {
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);

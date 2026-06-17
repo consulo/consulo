@@ -11,7 +11,7 @@ import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.compiler.CompilerManager;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.util.collection.Lists;
 import org.jspecify.annotations.Nullable;
@@ -46,13 +46,11 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         }
     }
 
-    
     @Override
     public Object getId() {
         return myId;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> start(BuildProgressDescriptor descriptor) {
         myDescriptor = descriptor;
@@ -61,13 +59,11 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         return this;
     }
 
-    
     protected StartEvent createStartEvent(BuildProgressDescriptor descriptor) {
         assert myParentProgress != null;
         return new StartEventImpl(getId(), myParentProgress.getId(), System.currentTimeMillis(), descriptor.getTitle());
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> startChildProgress(String title) {
         BuildDescriptor buildDescriptor = myDescriptor.getBuildDescriptor();
@@ -75,49 +71,47 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         progress.myListeners.addAll(myListeners);
         return progress.start(new BuildProgressDescriptor() {
 
-            
+
             @Override
             public String getTitle() {
                 return title;
             }
 
             @Override
-            public
-            
-            BuildDescriptor getBuildDescriptor() {
+            public BuildDescriptor getBuildDescriptor() {
                 return buildDescriptor;
             }
         });
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> progress(String title) {
         return progress(title, -1, -1, "");
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> progress(String title, long total, long progress, String unit) {
         Object parentId = myParentProgress != null ? myParentProgress.getId() : null;
-        onEvent(getBuildId(),
-            new ProgressBuildEventImpl(getId(), parentId, System.currentTimeMillis(), title, total, progress, unit));
+        onEvent(
+            getBuildId(),
+            new ProgressBuildEventImpl(getId(), parentId, System.currentTimeMillis(), title, total, progress, unit)
+        );
         return this;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> output(String text, boolean stdOut) {
         onEvent(getBuildId(), new OutputBuildEventImpl(getId(), text, stdOut));
         return this;
     }
 
-    
     @Override
-    public BuildProgress<BuildProgressDescriptor> fileMessage(String title,
-                                                              String message,
-                                                              MessageEvent.Kind kind,
-                                                              FilePosition filePosition) {
+    public BuildProgress<BuildProgressDescriptor> fileMessage(
+        String title,
+        String message,
+        MessageEvent.Kind kind,
+        FilePosition filePosition
+    ) {
         StringBuilder fileLink = new StringBuilder(filePosition.getFile().getPath());
         if (filePosition.getStartLine() > 0) {
             fileLink.append(":").append(filePosition.getStartLine() + 1);
@@ -132,41 +126,38 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         return this;
     }
 
-    
     @Override
-    public BuildProgress<BuildProgressDescriptor> message(String title,
-                                                          String message,
-                                                          MessageEvent.Kind kind,
-                                                          @Nullable Navigatable navigatable) {
+    public BuildProgress<BuildProgressDescriptor> message(
+        String title,
+        String message,
+        MessageEvent.Kind kind,
+        @Nullable Navigable navigable
+    ) {
         MessageEventImpl event = new MessageEventImpl(getId(), kind, BuildNotificationsGroups.BUILD_ISSUES, title, message) {
             @Override
-            public @Nullable Navigatable getNavigatable(Project project) {
-                return navigatable;
+            public @Nullable Navigable getNavigable(Project project) {
+                return navigable;
             }
         };
         onEvent(getBuildId(), event);
         return this;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> finish() {
         return finish(false);
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> finish(boolean isUpToDate) {
         return finish(System.currentTimeMillis(), isUpToDate, myDescriptor.getTitle());
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> finish(long timeStamp) {
         return finish(timeStamp, false, myDescriptor.getTitle());
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, String message) {
         assertStarted();
@@ -177,13 +168,11 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         return myParentProgress;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> fail() {
         return fail(System.currentTimeMillis(), myDescriptor.getTitle());
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> fail(long timeStamp, String message) {
         assertStarted();
@@ -193,13 +182,11 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         return myParentProgress;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> cancel() {
         return cancel(System.currentTimeMillis(), myDescriptor.getTitle());
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> cancel(long timeStamp, String message) {
         assertStarted();
@@ -210,7 +197,6 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    
     public BuildProgress<BuildProgressDescriptor> buildIssue(BuildIssue issue, MessageEvent.Kind kind) {
         onEvent(getBuildId(), new BuildIssueEventImpl(getId(), issue, kind));
         return this;

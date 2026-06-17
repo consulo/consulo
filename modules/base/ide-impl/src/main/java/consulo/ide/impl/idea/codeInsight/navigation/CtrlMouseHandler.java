@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -47,7 +48,7 @@ import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -370,7 +371,14 @@ public final class CtrlMouseHandler {
 
         public abstract boolean isValid(Document document);
 
-        public abstract boolean isNavigatable();
+        public abstract boolean isNavigable();
+
+        @Deprecated
+        @DeprecationInfo("Use #isNavigable(), typo-corrected name")
+        @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+        public final boolean isNavigatable() {
+            return isNavigable();
+        }
 
         boolean rangesAreCorrect(Document document) {
             TextRange docRange = new TextRange(0, document.getTextLength());
@@ -405,7 +413,7 @@ public final class CtrlMouseHandler {
 
         @Override
         public DocInfo getInfo() {
-            return areElementsValid() ? generateInfo(myTargetElement, myElementAtPointer, isNavigatable()) : DocInfo.EMPTY;
+            return areElementsValid() ? generateInfo(myTargetElement, myElementAtPointer, isNavigable()) : DocInfo.EMPTY;
         }
 
         @RequiredReadAction
@@ -414,12 +422,13 @@ public final class CtrlMouseHandler {
         }
 
         @Override
+        @RequiredReadAction
         public boolean isValid(Document document) {
             return areElementsValid() && rangesAreCorrect(document);
         }
 
         @Override
-        public boolean isNavigatable() {
+        public boolean isNavigable() {
             return myTargetElement != myElementAtPointer && myTargetElement != myElementAtPointer.getParent();
         }
     }
@@ -445,7 +454,7 @@ public final class CtrlMouseHandler {
         }
 
         @Override
-        public boolean isNavigatable() {
+        public boolean isNavigable() {
             return true;
         }
     }
@@ -521,7 +530,7 @@ public final class CtrlMouseHandler {
                 return null;
             }
             if (targetElements.length == 1) {
-                Navigatable descriptor = EditSourceUtil.getDescriptor(targetElements[0]);
+                Navigable descriptor = EditSourceUtil.getDescriptor(targetElements[0]);
                 if (descriptor == null || !descriptor.canNavigate()) {
                     return null;
                 }
@@ -544,7 +553,6 @@ public final class CtrlMouseHandler {
 
                 if (baseDocInfo != DocInfo.EMPTY && !StringUtil.isEmptyOrSpaces(baseDocInfo.text)) {
                     return new Info(identifier) {
-                        
                         @Override
                         public DocInfo getInfo() {
                             StringBuilder builder = new StringBuilder("<small>Show usages of </small><br>");
@@ -558,14 +566,13 @@ public final class CtrlMouseHandler {
                         }
 
                         @Override
-                        public boolean isNavigatable() {
+                        public boolean isNavigable() {
                             return true;
                         }
                     };
                 }
                 else {
                     return new Info(identifier) {
-                        
                         @Override
                         public DocInfo getInfo() {
                             String name = UsageViewUtil.getType(element) + " '" + UsageViewUtil.getShortName(element) + "'";
@@ -573,12 +580,13 @@ public final class CtrlMouseHandler {
                         }
 
                         @Override
+                        @RequiredReadAction
                         public boolean isValid(Document document) {
                             return element.isValid();
                         }
 
                         @Override
-                        public boolean isNavigatable() {
+                        public boolean isNavigable() {
                             return true;
                         }
                     };
@@ -606,6 +614,7 @@ public final class CtrlMouseHandler {
         return resolvedElement == null ? Collections.emptyList() : Collections.singletonList(resolvedElement);
     }
 
+    @RequiredUIAccess
     public void disposeHighlighter() {
         HighlightersSet highlighter = myHighlighter;
         if (highlighter != null) {
@@ -698,6 +707,7 @@ public final class CtrlMouseHandler {
             return myBrowseMode;
         }
 
+        @RequiredUIAccess
         void execute(BrowseMode browseMode) {
             myBrowseMode = browseMode;
 
@@ -724,6 +734,7 @@ public final class CtrlMouseHandler {
             return CtrlMouseHandler.this::disposeHighlighter;
         }
 
+        @RequiredReadAction
         private Runnable doExecute() {
             EditorEx editor = getPossiblyInjectedEditor();
             int offset = getOffset(editor);
@@ -768,6 +779,7 @@ public final class CtrlMouseHandler {
             return editor instanceof EditorWindow ? ((EditorWindow) editor).getDocument().hostToInjected(myHostOffset) : myHostOffset;
         }
 
+        @RequiredUIAccess
         private void addHighlighterAndShowHint(Info info, DocInfo docInfo, EditorEx editor) {
             if (myDisposed || editor.isDisposed()) {
                 return;
@@ -778,14 +790,14 @@ public final class CtrlMouseHandler {
                 }
                 else {
                     // highlighter already set
-                    if (info.isNavigatable()) {
+                    if (info.isNavigable()) {
                         editor.setCustomCursor(CtrlMouseHandler.class, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     }
                     return;
                 }
             }
 
-            if (!info.isValid(editor.getDocument()) || !info.isNavigatable() && docInfo.text == null) {
+            if (!info.isValid(editor.getDocument()) || !info.isNavigable() && docInfo.text == null) {
                 return;
             }
 
@@ -815,7 +827,6 @@ public final class CtrlMouseHandler {
             }
         }
 
-        
         private JComponent wrapInScrollPaneIfNeeded(JComponent component, Editor editor) {
             if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
                 Dimension preferredSize = component.getPreferredSize();
@@ -842,21 +853,29 @@ public final class CtrlMouseHandler {
             }
             Disposable hintDisposable = Disposable.newDisposable("CtrlMouseHandler.TooltipProvider.updateOnPsiChanges");
             hint.addHintListener(__ -> Disposer.dispose(hintDisposable));
-            myProject.getMessageBus().connect(hintDisposable).subscribe(PsiModificationTrackerListener.class, () -> ReadAction.nonBlocking(() -> {
-                    try {
-                        DocInfo newDocInfo = info.getInfo();
-                        return (Runnable) () -> {
-                            if (newDocInfo.text != null && !oldText.equals(newDocInfo.text)) {
-                                updateText(newDocInfo.text, textConsumer, hint, editor);
-                            }
-                        };
-                    }
-                    catch (IndexNotReadyException e) {
-                        showDumbModeNotification(myProject);
-                        return createDisposalContinuation();
-                    }
-                }).finishOnUiThread(Application::getDefaultModalityState, Runnable::run).withDocumentsCommitted(myProject).expireWith(hintDisposable).expireWhen(() -> !info.isValid(editor.getDocument()))
-                .coalesceBy(hint).submit(AppExecutorUtil.getAppExecutorService()));
+            myProject.getMessageBus().connect(hintDisposable).subscribe(
+                PsiModificationTrackerListener.class,
+                () -> ReadAction.nonBlocking(() -> {
+                        try {
+                            DocInfo newDocInfo = info.getInfo();
+                            return (Runnable) () -> {
+                                if (newDocInfo.text != null && !oldText.equals(newDocInfo.text)) {
+                                    updateText(newDocInfo.text, textConsumer, hint, editor);
+                                }
+                            };
+                        }
+                        catch (IndexNotReadyException e) {
+                            showDumbModeNotification(myProject);
+                            return createDisposalContinuation();
+                        }
+                    })
+                    .finishOnUiThread(Application::getDefaultModalityState, Runnable::run)
+                    .withDocumentsCommitted(myProject)
+                    .expireWith(hintDisposable)
+                    .expireWhen(() -> !info.isValid(editor.getDocument()))
+                    .coalesceBy(hint)
+                    .submit(AppExecutorUtil.getAppExecutorService())
+            );
         }
 
         @RequiredUIAccess
@@ -880,14 +899,14 @@ public final class CtrlMouseHandler {
     private HighlightersSet installHighlighterSet(Info info, EditorEx editor, boolean highlighterOnly) {
         editor.getContentComponent().addKeyListener(myEditorKeyListener);
         editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
-        if (info.isNavigatable()) {
+        if (info.isNavigable()) {
             editor.setCustomCursor(CtrlMouseHandler.class, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
 
         List<RangeHighlighter> highlighters = new ArrayList<>();
 
-        if (!highlighterOnly || info.isNavigatable()) {
-            TextAttributes attributes = info.isNavigatable()
+        if (!highlighterOnly || info.isNavigable()) {
+            TextAttributes attributes = info.isNavigable()
                 ? EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR)
                 : new TextAttributes(null, HintUtil.getInformationColor(), null, null, Font.PLAIN);
             for (TextRange range : info.getRanges()) {
@@ -937,7 +956,6 @@ public final class CtrlMouseHandler {
             myHighlighterView.getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener);
         }
 
-        
         Info getStoredInfo() {
             return myStoredInfo;
         }

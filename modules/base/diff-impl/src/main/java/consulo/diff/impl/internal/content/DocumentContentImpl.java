@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.content;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.diff.content.DiffContentBase;
@@ -22,11 +23,13 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.util.LineCol;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.platform.LineSeparator;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
@@ -37,133 +40,140 @@ import java.nio.charset.Charset;
  * Allows to compare some text associated with document.
  */
 public class DocumentContentImpl extends DiffContentBase implements DocumentContent {
-  private final @Nullable Project myProject;
+    private final @Nullable Project myProject;
 
-  
-  private final Document myDocument;
-
-  private final @Nullable FileType myType;
-  private final @Nullable VirtualFile myHighlightFile;
-
-  private final @Nullable LineSeparator mySeparator;
-  private final @Nullable Charset myCharset;
-  private final @Nullable Boolean myBOM;
-
-  public DocumentContentImpl(Document document) {
-    this(null, document, null, null, null, null, null);
-  }
-
-  public DocumentContentImpl(@Nullable Project project,
-                             Document document,
-                             @Nullable FileType type,
-                             @Nullable VirtualFile highlightFile,
-                             @Nullable LineSeparator separator,
-                             @Nullable Charset charset,
-                             @Nullable Boolean bom) {
-    myProject = project;
-    myDocument = document;
-    myType = type;
-    myHighlightFile = highlightFile;
-    mySeparator = separator;
-    myCharset = charset;
-    myBOM = bom;
-  }
-
-  public @Nullable Project getProject() {
-    return myProject;
-  }
-
-  
-  @Override
-  public Document getDocument() {
-    return myDocument;
-  }
-
-  @Override
-  public @Nullable VirtualFile getHighlightFile() {
-    return myHighlightFile;
-  }
-
-  @Override
-  public @Nullable Navigatable getNavigatable(LineCol position) {
-    if (myProject == null || getHighlightFile() == null || !getHighlightFile().isValid()) return null;
-    return new MyNavigatable(myProject, getHighlightFile(), getDocument(), position);
-  }
-
-  @Override
-  public @Nullable Navigatable getNavigatable() {
-    return getNavigatable(new LineCol(0));
-  }
-
-  @Override
-  public @Nullable LineSeparator getLineSeparator() {
-    return mySeparator;
-  }
-
-  @Override
-  public @Nullable Boolean hasBom() {
-    return myBOM;
-  }
-
-  @Override
-  public @Nullable FileType getContentType() {
-    return myType;
-  }
-
-  @Override
-  public @Nullable Charset getCharset() {
-    return myCharset;
-  }
-
-  private static class MyNavigatable implements Navigatable {
-    
-    private final Project myProject;
-    
-    private final VirtualFile myTargetFile;
-    
     private final Document myDocument;
-    
-    private final LineCol myPosition;
 
-    public MyNavigatable(Project project, VirtualFile targetFile, Document document, LineCol position) {
-      myProject = project;
-      myTargetFile = targetFile;
-      myDocument = document;
-      myPosition = position;
+    private final @Nullable FileType myType;
+    private final @Nullable VirtualFile myHighlightFile;
+
+    private final @Nullable LineSeparator mySeparator;
+    private final @Nullable Charset myCharset;
+    private final @Nullable Boolean myBOM;
+
+    public DocumentContentImpl(Document document) {
+        this(null, document, null, null, null, null, null);
+    }
+
+    public DocumentContentImpl(
+        @Nullable Project project,
+        Document document,
+        @Nullable FileType type,
+        @Nullable VirtualFile highlightFile,
+        @Nullable LineSeparator separator,
+        @Nullable Charset charset,
+        @Nullable Boolean bom
+    ) {
+        myProject = project;
+        myDocument = document;
+        myType = type;
+        myHighlightFile = highlightFile;
+        mySeparator = separator;
+        myCharset = charset;
+        myBOM = bom;
+    }
+
+    public @Nullable Project getProject() {
+        return myProject;
     }
 
     @Override
-    public void navigate(boolean requestFocus) {
-      Document targetDocument = FileDocumentManager.getInstance().getDocument(myTargetFile);
-      LineCol targetPosition = translatePosition(myDocument, targetDocument, myPosition);
-      OpenFileDescriptor descriptor = OpenFileDescriptorFactory.getInstance(myProject)
-                                                               .newBuilder(myTargetFile)
-                                                               .line(targetPosition.line)
-                                                               .column(targetPosition.column)
-                                                               .build();
-      if (descriptor.canNavigate()) descriptor.navigate(true);
+    public Document getDocument() {
+        return myDocument;
     }
 
     @Override
-    public boolean canNavigate() {
-      return myTargetFile.isValid();
+    public @Nullable VirtualFile getHighlightFile() {
+        return myHighlightFile;
     }
 
     @Override
-    public boolean canNavigateToSource() {
-      return false;
+    public @Nullable Navigable getNavigable(LineCol position) {
+        if (myProject == null || getHighlightFile() == null || !getHighlightFile().isValid()) {
+            return null;
+        }
+        return new MyNavigable(myProject, getHighlightFile(), getDocument(), position);
     }
 
-    
-    private static LineCol translatePosition(Document fromDocument, @Nullable Document toDocument, LineCol position) {
-      try {
-        if (toDocument == null) return position;
-        int targetLine = Diff.translateLine(fromDocument.getCharsSequence(), toDocument.getCharsSequence(), position.line, true);
-        return new LineCol(targetLine, position.column);
-      }
-      catch (FilesTooBigForDiffException ignore) {
-        return position;
-      }
+    @Override
+    public @Nullable Navigable getNavigable() {
+        return getNavigable(new LineCol(0));
     }
-  }
+
+    @Override
+    public @Nullable LineSeparator getLineSeparator() {
+        return mySeparator;
+    }
+
+    @Override
+    public @Nullable Boolean hasBom() {
+        return myBOM;
+    }
+
+    @Override
+    public @Nullable FileType getContentType() {
+        return myType;
+    }
+
+    @Override
+    public @Nullable Charset getCharset() {
+        return myCharset;
+    }
+
+    private static class MyNavigable implements Navigatable {
+        private final Project myProject;
+
+        private final VirtualFile myTargetFile;
+
+        private final Document myDocument;
+
+        private final LineCol myPosition;
+
+        public MyNavigable(Project project, VirtualFile targetFile, Document document, LineCol position) {
+            myProject = project;
+            myTargetFile = targetFile;
+            myDocument = document;
+            myPosition = position;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void navigate(boolean requestFocus) {
+            Document targetDocument = FileDocumentManager.getInstance().getDocument(myTargetFile);
+            LineCol targetPosition = translatePosition(myDocument, targetDocument, myPosition);
+            OpenFileDescriptor descriptor = OpenFileDescriptorFactory.getInstance(myProject)
+                .newBuilder(myTargetFile)
+                .line(targetPosition.line)
+                .column(targetPosition.column)
+                .build();
+            if (descriptor.canNavigate()) {
+                descriptor.navigate(true);
+            }
+        }
+
+        @Override
+        @RequiredReadAction
+        public boolean canNavigate() {
+            return myTargetFile.isValid();
+        }
+
+        @Override
+        @RequiredReadAction
+        public boolean canNavigateToSource() {
+            return false;
+        }
+
+        private static LineCol translatePosition(Document fromDocument, @Nullable Document toDocument, LineCol position) {
+            try {
+                if (toDocument == null) {
+                    return position;
+                }
+                int targetLine = Diff.translateLine(fromDocument.getCharsSequence(), toDocument.getCharsSequence(), position.line, true);
+                return new LineCol(targetLine, position.column);
+            }
+            catch (FilesTooBigForDiffException ignore) {
+                return position;
+            }
+        }
+    }
 }

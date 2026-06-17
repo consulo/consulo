@@ -15,8 +15,10 @@
  */
 package consulo.execution.test.sm;
 
-import consulo.project.Project;
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -25,5 +27,12 @@ import org.jspecify.annotations.Nullable;
  */
 @Deprecated
 public interface SMStacktraceParser {
-    @Nullable Navigatable getErrorNavigatable(Project project, String stacktrace);
+    @Nullable Navigable getErrorNavigable(Project project, String stacktrace);
+
+    @Deprecated
+    @DeprecationInfo("Use #getErrorNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getErrorNavigatable(Project project, String stacktrace) {
+        return (Navigatable) getErrorNavigable(project, stacktrace);
+    }
 }

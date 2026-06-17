@@ -15,13 +15,13 @@
  */
 package consulo.execution.debug.frame;
 
-import consulo.execution.debug.XSourcePosition;
-
-import org.jspecify.annotations.Nullable;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author nik
  */
-public interface XNavigatable {
-  void setSourcePosition(@Nullable XSourcePosition sourcePosition);
+@Deprecated
+@DeprecationInfo("Use XNavigable, typo-corrected name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public interface XNavigatable extends XNavigable {
 }

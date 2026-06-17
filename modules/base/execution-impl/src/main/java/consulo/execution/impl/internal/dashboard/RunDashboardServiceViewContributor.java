@@ -1,6 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.dashboard;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
@@ -26,11 +27,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.dnd.DnDEvent;
@@ -321,7 +324,7 @@ public final class RunDashboardServiceViewContributor
         }
 
         @Override
-        public @Nullable Navigatable getNavigatable() {
+        public @Nullable Navigable getNavigable() {
             Supplier<PsiElement> value = LazyValue.nullable(() -> {
                 for (RunDashboardCustomizer customizer : myNode.getCustomizers()) {
                     PsiElement psiElement = customizer.getPsiElement(myNode);
@@ -333,21 +336,23 @@ public final class RunDashboardServiceViewContributor
             });
             return new Navigatable() {
                 @Override
+                @RequiredUIAccess
                 public void navigate(boolean requestFocus) {
                     PsiNavigateUtil.navigate(value.get(), requestFocus);
                 }
 
                 @Override
+                @RequiredReadAction
                 public boolean canNavigate() {
                     return value.get() != null;
                 }
 
                 @Override
+                @RequiredReadAction
                 public boolean canNavigateToSource() {
                     return canNavigate();
                 }
             };
-
         }
 
         @Override

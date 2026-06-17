@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 
@@ -49,11 +51,18 @@ public interface CompilerMessage {
     String getMessage();
 
     /**
-     * Returns the navigatable object allowing to navigate to the message source.
+     * Returns the navigable object allowing to navigate to the message source.
      *
      * @return the instance.
      */
-    @Nullable Navigatable getNavigatable();
+    @Nullable Navigable getNavigable();
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getNavigatable() {
+        return (Navigatable) getNavigable();
+    }
 
     /**
      * Returns the file to which the message applies.

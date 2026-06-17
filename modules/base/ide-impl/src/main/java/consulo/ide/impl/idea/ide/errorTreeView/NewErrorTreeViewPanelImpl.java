@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -24,16 +25,17 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.ExportToTextFileToolbarAction;
-import consulo.project.ui.action.NextOccurenceToolbarAction;
-import consulo.project.ui.action.PreviousOccurenceToolbarAction;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorViewTextExporter;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.action.NextOccurenceToolbarAction;
+import consulo.project.ui.action.PreviousOccurenceToolbarAction;
 import consulo.project.ui.view.MessageView;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
@@ -213,9 +215,9 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         if (KEY == dataId) {
             return this;
         }
-        if (Navigatable.KEY == dataId) {
-            NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
-            return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
+        if (Navigable.KEY == dataId) {
+            NavigableMessageElement selectedMessageElement = getSelectedMessageElement();
+            return selectedMessageElement != null ? selectedMessageElement.getNavigable() : null;
         }
         else if (HelpManager.HELP_ID == dataId) {
             return myHelpId;
@@ -227,7 +229,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             return myExporterToTextFile;
         }
         else if (CURRENT_EXCEPTION_DATA_KEY == dataId) {
-            NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
+            NavigableMessageElement selectedMessageElement = getSelectedMessageElement();
             return selectedMessageElement != null ? selectedMessageElement.getData() : null;
         }
         return null;
@@ -307,7 +309,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         int type,
         String[] text,
         @Nullable String groupName,
-        Navigatable navigatable,
+        Navigable navigable,
         @Nullable String exportTextPrefix,
         @Nullable String rendererTextPrefix,
         @Nullable Object data
@@ -316,13 +318,13 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             return;
         }
         VirtualFile file = data instanceof VirtualFile ? (VirtualFile) data : null;
-        if (file == null && navigatable instanceof OpenFileDescriptorImpl openFileDescriptor) {
+        if (file == null && navigable instanceof OpenFileDescriptorImpl openFileDescriptor) {
             file = openFileDescriptor.getFile();
         }
         String exportPrefix = exportTextPrefix == null ? "" : exportTextPrefix;
         String renderPrefix = rendererTextPrefix == null ? "" : rendererTextPrefix;
         ErrorTreeElementKind kind = ErrorTreeElementKind.convertMessageFromCompilerErrorType(type);
-        myErrorViewStructure.addNavigatableMessage(groupName, navigatable, kind, text, data, exportPrefix, renderPrefix, file);
+        myErrorViewStructure.addNavigableMessage(groupName, navigable, kind, text, data, exportPrefix, renderPrefix, file);
         myBuilder.updateTree();
     }
 
@@ -346,9 +348,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         return this;
     }
 
-    private @Nullable NavigatableMessageElement getSelectedMessageElement() {
-        ErrorTreeElement selectedElement = getSelectedErrorTreeElement();
-        return selectedElement instanceof NavigatableMessageElement ? (NavigatableMessageElement) selectedElement : null;
+    private @Nullable NavigableMessageElement getSelectedMessageElement() {
+        return getSelectedErrorTreeElement() instanceof NavigableMessageElement selectedElement ? selectedElement : null;
     }
 
     public @Nullable ErrorTreeElement getSelectedErrorTreeElement() {
@@ -369,14 +370,15 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
         return (ErrorTreeNodeDescriptor) userObject;
     }
 
+    @RequiredReadAction
     private void navigateToSource(boolean focusEditor) {
-        NavigatableMessageElement element = getSelectedMessageElement();
+        NavigableMessageElement element = getSelectedMessageElement();
         if (element == null) {
             return;
         }
-        Navigatable navigatable = element.getNavigatable();
-        if (navigatable.canNavigate()) {
-            navigatable.navigate(focusEditor);
+        Navigable navigable = element.getNavigable();
+        if (navigable.canNavigate()) {
+            navigable.navigate(focusEditor);
         }
     }
 
@@ -390,7 +392,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             return;
         }
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
-        if (getData(Navigatable.KEY) != null) {
+        if (getData(Navigable.KEY) != null) {
             group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
         }
         group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
@@ -726,8 +728,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
             }
             ErrorTreeNodeDescriptor descriptor = (ErrorTreeNodeDescriptor) userObject;
             ErrorTreeElement element = descriptor.getElement();
-            if (element instanceof NavigatableMessageElement) {
-                return ((NavigatableMessageElement) element).getNavigatable();
+            if (element instanceof NavigableMessageElement navigableMessageElement) {
+                return navigableMessageElement.getNavigatable();
             }
             return null;
         }

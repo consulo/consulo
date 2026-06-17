@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
@@ -22,7 +23,7 @@ import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
@@ -48,7 +49,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
 
     private final List<String> myGroupNames = new ArrayList<>();
     private final Map<String, GroupingElement> myGroupNameToElementMap = new HashMap<>();
-    private final Map<String, List<NavigatableMessageElement>> myGroupNameToMessagesMap = new HashMap<>();
+    private final Map<String, List<NavigableMessageElement>> myGroupNameToMessagesMap = new HashMap<>();
     private final Map<ErrorTreeElementKind, List<ErrorTreeElement>> mySimpleMessages = new EnumMap<>(ErrorTreeElementKind.class);
     private final Object myLock = new Object();
 
@@ -97,20 +98,20 @@ public class ErrorViewStructure extends AbstractTreeStructure {
 
         if (element instanceof GroupingElement) {
             synchronized (myLock) {
-                List<NavigatableMessageElement> children = myGroupNameToMessagesMap.get(((GroupingElement) element).getName());
+                List<NavigableMessageElement> children = myGroupNameToMessagesMap.get(((GroupingElement) element).getName());
                 if (children != null && !children.isEmpty()) {
                     if (myConfiguration != null) {
                         List<ErrorTreeElement> filtered = new ArrayList<>(children.size());
-                        for (NavigatableMessageElement navigatableMessageElement : children) {
-                            ErrorTreeElementKind kind = navigatableMessageElement.getKind();
+                        for (NavigableMessageElement navigableMessageElement : children) {
+                            ErrorTreeElementKind kind = navigableMessageElement.getKind();
                             if (!canShowKind(kind)) {
                                 continue;
                             }
-                            filtered.add(navigatableMessageElement);
+                            filtered.add(navigableMessageElement);
                         }
                         return ArrayUtil.toObjectArray(filtered, ErrorTreeElement.class);
                     }
-                    return ArrayUtil.toObjectArray(children, NavigatableMessageElement.class);
+                    return ArrayUtil.toObjectArray((List) children, NavigatableMessageElement.class);
                 }
             }
         }
@@ -123,9 +124,9 @@ public class ErrorViewStructure extends AbstractTreeStructure {
             return getChildCount(groupingElement) > 0;
         }
         synchronized (myLock) {
-            List<NavigatableMessageElement> children = myGroupNameToMessagesMap.get(groupingElement.getName());
+            List<NavigableMessageElement> children = myGroupNameToMessagesMap.get(groupingElement.getName());
             if (children != null) {
-                for (NavigatableMessageElement child : children) {
+                for (NavigableMessageElement child : children) {
                     ErrorTreeElementKind kind = child.getKind();
                     if (canShowKind(kind)) {
                         return true;
@@ -141,8 +142,8 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         if (element instanceof GroupingElement || element instanceof SimpleMessageElement) {
             return myRoot;
         }
-        if (element instanceof NavigatableMessageElement) {
-            GroupingElement result = ((NavigatableMessageElement) element).getParent();
+        if (element instanceof NavigableMessageElement navigableMessageElement) {
+            GroupingElement result = navigableMessageElement.getParent();
             return result == null ? myRoot : result;
         }
         return null;
@@ -177,20 +178,20 @@ public class ErrorViewStructure extends AbstractTreeStructure {
                 line = column = -1;
             }
 
-            int guiline = line < 0 ? -1 : line + 1;
-            int guicolumn = column < 0 ? -1 : column + 1;
+            int guiLine = line < 0 ? -1 : line + 1;
+            int guiColumn = column < 0 ? -1 : column + 1;
 
             VirtualFile group = underFileGroup != null ? underFileGroup : file;
             VirtualFile nav = file != null ? file : underFileGroup;
 
-            addNavigatableMessage(
+            addNavigableMessage(
                 group.getPresentableUrl(),
                 new OpenFileDescriptorImpl(myProject, nav, line, column),
                 kind,
                 text,
                 data,
-                NewErrorTreeViewPanelImpl.createExportPrefix(guiline),
-                NewErrorTreeViewPanelImpl.createRendererPrefix(guiline, guicolumn),
+                NewErrorTreeViewPanelImpl.createExportPrefix(guiLine),
+                NewErrorTreeViewPanelImpl.createRendererPrefix(guiLine, guiColumn),
                 group
             );
         }
@@ -201,12 +202,12 @@ public class ErrorViewStructure extends AbstractTreeStructure {
 
     public List<Object> getGroupChildrenData(String groupName) {
         synchronized (myLock) {
-            List<NavigatableMessageElement> children = myGroupNameToMessagesMap.get(groupName);
+            List<NavigableMessageElement> children = myGroupNameToMessagesMap.get(groupName);
             if (children == null || children.isEmpty()) {
                 return Collections.emptyList();
             }
             List<Object> result = new ArrayList<>();
-            for (NavigatableMessageElement child : children) {
+            for (NavigableMessageElement child : children) {
                 Object data = child.getData();
                 if (data != null) {
                     result.add(data);
@@ -230,9 +231,9 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
 
     private void addGroupPlusElements(String text, GroupingElement group, List<SimpleErrorData> children) {
-        List<NavigatableMessageElement> elements = new ArrayList<>();
+        List<NavigableMessageElement> elements = new ArrayList<>();
         for (SimpleErrorData child : children) {
-            elements.add(new MyNavigatableWithDataElement(
+            elements.add(new MyNavigableWithDataElement(
                 myProject,
                 child.getKind(),
                 group,
@@ -254,9 +255,9 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         addSimpleMessage(kind, text, data);
     }
 
-    public void addNavigatableMessage(
+    public void addNavigableMessage(
         @Nullable String groupName,
-        Navigatable navigatable,
+        Navigable navigable,
         ErrorTreeElementKind kind,
         String[] message,
         Object data,
@@ -265,11 +266,11 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         VirtualFile file
     ) {
         if (groupName == null) {
-            addSimpleMessageElement(new NavigatableMessageElement(kind, null, message, navigatable, exportText, rendererTextPrefix));
+            addSimpleMessageElement(new NavigatableMessageElement(kind, null, message, navigable, exportText, rendererTextPrefix));
         }
         else {
             synchronized (myLock) {
-                List<NavigatableMessageElement> elements = myGroupNameToMessagesMap.get(groupName);
+                List<NavigableMessageElement> elements = myGroupNameToMessagesMap.get(groupName);
                 if (elements == null) {
                     elements = new ArrayList<>();
                     myGroupNameToMessagesMap.put(groupName, elements);
@@ -278,7 +279,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
                     kind,
                     getGroupingElement(groupName, data, file),
                     message,
-                    navigatable,
+                    navigable,
                     exportText,
                     rendererTextPrefix
                 ));
@@ -286,19 +287,42 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    public void addNavigatableMessage(String groupName, NavigatableMessageElement navigatableMessageElement) {
+    @Deprecated
+    @DeprecationInfo("Use #addNavigableMessage(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public void addNavigatableMessage(
+        @Nullable String groupName,
+        Navigable navigable,
+        ErrorTreeElementKind kind,
+        String[] message,
+        Object data,
+        String exportText,
+        String rendererTextPrefix,
+        VirtualFile file
+    ) {
+        addNavigableMessage(groupName, navigable, kind, message, data, exportText, rendererTextPrefix, file);
+    }
+
+    public void addNavigableMessage(String groupName, NavigableMessageElement navigableMessageElement) {
         synchronized (myLock) {
-            List<NavigatableMessageElement> elements = myGroupNameToMessagesMap.get(groupName);
+            List<NavigableMessageElement> elements = myGroupNameToMessagesMap.get(groupName);
             if (elements == null) {
                 elements = new ArrayList<>();
                 myGroupNameToMessagesMap.put(groupName, elements);
             }
             if (!myGroupNameToElementMap.containsKey(groupName)) {
                 myGroupNames.add(groupName);
-                myGroupNameToElementMap.put(groupName, navigatableMessageElement.getParent());
+                myGroupNameToElementMap.put(groupName, navigableMessageElement.getParent());
             }
-            elements.add(navigatableMessageElement);
+            elements.add(navigableMessageElement);
         }
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #addNavigableMessage(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    public void addNavigatableMessage(String groupName, NavigableMessageElement navigableMessageElement) {
+        addNavigableMessage(groupName, navigableMessageElement);
     }
 
     private void addSimpleMessage(ErrorTreeElementKind kind, String[] text, Object data) {
@@ -337,7 +361,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
 
     public int getChildCount(GroupingElement groupingElement) {
         synchronized (myLock) {
-            List<NavigatableMessageElement> children = myGroupNameToMessagesMap.get(groupingElement.getName());
+            List<NavigableMessageElement> children = myGroupNameToMessagesMap.get(groupingElement.getName());
             return children == null ? 0 : children.size();
         }
     }
@@ -361,11 +385,11 @@ public class ErrorViewStructure extends AbstractTreeStructure {
                 return simpleMessages.get(0);
             }
             for (String path : myGroupNames) {
-                List<NavigatableMessageElement> messages = myGroupNameToMessagesMap.get(path);
+                List<NavigableMessageElement> messages = myGroupNameToMessagesMap.get(path);
                 if (messages != null) {
-                    for (NavigatableMessageElement navigatableMessageElement : messages) {
-                        if (kind.equals(navigatableMessageElement.getKind())) {
-                            return navigatableMessageElement;
+                    for (NavigableMessageElement navigableMessageElement : messages) {
+                        if (kind.equals(navigableMessageElement.getKind())) {
+                            return navigableMessageElement;
                         }
                     }
                 }
@@ -429,12 +453,11 @@ public class ErrorViewStructure extends AbstractTreeStructure {
                 });
             }
         }
-        else if (element instanceof NavigatableMessageElement) {
-            NavigatableMessageElement navElement = (NavigatableMessageElement) element;
+        else if (element instanceof NavigableMessageElement navElement) {
             GroupingElement parent = navElement.getParent();
             if (parent != null) {
                 synchronized (myLock) {
-                    List<NavigatableMessageElement> groupMessages = myGroupNameToMessagesMap.get(parent.getName());
+                    List<NavigableMessageElement> groupMessages = myGroupNameToMessagesMap.get(parent.getName());
                     if (groupMessages != null) {
                         groupMessages.remove(navElement);
                     }
@@ -451,11 +474,11 @@ public class ErrorViewStructure extends AbstractTreeStructure {
         }
     }
 
-    private static class MyNavigatableWithDataElement extends NavigatableMessageElement {
+    private static class MyNavigableWithDataElement extends NavigatableMessageElement {
         private final VirtualFile myVf;
         private final CustomizeColoredTreeCellRenderer myCustomizeColoredTreeCellRenderer;
 
-        private MyNavigatableWithDataElement(
+        private MyNavigableWithDataElement(
             Project project,
             ErrorTreeElementKind kind,
             GroupingElement parent,

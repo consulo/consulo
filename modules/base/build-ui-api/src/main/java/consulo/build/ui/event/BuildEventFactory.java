@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.issue.BuildIssue;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import org.jspecify.annotations.Nullable;
@@ -74,70 +74,88 @@ public interface BuildEventFactory {
         return createFailure(message, null, Collections.emptyList(), error, null, null);
     }
 
-    default Failure createFailure(@BuildEventsNls.Message String message,
-                                  Throwable error,
-                                  @Nullable Notification notification,
-                                  @Nullable Navigatable navigatable) {
-        return createFailure(message, null, Collections.emptyList(), error, notification, navigatable);
+    default Failure createFailure(
+        @BuildEventsNls.Message String message,
+        Throwable error,
+        @Nullable Notification notification,
+        @Nullable Navigable navigable
+    ) {
+        return createFailure(message, null, Collections.emptyList(), error, notification, navigable);
     }
 
     default Failure createFailure(@BuildEventsNls.Message String message, @BuildEventsNls.Description String description) {
         return createFailure(message, description, List.of(), null, null, null);
     }
 
-    default Failure createFailure(@BuildEventsNls.Message String message,
-                                  @BuildEventsNls.Description String description,
-                                  List<? extends Failure> causes) {
+    default Failure createFailure(
+        @BuildEventsNls.Message String message,
+        @BuildEventsNls.Description String description,
+        List<? extends Failure> causes
+    ) {
         return createFailure(message, description, causes, null, null, null);
     }
 
-    Failure createFailure(@BuildEventsNls.Message String message,
-                          @BuildEventsNls.Description String description,
-                          List<? extends Failure> causes,
-                          @Nullable Throwable error,
-                          @Nullable Notification notification,
-                          @Nullable Navigatable navigatable);
+    Failure createFailure(
+        @BuildEventsNls.Message String message,
+        @BuildEventsNls.Description String description,
+        List<? extends Failure> causes,
+        @Nullable Throwable error,
+        @Nullable Notification notification,
+        @Nullable Navigable navigable
+    );
 
     FailureResult createFailureResult(List<Failure> failures);
 
-    FileMessageEvent createFileMessageEvent(Object parentId,
-                                            MessageEvent.Kind kind,
-                                            NotificationGroup group,
-                                            @BuildEventsNls.Message String message,
-                                            @Nullable @BuildEventsNls.Description String detailedMessage,
-                                            FilePosition filePosition);
+    FileMessageEvent createFileMessageEvent(
+        Object parentId,
+        MessageEvent.Kind kind,
+        NotificationGroup group,
+        @BuildEventsNls.Message String message,
+        @Nullable @BuildEventsNls.Description String detailedMessage,
+        FilePosition filePosition
+    );
 
-    FinishEvent createFinishEvent(Object eventId,
-                                  @Nullable Object parentId,
-                                  long eventTime,
-                                  @BuildEventsNls.Message String message,
-                                  EventResult result);
+    FinishEvent createFinishEvent(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        @BuildEventsNls.Message String message,
+        EventResult result
+    );
 
-    FinishBuildEvent createFinishBuildEvent(Object eventId,
-                                            @Nullable Object parentId,
-                                            long eventTime,
-                                            @BuildEventsNls.Message String message,
-                                            EventResult result);
+    FinishBuildEvent createFinishBuildEvent(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        @BuildEventsNls.Message String message,
+        EventResult result
+    );
 
-    default MessageEvent createMessageEvent(Object parentId,
-                                            MessageEvent.Kind kind,
-                                            NotificationGroup group,
-                                            String message,
-                                            @Nullable String detailedMessage) {
+    default MessageEvent createMessageEvent(
+        Object parentId,
+        MessageEvent.Kind kind,
+        NotificationGroup group,
+        String message,
+        @Nullable String detailedMessage
+    ) {
         return createMessageEvent(parentId, kind, group, message, detailedMessage, null);
     }
 
-    MessageEvent createMessageEvent(Object parentId,
-                                    MessageEvent.Kind kind,
-                                    NotificationGroup group,
-                                    String message,
-                                    @Nullable String detailedMessage,
-                                    @Nullable Navigatable navigatable);
+    MessageEvent createMessageEvent(
+        Object parentId,
+        MessageEvent.Kind kind,
+        NotificationGroup group,
+        String message,
+        @Nullable String detailedMessage,
+        @Nullable Navigable navigable
+    );
 
-    StartEvent createStartEvent(Object eventId,
-                                @Nullable Object parentId,
-                                long eventTime,
-                                @BuildEventsNls.Message String message);
+    StartEvent createStartEvent(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        @BuildEventsNls.Message String message
+    );
 
     BuildIssueEvent createBuildIssueEvent(
         Object parentId,
@@ -151,5 +169,10 @@ public interface BuildEventFactory {
         return createOutputBuildEvent(new Object(), parentId, message, stdOut);
     }
 
-    OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, @BuildEventsNls.Message String message, boolean stdOut);
+    OutputBuildEvent createOutputBuildEvent(
+        Object eventId,
+        @Nullable Object parentId,
+        @BuildEventsNls.Message String message,
+        boolean stdOut
+    );
 }

@@ -1,11 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.NullableLazyValue;
 import consulo.build.ui.ExecutionNode;
 import consulo.build.ui.event.*;
 import consulo.build.ui.localize.BuildLocalize;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -53,7 +54,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     private volatile @Nullable EventResult myResult;
     private final boolean myAutoExpandNode;
     private final Supplier<Boolean> myIsCorrectThread;
-    private volatile @Nullable Navigatable myNavigatable;
+    private volatile @Nullable Navigable myNavigable;
     private volatile @Nullable NullableLazyValue<Image> myPreferredIconValue;
     private Predicate<? super ExecutionNodeImpl> myFilter;
     private boolean myAlwaysLeaf;
@@ -304,25 +305,31 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         myAlwaysLeaf = alwaysLeaf;
     }
 
-    public void setNavigatable(@Nullable Navigatable navigatable) {
+    @Deprecated
+    @DeprecationInfo("Use #setNavigable() with typo-fixed name")
+    @SuppressWarnings("SpellCheckingInspection")
+    public void setNavigatable(@Nullable Navigable navigable) {
+        setNavigable(navigable);
+    }
+
+    public void setNavigable(@Nullable Navigable navigable) {
         assert myIsCorrectThread.get();
-        myNavigatable = navigatable;
+        myNavigable = navigable;
     }
 
     @Override
-   
-    public List<Navigatable> getNavigatables() {
-        if (myNavigatable != null) {
-            return Collections.singletonList(myNavigatable);
+    public List<Navigable> getNavigables() {
+        if (myNavigable != null) {
+            return Collections.singletonList(myNavigable);
         }
         if (myResult == null) {
             return Collections.emptyList();
         }
 
         if (myResult instanceof FailureResult failureResult) {
-            List<Navigatable> result = new SmartList<>();
+            List<Navigable> result = new SmartList<>();
             for (Failure failure : failureResult.getFailures()) {
-                ContainerUtil.addIfNotNull(result, failure.getNavigatable());
+                ContainerUtil.addIfNotNull(result, failure.getNavigable());
             }
             return result;
         }

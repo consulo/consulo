@@ -5,7 +5,7 @@ import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.issue.BuildIssue;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import org.jspecify.annotations.Nullable;
 
 public interface BuildProgress<T extends BuildProgressDescriptor> {
@@ -25,7 +25,7 @@ public interface BuildProgress<T extends BuildProgressDescriptor> {
         @BuildEventsNls.Title String title,
         @BuildEventsNls.Message String message,
         MessageEvent.Kind kind,
-        @Nullable Navigatable navigatable
+        @Nullable Navigable navigable
     );
 
     BuildProgress<T> fileMessage(

@@ -39,7 +39,7 @@ import consulo.diff.util.LineCol;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.document.event.DocumentEvent;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.ContainerUtil;
@@ -55,13 +55,11 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
    
     private final List<? extends EditorEx> myEditableEditors;
 
-   
     private final MyVisibleAreaListener myVisibleAreaListener1 = new MyVisibleAreaListener(Side.LEFT);
    
     private final MyVisibleAreaListener myVisibleAreaListener2 = new MyVisibleAreaListener(Side.RIGHT);
     protected SyncScrollSupport.@Nullable ThreesideSyncScrollSupport mySyncScrollSupport;
 
-   
     protected final SetEditorSettingsAction myEditorSettingsAction;
 
     public ThreesideTextDiffViewer(DiffContext context, ContentDiffRequest request) {
@@ -93,7 +91,6 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
         super.onDispose();
     }
 
-   
     @Override
     protected List<TextEditorHolder> createEditorHolders(EditorHolderFactory<TextEditorHolder> factory) {
         List<TextEditorHolder> holders = super.createEditorHolders(factory);
@@ -171,12 +168,10 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     // Diff
     //
 
-   
     public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
-   
     protected List<AnAction> createEditorPopupActions() {
         return TextDiffViewerUtil.createEditorPopupActions();
     }
@@ -192,23 +187,19 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     // Getters
     //
 
-   
     public EditorEx getCurrentEditor() {
         return getEditor(getCurrentSide());
     }
 
-   
     public DocumentContent getCurrentContent() {
         return getContent(getCurrentSide());
     }
 
-   
     protected List<? extends DocumentContent> getContents() {
         //noinspection unchecked
         return (List) myRequest.getContents();
     }
 
-   
     public List<? extends EditorEx> getEditors() {
         if (myEditors == null) {
             myEditors = ContainerUtil.map(getEditorHolders(), TextEditorHolder::getEditor);
@@ -216,17 +207,14 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
         return myEditors;
     }
 
-   
     protected List<? extends EditorEx> getEditableEditors() {
         return myEditableEditors;
     }
 
-   
     public EditorEx getEditor(ThreeSide side) {
         return side.select(getEditors());
     }
 
-   
     public DocumentContent getContent(ThreeSide side) {
         return side.select(getContents());
     }
@@ -257,12 +245,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     protected abstract SyncScrollSupport.@Nullable SyncScrollable getSyncScrollable(Side side);
 
     @RequiredUIAccess
-   
-    protected LogicalPosition transferPosition(
-        ThreeSide baseSide,
-        ThreeSide targetSide,
-        LogicalPosition position
-    ) {
+    protected LogicalPosition transferPosition(ThreeSide baseSide, ThreeSide targetSide, LogicalPosition position) {
         if (mySyncScrollSupport == null) {
             return position;
         }
@@ -303,8 +286,8 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     //
 
     @Override
-    protected @Nullable Navigatable getNavigatable() {
-        return getCurrentContent().getNavigatable(LineCol.fromCaret(getCurrentEditor()));
+    protected @Nullable Navigable getNavigable() {
+        return getCurrentContent().getNavigable(LineCol.fromCaret(getCurrentEditor()));
     }
 
     public static boolean canShowRequest(DiffContext context, DiffRequest request) {
@@ -317,13 +300,13 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
 
     private class MyOpenInEditorWithMouseAction extends OpenInEditorWithMouseAction {
         @Override
-        protected Navigatable getNavigatable(Editor editor, int line) {
+        protected Navigable getNavigable(Editor editor, int line) {
             ThreeSide side = getEditorSide(editor);
             if (side == null) {
                 return null;
             }
 
-            return getContent(side).getNavigatable(new LineCol(line));
+            return getContent(side).getNavigable(new LineCol(line));
         }
     }
 
@@ -346,7 +329,6 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     }
 
     private class MyVisibleAreaListener implements VisibleAreaListener {
-       
         Side mySide;
 
         public MyVisibleAreaListener(Side side) {
@@ -364,7 +346,6 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     }
 
     protected abstract class MyInitialScrollPositionHelper extends InitialScrollPositionSupport.ThreesideInitialScrollHelper {
-       
         @Override
         protected List<? extends Editor> getEditors() {
             return ThreesideTextDiffViewer.this.getEditors();

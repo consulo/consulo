@@ -20,7 +20,7 @@ import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.*;
 import consulo.build.ui.issue.BuildIssue;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import jakarta.inject.Singleton;
@@ -36,7 +36,6 @@ import java.util.function.Supplier;
 @ServiceImpl
 @Singleton
 public class BuildEventFactoryImpl implements BuildEventFactory {
-
     @Override
     public SkippedResult createSkippedResult() {
         return new SkippedResultImpl();
@@ -53,8 +52,15 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     }
 
     @Override
-    public Failure createFailure(String message, String description, List<? extends Failure> causes, @Nullable Throwable error, @Nullable Notification notification, @Nullable Navigatable navigatable) {
-        return new FailureImpl(message, description, causes, error, notification, navigatable);
+    public Failure createFailure(
+        String message,
+        String description,
+        List<? extends Failure> causes,
+        @Nullable Throwable error,
+        @Nullable Notification notification,
+        @Nullable Navigable navigable
+    ) {
+        return new FailureImpl(message, description, causes, error, notification, navigable);
     }
 
     @Override
@@ -63,12 +69,14 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     }
 
     @Override
-    public FileMessageEvent createFileMessageEvent(Object parentId,
-                                                   MessageEvent.Kind kind,
-                                                   NotificationGroup group,
-                                                   String message,
-                                                   @Nullable String detailedMessage,
-                                                   FilePosition filePosition) {
+    public FileMessageEvent createFileMessageEvent(
+        Object parentId,
+        MessageEvent.Kind kind,
+        NotificationGroup group,
+        String message,
+        @Nullable String detailedMessage,
+        FilePosition filePosition
+    ) {
         return new FileMessageEventImpl(parentId, kind, group, message, detailedMessage, filePosition);
     }
 
@@ -78,18 +86,26 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     }
 
     @Override
-    public FinishBuildEvent createFinishBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, String message, EventResult result) {
+    public FinishBuildEvent createFinishBuildEvent(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        String message,
+        EventResult result
+    ) {
         return new FinishBuildEventImpl(eventId, parentId, eventTime, message, result);
     }
 
     @Override
-    public MessageEvent createMessageEvent(Object parentId,
-                                           MessageEvent.Kind kind,
-                                           NotificationGroup group,
-                                           String message,
-                                           @Nullable String detailedMessage,
-                                           @Nullable Navigatable navigatable) {
-        return new MessageEventImpl(parentId, kind, group, message, detailedMessage, navigatable);
+    public MessageEvent createMessageEvent(
+        Object parentId,
+        MessageEvent.Kind kind,
+        NotificationGroup group,
+        String message,
+        @Nullable String detailedMessage,
+        @Nullable Navigable navigable
+    ) {
+        return new MessageEventImpl(parentId, kind, group, message, detailedMessage, navigable);
     }
 
     @Override

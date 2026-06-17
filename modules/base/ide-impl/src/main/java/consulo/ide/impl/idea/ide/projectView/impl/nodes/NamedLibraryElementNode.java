@@ -26,7 +26,7 @@ import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.orderEntry.*;
-import consulo.navigation.NavigatableWithText;
+import consulo.navigation.NavigableWithText;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
@@ -49,12 +49,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement> implements NavigatableWithText {
+public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement> implements NavigableWithText {
     public NamedLibraryElementNode(Project project, NamedLibraryElement value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
-    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
@@ -152,11 +151,11 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         return true;
     }
 
-    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenLibrarySettingsText();

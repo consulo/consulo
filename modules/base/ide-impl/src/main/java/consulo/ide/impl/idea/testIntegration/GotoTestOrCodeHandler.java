@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.testIntegration;
 
-import consulo.language.editor.CodeInsightBundle;
+import consulo.codeEditor.Editor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.ide.impl.idea.codeInsight.navigation.GotoTargetHandler;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.testIntegration.TestCreator;
 import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.execution.executor.DefaultRunExecutor;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.Shortcut;
-import consulo.codeEditor.Editor;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.util.collection.SmartList;
+import consulo.navigation.Navigable;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
-
+import consulo.util.collection.SmartList;
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -85,7 +85,6 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     return new GotoData(sourceElement, PsiUtilCore.toPsiElementArray(candidates), actions);
   }
 
-  
   public static PsiElement getSelectedElement(Editor editor, PsiFile file) {
     return PsiUtilCore.getElementAtOffset(file, editor.getCaretModel().getOffset());
   }
@@ -95,7 +94,6 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     return false;
   }
 
-  
   @Override
   protected String getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
     String suffix = finished ? "" : " so far";
@@ -107,7 +105,6 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     }
   }
 
-  
   @Override
   protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
     if (TestFinderHelper.isTest(sourceElement)) {
@@ -118,7 +115,6 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     }
   }
 
-  
   @Override
   protected String getNotFoundMessage(Project project, Editor editor, PsiFile file) {
     return CodeInsightBundle.message("goto.test.notFound");
@@ -137,7 +133,8 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
   }
 
   @Override
-  protected void navigateToElement(Navigatable element) {
+  @RequiredUIAccess
+  protected void navigateToElement(Navigable element) {
     if (element instanceof PsiElement) {
       PopupNavigationUtil.activateFileWithPsiElement((PsiElement)element, true);
     }

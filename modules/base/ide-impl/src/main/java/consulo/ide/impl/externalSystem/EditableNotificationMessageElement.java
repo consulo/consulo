@@ -16,16 +16,16 @@
 package consulo.ide.impl.externalSystem;
 
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.ide.errorTreeView.*;
+import consulo.ide.impl.idea.ide.errorTreeView.EditableMessageElement;
+import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
+import consulo.navigation.Navigable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -48,150 +48,149 @@ import java.util.Map;
  * @since 2014-03-24
  */
 public class EditableNotificationMessageElement extends NotificationMessageElement implements EditableMessageElement {
+    private final TreeCellEditor myRightTreeCellEditor;
 
-  
-  private final TreeCellEditor myRightTreeCellEditor;
-  
-  private final Notification myNotification;
-  
-  private final Map<String/*url*/, String/*link text to replace*/> disabledLinks;
+    private final Notification myNotification;
 
-  public EditableNotificationMessageElement(
-    Notification notification,
-    ErrorTreeElementKind kind,
-    @Nullable GroupingElement parent,
-    String[] message,
-    Navigatable navigatable,
-    String exportText, String rendererTextPrefix
-  ) {
-    super(kind, parent, message, navigatable, exportText, rendererTextPrefix);
-    myNotification = notification;
-    disabledLinks = new HashMap<>();
-    myRightTreeCellEditor = new MyCellEditor();
-  }
+    private final Map<String/*url*/, String/*link text to replace*/> disabledLinks;
 
-  public void addDisabledLink(String url, @Nullable String text) {
-    disabledLinks.put(url, text);
-  }
-
-  
-  @Override
-  public TreeCellEditor getRightSelfEditor() {
-    return myRightTreeCellEditor;
-  }
-
-  @Override
-  public boolean startEditingOnMouseMove() {
-    return true;
-  }
-
-  public static void disableLink(HyperlinkEvent event) {
-    disableLink(event, null);
-  }
-
-  private static void disableLink(HyperlinkEvent event, @Nullable String linkText) {
-    if (event.getSource() instanceof MyJEditorPane editorPane) {
-      UIUtil.invokeLaterIfNeeded(() -> {
-        editorPane.myElement.addDisabledLink(event.getDescription(), linkText);
-        editorPane.myElement.updateStyle(editorPane, null, null, true, false);
-      });
+    public EditableNotificationMessageElement(
+        Notification notification,
+        ErrorTreeElementKind kind,
+        @Nullable GroupingElement parent,
+        String[] message,
+        Navigable navigable,
+        String exportText, String rendererTextPrefix
+    ) {
+        super(kind, parent, message, navigable, exportText, rendererTextPrefix);
+        myNotification = notification;
+        disabledLinks = new HashMap<>();
+        myRightTreeCellEditor = new MyCellEditor();
     }
-  }
 
-  @Override
-  protected void updateStyle(JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
-    super.updateStyle(editorPane, tree, value, selected, hasFocus);
+    public void addDisabledLink(String url, @Nullable String text) {
+        disabledLinks.put(url, text);
+    }
 
-    HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
-    Style linkStyle = htmlDocument.getStyleSheet().getStyle(NotificationMessageElement.LINK_STYLE);
-    StyleConstants.setForeground(linkStyle, IdeTooltipManagerImpl.getInstanceImpl().getLinkForeground(false));
-    StyleConstants.setItalic(linkStyle, true);
-    HTMLDocument.Iterator iterator = htmlDocument.getIterator(HTML.Tag.A);
-    while (iterator.isValid()) {
-      boolean disabledLink = false;
-      AttributeSet attributes = iterator.getAttributes();
-      if (attributes instanceof SimpleAttributeSet simpleAttributeSet) {
-        Object attribute = attributes.getAttribute(HTML.Attribute.HREF);
-        if (attribute instanceof String && disabledLinks.containsKey(attribute)) {
-          disabledLink = true;
-          //TODO [Vlad] add support for disabled link text update
-          ////final String linkText = disabledLinks.get(attribute);
-          //if (linkText != null) {
-          //}
-          simpleAttributeSet.removeAttribute(HTML.Attribute.HREF);
+    @Override
+    public TreeCellEditor getRightSelfEditor() {
+        return myRightTreeCellEditor;
+    }
+
+    @Override
+    public boolean startEditingOnMouseMove() {
+        return true;
+    }
+
+    public static void disableLink(HyperlinkEvent event) {
+        disableLink(event, null);
+    }
+
+    private static void disableLink(HyperlinkEvent event, @Nullable String linkText) {
+        if (event.getSource() instanceof MyJEditorPane editorPane) {
+            UIUtil.invokeLaterIfNeeded(() -> {
+                editorPane.myElement.addDisabledLink(event.getDescription(), linkText);
+                editorPane.myElement.updateStyle(editorPane, null, null, true, false);
+            });
         }
-        if (attribute == null) {
-          disabledLink = true;
+    }
+
+    @Override
+    protected void updateStyle(JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+        super.updateStyle(editorPane, tree, value, selected, hasFocus);
+
+        HTMLDocument htmlDocument = (HTMLDocument) editorPane.getDocument();
+        Style linkStyle = htmlDocument.getStyleSheet().getStyle(NotificationMessageElement.LINK_STYLE);
+        StyleConstants.setForeground(linkStyle, IdeTooltipManagerImpl.getInstanceImpl().getLinkForeground(false));
+        StyleConstants.setItalic(linkStyle, true);
+        HTMLDocument.Iterator iterator = htmlDocument.getIterator(HTML.Tag.A);
+        while (iterator.isValid()) {
+            boolean disabledLink = false;
+            AttributeSet attributes = iterator.getAttributes();
+            if (attributes instanceof SimpleAttributeSet simpleAttributeSet) {
+                Object attribute = attributes.getAttribute(HTML.Attribute.HREF);
+                if (attribute instanceof String && disabledLinks.containsKey(attribute)) {
+                    disabledLink = true;
+                    //TODO [Vlad] add support for disabled link text update
+                    ////final String linkText = disabledLinks.get(attribute);
+                    //if (linkText != null) {
+                    //}
+                    simpleAttributeSet.removeAttribute(HTML.Attribute.HREF);
+                }
+                if (attribute == null) {
+                    disabledLink = true;
+                }
+            }
+            if (!disabledLink) {
+                htmlDocument.setCharacterAttributes(
+                    iterator.getStartOffset(), iterator.getEndOffset() - iterator.getStartOffset(), linkStyle, false);
+            }
+            iterator.next();
         }
-      }
-      if (!disabledLink) {
-        htmlDocument.setCharacterAttributes(
-                iterator.getStartOffset(), iterator.getEndOffset() - iterator.getStartOffset(), linkStyle, false);
-      }
-      iterator.next();
     }
-  }
 
-  private static class MyJEditorPane extends JEditorPane {
-    
-    private final EditableNotificationMessageElement myElement;
+    private static class MyJEditorPane extends JEditorPane {
 
-    public MyJEditorPane(EditableNotificationMessageElement element) {
-      myElement = element;
+        private final EditableNotificationMessageElement myElement;
+
+        public MyJEditorPane(EditableNotificationMessageElement element) {
+            myElement = element;
+        }
     }
-  }
 
-  private class MyCellEditor extends AbstractCellEditor implements TreeCellEditor {
-    private final JEditorPane editorComponent;
-    private @Nullable JTree myTree;
+    private class MyCellEditor extends AbstractCellEditor implements TreeCellEditor {
+        private final JEditorPane editorComponent;
+        private @Nullable JTree myTree;
 
-    private MyCellEditor() {
-      editorComponent = installJep(new MyJEditorPane(EditableNotificationMessageElement.this));
+        private MyCellEditor() {
+            editorComponent = installJep(new MyJEditorPane(EditableNotificationMessageElement.this));
 
-      HyperlinkListener hyperlinkListener = new ActivatedHyperlinkListener();
-      editorComponent.addHyperlinkListener(hyperlinkListener);
-      editorComponent.addMouseListener(new PopupHandler() {
+            HyperlinkListener hyperlinkListener = new ActivatedHyperlinkListener();
+            editorComponent.addHyperlinkListener(hyperlinkListener);
+            editorComponent.addMouseListener(new PopupHandler() {
+                @Override
+                public void invokePopup(Component comp, int x, int y) {
+                    if (myTree == null) {
+                        return;
+                    }
+
+                    TreePath path = myTree.getLeadSelectionPath();
+                    if (path == null) {
+                        return;
+                    }
+                    DefaultActionGroup group = new DefaultActionGroup();
+                    group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
+                    group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
+
+                    ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.COMPILER_MESSAGES_POPUP, group);
+                    menu.getComponent().show(comp, x, y);
+                }
+            });
+        }
+
         @Override
-        public void invokePopup(Component comp, int x, int y) {
-          if (myTree == null) return;
-
-          TreePath path = myTree.getLeadSelectionPath();
-          if (path == null) {
-            return;
-          }
-          DefaultActionGroup group = new DefaultActionGroup();
-          group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
-          group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
-
-          ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.COMPILER_MESSAGES_POPUP, group);
-          menu.getComponent().show(comp, x, y);
+        public Component getTreeCellEditorComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row) {
+            myTree = tree;
+            updateStyle(editorComponent, tree, value, selected, false);
+            return editorComponent;
         }
-      });
-    }
 
-    @Override
-    public Component getTreeCellEditorComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row) {
-      myTree = tree;
-      updateStyle(editorComponent, tree, value, selected, false);
-      return editorComponent;
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-      return null;
-    }
-
-    private class ActivatedHyperlinkListener implements HyperlinkListener {
-      @Override
-      @RequiredUIAccess
-      public void hyperlinkUpdate(HyperlinkEvent e) {
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          NotificationListener notificationListener = myNotification.getListener();
-          if (notificationListener != null) {
-            notificationListener.hyperlinkUpdate(myNotification, e);
-          }
+        @Override
+        public Object getCellEditorValue() {
+            return null;
         }
-      }
+
+        private class ActivatedHyperlinkListener implements HyperlinkListener {
+            @Override
+            @RequiredUIAccess
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    NotificationListener notificationListener = myNotification.getListener();
+                    if (notificationListener != null) {
+                        notificationListener.hyperlinkUpdate(myNotification, e);
+                    }
+                }
+            }
+        }
     }
-  }
 }

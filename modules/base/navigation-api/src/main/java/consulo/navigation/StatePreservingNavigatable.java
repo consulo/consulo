@@ -15,12 +15,16 @@
  */
 package consulo.navigation;
 
+import consulo.annotation.DeprecationInfo;
+
 /**
- * Navigatable that saves cursor position in the editor when navigating to
+ * Navigable that saves cursor position in the editor when navigating to
  * already opened documents
  *
  * @author Konstantin Bulenkov
  */
-public interface StatePreservingNavigatable extends Navigatable {
-  void navigate(boolean requestFocus, boolean preserveState);
+@Deprecated
+@DeprecationInfo("Use StatePreservingNavigable, typo-corrected class name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public interface StatePreservingNavigatable extends StatePreservingNavigable {
 }

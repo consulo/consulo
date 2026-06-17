@@ -24,8 +24,8 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XErrorValuePresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
-import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
+import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.localize.LocalizeValue;
 import consulo.util.concurrent.AsyncResult;
@@ -182,9 +182,9 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        public void computeSourcePosition(XNavigatable navigatable) {
+        public void computeSourcePosition(XNavigable navigable) {
             if (myValue != null) {
-                myValue.computeSourcePosition(navigatable);
+                myValue.computeSourcePosition(navigable);
             }
         }
 
@@ -204,9 +204,9 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        public void computeTypeSourcePosition(XNavigatable navigatable) {
+        public void computeTypeSourcePosition(XNavigable navigable) {
             if (myValue != null) {
-                myValue.computeTypeSourcePosition(navigatable);
+                myValue.computeTypeSourcePosition(navigable);
             }
         }
 

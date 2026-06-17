@@ -17,7 +17,7 @@ package consulo.diff.impl.internal.content;
 
 import consulo.diff.content.DiffContentBase;
 import consulo.diff.content.DirectoryContent;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -25,30 +25,30 @@ import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
 public class DirectoryContentImpl extends DiffContentBase implements DirectoryContent {
-  
-  private final VirtualFile myFile;
-  private final @Nullable Project myProject;
+    private final VirtualFile myFile;
+    private final @Nullable Project myProject;
 
-  public DirectoryContentImpl(@Nullable Project project, VirtualFile file) {
-    assert file.isValid() && file.isDirectory();
-    myProject = project;
-    myFile = file;
-  }
+    public DirectoryContentImpl(@Nullable Project project, VirtualFile file) {
+        assert file.isValid() && file.isDirectory();
+        myProject = project;
+        myFile = file;
+    }
 
-  @Override
-  public @Nullable Navigatable getNavigatable() {
-    if (myProject == null || myProject.isDefault() || !myFile.isValid()) return null;
-    return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myFile).build();
-  }
+    @Override
+    public @Nullable Navigable getNavigable() {
+        if (myProject == null || myProject.isDefault() || !myFile.isValid()) {
+            return null;
+        }
+        return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myFile).build();
+    }
 
-  
-  @Override
-  public VirtualFile getFile() {
-    return myFile;
-  }
+    @Override
+    public VirtualFile getFile() {
+        return myFile;
+    }
 
-  @Override
-  public @Nullable FileType getContentType() {
-    return null;
-  }
+    @Override
+    public @Nullable FileType getContentType() {
+        return null;
+    }
 }

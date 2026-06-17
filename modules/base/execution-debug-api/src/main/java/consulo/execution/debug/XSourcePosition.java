@@ -13,32 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.debug;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
 
 /**
  * Represents position in a source file. Use {@link XDebuggerUtil#createPosition} and {@link XDebuggerUtil#createPositionByOffset} to
  * create instances of this interface.
+ *
  * @author nik
  */
 public interface XSourcePosition {
-  /**
-   * @return 0-based number of line
-   */
-  int getLine();
+    /**
+     * @return 0-based number of line
+     */
+    int getLine();
 
-  /**
-   * @return offset from the beginning of file
-   */
-  int getOffset();
+    /**
+     * @return offset from the beginning of file
+     */
+    int getOffset();
 
-  
-  VirtualFile getFile();
+    VirtualFile getFile();
 
-  
-  Navigatable createNavigatable(Project project);
+    Navigable createNavigable(Project project);
+
+    @Deprecated
+    @DeprecationInfo("Use #createNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default Navigatable createNavigatable(Project project) {
+        return (Navigatable) createNavigable(project);
+    }
 }

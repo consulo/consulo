@@ -20,11 +20,10 @@ import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -96,9 +95,9 @@ public class CompileContextExDelegate implements CompileContextEx {
         @Nullable String url,
         int lineNum,
         int columnNum,
-        Navigatable navigatable
+        Navigable navigable
     ) {
-        myDelegate.addMessage(category, message, url, lineNum, columnNum, navigatable);
+        myDelegate.addMessage(category, message, url, lineNum, columnNum, navigable);
     }
 
     @Override
@@ -106,7 +105,6 @@ public class CompileContextExDelegate implements CompileContextEx {
         return myDelegate.getMessageCount(category);
     }
 
-    
     @Override
     public ProgressIndicator getProgressIndicator() {
         return myDelegate.getProgressIndicator();

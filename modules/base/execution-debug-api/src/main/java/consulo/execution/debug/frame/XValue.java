@@ -23,7 +23,6 @@ import consulo.execution.debug.evaluation.XInstanceEvaluator;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ThreeState;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -33,101 +32,105 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public abstract class XValue extends XValueContainer {
-  /**
-   * Start computing presentation of the value in the debugger tree and call {@link XValueNode#setPresentation(Image, String, String, boolean)}
-   * when computation is finished.
-   * Note that this method is called from the Event Dispatch thread so it should return quickly.
-   * @param node node
-   * @param place where the node will be shown.
-   */
-  public abstract void computePresentation(XValueNode node, XValuePlace place);
+    /**
+     * Start computing presentation of the value in the debugger tree and call {@link XValueNode#setPresentation(Image, String, String, boolean)}
+     * when computation is finished.
+     * Note that this method is called from the Event Dispatch thread so it should return quickly.
+     *
+     * @param node  node
+     * @param place where the node will be shown.
+     */
+    public abstract void computePresentation(XValueNode node, XValuePlace place);
 
-  /**
-   * @return expression which evaluates to the current value
-   */
-  public @Nullable String getEvaluationExpression() {
-    return null;
-  }
+    /**
+     * @return expression which evaluates to the current value
+     */
+    public @Nullable String getEvaluationExpression() {
+        return null;
+    }
 
-  /**
-   * Asynchronously calculates expression which evaluates to the current value
-   */
-  public AsyncResult<XExpression> calculateEvaluationExpression() {
-    String expression = getEvaluationExpression();
-    XExpression res =
+    /**
+     * Asynchronously calculates expression which evaluates to the current value
+     */
+    public AsyncResult<XExpression> calculateEvaluationExpression() {
+        String expression = getEvaluationExpression();
+        XExpression res =
             expression != null ? XDebuggerUtil.getInstance().createExpression(expression, null, null, EvaluationMode.EXPRESSION) : null;
-    return AsyncResult.done(res);
-  }
+        return AsyncResult.done(res);
+    }
 
-  /**
-   * @return evaluator to calculate value of the current object instance
-   */
-  public @Nullable XInstanceEvaluator getInstanceEvaluator() {
-    return null;
-  }
+    /**
+     * @return evaluator to calculate value of the current object instance
+     */
+    public @Nullable XInstanceEvaluator getInstanceEvaluator() {
+        return null;
+    }
 
-  /**
-   * @return {@link XValueModifier} instance which can be used to modify the value
-   */
-  public @Nullable XValueModifier getModifier() {
-    return null;
-  }
+    /**
+     * @return {@link XValueModifier} instance which can be used to modify the value
+     */
+    public @Nullable XValueModifier getModifier() {
+        return null;
+    }
 
-  /**
-   * Start computing source position of the value and call {@link XNavigatable#setSourcePosition(XSourcePosition)}
-   * when computation is finished.
-   * Note that this method is called from the Event Dispatch thread so it should return quickly.
-   * @param navigatable navigatable
-   */
-  public void computeSourcePosition(XNavigatable navigatable) {
-    navigatable.setSourcePosition(null);
-  }
+    /**
+     * Start computing source position of the value and call {@link XNavigable#setSourcePosition(XSourcePosition)}
+     * when computation is finished.
+     * Note that this method is called from the Event Dispatch thread so it should return quickly.
+     *
+     * @param navigable navigable
+     */
+    public void computeSourcePosition(XNavigable navigable) {
+        navigable.setSourcePosition(null);
+    }
 
-  /**
-   * Provide inline debugger data, return ability to provide, use
-   * {@link ThreeState#UNSURE} if unsupported (default platform implementation will be used),
-   * {@link ThreeState#YES} if applicable
-   * {@link ThreeState#NO} if not applicable
-   */
-  public ThreeState computeInlineDebuggerData(XInlineDebuggerDataCallback callback) {
-    return ThreeState.UNSURE;
-  }
+    /**
+     * Provide inline debugger data, return ability to provide, use
+     * {@link ThreeState#UNSURE} if unsupported (default platform implementation will be used),
+     * {@link ThreeState#YES} if applicable
+     * {@link ThreeState#NO} if not applicable
+     */
+    public ThreeState computeInlineDebuggerData(XInlineDebuggerDataCallback callback) {
+        return ThreeState.UNSURE;
+    }
 
-  /**
-   * Return {@code true} from this method and override {@link #computeSourcePosition(XNavigatable)} if navigation to the source
-   * is supported for the value
-   * @return {@code true} if navigation to the value's source is supported
-   */
-  public boolean canNavigateToSource() {
-    // should be false, but cannot be due to compatibility reasons
-    return true;
-  }
+    /**
+     * Return {@code true} from this method and override {@link #computeSourcePosition(XNavigable)} if navigation to the source
+     * is supported for the value
+     *
+     * @return {@code true} if navigation to the value's source is supported
+     */
+    public boolean canNavigateToSource() {
+        // should be false, but cannot be due to compatibility reasons
+        return true;
+    }
 
-  /**
-   * Return {@code true} from this method and override {@link #computeTypeSourcePosition(XNavigatable)} if navigation to the value's type
-   * is supported for the value
-   * @return {@code true} if navigation to the value's type is supported
-   */
-  public boolean canNavigateToTypeSource() {
-    return false;
-  }
+    /**
+     * Return {@code true} from this method and override {@link #computeTypeSourcePosition(XNavigable)} if navigation to the value's type
+     * is supported for the value
+     *
+     * @return {@code true} if navigation to the value's type is supported
+     */
+    public boolean canNavigateToTypeSource() {
+        return false;
+    }
 
-  /**
-   * Start computing source position of the value's type and call {@link XNavigatable#setSourcePosition(XSourcePosition)}
-   * when computation is finished.
-   * Note that this method is called from the Event Dispatch thread so it should return quickly.
-   */
-  public void computeTypeSourcePosition(XNavigatable navigatable) {
-    navigatable.setSourcePosition(null);
-  }
+    /**
+     * Start computing source position of the value's type and call {@link XNavigable#setSourcePosition(XSourcePosition)}
+     * when computation is finished.
+     * Note that this method is called from the Event Dispatch thread so it should return quickly.
+     */
+    public void computeTypeSourcePosition(XNavigable navigable) {
+        navigable.setSourcePosition(null);
+    }
 
-  /**
-   * This enables showing referrers for the value
-   *
-   * @return provider that creates an XValue returning objects that refer to the current value
-   * or null if showing referrers for the value is disabled
-   */
-  public @Nullable XReferrersProvider getReferrersProvider() {
-    return null;
-  }
+    /**
+     * This enables showing referrers for the value
+     *
+     * @return provider that creates an XValue returning objects that refer to the current value
+     * or null if showing referrers for the value is disabled
+     */
+    public @Nullable XReferrersProvider getReferrersProvider() {
+        return null;
+    }
 }

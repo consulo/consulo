@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
-import consulo.execution.debug.frame.XNavigatable;
+import consulo.execution.debug.frame.XNavigable;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.localize.LocalizeValue;
@@ -34,7 +34,7 @@ public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
     @Override
     protected void perform(XValueNodeImpl node, String nodeName, AnActionEvent e) {
         XValue value = node.getValueContainer();
-        XNavigatable navigatable = sourcePosition -> {
+        XNavigable navigable = sourcePosition -> {
             if (sourcePosition != null) {
                 AppUIUtil.invokeOnEdt(() -> {
                     Project project = node.getTree().getProject();
@@ -42,12 +42,12 @@ public abstract class XJumpToSourceActionBase extends XDebuggerTreeActionBase {
                         return;
                     }
 
-                    sourcePosition.createNavigatable(project).navigate(true);
+                    sourcePosition.createNavigable(project).navigate(true);
                 });
             }
         };
-        startComputingSourcePosition(value, navigatable);
+        startComputingSourcePosition(value, navigable);
     }
 
-    protected abstract void startComputingSourcePosition(XValue value, XNavigatable navigatable);
+    protected abstract void startComputingSourcePosition(XValue value, XNavigable navigable);
 }

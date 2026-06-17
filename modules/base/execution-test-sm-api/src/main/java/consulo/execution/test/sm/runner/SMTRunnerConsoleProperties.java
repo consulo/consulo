@@ -33,6 +33,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -40,7 +41,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -110,17 +110,17 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     }
 
     @Override
-    public @Nullable Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
-        return getErrorNavigatable(location.getProject(), stacktrace);
+    public @Nullable Navigable getErrorNavigable(Location<?> location, String stacktrace) {
+        return getErrorNavigable(location.getProject(), stacktrace);
     }
 
     @Override
-    public @Nullable Navigatable getErrorNavigatable(final Project project, String stacktrace) {
+    public @Nullable Navigable getErrorNavigable(final Project project, String stacktrace) {
         if (myCustomFilter.isEmpty()) {
             return null;
         }
 
-        // iterate stacktrace lines find first navigatable line using
+        // iterate stacktrace lines find first navigable line using
         // stacktrace filters
         int stacktraceLength = stacktrace.length();
         String[] lines = StringUtil.splitByLines(stacktrace);
@@ -149,11 +149,13 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
                     }
 
                     @Override
+                    @RequiredReadAction
                     public boolean canNavigate() {
                         return true;
                     }
 
                     @Override
+                    @RequiredReadAction
                     public boolean canNavigateToSource() {
                         return true;
                     }
@@ -206,7 +208,6 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         return null;
     }
 
-    
     public String getTestFrameworkName() {
         return myTestFrameworkName;
     }

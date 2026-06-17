@@ -30,7 +30,7 @@ import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.localize.LocalizeValue;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionGroup;
@@ -45,8 +45,8 @@ import consulo.util.lang.xml.CommonXmlStrings;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -104,13 +104,11 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         myLogExpression = expression != null ? expression.toXExpression() : null;
     }
 
-    
     @Override
     public final Project getProject() {
         return myBreakpointManager.getProject();
     }
 
-    
     @Override
     public XBreakpointManagerImpl getBreakpointManager() {
         return myBreakpointManager;
@@ -128,12 +126,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    public Navigatable getNavigatable() {
+    public Navigable getNavigable() {
         XSourcePosition position = getSourcePosition();
         if (position == null) {
             return null;
         }
-        return position.createNavigatable(getProject());
+        return position.createNavigable(getProject());
     }
 
     @Override
@@ -150,7 +148,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    
     public SuspendPolicy getSuspendPolicy() {
         return myState.getSuspendPolicy();
     }
@@ -276,7 +273,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
-    
     public XBreakpointType<Self, P> getType() {
         return myType;
     }
@@ -338,7 +334,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return Collections.emptyList();
     }
 
-    
     public String getDescription() {
         StringBuilder builder = new StringBuilder();
         builder.append(CommonXmlStrings.HTML_START).append(CommonXmlStrings.BODY_START);
@@ -459,7 +454,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         return null;
     }
 
-    
     public Image getIcon() {
         if (myIcon == null) {
             updateIcon();
@@ -489,7 +483,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         myCustomizedPresentation = presentation;
     }
 
-    
     public GutterIconRenderer createGutterIconRenderer() {
         return new BreakpointGutterIconRenderer();
     }
@@ -506,7 +499,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     protected class BreakpointGutterIconRenderer extends GutterIconRenderer implements DumbAware {
         @Override
-        
         public Image getIcon() {
             return XBreakpointBase.this.getIcon();
         }
@@ -541,7 +533,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             );
         }
 
-        
         @Override
         public Alignment getAlignment() {
             return BreakpointEditorUtil.isBreakPointsOnLineNumbers() ? Alignment.LINE_NUMBERS : Alignment.RIGHT;
@@ -552,7 +543,6 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             return null;
         }
 
-        
         @Override
         public LocalizeValue getTooltipValue() {
             return LocalizeValue.localizeTODO(getDescription());

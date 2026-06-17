@@ -34,7 +34,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.util.LineCol;
 import consulo.diff.util.Side;
 import consulo.logging.Logger;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.ContainerUtil;
@@ -48,10 +48,10 @@ import java.util.List;
 public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditorHolder> {
     public static final Logger LOG = Logger.getInstance(OnesideTextDiffViewer.class);
 
-    
+
     private final List<? extends EditorEx> myEditableEditors;
 
-    
+
     protected final SetEditorSettingsAction myEditorSettingsAction;
 
     public OnesideTextDiffViewer(DiffContext context, ContentDiffRequest request) {
@@ -79,7 +79,7 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
         super.onDispose();
     }
 
-    
+
     @Override
     protected TextEditorHolder createEditorHolder(EditorHolderFactory<TextEditorHolder> factory) {
         TextEditorHolder holder = super.createEditorHolder(factory);
@@ -102,12 +102,12 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     // Diff
     //
 
-    
+
     public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
-    
+
     protected List<AnAction> createEditorPopupActions() {
         return TextDiffViewerUtil.createEditorPopupActions();
     }
@@ -129,22 +129,22 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     // Getters
     //
 
-    
+
     public List<? extends EditorEx> getEditors() {
         return Collections.singletonList(getEditor());
     }
 
-    
+
     protected List<? extends EditorEx> getEditableEditors() {
         return myEditableEditors;
     }
 
-    
+
     public EditorEx getEditor() {
         return getEditorHolder().getEditor();
     }
 
-    
+
     @Override
     public DocumentContent getContent() {
         //noinspection unchecked
@@ -165,8 +165,8 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     //
 
     @Override
-    protected @Nullable Navigatable getNavigatable() {
-        return getContent().getNavigatable(LineCol.fromCaret(getEditor()));
+    protected @Nullable Navigable getNavigable() {
+        return getContent().getNavigable(LineCol.fromCaret(getEditor()));
     }
 
     public static boolean canShowRequest(DiffContext context, DiffRequest request) {
@@ -179,11 +179,11 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
 
     private class MyOpenInEditorWithMouseAction extends OpenInEditorWithMouseAction {
         @Override
-        protected Navigatable getNavigatable(Editor editor, int line) {
+        protected Navigable getNavigable(Editor editor, int line) {
             if (editor != getEditor()) {
                 return null;
             }
-            return getContent().getNavigatable(new LineCol(line));
+            return getContent().getNavigable(new LineCol(line));
         }
     }
 
@@ -200,7 +200,7 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
     }
 
     protected abstract class MyInitialScrollPositionHelper extends InitialScrollPositionSupport.TwosideInitialScrollHelper {
-        
+
         @Override
         protected List<? extends Editor> getEditors() {
             return OnesideTextDiffViewer.this.getEditors();

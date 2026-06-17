@@ -15,57 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView;
 
-import consulo.navigation.Navigatable;
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
-
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2004-11-12
  */
-public class NavigatableMessageElement extends ErrorTreeElement {
-  private final GroupingElement myParent;
-  private final String[] myMessage;
-  private final Navigatable myNavigatable;
-  private final String myExportText;
-  private final String myRendererTextPrefix;
-
-  public NavigatableMessageElement(ErrorTreeElementKind kind,
-                                   @Nullable GroupingElement parent,
-                                   String[] message,
-                                   Navigatable navigatable,
-                                   String exportText,
-                                   String rendererTextPrefix) {
-    super(kind);
-    myParent = parent;
-    myMessage = message;
-    myNavigatable = navigatable;
-    myExportText = exportText;
-    myRendererTextPrefix = rendererTextPrefix;
-  }
-
-  public Navigatable getNavigatable() {
-    return myNavigatable;
-  }
-
-  public String[] getText() {
-    return myMessage;
-  }
-
-  public Object getData() {
-    return myParent.getData();
-  }
-
-  public @Nullable GroupingElement getParent() {
-    return myParent;
-  }
-
-  public String getExportTextPrefix() {
-    return getKind().getPresentableText() + myExportText;
-  }
-
-  public String getRendererTextPrefix() {
-    return myRendererTextPrefix;
-  }
+@Deprecated
+@DeprecationInfo("Use NavigableMessageElement, typo-corrected name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public class NavigatableMessageElement extends NavigableMessageElement {
+    public NavigatableMessageElement(
+        ErrorTreeElementKind kind,
+        @Nullable GroupingElement parent,
+        String[] message,
+        Navigable navigable,
+        String exportText,
+        String rendererTextPrefix
+    ) {
+        super(kind, parent, message, navigable, exportText, rendererTextPrefix);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.navigation;
+package consulo.ui.ex.awt.tree;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.util.concurrent.Promise;
 
-@Deprecated
-@DeprecationInfo("Use NonNavigable, typo-corrected name")
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public final class NonNavigatable extends NonNavigable {
-    NonNavigatable() {
-    }
+import javax.swing.tree.TreePath;
+
+/**
+ * @author Sergey.Malenkov
+ */
+public interface Navigable {
+    Promise<TreePath> nextTreePath(TreePath path, Object object);
+
+    Promise<TreePath> prevTreePath(TreePath path, Object object);
 }

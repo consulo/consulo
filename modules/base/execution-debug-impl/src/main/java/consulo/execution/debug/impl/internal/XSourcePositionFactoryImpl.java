@@ -15,15 +15,18 @@
  */
 package consulo.execution.debug.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.XSourcePositionFactory;
 import consulo.language.psi.PsiElement;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,26 +35,29 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class XSourcePositionFactoryImpl implements XSourcePositionFactory {
-    public static class XSourcePositionNavigatable implements Navigatable {
+    public static class XSourcePositionNavigable implements Navigatable {
         private final Project myProject;
         private final XSourcePosition myPosition;
 
-        public XSourcePositionNavigatable(Project project, XSourcePosition position) {
+        public XSourcePositionNavigable(Project project, XSourcePosition position) {
             myProject = project;
             myPosition = position;
         }
 
         @Override
+        @RequiredUIAccess
         public void navigate(boolean requestFocus) {
             XSourcePositionImpl.createOpenFileDescriptor(myProject, myPosition).navigate(requestFocus);
         }
 
         @Override
+        @RequiredReadAction
         public boolean canNavigate() {
             return myPosition.getFile().isValid();
         }
 
         @Override
+        @RequiredReadAction
         public boolean canNavigateToSource() {
             return canNavigate();
         }
@@ -77,9 +83,8 @@ public class XSourcePositionFactoryImpl implements XSourcePositionFactory {
         return XSourcePositionImpl.createByElement(element);
     }
 
-    
     @Override
-    public Navigatable createDefaultNavigatable(Project project, XSourcePosition position) {
-        return new XSourcePositionNavigatable(project, position);
+    public Navigable createDefaultNavigable(Project project, XSourcePosition position) {
+        return new XSourcePositionNavigable(project, position);
     }
 }

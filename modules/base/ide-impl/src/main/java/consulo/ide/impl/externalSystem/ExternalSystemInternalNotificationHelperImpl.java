@@ -26,10 +26,10 @@ import consulo.externalSystem.service.notification.NotificationSource;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
-import consulo.ide.impl.idea.ide.errorTreeView.NavigatableMessageElement;
+import consulo.ide.impl.idea.ide.errorTreeView.NavigableMessageElement;
 import consulo.ide.impl.idea.ide.errorTreeView.NewEditableErrorTreeViewPanel;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.view.MessageView;
@@ -45,9 +45,9 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -79,8 +79,8 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         int guiLine = line < 0 ? -1 : line + 1;
         int guiColumn = column < 0 ? 0 : column + 1;
 
-        Navigatable navigatable = notificationData.getNavigatable() != null
-            ? notificationData.getNavigatable()
+        Navigable navigable = notificationData.getNavigable() != null
+            ? notificationData.getNavigable()
             : virtualFile != null ? new OpenFileDescriptorImpl(myProject, virtualFile, line, column) : null;
 
         ErrorTreeElementKind kind =
@@ -96,35 +96,34 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
             NewErrorTreeViewPanelImpl errorTreeView =
                 prepareMessagesView(externalSystemId, notificationData.getNotificationSource(), activate);
             GroupingElement groupingElement = errorTreeView.getErrorViewStructure().getGroupingElement(groupName, null, virtualFile);
-            NavigatableMessageElement navigatableMessageElement;
+            NavigableMessageElement navigableMessageElement;
             if (notificationData.hasLinks()) {
-                navigatableMessageElement = new EditableNotificationMessageElement(
+                navigableMessageElement = new EditableNotificationMessageElement(
                     notification,
                     kind,
                     groupingElement,
                     message,
-                    navigatable,
+                    navigable,
                     exportPrefix,
                     rendererPrefix
                 );
             }
             else {
-                navigatableMessageElement = new NotificationMessageElement(
+                navigableMessageElement = new NotificationMessageElement(
                     kind,
                     groupingElement,
                     message,
-                    navigatable,
+                    navigable,
                     exportPrefix,
                     rendererPrefix
                 );
             }
 
-            errorTreeView.getErrorViewStructure().addNavigatableMessage(groupName, navigatableMessageElement);
+            errorTreeView.getErrorViewStructure().addNavigableMessage(groupName, navigableMessageElement);
             errorTreeView.updateTree();
         });
     }
 
-    
     @RequiredUIAccess
     public NewErrorTreeViewPanelImpl prepareMessagesView(
         ProjectSystemId externalSystemId,
@@ -172,11 +171,7 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         return targetContent;
     }
 
-    
-    public static String getContentDisplayName(
-        NotificationSource notificationSource,
-        ProjectSystemId externalSystemId
-    ) {
+    public static String getContentDisplayName(NotificationSource notificationSource, ProjectSystemId externalSystemId) {
         if (notificationSource != NotificationSource.PROJECT_SYNC) {
             throw new AssertionError("unsupported notification source found: " + notificationSource);
         }

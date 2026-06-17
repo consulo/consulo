@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.navigation;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -39,7 +38,7 @@ import consulo.language.psi.util.EditSourceUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -83,7 +82,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         }
         catch (IndexNotReadyException e) {
             DumbService.getInstance(project)
-                .showDumbModeNotification(LocalizeValue.localizeTODO("Navigation is not available here during index update"));
+                    .showDumbModeNotification(LocalizeValue.localizeTODO("Navigation is not available here during index update"));
         }
     }
 
@@ -92,12 +91,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     protected abstract @Nullable GotoData getSourceAndTargetElements(Editor editor, PsiFile file);
 
     @RequiredUIAccess
-    private void show(
-        Project project,
-        Editor editor,
-        PsiFile file,
-        GotoData gotoData
-    ) {
+    private void show(Project project, Editor editor, PsiFile file, GotoData gotoData) {
         PsiElement[] targets = gotoData.targets;
         List<AdditionalAction> additionalActions = gotoData.additionalActions;
 
@@ -167,8 +161,8 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
                     additionalAction.execute();
                 }
                 else {
-                    Navigatable nav =
-                        element instanceof Navigatable navigatable ? navigatable : EditSourceUtil.getDescriptor((PsiElement)element);
+                    Navigable nav =
+                        element instanceof Navigable navigable ? navigable : EditSourceUtil.getDescriptor((PsiElement)element);
                     try {
                         if (nav != null && nav.canNavigate()) {
                             navigateToElement(nav);
@@ -229,7 +223,6 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         }
     }
 
-    
     private PsiElementListCellRenderer getRenderer(
         Object value,
         Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
@@ -242,7 +235,6 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return renderer != null ? renderer : myDefaultTargetElementRenderer;
     }
 
-    
     protected Comparator<PsiElement> createComparator(
         Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
         GotoData gotoData
@@ -263,8 +255,9 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return GotoTargetRendererProvider.EP_NAME.computeSafeIfAny(Application.get(), it -> it.getRenderer(eachTarget, gotoData));
     }
 
+    @RequiredUIAccess
     protected boolean navigateToElement(PsiElement target) {
-        Navigatable descriptor = target instanceof Navigatable navigatable ? navigatable : EditSourceUtil.getDescriptor(target);
+        Navigable descriptor = target instanceof Navigable navigable ? navigable : EditSourceUtil.getDescriptor(target);
         if (descriptor != null && descriptor.canNavigate()) {
             navigateToElement(descriptor);
             return true;
@@ -272,7 +265,8 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return false;
     }
 
-    protected void navigateToElement(Navigatable descriptor) {
+    @RequiredUIAccess
+    protected void navigateToElement(Navigable descriptor) {
         descriptor.navigate(true);
     }
 
@@ -280,24 +274,20 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return true;
     }
 
-    
     @Deprecated // use getChooserTitle(PsiElement, String, int, boolean) instead
     protected String getChooserTitle(PsiElement sourceElement, String name, int length) {
         LOG.warn("Please override getChooserTitle(PsiElement, String, int, boolean) instead");
         return "";
     }
 
-    
     protected String getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
         return getChooserTitle(sourceElement, name, length);
     }
 
-    
     protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
         return getChooserTitle(sourceElement, name, length, true);
     }
 
-    
     protected abstract String getNotFoundMessage(Project project, Editor editor, PsiFile file);
 
     protected @Nullable String getAdText(PsiElement source, int length) {
@@ -305,7 +295,6 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
 
     public interface AdditionalAction {
-        
         String getText();
 
         Image getIcon();
@@ -314,7 +303,6 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
 
     public static class GotoData implements GotoTargetRendererProvider.Options {
-        
         public final PsiElement source;
         public PsiElement[] targets;
         public final List<AdditionalAction> additionalActions;

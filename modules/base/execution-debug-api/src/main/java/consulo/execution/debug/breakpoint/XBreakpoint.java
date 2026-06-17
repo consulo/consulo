@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.debug.breakpoint;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XSourcePosition;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
@@ -32,21 +33,26 @@ import org.jspecify.annotations.Nullable;
  * @see XBreakpointManager
  */
 public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHolder {
-
     boolean isEnabled();
 
     void setEnabled(boolean enabled);
 
-    
     XBreakpointType<?, P> getType();
 
     P getProperties();
 
-    @Nullable XSourcePosition getSourcePosition();
+    @Nullable
+    XSourcePosition getSourcePosition();
 
-    @Nullable Navigatable getNavigatable();
+    @Nullable Navigable getNavigable();
 
-    
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable(), typo-corrected name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getNavigatable() {
+        return (Navigatable) getNavigable();
+    }
+
     SuspendPolicy getSuspendPolicy();
 
     void setSuspendPolicy(SuspendPolicy policy);
@@ -83,10 +89,8 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     long getTimeStamp();
 
-    
     Project getProject();
 
-    
     XBreakpointManager getBreakpointManager();
 
     void fireBreakpointChanged();

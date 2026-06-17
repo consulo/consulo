@@ -15,13 +15,13 @@
  */
 package consulo.navigation;
 
-import consulo.localize.LocalizeValue;
-import consulo.navigation.Navigatable;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author yole
  */
-public interface NavigatableWithText extends Navigatable {
-    
-    LocalizeValue getNavigateActionText(boolean focusEditor);
+@Deprecated
+@DeprecationInfo("Use NavigableWithText, typo-corrected name")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+public interface NavigatableWithText extends NavigableWithText {
 }

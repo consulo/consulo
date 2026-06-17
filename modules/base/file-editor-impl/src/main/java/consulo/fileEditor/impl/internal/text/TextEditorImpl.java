@@ -36,7 +36,7 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -213,14 +213,14 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    public boolean canNavigateTo(Navigatable navigatable) {
-        return navigatable instanceof OpenFileDescriptor fileDescriptor
+    public boolean canNavigateTo(Navigable navigable) {
+        return navigable instanceof OpenFileDescriptor fileDescriptor
             && (fileDescriptor.getLine() != -1 || fileDescriptor.getOffset() >= 0);
     }
 
     @Override
-    public void navigateTo(Navigatable navigatable) {
-        ((OpenFileDescriptorImpl) navigatable).navigateIn(getEditor());
+    public void navigateTo(Navigable navigable) {
+        ((OpenFileDescriptorImpl) navigable).navigateIn(getEditor());
     }
 
     @Override

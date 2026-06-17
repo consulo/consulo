@@ -15,6 +15,7 @@
  */
 package consulo.diff;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
 import consulo.diff.content.DiffContent;
 import consulo.diff.merge.MergeTool;
@@ -24,19 +25,29 @@ import consulo.navigation.Navigatable;
 import consulo.util.dataholder.Key;
 
 public interface DiffDataKeys {
-  Key<Navigatable> NAVIGATABLE = Key.create("diff_navigatable");
-  Key<Navigatable[]> NAVIGATABLE_ARRAY = Key.create("diff_navigatable_array");
+    Key<Navigatable> NAVIGABLE = Key.create("diff_navigatable");
+    Key<Navigatable[]> NAVIGABLE_ARRAY = Key.create("diff_navigatable_array");
 
-  Key<Editor> CURRENT_EDITOR = Key.create("diff_current_editor");
-  Key<DiffContent> CURRENT_CONTENT = Key.create("diff_current_content");
-  Key<LineRange> CURRENT_CHANGE_RANGE = Key.create("diff_current_change_range");
+    @Deprecated
+    @DeprecationInfo("Use #NAVIGABLE with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    Key<Navigatable> NAVIGATABLE = NAVIGABLE;
 
-  Key<DiffRequest> DIFF_REQUEST = Key.create("diff_request");
-  Key<DiffContext> DIFF_CONTEXT = Key.create("diff_context");
-  Key<FrameDiffTool.DiffViewer> DIFF_VIEWER = Key.create("diff_frame_viewer");
-  Key<FrameDiffTool.DiffViewer> WRAPPING_DIFF_VIEWER = Key.create("main_diff_frame_viewer"); // if DiffViewerWrapper is used
+    @Deprecated
+    @DeprecationInfo("Use #NAVIGABLE_ARRAY with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    Key<Navigatable[]> NAVIGATABLE_ARRAY = NAVIGABLE_ARRAY;
 
-  Key<MergeTool.MergeViewer> MERGE_VIEWER = Key.create("merge_viewer");
+    Key<Editor> CURRENT_EDITOR = Key.create("diff_current_editor");
+    Key<DiffContent> CURRENT_CONTENT = Key.create("diff_current_content");
+    Key<LineRange> CURRENT_CHANGE_RANGE = Key.create("diff_current_change_range");
 
-  Key<PrevNextDifferenceIterable> PREV_NEXT_DIFFERENCE_ITERABLE = Key.create("prev_next_difference_iterable");
+    Key<DiffRequest> DIFF_REQUEST = Key.create("diff_request");
+    Key<DiffContext> DIFF_CONTEXT = Key.create("diff_context");
+    Key<FrameDiffTool.DiffViewer> DIFF_VIEWER = Key.create("diff_frame_viewer");
+    Key<FrameDiffTool.DiffViewer> WRAPPING_DIFF_VIEWER = Key.create("main_diff_frame_viewer"); // if DiffViewerWrapper is used
+
+    Key<MergeTool.MergeViewer> MERGE_VIEWER = Key.create("merge_viewer");
+
+    Key<PrevNextDifferenceIterable> PREV_NEXT_DIFFERENCE_ITERABLE = Key.create("prev_next_difference_iterable");
 }

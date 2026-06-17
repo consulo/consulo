@@ -24,11 +24,10 @@ import consulo.execution.test.sm.SMCustomMessagesParsing;
 import consulo.execution.test.sm.runner.*;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.Filter;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
-
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -73,13 +72,13 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
     }
 
     @Override
-    public @Nullable Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
-        return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
+    public @Nullable Navigable getErrorNavigable(Location<?> location, String stacktrace) {
+        return myProperties == null ? null : myProperties.getErrorNavigable(location, stacktrace);
     }
 
     @Override
-    public @Nullable Navigatable getErrorNavigatable(Project project, String stacktrace) {
-        return myProperties == null ? null : myProperties.getErrorNavigatable(project, stacktrace);
+    public @Nullable Navigable getErrorNavigable(Project project, String stacktrace) {
+        return myProperties == null ? null : myProperties.getErrorNavigable(project, stacktrace);
     }
 
     @Override

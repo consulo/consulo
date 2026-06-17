@@ -5,7 +5,7 @@ import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.FileMessageEvent;
 import consulo.build.ui.event.FileMessageEventResult;
-import consulo.navigation.Navigatable;
+import consulo.navigation.Navigable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import org.jspecify.annotations.Nullable;
@@ -64,12 +64,12 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
   }
 
   @Override
-  public @Nullable Navigatable getNavigatable(Project project) {
-    return new FileNavigatable(project, myFilePosition);
+  public @Nullable Navigable getNavigable(Project project) {
+    return new FileNavigable(project, myFilePosition);
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     if (!super.equals(o)) return false;

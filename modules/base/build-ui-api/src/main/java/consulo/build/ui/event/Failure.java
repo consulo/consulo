@@ -15,27 +15,45 @@
  */
 package consulo.build.ui.event;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface Failure {
-  @BuildEventsNls.Message
-  @Nullable String getMessage();
+    @BuildEventsNls.Message
+    @Nullable
+    String getMessage();
 
-  @BuildEventsNls.Description
-  @Nullable String getDescription();
+    @BuildEventsNls.Description
+    @Nullable
+    String getDescription();
 
-  default @Nullable Throwable getError() {return null;}
+    default @Nullable Throwable getError() {
+        return null;
+    }
 
-  List<? extends Failure> getCauses();
+    List<? extends Failure> getCauses();
 
-  default @Nullable Notification getNotification() {return null;}
+    default @Nullable Notification getNotification() {
+        return null;
+    }
 
-  default @Nullable Navigatable getNavigatable() {return null;}
+    default @Nullable Navigable getNavigable() {
+        return null;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    default @Nullable Navigatable getNavigatable() {
+        return (Navigatable) getNavigable();
+    }
 }

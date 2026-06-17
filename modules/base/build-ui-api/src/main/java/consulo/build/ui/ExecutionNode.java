@@ -15,22 +15,31 @@
  */
 package consulo.build.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 01-Aug-22
+ * @since 2022-08-01
  */
 public abstract class ExecutionNode<T extends ExecutionNode<T>> extends PresentableNodeDescriptor<T> {
-  public ExecutionNode(@Nullable NodeDescriptor parentDescriptor) {
-    super(parentDescriptor);
-  }
+    public ExecutionNode(@Nullable NodeDescriptor parentDescriptor) {
+        super(parentDescriptor);
+    }
 
-  
-  public abstract List<Navigatable> getNavigatables();
+    public abstract List<Navigable> getNavigables();
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigables() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation", "unchecked"})
+    public List<Navigatable> getNavigatables() {
+        return (List) getNavigables();
+    }
 }

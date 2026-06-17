@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressWindow;
 import consulo.application.progress.ProgressIndicator;
@@ -28,6 +29,7 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
 import consulo.logging.Logger;
+import consulo.navigation.Navigable;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -254,8 +256,15 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
         Disposer.dispose(myTaskAlarm);
     }
 
-    protected @Nullable Navigatable getNavigatable() {
+    protected @Nullable Navigable getNavigable() {
         return null;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getNavigable() with typo-fixed name")
+    @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+    protected @Nullable Navigatable getNavigatable() {
+        return (Navigatable) getNavigable();
     }
 
     //
@@ -307,8 +316,8 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
 
     @Override
     public @Nullable Object getData(Key<?> dataId) {
-        if (DiffDataKeys.NAVIGATABLE == dataId) {
-            return getNavigatable();
+        if (DiffDataKeys.NAVIGABLE == dataId) {
+            return getNavigable();
         }
         else if (Project.KEY == dataId) {
             return myProject;
