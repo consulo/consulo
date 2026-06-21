@@ -22,7 +22,8 @@ import org.jspecify.annotations.Nullable;
  * Read-only view of captured data. Used by {@link UiDataRule} to access
  * already-collected data when computing derived values.
  * <p>
- * Only returns immediately available (non-lazy) data.
+ * Resolves both immediate and lazily-provided data on demand, so a rule may read
+ * a dependency that an earlier provider supplied lazily.
  */
 public interface DataSnapshot {
     <T> @Nullable T get(Key<T> key);

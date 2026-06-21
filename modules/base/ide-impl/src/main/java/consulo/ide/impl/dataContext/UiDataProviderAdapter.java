@@ -22,8 +22,6 @@ import consulo.dataContext.UiDataRule;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * Adapts a {@link UiDataProvider} to the {@link DataProvider} interface,
  * allowing it to be used within the existing DataManager infrastructure.
@@ -34,9 +32,11 @@ import java.util.List;
  * {@code tryRunReadAction}).
  */
 public class UiDataProviderAdapter implements DataProvider {
+    private final Application myApplication;
     private final UiDataProvider myProvider;
 
-    public UiDataProviderAdapter(UiDataProvider provider) {
+    public UiDataProviderAdapter(Application application, UiDataProvider provider) {
+        myApplication = application;
         myProvider = provider;
     }
 
@@ -46,8 +46,8 @@ public class UiDataProviderAdapter implements DataProvider {
 
     @Override
     public @Nullable Object getData(Key<?> dataId) {
-        DataSinkImpl sink = new DataSinkImpl();
-        sink.collectFromProvider(myProvider, Application.get().getExtensionPoint(UiDataRule.class));
+        DataSinkImpl sink = new DataSinkImpl(myApplication);
+        sink.collectFromProvider(myProvider, myApplication.getExtensionPoint(UiDataRule.class));
         return sink.resolve(dataId);
     }
 }

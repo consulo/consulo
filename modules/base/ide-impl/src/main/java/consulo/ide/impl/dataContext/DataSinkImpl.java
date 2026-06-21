@@ -26,8 +26,10 @@ import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -42,8 +44,15 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     private final Map<Key, Object> myImmediateData = new HashMap<>();
     private final Map<Key, Supplier<?>> myLazyData = new HashMap<>();
     private final Map<Key, Function<DataSnapshot, ?>> myLazyValueData = new HashMap<>();
+    private final Set<Key> myResolving = new HashSet<>();
 
     private boolean mySnapshotCollected;
+
+    private final Application myApplication;
+
+    public DataSinkImpl(Application application) {
+        myApplication = application;
+    }
 
     @Override
     public <T> void set(Key<T> key, @Nullable T data) {
@@ -90,6 +99,9 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
      *   <li>Check lazyValue function — execute under {@code tryRunReadAction} with this as snapshot — return if found</li>
      *   <li>Return null</li>
      * </ol>
+     * A {@link UiDataRule} computing a derived value (e.g. {@code VIRTUAL_FILE} from
+     * {@code PSI_ELEMENT}) reads dependencies back through {@link #get}, which must therefore
+     * resolve lazy data too — otherwise lazily-provided keys would always read as {@code null}.
      */
     @SuppressWarnings("unchecked")
     public <T> @Nullable T resolve(Key<T> key) {
@@ -99,38 +111,44 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
             return (T) immediate;
         }
 
-        // 2. Lazy supplier
-        Supplier<?> supplier = myLazyData.get(key);
-        if (supplier != null) {
-            T result = resolveUnderReadAction(() -> (T) supplier.get());
-            if (result != null) {
-                return result;
-            }
+        // Guard against cyclic lazy dependencies (e.g. a rule for A reading B whose rule reads A)
+        if (!myResolving.add(key)) {
+            return null;
         }
-
-        // 3. Lazy value function
-        Function<DataSnapshot, ?> function = myLazyValueData.get(key);
-        if (function != null) {
-            T result = resolveUnderReadAction(() -> (T) function.apply(this));
-            if (result != null) {
-                return result;
+        try {
+            // 2. Lazy supplier
+            Supplier<?> supplier = myLazyData.get(key);
+            if (supplier != null) {
+                T result = resolveUnderReadAction(() -> (T) supplier.get());
+                if (result != null) {
+                    return result;
+                }
             }
-        }
 
-        return null;
+            // 3. Lazy value function
+            Function<DataSnapshot, ?> function = myLazyValueData.get(key);
+            if (function != null) {
+                T result = resolveUnderReadAction(() -> (T) function.apply(this));
+                if (result != null) {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+        finally {
+            myResolving.remove(key);
+        }
     }
 
     @Override
     public @Nullable <T> T get(Key<T> key) {
-        // DataSnapshot only returns immediate (non-lazy) data
-        @SuppressWarnings("unchecked")
-        T result = (T) myImmediateData.get(key);
-        return result;
+        return resolve(key);
     }
 
     private @Nullable <T> T resolveUnderReadAction(Supplier<T> computation) {
         SimpleReference<T> result = SimpleReference.create();
-        Application.get().tryRunReadAction(() -> result.set(computation.get()));
+        myApplication.tryRunReadAction(() -> result.set(computation.get()));
         return result.get();
     }
 }

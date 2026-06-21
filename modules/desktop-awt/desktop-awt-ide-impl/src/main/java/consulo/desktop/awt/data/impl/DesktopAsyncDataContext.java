@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.data.impl;
 
+import consulo.application.Application;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -24,7 +25,7 @@ class DesktopAsyncDataContext implements AsyncDataContext {
     private final PreCachedDataContext myDelegate;
 
     @RequiredUIAccess
-    DesktopAsyncDataContext(DesktopDataManagerImpl dataManager, DataContext syncContext) {
+    DesktopAsyncDataContext(DesktopDataManagerImpl dataManager, DataContext syncContext, Application application) {
         UIAccess.assertIsUIThread();
         Component component = syncContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         List<Component> hierarchy = JBIterable.generate(component, Component::getParent).toList();
@@ -33,7 +34,7 @@ class DesktopAsyncDataContext implements AsyncDataContext {
         for (Component each : hierarchy) {
             DataProvider provider = dataManager.getDataProviderEx(each);
             if (provider != null) {
-                providers.add(PreCachedDataContext.initProviderForAsync(provider));
+                providers.add(PreCachedDataContext.initProviderForAsync(application, provider));
             }
         }
 

@@ -151,7 +151,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   SearchScope getMaxSearchScopeToWarnOfFallingOutOf(UsageTarget[] searchFor) {
     UsageTarget target = searchFor.length > 0 ? searchFor[0] : null;
     if (target instanceof UiDataProvider uiDataProvider) {
-      DataSinkImpl sink = new DataSinkImpl();
+      DataSinkImpl sink = new DataSinkImpl(Application.get());
       uiDataProvider.uiDataSnapshot(sink);
       SearchScope scope = sink.resolve(UsageView.USAGE_SCOPE);
       if (scope != null) {

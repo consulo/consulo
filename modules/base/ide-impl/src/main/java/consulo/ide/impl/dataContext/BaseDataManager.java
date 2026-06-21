@@ -155,7 +155,7 @@ public abstract class BaseDataManager implements DataManagerEx {
         ModalityState.KEY
     );
 
-    private final Application myApplication;
+    protected final Application myApplication;
     protected final Provider<WindowManager> myWindowManager;
 
     @Inject
@@ -240,7 +240,7 @@ public abstract class BaseDataManager implements DataManagerEx {
 
     protected DataProvider getDataProviderForComponent(consulo.ui.Component component) {
         if (component instanceof UiDataProvider uiProvider) {
-            return new UiDataProviderAdapter(uiProvider);
+            return new UiDataProviderAdapter(myApplication, uiProvider);
         }
         return component::getUserData;
     }
@@ -251,7 +251,7 @@ public abstract class BaseDataManager implements DataManagerEx {
         List<DataProvider> providers = new ArrayList<>();
         for (consulo.ui.Component c = component; c != null; c = c.getParent()) {
             DataProvider provider = getDataProviderForComponent(c);
-            providers.add(PreCachedDataContext.initProviderForAsync(provider));
+            providers.add(PreCachedDataContext.initProviderForAsync(myApplication, provider));
         }
         return new PreCachedDataContext(this, providers);
     }

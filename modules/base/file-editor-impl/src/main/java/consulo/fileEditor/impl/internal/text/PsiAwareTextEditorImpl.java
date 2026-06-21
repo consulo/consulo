@@ -34,6 +34,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.dataContext.DataSink;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -113,7 +114,10 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
       super.uiDataSnapshot(sink);
 
       // Lookup bounds — EDT-safe, just UI state
-      LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
+      LookupEx lookup = myProject.getDisposeState().get() != ThreeState.NO
+          ? null
+          : LookupManager.getInstance(myProject).getActiveLookup();
+
       if (lookup != null && lookup.isVisible()) {
         sink.set(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE, lookup.getBounds());
       }
