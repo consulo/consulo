@@ -72,7 +72,6 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         myOriginalHandler = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ENTER;
@@ -102,7 +101,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     }
 
     @RequiredWriteAction
-    private void executeWriteActionInner(Editor editor, Caret caret, DataContext dataContext, Project project) {
+    private void executeWriteActionInner(Editor editor, @Nullable Caret caret, DataContext dataContext, Project project) {
         CodeInsightSettings settings = CodeInsightSettings.getInstance();
         if (project == null) {
             myOriginalHandler.execute(editor, caret, dataContext);
