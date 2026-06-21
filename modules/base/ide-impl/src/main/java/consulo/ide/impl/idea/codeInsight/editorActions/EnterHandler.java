@@ -101,7 +101,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     }
 
     @RequiredWriteAction
-    private void executeWriteActionInner(Editor editor, @Nullable Caret caret, DataContext dataContext, Project project) {
+    private void executeWriteActionInner(Editor editor, @Nullable Caret caret, DataContext dataContext, @Nullable Project project) {
         CodeInsightSettings settings = CodeInsightSettings.getInstance();
         if (project == null) {
             myOriginalHandler.execute(editor, caret, dataContext);
