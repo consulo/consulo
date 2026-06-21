@@ -1,6 +1,8 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ide.impl.codeInsight.codeVision.ui.model;
 
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.Inlay;
 import consulo.language.editor.codeVision.CodeVisionAnchorKind;
 import consulo.language.editor.codeVision.CodeVisionEntry;
@@ -47,7 +49,12 @@ public class CodeVisionListData {
     public void setPainted(boolean value) {
         if (_isPainted != value) {
             _isPainted = value;
-            inlay.update();
+            // Do not request an inlay update while the editor is painting itself into an image
+            // (pure painting mode), since that would trigger a re-layout during paint.
+            Editor editor = inlay.getEditor();
+            if (!(editor instanceof EditorEx ex && ex.isPurePaintingMode())) {
+                inlay.update();
+            }
         }
     }
 
