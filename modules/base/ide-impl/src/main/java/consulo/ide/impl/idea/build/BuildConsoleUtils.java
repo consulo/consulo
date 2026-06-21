@@ -5,6 +5,7 @@ import consulo.build.ui.event.Failure;
 import consulo.build.ui.issue.BuildIssue;
 import consulo.build.ui.issue.BuildIssueQuickFix;
 import consulo.build.ui.progress.BuildProgressListener;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
@@ -60,7 +61,7 @@ public final class BuildConsoleUtils {
         for (BuildIssueQuickFix quickFix : buildIssue.getQuickFixes()) {
             listenerMap.put(quickFix.getId(), (notification, event) -> {
                 BuildView buildView = findBuildView(consoleView);
-                quickFix.runQuickFix(project, buildView == null ? consoleView : buildView);
+                quickFix.runQuickFix(project, buildView != null ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null);
             });
         }
 
@@ -147,7 +148,7 @@ public final class BuildConsoleUtils {
     
     public static DataProvider getDataProvider(Object buildId, AbstractViewManager buildListener) {
         BuildView buildView = buildListener.getBuildView(buildId);
-        return (buildView != null) ? buildView : dataId -> null;
+        return (buildView != null) ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null;
     }
 
     //@ApiStatus.Experimental
@@ -155,7 +156,7 @@ public final class BuildConsoleUtils {
     public static DataProvider getDataProvider(Object buildId, BuildProgressListener buildListener) {
         DataProvider provider;
         if (buildListener instanceof BuildView buildView) {
-            provider = buildView;
+            provider = dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId);
         }
         else if (buildListener instanceof AbstractViewManager abstractViewManager) {
             provider = getDataProvider(buildId, abstractViewManager);

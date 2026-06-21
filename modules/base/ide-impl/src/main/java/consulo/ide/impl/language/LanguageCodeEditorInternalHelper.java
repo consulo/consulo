@@ -31,7 +31,6 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
-import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
@@ -57,7 +56,6 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.MacUIUtil;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -78,22 +76,6 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
 
         public FileEditorAffectCaretContext(DataContext delegate, Caret caret) {
             super(delegate, caret);
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T> @Nullable T getData(Key<T> dataId) {
-            Project project = super.getData(Project.KEY);
-            if (project != null) {
-                FileEditorManager fm = FileEditorManager.getInstance(project);
-                if (fm != null) {
-                    Object data = fm.getData(dataId, myCaret.getEditor(), myCaret);
-                    if (data != null) {
-                        return (T) data;
-                    }
-                }
-            }
-            return super.getData(dataId);
         }
     }
 
@@ -116,7 +98,6 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(document, offset);
     }
 
-    
     @Override
     public CaretDataContext createCaretDataContext(DataContext delegate, Caret caret) {
         return new FileEditorAffectCaretContext(delegate, caret);
@@ -176,7 +157,6 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
     }
 
-    
     @Override
     public MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
         return DocumentMarkupModelImpl.forDocument(document, project, create);
@@ -192,13 +172,11 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS;
     }
 
-    
     @Override
     public LineWrapPositionStrategy getLineWrapPositionStrategy(Editor editor) {
         return LanguageLineWrapPositionStrategy.forEditor(editor);
     }
 
-    
     @Override
     public EditorHighlighter createEmptyHighlighter(Project project, Document document) {
         return EditorUtil.createEmptyHighlighter(project, document);
@@ -215,7 +193,6 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
         return StickyLinesModelImpl.getModel(project, document);
     }
 
-    
     @Override
     public StickyLinesModel getStickyLinesModel(MarkupModel markupModel) {
         return StickyLinesModelImpl.getModel(markupModel);

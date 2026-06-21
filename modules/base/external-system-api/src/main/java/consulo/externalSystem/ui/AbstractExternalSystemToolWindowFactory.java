@@ -71,7 +71,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
             ExternalProjectsManager.getInstance(project).registerView(myExternalSystemId, view);
             view.init();
             Content content = ContentFactory.getInstance().createContent(view, "", true);
-            toolWindow.getContentManager().addDataProvider(view);
+            toolWindow.getContentManager().addUiDataProvider(view);
             contentManager.addContent(content);
         });
     }

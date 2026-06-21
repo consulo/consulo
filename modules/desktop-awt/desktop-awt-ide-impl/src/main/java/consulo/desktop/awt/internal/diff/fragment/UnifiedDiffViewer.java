@@ -26,6 +26,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataSink;
 import consulo.desktop.awt.internal.diff.action.OpenInEditorWithMouseAction;
 import consulo.desktop.awt.internal.diff.action.SetEditorSettingsAction;
 import consulo.desktop.awt.internal.diff.util.*;
@@ -69,7 +70,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
@@ -1219,24 +1219,18 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     //
 
     @Override
-    @RequiredUIAccess
-    public @Nullable Object getData(Key<?> dataId) {
-        if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
-            return myPrevNextDifferenceIterable;
-        }
-        else if (VirtualFile.KEY == dataId) {
-            return DiffImplUtil.getVirtualFile(myRequest, myMasterSide);
-        }
-        else if (DiffDataKeys.CURRENT_EDITOR == dataId) {
-            return myEditor;
-        }
-        else if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE, myPrevNextDifferenceIterable);
+        sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, myMasterSide));
+        sink.set(DiffDataKeys.CURRENT_EDITOR, myEditor);
+        sink.lazy(DiffDataKeys.CURRENT_CHANGE_RANGE, () -> {
             UnifiedDiffChange change = getCurrentChange();
             if (change != null) {
                 return new LineRange(change.getLine1(), change.getLine2());
             }
-        }
-        return super.getData(dataId);
+            return null;
+        });
     }
 
     private class MyStatusPanel extends StatusPanel {

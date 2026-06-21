@@ -16,15 +16,14 @@
 package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.application.ApplicationBundle;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.PopupHandler;
-import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +33,7 @@ import java.util.List;
 /**
  * @author Svetlana.Zemlyanskaya
  */
-public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider {
-  
+public class ArrangementRuleAliasesPanel extends JPanel implements UiDataProvider {
   protected final ArrangementRuleAliasControl myControl;
 
   public ArrangementRuleAliasesPanel(ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
@@ -72,7 +70,6 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
     add(scrollPane, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
 
-  
   public List<StdArrangementMatchRule> getRuleSequences() {
     return myControl.getRuleSequences();
   }
@@ -82,10 +79,7 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
   }
 
   @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    if (ArrangementRuleAliasControl.KEY == dataId) {
-      return myControl;
-    }
-    return null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(ArrangementRuleAliasControl.KEY, myControl);
   }
 }

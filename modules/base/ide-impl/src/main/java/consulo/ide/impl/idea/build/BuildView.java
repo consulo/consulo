@@ -12,7 +12,8 @@ import consulo.build.ui.event.StartBuildEvent;
 import consulo.build.ui.impl.internal.event.StartBuildEventImpl;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.build.ui.progress.BuildProgressListener;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunProfile;
@@ -45,20 +46,17 @@ import java.util.function.*;
 /**
  * @author Vladislav.Soroka
  */
-public class BuildView extends CompositeView<ExecutionConsole> implements BuildProgressListener, ConsoleView, DataProvider, Filterable<ExecutionNodeImpl>, OccurenceNavigator, ObservableConsoleView {
+public class BuildView extends CompositeView<ExecutionConsole> implements BuildProgressListener, ConsoleView, UiDataProvider, Filterable<ExecutionNodeImpl>, OccurenceNavigator, ObservableConsoleView {
   public static final String CONSOLE_VIEW_NAME = "consoleView";
   //@ApiStatus.Experimental
   public static final Key<List<AnAction>> RESTART_ACTIONS = Key.create("restart actions");
   private final
- 
   Project myProject;
   private final
- 
   ViewManager myViewManager;
   private final AtomicBoolean isBuildStartEventProcessed = new AtomicBoolean();
   private final List<BuildEvent> myAfterStartEvents = Lists.newLockFreeCopyOnWriteList();
   private final
- 
   DefaultBuildDescriptor myBuildDescriptor;
   private volatile
   @Nullable ExecutionConsole myExecutionConsole;
@@ -305,7 +303,6 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
- 
   public AnAction[] createConsoleActions() {
     if (!myViewManager.isBuildContentView()) {
       // console actions should be integrated with the provided toolbar when the console is shown not on Build tw
@@ -359,23 +356,18 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    if (KEY == dataId) {
-      return getConsoleView();
+  public void uiDataSnapshot(DataSink sink) {
+    super.uiDataSnapshot(sink);
+    ExecutionConsole consoleView = getConsoleView();
+    if (consoleView instanceof ConsoleView cv) {
+      sink.set(ConsoleView.KEY, cv);
     }
-    Object data = super.getData(dataId);
-    if (data != null) return data;
-    if (RunProfile.KEY == dataId) {
-      ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
-      return environment == null ? null : environment.getRunProfile();
+    ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
+    if (environment != null) {
+      sink.set(RunProfile.KEY, environment.getRunProfile());
+      sink.set(ExecutionEnvironment.KEY, environment);
     }
-    if (ExecutionEnvironment.KEY == dataId) {
-      return myBuildDescriptor.getExecutionEnvironment();
-    }
-    if (RESTART_ACTIONS == dataId) {
-      return myBuildDescriptor.getRestartActions();
-    }
-    return null;
+    sink.set(RESTART_ACTIONS, myBuildDescriptor.getRestartActions());
   }
 
   @Override
@@ -383,7 +375,6 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     return getEventView() != null;
   }
 
- 
   @Override
   public Predicate<ExecutionNodeImpl> getFilter() {
     BuildTreeConsoleView eventView = getEventView();
@@ -412,7 +403,6 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     return eventView != null && eventView.contains(filter);
   }
 
- 
   private OccurenceNavigator getOccurenceNavigator() {
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) return eventView;
@@ -443,13 +433,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     return getOccurenceNavigator().goPreviousOccurence();
   }
 
- 
   @Override
   public String getNextOccurenceActionName() {
     return getOccurenceNavigator().getNextOccurenceActionName();
   }
 
- 
   @Override
   public String getPreviousOccurenceActionName() {
     return getOccurenceNavigator().getPreviousOccurenceActionName();

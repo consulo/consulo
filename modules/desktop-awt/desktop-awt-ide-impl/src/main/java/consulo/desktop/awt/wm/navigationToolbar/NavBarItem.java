@@ -3,7 +3,8 @@ package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -14,9 +15,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.ui.image.Image;
-import consulo.util.collection.JBIterable;
-import consulo.util.dataholder.Key;
-import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class NavBarItem extends SimpleColoredComponent implements DataProvider, Disposable {
+public class NavBarItem extends SimpleColoredComponent implements UiDataProvider, Disposable {
   private final String myText;
   private final SimpleTextAttributes myAttributes;
   private final int myIndex;
@@ -104,7 +102,6 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     return myAttributes;
   }
 
-  
   public String getText() {
     return myText;
   }
@@ -169,7 +166,6 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     super.setOpaque(false);
   }
 
-  
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
@@ -189,7 +185,6 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     return object instanceof PsiElement && ((PsiElement)object).getContainingFile() != null;
   }
 
-  
   @Override
   public Dimension getMinimumSize() {
     return getPreferredSize();
@@ -227,8 +222,11 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    return myPanel.getDataImpl(dataId, this, () -> JBIterable.of(getObject()));
+  public void uiDataSnapshot(DataSink sink) {
+    Object obj = getObject();
+    sink.set(NavBarPanel.NAV_BAR_ITEMS, obj != null ? List.of(obj) : List.of());
+    // Delegate non-selection data to panel (Project, CopyPaste, IdeView, etc.)
+    sink.uiDataSnapshot(myPanel);
   }
 
   @Override

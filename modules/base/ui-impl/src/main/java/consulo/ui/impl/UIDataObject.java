@@ -44,9 +44,6 @@ public class UIDataObject extends UserDataHolderBase {
 
     private @Nullable Map<BorderPosition, BorderInfo> myBorders;
 
-    private final Supplier<List<Function<Key<?>, Object>>> myUserDataProviders = LazyValue.atomicNotNull(Lists::newLockFreeCopyOnWriteList);
-
-    
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
         EventDispatcher<ComponentEventListener> eventDispatcher = myListeners.computeIfAbsent(eventClass,
@@ -57,7 +54,6 @@ public class UIDataObject extends UserDataHolderBase {
     }
 
     @SuppressWarnings("unchecked")
-    
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getDispatcher(Class<E> c) {
         EventDispatcher eventDispatcher = myListeners.computeIfAbsent(c,
             it -> EventDispatcher.create(ComponentEventListener.class)
@@ -65,22 +61,9 @@ public class UIDataObject extends UserDataHolderBase {
         return (ComponentEventListener<C, E>) eventDispatcher.getMulticaster();
     }
 
-    
-    public <T> Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        myUserDataProviders.get().add(function);
-        return () -> myUserDataProviders.get().remove(function);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getUserData(Key<T> key) {
-        List<Function<Key<?>, Object>> value = myUserDataProviders.get();
-        for (Function<Key<?>, Object> function : value) {
-            Object funcValue = function.apply(key);
-            if (funcValue != null) {
-                return (T) funcValue;
-            }
-        }
         return super.getUserData(key);
     }
 
@@ -101,7 +84,6 @@ public class UIDataObject extends UserDataHolderBase {
         myBorders.remove(borderPosition);
     }
 
-    
     public Map<BorderPosition, BorderInfo> getBorders() {
         return myBorders == null ? Map.of() : myBorders;
     }

@@ -3,7 +3,8 @@ package consulo.versionControlSystem.log.impl.internal.ui;
 import com.google.common.primitives.Ints;
 import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -14,7 +15,6 @@ import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awt.table.ComponentsListFocusTraversalPolicy;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
@@ -44,40 +44,25 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class MainFrame extends JPanel implements DataProvider, Disposable {
+public class MainFrame extends JPanel implements UiDataProvider, Disposable {
     private static final String HELP_ID = "reference.changesToolWindow.log";
 
-    
     private final VcsLogDataImpl myLogData;
-    
     private final VcsLogUiImpl myUi;
-    
     private final VcsLog myLog;
-    
     private final VcsLogClassicFilterUi myFilterUi;
 
-    
     private final JBLoadingPanel myChangesLoadingPane;
-    
     private final VcsLogGraphTable myGraphTable;
-    
     private final DetailsPanel myDetailsPanel;
-    
     private final Splitter myDetailsSplitter;
-    
     private final JComponent myToolbar;
-    
     private final RepositoryChangesBrowser myChangesBrowser;
-    
     private final Splitter myChangesBrowserSplitter;
-    
     private final SearchTextField myTextFilter;
-    
     private final MainVcsLogUiProperties myUiProperties;
 
-    
     private Runnable myContainingBranchesListener;
-    
     private Runnable myMiniDetailsLoadedListener;
 
     public MainFrame(VcsLogDataImpl logData,
@@ -152,6 +137,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
             }
         }, this);
 
+
         JComponent toolbars = new JPanel(new BorderLayout());
         toolbars.add(myToolbar, BorderLayout.NORTH);
         JComponent toolbarsAndTable = new JPanel(new BorderLayout());
@@ -200,19 +186,16 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
         myDetailsSplitter.setSecondComponent(state ? myDetailsPanel : null);
     }
 
-    
     private JScrollPane setupScrolledGraph() {
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myGraphTable, SideBorder.TOP);
         myGraphTable.viewportSet(scrollPane.getViewport());
         return scrollPane;
     }
 
-    
     public VcsLogGraphTable getGraphTable() {
         return myGraphTable;
     }
 
-    
     public VcsLogFilterUi getFilterUi() {
         return myFilterUi;
     }
@@ -249,33 +232,26 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
         return panel;
     }
 
-    
     private ActionToolbar createActionsToolbar(ActionGroup mainGroup) {
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, mainGroup, true);
         toolbar.setTargetComponent(this);
         return toolbar;
     }
 
-    
     public JComponent getMainComponent() {
         return this;
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (VcsLog.KEY == dataId) {
-            return myLog;
-        }
-        else if (VcsLogUi.KEY == dataId) {
-            return myUi;
-        }
-        else if (VcsLogDataProvider.KEY == dataId) {
-            return myLogData;
-        }
-        else if (VcsDataKeys.CHANGES == dataId || VcsDataKeys.SELECTED_CHANGES == dataId) {
-            return ArrayUtil.toObjectArray(myChangesBrowser.getCurrentDisplayedChanges(), Change.class);
-        }
-        else if (VcsDataKeys.CHANGE_LISTS == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(VcsLog.KEY, myLog);
+        sink.set(VcsLogUi.KEY, myUi);
+        sink.set(VcsLogDataProvider.KEY, myLogData);
+        sink.set(HelpManager.HELP_ID, HELP_ID);
+        sink.set(VcsLogInternalDataKeys.LOG_UI_PROPERTIES, myUiProperties);
+        sink.lazy(VcsDataKeys.CHANGES, () -> ArrayUtil.toObjectArray(myChangesBrowser.getCurrentDisplayedChanges(), Change.class));
+        sink.lazy(VcsDataKeys.SELECTED_CHANGES, () -> ArrayUtil.toObjectArray(myChangesBrowser.getCurrentDisplayedChanges(), Change.class));
+        sink.lazy(VcsDataKeys.CHANGE_LISTS, () -> {
             List<VcsFullCommitDetails> details = myLog.getSelectedDetails();
             if (details.size() > VcsLogUtil.MAX_SELECTED_COMMITS) {
                 return null;
@@ -292,16 +268,16 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
                     convertToRevisionNumber(detail.getId())
                 )
             );
-        }
-        else if (VcsDataKeys.VCS_REVISION_NUMBERS == dataId) {
+        });
+        sink.lazy(VcsDataKeys.VCS_REVISION_NUMBERS, () -> {
             List<CommitId> hashes = myLog.getSelectedCommits();
             if (hashes.size() > VcsLogUtil.MAX_SELECTED_COMMITS) {
                 return null;
             }
             return ArrayUtil
                 .toObjectArray(ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())), VcsRevisionNumber.class);
-        }
-        else if (VcsDataKeys.VCS == dataId) {
+        });
+        sink.lazy(VcsDataKeys.VCS, () -> {
             int[] selectedRows = myGraphTable.getSelectedRows();
             if (selectedRows.length == 0 || selectedRows.length > VcsLogUtil.MAX_SELECTED_COMMITS) {
                 return null;
@@ -310,29 +286,21 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
             if (roots.size() == 1) {
                 return myLogData.getLogProvider(ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(roots))).getSupportedVcs();
             }
-        }
-        else if (VcsLogDataKeys.VCS_LOG_BRANCHES == dataId) {
+            return null;
+        });
+        sink.lazy(VcsLogDataKeys.VCS_LOG_BRANCHES, () -> {
             int[] selectedRows = myGraphTable.getSelectedRows();
             if (selectedRows.length != 1) {
                 return null;
             }
             return myGraphTable.getModel().getBranchesAtRow(selectedRows[0]);
-        }
-        else if (HelpManager.HELP_ID == dataId) {
-            return HELP_ID;
-        }
-        else if (VcsLogInternalDataKeys.LOG_UI_PROPERTIES == dataId) {
-            return myUiProperties;
-        }
-        return null;
+        });
     }
 
-    
     public JComponent getToolbar() {
         return myToolbar;
     }
 
-    
     public SearchTextField getTextFilter() {
         return myTextFilter;
     }
@@ -341,7 +309,6 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
         return myGraphTable.getRowCount() > 0;
     }
 
-    
     private static TextRevisionNumber convertToRevisionNumber(Hash hash) {
         return new TextRevisionNumber(hash.asString(), hash.toShortString());
     }
@@ -393,7 +360,6 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     }
 
     private class MyFocusPolicy extends ComponentsListFocusTraversalPolicy {
-        
         @Override
         protected List<Component> getOrderedComponents() {
             return Arrays.asList(myGraphTable, myChangesBrowser.getPreferredFocusedComponent(), myTextFilter.getTextEditor());

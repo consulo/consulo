@@ -16,39 +16,33 @@
 
 package consulo.language.impl.internal.dataRule;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.DataSnapshot;
+import consulo.dataContext.UiDataRule;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ExtensionImpl
-public class PsiFileRule implements GetDataRule<PsiFile> {
-  
-  @Override
-  public Key<PsiFile> getKey() {
-    return PsiFile.KEY;
-  }
-
-  @Override
-  @RequiredReadAction
-  public PsiFile getData(DataProvider dataProvider) {
-    PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
-    if (element != null) {
-      return element.getContainingFile();
+public class PsiFileRule implements UiDataRule {
+    @Override
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
+        sink.lazyValue(PsiFile.KEY, dataProvider -> {
+            PsiElement element = dataProvider.get(PsiElement.KEY);
+            if (element != null) {
+                return element.getContainingFile();
+            }
+            Project project = dataProvider.get(Project.KEY);
+            if (project != null) {
+                VirtualFile vFile = dataProvider.get(VirtualFile.KEY);
+                if (vFile != null) {
+                    return PsiManager.getInstance(project).findFile(vFile);
+                }
+            }
+            return null;
+        });
     }
-    Project project = dataProvider.getDataUnchecked(Project.KEY);
-    if (project != null) {
-      VirtualFile vFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
-      if (vFile != null) {
-        return PsiManager.getInstance(project).findFile(vFile);
-      }
-    }
-    return null;
-  }
 }

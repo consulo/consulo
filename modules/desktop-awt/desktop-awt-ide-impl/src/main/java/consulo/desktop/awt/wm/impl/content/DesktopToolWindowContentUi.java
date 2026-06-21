@@ -15,26 +15,24 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.ui.popup.PopupState;
+import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.project.ui.impl.internal.wm.action.ShowContentAction;
 import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
 import consulo.project.ui.internal.ToolWindowContentUI;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
@@ -51,7 +49,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
@@ -67,7 +64,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
+public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, UiDataProvider {
     class MyLayoutManager extends FlowLayout {
         MyLayoutManager() {
             super(FlowLayout.CENTER, 0, 0);
@@ -88,7 +85,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             return calcSize(target, Component::getPreferredSize);
         }
 
-        
         private Dimension calcSize(Container target, Function<Component, Dimension> dimensionSupplier) {
             synchronized (target.getTreeLock()) {
                 Dimension dim = new Dimension(0, 0);
@@ -163,7 +159,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         myShowContent = new ShowContentAction(myWindow, myContent);
     }
 
-    
     public ContentManager getContentManager() {
         return myManager;
     }
@@ -374,25 +369,21 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         return true;
     }
 
-    
     @Override
     public String getCloseActionName() {
         return getCurrentLayout().getCloseActionName();
     }
 
-    
     @Override
     public String getCloseAllButThisActionName() {
         return getCurrentLayout().getCloseAllButThisActionName();
     }
 
-    
     @Override
     public String getPreviousContentActionName() {
         return getCurrentLayout().getPreviousContentActionName();
     }
 
-    
     @Override
     public String getNextContentActionName() {
         return getCurrentLayout().getNextContentActionName();
@@ -676,19 +667,12 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (ToolWindow.KEY == dataId) {
-            return myWindow;
-        }
-
-        if (CloseAction.CloseTarget.KEY == dataId) {
-            return computeCloseTarget();
-        }
-
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(ToolWindow.KEY, myWindow);
+        sink.set(CloseAction.CloseTarget.KEY, computeCloseTarget((ToolWindowBase) myWindow));
     }
 
-    private CloseAction.CloseTarget computeCloseTarget() {
+    private CloseAction.CloseTarget computeCloseTarget(ToolWindowBase toolWindow) {
         if (myManager.canCloseContents()) {
             Content selected = myManager.getSelectedContent();
             if (selected != null && selected.isCloseable()) {
@@ -696,13 +680,20 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             }
         }
 
-        return new HideToolwindowTarget();
+        return new HideToolwindowTarget(toolWindow);
     }
 
-    private class HideToolwindowTarget implements CloseAction.CloseTarget {
+    private static class HideToolwindowTarget implements CloseAction.CloseTarget {
+
+        private final ToolWindowBase myToolWindow;
+
+        private HideToolwindowTarget(ToolWindowBase toolWindow) {
+            myToolWindow = toolWindow;
+        }
+
         @Override
         public void close() {
-            myWindow.fireHidden();
+            myToolWindow.fireHidden();
         }
     }
 

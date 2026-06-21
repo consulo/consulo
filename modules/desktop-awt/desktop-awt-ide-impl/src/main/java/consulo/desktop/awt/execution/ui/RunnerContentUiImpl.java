@@ -19,7 +19,8 @@ package consulo.desktop.awt.execution.ui;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.impl.internal.ui.layout.RunnerLayoutImpl;
@@ -65,7 +66,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -242,19 +242,14 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             return;
         }
 
-        myTabs = (JBRunnerTabs) new JBRunnerTabs(myProject, myActionManager, myFocusManager, this).setDataProvider(new DataProvider() {
+        myTabs = (JBRunnerTabs) new JBRunnerTabs(myProject, myActionManager, myFocusManager, this).setDataProvider(new UiDataProvider() {
                 @Override
-                public Object getData(Key<?> dataId) {
-                    if (ViewContext.CONTENT_KEY == dataId) {
-                        TabInfo info = myTabs.getTargetInfo();
-                        if (info != null) {
-                            return getGridFor(info).getData(dataId);
-                        }
+                public void uiDataSnapshot(DataSink sink) {
+                    sink.set(ViewContext.CONTEXT_KEY, RunnerContentUiImpl.this);
+                    TabInfo info = myTabs.getTargetInfo();
+                    if (info != null) {
+                        sink.uiDataSnapshot(getGridFor(info));
                     }
-                    else if (ViewContext.CONTEXT_KEY == dataId) {
-                        return RunnerContentUiImpl.this;
-                    }
-                    return null;
                 }
             })
             .setInnerInsets(JBUI.emptyInsets())
@@ -315,7 +310,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                 if (UIUtil.isCloseClick(e)) {
                     TabInfo tabInfo = myTabs.findInfo(e);
                     GridImpl grid = tabInfo == null ? null : getGridFor(tabInfo);
-                    Content[] contents = grid != null ? (Content[]) grid.getData(ViewContext.CONTENT_KEY) : null;
+                    Content[] contents = grid != null ? grid.getContents().toArray(new Content[0]) : null;
                     if (contents == null) {
                         return;
                     }
@@ -506,7 +501,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return getAcceptArea();
     }
 
-    
     @Override
     public ContentResponse getContentResponse(DockableContent content, RelativePoint point) {
         if (!(content instanceof DockableGrid)) {
@@ -727,8 +721,9 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                 if (myMinimizeActionEnabled) {
                     AnAction[] actions = myViewActions.getChildren(null, ActionManager.getInstance());
                     for (AnAction action : actions) {
-                        if (action instanceof ViewLayoutModificationAction && ((ViewLayoutModificationAction) action).getContent() == event.getContent())
+                        if (action instanceof ViewLayoutModificationAction && ((ViewLayoutModificationAction) action).getContent() == event.getContent()) {
                             return;
+                        }
                     }
 
                     CustomContentLayoutSettings layoutOptionsCollection = event.getContent().getUserData(CustomContentLayoutSettings.KEY);
@@ -973,7 +968,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
         for (Map.Entry<GridImpl, Wrapper> entry : myMinimizedButtonsPlaceholder.entrySet()) {
             Wrapper eachPlaceholder = entry.getValue();
-            
+
             if (count > 0) {
                 ActionGroup contentGroup = ActionGroup.newImmutableBuilder().add(myViewActions).build();
                 ActionToolbar tb = myActionManager.createActionToolbar(ActionPlaces.RUNNER_LAYOUT_BUTTON_TOOLBAR, contentGroup, true);
@@ -982,7 +977,8 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
                 tb.getComponent().setBorder(null);
                 JComponent minimized = tb.getComponent();
                 eachPlaceholder.setContent(minimized);
-            } else {
+            }
+            else {
                 eachPlaceholder.setContent(null);
             }
         }
@@ -1326,7 +1322,9 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         List<AnAction> specialActions = new ArrayList<>();
         ActionManager actionManager = ActionManager.getInstance();
         for (AnAction action : myViewActions.getChildren(null, actionManager)) {
-            if (!(action instanceof ViewLayoutModificationAction)) specialActions.add(action);
+            if (!(action instanceof ViewLayoutModificationAction)) {
+                specialActions.add(action);
+            }
         }
         if (myMinimizeActionEnabled) {
             if (specialActions.isEmpty()) {
@@ -1546,7 +1544,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
     }
 
-    private class MyComponent extends NonOpaquePanel implements DataProvider, QuickActionProvider {
+    private class MyComponent extends NonOpaquePanel implements UiDataProvider, QuickActionProvider {
         private boolean myWasEverAdded;
 
         public MyComponent(LayoutManager layout) {
@@ -1556,22 +1554,22 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
 
         @Override
-        public @Nullable Object getData(Key<?> dataId) {
-            if (KEY == dataId) {
-                return RunnerContentUiImpl.this;
-            }
-            else if (CloseAction.CloseTarget.KEY == dataId) {
-                Content content = getContentManager().getSelectedContent();
-                if (content != null && content.getManager().canCloseContents() && content.isCloseable()) {
-                    return (CloseAction.CloseTarget) () -> content.getManager().removeContent(content, true, true, true);
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(RunnerContentUi.KEY, RunnerContentUiImpl.this);
+
+            Content content = getContentManager().getSelectedContent();
+            if (content != null && content.isCloseable()) {
+                ContentManager contentManager = content.getManager();
+                if (contentManager != null && contentManager.canCloseContents()) {
+                    sink.set(CloseAction.CloseTarget.KEY,
+                        (CloseAction.CloseTarget) () -> contentManager.removeContent(content, true, true, true));
                 }
             }
 
             ContentManager originalContentManager = myOriginal == null ? null : myOriginal.getContentManager();
-            if (originalContentManager != null && originalContentManager.getComponent() instanceof DataProvider dataProvider) {
-                return dataProvider.getData(dataId);
+            if (originalContentManager != null && originalContentManager.getComponent() instanceof UiDataProvider uiDataProvider) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
-            return null;
         }
 
         @SuppressWarnings("NullableProblems")
@@ -1727,7 +1725,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return myManager;
     }
 
-    
     @Override
     public ActionManager getActionManager() {
         return myActionManager;
@@ -1913,7 +1910,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         @Override
         public void dragOutStarted(MouseEvent mouseEvent, TabInfo info) {
             JComponent component = info.getComponent();
-            Content[] data = (Content[]) ((DataProvider) component).getData(ViewContext.CONTENT_KEY);
+            Content[] data = component instanceof Grid grid ? grid.getContents().toArray(new Content[0]) : null;
             assert data != null;
             storeDefaultIndices(data);
 

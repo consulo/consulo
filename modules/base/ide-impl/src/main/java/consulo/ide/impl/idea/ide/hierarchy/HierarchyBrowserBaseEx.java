@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataSink;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposer;
@@ -470,15 +471,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         return myCurrentViewType;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Object getData(Key<?> dataId) {
-        if (getBrowserDataKey() == dataId) {
-            return this;
-        }
-        if (HelpManager.HELP_ID == dataId) {
-            return HELP_ID;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set((Key)getBrowserDataKey(), this);
+        sink.set(HelpManager.HELP_ID, HELP_ID);
     }
 
     private void disposeBuilders() {
@@ -583,7 +581,6 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     static class BaseOnThisElementAction<H extends HierarchyProvider> extends AnAction {
         private final String myActionId;
         private final Key<?> myBrowserDataKey;
-        
         private final Class<H> myHierarchyProviderClass;
 
         BaseOnThisElementAction(

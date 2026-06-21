@@ -20,7 +20,8 @@ import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowState;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -53,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FrameWrapper implements Disposable, DataProvider {
+public class FrameWrapper implements Disposable, UiDataProvider {
 
   private String myDimensionKey = null;
   private JComponent myComponent = null;
@@ -268,16 +269,8 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   @Override
-  public Object getData(Key<?> dataId) {
-    if (Project.KEY == dataId) {
-      return myProject;
-    }
-    return null;
-  }
-
-  public @Nullable Object getDataInner(Key<?> dataId) {
-    Object data = getData(dataId);
-    return data != null ? data : myDataMap.get(dataId);
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(Project.KEY, myProject);
   }
 
   public void setComponent(JComponent component) {

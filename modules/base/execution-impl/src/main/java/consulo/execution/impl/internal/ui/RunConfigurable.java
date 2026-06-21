@@ -23,6 +23,8 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.ProgramRunnerUtil;
@@ -90,7 +92,6 @@ public class RunConfigurable extends BaseConfigurable {
             return Image.empty(Image.DEFAULT_ICON_SIZE);
         }
 
-       
         @Override
         public String getId() {
             return "";
@@ -112,7 +113,6 @@ public class RunConfigurable extends BaseConfigurable {
 
     private volatile boolean isDisposed = false;
 
-   
     private final Project myProject;
     private RunDialogBase myRunDialog;
     private final TitlelessDecorator myTitlelessDecorator;
@@ -155,7 +155,6 @@ public class RunConfigurable extends BaseConfigurable {
         myRunManager = (RunManagerImpl) RunManager.getInstance(myProject);
     }
 
-   
     @Override
     public LocalizeValue getDisplayName() {
         return ExecutionLocalize.runConfigurableDisplayName();
@@ -644,11 +643,10 @@ public class RunConfigurable extends BaseConfigurable {
         });
 
         myWholePanel = new JPanel(new BorderLayout());
-        DataManager.registerDataProvider(myWholePanel, new DataProvider() {
+        DataManager.registerUiDataProvider(myWholePanel, new UiDataProvider() {
             @Override
-            public @Nullable Object getData(Key dataId) {
-                return RunConfigurationSelector.KEY == dataId
-                    ? (RunConfigurationSelector) configuration -> selectConfiguration(configuration) : null;
+            public void uiDataSnapshot(DataSink sink) {
+                sink.set(RunConfigurationSelector.KEY, configuration -> selectConfiguration(configuration));
             }
         });
 
@@ -1059,7 +1057,6 @@ public class RunConfigurable extends BaseConfigurable {
         return null;
     }
 
-   
     private DefaultMutableTreeNode getNode(int row) {
         return (DefaultMutableTreeNode) myTree.getPathForRow(row).getLastPathComponent();
     }
@@ -1118,7 +1115,7 @@ public class RunConfigurable extends BaseConfigurable {
         return null;
     }
 
-   
+
     private static String createUniqueName(DefaultMutableTreeNode typeNode, @Nullable String baseName, NodeKind... kinds) {
         String str = (baseName == null) ? ExecutionLocalize.runConfigurationUnnamedNamePrefix().get() : baseName;
         List<DefaultMutableTreeNode> configurationNodes = new ArrayList<>();
@@ -1209,7 +1206,6 @@ public class RunConfigurable extends BaseConfigurable {
             ListPopup popup = JBPopupFactory.getInstance().createListPopup(
                 new BaseListPopupStep<ConfigurationType>(ExecutionLocalize.addNewRunConfigurationAction2Name().get(), configurationTypes) {
                     @Override
-                   
                     public String getTextFor(ConfigurationType type) {
                         if (type == HIDDEN_ITEMS_STUB) {
                             return hiddenCount + " items more (irrelevant)...";
@@ -1262,7 +1258,6 @@ public class RunConfigurable extends BaseConfigurable {
                             factories
                         ) {
                             @Override
-                           
                             public String getTextFor(ConfigurationFactory value) {
                                 return value.getDisplayName().get();
                             }
@@ -1710,7 +1705,6 @@ public class RunConfigurable extends BaseConfigurable {
         return null;
     }
 
-   
     private DefaultMutableTreeNode[] getSelectedNodes() {
         return myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
     }
@@ -1815,7 +1809,6 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-   
     static NodeKind getKind(@Nullable DefaultMutableTreeNode node) {
         if (node == null) {
             return UNKNOWN;

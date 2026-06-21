@@ -21,7 +21,8 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -64,7 +65,7 @@ import java.util.Objects;
 /**
  * @author max
  */
-public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, DataProvider, DocumentBasedComponent, AWTHasSuffixComponent {
+public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, UiDataProvider, DocumentBasedComponent, AWTHasSuffixComponent {
     private static final String uiClassID = "EditorTextFieldUI";
 
     private static final Logger LOG = Logger.getInstance(EditorTextField.class);
@@ -654,7 +655,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         return getBackgroundColor(isEnabled());
     }
 
-    
     protected Color getBackgroundColor(boolean enabled) {
         if (myEnforcedBgColor != null) {
             return myEnforcedBgColor;
@@ -822,19 +822,13 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myEditor != null && myEditor.isRendererMode()) {
-            if (CopyProvider.KEY == dataId) {
-                return myEditor.getCopyProvider();
-            }
-            return null;
+            sink.set(CopyProvider.KEY, myEditor.getCopyProvider());
+            return;
         }
 
-        if (Editor.KEY == dataId) {
-            return myEditor;
-        }
-
-        return null;
+        sink.set(Editor.KEY, myEditor);
     }
 
     private void onEditorChange() {

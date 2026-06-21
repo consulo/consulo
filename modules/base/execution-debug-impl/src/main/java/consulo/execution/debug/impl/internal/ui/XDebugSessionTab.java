@@ -15,8 +15,8 @@
  */
 package consulo.execution.debug.impl.internal.ui;
 
-import consulo.application.Application;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
@@ -81,7 +81,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     };
 
-    
     public static XDebugSessionTab create(
         XDebugSessionImpl session,
         @Nullable Image icon,
@@ -104,7 +103,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return tab;
     }
 
-    
     public RunnerLayoutUi getUi() {
         return myUi;
     }
@@ -173,27 +171,17 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (XWatchesView.DATA_KEY == dataId) {
-            return myWatchesView;
-        }
-        else if (TAB_KEY == dataId) {
-            return this;
-        }
-        else if (XDebugSessionData.DATA_KEY == dataId) {
-            return mySessionData;
-        }
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+
+        sink.set(XWatchesView.DATA_KEY, myWatchesView);
+        sink.set(TAB_KEY, this);
+        sink.set(XDebugSessionData.DATA_KEY, mySessionData);
 
         if (mySession != null) {
-            if (XDebugSession.DATA_KEY == dataId) {
-                return mySession;
-            }
-            else if (ConsoleView.KEY == dataId) {
-                return mySession.getConsoleView();
-            }
+            sink.set(XDebugSession.DATA_KEY, mySession);
+            sink.set(ConsoleView.KEY, mySession.getConsoleView());
         }
-
-        return super.getData(dataId);
     }
 
     private Content createVariablesContent(XDebugSessionImpl session) {
@@ -215,9 +203,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         return result;
     }
 
-    
     private Content createFramesContent() {
-        XFramesView framesView = new XFramesView(myProject);
+        XFramesView framesView = new XFramesView(myProject, mySession);
         registerView(DebuggerContentInfo.FRAME_CONTENT, framesView);
         Content framesContent = myUi.createContent(
             DebuggerContentInfo.FRAME_CONTENT,
@@ -370,7 +357,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         }
     }
 
-    
     private String getWatchesContentId() {
         return DebuggerContentInfo.VARIABLES_CONTENT;
     }

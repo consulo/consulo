@@ -29,9 +29,9 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.disposer.Disposer;
+import consulo.dataContext.DataSink;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -39,14 +39,10 @@ import javax.swing.*;
 import java.util.List;
 
 public abstract class OnesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  
   protected final SimpleDiffPanel myPanel;
-  
   protected final OnesideContentPanel myContentPanel;
 
-  
   private final Side mySide;
-  
   private final T myHolder;
 
   public OnesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
@@ -79,7 +75,6 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Editors
   //
 
-  
   protected T createEditorHolder(EditorHolderFactory<T> factory) {
     DiffContent content = mySide.select(myRequest.getContents());
     return factory.create(content, myContext);
@@ -98,7 +93,6 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Getters
   //
 
-  
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -110,30 +104,23 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return getEditorHolder().getPreferredFocusedComponent();
   }
 
-  
   public Side getSide() {
     return mySide;
   }
 
-  
   protected DiffContent getContent() {
     return mySide.select(myRequest.getContents());
   }
 
-  
   protected T getEditorHolder() {
     return myHolder;
   }
 
   @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    if (VirtualFile.KEY == dataId) {
-      return DiffImplUtil.getVirtualFile(myRequest, mySide);
-    }
-    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
-      return getContent();
-    }
-    return super.getData(dataId);
+  public void uiDataSnapshot(DataSink sink) {
+    super.uiDataSnapshot(sink);
+    sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, mySide));
+    sink.set(DiffDataKeys.CURRENT_CONTENT, getContent());
   }
 
   //

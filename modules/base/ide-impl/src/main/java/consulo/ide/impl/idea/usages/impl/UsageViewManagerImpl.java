@@ -22,8 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.content.scope.SearchScope;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
+import consulo.ide.impl.dataContext.DataSinkImpl;
 import consulo.ide.impl.idea.find.SearchInBackgroundOption;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -150,15 +150,13 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   SearchScope getMaxSearchScopeToWarnOfFallingOutOf(UsageTarget[] searchFor) {
     UsageTarget target = searchFor.length > 0 ? searchFor[0] : null;
-    if (target instanceof TypeSafeDataProvider) {
-      final SearchScope[] scope = new SearchScope[1];
-      ((TypeSafeDataProvider)target).calcData(UsageView.USAGE_SCOPE, new DataSink() {
-        @Override
-        public <T> void put(Key<T> key, T data) {
-          scope[0] = (SearchScope)data;
-        }
-      });
-      return scope[0];
+    if (target instanceof UiDataProvider uiDataProvider) {
+      DataSinkImpl sink = new DataSinkImpl();
+      uiDataProvider.uiDataSnapshot(sink);
+      SearchScope scope = sink.resolve(UsageView.USAGE_SCOPE);
+      if (scope != null) {
+        return scope;
+      }
     }
     return GlobalSearchScope.allScope(myProject); // by default do not warn of falling out of scope
   }

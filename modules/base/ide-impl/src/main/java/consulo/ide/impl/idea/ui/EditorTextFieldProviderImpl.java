@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.dataContext.DataSink;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.action.EditorAction;
@@ -76,7 +77,6 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     return 0;
   };
 
-  
   @Override
   public EditorTextField getEditorField(Language language, Project project,
                                         Iterable<Consumer<EditorEx>> features) {
@@ -85,7 +85,6 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
 
   private static class MyEditorTextField extends LanguageTextField {
 
-    
     private final Iterable<Consumer<EditorEx>> myCustomizations;
 
     MyEditorTextField(Language language, Project project, Iterable<Consumer<EditorEx>> customizations) {
@@ -121,11 +120,9 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-      if (PlatformDataKeys.ACTIONS_SORTER == dataId) {
-        return ACTIONS_COMPARATOR;
-      }
-      return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+      super.uiDataSnapshot(sink);
+      sink.set(PlatformDataKeys.ACTIONS_SORTER, ACTIONS_COMPARATOR);
     }
   }
 }

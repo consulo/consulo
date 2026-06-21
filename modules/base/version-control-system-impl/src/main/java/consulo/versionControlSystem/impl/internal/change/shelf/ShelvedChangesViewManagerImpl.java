@@ -20,7 +20,7 @@ import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.file.FileTypeManager;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
@@ -259,87 +259,69 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         }
     }
 
-    private class ShelfTree extends Tree implements TypeSafeDataProvider {
+    private class ShelfTree extends Tree implements UiDataProvider {
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
-            if (key == SHELVED_CHANGELIST_KEY) {
-                Set<ShelvedChangeListImpl> changeLists = getSelectedLists(false);
-
-                if (changeLists.size() > 0) {
-                    sink.put(SHELVED_CHANGELIST_KEY, changeLists.toArray(new ShelvedChangeListImpl[changeLists.size()]));
+        public void uiDataSnapshot(DataSink sink) {
+            Set<ShelvedChangeListImpl> nonRecycledLists = getSelectedLists(false);
+            if (nonRecycledLists.size() > 0) {
+                sink.set(SHELVED_CHANGELIST_KEY, nonRecycledLists.toArray(new ShelvedChangeListImpl[nonRecycledLists.size()]));
+            }
+            Set<ShelvedChangeListImpl> recycledLists = getSelectedLists(true);
+            if (recycledLists.size() > 0) {
+                sink.set(SHELVED_RECYCLED_CHANGELIST_KEY, recycledLists.toArray(new ShelvedChangeListImpl[recycledLists.size()]));
+            }
+            sink.set(SHELVED_CHANGE_KEY, TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class));
+            sink.set(SHELVED_BINARY_FILE_KEY, TreeUtil.collectSelectedObjectsOfType(this, ShelvedBinaryFileImpl.class));
+            sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, getSelectionCount() > 0);
+            List<ShelvedChangeImpl> shelvedChanges = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class);
+            List<ShelvedBinaryFileImpl> shelvedBinaryFiles = TreeUtil.collectSelectedObjectsOfType(this, ShelvedBinaryFileImpl.class);
+            if (!shelvedChanges.isEmpty() || !shelvedBinaryFiles.isEmpty()) {
+                List<Change> changes = new ArrayList<>(shelvedChanges.size() + shelvedBinaryFiles.size());
+                for (ShelvedChangeImpl shelvedChange : shelvedChanges) {
+                    changes.add(shelvedChange.getChange(myProject));
                 }
-            }
-            else if (key == SHELVED_RECYCLED_CHANGELIST_KEY) {
-                Set<ShelvedChangeListImpl> changeLists = getSelectedLists(true);
-
-                if (changeLists.size() > 0) {
-                    sink.put(SHELVED_RECYCLED_CHANGELIST_KEY, changeLists.toArray(new ShelvedChangeListImpl[changeLists.size()]));
+                for (ShelvedBinaryFileImpl binaryFile : shelvedBinaryFiles) {
+                    changes.add(binaryFile.createChange(myProject));
                 }
+                sink.set(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
             }
-            else if (key == SHELVED_CHANGE_KEY) {
-                sink.put(SHELVED_CHANGE_KEY, TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class));
-            }
-            else if (key == SHELVED_BINARY_FILE_KEY) {
-                sink.put(SHELVED_BINARY_FILE_KEY, TreeUtil.collectSelectedObjectsOfType(this, ShelvedBinaryFileImpl.class));
-            }
-            else if (key == VcsDataKeys.HAVE_SELECTED_CHANGES) {
-                sink.put(VcsDataKeys.HAVE_SELECTED_CHANGES, getSelectionCount() > 0);
-        /*List<ShelvedChange> shelvedChanges = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChange.class);
-        final List<ShelvedChangeList> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeList.class);*/
-            }
-            else if (key == VcsDataKeys.CHANGES) {
-                List<ShelvedChangeImpl> shelvedChanges = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class);
-                List<ShelvedBinaryFileImpl> shelvedBinaryFiles = TreeUtil.collectSelectedObjectsOfType(this, ShelvedBinaryFileImpl.class);
-                if (!shelvedChanges.isEmpty() || !shelvedBinaryFiles.isEmpty()) {
-                    List<Change> changes = new ArrayList<>(shelvedChanges.size() + shelvedBinaryFiles.size());
-                    for (ShelvedChangeImpl shelvedChange : shelvedChanges) {
+            else {
+                List<ShelvedChangeListImpl> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeListImpl.class);
+                List<Change> changes = new ArrayList<>();
+                for (ShelvedChangeListImpl changeList : changeLists) {
+                    List<ShelvedChangeImpl> clChanges = changeList.getChanges(myProject);
+                    for (ShelvedChangeImpl shelvedChange : clChanges) {
                         changes.add(shelvedChange.getChange(myProject));
                     }
-                    for (ShelvedBinaryFileImpl binaryFile : shelvedBinaryFiles) {
-                        changes.add(binaryFile.createChange(myProject));
+                    List<? extends ShelvedBinaryFile> binaryFiles = changeList.getBinaryFiles();
+                    for (ShelvedBinaryFile file : binaryFiles) {
+                        changes.add(file.createChange(myProject));
                     }
-                    sink.put(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
                 }
-                else {
-                    List<ShelvedChangeListImpl> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeListImpl.class);
-                    List<Change> changes = new ArrayList<>();
-                    for (ShelvedChangeListImpl changeList : changeLists) {
-                        shelvedChanges = changeList.getChanges(myProject);
-                        for (ShelvedChangeImpl shelvedChange : shelvedChanges) {
-                            changes.add(shelvedChange.getChange(myProject));
-                        }
-                        List<? extends ShelvedBinaryFile> binaryFiles = changeList.getBinaryFiles();
-                        for (ShelvedBinaryFile file : binaryFiles) {
-                            changes.add(file.createChange(myProject));
-                        }
-                    }
-                    sink.put(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
-                }
+                sink.set(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
             }
-            else if (key == DeleteProvider.KEY) {
-                sink.put(DeleteProvider.KEY, myDeleteProvider);
+            sink.set(DeleteProvider.KEY, myDeleteProvider);
+            List<ShelvedChangeImpl> allShelvedChanges = new ArrayList<>(TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class));
+            ArrayDeque<Navigatable> navigatables = new ArrayDeque<>();
+            List<ShelvedChangeListImpl> allChangeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeListImpl.class);
+            for (ShelvedChangeListImpl changeList : allChangeLists) {
+                allShelvedChanges.addAll(changeList.getChanges(myProject));
             }
-            else if (Navigatable.KEY_OF_ARRAY.equals(key)) {
-                List<ShelvedChangeImpl> shelvedChanges = new ArrayList<>(TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeImpl.class));
-                ArrayDeque<Navigatable> navigatables = new ArrayDeque<>();
-                List<ShelvedChangeListImpl> changeLists = TreeUtil.collectSelectedObjectsOfType(this, ShelvedChangeListImpl.class);
-                for (ShelvedChangeListImpl changeList : changeLists) {
-                    shelvedChanges.addAll(changeList.getChanges(myProject));
-                }
-                for (ShelvedChangeImpl shelvedChange : shelvedChanges) {
-                    if (shelvedChange.getBeforePath() != null && !FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
-                        Navigatable navigatable = requestFocus -> {
+            for (ShelvedChangeImpl shelvedChange : allShelvedChanges) {
+                if (shelvedChange.getBeforePath() != null && !FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
+                    Navigatable navigatable = new Navigatable() {
+                        @Override
+                        public void navigate(boolean requestFocus) {
                             VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
                             if (vf != null) {
                                 OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
                             }
-                        };
-                        navigatables.add(navigatable);
-                    }
+                        }
+                    };
+                    navigatables.add(navigatable);
                 }
-
-                sink.put(Navigatable.KEY_OF_ARRAY, navigatables.toArray(new Navigatable[navigatables.size()]));
             }
+            sink.set(Navigatable.KEY_OF_ARRAY, navigatables.toArray(new Navigatable[navigatables.size()]));
         }
 
         private Set<ShelvedChangeListImpl> getSelectedLists(boolean recycled) {

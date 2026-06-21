@@ -15,7 +15,6 @@
  */
 package consulo.diff.util;
 
-import consulo.dataContext.DataProvider;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.internal.GenericDataProvider;
 import consulo.util.dataholder.Key;
@@ -28,12 +27,19 @@ import org.jspecify.annotations.Nullable;
  */
 public class DiffUtil {
 
+  // TODO: DiffUserDataKeys.DATA_PROVIDER is Key<DataProvider>, but GenericDataProvider now implements UiDataProvider.
+  //  This method needs to be reworked as part of the DiffUserDataKeys migration to support UiDataProvider pattern.
   public static <T> void putDataKey(UserDataHolder holder, Key<T> key, @Nullable T value) {
-    DataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-    if (!(dataProvider instanceof GenericDataProvider)) {
-      dataProvider = new GenericDataProvider(dataProvider);
-      holder.putUserData(DiffUserDataKeys.DATA_PROVIDER, dataProvider);
+    Object dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
+    GenericDataProvider genericDataProvider;
+    if (dataProvider instanceof GenericDataProvider gdp) {
+      genericDataProvider = gdp;
     }
-    ((GenericDataProvider)dataProvider).putData(key, value);
+    else {
+      genericDataProvider = new GenericDataProvider();
+      //noinspection unchecked
+      holder.putUserData((Key) DiffUserDataKeys.DATA_PROVIDER, genericDataProvider);
+    }
+    genericDataProvider.putData(key, value);
   }
 }

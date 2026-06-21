@@ -25,7 +25,8 @@ import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.bookmark.ui.view.event.FavoritesListener;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.util.IdeView;
@@ -87,7 +88,7 @@ import java.util.*;
  * @author anna
  * @author Konstantin Bulenkov
  */
-public class FavoritesTreeViewPanel extends JPanel implements DataProvider, DockContainer, SwingDockContainer {
+public class FavoritesTreeViewPanel extends JPanel implements UiDataProvider, DockContainer, SwingDockContainer {
     private final FavoritesTreeStructure myFavoritesTreeStructure;
     private FavoritesViewTreeBuilder myBuilder;
     private final CopyPasteDelegator myCopyPasteDelegator;
@@ -183,7 +184,6 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         EditSourceOnEnterKeyHandler.install(myTree);
         myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
             @Override
-            
             protected PsiElement[] getSelectedElements() {
                 return getSelectedPsiElements();
             }
@@ -258,7 +258,6 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         return myTree;
     }
 
-    
     private PsiElement[] getSelectedPsiElements() {
         Object[] elements = getSelectedNodeElements();
         if (elements == null) {
@@ -293,42 +292,65 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            return myProject;
-        }
-        if (Navigatable.KEY == dataId) {
-            FavoritesTreeNodeDescriptor[] selectedNodeDescriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
-            return selectedNodeDescriptors.length == 1 ? selectedNodeDescriptors[0].getElement() : null;
-        }
-        if (Navigatable.KEY_OF_ARRAY == dataId) {
-            List<Navigatable> selectedElements = getSelectedElements(Navigatable.class);
-            return selectedElements.isEmpty() ? null : selectedElements.toArray(new Navigatable[selectedElements.size()]);
+    public void uiDataSnapshot(DataSink sink) {
+        // Immediate data — EDT safe, no read action needed
+        sink.set(Project.KEY, myProject);
+        sink.set(CutProvider.KEY, myCopyPasteDelegator.getCutProvider());
+        sink.set(CopyProvider.KEY, myCopyPasteDelegator.getCopyProvider());
+        sink.set(PasteProvider.KEY, myCopyPasteDelegator.getPasteProvider());
+        sink.set(HelpManager.HELP_ID, "reference.toolWindows.favorites");
+        sink.set(LangDataKeys.NO_NEW_ACTION, Boolean.TRUE);
+        sink.set(IdeView.KEY, myIdeView);
+        sink.set(FAVORITES_TREE_KEY, myTree);
+        sink.set(FAVORITES_TREE_BUILDER_KEY, myBuilder);
+
+        FavoritesTreeNodeDescriptor[] selectedNodeDescriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
+
+        // Single navigatable — EDT safe (AbstractTreeNode is Navigatable)
+        if (selectedNodeDescriptors.length == 1) {
+            sink.set(Navigatable.KEY, selectedNodeDescriptors[0].getElement());
         }
 
-        if (CutProvider.KEY == dataId) {
-            return myCopyPasteDelegator.getCutProvider();
+        // Context favorites roots — EDT safe (tree node filtering only)
+        List<FavoritesTreeNodeDescriptor> roots = new ArrayList<>();
+        for (FavoritesTreeNodeDescriptor desc : selectedNodeDescriptors) {
+            if (FavoritesTreeUtil.getProvider(myFavoritesManager, desc) != null) {
+                continue;
+            }
+            FavoritesTreeNodeDescriptor root = desc.getFavoritesRoot();
+            if (root != null && root.getElement() instanceof FavoritesListNode) {
+                roots.add(desc);
+            }
         }
-        if (CopyProvider.KEY == dataId) {
-            return myCopyPasteDelegator.getCopyProvider();
+        sink.set(CONTEXT_FAVORITES_ROOTS_DATA_KEY, roots.toArray(FavoritesTreeNodeDescriptor.EMPTY_ARRAY));
+
+        // Favorites list name — EDT safe
+        Set<String> selectedNames = new HashSet<>();
+        for (FavoritesTreeNodeDescriptor descriptor : selectedNodeDescriptors) {
+            FavoritesListNode node = FavoritesTreeUtil.extractParentList(descriptor);
+            if (node != null) {
+                selectedNames.add(node.getValue());
+            }
         }
-        if (PasteProvider.KEY == dataId) {
-            return myCopyPasteDelegator.getPasteProvider();
+        if (selectedNames.size() == 1) {
+            sink.set(FAVORITES_LIST_NAME_DATA_KEY, selectedNames.iterator().next());
         }
-        if (HelpManager.HELP_ID == dataId) {
-            return "reference.toolWindows.favorites";
-        }
-        if (LangDataKeys.NO_NEW_ACTION == dataId) {
-            return Boolean.TRUE;
-        }
-        if (PsiElement.KEY == dataId) {
+
+        // Lazy data — resolved under tryRunReadAction (SmartPsiElementPointer resolution)
+        sink.lazy(Navigatable.KEY_OF_ARRAY, () -> {
+            List<Navigatable> elements = getSelectedElements(Navigatable.class);
+            return elements.isEmpty() ? null : elements.toArray(new Navigatable[0]);
+        });
+
+        sink.lazy(PsiElement.KEY, () -> {
             PsiElement[] elements = getSelectedPsiElements();
             if (elements.length != 1) {
                 return null;
             }
             return elements[0] != null && elements[0].isValid() ? elements[0] : null;
-        }
-        if (PsiElement.KEY_OF_ARRAY == dataId) {
+        });
+
+        sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
             PsiElement[] elements = getSelectedPsiElements();
             ArrayList<PsiElement> result = new ArrayList<>();
             for (PsiElement element : elements) {
@@ -337,84 +359,35 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
                 }
             }
             return result.isEmpty() ? null : PsiUtilCore.toPsiElementArray(result);
-        }
+        });
 
-        if (IdeView.KEY == dataId) {
-            return myIdeView;
-        }
-
-        if (LangDataKeys.TARGET_PSI_ELEMENT == dataId) {
-            return null;
-        }
-
-        if (LangDataKeys.MODULE_CONTEXT == dataId) {
+        sink.lazy(LangDataKeys.MODULE_CONTEXT, () -> {
             Module[] selected = getSelectedModules();
             return selected != null && selected.length == 1 ? selected[0] : null;
-        }
-        if (LangDataKeys.MODULE_CONTEXT_ARRAY == dataId) {
-            return getSelectedModules();
-        }
+        });
 
-        if (DeleteProvider.KEY == dataId) {
+        sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> getSelectedModules());
+
+        sink.lazy(DeleteProvider.KEY, () -> {
             Object[] elements = getSelectedNodeElements();
-            return elements != null && elements.length >= 1 && elements[0] instanceof Module ? myDeleteModuleProvider : myDeletePSIElementProvider;
-        }
-        if (ModuleGroup.ARRAY_DATA_KEY == dataId) {
-            List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
-            return selectedElements.isEmpty() ? null : selectedElements.toArray(new ModuleGroup[selectedElements.size()]);
-        }
-        if (LibraryGroupElement.ARRAY_DATA_KEY == dataId) {
-            List<LibraryGroupElement> selectedElements = getSelectedElements(LibraryGroupElement.class);
-            return selectedElements.isEmpty() ? null : selectedElements.toArray(new LibraryGroupElement[selectedElements.size()]);
-        }
-        if (NamedLibraryElement.ARRAY_DATA_KEY == dataId) {
-            List<NamedLibraryElement> selectedElements = getSelectedElements(NamedLibraryElement.class);
-            return selectedElements.isEmpty() ? null : selectedElements.toArray(new NamedLibraryElement[selectedElements.size()]);
-        }
-        if (CONTEXT_FAVORITES_ROOTS_DATA_KEY == dataId) {
-            List<FavoritesTreeNodeDescriptor> result = new ArrayList<>();
-            FavoritesTreeNodeDescriptor[] selectedNodeDescriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
-            for (FavoritesTreeNodeDescriptor selectedNodeDescriptor : selectedNodeDescriptors) {
-                if (FavoritesTreeUtil.getProvider(myFavoritesManager, selectedNodeDescriptor) != null) {
-                    continue;
-                }
-                FavoritesTreeNodeDescriptor root = selectedNodeDescriptor.getFavoritesRoot();
-                if (root != null && root.getElement() instanceof FavoritesListNode) {
-                    result.add(selectedNodeDescriptor);
-                }
-            }
-            return result.toArray(new FavoritesTreeNodeDescriptor[result.size()]);
-        }
-        if (FAVORITES_TREE_KEY == dataId) {
-            return myTree;
-        }
-        if (FAVORITES_TREE_BUILDER_KEY == dataId) {
-            return myBuilder;
-        }
-        if (FAVORITES_LIST_NAME_DATA_KEY == dataId) {
-            FavoritesTreeNodeDescriptor[] descriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
-            Set<String> selectedNames = new HashSet<>();
-            for (FavoritesTreeNodeDescriptor descriptor : descriptors) {
-                FavoritesListNode node = FavoritesTreeUtil.extractParentList(descriptor);
-                if (node != null) {
-                    selectedNames.add(node.getValue());
-                }
-            }
+            return elements != null && elements.length >= 1 && elements[0] instanceof Module
+                ? myDeleteModuleProvider : myDeletePSIElementProvider;
+        });
 
-            if (selectedNames.size() == 1) {
-                return selectedNames.iterator().next();
-            }
-            return null;
-        }
-        FavoritesTreeNodeDescriptor[] descriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
-        if (descriptors.length > 0) {
-            List<AbstractTreeNode> nodes = new ArrayList<>();
-            for (FavoritesTreeNodeDescriptor descriptor : descriptors) {
-                nodes.add(descriptor.getElement());
-            }
-            return myFavoritesTreeStructure.getDataFromProviders(nodes, dataId);
-        }
-        return null;
+        sink.lazy(ModuleGroup.ARRAY_DATA_KEY, () -> {
+            List<ModuleGroup> elements = getSelectedElements(ModuleGroup.class);
+            return elements.isEmpty() ? null : elements.toArray(new ModuleGroup[0]);
+        });
+
+        sink.lazy(LibraryGroupElement.ARRAY_DATA_KEY, () -> {
+            List<LibraryGroupElement> elements = getSelectedElements(LibraryGroupElement.class);
+            return elements.isEmpty() ? null : elements.toArray(new LibraryGroupElement[0]);
+        });
+
+        sink.lazy(NamedLibraryElement.ARRAY_DATA_KEY, () -> {
+            List<NamedLibraryElement> elements = getSelectedElements(NamedLibraryElement.class);
+            return elements.isEmpty() ? null : elements.toArray(new NamedLibraryElement[0]);
+        });
     }
 
     private Set<FavoritesListNode> getSelectedListsNodes() {
@@ -705,7 +678,6 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         return getAcceptArea();
     }
 
-    
     @Override
     public ContentResponse getContentResponse(DockableContent content, RelativePoint point) {
         if (content.getKey() instanceof VirtualFile) {

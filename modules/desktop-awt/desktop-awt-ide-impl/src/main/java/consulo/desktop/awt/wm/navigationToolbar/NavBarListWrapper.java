@@ -15,15 +15,13 @@
  */
 package consulo.desktop.awt.wm.navigationToolbar;
 
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.util.dataholder.Key;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
-
-import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -34,7 +32,7 @@ import java.awt.event.MouseMotionAdapter;
 /**
 * @author Konstantin Bulenkov
 */
-class NavBarListWrapper extends JBScrollPane implements DataProvider {
+class NavBarListWrapper extends JBScrollPane implements UiDataProvider {
   private static final int MAX_SIZE = 20;
   private final JList myList;
 
@@ -68,14 +66,9 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
   }
 
   @Override
-  public @Nullable Object getData(Key<?> dataId) {
-    if (PlatformDataKeys.SELECTED_ITEM == dataId){
-      return myList.getSelectedValue();
-    }
-    if (PlatformDataKeys.SELECTED_ITEMS == dataId){
-      return myList.getSelectedValues();
-    }
-    return null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.lazy(PlatformDataKeys.SELECTED_ITEM, () -> myList.getSelectedValue());
+    sink.lazy(PlatformDataKeys.SELECTED_ITEMS, () -> myList.getSelectedValues());
   }
 
   @Override

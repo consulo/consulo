@@ -16,8 +16,6 @@
 package consulo.dataContext.internal;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
@@ -39,16 +37,7 @@ public class BuilderDataContext implements DataContext {
   @Override
   @SuppressWarnings("unchecked")
   public <T> @Nullable T getData(Key<T> dataId) {
-    Object result = getDataFromSelfOrParent(dataId);
-
-    if (result == null) {
-      GetDataRule rule = ((DataRuleHoler)DataManager.getInstance()).getDataRule(dataId);
-      if (rule != null) {
-        return (T)rule.getData(this::getDataFromSelfOrParent);
-      }
-    }
-
-    return (T)result;
+    return (T) getDataFromSelfOrParent(dataId);
   }
 
   private @Nullable Object getDataFromSelfOrParent(Key dataId) {

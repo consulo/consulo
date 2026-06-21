@@ -29,8 +29,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -38,6 +36,9 @@ import java.util.function.Supplier;
  */
 public interface Component extends UserDataHolder {
     Key<Component> KEY = Key.of(Component.class);
+
+    @Override
+    <T> void putUserData(Key<T> key, @Nullable T value);
 
     @RequiredUIAccess
     default void addBorder(BorderPosition borderPosition) {
@@ -136,12 +137,6 @@ public interface Component extends UserDataHolder {
         setSize(size);
         return this;
     }
-
-    default <T> Disposable addUserDataProvider(Key<T> key, Supplier<T> supplier) {
-        return addUserDataProvider(k -> k == key ? supplier.get() : null);
-    }
-
-    Disposable addUserDataProvider(Function<Key<?>, @Nullable Object> function);
 
     Font getFont();
 
