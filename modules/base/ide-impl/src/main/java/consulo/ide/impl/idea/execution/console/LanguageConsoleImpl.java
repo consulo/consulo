@@ -53,7 +53,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;

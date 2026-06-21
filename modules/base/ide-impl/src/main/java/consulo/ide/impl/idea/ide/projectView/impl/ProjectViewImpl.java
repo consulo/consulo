@@ -116,7 +116,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -289,7 +288,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         );
     }
 
-    @NotNull
     private Iterable<? extends Component> buildNotInHierarchyIterable() {
         return () -> JBIterable.from(new ArrayList<>(myId2Pane.values()))
             .map(pane -> {
@@ -304,7 +302,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             .iterator();
     }
 
-    private void uiDataSnapshot(@NotNull DataSink sink) {
+    private void uiDataSnapshot(DataSink sink) {
         sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
         sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());
         sink.set(PlatformDataKeys.PASTE_PROVIDER, myCopyPasteDelegator.getPasteProvider());

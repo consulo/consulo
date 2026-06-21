@@ -75,7 +75,6 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -473,7 +472,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
 
     @RequiredReadAction
-    @NotNull
     private PsiElement[] getPsiElements(Object[] selectedUserObjects) {
         List<PsiElement> result = new ArrayList<>();
         for (Object userObject : selectedUserObjects) {

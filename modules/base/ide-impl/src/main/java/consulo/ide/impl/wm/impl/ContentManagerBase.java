@@ -42,7 +42,6 @@ import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -548,7 +547,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
 
     @Override
-    public void addUiDataProvider(@NotNull UiDataProvider provider) {
+    public void addUiDataProvider(UiDataProvider provider) {
         myDataProviders.add(provider);
     }
 
