@@ -38,8 +38,8 @@ class CutLineActionHandler extends EditorWriteActionHandler {
         myCopyToClipboard = copyToClipboard;
     }
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (caret == null) {
             caret = editor.getCaretModel().getCurrentCaret();

@@ -62,7 +62,7 @@ public interface EditorGutterComponentEx extends EditorGutter {
             lineNumberConverter2 == null ? null : convertFromOperator(lineNumberConverter2));
     }
 
-    private static LineNumberConverter convertFromOperator(IntUnaryOperator operator) {
+    private static LineNumberConverter convertFromOperator(@Nullable IntUnaryOperator operator) {
         if (operator == null) {
             return LineNumberConverter.DEFAULT;
         }

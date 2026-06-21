@@ -107,7 +107,8 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     public boolean ensureInjectionUpToDate(Caret hostCaret) {
         Editor editor = hostCaret.getEditor();
         Project project = editor.getProject();
-        if (project != null && InjectedLanguageManager.getInstance(project).mightHaveInjectedFragmentAtOffset(editor.getDocument(), hostCaret.getOffset())) {
+        if (project != null
+            && InjectedLanguageManager.getInstance(project).mightHaveInjectedFragmentAtOffset(editor.getDocument(), hostCaret.getOffset())) {
             PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
             return true;
         }
@@ -118,7 +119,8 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     public boolean isLexemeBoundary(@Nullable Object left, @Nullable Object right) {
         IElementType leftTokenType = (IElementType) left;
         IElementType rightTokenType = (IElementType) right;
-        return leftTokenType != null && rightTokenType != null && WordBoundaryFilter.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
+        return leftTokenType != null && rightTokenType != null
+            && WordBoundaryFilter.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
     }
 
     @Override
@@ -178,7 +180,7 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
     }
 
     @Override
-    public EditorHighlighter createEmptyHighlighter(Project project, Document document) {
+    public EditorHighlighter createEmptyHighlighter(@Nullable Project project, Document document) {
         return EditorUtil.createEmptyHighlighter(project, document);
     }
 

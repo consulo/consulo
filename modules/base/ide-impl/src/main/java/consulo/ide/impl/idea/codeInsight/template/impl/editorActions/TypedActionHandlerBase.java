@@ -29,14 +29,14 @@ public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, Ov
   protected @Nullable TypedActionHandler myOriginalHandler;
 
   @Override
-  public void init(TypedActionHandler delegate) {
+  public void init(@Nullable TypedActionHandler delegate) {
     myOriginalHandler = delegate;
   }
 
   @Override
   public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
-    if (myOriginalHandler instanceof TypedActionHandlerEx) {
-      ((TypedActionHandlerEx)myOriginalHandler).beforeExecute(editor, c, context, plan);
+    if (myOriginalHandler instanceof TypedActionHandlerEx typedActionHandlerEx) {
+      typedActionHandlerEx.beforeExecute(editor, c, context, plan);
     }
   }
 }

@@ -28,6 +28,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -44,9 +45,9 @@ public class StartNewLineAction extends EditorAction {
             return getEnterHandler().isEnabled(editor, caret, dataContext);
         }
 
-        @RequiredWriteAction
         @Override
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        @RequiredWriteAction
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             CopyPasteManager.getInstance().stopKillRings();
             if (editor.getDocument().getLineCount() != 0) {
                 editor.getSelectionModel().removeSelection();

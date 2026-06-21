@@ -25,6 +25,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Words.html#Words">kill-word</a> command.
@@ -42,7 +43,7 @@ public class KillToWordEndAction extends TextComponentEditorAction {
     private static class Handler extends EditorWriteActionHandler {
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             CaretModel caretModel = editor.getCaretModel();
             int caretOffset = caretModel.getOffset();
             Document document = editor.getDocument();

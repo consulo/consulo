@@ -1,7 +1,10 @@
+import org.jspecify.annotations.NullMarked;
+
 /**
  * @author VISTALL
- * @since 05/02/2022
+ * @since 2022-02-05
  */
+@NullMarked
 module consulo.code.editor.api {
     // todo not required dependency
     requires java.desktop;

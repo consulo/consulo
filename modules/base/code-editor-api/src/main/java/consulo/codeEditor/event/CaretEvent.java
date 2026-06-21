@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.EventObject;
 
 public class CaretEvent extends EventObject {
-  private final Caret myCaret;
+  private final @Nullable Caret myCaret;
   private final LogicalPosition myOldPosition;
   private final LogicalPosition myNewPosition;
 

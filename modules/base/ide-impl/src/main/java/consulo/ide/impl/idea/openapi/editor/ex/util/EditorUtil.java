@@ -47,6 +47,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
@@ -60,8 +61,6 @@ import java.awt.event.MouseWheelEvent;
 import java.util.List;
 
 public final class EditorUtil {
-    private static final Logger LOG = Logger.getInstance(EditorUtil.class);
-
     private EditorUtil() {
     }
 
@@ -147,7 +146,6 @@ public final class EditorUtil {
         }
     }
 
-    
     public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
         return EditorImplUtil.fontForChar(c, style, editor);
     }
@@ -350,8 +348,9 @@ public final class EditorUtil {
         if (e.getWheelRotation() == 0) {
             return false;
         }
-        return Platform.current().os().isMac() ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e
-            .isAltDown() && !e.isShiftDown();
+        return Platform.current().os().isMac()
+            ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown()
+            : e.isControlDown() && !e.isMetaDown() && !e.isAltDown() && !e.isShiftDown();
     }
 
     public static boolean inVirtualSpace(Editor editor, LogicalPosition logicalPosition) {
@@ -586,7 +585,7 @@ public final class EditorUtil {
             }
 
             private Pair<int[], int[]> getSelectionOffsets() {
-                return Pair.create(editor.getSelectionModel().getBlockSelectionStarts(), editor.getSelectionModel().getBlockSelectionEnds());
+                return Couple.of(editor.getSelectionModel().getBlockSelectionStarts(), editor.getSelectionModel().getBlockSelectionEnds());
             }
         }, disposable);
     }
@@ -594,7 +593,6 @@ public final class EditorUtil {
     public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, Document document) {
         EditorHighlighter highlighter = new EmptyEditorHighlighter(new TextAttributes()) {
             @Override
-            
             public HighlighterIterator createIterator(int startOffset) {
                 setText(document.getImmutableCharSequence());
                 return super.createIterator(startOffset);

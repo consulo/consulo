@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -30,6 +31,7 @@ import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 
@@ -48,14 +50,14 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
         myOriginalAction = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_COPY;
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret == null : "Invocation of 'copy' operation for specific caret is not supported";
         Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
         if (project == null) {
@@ -98,13 +100,9 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
             ? EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDatas)
             : selectionModel.getSelectedText();
         String rawText = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDatas);
-        String escapedText = null;
-        for (CopyPastePreProcessor processor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
-            escapedText = processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText);
-            if (escapedText != null) {
-                break;
-            }
-        }
+        String escapedText = Application.get().getExtensionPoint(CopyPastePreProcessor.class).computeSafeIfAny(
+            processor -> processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText)
+        );
         Transferable transferable = new TextBlockTransferable(
             escapedText != null ? escapedText : rawText,
             transferableDatas,

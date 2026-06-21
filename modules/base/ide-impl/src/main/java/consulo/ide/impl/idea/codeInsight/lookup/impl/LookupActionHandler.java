@@ -1,5 +1,4 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.codeEditor.Caret;
@@ -14,6 +13,7 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -34,7 +34,8 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
   }
 
   @Override
-  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredUIAccess
+  public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null || !lookup.isAvailableToUser()) {
       Project project = editor.getProject();
@@ -93,6 +94,7 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
     }
 
     @Override
+    @RequiredUIAccess
     protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS);
       LookupEx lookup = LookupManager.getActiveLookup(editor);
@@ -101,5 +103,4 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
       EditorActionManager.getInstance().getActionHandler(myUp ? IdeActions.ACTION_EDITOR_MOVE_CARET_UP : IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN).execute(editor, caret, dataContext);
     }
   }
-
 }

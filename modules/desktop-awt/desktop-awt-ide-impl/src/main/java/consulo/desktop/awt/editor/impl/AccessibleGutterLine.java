@@ -12,6 +12,7 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.markup.ActiveGutterRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -85,6 +86,7 @@ class AccessibleGutterLine extends JPanel {
             actionHandlerInstalled = true;
             EditorActionManager.getInstance().setActionHandler("EditorShowGutterIconTooltip", new EditorActionHandler() {
                 @Override
+                @RequiredUIAccess
                 protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
                     AccessibleGutterLine line = ((EditorGutterComponentImpl)editor.getGutter()).getCurrentAccessibleLine();
                     if (line != null) {

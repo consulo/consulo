@@ -35,6 +35,7 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class SmartEnterAction extends EditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null || editor.isOneLineMode()) {
                 plainEnter(editor, caret, dataContext);

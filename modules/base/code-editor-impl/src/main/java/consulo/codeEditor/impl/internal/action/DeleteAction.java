@@ -35,6 +35,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = IdeActions.ACTION_EDITOR_DELETE, shortcutFrom = @ActionRef(id = IdeActions.ACTION_DELETE))
 public class DeleteAction extends EditorAction {
@@ -43,9 +44,9 @@ public class DeleteAction extends EditorAction {
             super(true);
         }
 
-        @RequiredWriteAction
         @Override
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        @RequiredWriteAction
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             CodeEditorInternalHelper.getInstance().hideCursorInEditor(editor);
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
             CopyPasteManager.getInstance().stopKillRings();

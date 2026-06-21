@@ -17,7 +17,7 @@ package consulo.codeEditor.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface EditorLastActionTracker {
     public static EditorLastActionTracker getInstance() {
-        return ApplicationManager.getApplication().getComponent(EditorLastActionTracker.class);
+        return Application.get().getComponent(EditorLastActionTracker.class);
     }
 
     /**

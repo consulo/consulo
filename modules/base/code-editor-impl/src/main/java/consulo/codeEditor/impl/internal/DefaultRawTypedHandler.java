@@ -32,8 +32,8 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx, RawTypedAct
 
         TypedActionHandler handler = myAction.getHandler();
 
-        if (handler instanceof TypedActionHandlerEx) {
-            ((TypedActionHandlerEx)handler).beforeExecute(editor, c, context, plan);
+        if (handler instanceof TypedActionHandlerEx typedActionHandlerEx) {
+            typedActionHandlerEx.beforeExecute(editor, c, context, plan);
         }
     }
 

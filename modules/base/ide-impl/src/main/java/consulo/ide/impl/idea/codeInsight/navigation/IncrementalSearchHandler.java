@@ -45,6 +45,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.UIUtil;
@@ -393,7 +394,8 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
         myOriginalHandler.execute(editor, caret, dataContext);
@@ -419,7 +421,8 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
         myOriginalHandler.execute(editor, caret, dataContext);
@@ -452,7 +455,8 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredUIAccess
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
         myOriginalHandler.execute(editor, caret, dataContext);

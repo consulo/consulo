@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl.internal.action;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionUtil;
@@ -10,6 +11,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author eldar
@@ -24,7 +26,8 @@ class DeleteToWordBoundaryHandler extends EditorWriteActionHandler.ForEachCaret 
     }
 
     @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+    @RequiredWriteAction
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
         CopyPasteManager.getInstance().stopKillRings();
 

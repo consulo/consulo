@@ -539,7 +539,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         return myFoldTree.intersectsRegion(startOffset, endOffset);
     }
 
-    public @Nullable FoldRegion[] fetchVisible() {
+    public FoldRegion @Nullable [] fetchVisible() {
         return myFoldTree.fetchVisible();
     }
 

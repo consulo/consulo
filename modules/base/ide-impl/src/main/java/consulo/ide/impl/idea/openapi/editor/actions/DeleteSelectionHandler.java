@@ -36,8 +36,8 @@ import org.jspecify.annotations.Nullable;
 public class DeleteSelectionHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
     private EditorActionHandler myOriginalHandler;
 
-    @RequiredWriteAction
     @Override
+    @RequiredWriteAction
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         if (caret == null ? editor.getSelectionModel().hasSelection(true) : caret.hasSelection()) {
             CodeEditorInternalHelper.getInstance().hideCursorInEditor(editor);
@@ -61,7 +61,6 @@ public class DeleteSelectionHandler extends EditorWriteActionHandler implements 
         myOriginalHandler = originalHandler;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_DELETE;

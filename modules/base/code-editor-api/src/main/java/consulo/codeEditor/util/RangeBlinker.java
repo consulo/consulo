@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.codeEditor.util;
 
 import consulo.application.Application;
@@ -27,6 +26,7 @@ import consulo.document.util.Segment;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class RangeBlinker {
   private final TextAttributes myAttributes;
   private final List<RangeHighlighter> myAddedHighlighters = new ArrayList<>();
 
-  private Future<?> myBlinkingFuture;
+  private @Nullable Future<?> myBlinkingFuture = null;
 
   public RangeBlinker(Editor editor, TextAttributes attributes, int timeToLive) {
     myAttributes = attributes;
@@ -83,8 +83,13 @@ public class RangeBlinker {
     if (show) {
       for (Segment segment : myMarkers) {
         if (segment.getEndOffset() > myEditor.getDocument().getTextLength()) continue;
-        RangeHighlighter highlighter =
-                markupModel.addRangeHighlighter(segment.getStartOffset(), segment.getEndOffset(), HighlighterLayer.ADDITIONAL_SYNTAX, myAttributes, HighlighterTargetArea.EXACT_RANGE);
+        RangeHighlighter highlighter = markupModel.addRangeHighlighter(
+            segment.getStartOffset(),
+            segment.getEndOffset(),
+            HighlighterLayer.ADDITIONAL_SYNTAX,
+            myAttributes,
+            HighlighterTargetArea.EXACT_RANGE
+        );
         myAddedHighlighters.add(highlighter);
       }
     }
@@ -95,13 +100,17 @@ public class RangeBlinker {
 
     UIAccess uiAccess = application.getLastUIAccess();
 
-    myBlinkingFuture = uiAccess.getScheduler().schedule(() -> {
-      if (myTimeToLive > 0 || show) {
-        myTimeToLive--;
-        show = !show;
-        startBlinking();
-      }
-    }, 400, TimeUnit.MILLISECONDS);
+    myBlinkingFuture = uiAccess.getScheduler().schedule(
+      () -> {
+        if (myTimeToLive > 0 || show) {
+          myTimeToLive--;
+          show = !show;
+          startBlinking();
+        }
+      },
+      400,
+      TimeUnit.MILLISECONDS
+    );
   }
 
   public void stopBlinking() {

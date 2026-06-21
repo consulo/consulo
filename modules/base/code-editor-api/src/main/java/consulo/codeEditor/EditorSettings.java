@@ -102,7 +102,7 @@ public interface EditorSettings {
 
     void setUseTabCharacter(boolean useTabCharacter);
 
-    int getTabSize(Project project);
+    int getTabSize(@Nullable Project project);
 
     void setTabSize(int tabSize);
 

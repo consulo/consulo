@@ -27,6 +27,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.ui.ex.action.IdeActions;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = IdeActions.ACTION_EDITOR_JOIN_LINES)
 public class JoinLinesAction extends TextComponentEditorAction {
@@ -37,7 +38,11 @@ public class JoinLinesAction extends TextComponentEditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (caret == null) {
+                return;
+            }
+
             Document doc = editor.getDocument();
 
             LogicalPosition caretPosition = caret.getLogicalPosition();

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ExtensionImpl;
@@ -24,6 +23,7 @@ import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -32,7 +32,8 @@ public class HomeHandler extends EditorActionHandler implements ExtensionEditorA
   private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredUIAccess
+  public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null || !lookup.isFocused()) {
       myOriginalHandler.execute(editor, caret, dataContext);
@@ -48,7 +49,6 @@ public class HomeHandler extends EditorActionHandler implements ExtensionEditorA
     myOriginalHandler = originalHandler;
   }
 
-  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_LINE_START;

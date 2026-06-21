@@ -47,7 +47,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     private GutterIconRenderer myGutterIconRenderer;
     private Object myErrorStripeTooltip;
     private MarkupEditorFilter myFilter = MarkupEditorFilter.EMPTY;
-    private CustomHighlighterRenderer myCustomRenderer;
+    private @Nullable CustomHighlighterRenderer myCustomRenderer;
     private LineSeparatorRenderer myLineSeparatorRenderer;
 
     @Mask
@@ -193,15 +193,15 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    public CustomHighlighterRenderer getCustomRenderer() {
+    public @Nullable CustomHighlighterRenderer getCustomRenderer() {
         return myCustomRenderer;
     }
 
     @Override
-    public void setCustomRenderer(CustomHighlighterRenderer renderer) {
+    public void setCustomRenderer(@Nullable CustomHighlighterRenderer renderer) {
         CustomHighlighterRenderer old = myCustomRenderer;
         myCustomRenderer = renderer;
-        if (!Comparing.equal(old, renderer)) {
+        if (!Objects.equals(old, renderer)) {
             fireChanged(true, false, false);
         }
     }

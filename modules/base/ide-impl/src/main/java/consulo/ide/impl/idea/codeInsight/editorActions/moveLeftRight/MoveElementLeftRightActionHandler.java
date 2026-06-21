@@ -94,8 +94,8 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
     return null;
   }
 
-  @RequiredWriteAction
   @Override
+  @RequiredWriteAction
   public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     assert caret != null;
     DocumentEx document = (DocumentEx)editor.getDocument();

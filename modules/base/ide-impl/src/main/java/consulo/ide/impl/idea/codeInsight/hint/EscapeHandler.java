@@ -22,6 +22,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.hint.HintManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 
 import org.jspecify.annotations.Nullable;
@@ -31,7 +32,8 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
   private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+  @RequiredUIAccess
+  public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     if (HintManagerImpl.getInstanceImpl().hideHints(HintManager.HIDE_BY_ESCAPE | HintManager.HIDE_BY_ANY_KEY, true, false)) {
       return;
     }

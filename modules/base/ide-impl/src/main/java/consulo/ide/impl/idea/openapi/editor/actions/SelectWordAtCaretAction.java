@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.SelectWordUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -47,6 +48,7 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
         }
 
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             SelectionModel selectionModel = editor.getSelectionModel();
             Document document = editor.getDocument();
@@ -104,6 +106,7 @@ public class SelectWordAtCaretAction extends TextComponentEditorAction implement
         }
 
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
             SelectionModel selectionModel = editor.getSelectionModel();

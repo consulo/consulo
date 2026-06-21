@@ -36,8 +36,8 @@ import static consulo.language.ast.StringEscapesTokenTypes.VALID_STRING_ESCAPE_T
 @ActionImpl(id = "EditorToggleCase")
 public class ToggleCaseAction extends TextComponentEditorAction {
     private static class Handler extends EditorWriteActionHandler {
-        @RequiredWriteAction
         @Override
+        @RequiredWriteAction
         public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             SimpleReference<Boolean> toLowerCase = new SimpleReference<>(Boolean.FALSE);
             runForCaret(
