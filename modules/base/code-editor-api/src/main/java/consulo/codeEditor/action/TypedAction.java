@@ -15,9 +15,10 @@ import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
+import java.util.Objects;
 
 /**
  * Provides services for registering actions which are activated by typing in the editor.
@@ -28,7 +29,7 @@ public abstract class TypedAction {
         return Application.get().getInstance(TypedAction.class);
     }
 
-    private TypedActionHandler myRawHandler;
+    private @Nullable TypedActionHandler myRawHandler = null;
     private TypedActionHandler myHandler;
     private boolean myHandlersLoaded;
 
@@ -43,22 +44,26 @@ public abstract class TypedAction {
         if (!myHandlersLoaded) {
             myHandlersLoaded = true;
 
-            List<ExtensionTypedActionHandler> extensionList =
-                myApplication.getExtensionPoint(ExtensionTypedActionHandler.class).getExtensionList();
-            for (ExtensionTypedActionHandler handler : extensionList) {
-                handler.init(myHandler);
+            SimpleReference<TypedActionHandler> previousHandler = SimpleReference.create(myHandler);
 
-                myHandler = handler;
-            }
+            myApplication.getExtensionPoint(ExtensionTypedActionHandler.class).forEach(handler -> {
+                handler.init(previousHandler.requiredGet());
+                previousHandler.set(handler);
+            });
+
+            myHandler = previousHandler.requiredGet();
         }
     }
 
     private void loadRawHandlers() {
-        for (RawTypedActionHandlerInternal handler : myApplication.getExtensionPoint(RawTypedActionHandlerInternal.class).getExtensionList()) {
-            handler.init(myRawHandler);
+        SimpleReference<TypedActionHandler> previousRawHandler = SimpleReference.create(myRawHandler);
 
-            myRawHandler = handler;
-        }
+        myApplication.getExtensionPoint(RawTypedActionHandlerInternal.class).forEach(handler -> {
+            handler.init(previousRawHandler.get());
+            previousRawHandler.set(handler);
+        });
+
+        myRawHandler = previousRawHandler.get();
     }
 
     private static class Handler implements TypedActionHandler {
@@ -113,11 +118,10 @@ public abstract class TypedAction {
      *
      * @see #setupRawHandler(TypedActionHandler)
      */
-    public TypedActionHandler getRawHandler() {
+    public @Nullable TypedActionHandler getRawHandler() {
         return myRawHandler;
     }
 
-    
     public RawTypedActionHandler getDefaultRawTypedHandler() {
         throw new UnsupportedOperationException();
     }
@@ -136,7 +140,7 @@ public abstract class TypedAction {
      * @see #getHandler()
      * @see #setupHandler(TypedActionHandler)
      */
-    public TypedActionHandler setupRawHandler(TypedActionHandler handler) {
+    public @Nullable TypedActionHandler setupRawHandler(TypedActionHandler handler) {
         TypedActionHandler tmp = myRawHandler;
         myRawHandler = handler;
         if (tmp == null) {
@@ -146,8 +150,8 @@ public abstract class TypedAction {
     }
 
     public void beforeActionPerformed(Editor editor, char c, DataContext context, ActionPlan plan) {
-        if (myRawHandler instanceof TypedActionHandlerEx) {
-            ((TypedActionHandlerEx)myRawHandler).beforeExecute(editor, c, context, plan);
+        if (myRawHandler instanceof TypedActionHandlerEx typedActionHandlerEx) {
+            typedActionHandlerEx.beforeExecute(editor, c, context, plan);
         }
     }
 
@@ -156,6 +160,9 @@ public abstract class TypedAction {
             return;
         }
         Project project = dataContext.getData(Project.KEY);
-        FreezeLogger.getInstance().runUnderPerformanceMonitor(project, () -> myRawHandler.execute(editor, charTyped, dataContext));
+        FreezeLogger.getInstance().runUnderPerformanceMonitor(
+            project,
+            () -> Objects.requireNonNull(myRawHandler).execute(editor, charTyped, dataContext)
+        );
     }
 }

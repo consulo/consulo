@@ -21,6 +21,7 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -31,6 +32,7 @@ import org.jspecify.annotations.Nullable;
 public class EscapeAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (editor instanceof EditorEx) {
                 EditorEx editorEx = (EditorEx) editor;

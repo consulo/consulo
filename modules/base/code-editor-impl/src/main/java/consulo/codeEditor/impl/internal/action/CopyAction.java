@@ -24,6 +24,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import org.jspecify.annotations.Nullable;
 
@@ -35,6 +36,7 @@ import org.jspecify.annotations.Nullable;
 public class CopyAction extends TextComponentEditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (!editor.getSelectionModel().hasSelection(true)) {
                 if (Registry.is(SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {

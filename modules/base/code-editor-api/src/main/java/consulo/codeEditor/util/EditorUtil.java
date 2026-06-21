@@ -113,7 +113,8 @@ public class EditorUtil {
     }
 
     public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
-        return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
+        return attributes == TextAttributes.ERASE_MARKER
+            || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
     }
 
     public static int getTabSize(Editor editor) {
@@ -180,9 +181,7 @@ public class EditorUtil {
      * @see #getNotFoldedLineEndOffset(Editor, int)
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
-    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor,
-                                                                              VisualPosition start,
-                                                                              VisualPosition end) {
+    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor, VisualPosition start, VisualPosition end) {
         Document document = editor.getDocument();
         FoldingModel foldingModel = editor.getFoldingModel();
 
@@ -261,14 +260,19 @@ public class EditorUtil {
         return document.getLineEndOffset(lineNumber);
     }
 
-    public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+    public static int getNotFoldedLineStartOffset(
+        Document document,
+        FoldingModel foldingModel,
+        int startOffset,
+        boolean stopAtInvisibleFoldRegions
+    ) {
         int offset = startOffset;
         while (true) {
             offset = DocumentUtil.getLineStartOffset(offset, document);
             FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset - 1);
-            if (foldRegion == null ||
-                stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty() ||
-                foldRegion.getStartOffset() >= offset) {
+            if (foldRegion == null
+                || stopAtInvisibleFoldRegions && foldRegion.getPlaceholderText().isEmpty()
+                || foldRegion.getStartOffset() >= offset) {
                 break;
             }
             offset = foldRegion.getStartOffset();
@@ -313,18 +317,11 @@ public class EditorUtil {
         return line;
     }
 
-    public static int calcColumnNumber(Editor editor,
-                                       CharSequence text,
-                                       int start,
-                                       int offset) {
+    public static int calcColumnNumber(Editor editor, CharSequence text, int start, int offset) {
         return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
     }
 
-    public static int calcColumnNumber(@Nullable Editor editor,
-                                       CharSequence text,
-                                       int start,
-                                       int offset,
-                                       int tabSize) {
+    public static int calcColumnNumber(@Nullable Editor editor, CharSequence text, int start, int offset, int tabSize) {
         if (editor instanceof TextComponentEditor) {
             return offset - start;
         }

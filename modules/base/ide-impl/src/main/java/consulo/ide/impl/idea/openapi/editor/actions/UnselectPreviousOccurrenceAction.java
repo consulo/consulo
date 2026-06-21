@@ -23,6 +23,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorAction;
 
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "UnselectPreviousOccurrence")
@@ -38,6 +39,7 @@ public class UnselectPreviousOccurrenceAction extends EditorAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             if (editor.getCaretModel().getCaretCount() > 1) {
                 editor.getCaretModel().removeCaret(editor.getCaretModel().getPrimaryCaret());

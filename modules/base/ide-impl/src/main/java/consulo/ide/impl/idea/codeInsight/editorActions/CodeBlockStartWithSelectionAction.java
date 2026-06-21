@@ -23,6 +23,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -37,6 +38,7 @@ public class CodeBlockStartWithSelectionAction extends EditorAction {
         }
 
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project != null) {

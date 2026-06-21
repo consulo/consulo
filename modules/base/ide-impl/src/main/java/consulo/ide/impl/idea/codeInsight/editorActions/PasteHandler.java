@@ -72,7 +72,6 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         myOriginalHandler = originalAction;
     }
 
-    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_PASTE;
@@ -80,7 +79,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
     @Override
     @RequiredUIAccess
-    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret == null : "Invocation of 'paste' operation for specific caret is not supported";
         execute(editor, dataContext, null);
     }

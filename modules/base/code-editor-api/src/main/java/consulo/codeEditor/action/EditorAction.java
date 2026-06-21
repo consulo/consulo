@@ -52,12 +52,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         setEnabledInModalContext(true);
     }
 
-    protected EditorAction(
-        LocalizeValue text,
-        LocalizeValue description,
-        Image icon,
-        EditorActionHandler defaultHandler
-    ) {
+    protected EditorAction(LocalizeValue text, LocalizeValue description, Image icon, EditorActionHandler defaultHandler) {
         super(text, description, icon);
         myHandler = defaultHandler;
         setEnabledInModalContext(true);
@@ -83,7 +78,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         myHandlersLoaded = true;
         String id = ActionManager.getInstance().getId(this);
         List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
-        for (int i = extensions.size() - 1; i >= 0; i--) {
+        for (int i = extensions.size(); --i >= 0; ) {
             ExtensionEditorActionHandler handler = extensions.get(i);
             if (handler.getActionId().equals(id)) {
                 handler.init(myHandler);
@@ -102,15 +97,16 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         myHandler.setWorksInInjected(isInInjectedContext());
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
-        actionPerformed(editor, dataContext);
+        if (editor != null) {
+            actionPerformed(editor, dataContext);
+        }
     }
 
-    
     @Override
     public ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
@@ -122,10 +118,6 @@ public abstract class EditorAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     public final void actionPerformed(Editor editor, DataContext dataContext) {
-        if (editor == null) {
-            return;
-        }
-
         EditorActionHandler handler = getHandler();
         Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
 
@@ -174,7 +166,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         return new DataContext() {
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(Key<T> dataId) {
+            public <T> @Nullable T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) editor.getProject();
                 }

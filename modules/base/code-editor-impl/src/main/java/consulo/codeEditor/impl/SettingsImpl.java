@@ -400,7 +400,7 @@ public class SettingsImpl implements EditorSettings {
     }
 
     @Override
-    public int getTabSize(Project project) {
+    public int getTabSize(@Nullable Project project) {
         if (myTabSize != null) {
             return myTabSize;
         }

@@ -68,11 +68,13 @@ public interface MarkupModel extends UserDataHolder {
      * An editor can provide a custom scheme different from the global one, also a user can change the global scheme explicitly.
      * Using the overload taking a {@link TextAttributesKey} will make the platform take care of all these cases.
      */
-    RangeHighlighter addRangeHighlighter(int startOffset,
-                                         int endOffset,
-                                         int layer,
-                                         @Nullable TextAttributes textAttributes,
-                                         HighlighterTargetArea targetArea);
+    RangeHighlighter addRangeHighlighter(
+        int startOffset,
+        int endOffset,
+        int layer,
+        @Nullable TextAttributes textAttributes,
+        HighlighterTargetArea targetArea
+    );
 
     /**
      * Adds a highlighter covering the specified line in the document.

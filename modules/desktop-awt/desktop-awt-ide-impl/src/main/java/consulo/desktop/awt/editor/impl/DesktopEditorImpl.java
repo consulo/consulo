@@ -192,7 +192,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
    
     private final JScrollBar myVerticalScrollBar;
 
-   
     protected final CaretCursor myCaretCursor;
     private final ScrollingTimer myScrollingTimer = new ScrollingTimer();
 
@@ -212,7 +211,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private int mySavedSelectionStart = -1;
     private int mySavedSelectionEnd = -1;
 
-   
     private static final RepaintCursorCommand ourCaretBlinkingCommand = new RepaintCursorCommand();
 
     @MouseSelectionState
@@ -253,7 +251,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private RangeMarker myDraggedRange;
     private boolean myDragStarted;
 
-   
     private final JPanel myHeaderPanel;
 
     private @Nullable MouseEvent myInitialMouseEvent;
@@ -684,42 +681,35 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public DesktopSelectionModelImpl getSelectionModel() {
         return (DesktopSelectionModelImpl) super.getSelectionModel();
     }
 
     @Override
-   
     public DesktopEditorMarkupModelImpl getMarkupModel() {
         return (DesktopEditorMarkupModelImpl) super.getMarkupModel();
     }
 
     @Override
-   
     public DesktopFoldingModelImpl getFoldingModel() {
         return (DesktopFoldingModelImpl) super.getFoldingModel();
     }
 
     @Override
-   
     public DesktopCaretModelImpl getCaretModel() {
         return (DesktopCaretModelImpl) super.getCaretModel();
     }
 
     @Override
-   
     public DesktopScrollingModelImpl getScrollingModel() {
         return (DesktopScrollingModelImpl) super.getScrollingModel();
     }
 
     @Override
-   
     public SoftWrapModelImpl getSoftWrapModel() {
         return (SoftWrapModelImpl) super.getSoftWrapModel();
     }
 
-   
     @Override
     public InlayModelImpl getInlayModel() {
         return (InlayModelImpl) super.getInlayModel();
@@ -1040,7 +1030,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
-   
     public ActionCallback type(String text) {
         ActionCallback result = new ActionCallback();
 
@@ -1099,18 +1088,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public EditorComponentImpl getContentComponent() {
         return myEditorComponent;
     }
 
-   
     @Override
     public consulo.ui.Component getContentUIComponent() {
         return TargetAWT.wrap(myEditorComponent);
     }
 
-   
     @Override
     public EditorGutterComponentImpl getGutterComponentEx() {
         return myGutterComponent;
@@ -1122,38 +1108,32 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public VisualPosition xyToVisualPosition(Point p) {
         return myView.xyToVisualPosition(p);
     }
 
     @Override
-   
     public VisualPosition xyToVisualPosition(Point2D p) {
         return myView.xyToVisualPosition(p);
     }
 
     @Override
-   
     public Point2D offsetToPoint2D(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
         return myView.offsetToXY(offset, leanTowardsLargerOffsets, beforeSoftWrap);
     }
 
     @Override
-   
     public Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
         Point2D point2D = offsetToPoint2D(offset, leanForward, beforeSoftWrap);
         return new Point((int) point2D.getX(), (int) point2D.getY());
     }
 
     @Override
-   
     public VisualPosition offsetToVisualPosition(int offset) {
         return offsetToVisualPosition(offset, false, false);
     }
 
     @Override
-   
     public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
         return myView.offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
     }
@@ -1171,7 +1151,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public LogicalPosition offsetToLogicalPosition(int offset) {
         return myView.offsetToLogicalPosition(offset);
     }
@@ -1195,7 +1174,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public LogicalPosition xyToLogicalPosition(Point p) {
         Point pp = p.x >= 0 && p.y >= 0 ? p : new Point(Math.max(p.x, 0), Math.max(p.y, 0));
         return visualToLogicalPosition(xyToVisualPosition(pp));
@@ -1212,21 +1190,18 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public Point logicalPositionToXY(LogicalPosition pos) {
         VisualPosition visible = logicalToVisualPosition(pos);
         return visualPositionToXY(visible);
     }
 
     @Override
-   
     public Point visualPositionToXY(VisualPosition visible) {
         Point2D point2D = myView.visualPositionToXY(visible);
         return new Point((int) point2D.getX(), (int) point2D.getY());
     }
 
     @Override
-   
     public Point2D visualPositionToPoint2D(VisualPosition visible) {
         return myView.visualPositionToXY(visible);
     }
@@ -1423,7 +1398,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public String dumpState() {
         return super.dumpState() +
             "\ninsets: " +
@@ -1518,12 +1492,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public JComponent getComponent() {
         return myPanel;
     }
 
-   
     @Override
     public consulo.ui.Component getUIComponent() {
         return TargetAWT.wrap(myPanel);
@@ -1675,12 +1647,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myForcedBackground = color;
     }
 
-   
     ColorValue getForegroundColor() {
         return myScheme.getDefaultForeground();
     }
 
-   
     @Override
     public ColorValue getBackgroundColor() {
         if (myForcedBackground != null) {
@@ -1690,7 +1660,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return getBackgroundIgnoreForced();
     }
 
-   
     @Override
     public TextDrawingCallback getTextDrawingCallback() {
         return myTextDrawingCallback;
@@ -1701,7 +1670,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return Comparing.equal(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
     }
 
-   
     private ColorValue getBackgroundIgnoreForced() {
         ColorValue color = myScheme.getDefaultBackground();
         if (myDocument.isWritable()) {
@@ -1751,7 +1719,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myView.getCharHeight();
     }
 
-   
     @Override
     public FontMetrics getFontMetrics(@JdkConstants.FontStyle int fontType) {
         EditorFontType ft;
@@ -1836,13 +1803,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return 0;
     }
 
-   
     @Override
     public Dimension getContentSize() {
         return myView.getPreferredSize();
     }
 
-   
     @Override
     public JScrollPane getScrollPane() {
         return myScrollPane;
@@ -1881,13 +1846,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
         return myView.logicalToVisualPosition(logicalPos, false);
     }
 
     @Override
-   
     public LogicalPosition visualToLogicalPosition(VisualPosition visiblePos) {
         return myView.visualToLogicalPosition(visiblePos);
     }
@@ -1908,7 +1871,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return lineIndex;
     }
 
-   
     private VisualPosition getTargetPosition(int x, int y, boolean trimToLineWidth, @Nullable Caret targetCaret) {
         if (myDocument.getLineCount() == 0) {
             return new VisualPosition(0, 0);
@@ -2696,7 +2658,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         return myScrollBarOrientation != EditorEx.VERTICAL_SCROLLBAR_RIGHT;
     }
 
-   
     public JScrollBar getVerticalScrollBar() {
         return myVerticalScrollBar;
     }
@@ -2761,7 +2722,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myInputMethodRequestsHandler.setInputMethodCaretPosition(e);
     }
 
-   
     InputMethodRequests getInputMethodRequests() {
         if (myInputMethodRequestsHandler == null) {
             myInputMethodRequestsHandler = new MyInputMethodHandler();
@@ -2818,7 +2778,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myDropHandler = dropHandler;
     }
 
-   
     private EditorMouseEvent createEditorMouseEvent(MouseEvent e) {
         Point point = e.getPoint();
         EditorMouseEventArea area = getMouseEventArea(e);
@@ -2851,7 +2810,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
             myDelegate = delegate;
         }
 
-       
         @Override
         public Rectangle getTextLocation(TextHitInfo offset) {
             return execute(() -> myDelegate.getTextLocation(offset));
@@ -2867,7 +2825,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return execute(myDelegate::getInsertPositionOffset);
         }
 
-       
         @Override
         public AttributedCharacterIterator getCommittedText(
             int beginIndex,
@@ -2901,7 +2858,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
         private String composedText;
         private ProperTextRange composedTextRange;
 
-       
         @Override
         public Rectangle getTextLocation(TextHitInfo offset) {
             if (isDisposed()) {
@@ -2976,7 +2932,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return "";
         }
 
-       
         @Override
         public AttributedCharacterIterator getCommittedText(
             int beginIndex,
@@ -3509,41 +3464,37 @@ public final class DesktopEditorImpl extends CodeEditorBase
                         mySelectionModel.setSelection(startToUse, caretOffset);
                     }
                 }
-                else {
-                    if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection() && !isCreateRectangularSelectionEvent(e) &&
-                        e.getClickCount() == 1) {
-                        if (!toggleCaret) {
-                            setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
-                            mySelectionModel.setSelection(caretOffset, caretOffset);
-                        }
+                else if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection()
+                    && !isCreateRectangularSelectionEvent(e) && e.getClickCount() == 1) {
+                    if (!toggleCaret) {
+                        setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
+                        mySelectionModel.setSelection(caretOffset, caretOffset);
                     }
-                    else {
-                        if (e.getButton() == MouseEvent.BUTTON1
-                            && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA)
-                            && (!toggleCaret || lastPressCreatedCaret)
-                            && !(myMouseSelectedRegion instanceof CustomFoldRegion)) {
-                            switch (e.getClickCount()) {
-                                case 2:
-                                    selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
-                                    break;
+                }
+                else if (e.getButton() == MouseEvent.BUTTON1
+                    && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA)
+                    && (!toggleCaret || lastPressCreatedCaret)
+                    && !(myMouseSelectedRegion instanceof CustomFoldRegion)) {
+                    switch (e.getClickCount()) {
+                        case 2:
+                            selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
+                            break;
 
-                                case 3:
-                                    if (eventArea == EditorMouseEventArea.EDITING_AREA &&
-                                        HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK && mySettings.isCamelWords()) {
-                                        // We want to differentiate between triple and quadruple clicks when 'select by camel humps' is on. The former
-                                        // is assumed to select 'hump' while the latter points to the whole word.
-                                        selectWordAtCaret(false);
-                                        break;
-                                    }
-                                    //noinspection fallthrough
-                                case 4:
-                                    // Triple and quadruple clicks on the line number reset the selection to a single line,
-                                    // except that in this case we keep the caret at the beginning of this line, not the next line.
-                                    selectLineAtCaret(false);
-                                    mySelectionModel.setUnknownDirection(true);
-                                    break;
+                        case 3:
+                            if (eventArea == EditorMouseEventArea.EDITING_AREA &&
+                                HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK && mySettings.isCamelWords()) {
+                                // We want to differentiate between triple and quadruple clicks when 'select by camel humps' is on. The former
+                                // is assumed to select 'hump' while the latter points to the whole word.
+                                selectWordAtCaret(false);
+                                break;
                             }
-                        }
+                            //noinspection fallthrough
+                        case 4:
+                            // Triple and quadruple clicks on the line number reset the selection to a single line,
+                            // except that in this case we keep the caret at the beginning of this line, not the next line.
+                            selectLineAtCaret(false);
+                            mySelectionModel.setUnknownDirection(true);
+                            break;
                     }
                 }
             }
@@ -3633,7 +3584,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
      * @return {@code true} if action that produces given event will trigger editor selection change; {@code false} otherwise
      */
     private boolean tweakSelectionEvent(MouseEvent e) {
-        return getSelectionModel().hasSelection() && e.getButton() == MouseEvent.BUTTON1 && e.isShiftDown() && getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA;
+        return getSelectionModel().hasSelection()
+            && e.getButton() == MouseEvent.BUTTON1
+            && e.isShiftDown()
+            && getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA;
     }
 
     /**
@@ -4039,7 +3993,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public EditorGutter getGutter() {
         return getGutterComponentEx();
     }
@@ -4063,7 +4016,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-   
     public int[] visualLineToYRange(int visualLine) {
         return myView.visualLineToYRange(visualLine);
     }
@@ -4157,6 +4109,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             return myCharacterGrid;
         }
     }
+
     @TestOnly
     void validateState() {
         myView.validateState();
@@ -4175,7 +4128,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         public void setUI(ScrollPaneUI ui) {
             super.setUI(ui);
-            // disable standard Swing keybindings
+            // disable standard Swing key-bindings
             setInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
         }
 
@@ -4232,7 +4185,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
         }
 
-       
         @Override
         public Insets getBorderInsets(Component c) {
             FileEditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, FileEditorsSplitters.class);

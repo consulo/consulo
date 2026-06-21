@@ -80,7 +80,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   @Override
-  public @Nullable TextRange[] pasteFromClipboard(Editor editor) {
+  public TextRange @Nullable [] pasteFromClipboard(Editor editor) {
     CopyPasteManager manager = CopyPasteManager.getInstance();
     if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
       Transferable clipboardContents = manager.getContents();
@@ -92,7 +92,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   @Override
-  public @Nullable TextRange[] pasteTransferable(final Editor editor, Transferable content) {
+  public TextRange @Nullable [] pasteTransferable(final Editor editor, Transferable content) {
     String text = getStringContent(content);
     if (text == null) return null;
 

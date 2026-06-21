@@ -27,6 +27,7 @@ import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +44,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         }
 
         @Override
+        @RequiredUIAccess
         public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             LookupEx lookup = LookupManager.getActiveLookup(editor);
             assert lookup != null;

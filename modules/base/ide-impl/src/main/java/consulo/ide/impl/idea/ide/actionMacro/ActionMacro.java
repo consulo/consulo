@@ -273,6 +273,9 @@ public class ActionMacro implements JDOMExternalizable {
 
     public void playBack(DataContext context) {
       Editor editor = context.getData(Editor.KEY);
+      if (editor == null) {
+        return;
+      }
       TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
       for (char aChar : myText.toCharArray()) {
         typedAction.actionPerformed(editor, aChar, context);

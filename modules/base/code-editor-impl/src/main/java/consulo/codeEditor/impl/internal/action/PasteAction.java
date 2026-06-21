@@ -28,6 +28,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
@@ -41,7 +42,7 @@ public class PasteAction extends EditorAction {
     private static class Handler extends BasePasteHandler {
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             TextRange range = null;
             if (myTransferable != null) {
                 TextRange[] ranges = EditorCopyPasteHelper.getInstance().pasteTransferable(editor, myTransferable);

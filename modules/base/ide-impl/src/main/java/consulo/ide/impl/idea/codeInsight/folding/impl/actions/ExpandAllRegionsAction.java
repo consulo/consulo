@@ -25,6 +25,7 @@ import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class ExpandAllRegionsAction extends EditorAction {
             ActionLocalize.actionExpandallregionsDescription(),
             new BaseFoldingHandler() {
                 @Override
+                @RequiredUIAccess
                 public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
                     Project project = editor.getProject();
                     assert project != null;

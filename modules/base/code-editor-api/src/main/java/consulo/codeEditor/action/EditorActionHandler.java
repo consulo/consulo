@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
-import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import org.jspecify.annotations.Nullable;
 
@@ -65,10 +65,7 @@ public abstract class EditorActionHandler {
         }
         inCheck = true;
         try {
-            if (editor == null) {
-                return false;
-            }
-            Editor hostEditor = dataContext == null ? null : dataContext.getData(EditorKeys.HOST_EDITOR);
+            Editor hostEditor = dataContext.getData(EditorKeys.HOST_EDITOR);
             if (hostEditor == null) {
                 hostEditor = editor;
             }
@@ -87,11 +84,10 @@ public abstract class EditorActionHandler {
         }
     }
 
-    private void doIfEnabled(Caret hostCaret, @Nullable DataContext context, CaretTask task) {
-        DataContext caretContext =
-            context == null ? null : CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
+    private void doIfEnabled(Caret hostCaret, DataContext context, CaretTask task) {
+        DataContext caretContext = CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
         Editor editor = hostCaret.getEditor();
-        if (myWorksInInjected && caretContext != null) {
+        if (myWorksInInjected) {
             DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
             Caret injectedCaret = injectedCaretContext.getData(Caret.KEY);
             if (injectedCaret != null && injectedCaret != hostCaret
@@ -142,7 +138,7 @@ public abstract class EditorActionHandler {
      * {@link #execute(Editor, Caret, DataContext)}.
      */
     @Deprecated
-    public void execute(Editor editor, @Nullable DataContext dataContext) {
+    public void execute(Editor editor, DataContext dataContext) {
         if (inExecution) {
             return;
         }
@@ -193,7 +189,7 @@ public abstract class EditorActionHandler {
      * @param dataContext the data context for the action.
      */
     public final void execute(Editor editor, @Nullable Caret contextCaret, DataContext dataContext) {
-        Editor hostEditor = dataContext == null ? null : dataContext.getData(EditorKeys.HOST_EDITOR);
+        Editor hostEditor = dataContext.getData(EditorKeys.HOST_EDITOR);
         if (hostEditor == null) {
             hostEditor = editor;
         }
@@ -202,7 +198,7 @@ public abstract class EditorActionHandler {
                 if (myWorksInInjected) {
                     ensureInjectionUpToDate(caret);
                 }
-                doIfEnabled(caret, dataContext, (caret1, dc) -> doExecute(caret1.getEditor(), caret1, dc));
+                doIfEnabled(caret, dataContext, (thisCaret, dc) -> doExecute(thisCaret.getEditor(), thisCaret, dc));
             });
         }
         else if (contextCaret == null) {
@@ -235,15 +231,12 @@ public abstract class EditorActionHandler {
         }
 
         @Override
-        protected abstract void doExecute(
-            Editor editor,
-            @SuppressWarnings("NullableProblems") Caret caret,
-            DataContext dataContext
-        );
+        @RequiredUIAccess
+        protected abstract void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext);
     }
 
     @FunctionalInterface
     private interface CaretTask {
-        void perform(Caret caret, @Nullable DataContext dataContext);
+        void perform(Caret caret, DataContext dataContext);
     }
 }

@@ -111,7 +111,7 @@ public interface RangeHighlighter extends RangeMarker {
 
     @Nullable CustomHighlighterRenderer getCustomRenderer();
 
-    void setCustomRenderer(CustomHighlighterRenderer renderer);
+    void setCustomRenderer(@Nullable CustomHighlighterRenderer renderer);
 
     /**
      * Returns the renderer used for drawing gutter icons in the area covered by the

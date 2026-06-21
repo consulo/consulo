@@ -483,13 +483,10 @@ public interface Editor extends UserDataHolder {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
-    
     IndentsModel getIndentsModel();
 
-    
     InlayModel getInlayModel();
 
-    
     EditorKind getEditorKind();
 
     /**
@@ -515,10 +512,8 @@ public interface Editor extends UserDataHolder {
         return getCaretModel().getOffset();
     }
 
-    
     DataContext getDataContext();
 
-    
     default EditorHighlighter getHighlighter() {
         return CodeEditorInternalHelper.getInstance().createEmptyHighlighter(getProject(), getDocument());
     }
