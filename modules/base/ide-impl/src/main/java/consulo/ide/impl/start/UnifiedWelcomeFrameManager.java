@@ -25,6 +25,7 @@ import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.ProjectManager;
+import consulo.project.internal.RecentProjectsChecker;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
@@ -78,16 +79,38 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     @Override
     public IdeFrame createFrame() {
         Window welcomeFrame = Window.create(FrameTitleUtil.buildTitle(), WindowOptions.builder().disableResize().build());
-        welcomeFrame.addCloseListener(event -> frameClosed());
         welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
         welcomeFrame.setContent(Label.create("Loading..."));
 
         AnAction[] recentProjectsActions = myRecentProjectsManager.getRecentProjectsActions(false);
 
+        List<String> pathsToCheck = new ArrayList<>();
+        for (AnAction action : recentProjectsActions) {
+            if (action instanceof ReopenProjectAction reopenProjectAction) {
+                pathsToCheck.add(reopenProjectAction.getProjectPath());
+            }
+        }
+
+        RecentProjectsChecker checker = RecentProjectsChecker.getInstance();
+        Runnable checkerCallback = () -> {
+        };
+        checker.addCallback(checkerCallback, pathsToCheck);
+        welcomeFrame.addCloseListener(event -> {
+            checker.removeCallback(checkerCallback);
+            frameClosed();
+        });
+
         ListModel<AnAction> model = ListModel.of(Arrays.asList(recentProjectsActions));
 
         ListBox<AnAction> listSelect = ListBox.create(model);
-        listSelect.setRenderer((renderer, index, item) -> renderer.append(((ReopenProjectAction) item).getProjectName()));
+        listSelect.setRenderer((renderer, index, item) -> {
+            ReopenProjectAction action = (ReopenProjectAction) item;
+            renderer.append(action.getProjectName());
+            String branch = RecentProjectsChecker.getInstance().getBranch(action.getProjectPath());
+            if (branch != null && !branch.isEmpty()) {
+                renderer.append(" [" + branch + "]");
+            }
+        });
         listSelect.addValueListener(event -> {
             ReopenProjectAction value = (ReopenProjectAction) event.getValue();
 

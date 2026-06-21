@@ -16,17 +16,11 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
-import consulo.application.Application;
-import consulo.application.PowerSaveMode;
-import consulo.application.PowerSaveModeListener;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.UniqueNameBuilder;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
@@ -35,9 +29,8 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectGroup;
+import consulo.project.internal.RecentProjectsChecker;
 import consulo.project.internal.RecentProjectsManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -58,13 +51,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author max
@@ -75,7 +63,6 @@ public class RecentProjectPanel {
     public static final String RECENT_PROJECTS_LABEL = "Recent Projects";
     protected final UniqueNameBuilder<ReopenProjectAction> myPathShortener;
     protected AnAction removeRecentProjectAction;
-    protected FilePathChecker myChecker;
     private int myHoverIndex = -1;
     private final int closeButtonInset = JBUI.scale(7);
     private Image currentIcon = AllIcons.General.Remove;
@@ -131,19 +118,19 @@ public class RecentProjectPanel {
             }
         }
 
-        myChecker = new FilePathChecker(new Runnable() {
-            @Override
-            public void run() {
-                if (myList.isShowing()) {
-                    myList.revalidate();
-                    myList.repaint();
-                }
-            }
-        }, pathsToCheck);
-        Disposer.register(parentDisposable, myChecker);
-
         myList = createList(recentProjectActions, getPreferredScrollableViewportSize());
         myList.setCellRenderer(createRenderer(myPathShortener));
+
+        Runnable checkerCallback = () -> {
+            if (myList.isShowing()) {
+                myList.revalidate();
+                myList.repaint();
+            }
+        };
+
+        RecentProjectsChecker checker = RecentProjectsChecker.getInstance();
+        checker.addCallback(checkerCallback, pathsToCheck);
+        Disposer.register(parentDisposable, () -> checker.removeCallback(checkerCallback));
 
         new ClickListener() {
             @Override
@@ -334,7 +321,7 @@ public class RecentProjectPanel {
     }
 
     protected boolean isPathValid(String path) {
-        return myChecker == null || myChecker.isValid(path);
+        return RecentProjectsChecker.getInstance().isValid(path);
     }
 
     protected JBList<AnAction> createList(AnAction[] recentProjectActions, Dimension size) {
@@ -363,20 +350,6 @@ public class RecentProjectPanel {
             Rectangle bounds = getCellBounds(index, index);
             Image icon = PlatformIconGroup.actionsMorevertical();
             return new Rectangle(bounds.width - icon.getWidth() * 2, bounds.y, icon.getWidth() * 2, (int) bounds.getHeight());
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-
-            // this is debug for getCloseIconRect()
-            //int i = getSelectedIndex();
-            //if (i == -1) {
-            //  return;
-            //}
-            //g.setColor(Color.RED);
-            //Rectangle closeIconRect = getCloseIconRect(i);
-            //g.fillRect(closeIconRect.x, closeIconRect.y, closeIconRect.width, closeIconRect.height);
         }
 
         @Override
@@ -453,7 +426,12 @@ public class RecentProjectPanel {
             setBackground(back);
 
             if (value instanceof ReopenProjectAction item) {
-                myName.setText(getTitle2Text(item.getTemplatePresentation().getText(), myName, JBUI.scale(55)));
+                String name = item.getTemplatePresentation().getText();
+                String branch = RecentProjectsChecker.getInstance().getBranch(item.getProjectPath());
+                if (!StringUtil.isEmptyOrSpaces(branch)) {
+                    name += " [" + branch + "]";
+                }
+                myName.setText(getTitle2Text(name, myName, JBUI.scale(55)));
                 myPath.setText(getTitle2Text(item.getProjectPath(), myPath, JBUI.scale(55)));
             }
             else if (value instanceof PopupProjectGroupActionGroup group) {
@@ -516,118 +494,5 @@ public class RecentProjectPanel {
         }
 
         return fullText;
-    }
-
-    private static class FilePathChecker implements Disposable, ApplicationActivationListener, PowerSaveModeListener {
-        private static final int MIN_AUTO_UPDATE_MILLIS = 2500;
-        private ScheduledExecutorService myService = null;
-        private final Set<String> myInvalidPaths = Collections.synchronizedSet(new HashSet<>());
-
-        private final Runnable myCallback;
-        private final Collection<String> myPaths;
-
-        FilePathChecker(Runnable callback, Collection<String> paths) {
-            myCallback = callback;
-            myPaths = paths;
-            MessageBusConnection connection = Application.get().getMessageBus().connect(this);
-            connection.subscribe(ApplicationActivationListener.class, this);
-            connection.subscribe(PowerSaveModeListener.class, this);
-            onAppStateChanged();
-        }
-
-        boolean isValid(String path) {
-            return !myInvalidPaths.contains(path);
-        }
-
-        @Override
-        public void applicationActivated(IdeFrame ideFrame) {
-            onAppStateChanged();
-        }
-
-        @Override
-        public void delayedApplicationDeactivated(IdeFrame ideFrame) {
-            onAppStateChanged();
-        }
-
-        @Override
-        public void applicationDeactivated(IdeFrame ideFrame) {
-        }
-
-        @Override
-        public void powerSaveStateChanged() {
-            onAppStateChanged();
-        }
-
-        private void onAppStateChanged() {
-            boolean settingsAreOK = !PowerSaveMode.isEnabled();
-            boolean everythingIsOK = settingsAreOK && Application.get().isActive();
-            if (myService == null && everythingIsOK) {
-                myService = AppExecutorUtil.createBoundedScheduledExecutorService("CheckRecentProjectPaths Service", 2);
-                for (String path : myPaths) {
-                    scheduleCheck(path, 0);
-                }
-                Application.get().invokeLater(myCallback);
-            }
-            if (myService != null && !everythingIsOK) {
-                if (!settingsAreOK) {
-                    myInvalidPaths.clear();
-                }
-                if (!myService.isShutdown()) {
-                    myService.shutdown();
-                    myService = null;
-                }
-                Application.get().invokeLater(myCallback);
-            }
-        }
-
-        @Override
-        public void dispose() {
-            if (myService != null) {
-                myService.shutdownNow();
-            }
-        }
-
-        private void scheduleCheck(String path, long delay) {
-            if (myService == null || myService.isShutdown()) {
-                return;
-            }
-
-            myService.schedule(() -> {
-                long startTime = System.currentTimeMillis();
-                boolean pathIsValid;
-                try {
-                    pathIsValid = !RecentProjectsManagerImpl.isFileSystemPath(path) || isPathAvailable(path);
-                }
-                catch (Exception e) {
-                    pathIsValid = false;
-                }
-                if (myInvalidPaths.contains(path) == pathIsValid) {
-                    if (pathIsValid) {
-                        myInvalidPaths.remove(path);
-                    }
-                    else {
-                        myInvalidPaths.add(path);
-                    }
-                    Application.get().invokeLater(myCallback);
-                }
-                scheduleCheck(path, Math.max(MIN_AUTO_UPDATE_MILLIS, 10 * (System.currentTimeMillis() - startTime)));
-            }, delay, TimeUnit.MILLISECONDS);
-        }
-    }
-
-    private static boolean isPathAvailable(String pathStr) {
-        Path path = Paths.get(pathStr), pathRoot = path.getRoot();
-        if (pathRoot == null) {
-            return false;
-        }
-        if (Platform.current().os().isWindows() && pathRoot.toString().startsWith("\\\\")) {
-            return true;
-        }
-        for (Path fsRoot : pathRoot.getFileSystem().getRootDirectories()) {
-            if (pathRoot.equals(fsRoot)) {
-                return Files.exists(path);
-            }
-        }
-        return false;
     }
 }

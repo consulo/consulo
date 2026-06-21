@@ -90,7 +90,14 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
         }
         else {
             presentation.setEnabled(true);
-            presentation.setText(myProjectText);
+
+            String branch = RecentProjectsManager.getInstance().getBranch(myProjectPath);
+            if (branch != null && !branch.isEmpty()) {
+                presentation.setText(LocalizeValue.join(myProjectText, LocalizeValue.of(" [" + branch + "]")));
+            }
+            else {
+                presentation.setText(myProjectText);
+            }
         }
     }
 

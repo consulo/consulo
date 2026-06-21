@@ -17,6 +17,7 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.project.ProjectGroup;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
+import consulo.project.internal.RecentProjectsChecker;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionGroup;
@@ -182,8 +183,10 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
         final Color back = UIUtil.getListBackground(isSelected);
         final JLabel name = new JLabel();
         final JLabel path = new JLabel();
+        final JLabel branch = new JLabel();
         name.setForeground(fore);
         path.setForeground(isSelected ? fore : UIUtil.getInactiveTextColor());
+        branch.setForeground(isSelected ? fore : UIUtil.getInactiveTextColor());
 
         return new JPanel() {
           {
@@ -235,15 +238,28 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               add(moreActionLabel, BorderLayout.EAST);
             }
             else if (value instanceof ReopenProjectAction) {
+              String projectPath = ((ReopenProjectAction)value).getProjectPath();
               NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
               name.setText(getTitle2Text(((ReopenProjectAction)value).getTemplatePresentation().getText(), name, JBUI.scale(55)));
-              path.setText(getTitle2Text(((ReopenProjectAction)value).getProjectPath(), path, JBUI.scale(isInsideGroup ? 80 : 60)));
+              path.setText(getTitle2Text(projectPath, path, JBUI.scale(isInsideGroup ? 80 : 60)));
 
-              if (!isPathValid((((ReopenProjectAction)value).getProjectPath()))) {
+              if (!isPathValid(projectPath)) {
                 path.setForeground(ColorUtil.mix(path.getForeground(), JBColor.red, .5));
               }
 
-              p.add(name, BorderLayout.NORTH);
+              String branchName = RecentProjectsChecker.getInstance().getBranch(projectPath);
+              if (branchName != null && !branchName.isEmpty()) {
+                branch.setIcon(TargetAWT.to(PlatformIconGroup.vcsBranch()));
+                branch.setBorder(JBUI.Borders.emptyLeft(8));
+                branch.setText(getTitle2Text(branchName, branch, JBUI.scale(isInsideGroup ? 80 : 60)));
+                NonOpaquePanel nameLine = new NonOpaquePanel(new BorderLayout());
+                nameLine.add(name, BorderLayout.WEST);
+                nameLine.add(branch, BorderLayout.CENTER);
+                p.add(nameLine, BorderLayout.NORTH);
+              }
+              else {
+                p.add(name, BorderLayout.NORTH);
+              }
               p.add(path, BorderLayout.SOUTH);
 
               Image moduleMainIcon = ((ReopenProjectAction)value).getExtensionIcon();
