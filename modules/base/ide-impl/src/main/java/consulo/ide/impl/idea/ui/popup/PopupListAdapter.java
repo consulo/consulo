@@ -7,12 +7,12 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ListWithFilter;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.popup.ListComponentUpdater;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -131,7 +131,7 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
     return myListWithFilter.resetFilter();
   }
 
-  private class MyListWrapper extends JBScrollPane implements DataProvider {
+  private class MyListWrapper extends JBScrollPane implements UiDataProvider {
     private final JList myList;
 
     private MyListWrapper(JList list) {
@@ -150,14 +150,9 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
     }
 
     @Override
-    public @Nullable Object getData(Key dataId) {
-      if (PlatformDataKeys.SELECTED_ITEM == dataId) {
-        return myList.getSelectedValue();
-      }
-      if (PlatformDataKeys.SELECTED_ITEMS == dataId) {
-        return myList.getSelectedValues();
-      }
-      return null;
+    public void uiDataSnapshot(DataSink sink) {
+      sink.set(PlatformDataKeys.SELECTED_ITEM, myList.getSelectedValue());
+      sink.set(PlatformDataKeys.SELECTED_ITEMS, myList.getSelectedValues());
     }
 
     @Override

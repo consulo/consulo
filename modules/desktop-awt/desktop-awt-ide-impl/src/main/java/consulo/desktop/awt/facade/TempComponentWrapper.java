@@ -29,7 +29,6 @@ import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -87,13 +86,6 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
         throw new UnsupportedOperationException();
     }
 
-    
-    @Override
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        throw new UnsupportedOperationException();
-    }
-
-    
     @Override
     public Font getFont() {
         throw new UnsupportedOperationException();
@@ -104,13 +96,11 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         throw new UnsupportedOperationException();
@@ -126,7 +116,6 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFoc
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
     public java.awt.Component toAWTComponent() {
         return myComponent;

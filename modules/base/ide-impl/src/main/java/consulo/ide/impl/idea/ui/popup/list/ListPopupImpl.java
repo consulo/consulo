@@ -5,7 +5,8 @@ import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ClientId;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.UiInterceptors;
@@ -135,7 +136,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return myListModel;
     }
 
-    
     @Override
     public PopupInlineActionsSupport getPopupInlineActionsSupport() {
         return myInlineActionsSupport.get();
@@ -350,7 +350,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         return myList;
     }
 
-    
     protected KeyEvent createKeyEvent(ActionEvent e, int keyCode) {
         return new KeyEvent(myList, KeyEvent.KEY_PRESSED, e.getWhen(), e.getModifiers(), keyCode, KeyEvent.CHAR_UNDEFINED);
     }
@@ -713,7 +712,6 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @SuppressWarnings("unchecked")
-        
         private ExtendMode calcExtendMode(int index) {
             ListPopupStep<Object> listStep = getListStep();
             Object selectedValue = myListModel.getElementAt(index);
@@ -859,7 +857,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         myIndexForShowingChild = aIndexForShowingChild;
     }
 
-    private class MyList extends JBList implements DataProvider, ListWithInlineButtons {
+    private class MyList extends JBList implements UiDataProvider, ListWithInlineButtons {
         private @Nullable Integer selectedButtonIndex;
 
         MyList() {
@@ -942,19 +940,12 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @Override
-        public Object getData(Key dataId) {
-            if (PlatformDataKeys.SELECTED_ITEM == dataId) {
-                return myList.getSelectedValue();
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(PlatformDataKeys.SELECTED_ITEM, myList.getSelectedValue());
+            sink.set(PlatformDataKeys.SELECTED_ITEMS, myList.getSelectedValues());
+            if (mySpeedSearchPatternField != null && mySpeedSearchPatternField.isVisible()) {
+                sink.set(PlatformDataKeys.SPEED_SEARCH_COMPONENT, mySpeedSearchPatternField);
             }
-            if (PlatformDataKeys.SELECTED_ITEMS == dataId) {
-                return myList.getSelectedValues();
-            }
-            if (PlatformDataKeys.SPEED_SEARCH_COMPONENT == dataId) {
-                if (mySpeedSearchPatternField != null && mySpeedSearchPatternField.isVisible()) {
-                    return mySpeedSearchPatternField;
-                }
-            }
-            return null;
         }
 
         @Override

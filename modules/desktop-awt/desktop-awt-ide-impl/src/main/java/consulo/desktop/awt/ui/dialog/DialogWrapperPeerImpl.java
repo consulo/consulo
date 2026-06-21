@@ -28,9 +28,8 @@ import consulo.application.util.Queryable;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.OwnerOptional;
@@ -72,7 +71,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
@@ -646,7 +644,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, DataProvider, Queryable, AbstractDialog {
+    private static class MyDialog extends JDialogAsUIWindow implements DialogWrapperDialog, UiDataProvider, Queryable, AbstractDialog {
         private final WeakReference<DialogWrapper> myDialogWrapper;
 
         /**
@@ -706,16 +704,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
-        public Object getData(Key<?> dataId) {
+        public void uiDataSnapshot(DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
-            if (wrapper instanceof DataProvider dataProvider) {
-                return dataProvider.getData(dataId);
+            if (wrapper instanceof UiDataProvider uiProvider) {
+                sink.uiDataSnapshot(uiProvider);
             }
-            if (wrapper instanceof TypeSafeDataProvider) {
-                TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)wrapper);
-                return adapter.getData(dataId);
-            }
-            return null;
         }
 
         @Override
@@ -1007,7 +1000,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
         }
 
-        private class DialogRootPane extends JRootPane implements DataProvider {
+        private class DialogRootPane extends JRootPane implements UiDataProvider {
 
             private final boolean myGlassPaneIsSet;
 
@@ -1069,9 +1062,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             @Override
-            public Object getData(Key<?> dataId) {
+            public void uiDataSnapshot(DataSink sink) {
                 DialogWrapper wrapper = myDialogWrapper.get();
-                return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
+                if (wrapper != null) {
+                    sink.lazy(PlatformDataKeys.UI_DISPOSABLE, () -> wrapper.getDisposable());
+                }
             }
         }
 

@@ -26,7 +26,8 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -54,7 +55,6 @@ import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
@@ -75,7 +75,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class EditorComponentImpl extends JTextComponent
-    implements EditorHolder, Scrollable, DataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
+    implements EditorHolder, Scrollable, UiDataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
     private final DesktopEditorImpl myEditor;
 
     public EditorComponentImpl(DesktopEditorImpl editor) {
@@ -123,43 +123,29 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-   
     public DesktopEditorImpl getEditor() {
         return myEditor;
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myEditor.isDisposed() || myEditor.isRendererMode()) {
-            return null;
+            return;
         }
 
-        if (Editor.KEY == dataId) {
-            return myEditor;
-        }
-        if (Caret.KEY == dataId) {
-            return myEditor.getCaretModel().getCurrentCaret();
-        }
-        if (DeleteProvider.KEY == dataId) {
-            return myEditor.getDeleteProvider();
-        }
-        if (CutProvider.KEY == dataId) {
-            return myEditor.getCutProvider();
-        }
-        if (CopyProvider.KEY == dataId) {
-            return myEditor.getCopyProvider();
-        }
-        if (PasteProvider.KEY == dataId) {
-            return myEditor.getPasteProvider();
-        }
-        if (EditorKeys.EDITOR_VIRTUAL_SPACE == dataId) {
+        sink.set(Editor.KEY, myEditor);
+        sink.lazy(Caret.KEY, () -> myEditor.getCaretModel().getCurrentCaret());
+        sink.lazy(DeleteProvider.KEY, () -> myEditor.getDeleteProvider());
+        sink.lazy(CutProvider.KEY, () -> myEditor.getCutProvider());
+        sink.lazy(CopyProvider.KEY, () -> myEditor.getCopyProvider());
+        sink.lazy(PasteProvider.KEY, () -> myEditor.getPasteProvider());
+        sink.lazy(EditorKeys.EDITOR_VIRTUAL_SPACE, () -> {
             LogicalPosition location = myEditor.myLastMousePressedLocation;
             if (location == null) {
                 location = myEditor.getCaretModel().getLogicalPosition();
             }
             return EditorUtil.inVirtualSpace(myEditor, location);
-        }
-        return null;
+        });
     }
 
     @Override
@@ -467,7 +453,7 @@ public class EditorComponentImpl extends JTextComponent
     private class EditorAccessibilityDocument implements javax.swing.text.Document, javax.swing.text.Element {
         private List<javax.swing.event.DocumentListener> myListeners;
 
-        public List<javax.swing.event.@Nullable DocumentListener> getListeners() {
+        public @Nullable List<javax.swing.event.DocumentListener> getListeners() {
             return myListeners;
         }
 
@@ -834,7 +820,7 @@ public class EditorComponentImpl extends JTextComponent
         }
 
         @Override
-        public Rectangle modelToView(JTextComponent tc, int pos, Position.@Nullable Bias ignored) throws BadLocationException {
+        public @Nullable Rectangle modelToView(JTextComponent tc, int pos, Position.Bias ignored) throws BadLocationException {
             return modelToView(tc, pos);
         }
 

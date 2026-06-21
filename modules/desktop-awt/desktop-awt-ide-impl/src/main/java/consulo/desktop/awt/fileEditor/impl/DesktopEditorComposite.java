@@ -20,7 +20,8 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.util.Weighted;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.project.DumbUnawareHider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -176,7 +177,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }, this);
     }
 
-    
     private TabFactoryBuilderImpl.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
         PrevNextActionsDescriptor descriptor =
             new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
@@ -270,7 +270,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      * @return file for which composite was created.
      */
     @Override
-    
     public VirtualFile getFile() {
         return myFile;
     }
@@ -292,13 +291,11 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      * this array</b>.
      */
     @Override
-    
     public FileEditor[] getEditors() {
         return myEditors;
     }
 
     @Override
-    
     public List<JComponent> getTopComponents(FileEditor editor) {
         return getTopBottomComponents(editor, true);
     }
@@ -314,7 +311,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         return Collections.unmodifiableList(result);
     }
 
-    
     @Override
     public Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
         return manageTopOrBottomComponent(editor, component, true);
@@ -340,7 +336,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         manageTopOrBottomComponent(editor, component, false, true);
     }
 
-    
     private Disposable manageTopOrBottomComponent(FileEditor editor, ComponentContainer componentContainer, boolean top) {
         JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
         assert container != null;
@@ -404,7 +399,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
     }
 
-    
     protected String getDisplayName(FileEditor editor) {
         return ObjectUtil.notNull(myDisplayNames.get(editor), editor.getName());
     }
@@ -413,7 +407,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      * @return currently selected myEditor.
      */
     @Override
-    
     public FileEditor getSelectedEditor() {
         return getSelectedEditorWithProvider().getFileEditor();
     }
@@ -427,7 +420,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
      * @return currently selected myEditor with its provider.
      */
     @Override
-    
     public abstract FileEditorWithProvider getSelectedEditorWithProvider();
 
     @Override
@@ -478,7 +470,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
     }
 
-    private class MyComponent extends JPanel implements DataProvider {
+    private class MyComponent extends JPanel implements UiDataProvider {
         private @Nullable JComponent myFocusComponent;
 
         public MyComponent(JComponent realComponent, @Nullable JComponent focusComponent) {
@@ -512,22 +504,14 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
 
         @Override
-        public final Object getData(Key<?> dataId) {
-            if (FileEditor.KEY == dataId) {
-                return getSelectedEditor();
-            }
-            else if (VirtualFile.KEY == dataId) {
-                return myFile.isValid() ? myFile : null;
-            }
-            else if (VirtualFile.KEY_OF_ARRAY == dataId) {
-                return myFile.isValid() ? new VirtualFile[]{myFile} : null;
-            }
-            else {
-                JComponent component = getPreferredFocusedComponent();
-                if (component instanceof DataProvider dataProvider && component != this) {
-                    return dataProvider.getData(dataId);
-                }
-                return null;
+        public final void uiDataSnapshot(DataSink sink) {
+            sink.lazy(FileEditor.KEY, () -> getSelectedEditor());
+            sink.lazy(VirtualFile.KEY, () -> myFile.isValid() ? myFile : null);
+            sink.lazy(VirtualFile.KEY_OF_ARRAY, () -> myFile.isValid() ? new VirtualFile[]{myFile} : null);
+
+            JComponent component = getPreferredFocusedComponent();
+            if (component instanceof UiDataProvider uiDataProvider && component != this) {
+                sink.uiDataSnapshot(uiDataProvider);
             }
         }
     }
@@ -570,7 +554,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         }
     }
 
-    
     private static SideBorder createTopBottomSideBorder(boolean top) {
         return new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP) {
             @Override

@@ -16,15 +16,16 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
+import consulo.ide.impl.idea.ui.content.impl.DesktopContentManagerImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.util.concurrent.AsyncResult;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
-import consulo.ui.Component;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -32,58 +33,54 @@ import org.jspecify.annotations.Nullable;
  * @since 18-Oct-17
  */
 public class UnifiedContentManager extends ContentManagerBase {
-  private Component myComponent;
+    private Component myComponent;
 
-  public UnifiedContentManager(ContentUI contentUI, boolean canCloseContents, Project project) {
-    super(contentUI, canCloseContents, project);
-  }
-
-  
-  @Override
-  protected AsyncResult<Void> requestFocusForComponent() {
-    return getFocusManager().requestFocus(myComponent, true);
-  }
-
-  @Override
-  protected boolean isSelectionHoldsFocus() {
-    return false; //TODO [VISTALL]
-  }
-
-  
-  @Override
-  public AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced) {
-    return AsyncResult.resolved();  //TODO [VISTALL]
-  }
-
-  @RequiredUIAccess
-  
-  @Override
-  public Component getUIComponent() {
-    if (myComponent == null) {
-      DockLayout dock = DockLayout.create();
-      dock.addUserDataProvider(dataId -> {
-        if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
-          return this;
-        }
-
-        for (DataProvider dataProvider : myDataProviders) {
-          Object data = dataProvider.getData(dataId);
-          if (data != null) {
-            return data;
-          }
-        }
-
-        if (myUI instanceof DataProvider) {
-          return ((DataProvider)myUI).getData(dataId);
-        }
-
-        return null;
-      });
-      dock.center(myUI.getUIComponent());
-
-      myComponent = dock;
-
+    public UnifiedContentManager(ContentUI contentUI, boolean canCloseContents, Project project) {
+        super(contentUI, canCloseContents, project);
     }
-    return myComponent;
-  }
+
+    @Override
+    protected AsyncResult<Void> requestFocusForComponent() {
+        return getFocusManager().requestFocus(myComponent, true);
+    }
+
+    @Override
+    protected boolean isSelectionHoldsFocus() {
+        return false; //TODO [VISTALL]
+    }
+
+    @Override
+    public AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced) {
+        return AsyncResult.resolved();  //TODO [VISTALL]
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Component getUIComponent() {
+        if (myComponent == null) {
+            DockLayout dock = DockLayout.create();
+            dock.putUserData(UiDataProvider.KEY, sink -> {
+                for (UiDataProvider uiDataProvider : myDataProviders) {
+                    uiDataProvider.uiDataSnapshot(sink);
+                }
+
+                ContentUI ui = myUI;
+                if (ui instanceof UiDataProvider uiDataProvider) {
+                    uiDataProvider.uiDataSnapshot(sink);
+                }
+
+                sink.set(PlatformDataKeys.CONTENT_MANAGER, UnifiedContentManager.this);
+
+                if (getContentCount() > 1) {
+                    sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, UnifiedContentManager.this);
+                }
+            });
+
+            dock.center(myUI.getUIComponent());
+
+            myComponent = dock;
+
+        }
+        return myComponent;
+    }
 }

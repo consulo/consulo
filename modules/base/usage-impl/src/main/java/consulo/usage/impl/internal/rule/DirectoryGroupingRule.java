@@ -18,7 +18,7 @@ package consulo.usage.impl.internal.rule;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -29,7 +29,6 @@ import consulo.usage.UsageGroup;
 import consulo.usage.UsageView;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -76,7 +75,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
         return new DirectoryGroup(dir);
     }
 
-    private class DirectoryGroup implements UsageGroup, TypeSafeDataProvider {
+    private class DirectoryGroup implements UsageGroup, UiDataProvider {
         private final VirtualFile myDir;
 
         @Override
@@ -155,20 +154,16 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
         }
 
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             if (!isValid()) {
                 return;
             }
-            if (VirtualFile.KEY == key) {
-                sink.put(VirtualFile.KEY, myDir);
-            }
-            if (PsiElement.KEY == key) {
-                sink.put(PsiElement.KEY, getDirectory());
-            }
+            sink.set(VirtualFile.KEY, myDir);
+            sink.lazy(PsiElement.KEY, () -> getDirectory());
         }
     }
 
-    private class PackageGroup implements UsageGroup, TypeSafeDataProvider {
+    private class PackageGroup implements UsageGroup, UiDataProvider {
         private final PsiPackage myPackage;
 
         private PackageGroup(PsiPackage aPackage) {
@@ -243,13 +238,11 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
         }
 
         @Override
-        public void calcData(Key<?> key, DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             if (!isValid()) {
                 return;
             }
-            if (PsiElement.KEY == key) {
-                sink.put(PsiElement.KEY, myPackage);
-            }
+            sink.set(PsiElement.KEY, myPackage);
         }
     }
 }

@@ -22,7 +22,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.graph.GraphAlgorithms;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.Graph;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.LangDataKeys;
@@ -513,14 +514,13 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
             return false;
         }
 
-        
         @Override
         public LocalizeValue getNavigateActionText(boolean focusEditor) {
             return ProjectUIViewLocalize.actionOpenModuleSettingsText();
         }
     }
 
-    private static class MyTreePanel extends JPanel implements DataProvider {
+    private static class MyTreePanel extends JPanel implements UiDataProvider {
         private final Tree myTree;
         private final Project myProject;
 
@@ -532,30 +532,26 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         }
 
         @Override
-        public Object getData(Key dataId) {
-            if (Project.KEY == dataId) {
-                return myProject;
-            }
-            if (LangDataKeys.MODULE_CONTEXT == dataId) {
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(Project.KEY, myProject);
+            sink.set(HelpManager.HELP_ID, ourHelpID);
+            sink.lazy(LangDataKeys.MODULE_CONTEXT, () -> {
                 TreePath selectionPath = myTree.getLeadSelectionPath();
-                if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode) {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-                    if (node.getUserObject() instanceof MyUserObject) {
-                        return ((MyUserObject) node.getUserObject()).getModule();
+                if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode node) {
+                    if (node.getUserObject() instanceof MyUserObject myUserObject) {
+                        return myUserObject.getModule();
                     }
                 }
-            }
-            if (HelpManager.HELP_ID == dataId) {
-                return ourHelpID;
-            }
-            if (Navigatable.KEY == dataId) {
+                return null;
+            });
+            sink.lazy(Navigatable.KEY, () -> {
                 TreePath selectionPath = myTree.getLeadSelectionPath();
                 if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode node
                     && node.getUserObject() instanceof MyUserObject) {
-                    return node.getUserObject();
+                    return (Navigatable) node.getUserObject();
                 }
-            }
-            return null;
+                return null;
+            });
         }
     }
 

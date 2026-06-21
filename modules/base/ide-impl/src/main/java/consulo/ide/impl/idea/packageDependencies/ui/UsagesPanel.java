@@ -19,7 +19,8 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
@@ -28,13 +29,12 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.usage.*;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class UsagesPanel extends JPanel implements Disposable, DataProvider {
+public abstract class UsagesPanel extends JPanel implements Disposable, UiDataProvider {
   protected static final Logger LOG = Logger.getInstance(UsagesPanel.class);
 
   protected final Project myProject;
@@ -114,7 +114,7 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
   }
 
   @Override
-  public @Nullable Object getData(Key dataId) {
-    return HelpManager.HELP_ID == dataId ? "ideaInterface.find" : null;
+  public void uiDataSnapshot(DataSink sink) {
+    sink.set(HelpManager.HELP_ID, "ideaInterface.find");
   }
 }

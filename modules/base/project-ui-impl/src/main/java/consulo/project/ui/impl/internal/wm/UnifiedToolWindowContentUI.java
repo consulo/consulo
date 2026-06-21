@@ -17,7 +17,8 @@ package consulo.project.ui.impl.internal.wm;
 
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposer;
 import consulo.project.ui.impl.internal.wm.action.ShowContentAction;
 import consulo.project.ui.impl.internal.wm.action.TabbedContentAction;
@@ -37,7 +38,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.ui.layout.DockLayout;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class UnifiedToolWindowContentUI implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
+public class UnifiedToolWindowContentUI implements ToolWindowContentUI, PropertyChangeListener, UiDataProvider {
     public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
     // when client property is put in toolwindow component, hides toolwindow label
     public static final String HIDE_ID_LABEL = ToolWindowContentUI.HIDE_ID_LABEL;
@@ -108,7 +108,6 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         throw new AbstractMethodError();
     }
 
-    
     @Override
     public consulo.ui.Component getUIComponent() {
         return myContent;
@@ -185,6 +184,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         myContent.center(selected.getUIComponent());
     }
 
+
     private void rebuild() {
         getCurrentLayout().rebuild();
         getCurrentLayout().update();
@@ -198,6 +198,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
   public void doLayout() {
     getCurrentLayout().layout();
   }
+
 
   @Override
   protected void paintComponent(final Graphics g) {
@@ -261,25 +262,21 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
         return true;
     }
 
-    
     @Override
     public String getCloseActionName() {
         return getCurrentLayout().getCloseActionName();
     }
 
-    
     @Override
     public String getCloseAllButThisActionName() {
         return getCurrentLayout().getCloseAllButThisActionName();
     }
 
-    
     @Override
     public String getPreviousContentActionName() {
         return getCurrentLayout().getPreviousContentActionName();
     }
 
-    
     @Override
     public String getNextContentActionName() {
         return getCurrentLayout().getNextContentActionName();
@@ -388,19 +385,12 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     }
 
     @Override
-    public @Nullable Object getData(Key<?> dataId) {
-        if (ToolWindow.KEY == dataId) {
-            return myWindow;
-        }
-
-        if (CloseAction.CloseTarget.KEY == dataId) {
-            return computeCloseTarget();
-        }
-
-        return null;
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(ToolWindow.KEY, myWindow);
+        sink.set(CloseAction.CloseTarget.KEY, computeCloseTarget((UnifiedToolWindowImpl) myWindow));
     }
 
-    private CloseAction.CloseTarget computeCloseTarget() {
+    private CloseAction.CloseTarget computeCloseTarget(ToolWindowBase toolWindow) {
         if (myManager.canCloseContents()) {
             Content selected = myManager.getSelectedContent();
             if (selected != null && selected.isCloseable()) {
@@ -408,13 +398,19 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
             }
         }
 
-        return new HideToolwindowTarget();
+        return new HideToolwindowTarget(toolWindow);
     }
 
-    private class HideToolwindowTarget implements CloseAction.CloseTarget {
+    private static class HideToolwindowTarget implements CloseAction.CloseTarget {
+        private final ToolWindowBase myToolWindow;
+
+        private HideToolwindowTarget(ToolWindowBase toolWindow) {
+            myToolWindow = toolWindow;
+        }
+
         @Override
         public void close() {
-            myWindow.fireHidden();
+            myToolWindow.fireHidden();
         }
     }
 

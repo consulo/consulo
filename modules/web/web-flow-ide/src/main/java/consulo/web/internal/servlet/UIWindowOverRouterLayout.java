@@ -36,7 +36,6 @@ import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaadin;
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -100,11 +99,6 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
     @Override
     public void setSize(Size2D size) {
 
-    }
-
-    @Override
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

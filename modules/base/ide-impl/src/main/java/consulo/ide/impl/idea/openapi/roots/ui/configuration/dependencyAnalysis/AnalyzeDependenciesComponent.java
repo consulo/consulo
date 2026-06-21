@@ -18,27 +18,28 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.dependencyAnalysis;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
-import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -276,7 +277,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      *
      * @param <T> the actual explanation type
      */
-    abstract class PathNode<T extends ModuleDependenciesAnalyzer.Explanation> extends NamedConfigurable<T> implements DataProvider {
+    abstract class PathNode<T extends ModuleDependenciesAnalyzer.Explanation> extends NamedConfigurable<T> implements UiDataProvider {
         /**
          * The cut off length, after which URLs are not shown (only suffix)
          */
@@ -315,7 +316,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             myExplanationTree = new Tree(new DefaultTreeModel(buildTree()));
             myExplanationTree.setRootVisible(false);
             myExplanationTree.setCellRenderer(new ExplanationTreeRenderer());
-            DataManager.registerDataProvider(myExplanationTree, this);
+            DataManager.registerUiDataProvider(myExplanationTree, this);
             TreeUtil.expandAll(myExplanationTree);
             NavigateAction navigateAction = new NavigateAction();
             navigateAction.registerCustomShortcutSet(
@@ -328,22 +329,19 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
             return new JBScrollPane(myExplanationTree);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
-        public Object getData(Key<?> dataId) {
-            if (Project.KEY == dataId) {
-                return myModule.getProject();
-            }
-            if (Module.KEY == dataId) {
-                return myModule;
-            }
+        public void uiDataSnapshot(DataSink sink) {
+            sink.set(Project.KEY, myModule.getProject());
+            sink.set(Module.KEY, myModule);
+
             TreePath selectionPath = myExplanationTree.getSelectionPath();
             DefaultMutableTreeNode node = selectionPath == null ? null : (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
             Object o = node == null ? null : node.getUserObject();
-            return o instanceof ModuleDependenciesAnalyzer.OrderPathElement && ORDER_PATH_ELEMENT_KEY == dataId ? o : null;
+            if (o instanceof ModuleDependenciesAnalyzer.OrderPathElement orderPathElement) {
+                sink.set(ORDER_PATH_ELEMENT_KEY, orderPathElement);
+            }
         }
+
 
         /**
          * Build tree for the dependencies

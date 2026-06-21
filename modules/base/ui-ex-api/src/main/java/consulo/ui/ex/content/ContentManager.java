@@ -17,7 +17,7 @@ package consulo.ui.ex.content;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.BusyObject;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,39 +42,32 @@ public interface ContentManager extends Disposable, BusyObject {
 
     boolean removeContent(Content content, boolean dispose);
 
-    
     AsyncResult<Void> removeContent(Content content, boolean dispose, boolean trackFocus, boolean forcedFocus);
 
     void setSelectedContent(Content content);
 
-    
     AsyncResult<Void> setSelectedContentCB(Content content);
 
     void setSelectedContent(Content content, boolean requestFocus);
 
-    
     AsyncResult<Void> setSelectedContentCB(Content content, boolean requestFocus);
 
     void setSelectedContent(Content content, boolean requestFocus, boolean forcedFocus);
 
-    
     AsyncResult<Void> setSelectedContentCB(Content content, boolean requestFocus, boolean forcedFocus);
 
-    
     AsyncResult<Void> setSelectedContent(Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
 
     void addSelectedContent(Content content);
 
     @Nullable Content getSelectedContent();
 
-    
     Content[] getSelectedContents();
 
     void removeAllContents(boolean dispose);
 
     int getContentCount();
 
-    
     Content[] getContents();
 
     //TODO[anton,vova] is this method needed?
@@ -84,7 +77,6 @@ public interface ContentManager extends Disposable, BusyObject {
 
     int getIndexOfContent(Content content);
 
-    
     String getCloseActionName();
 
     boolean canCloseAllContents();
@@ -111,10 +103,8 @@ public interface ContentManager extends Disposable, BusyObject {
      */
     String getCloseAllButThisActionName();
 
-    
     String getPreviousContentActionName();
 
-    
     String getNextContentActionName();
 
     List<AnAction> getAdditionalPopupActions(Content content);
@@ -123,12 +113,10 @@ public interface ContentManager extends Disposable, BusyObject {
 
     boolean isSelected(Content content);
 
-    
     AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced);
 
-    void addDataProvider(DataProvider provider);
+    void addUiDataProvider(UiDataProvider provider);
 
-    
     default ContentFactory getFactory() {
         return ContentFactory.getInstance();
     }
@@ -141,7 +129,6 @@ public interface ContentManager extends Disposable, BusyObject {
         throw new AbstractMethodError();
     }
 
-    
     @RequiredUIAccess
     default Component getUIComponent() {
         throw new AbstractMethodError();
@@ -149,7 +136,6 @@ public interface ContentManager extends Disposable, BusyObject {
 
     // TODO [VISTALL] awt & swing dependency
     // region awt & swing dependency
-    
     default javax.swing.JComponent getComponent() {
         throw new AbstractMethodError();
     }

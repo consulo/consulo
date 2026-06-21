@@ -15,11 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.dataRule;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
+import consulo.dataContext.DataSnapshot;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesSelection;
@@ -28,29 +25,21 @@ import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 
-@ExtensionImpl
-public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
-  
-  @Override
-  public Key<ChangesSelection> getKey() {
-    return VcsDataKeys.CHANGES_SELECTION;
-  }
-
-  @Override
-  public @Nullable ChangesSelection getData(DataProvider dataProvider) {
+public final class VcsChangesSelectionRule {
+  public static @Nullable ChangesSelection getData(DataSnapshot dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
-  public @Nullable ChangesSelection getChangesSelection(DataProvider dataProvider) {
-    Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
+  public static @Nullable ChangesSelection getChangesSelection(DataSnapshot dataProvider) {
+    Change currentChange = dataProvider.get(VcsDataKeys.CURRENT_CHANGE);
 
-    Change[] selectedChanges = dataProvider.getDataUnchecked(VcsDataKeys.SELECTED_CHANGES);
+    Change[] selectedChanges = dataProvider.get(VcsDataKeys.SELECTED_CHANGES);
     if (selectedChanges != null) {
       int index = Math.max(ArrayUtil.indexOf(selectedChanges, currentChange), 0);
       return new ChangesSelection(Arrays.asList(selectedChanges), index);
     }
 
-    Change[] changes = dataProvider.getDataUnchecked(VcsDataKeys.CHANGES);
+    Change[] changes = dataProvider.get(VcsDataKeys.CHANGES);
     if (changes != null) {
       int index = Math.max(ArrayUtil.indexOf(changes, currentChange), 0);
       return new ChangesSelection(Arrays.asList(changes), index);

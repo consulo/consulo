@@ -16,11 +16,12 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
@@ -58,7 +59,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
@@ -97,8 +97,8 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
     TimerListener timerListener = new TimerListener() {
       @Override
-      public IdeaModalityState getModalityState() {
-        return IdeaModalityState.stateForComponent(myToolWindow.getComponent());
+      public ModalityState getModalityState() {
+        return ModalityState.nonModal();
       }
 
       @Override
@@ -391,15 +391,14 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     return toolWindow != null && toolWindow.isVisible();
   }
 
-  private class ContentPanel extends JPanel implements DataProvider {
+  private class ContentPanel extends JPanel implements UiDataProvider {
     public ContentPanel() {
       super(new BorderLayout());
     }
 
     @Override
-    public Object getData(Key dataId) {
-      if (dataId == ourDataSelectorKey) return StructureViewWrapperImpl.this;
-      return null;
+    public void uiDataSnapshot(DataSink sink) {
+      sink.set(ourDataSelectorKey, StructureViewWrapperImpl.this);
     }
   }
 }

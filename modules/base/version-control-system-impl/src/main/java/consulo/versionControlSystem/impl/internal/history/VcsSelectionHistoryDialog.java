@@ -18,7 +18,8 @@ package consulo.versionControlSystem.impl.internal.history;
 import consulo.application.HelpManager;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.progress.ProgressManager;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.diff.Block;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
@@ -69,7 +70,7 @@ import java.util.List;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 
-public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvider {
+public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataProvider {
     private static final Logger LOG = Logger.getInstance(VcsSelectionHistoryDialog.class);
 
     private static final VcsRevisionNumber LOCAL_REVISION_NUMBER = new VcsRevisionNumber() {
@@ -96,11 +97,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
     private static final Block EMPTY_BLOCK = new Block("", 0, 0);
 
-    
     private final Project myProject;
-    
     private final VirtualFile myFile;
-    
     private final AbstractVcs myActiveVcs;
     private final String myHelpId;
 
@@ -117,9 +115,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     private final AnimatedIconComponent myStatusSpinner = new AsyncProcessIcon("VcsSelectionHistoryDialog");
     private final JEditorPane myComments;
 
-    
     private final MergingUpdateQueue myUpdateQueue;
-    
     private final BlockLoader myBlockLoader;
 
     private boolean myIsDuringUpdate = false;
@@ -248,7 +244,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         myList.getSelectionModel().setSelectionInterval(0, 0);
     }
 
-    
     private static String canNoLoadMessage(@Nullable VcsException e) {
         return "Can not load revision contents" + (e != null ? ": " + e.getMessage() : "");
     }
@@ -308,7 +303,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         }
     }
 
-    
     private IntPair getSelectedRevisionsRange() {
         List<VcsFileRevision> selection = myList.getSelectedObjects();
         if (selection.isEmpty()) {
@@ -471,28 +465,19 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
 
     @Override
-    public Object getData(Key<?> dataId) {
-        if (Project.KEY == dataId) {
-            return myProject;
-        }
-        else if (VcsDataKeys.VCS_VIRTUAL_FILE == dataId) {
-            return myFile;
-        }
-        else if (VcsDataKeys.VCS_FILE_REVISION == dataId) {
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(Project.KEY, myProject);
+        sink.set(VcsDataKeys.VCS_VIRTUAL_FILE, myFile);
+        sink.lazy(VcsDataKeys.VCS_FILE_REVISION, () -> {
             VcsFileRevision selectedObject = myList.getSelectedObject();
             return selectedObject instanceof CurrentRevision ? null : selectedObject;
-        }
-        else if (VcsDataKeys.VCS_FILE_REVISIONS == dataId) {
+        });
+        sink.lazy(VcsDataKeys.VCS_FILE_REVISIONS, () -> {
             List<VcsFileRevision> revisions = ContainerUtil.filter(myList.getSelectedObjects(), Predicates.notEqualTo(myLocalRevision));
             return ArrayUtil.toObjectArray(revisions, VcsFileRevision.class);
-        }
-        else if (VcsDataKeys.VCS == dataId) {
-            return myActiveVcs.getKeyInstanceMethod();
-        }
-        else if (HelpManager.HELP_ID == dataId) {
-            return myHelpId;
-        }
-        return null;
+        });
+        sink.set(VcsDataKeys.VCS, myActiveVcs.getKeyInstanceMethod());
+        sink.set(HelpManager.HELP_ID, myHelpId);
     }
 
     private class MyDiffAction extends DumbAwareAction {
@@ -556,7 +541,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
         }
     }
 
-    
     private DiffFromHistoryHandler getDiffHandler() {
         VcsHistoryProvider historyProvider = myActiveVcs.getVcsHistoryProvider();
         DiffFromHistoryHandler handler = historyProvider != null ? historyProvider.getHistoryDiffHandler() : null;
@@ -564,15 +548,11 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
 
     private abstract static class BlockLoader {
-        
         private final Object LOCK = new Object();
 
-        
         private final List<VcsFileRevision> myRevisions;
-        
         private final Charset myCharset;
 
-        
         private final List<Block> myBlocks = new ArrayList<>();
         private @Nullable VcsException myException;
         private boolean myIsLoading = true;
@@ -592,7 +572,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
             myBlocks.add(new Block(lastContent, selectionStart, selectionEnd + 1));
         }
 
-        
         public BlockData getLoadedData() {
             synchronized (LOCK) {
                 return new BlockData(myIsLoading, new ArrayList<>(myBlocks), myException, myCurrentLoadingRevision);
@@ -642,7 +621,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
         protected abstract void notifyUpdate();
 
-        
         private Block createBlock(Block block, VcsFileRevision revision) throws VcsException {
             if (block == EMPTY_BLOCK) {
                 return EMPTY_BLOCK;
@@ -654,7 +632,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
             return newBlock.getStart() != newBlock.getEnd() ? newBlock : EMPTY_BLOCK;
         }
 
-        
         private String loadContents(VcsFileRevision revision) throws VcsException {
             try {
                 byte[] bytes = revision.loadContent();
@@ -668,7 +645,6 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
     private static class BlockData {
         private final boolean myIsLoading;
-        
         private final List<Block> myBlocks;
         private final @Nullable VcsException myException;
         private final @Nullable VcsFileRevision myCurrentLoadingRevision;

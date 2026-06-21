@@ -2,7 +2,8 @@
 package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.application.util.Queryable;
-import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.wm.navigationToolbar.ui.NavBarUIManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -15,8 +16,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.hint.HintHint;
-import consulo.util.collection.JBIterable;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -135,15 +134,17 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
   }
 
   private static JComponent createPopupContent(NavBarPanel panel, int sourceItemIndex, Object[] siblings) {
-    class MyList<E> extends JBList<E> implements DataProvider, Queryable {
+    class MyList<E> extends JBList<E> implements UiDataProvider, Queryable {
       @Override
       public void putInfo(Map<String, String> info) {
         panel.putInfo(info);
       }
 
       @Override
-      public @Nullable Object getData(Key dataId) {
-        return panel.getDataImpl(dataId, this, () -> JBIterable.from(getSelectedValuesList()));
+      public void uiDataSnapshot(DataSink sink) {
+        sink.set(NavBarPanel.NAV_BAR_ITEMS, new ArrayList<>(getSelectedValuesList()));
+        // Delegate non-selection data to panel
+        sink.uiDataSnapshot(panel);
       }
     }
     JBList<Object> list = new MyList<>();
@@ -193,7 +194,6 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
     list.registerKeyboardAction(action, KeyStroke.getKeyStroke(keyCode, 0), JComponent.WHEN_FOCUSED);
   }
 
-  
   public JBList<?> getList() {
     return ((JBList)getComponent().getClientProperty(JBLIST_KEY));
   }

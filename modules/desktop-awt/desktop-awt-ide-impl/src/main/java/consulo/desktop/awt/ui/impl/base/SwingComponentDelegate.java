@@ -47,7 +47,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -90,7 +89,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         return myInitializedComponent != null;
     }
 
-    
     @Override
     public Disposable addClickListener(ComponentEventListener<Component, ClickEvent> clickListener) {
         ClickListener awtClickListener = new ClickListener() {
@@ -121,7 +119,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         toAWTComponent().requestFocus();
     }
 
-    
     @Override
     public LocalizeValue getToolTipText() {
         JComponent component = (JComponent) toAWTComponent();
@@ -134,7 +131,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         component.setToolTipText(StringUtil.nullize(value.get()));
     }
 
-    
     @Override
     public T toAWTComponent() {
         if (myInitializedComponent == null) {
@@ -178,7 +174,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         toAWTComponent().setPreferredSize(TargetAWT.to(size));
     }
 
-    
     @Override
     public Font getFont() {
         return new DesktopFontImpl(toAWTComponent().getFont());
@@ -200,19 +195,11 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     }
 
     @Override
-    
-    public Disposable addUserDataProvider(Function<Key<?>, Object> function) {
-        return dataObject().addUserDataProvider(function);
-    }
-
-    
-    @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
         return dataObject().addListener(eventClass, listener);
     }
 
-    
     @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return dataObject().getDispatcher(eventClass);
@@ -274,7 +261,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         component.setBorder(new UIComponentBorder(borders));
     }
 
-    
     protected UIDataObject dataObject() {
         JComponent component = (JComponent) toAWTComponent();
         UIDataObject dataObject = (UIDataObject) component.getClientProperty(UIDataObject.class);

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataSink;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.localize.IdeLocalize;
@@ -80,7 +81,6 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
         trees.put(SUBTYPES_HIERARCHY_TYPE, tree3);
     }
 
-    
     protected BaseOnThisTypeAction createBaseOnThisAction() {
         return new BaseOnThisTypeAction();
     }
@@ -108,32 +108,26 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    
     protected Key getBrowserDataKey() {
         return DATA_KEY;
     }
 
     @Override
-    
     protected String getActionPlace() {
         return ActionPlaces.TYPE_HIERARCHY_VIEW_TOOLBAR;
     }
 
     @Override
-    public final Object getData(Key<?> dataId) {
-        if (DeleteProvider.KEY == dataId) {
-            return myDeleteElementProvider;
-        }
-        return super.getData(dataId);
+    public void uiDataSnapshot(DataSink sink) {
+        super.uiDataSnapshot(sink);
+        sink.set(DeleteProvider.KEY, myDeleteElementProvider);
     }
 
-    
     @Override
     protected LocalizeValue getPrevOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyTypePrevOccurenceName();
     }
 
-    
     @Override
     protected LocalizeValue getNextOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyTypeNextOccurenceName();
@@ -182,7 +176,6 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
             return viewType;
         }
 
-        
         @Override
         protected LocalizeValue getNonDefaultText(HierarchyBrowserBaseEx browser, PsiElement element) {
             return ((TypeHierarchyBrowserBase)browser).isInterface(element)

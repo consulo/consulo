@@ -17,7 +17,7 @@ package consulo.externalSystem.model;
 
 import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
-import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.view.ExternalProjectsView;
@@ -37,7 +37,7 @@ public interface ExternalSystemDataKeys {
   Key<ProjectSystemId> EXTERNAL_SYSTEM_ID = Key.create("external.system.id");
   Key<NotificationGroup> NOTIFICATION_GROUP = Key.create("external.system.notification");
   Key<ExternalSystemTasksTreeModel> ALL_TASKS_MODEL = Key.create("external.system.all.tasks.model");
-  Key<ExternalTaskPojo> SELECTED_TASK = Key.create("external.system.selected.task");
+  Key<ExternalTaskExecutionInfo> SELECTED_TASK = Key.create("external.system.selected.task");
   Key<ExternalProjectPojo> SELECTED_PROJECT = Key.create("external.system.selected.project");
 
   Key<ExternalSystemRecentTasksList> RECENT_TASKS_LIST = Key.create("external.system.recent.tasks.list");

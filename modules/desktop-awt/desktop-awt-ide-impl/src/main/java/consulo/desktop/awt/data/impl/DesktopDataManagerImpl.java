@@ -18,23 +18,23 @@ package consulo.desktop.awt.data.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
-import consulo.dataContext.*;
+import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
-import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
-import consulo.dataContext.TypeSafeDataProviderAdapter;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
-import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.ide.impl.dataContext.UiDataProviderAdapter;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -44,219 +44,209 @@ import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
 @Singleton
 @ServiceImpl
 public class DesktopDataManagerImpl extends BaseDataManager {
-  private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
+    private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
 
-  public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> implements DataContextWithEventCount {
-    private int myEventCount;
-
-    public MyDataContext(DesktopDataManagerImpl dataManager, Component component) {
-      super(dataManager, component);
-      myEventCount = -1;
-    }
-
-    @Override
-    public void setEventCount(int eventCount, Object caller) {
-      assert caller instanceof IdeKeyEventDispatcher : "This method might be accessible from " + IdeKeyEventDispatcher.class.getName() + " only";
-      clearCacheData();
-      myEventCount = eventCount;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getData(Key<T> dataId) {
-      int currentEventCount = IdeEventQueue.getInstance().getEventCount();
-      if (myEventCount != -1 && myEventCount != currentEventCount) {
-        LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
-        return doGetData(dataId);
-      }
-
-      return super.getData(dataId);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected <T> @Nullable T doGetData(Key<T> dataId) {
-      Component component = getComponent();
-      if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
-        if (component == null) {
-          return null;
-        }
-        return (T)(Boolean)IdeKeyEventDispatcher.isModalContext(component);
-      }
-      if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
-        return (T)component;
-      }
-
-      if (consulo.ui.Component.KEY == dataId) {
-        if (component instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
-            return (T) fromSwingComponentWrapper.toUIComponent();
+    public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> {
+        public MyDataContext(DesktopDataManagerImpl dataManager, Component component) {
+            super(dataManager, component);
         }
 
-        return (T) TargetAWT.wrap(component);
-      }
+        @Override
+        @SuppressWarnings("unchecked")
+        protected <T> @Nullable T doGetData(Key<T> dataId) {
+            Component component = getComponent();
+            if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
+                if (component == null) {
+                    return null;
+                }
+                return (T) (Boolean) IdeKeyEventDispatcher.isModalContext(component);
+            }
+            if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
+                return (T) component;
+            }
 
-      if (ModalityState.KEY == dataId) {
-        return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.nonModal());
-      }
+            if (consulo.ui.Component.KEY == dataId) {
+                if (component instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
+                    return (T) fromSwingComponentWrapper.toUIComponent();
+                }
 
-      Object data = calcData(dataId, component);
-      if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
-        return (T)validateEditor((Editor)data);
-      }
-      return (T)data;
+                return (T) TargetAWT.wrap(component);
+            }
+
+            if (ModalityState.KEY == dataId) {
+                return (T) (component != null ? ModalityState.nonModal() : ModalityState.nonModal());
+            }
+
+            Object data = calcData(dataId, component);
+            if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
+                return (T) validateEditor((Editor) data);
+            }
+            return (T) data;
+        }
+
+        protected Object calcData(Key<?> dataId, Component component) {
+            return getDataManager().getData(dataId, component);
+        }
     }
 
-    protected Object calcData(Key<?> dataId, Component component) {
-      return getDataManager().getData(dataId, component);
-    }
-  }
-
-  @Inject
-  public DesktopDataManagerImpl(Application application, Provider<WindowManager> windowManagerProvider) {
-    super(application, windowManagerProvider);
-  }
-
-  private WindowManagerEx windowManager() {
-    return (WindowManagerEx)myWindowManager.get();
-  }
-
-  private @Nullable <T> T getData(Key<T> dataId, Component focusedComponent) {
-    try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
-      for (Component c = focusedComponent; c != null; c = c.getParent()) {
-        DataProvider dataProvider = getDataProviderEx(c);
-        if (dataProvider == null) continue;
-        T data = getDataFromProvider(dataProvider, dataId, null);
-        if (data != null) return data;
-      }
-    }
-    return null;
-  }
-
-  @Override
-  @SuppressWarnings("deprecation")
-  public @Nullable DataProvider getDataProviderEx(Component component) {
-    DataProvider dataProvider = null;
-    if (component instanceof DataProvider) {
-      dataProvider = (DataProvider)component;
-    }
-    else if (component instanceof TypeSafeDataProvider) {
-      dataProvider = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)component);
-    }
-    else if (component instanceof JComponent) {
-      dataProvider = DataManager.getDataProvider((JComponent)component);
-    }
-    // special case for desktop impl. Later removed since we don't want use AWT
-    else if (component instanceof FromSwingComponentWrapper) {
-      consulo.ui.Component uiComponent = ((FromSwingComponentWrapper)component).toUIComponent();
-      return uiComponent::getUserData;
-    }
-    // special case for desktop impl. Later removed since we don't want use AWT
-    else if (component instanceof FromSwingWindowWrapper) {
-      consulo.ui.Window uiWindow = ((FromSwingWindowWrapper)component).toUIWindow();
-      return uiWindow::getUserData;
+    @Inject
+    public DesktopDataManagerImpl(Application application, Provider<WindowManager> windowManagerProvider) {
+        super(application, windowManagerProvider);
     }
 
-    return dataProvider;
-  }
-
- 
-  @Override
-  public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
-    return new DesktopAsyncDataContext(this, dataContext);
-  }
-
-  @Override
-  public DataContext getDataContext(@Nullable Component component) {
-    return new MyDataContext(this, component);
-  }
-
-  @Override
-  public DataContext getDataContext(Component component, int x, int y) {
-    if (x < 0 || x >= component.getWidth() || y < 0 || y >= component.getHeight()) {
-      throw new IllegalArgumentException("wrong point: x=" + x + "; y=" + y);
+    private WindowManagerEx windowManager() {
+        return (WindowManagerEx) myWindowManager.get();
     }
 
-    // Point inside JTabbedPane has special meaning. If point is inside tab bounds then
-    // we construct DataContext by the component which corresponds to the (x, y) tab.
-    if (component instanceof JTabbedPane) {
-      JTabbedPane tabbedPane = (JTabbedPane)component;
-      int index = tabbedPane.getUI().tabForCoordinate(tabbedPane, x, y);
-      return getDataContext(index != -1 ? tabbedPane.getComponentAt(index) : tabbedPane);
-    }
-    else {
-      return getDataContext(component);
-    }
-  }
-
-  @Override
- 
-  public DataContext getDataContext() {
-    return getDataContext(getFocusedComponent());
-  }
-
-  private @Nullable Component getFocusedComponent() {
-    Window activeWindow = TargetAWT.to(windowManager().getMostRecentFocusedWindow());
-    if (activeWindow == null) {
-      activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-      if (activeWindow == null) {
-        activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-        if (activeWindow == null) return null;
-      }
+    private @Nullable <T> T getData(Key<T> dataId, Component focusedComponent) {
+        try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
+            for (Component c = focusedComponent; c != null; c = c.getParent()) {
+                DataProvider dataProvider = getDataProviderEx(c);
+                if (dataProvider == null) {
+                    continue;
+                }
+                T data = getDataFromProvider(dataProvider, dataId, null);
+                if (data != null) {
+                    return data;
+                }
+            }
+        }
+        return null;
     }
 
-    // In case we have an active floating toolwindow and some component in another window focused,
-    // we want this other component to receive key events.
-    // Walking up the window ownership hierarchy from the floating toolwindow would have led us to the main IdeFrame
-    // whereas we want to be able to type in other frames as well.
-    if (activeWindow instanceof ToolWindowFloatingDecorator) {
-      IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
-      FocusableFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
-      JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;
-      Window lastFocusedWindow = frameComponent != null ? SwingUtilities.getWindowAncestor(frameComponent) : null;
-      boolean toolWindowIsNotFocused = windowManager().getFocusedComponent(activeWindow) == null;
-      if (toolWindowIsNotFocused && lastFocusedWindow != null) {
-        activeWindow = lastFocusedWindow;
-      }
+    @Override
+    @SuppressWarnings("deprecation")
+    public @Nullable DataProvider getDataProviderEx(Component component) {
+        // UiDataProvider takes priority over DataProvider
+        if (component instanceof UiDataProvider uiProvider) {
+            return new UiDataProviderAdapter(myApplication, uiProvider);
+        }
+
+        DataProvider dataProvider = null;
+        if (component instanceof DataProvider) {
+            dataProvider = (DataProvider) component;
+        }
+        else if (component instanceof JComponent jComponent) {
+            // Check for registered UiDataProvider first (via DataManager.registerUiDataProvider)
+            Object uiDataObj = jComponent.getClientProperty(UiDataProvider.KEY);
+            if (uiDataObj instanceof UiDataProvider uiProvider) {
+                return new UiDataProviderAdapter(myApplication, uiProvider);
+            }
+        }
+        // special case for desktop impl. Later removed since we don't want use AWT
+        else if (component instanceof FromSwingComponentWrapper) {
+            consulo.ui.Component uiComponent = ((FromSwingComponentWrapper) component).toUIComponent();
+            return uiComponent::getUserData;
+        }
+        // special case for desktop impl. Later removed since we don't want use AWT
+        else if (component instanceof FromSwingWindowWrapper) {
+            consulo.ui.Window uiWindow = ((FromSwingWindowWrapper) component).toUIWindow();
+            return uiWindow::getUserData;
+        }
+
+        return dataProvider;
     }
 
-    // try to find first parent window that has focus
-    Window window = activeWindow;
-    Component focusedComponent = null;
-    while (window != null) {
-      focusedComponent = windowManager().getFocusedComponent(window);
-      if (focusedComponent != null) {
-        break;
-      }
-      window = window.getOwner();
-    }
-    if (focusedComponent == null) {
-      focusedComponent = activeWindow;
+    @Override
+    public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
+        return new DesktopAsyncDataContext(this, dataContext, myApplication);
     }
 
-    return focusedComponent;
-  }
-
-  @Override
-  @Nullable // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
-  protected <T> T getData(Key<T> dataId, consulo.ui.Component focusedComponent) {
-    return getData(dataId, TargetAWT.to(focusedComponent));
-  }
-
-  public static @Nullable Editor validateEditor(Editor editor) {
-    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    if (focusOwner instanceof JComponent) {
-      JComponent jComponent = (JComponent)focusOwner;
-      if (jComponent.getClientProperty("AuxEditorComponent") != null) return null; // Hack for EditorSearchComponent
+    @Override
+    public DataContext getDataContext(@Nullable Component component) {
+        return new MyDataContext(this, component);
     }
 
-    return editor;
-  }
+    @Override
+    public DataContext getDataContext(Component component, int x, int y) {
+        if (x < 0 || x >= component.getWidth() || y < 0 || y >= component.getHeight()) {
+            throw new IllegalArgumentException("wrong point: x=" + x + "; y=" + y);
+        }
+
+        // Point inside JTabbedPane has special meaning. If point is inside tab bounds then
+        // we construct DataContext by the component which corresponds to the (x, y) tab.
+        if (component instanceof JTabbedPane) {
+            JTabbedPane tabbedPane = (JTabbedPane) component;
+            int index = tabbedPane.getUI().tabForCoordinate(tabbedPane, x, y);
+            return getDataContext(index != -1 ? tabbedPane.getComponentAt(index) : tabbedPane);
+        }
+        else {
+            return getDataContext(component);
+        }
+    }
+
+    @Override
+    public DataContext getDataContext() {
+        return getDataContext(getFocusedComponent());
+    }
+
+    private @Nullable Component getFocusedComponent() {
+        Window activeWindow = TargetAWT.to(windowManager().getMostRecentFocusedWindow());
+        if (activeWindow == null) {
+            activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+            if (activeWindow == null) {
+                activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+                if (activeWindow == null) {
+                    return null;
+                }
+            }
+        }
+
+        // In case we have an active floating toolwindow and some component in another window focused,
+        // we want this other component to receive key events.
+        // Walking up the window ownership hierarchy from the floating toolwindow would have led us to the main IdeFrame
+        // whereas we want to be able to type in other frames as well.
+        if (activeWindow instanceof ToolWindowFloatingDecorator) {
+            IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
+            FocusableFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
+            JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;
+            Window lastFocusedWindow = frameComponent != null ? SwingUtilities.getWindowAncestor(frameComponent) : null;
+            boolean toolWindowIsNotFocused = windowManager().getFocusedComponent(activeWindow) == null;
+            if (toolWindowIsNotFocused && lastFocusedWindow != null) {
+                activeWindow = lastFocusedWindow;
+            }
+        }
+
+        // try to find first parent window that has focus
+        Window window = activeWindow;
+        Component focusedComponent = null;
+        while (window != null) {
+            focusedComponent = windowManager().getFocusedComponent(window);
+            if (focusedComponent != null) {
+                break;
+            }
+            window = window.getOwner();
+        }
+        if (focusedComponent == null) {
+            focusedComponent = activeWindow;
+        }
+
+        return focusedComponent;
+    }
+
+    @Override
+    // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
+    protected <T> T getData(Key<T> dataId, consulo.ui.@Nullable Component focusedComponent) {
+        return getData(dataId, TargetAWT.to(focusedComponent));
+    }
+
+    public static @Nullable Editor validateEditor(Editor editor) {
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focusOwner instanceof JComponent) {
+            JComponent jComponent = (JComponent) focusOwner;
+            if (jComponent.getClientProperty("AuxEditorComponent") != null) {
+                return null; // Hack for EditorSearchComponent
+            }
+        }
+
+        return editor;
+    }
 }

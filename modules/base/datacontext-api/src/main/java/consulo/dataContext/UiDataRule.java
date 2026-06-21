@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2025 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@ package consulo.dataContext;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.util.dataholder.Key;
-import org.jspecify.annotations.Nullable;
 
+/**
+ * Extension point for computing derived data from an already-collected snapshot.
+ * <p>
+ * This rule works with the {@link UiDataProvider} / {@link DataSink} system.
+ * Rules can read already-collected immediate data via {@link DataSnapshot}
+ * and contribute additional data (including lazy/deferred values) via {@link DataSink}.
+ * <p>
+ * Example: computing {@code PSI_FILE} from {@code VIRTUAL_FILE} + {@code PROJECT}.
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface GetDataRule<T> {
-    Key<T> getKey();
-
-    @Nullable T getData(DataProvider dataProvider);
+public interface UiDataRule {
+    void uiDataSnapshot(DataSink sink, DataSnapshot snapshot);
 }
