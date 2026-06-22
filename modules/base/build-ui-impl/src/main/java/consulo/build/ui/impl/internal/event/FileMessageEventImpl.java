@@ -5,6 +5,7 @@ import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.FileMessageEvent;
 import consulo.build.ui.event.FileMessageEventResult;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
@@ -16,69 +17,76 @@ import java.util.Objects;
  * @author Vladislav.Soroka
  */
 public class FileMessageEventImpl extends MessageEventImpl implements FileMessageEvent {
+    private final FilePosition myFilePosition;
 
-  private final FilePosition myFilePosition;
-
-  public FileMessageEventImpl(Object parentId,
-                              Kind kind,
-                              NotificationGroup group,
-                              @BuildEventsNls.Message String message,
-                              @Nullable @BuildEventsNls.Description String detailedMessage,
-                              FilePosition filePosition) {
-    super(parentId, kind, group, message, detailedMessage);
-    myFilePosition = filePosition;
-  }
-
-  @Override
-  public FileMessageEventResult getResult() {
-    return new FileMessageEventResult() {
-      @Override
-      public FilePosition getFilePosition() {
-        return myFilePosition;
-      }
-
-      @Override
-      public Kind getKind() {
-        return FileMessageEventImpl.this.getKind();
-      }
-
-      @Override
-      public @Nullable String getDetails() {
-        return getDescription();
-      }
-    };
-  }
-
-  @Override
-  public FilePosition getFilePosition() {
-    return myFilePosition;
-  }
-
-  @Override
-  public @Nullable String getHint() {
-    String hint = super.getHint();
-    if (hint == null && myFilePosition.getStartLine() >= 0) {
-      hint = ":" + (myFilePosition.getStartLine() + 1);
+    public FileMessageEventImpl(
+        Object parentId,
+        Kind kind,
+        NotificationGroup group,
+        @BuildEventsNls.Message String message,
+        @Nullable @BuildEventsNls.Description String detailedMessage,
+        FilePosition filePosition
+    ) {
+        super(parentId, kind, group, message, detailedMessage);
+        myFilePosition = filePosition;
     }
-    return hint;
-  }
 
-  @Override
-  public @Nullable Navigatable getNavigatable(Project project) {
-    return new FileNavigatable(project, myFilePosition);
-  }
+    @Override
+    public FileMessageEventResult getResult() {
+        return new FileMessageEventResult() {
+            @Override
+            public FilePosition getFilePosition() {
+                return myFilePosition;
+            }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-    FileMessageEventImpl event = (FileMessageEventImpl)o;
-    return Objects.equals(myFilePosition, event.myFilePosition);
-  }
+            @Override
+            public Kind getKind() {
+                return FileMessageEventImpl.this.getKind();
+            }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), myFilePosition);
-  }
+            @Override
+            public LocalizeValue getDetails() {
+                return getDescription();
+            }
+        };
+    }
+
+    @Override
+    public FilePosition getFilePosition() {
+        return myFilePosition;
+    }
+
+    @Override
+    public LocalizeValue getHint() {
+        LocalizeValue hint = super.getHint();
+        if (hint.isEmpty() && myFilePosition.getStartLine() >= 0) {
+            hint = LocalizeValue.of(":" + (myFilePosition.getStartLine() + 1));
+        }
+        return hint;
+    }
+
+    @Override
+    public @Nullable Navigatable getNavigatable(Project project) {
+        return new FileNavigatable(project, myFilePosition);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        FileMessageEventImpl that = (FileMessageEventImpl) o;
+        return Objects.equals(myFilePosition, that.myFilePosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), myFilePosition);
+    }
 }

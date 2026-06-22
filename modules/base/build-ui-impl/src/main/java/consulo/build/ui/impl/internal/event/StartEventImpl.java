@@ -23,8 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author Vladislav.Soroka
  */
 public class StartEventImpl extends AbstractBuildEvent implements StartEvent {
-
-  public StartEventImpl(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
-    super(eventId, parentId, eventTime, message);
-  }
+    public StartEventImpl(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
+        super(eventId, parentId, eventTime, message);
+    }
 }

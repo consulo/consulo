@@ -12,10 +12,10 @@ import consulo.language.editor.problemView.FileProblem;
 import consulo.language.editor.problemView.HighlightingDuplicateProblem;
 import consulo.language.editor.problemView.ProblemsCollector;
 import consulo.language.editor.problemView.ProblemsProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -112,7 +112,7 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         }
 
         @Override
-        public @Nullable String getDescription() {
+        public LocalizeValue getDescription() {
             return myEvent.getDescription();
         }
 
@@ -137,7 +137,7 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         }
 
         @Override
-        public String getText() {
+        public LocalizeValue getText() {
             return myEvent.getMessage();
         }
 

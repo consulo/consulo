@@ -15,25 +15,21 @@ public class BuildRootProgressImpl extends BuildProgressImpl {
         super(null);
     }
 
-    
     @Override
     public Object getId() {
         return getBuildId();
     }
 
     @Override
-    
     protected StartEvent createStartEvent(BuildProgressDescriptor descriptor) {
         return new StartBuildEventImpl(descriptor.getBuildDescriptor(), BuildLocalize.buildStatusRunning().get());
     }
 
     @Override
-    public 
-    BuildProgress<BuildProgressDescriptor> finish() {
+    public BuildProgress<BuildProgressDescriptor> finish() {
         return finish(System.currentTimeMillis(), false, BuildLocalize.buildStatusFinished().get());
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, @BuildEventsNls.Message String message) {
         assertStarted();
@@ -42,13 +38,11 @@ public class BuildRootProgressImpl extends BuildProgressImpl {
         return this;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> fail() {
         return fail(System.currentTimeMillis(), BuildLocalize.buildStatusFailed().get());
     }
 
-    
     @Override
     public BuildRootProgressImpl fail(long timeStamp, @BuildEventsNls.Message String message) {
         assertStarted();
@@ -57,13 +51,11 @@ public class BuildRootProgressImpl extends BuildProgressImpl {
         return this;
     }
 
-    
     @Override
     public BuildProgress<BuildProgressDescriptor> cancel() {
         return cancel(System.currentTimeMillis(), BuildLocalize.buildStatusCancelled().get());
     }
 
-    
     @Override
     public BuildRootProgressImpl cancel(long timeStamp, String message) {
         assertStarted();

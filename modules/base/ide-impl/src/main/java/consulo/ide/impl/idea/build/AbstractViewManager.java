@@ -195,10 +195,8 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     }
 
     static class BuildInfo extends DefaultBuildDescriptor {
-        @BuildEventsNls.Message
-        String message;
-        @BuildEventsNls.Message
-        String statusMessage;
+        LocalizeValue message = LocalizeValue.empty();
+        LocalizeValue statusMessage = LocalizeValue.empty();
         long endTime = -1;
         EventResult result;
         Content content;
@@ -238,7 +236,9 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
     private String getPinnedTabName(MultipleBuildsView buildsView) {
         Map<BuildDescriptor, BuildView> buildsMap = buildsView.getBuildsMap();
 
-        BuildDescriptor buildInfo = buildsMap.keySet().stream().reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2).orElse(null);
+        BuildDescriptor buildInfo = buildsMap.keySet().stream()
+            .reduce((b1, b2) -> b1.getStartTime() <= b2.getStartTime() ? b1 : b2)
+            .orElse(null);
         if (buildInfo != null) {
             String title = buildInfo.getTitle();
             String viewName = getViewName().get().split(" ")[0];

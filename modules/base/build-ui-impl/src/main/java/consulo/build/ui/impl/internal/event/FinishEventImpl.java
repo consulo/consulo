@@ -26,22 +26,24 @@ import org.jspecify.annotations.Nullable;
  * @author Vladislav.Soroka
  */
 public class FinishEventImpl extends AbstractBuildEvent implements FinishEvent {
-  private final EventResult myResult;
+    private final EventResult myResult;
 
-  public FinishEventImpl(Object eventId,
-                         @Nullable Object parentId,
-                         long eventTime,
-                         @BuildEventsNls.Message String message,
-                         EventResult result) {
-    super(eventId, parentId, eventTime, message);
-    myResult = result;
-    if (myResult instanceof SuccessResult successResult && successResult.isUpToDate()) {
-      setHint(BuildLocalize.buildEventMessageUpToDate().get());
+    public FinishEventImpl(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        @BuildEventsNls.Message String message,
+        EventResult result
+    ) {
+        super(eventId, parentId, eventTime, message);
+        myResult = result;
+        if (myResult instanceof SuccessResult successResult && successResult.isUpToDate()) {
+            setHint(BuildLocalize.buildEventMessageUpToDate());
+        }
     }
-  }
 
-  @Override
-  public EventResult getResult() {
-    return myResult;
-  }
+    @Override
+    public EventResult getResult() {
+        return myResult;
+    }
 }

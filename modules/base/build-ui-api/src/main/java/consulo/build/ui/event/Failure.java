@@ -15,27 +15,79 @@
  */
 package consulo.build.ui.event;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface Failure {
-  @BuildEventsNls.Message
-  @Nullable String getMessage();
+    interface Builder {
+        Builder message(LocalizeValue message);
 
-  @BuildEventsNls.Description
-  @Nullable String getDescription();
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        default Builder message(@Nullable @BuildEventsNls.Message String message) {
+            return message(LocalizeValue.ofNullable(message));
+        }
 
-  default @Nullable Throwable getError() {return null;}
+        Builder description(LocalizeValue description);
 
-  List<? extends Failure> getCauses();
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        default Builder description(@Nullable @BuildEventsNls.Description String description) {
+            return description(LocalizeValue.ofNullable(description));
+        }
 
-  default @Nullable Notification getNotification() {return null;}
+        Builder cause(Failure cause);
 
-  default @Nullable Navigatable getNavigatable() {return null;}
+        Builder causes(Collection<? extends Failure> causes);
+
+        Builder error(Throwable error);
+
+        default Builder optionalError(@Nullable Throwable error) {
+            return error == null ? this : error(error);
+        }
+
+        Builder notification(Notification notification);
+
+        default Builder optionalNotification(@Nullable Notification notification) {
+            return notification == null ? this : notification(notification);
+        }
+
+        Builder navigatable(Navigatable navigatable);
+
+        default Builder optionalNavigatable(@Nullable Navigatable navigatable) {
+            return navigatable == null ? this : navigatable(navigatable);
+        }
+
+        Failure create();
+
+        FailureResult createResult();
+    }
+
+    LocalizeValue getMessage();
+
+    LocalizeValue getDescription();
+
+    default @Nullable Throwable getError() {
+        return null;
+    }
+
+    List<? extends Failure> getCauses();
+
+    default @Nullable Notification getNotification() {
+        return null;
+    }
+
+    default @Nullable Navigatable getNavigatable() {
+        return null;
+    }
 }

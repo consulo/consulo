@@ -24,12 +24,12 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2022-08-08
  */
 @ExtensionImpl
 public class BuildNotificationGroupContributor implements NotificationGroupContributor {
-  @Override
-  public void contribute(Consumer<NotificationGroup> registrator) {
-    registrator.accept(BuildNotificationsGroups.BUILD_ISSUES);
-  }
+    @Override
+    public void contribute(Consumer<NotificationGroup> registrator) {
+        registrator.accept(BuildNotificationsGroups.BUILD_ISSUES);
+    }
 }

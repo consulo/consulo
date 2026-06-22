@@ -17,6 +17,7 @@ import consulo.build.ui.localize.BuildLocalize;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.compiler.internal.CompilerWorkspaceConfiguration;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
@@ -33,9 +34,7 @@ import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.codeEditor.action.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -68,8 +67,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -80,8 +80,8 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -90,14 +90,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
-import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
 import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
-import static consulo.util.lang.ObjectUtil.chooseNotNull;
+import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.util.lang.StringUtil.isEmpty;
 
 /**
@@ -321,7 +319,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
             if (currentNode == null) {
                 if (event instanceof DuplicateMessageAware) {
                     if (myFinishedBuildEventReceived.get()) {
-                        if (parentNode != null && parentNode.findFirstChild(node -> event.getMessage().equals(node.getName())) != null) {
+                        if (parentNode != null && parentNode.findFirstChild(node -> event.getMessage().get().equals(node.getName())) != null) {
                             return;
                         }
                     }
@@ -460,9 +458,9 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
 
         if (event instanceof FinishBuildEvent) {
             myFinishedBuildEventReceived.set(true);
-            String aHint = event.getHint();
+            LocalizeValue aHint = event.getHint();
             String time = DateFormatUtil.formatDateTime(event.getEventTime());
-            aHint = aHint == null ? BuildLocalize.buildEventMessageAt(time).get() : BuildLocalize.buildEventMessage0At1(aHint, time).get();
+            aHint = aHint.isEmpty() ? BuildLocalize.buildEventMessageAt(time) : BuildLocalize.buildEventMessage0At1(aHint, time);
             currentNode.setHint(aHint);
             myDeferredEvents.forEach(buildEvent -> onEventInternal(buildId, buildEvent));
             if (myConsoleViewHandler.myExecutionNode == null) {
@@ -610,16 +608,16 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
     private @Nullable Runnable addChildFailureNode(
         ExecutionNodeImpl parentNode,
         Failure failure,
-        String defaultFailureMessage,
+        LocalizeValue defaultFailureMessage,
         long eventTime,
         Set<ExecutionNodeImpl> structureChanged
     ) {
-        String message = chooseNotNull(failure.getMessage(), failure.getDescription());
-        if (message == null) {
+        LocalizeValue message = failure.getMessage().orIfEmpty(failure.getDescription());
+        if (message.isEmpty()) {
             Throwable error = failure.getError();
-            message = error != null ? error.getMessage() : defaultFailureMessage;
+            message = error != null ? LocalizeValue.ofNullable(error.getMessage()) : defaultFailureMessage;
         }
-        String failureNodeName = getMessageTitle(message);
+        LocalizeValue failureNodeName = message.map(BuildConsoleUtils::getMessageTitle);
         Navigatable failureNavigatable = failure.getNavigatable();
         FilePosition filePosition = null;
         if (failureNavigatable instanceof OpenFileDescriptorImpl fileDescriptor) {

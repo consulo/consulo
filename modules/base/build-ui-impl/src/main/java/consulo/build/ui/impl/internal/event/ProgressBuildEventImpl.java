@@ -23,30 +23,37 @@ import org.jspecify.annotations.Nullable;
  * @author Vladislav.Soroka
  */
 public class ProgressBuildEventImpl extends AbstractBuildEvent implements ProgressBuildEvent {
+    private final long myTotal;
+    private final long myProgress;
+    private final String myUnit;
 
-  private final long myTotal;
-  private final long myProgress;
-  private final String myUnit;
+    public ProgressBuildEventImpl(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        String message,
+        long total,
+        long progress,
+        String unit
+    ) {
+        super(eventId, parentId, eventTime, message);
+        myTotal = total;
+        myProgress = progress;
+        myUnit = unit;
+    }
 
-  public ProgressBuildEventImpl(Object eventId, @Nullable Object parentId, long eventTime, String message, long total, long progress, String unit) {
-    super(eventId, parentId, eventTime, message);
-    myTotal = total;
-    myProgress = progress;
-    myUnit = unit;
-  }
+    @Override
+    public long getTotal() {
+        return myTotal;
+    }
 
-  @Override
-  public long getTotal() {
-    return myTotal;
-  }
+    @Override
+    public long getProgress() {
+        return myProgress;
+    }
 
-  @Override
-  public long getProgress() {
-    return myProgress;
-  }
-
-  @Override
-  public String getUnit() {
-    return myUnit;
-  }
+    @Override
+    public String getUnit() {
+        return myUnit;
+    }
 }
