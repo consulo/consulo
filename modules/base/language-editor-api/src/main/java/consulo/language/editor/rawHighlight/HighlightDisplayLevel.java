@@ -91,7 +91,6 @@ public class HighlightDisplayLevel {
         return mySeverity.toString();
     }
 
-    
     public String getName() {
         return mySeverity.getName();
     }
@@ -100,7 +99,6 @@ public class HighlightDisplayLevel {
         return myIcon;
     }
 
-    
     public HighlightSeverity getSeverity() {
         return mySeverity;
     }
@@ -116,7 +114,6 @@ public class HighlightDisplayLevel {
         }
     }
 
-    
     private static ColorValue buildColorValue(TextAttributesKey key) {
         return ColorValue.lazy(() -> {
             EditorColorsManager manager = EditorColorsManager.getInstance();
@@ -133,22 +130,18 @@ public class HighlightDisplayLevel {
         return 14;
     }
 
-    
     public static Image createBoxIcon(TextAttributesKey key) {
         return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), buildColorValue(key));
     }
 
-    
     private static Image createErrorIcon(TextAttributesKey textAttributesKey) {
         return ImageEffects.colorize(PlatformIconGroup.generalInspectionserror(), buildColorValue(textAttributesKey));
     }
 
-    
     private static Image createWarningIcon(TextAttributesKey textAttributesKey) {
         return ImageEffects.colorize(PlatformIconGroup.generalInspectionswarning(), buildColorValue(textAttributesKey));
     }
 
-    
     public static Image createIconByMask(ColorValue renderColor) {
         return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), renderColor);
     }

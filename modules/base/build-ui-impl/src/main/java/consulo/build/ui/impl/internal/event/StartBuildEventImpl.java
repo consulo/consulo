@@ -27,6 +27,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -35,88 +36,87 @@ import java.util.function.Supplier;
  * @author Vladislav.Soroka
  */
 public class StartBuildEventImpl extends StartEventImpl implements StartBuildEvent {
+    private final DefaultBuildDescriptor myBuildDescriptor;
+    private @Nullable BuildViewSettingsProvider myBuildViewSettingsProvider;
 
-  private final
-  DefaultBuildDescriptor myBuildDescriptor;
-  private @Nullable
-  BuildViewSettingsProvider myBuildViewSettingsProvider;
+    public StartBuildEventImpl(BuildDescriptor descriptor, @BuildEventsNls.Message String message) {
+        super(descriptor.getId(), null, descriptor.getStartTime(), message);
+        myBuildDescriptor =
+            descriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor) descriptor : new DefaultBuildDescriptor(descriptor);
+    }
 
-  public StartBuildEventImpl(BuildDescriptor descriptor, @BuildEventsNls.Message  String message) {
-    super(descriptor.getId(), null, descriptor.getStartTime(), message);
-    myBuildDescriptor =
-      descriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor)descriptor : new DefaultBuildDescriptor(descriptor);
-  }
+    //@ApiStatus.Experimental
 
-  //@ApiStatus.Experimental
- 
-  @Override
-  public DefaultBuildDescriptor getBuildDescriptor() {
-    return myBuildDescriptor;
-  }
+    @Override
+    public DefaultBuildDescriptor getBuildDescriptor() {
+        return myBuildDescriptor;
+    }
 
-  /**
-   * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
-   */
-  @Deprecated
-  public StartBuildEventImpl withProcessHandler(@Nullable BuildProcessHandler processHandler,
-                                                @Nullable Consumer<? super ConsoleView> attachedConsoleConsumer) {
-    myBuildDescriptor.withProcessHandler(processHandler, attachedConsoleConsumer);
-    return this;
-  }
+    /**
+     * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
+     */
+    @Deprecated
+    public StartBuildEventImpl withProcessHandler(
+        @Nullable BuildProcessHandler processHandler,
+        @Nullable Consumer<? super ConsoleView> attachedConsoleConsumer
+    ) {
+        myBuildDescriptor.withProcessHandler(processHandler, attachedConsoleConsumer);
+        return this;
+    }
 
-  /**
-   * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
-   */
-  @Deprecated
-  public StartBuildEventImpl withRestartAction(AnAction anAction) {
-    myBuildDescriptor.withRestartAction(anAction);
-    return this;
-  }
+    /**
+     * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
+     */
+    @Deprecated
+    public StartBuildEventImpl withRestartAction(AnAction anAction) {
+        myBuildDescriptor.withRestartAction(anAction);
+        return this;
+    }
 
-  /**
-   * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
-   */
-  @Deprecated
-  public StartBuildEventImpl withRestartActions(AnAction... actions) {
-    Arrays.stream(actions).forEach(myBuildDescriptor::withRestartAction);
-    return this;
-  }
+    /**
+     * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
+     */
+    @Deprecated
+    public StartBuildEventImpl withRestartActions(AnAction... actions) {
+        Arrays.stream(actions).forEach(myBuildDescriptor::withRestartAction);
+        return this;
+    }
 
-  /**
-   * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
-   */
-  @Deprecated
-  public StartBuildEventImpl withContentDescriptorSupplier(Supplier<? extends RunContentDescriptor> contentDescriptorSupplier) {
-    myBuildDescriptor.withContentDescriptor(contentDescriptorSupplier);
-    return this;
-  }
+    /**
+     * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
+     */
+    @Deprecated
+    public StartBuildEventImpl withContentDescriptorSupplier(Supplier<? extends RunContentDescriptor> contentDescriptorSupplier) {
+        myBuildDescriptor.withContentDescriptor(contentDescriptorSupplier);
+        return this;
+    }
 
-  /**
-   * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
-   */
-  @Deprecated
-  public StartBuildEventImpl withExecutionFilter(Filter filter) {
-    myBuildDescriptor.withExecutionFilter(filter);
-    return this;
-  }
+    /**
+     * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
+     */
+    @Deprecated
+    public StartBuildEventImpl withExecutionFilter(Filter filter) {
+        myBuildDescriptor.withExecutionFilter(filter);
+        return this;
+    }
 
-  /**
-   * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
-   */
-  @Deprecated
-  public StartBuildEventImpl withExecutionFilters(Filter... filters) {
-    Arrays.stream(filters).forEach(myBuildDescriptor::withExecutionFilter);
-    return this;
-  }
+    /**
+     * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
+     */
+    @Deprecated
+    public StartBuildEventImpl withExecutionFilters(Filter... filters) {
+        Arrays.stream(filters).forEach(myBuildDescriptor::withExecutionFilter);
+        return this;
+    }
 
-  //@ApiStatus.Experimental
-  public @Nullable BuildViewSettingsProvider getBuildViewSettingsProvider() {
-    return myBuildViewSettingsProvider;
-  }
+    //@ApiStatus.Experimental
+    public @Nullable BuildViewSettingsProvider getBuildViewSettingsProvider() {
+        return myBuildViewSettingsProvider;
+    }
 
-  //@ApiStatus.Experimental
-  public StartBuildEventImpl withBuildViewSettingsProvider(@Nullable BuildViewSettingsProvider viewSettingsProvider) {
-    myBuildViewSettingsProvider = viewSettingsProvider;
-    return this;
-  }
+    //@ApiStatus.Experimental
+    public StartBuildEventImpl withBuildViewSettingsProvider(@Nullable BuildViewSettingsProvider viewSettingsProvider) {
+        myBuildViewSettingsProvider = viewSettingsProvider;
+        return this;
+    }
 }

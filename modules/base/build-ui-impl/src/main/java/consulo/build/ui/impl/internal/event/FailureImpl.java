@@ -15,92 +15,146 @@
  */
 package consulo.build.ui.impl.internal.event;
 
-import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
+import consulo.build.ui.event.FailureResult;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Vladislav.Soroka
  */
 public class FailureImpl implements Failure {
-  private final @BuildEventsNls.Message String myMessage;
-  private final @BuildEventsNls.Description String myDescription;
-  private final List<? extends Failure> myCauses;
-  private final @Nullable Throwable myError;
-  private final @Nullable Notification myNotification;
-  private final @Nullable Navigatable myNavigatable;
+    private static class MyBuilder implements Builder {
+        private LocalizeValue myMessage = LocalizeValue.empty();
+        private LocalizeValue myDescription = LocalizeValue.empty();
+        private @Nullable List<Failure> myCauses = null;
+        private @Nullable Throwable myError = null;
+        private @Nullable Notification myNotification = null;
+        private @Nullable Navigatable myNavigatable = null;
 
-  public FailureImpl(@BuildEventsNls.Message String message, Throwable error) {
-    this(message, null, Collections.emptyList(), error, null, null);
-  }
+        @Override
+        public Builder message(LocalizeValue message) {
+            myMessage = message;
+            return this;
+        }
 
-  public FailureImpl(
-    @BuildEventsNls.Message String message,
-    Throwable error,
-    @Nullable Notification notification,
-    @Nullable Navigatable navigatable
-  ) {
-    this(message, null, Collections.emptyList(), error, notification, navigatable);
-  }
+        @Override
+        public Builder description(LocalizeValue description) {
+            myDescription = description;
+            return this;
+        }
 
-  public FailureImpl(@BuildEventsNls.Message String message, @BuildEventsNls.Description String description) {
-    this(message, description, Collections.emptyList(), null, null, null);
-  }
+        @Override
+        public Builder cause(Failure cause) {
+            causes(List.of(cause));
+            return this;
+        }
 
-  public FailureImpl(@BuildEventsNls.Message String message,
-                     @BuildEventsNls.Description String description,
-                     List<? extends Failure> causes) {
-    this(message, description, causes, null, null, null);
-  }
+        @Override
+        public Builder causes(Collection<? extends Failure> causes) {
+            if (myCauses == null) {
+                myCauses = new ArrayList<>(causes);
+            }
+            else {
+                myCauses.addAll(causes);
+            }
+            return this;
+        }
 
-  public FailureImpl(
-    @BuildEventsNls.Message String message,
-    @BuildEventsNls.Description String description,
-    List<? extends Failure> causes,
-    @Nullable Throwable error,
-    @Nullable Notification notification,
-    @Nullable Navigatable navigatable
-  ) {
-    myMessage = message;
-    myDescription = description;
-    myCauses = causes;
-    myError = error;
-    myNotification = notification;
-    myNavigatable = navigatable;
-  }
+        @Override
+        public Builder error(Throwable error) {
+            return this;
+        }
 
-  @Override
-  public @Nullable String getMessage() {
-    return myMessage;
-  }
+        @Override
+        public Builder notification(Notification notification) {
+            return this;
+        }
 
-  @Override
-  public @Nullable String getDescription() {
-    return myDescription;
-  }
+        @Override
+        public Builder navigatable(Navigatable navigatable) {
+            return this;
+        }
 
-  @Override
-  public @Nullable Throwable getError() {
-    return myError;
-  }
+        private boolean isEmpty() {
+            return myMessage.isEmpty() && myError == null;
+        }
 
-  @Override
-  public List<? extends Failure> getCauses() {
-    return myCauses;
-  }
+        @Override
+        public Failure create() {
+            if (isEmpty()) {
+                throw new IllegalStateException("Failure must have at least message or error filled");
+            }
+            List<Failure> causes = myCauses == null ? List.of() : myCauses;
+            return new FailureImpl(myMessage, myDescription, causes, myError, myNotification, myNavigatable);
+        }
 
-  @Override
-  public @Nullable Notification getNotification() {
-    return myNotification;
-  }
+        @Override
+        public FailureResult createResult() {
+            return new FailureResultImpl(isEmpty() ? List.of() : List.of(create()));
+        }
+    }
 
-  @Override
-  public @Nullable Navigatable getNavigatable() {
-    return myNavigatable;
-  }
+    private final LocalizeValue myMessage;
+    private final LocalizeValue myDescription;
+    private final List<? extends Failure> myCauses;
+    private final @Nullable Throwable myError;
+    private final @Nullable Notification myNotification;
+    private final @Nullable Navigatable myNavigatable;
+
+    private FailureImpl(
+        LocalizeValue message,
+        LocalizeValue description,
+        List<? extends Failure> causes,
+        @Nullable Throwable error,
+        @Nullable Notification notification,
+        @Nullable Navigatable navigatable
+    ) {
+        myMessage = message;
+        myDescription = description;
+        myCauses = causes;
+        myError = error;
+        myNotification = notification;
+        myNavigatable = navigatable;
+    }
+
+    @Override
+    public LocalizeValue getMessage() {
+        return myMessage;
+    }
+
+    @Override
+    public LocalizeValue getDescription() {
+        return myDescription;
+    }
+
+    @Override
+    public @Nullable Throwable getError() {
+        return myError;
+    }
+
+    @Override
+    public List<? extends Failure> getCauses() {
+        return myCauses;
+    }
+
+    @Override
+    public @Nullable Notification getNotification() {
+        return myNotification;
+    }
+
+    @Override
+    public @Nullable Navigatable getNavigatable() {
+        return myNavigatable;
+    }
+
+    public static Builder builder() {
+        return new MyBuilder();
+    }
 }

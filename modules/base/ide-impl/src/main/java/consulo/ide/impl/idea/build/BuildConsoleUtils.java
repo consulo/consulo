@@ -19,7 +19,6 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -43,12 +42,12 @@ public final class BuildConsoleUtils {
     private static final String A_CLOSING = "</a>";
     private static final Set<String> NEW_LINES = Set.of("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>", "<pre>", "</pre>");
 
-    public static void printDetails(ConsoleView consoleView, @Nullable Failure failure, @Nullable String details) {
-        String text = failure == null ? details : ObjectUtil.chooseNotNull(failure.getDescription(), failure.getMessage());
-        if (text == null && failure != null && failure.getError() != null) {
-            text = failure.getError().getMessage();
+    public static void printDetails(ConsoleView consoleView, @Nullable Failure failure, LocalizeValue details) {
+        LocalizeValue text = failure == null ? details : failure.getDescription().orIfEmpty(failure.getMessage());
+        if (text.isEmpty() && failure != null && failure.getError() != null) {
+            text = LocalizeValue.ofNullable(failure.getError().getMessage());
         }
-        if (text == null) {
+        if (text.isEmpty()) {
             return;
         }
         Notification notification = failure == null ? null : failure.getNotification();
@@ -61,14 +60,17 @@ public final class BuildConsoleUtils {
         for (BuildIssueQuickFix quickFix : buildIssue.getQuickFixes()) {
             listenerMap.put(quickFix.getId(), (notification, event) -> {
                 BuildView buildView = findBuildView(consoleView);
-                quickFix.runQuickFix(project, buildView != null ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null);
+                quickFix.runQuickFix(
+                    project,
+                    buildView != null ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null
+                );
             });
         }
 
         Notification notification = NotificationService.getInstance()
             .newWarn(group)
-            .title(LocalizeValue.localizeTODO(buildIssue.getTitle()))
-            .content(LocalizeValue.localizeTODO(buildIssue.getDescription()))
+            .title(buildIssue.getTitle())
+            .content(buildIssue.getDescription())
             .hyperlinkListener(new NotificationListener.Adapter() {
                 @Override
                 @RequiredUIAccess
@@ -87,8 +89,8 @@ public final class BuildConsoleUtils {
         print(consoleView, notification, buildIssue.getDescription());
     }
 
-    private static void print(ConsoleView consoleView, @Nullable Notification notification, String text) {
-        String content = StringUtil.convertLineSeparators(text);
+    private static void print(ConsoleView consoleView, @Nullable Notification notification, LocalizeValue text) {
+        String content = StringUtil.convertLineSeparators(text.get());
         while (true) {
             Matcher tagMatcher = TAG_PATTERN.matcher(content);
             if (!tagMatcher.find()) {
@@ -148,7 +150,9 @@ public final class BuildConsoleUtils {
     
     public static DataProvider getDataProvider(Object buildId, AbstractViewManager buildListener) {
         BuildView buildView = buildListener.getBuildView(buildId);
-        return (buildView != null) ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null;
+        return buildView != null
+            ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId)
+            : dataId -> null;
     }
 
     //@ApiStatus.Experimental

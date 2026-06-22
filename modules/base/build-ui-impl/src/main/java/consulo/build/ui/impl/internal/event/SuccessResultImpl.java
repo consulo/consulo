@@ -25,24 +25,23 @@ import java.util.List;
  * @author Vladislav.Soroka
  */
 public class SuccessResultImpl implements SuccessResult {
+    private final boolean myUpToDate;
 
-  private final boolean myUpToDate;
+    public SuccessResultImpl() {
+        this(false);
+    }
 
-  public SuccessResultImpl() {
-    this(false);
-  }
+    public SuccessResultImpl(boolean isUpToDate) {
+        myUpToDate = isUpToDate;
+    }
 
-  public SuccessResultImpl(boolean isUpToDate) {
-    myUpToDate = isUpToDate;
-  }
+    @Override
+    public boolean isUpToDate() {
+        return myUpToDate;
+    }
 
-  @Override
-  public boolean isUpToDate() {
-    return myUpToDate;
-  }
-
-  @Override
-  public List<? extends Warning> getWarnings() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<? extends Warning> getWarnings() {
+        return Collections.emptyList();
+    }
 }

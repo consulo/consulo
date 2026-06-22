@@ -1,6 +1,7 @@
 package consulo.language.editor.problemView;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -13,7 +14,7 @@ public interface Problem {
     /**
      * One line description of the problem.
      */
-    String getText();
+    LocalizeValue getText();
 
     /**
      * A name used to group problems.
@@ -25,14 +26,14 @@ public interface Problem {
     /**
      * Detailed description of the problem if needed.
      */
-    default @Nullable String getDescription() {
-        return null;
+    default LocalizeValue getDescription() {
+        return LocalizeValue.empty();
     }
 
     /**
      * The problem icon.
      */
-    default Image getIcon() {
+    default @Nullable Image getIcon() {
         return HighlightDisplayLevel.ERROR.getIcon();
     }
 }

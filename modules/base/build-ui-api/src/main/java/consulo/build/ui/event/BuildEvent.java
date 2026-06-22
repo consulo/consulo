@@ -15,6 +15,7 @@
  */
 package consulo.build.ui.event;
 
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -48,12 +49,9 @@ public interface BuildEvent {
      *
      * @return The event text message.
      */
-    @BuildEventsNls.Message
-    String getMessage();
+    LocalizeValue getMessage();
 
-    @BuildEventsNls.Hint
-    @Nullable String getHint();
+    LocalizeValue getHint();
 
-    @BuildEventsNls.Description
-    @Nullable String getDescription();
+    LocalizeValue getDescription();
 }

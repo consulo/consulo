@@ -1,27 +1,32 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.build.ui.impl.internal.event;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.BuildEventsNls;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public abstract class AbstractBuildEvent implements BuildEvent {
-    private final
-    Object myEventId;
+    private final Object myEventId;
     private @Nullable Object myParentId;
     private final long myEventTime;
-    private final @BuildEventsNls.Message String myMessage;
-    private @Nullable @BuildEventsNls.Hint String myHint;
-    private @Nullable @BuildEventsNls.Description String myDescription;
+    private final LocalizeValue myMessage;
+    private LocalizeValue myHint = LocalizeValue.empty();
+    private LocalizeValue myDescription = LocalizeValue.empty();
 
-    public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
+    public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, LocalizeValue message) {
         myEventId = eventId;
         myParentId = parentId;
         myEventTime = eventTime;
         myMessage = message;
+    }
+
+    public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
+        this(eventId, parentId, eventTime, LocalizeValue.ofNullable(message));
     }
 
     @Override
@@ -44,26 +49,38 @@ public abstract class AbstractBuildEvent implements BuildEvent {
     }
 
     @Override
-    public @BuildEventsNls.Message String getMessage() {
+    public LocalizeValue getMessage() {
         return myMessage;
     }
 
     @Override
-    public @Nullable String getHint() {
+    public LocalizeValue getHint() {
         return myHint;
     }
 
-    public void setHint(@Nullable @BuildEventsNls.Hint String hint) {
+    public void setHint(LocalizeValue hint) {
         myHint = hint;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setHint(@Nullable @BuildEventsNls.Hint String hint) {
+        setHint(LocalizeValue.ofNullable(hint));
+    }
+
     @Override
-    public @Nullable @BuildEventsNls.Description String getDescription() {
+    public LocalizeValue getDescription() {
         return myDescription;
     }
 
-    public void setDescription(@Nullable @BuildEventsNls.Description String description) {
+    public void setDescription(LocalizeValue description) {
         myDescription = description;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setDescription(@Nullable @BuildEventsNls.Description String description) {
+        setDescription(LocalizeValue.ofNullable(description));
     }
 
     @Override
