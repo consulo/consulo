@@ -69,16 +69,19 @@ public class FailureImpl implements Failure {
 
         @Override
         public Builder error(Throwable error) {
+            myError = error;
             return this;
         }
 
         @Override
         public Builder notification(Notification notification) {
+            myNotification = notification;
             return this;
         }
 
         @Override
         public Builder navigatable(Navigatable navigatable) {
+            myNavigatable = navigatable;
             return this;
         }
 

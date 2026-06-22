@@ -29,7 +29,7 @@ import java.util.List;
  * @author Vladislav.Soroka
  */
 public interface Failure {
-    public interface Builder {
+    interface Builder {
         Builder message(LocalizeValue message);
 
         @Deprecated

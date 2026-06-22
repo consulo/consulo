@@ -20,15 +20,11 @@ import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.*;
 import consulo.build.ui.issue.BuildIssue;
-import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 

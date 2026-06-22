@@ -115,7 +115,7 @@ public interface BuildEventFactory {
     ) {
         return newFailure()
             .message(message)
-            .message(description)
+            .description(description)
             .create();
     }
 
@@ -129,7 +129,7 @@ public interface BuildEventFactory {
     ) {
         return newFailure()
             .message(message)
-            .message(description)
+            .description(description)
             .causes(causes)
             .create();
     }

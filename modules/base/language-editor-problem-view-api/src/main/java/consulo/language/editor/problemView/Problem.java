@@ -5,6 +5,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 public interface Problem {
     /**
      * The problem provider that the problem belongs to.
@@ -33,7 +35,7 @@ public interface Problem {
     /**
      * The problem icon.
      */
-    default @Nullable Image getIcon() {
-        return HighlightDisplayLevel.ERROR.getIcon();
+    default Image getIcon() {
+        return Objects.requireNonNull(HighlightDisplayLevel.ERROR.getIcon());
     }
 }
