@@ -26,98 +26,100 @@ import javax.swing.*;
 import java.util.function.BooleanSupplier;
 
 public class SearchReplaceComponentBuilder {
-  private final Project myProject;
-  private final JComponent myTargetComponent;
+    private final @Nullable Project myProject;
+    private final JComponent myTargetComponent;
 
-  private UiDataProvider myDataProvider;
+    private @Nullable UiDataProvider myDataProvider = null;
 
-  private Runnable myReplaceAction;
-  private Runnable myCloseAction;
+    private @Nullable Runnable myReplaceAction;
+    private @Nullable Runnable myCloseAction;
 
-  private final DefaultActionGroup mySearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 1");
-  private final DefaultActionGroup myExtraSearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 2");
-  private final DefaultActionGroup mySearchFieldActions = DefaultActionGroup.createFlatGroup(() -> "search field actions");
-  private BooleanSupplier mySearchToolbarModifiedFlagGetter = () -> false;
+    private final DefaultActionGroup mySearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 1");
+    private final DefaultActionGroup myExtraSearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 2");
+    private final DefaultActionGroup mySearchFieldActions = DefaultActionGroup.createFlatGroup(() -> "search field actions");
+    private BooleanSupplier mySearchToolbarModifiedFlagGetter = () -> false;
 
-  private final DefaultActionGroup myReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
-  private final DefaultActionGroup myExtraReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
-  private final DefaultActionGroup myReplaceFieldActions = DefaultActionGroup.createFlatGroup(() -> "replace field actions");
+    private final DefaultActionGroup myReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
+    private final DefaultActionGroup myExtraReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
+    private final DefaultActionGroup myReplaceFieldActions = DefaultActionGroup.createFlatGroup(() -> "replace field actions");
 
-  public SearchReplaceComponentBuilder(@Nullable Project project, JComponent component) {
-    myProject = project;
-    myTargetComponent = component;
-  }
-
-  public SearchReplaceComponentBuilder withDataProvider(UiDataProvider provider) {
-    myDataProvider = provider;
-    return this;
-  }
-
-  public SearchReplaceComponentBuilder withReplaceAction(Runnable action) {
-    myReplaceAction = action;
-    return this;
-  }
-
-  public SearchReplaceComponentBuilder withCloseAction(Runnable action) {
-    myCloseAction = action;
-    return this;
-  }
-
-  public SearchReplaceComponentBuilder addSearchFieldActions(AnAction... actions) {
-    mySearchFieldActions.addAll(actions);
-    return this;
-  }
-
-  public SearchReplaceComponentBuilder addReplaceFieldActions(AnAction... actions) {
-    myReplaceFieldActions.addAll(actions);
-    return this;
-  }
-
-  public SearchReplaceComponentBuilder addPrimarySearchActions(AnAction... actions) {
-    mySearchActions.addAll(actions);
-    return this;
-  }
-
-  public SearchReplaceComponentBuilder addSecondarySearchActions(AnAction... actions) {
-    for (AnAction action : actions) {
-      mySearchActions.addAction(action).setAsSecondary(true);
+    public SearchReplaceComponentBuilder(@Nullable Project project, JComponent component) {
+        myProject = project;
+        myTargetComponent = component;
     }
-    return this;
-  }
 
-  public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(BooleanSupplier getter) {
-    mySearchToolbarModifiedFlagGetter = getter;
-    return this;
-  }
+    public SearchReplaceComponentBuilder withDataProvider(UiDataProvider provider) {
+        myDataProvider = provider;
+        return this;
+    }
 
-  public SearchReplaceComponentBuilder addExtraSearchActions(AnAction... actions) {
-    myExtraSearchActions.addAll(actions);
-    return this;
-  }
+    public SearchReplaceComponentBuilder withReplaceAction(Runnable action) {
+        myReplaceAction = action;
+        return this;
+    }
 
-  public SearchReplaceComponentBuilder addPrimaryReplaceActions(AnAction... actions) {
-    myReplaceActions.addAll(actions);
-    return this;
-  }
+    public SearchReplaceComponentBuilder withCloseAction(Runnable action) {
+        myCloseAction = action;
+        return this;
+    }
 
-  public SearchReplaceComponentBuilder addExtraReplaceAction(AnAction... actions) {
-    myExtraReplaceActions.addAll(actions);
-    return this;
-  }
+    public SearchReplaceComponentBuilder addSearchFieldActions(AnAction... actions) {
+        mySearchFieldActions.addAll(actions);
+        return this;
+    }
 
-  public SearchReplaceComponent build() {
-    SearchReplaceComponentFactory factory = Application.get().getInstance(SearchReplaceComponentFactory.class);
-    return factory.create(myProject,
-                          myTargetComponent,
-                          mySearchActions,
-                          mySearchToolbarModifiedFlagGetter,
-                          myExtraSearchActions,
-                          mySearchFieldActions,
-                          myReplaceActions,
-                          myExtraReplaceActions,
-                          myReplaceFieldActions,
-                          myReplaceAction,
-                          myCloseAction,
-                          myDataProvider);
-  }
+    public SearchReplaceComponentBuilder addReplaceFieldActions(AnAction... actions) {
+        myReplaceFieldActions.addAll(actions);
+        return this;
+    }
+
+    public SearchReplaceComponentBuilder addPrimarySearchActions(AnAction... actions) {
+        mySearchActions.addAll(actions);
+        return this;
+    }
+
+    public SearchReplaceComponentBuilder addSecondarySearchActions(AnAction... actions) {
+        for (AnAction action : actions) {
+            mySearchActions.addAction(action).setAsSecondary(true);
+        }
+        return this;
+    }
+
+    public SearchReplaceComponentBuilder withSecondarySearchActionsIsModifiedGetter(BooleanSupplier getter) {
+        mySearchToolbarModifiedFlagGetter = getter;
+        return this;
+    }
+
+    public SearchReplaceComponentBuilder addExtraSearchActions(AnAction... actions) {
+        myExtraSearchActions.addAll(actions);
+        return this;
+    }
+
+    public SearchReplaceComponentBuilder addPrimaryReplaceActions(AnAction... actions) {
+        myReplaceActions.addAll(actions);
+        return this;
+    }
+
+    public SearchReplaceComponentBuilder addExtraReplaceAction(AnAction... actions) {
+        myExtraReplaceActions.addAll(actions);
+        return this;
+    }
+
+    public SearchReplaceComponent build() {
+        SearchReplaceComponentFactory factory = Application.get().getInstance(SearchReplaceComponentFactory.class);
+        return factory.create(
+            myProject,
+            myTargetComponent,
+            mySearchActions,
+            mySearchToolbarModifiedFlagGetter,
+            myExtraSearchActions,
+            mySearchFieldActions,
+            myReplaceActions,
+            myExtraReplaceActions,
+            myReplaceFieldActions,
+            myReplaceAction,
+            myCloseAction,
+            myDataProvider
+        );
+    }
 }

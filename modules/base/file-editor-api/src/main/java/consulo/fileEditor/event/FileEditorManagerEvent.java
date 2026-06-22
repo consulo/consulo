@@ -21,69 +21,70 @@ import consulo.fileEditor.FileEditorProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.EventObject;
 
 public final class FileEditorManagerEvent extends EventObject {
+    private final @Nullable VirtualFile myOldFile;
+    private final @Nullable FileEditor myOldEditor;
+    private final @Nullable VirtualFile myNewFile;
+    private final @Nullable FileEditor myNewEditor;
+    private final @Nullable FileEditorProvider myOldProvider;
+    private final @Nullable FileEditorProvider myNewProvider;
 
-  private final VirtualFile        myOldFile;
-  private final FileEditor myOldEditor;
-  private final VirtualFile        myNewFile;
-  private final FileEditor         myNewEditor;
-  private final FileEditorProvider myOldProvider;
-  private final FileEditorProvider myNewProvider;
+    public FileEditorManagerEvent(
+        FileEditorManager source,
+        @Nullable VirtualFile oldFile,
+        @Nullable FileEditor oldEditor,
+        @Nullable VirtualFile newFile,
+        @Nullable FileEditor newEditor
+    ) {
+        this(source, oldFile, oldEditor, null, newFile, newEditor, null);
+    }
 
-  public FileEditorManagerEvent(FileEditorManager source,
-                                @Nullable VirtualFile oldFile,
-                                @Nullable FileEditor oldEditor,
-                                @Nullable VirtualFile newFile,
-                                @Nullable FileEditor newEditor)
-  {
-    this(source, oldFile, oldEditor, null, newFile, newEditor, null);
-  }
-  
-  public FileEditorManagerEvent(FileEditorManager source,
-                                @Nullable VirtualFile oldFile,
-                                @Nullable FileEditor oldEditor,
-                                @Nullable FileEditorProvider oldProvider,
-                                @Nullable VirtualFile newFile,
-                                @Nullable FileEditor newEditor,
-                                @Nullable FileEditorProvider newProvider)
-  {
-    super(source);
-    myOldFile = oldFile;
-    myOldEditor = oldEditor;
-    myNewFile = newFile;
-    myNewEditor = newEditor;
-    myOldProvider = oldProvider;
-    myNewProvider = newProvider;
-  }
+    public FileEditorManagerEvent(
+        FileEditorManager source,
+        @Nullable VirtualFile oldFile,
+        @Nullable FileEditor oldEditor,
+        @Nullable FileEditorProvider oldProvider,
+        @Nullable VirtualFile newFile,
+        @Nullable FileEditor newEditor,
+        @Nullable FileEditorProvider newProvider
+    ) {
+        super(source);
+        myOldFile = oldFile;
+        myOldEditor = oldEditor;
+        myNewFile = newFile;
+        myNewEditor = newEditor;
+        myOldProvider = oldProvider;
+        myNewProvider = newProvider;
+    }
 
-  
-  public FileEditorManager getManager(){
-    return (FileEditorManager)getSource();
-  }
+    public FileEditorManager getManager() {
+        return (FileEditorManager) getSource();
+    }
 
-  public @Nullable VirtualFile getOldFile() {
-    return myOldFile;
-  }
+    public @Nullable VirtualFile getOldFile() {
+        return myOldFile;
+    }
 
-  public @Nullable VirtualFile getNewFile() {
-    return myNewFile;
-  }
+    public @Nullable VirtualFile getNewFile() {
+        return myNewFile;
+    }
 
-  public @Nullable FileEditor getOldEditor() {
-    return myOldEditor;
-  }
+    public @Nullable FileEditor getOldEditor() {
+        return myOldEditor;
+    }
 
-  public @Nullable FileEditor getNewEditor() {
-    return myNewEditor;
-  }
+    public @Nullable FileEditor getNewEditor() {
+        return myNewEditor;
+    }
 
-  public @Nullable FileEditorProvider getOldProvider() {
-    return myOldProvider;
-  }
+    public @Nullable FileEditorProvider getOldProvider() {
+        return myOldProvider;
+    }
 
-  public @Nullable FileEditorProvider getNewProvider() {
-    return myNewProvider;
-  }
+    public @Nullable FileEditorProvider getNewProvider() {
+        return myNewProvider;
+    }
 }

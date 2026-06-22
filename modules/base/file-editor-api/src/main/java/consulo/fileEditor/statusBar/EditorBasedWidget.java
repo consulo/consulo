@@ -29,127 +29,131 @@ import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
-  private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
+    private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
 
-  
-  protected final Project myProject;
+    protected final Project myProject;
 
-  protected StatusBar myStatusBar;
-  protected MessageBusConnection myConnection;
-  private volatile boolean myDisposed;
-  protected final StatusBarWidgetFactory myFactory;
+    protected @Nullable StatusBar myStatusBar = null;
+    protected @Nullable MessageBusConnection myConnection = null;
+    private volatile boolean myDisposed;
+    protected final StatusBarWidgetFactory myFactory;
 
-  protected EditorBasedWidget(Project project, StatusBarWidgetFactory factory) {
-    myProject = project;
-    myFactory = factory;
-  }
-
-  
-  @Override
-  public String getId() {
-    return myFactory.getId();
-  }
-
-  protected final @Nullable Editor getEditor() {
-    Project project = getProject();
-    if (project.isDisposed()) return null;
-
-    FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
-    Editor result = null;
-    if (fileEditor instanceof TextEditor) {
-      Editor editor = ((TextEditor)fileEditor).getEditor();
-      if (ensureValidEditorFile(editor)) {
-        result = editor;
-      }
+    protected EditorBasedWidget(Project project, StatusBarWidgetFactory factory) {
+        myProject = project;
+        myFactory = factory;
     }
 
-    if (result == null) {
-      FileEditorManager manager = FileEditorManager.getInstance(project);
-      Editor editor = manager.getSelectedTextEditor();
-      if (editor != null && WindowManager.getInstance().getStatusBar(editor.getComponent(), project) == myStatusBar && ensureValidEditorFile(editor)) {
-        result = editor;
-      }
+    @Override
+    public String getId() {
+        return myFactory.getId();
     }
 
-    return result;
-  }
+    protected final @Nullable Editor getEditor() {
+        Project project = getProject();
+        if (project.isDisposed()) {
+            return null;
+        }
 
-  private static boolean ensureValidEditorFile(Editor editor) {
-    Document document = editor.getDocument();
-    VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-    if (file != null && !file.isValid()) {
-      Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
-      Project project = editor.getProject();
-      Boolean fileIsOpen = project == null ? null : ArrayUtil.contains(file, FileEditorManager.getInstance(project).getOpenFiles());
-      LOG.error("Returned editor for invalid file: " + editor +
+        FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
+        Editor result = null;
+        if (fileEditor instanceof TextEditor textEditor) {
+            Editor editor = textEditor.getEditor();
+            if (ensureValidEditorFile(editor)) {
+                result = editor;
+            }
+        }
+
+        if (result == null) {
+            FileEditorManager manager = FileEditorManager.getInstance(project);
+            Editor editor = manager.getSelectedTextEditor();
+            if (editor != null
+                && WindowManager.getInstance().getStatusBar(editor.getComponent(), project) == myStatusBar
+                && ensureValidEditorFile(editor)) {
+                result = editor;
+            }
+        }
+
+        return result;
+    }
+
+    private static boolean ensureValidEditorFile(Editor editor) {
+        Document document = editor.getDocument();
+        VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+        if (file != null && !file.isValid()) {
+            Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
+            Project project = editor.getProject();
+            Boolean fileIsOpen = project == null ? null : ArrayUtil.contains(file, FileEditorManager.getInstance(project).getOpenFiles());
+            LOG.error("Returned editor for invalid file: " + editor +
                 "; disposed=" + editor.isDisposed() +
                 "; file " + file.getClass() +
                 "; cached document exists: " + (cachedDocument != null) +
                 "; same as document: " + (cachedDocument == document) +
                 "; file is open: " + fileIsOpen);
-      return false;
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
 
-  protected boolean isOurEditor(Editor editor) {
-    if(!Application.get().isSwingApplication()) {
-      return true;
+    protected boolean isOurEditor(@Nullable Editor editor) {
+        if (!Application.get().isSwingApplication()) {
+            return true;
+        }
+        return editor != null
+            && editor.isShowing()
+            && !Boolean.TRUE.equals(editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY))
+            && WindowManager.getInstance().getStatusBar(editor.getComponent(), editor.getProject()) == myStatusBar;
     }
-    return editor != null &&
-           editor.isShowing() &&
-           !Boolean.TRUE.equals(editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY)) &&
-           WindowManager.getInstance().getStatusBar(editor.getComponent(), editor.getProject()) == myStatusBar;
-  }
 
-  protected Component getFocusedComponent() {
-    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    if (focusOwner == null) {
-      IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-      FocusableFrame frame = focusManager.getLastFocusedFrame();
-      if (frame != null) {
-        focusOwner = focusManager.getLastFocusedFor(frame);
-      }
+    protected @Nullable Component getFocusedComponent() {
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focusOwner == null) {
+            IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
+            FocusableFrame frame = focusManager.getLastFocusedFrame();
+            if (frame != null) {
+                focusOwner = focusManager.getLastFocusedFor(frame);
+            }
+        }
+        return focusOwner;
     }
-    return focusOwner;
-  }
 
-  protected @Nullable Editor getFocusedEditor() {
-    Component component = getFocusedComponent();
-    Editor editor = component instanceof EditorHolder ? ((EditorHolder)component).getEditor() : getEditor();
-    return editor != null && !editor.isDisposed() ? editor : null;
-  }
+    protected @Nullable Editor getFocusedEditor() {
+        Component component = getFocusedComponent();
+        Editor editor = component instanceof EditorHolder editorHolder ? editorHolder.getEditor() : getEditor();
+        return editor != null && !editor.isDisposed() ? editor : null;
+    }
 
-  protected @Nullable VirtualFile getSelectedFile() {
-    Editor editor = getEditor();
-    if (editor == null) return null;
-    Document document = editor.getDocument();
-    return FileDocumentManager.getInstance().getFile(document);
-  }
+    protected @Nullable VirtualFile getSelectedFile() {
+        Editor editor = getEditor();
+        if (editor == null) {
+            return null;
+        }
+        Document document = editor.getDocument();
+        return FileDocumentManager.getInstance().getFile(document);
+    }
 
-  
-  protected final Project getProject() {
-    return myProject;
-  }
+    protected final Project getProject() {
+        return myProject;
+    }
 
-  @Override
-  public void install(StatusBar statusBar) {
-    assert statusBar.getProject() == null || statusBar.getProject().equals(myProject) : "Cannot install widget from one project on status bar of another project";
+    @Override
+    public void install(StatusBar statusBar) {
+        assert statusBar.getProject() == null || statusBar.getProject().equals(myProject)
+            : "Cannot install widget from one project on status bar of another project";
 
-    myStatusBar = statusBar;
-    Disposer.register(myStatusBar, this);
-    myConnection = myProject.getMessageBus().connect(this);
-    myConnection.subscribe(FileEditorManagerListener.class, this);
-  }
+        myStatusBar = statusBar;
+        Disposer.register(myStatusBar, this);
+        myConnection = myProject.getMessageBus().connect(this);
+        myConnection.subscribe(FileEditorManagerListener.class, this);
+    }
 
-  @Override
-  public void dispose() {
-    myDisposed = true;
-    myStatusBar = null;
-    myConnection = null;
-  }
+    @Override
+    public void dispose() {
+        myDisposed = true;
+        myStatusBar = null;
+        myConnection = null;
+    }
 
-  protected final boolean isDisposed() {
-    return myDisposed;
-  }
+    protected final boolean isDisposed() {
+        return myDisposed;
+    }
 }
