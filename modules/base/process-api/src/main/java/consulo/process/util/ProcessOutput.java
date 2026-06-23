@@ -41,7 +41,7 @@ public class ProcessOutput {
   }
 
   public void appendStdout(LocalizeValue text) {
-    myStdoutBuilder.append(text);
+    myStdoutBuilder.append(text.get());
   }
 
   public void appendStdout(@Nullable String text) {
@@ -49,7 +49,7 @@ public class ProcessOutput {
   }
 
   public void appendStderr(LocalizeValue text) {
-    myStderrBuilder.append(text);
+    myStderrBuilder.append(text.get());
   }
 
   public void appendStderr(@Nullable String text) {
