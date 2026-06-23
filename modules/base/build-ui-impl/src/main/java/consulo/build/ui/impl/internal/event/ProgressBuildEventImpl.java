@@ -17,6 +17,7 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.ProgressBuildEvent;
 
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -31,7 +32,7 @@ public class ProgressBuildEventImpl extends AbstractBuildEvent implements Progre
         Object eventId,
         @Nullable Object parentId,
         long eventTime,
-        String message,
+        LocalizeValue message,
         long total,
         long progress,
         String unit

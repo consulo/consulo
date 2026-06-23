@@ -70,7 +70,7 @@ public class CompilerTask extends Task.Backgroundable {
         myCompilationStartedAutomatically = compilationStartedAutomatically;
         myCounters = counters;
         mySessionId = UUID.randomUUID();
-        myBuildViewService = new BuildViewServiceImpl(project, mySessionId, contentName.get(), counters);
+        myBuildViewService = new BuildViewServiceImpl(project, mySessionId, contentName, counters);
     }
 
     public ProgressIndicator getIndicator() {

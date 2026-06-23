@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.sm.runner;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
@@ -38,6 +39,9 @@ public abstract class OutputLineSplitter {
         myStdinSupportEnabled = stdinEnabled;
     }
 
+    public void process(LocalizeValue text, Key outputType) {
+        process(text.get(), outputType);
+    }
     public void process(String text, Key outputType) {
         int from = 0;
         int to = 0;

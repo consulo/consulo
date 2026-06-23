@@ -24,8 +24,8 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
         Object parentId,
         Kind kind,
         NotificationGroup group,
-        String message,
-        @Nullable String detailedMessage
+        LocalizeValue message,
+        LocalizeValue detailedMessage
     ) {
         this(parentId, kind, group, message, detailedMessage, null);
     }
@@ -34,8 +34,8 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
         Object parentId,
         Kind kind,
         NotificationGroup group,
-        String message,
-        @Nullable String detailedMessage,
+        LocalizeValue message,
+        LocalizeValue detailedMessage,
         @Nullable Navigatable navigatable
     ) {
         super(new Object(), parentId, System.currentTimeMillis(), message);

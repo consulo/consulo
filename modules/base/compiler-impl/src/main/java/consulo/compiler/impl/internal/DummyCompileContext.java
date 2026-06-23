@@ -22,6 +22,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -32,6 +33,27 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class DummyCompileContext implements CompileContext {
+    private class MyMessageBuilder implements MessageBuilder {
+        @Override
+        public MessageBuilder url(String url) {
+            return this;
+        }
+
+        @Override
+        public MessageBuilder position(int row, int column) {
+            return this;
+        }
+
+        @Override
+        public MessageBuilder navigatable(Navigatable navigatable) {
+            return this;
+        }
+
+        @Override
+        public void add() {
+        }
+    }
+
     protected DummyCompileContext() {
     }
 
@@ -42,23 +64,13 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return new MyMessageBuilder();
+    }
+
+    @Override
     public Project getProject() {
         return null;
-    }
-
-    @Override
-    public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
-    }
-
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        @Nullable String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
     }
 
     @Override
@@ -77,7 +89,7 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
-    public void requestRebuildNextTime(String message) {
+    public void requestRebuildNextTime(LocalizeValue message) {
     }
 
     @Override

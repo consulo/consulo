@@ -328,13 +328,7 @@ public class CompileDriverImpl implements CompileDriver {
             }
         }
         catch (IOException e) {
-            context.addMessage(
-                CompilerMessageCategory.ERROR,
-                CompilerLocalize.compilerErrorException(e.getMessage()).get(),
-                null,
-                -1,
-                -1
-            );
+            context.newError(CompilerLocalize.compilerErrorException(StringUtil.notNullize(e.getMessage()))).add();
         }
     }
 
@@ -540,7 +534,7 @@ public class CompileDriverImpl implements CompileDriver {
                 message.append(" (Plugin: ").append(pluginId).append(")");
             }
             message.append(": ").append(ex.getMessage());
-            compileContext.addMessage(CompilerMessageCategory.ERROR, message.toString(), null, -1, -1);
+            compileContext.newError(LocalizeValue.localizeTODO(message.toString())).add();
 
             if (pluginId != null) {
                 throw new PluginException(ex, pluginId);
@@ -639,7 +633,7 @@ public class CompileDriverImpl implements CompileDriver {
                         .notify(myProject);
 
                     if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
-                        compileContext.addMessage(CompilerMessageCategory.INFORMATION, statusMessage.get(), null, -1, -1);
+                        compileContext.newInfo(statusMessage).add();
                     }
                 }
             }
@@ -754,25 +748,13 @@ public class CompileDriverImpl implements CompileDriver {
                             if (!file.exists()) {
                                 boolean created = file.mkdirs();
                                 if (!created) {
-                                    context.addMessage(
-                                        CompilerMessageCategory.ERROR,
-                                        CompilerLocalize.errorFailedToCreateOutputDirectory(file.getPath()).get(),
-                                        null,
-                                        0,
-                                        0
-                                    );
+                                    context.newError(CompilerLocalize.errorFailedToCreateOutputDirectory(file.getPath())).add();
                                     return ExitStatus.ERRORS;
                                 }
                             }
                             output = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
                             if (output == null) {
-                                context.addMessage(
-                                    CompilerMessageCategory.ERROR,
-                                    CompilerLocalize.errorFailedToLocateOutputDirectory(file.getPath()).get(),
-                                    null,
-                                    0,
-                                    0
-                                );
+                                context.newError(CompilerLocalize.errorFailedToLocateOutputDirectory(file.getPath())).add();
                                 return ExitStatus.ERRORS;
                             }
                         }
@@ -1094,13 +1076,7 @@ public class CompileDriverImpl implements CompileDriver {
                     for (File file : files) {
                         boolean deleteOk = deleteFile(file);
                         if (!deleteOk) {
-                            context.addMessage(
-                                CompilerMessageCategory.ERROR,
-                                CompilerLocalize.compilerErrorFailedToDelete(file.getPath()).get(),
-                                null,
-                                -1,
-                                -1
-                            );
+                            context.newError(CompilerLocalize.compilerErrorFailedToDelete(file.getPath())).add();
                         }
                     }
                 }

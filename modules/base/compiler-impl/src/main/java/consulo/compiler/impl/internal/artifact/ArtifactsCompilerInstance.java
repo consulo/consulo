@@ -63,13 +63,13 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         super(context);
     }
 
-    
+
     @Override
     public List<ArtifactBuildTarget> getAllTargets() {
         return getArtifactTargets(false);
     }
 
-    
+
     @Override
     public List<ArtifactBuildTarget> getSelectedTargets() {
         return getArtifactTargets(true);
@@ -111,7 +111,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         );
     }
 
-    
+
     @Override
     public List<ArtifactCompilerCompileItem> getItems(ArtifactBuildTarget target) {
         myBuilderContext = new ArtifactsProcessingItemsBuilderContext(myContext);
@@ -122,25 +122,17 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         String selfIncludingName = selfIncludingArtifacts.get(artifact.getName());
         if (selfIncludingName != null) {
             String name = selfIncludingName.equals(artifact.getName()) ? "it" : "'" + selfIncludingName + "' artifact";
-            myContext.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot build '" + artifact.getName() + "' artifact: " + name + " includes itself in the output layout",
-                null,
-                -1,
-                -1
-            );
+            myContext.newError(LocalizeValue.localizeTODO(
+                "Cannot build '" + artifact.getName() + "' artifact: " + name + " includes itself in the output layout"
+            )).add();
             return Collections.emptyList();
         }
 
         String outputPath = artifact.getOutputPath();
         if (StringUtil.isEmpty(outputPath)) {
-            myContext.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot build '" + artifact.getName() + "' artifact: output path is not specified",
-                null,
-                -1,
-                -1
-            );
+            myContext.newError(
+                LocalizeValue.localizeTODO("Cannot build '" + artifact.getName() + "' artifact: output path is not specified")
+            ).add();
             return Collections.emptyList();
         }
 
@@ -251,7 +243,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
         catch (Exception e) {
             LOG.info(e);
-            myContext.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
+            myContext.newError(LocalizeValue.of(ExceptionUtil.getThrowableText(e))).add();
             return false;
         }
         return true;
@@ -263,13 +255,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
 
         if (!FileUtil.createParentDirs(toFile)) {
-            myContext.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot create directory for '" + toFile.getAbsolutePath() + "' file",
-                null,
-                -1,
-                -1
-            );
+            myContext.newError(LocalizeValue.localizeTODO("Cannot create directory for '" + toFile.getAbsolutePath() + "' file")).add();
             return;
         }
 
@@ -401,16 +387,12 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                     notDeletedJars.add(filePath);
                 }
                 if (notDeletedFilesCount++ > 50) {
-                    myContext.addMessage(
-                        CompilerMessageCategory.WARNING,
-                        "Deletion of outdated files stopped because too many files cannot be deleted",
-                        null,
-                        -1,
-                        -1
+                    myContext.newWarning(
+                        LocalizeValue.localizeTODO("Deletion of outdated files stopped because too many files cannot be deleted")
                     );
                     break;
                 }
-                myContext.addMessage(CompilerMessageCategory.WARNING, "Cannot delete file '" + filePath + "'", null, -1, -1);
+                myContext.newWarning(LocalizeValue.localizeTODO("Cannot delete file '" + filePath + "'")).add();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Cannot delete file " + file);
                 }

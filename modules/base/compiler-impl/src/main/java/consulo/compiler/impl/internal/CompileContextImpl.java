@@ -55,6 +55,49 @@ import java.util.function.Supplier;
  * @since 2003-01-21
  */
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
+    private class MyMessageBuilder implements MessageBuilder {
+        private final CompilerMessageCategory myCategory;
+        private final LocalizeValue myMessage;
+
+        private @Nullable Navigatable myNavigatable = null;
+        private @Nullable VirtualFile myFile = null;
+        private int myRow = -1;
+        private int myColumn = -1;
+
+        private MyMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
+            myCategory = category;
+            myMessage = message;
+        }
+
+        @Override
+        public MessageBuilder url(String url) {
+            myFile = findPresentableFileForMessage(url);
+            return this;
+        }
+
+        @Override
+        public MessageBuilder optionalUrl(@Nullable String url) {
+            return url == null ? this : url(url);
+        }
+
+        @Override
+        public MessageBuilder position(int row, int column) {
+            myRow = row;
+            return this;
+        }
+
+        @Override
+        public MessageBuilder navigatable(Navigatable navigatable) {
+            myNavigatable = navigatable;
+            return this;
+        }
+
+        @Override
+        public void add() {
+            addMessage(new CompilerMessageImpl(myProject, myCategory, myMessage, myFile, myRow, myColumn, myNavigatable));
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
     
     private final Project myProject;
@@ -66,7 +109,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     private final CompileCounters myCounters;
 
     private boolean myRebuildRequested = false;
-    private String myRebuildReason;
+    private LocalizeValue myRebuildReason;
     private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<>();
     private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<>();
     private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap = new HashMap<>();
@@ -179,25 +222,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
-        CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
-        addMessage(msg);
-    }
-
-    @Deprecated
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
-        CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
-        addMessage(msg);
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return new MyMessageBuilder(category, message);
     }
 
     private @Nullable VirtualFile findPresentableFileForMessage(@Nullable String url) {
@@ -250,11 +276,11 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void requestRebuildNextTime(String message) {
+    public void requestRebuildNextTime(LocalizeValue message) {
         if (!myRebuildRequested) {
             myRebuildRequested = true;
             myRebuildReason = message;
-            addMessage(CompilerMessageCategory.ERROR, message, null, -1, -1);
+            newError(message).add();
         }
     }
 
@@ -262,7 +288,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return myRebuildRequested;
     }
 
-    public String getRebuildReason() {
+    public LocalizeValue getRebuildReason() {
         return myRebuildReason;
     }
 

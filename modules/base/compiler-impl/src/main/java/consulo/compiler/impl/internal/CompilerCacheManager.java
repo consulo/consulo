@@ -172,13 +172,7 @@ public class CompilerCacheManager implements Disposable {
             for (File child : children) {
                 boolean deleteOk = FileUtil.delete(child);
                 if (!deleteOk) {
-                    context.addMessage(
-                        CompilerMessageCategory.ERROR,
-                        CompilerLocalize.compilerErrorFailedToDelete(child.getPath()).get(),
-                        null,
-                        -1,
-                        -1
-                    );
+                    context.newError(CompilerLocalize.compilerErrorFailedToDelete(child.getPath())).add();
                 }
             }
         }

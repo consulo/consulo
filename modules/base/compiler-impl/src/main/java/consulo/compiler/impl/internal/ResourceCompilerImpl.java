@@ -153,13 +153,11 @@ public class ResourceCompilerImpl implements ResourceCompiler {
                 addToMap(processed, command.getOutputPath(), outputItem);
             }
             catch (IOException e) {
-                context.addMessage(
-                    CompilerMessageCategory.ERROR,
-                    CompilerLocalize.errorCopying(command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)).get(),
-                    command.getSourceFileUrl(),
-                    -1,
-                    -1
-                );
+                context.newError(
+                        CompilerLocalize.errorCopying(command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e))
+                    )
+                    .url(command.getSourceFileUrl())
+                    .add();
             }
         }
 

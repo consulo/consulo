@@ -2,7 +2,6 @@
 package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.FilePosition;
-import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.FileMessageEvent;
 import consulo.build.ui.event.FileMessageEventResult;
 import consulo.localize.LocalizeValue;
@@ -23,8 +22,8 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
         Object parentId,
         Kind kind,
         NotificationGroup group,
-        @BuildEventsNls.Message String message,
-        @Nullable @BuildEventsNls.Description String detailedMessage,
+        LocalizeValue message,
+        LocalizeValue detailedMessage,
         FilePosition filePosition
     ) {
         super(parentId, kind, group, message, detailedMessage);
@@ -59,8 +58,8 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
     @Override
     public LocalizeValue getHint() {
         LocalizeValue hint = super.getHint();
-        if (hint.isEmpty() && myFilePosition.getStartLine() >= 0) {
-            hint = LocalizeValue.of(":" + (myFilePosition.getStartLine() + 1));
+        if (hint.isEmpty() && myFilePosition.startLine() >= 0) {
+            hint = LocalizeValue.of(":" + (myFilePosition.startLine() + 1));
         }
         return hint;
     }

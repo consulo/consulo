@@ -18,6 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.localize.CompilerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -27,25 +28,24 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public final class CompilerMessageImpl implements CompilerMessage {
-    
     private final Project myProject;
     
     private final CompilerMessageCategory myCategory;
     private @Nullable Navigatable myNavigatable;
     
-    private final String myMessage;
+    private final LocalizeValue myMessage;
     private final @Nullable VirtualFile myFile;
     private final int myRow;
     private final int myColumn;
 
-    public CompilerMessageImpl(Project project, CompilerMessageCategory category, @Nullable String message) {
+    public CompilerMessageImpl(Project project, CompilerMessageCategory category, LocalizeValue message) {
         this(project, category, message, null, -1, -1, null);
     }
 
     public CompilerMessageImpl(
         Project project,
         CompilerMessageCategory category,
-        @Nullable String message,
+        LocalizeValue message,
         @Nullable VirtualFile file,
         int row,
         int column,
@@ -54,21 +54,19 @@ public final class CompilerMessageImpl implements CompilerMessage {
         myProject = project;
         myCategory = category;
         myNavigatable = navigatable;
-        myMessage = message == null ? "" : message;
+        myMessage = message;
         myRow = row;
         myColumn = column;
         myFile = file;
     }
 
-    
     @Override
     public CompilerMessageCategory getCategory() {
         return myCategory;
     }
 
-    
     @Override
-    public String getMessage() {
+    public LocalizeValue getMessage() {
         return myMessage;
     }
 
@@ -141,6 +139,6 @@ public final class CompilerMessageImpl implements CompilerMessage {
 
     @Override
     public String toString() {
-        return myMessage;
+        return myMessage.get();
     }
 }

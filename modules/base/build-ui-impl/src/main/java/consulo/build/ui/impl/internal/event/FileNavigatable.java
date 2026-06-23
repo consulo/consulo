@@ -71,7 +71,10 @@ public class FileNavigatable implements Navigatable {
         VirtualFile file = VirtualFileUtil.findFileByIoFile(myFilePosition.getFile(), false);
         if (file != null) {
             OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(myProject);
-            descriptor = factory.newBuilder(file).line(myFilePosition.getStartLine()).column(myFilePosition.getStartColumn()).build();
+            descriptor = factory.newBuilder(file)
+                .line(myFilePosition.startLine())
+                .column(myFilePosition.startColumn())
+                .build();
         }
         return descriptor;
     }

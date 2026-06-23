@@ -46,7 +46,6 @@ import java.util.*;
  */
 public class BuildViewServiceImpl {
     private static class ConsolePrinter {
-        
         private final BuildProgress<BuildProgressDescriptor> progress;
         private volatile boolean isNewLinePosition = true;
 
@@ -60,7 +59,7 @@ public class BuildViewServiceImpl {
                 text = '\n' + text;
             }
             isNewLinePosition = StringUtil.endsWithLineBreak(message);
-            progress.output(text, kind != MessageEvent.Kind.ERROR);
+            progress.output(LocalizeValue.of(text), kind != MessageEvent.Kind.ERROR);
         }
 
         private static String wrapWithAnsiColor(MessageEvent.Kind kind, String message) {
@@ -89,12 +88,12 @@ public class BuildViewServiceImpl {
 
     private final Project myProject;
     private final UUID mySessionId;
-    private final String myContentName;
+    private final LocalizeValue myContentName;
 
     private final BuildProgress<BuildProgressDescriptor> myBuildProgress;
     private final ConsolePrinter myConsolePrinter;
 
-    public BuildViewServiceImpl(Project project, UUID sessionId, String contentName, CompileCounters counters) {
+    public BuildViewServiceImpl(Project project, UUID sessionId, LocalizeValue contentName, CompileCounters counters) {
         myProject = project;
         mySessionId = sessionId;
         myContentName = contentName;
@@ -181,16 +180,13 @@ public class BuildViewServiceImpl {
                 .withContextActions(contextActions.toArray(AnAction.EMPTY_ARRAY));
 
         myBuildProgress.start(new BuildProgressDescriptor() {
-            
             @Override
-            public String getTitle() {
+            public LocalizeValue getTitle() {
                 return buildDescriptor.getTitle();
             }
 
             @Override
-            public
-            
-            BuildDescriptor getBuildDescriptor() {
+            public BuildDescriptor getBuildDescriptor() {
                 return buildDescriptor;
             }
         });
@@ -219,7 +215,7 @@ public class BuildViewServiceImpl {
 
             @Override
             public void setFraction(double fraction) {
-                myBuildProgress.progress(lastMessage.get(), 100, (long) (fraction * 100), "%");
+                myBuildProgress.progress(lastMessage, 100, (long) (fraction * 100), "%");
             }
 
             private Stack<LocalizeValue> getTextStack() {
@@ -262,17 +258,17 @@ public class BuildViewServiceImpl {
     public void onEnd(Object sessionId, ExitStatus exitStatus, long endBuildStamp) {
         LocalizeValue message;
         if (exitStatus == ExitStatus.ERRORS) {
-            message = BuildLocalize.buildMessagesFailed(StringUtil.wordsToBeginFromLowerCase(myContentName));
-            myBuildProgress.fail(endBuildStamp, message.get());
+            message = BuildLocalize.buildMessagesFailed(myContentName.map(StringUtil::wordsToBeginFromLowerCase));
+            myBuildProgress.fail(endBuildStamp, message);
         }
         else if (exitStatus == ExitStatus.CANCELLED) {
-            message = BuildLocalize.buildMessagesCancelled(StringUtil.wordsToBeginFromLowerCase(myContentName));
-            myBuildProgress.cancel(endBuildStamp, message.get());
+            message = BuildLocalize.buildMessagesCancelled(myContentName.map(StringUtil::wordsToBeginFromLowerCase));
+            myBuildProgress.cancel(endBuildStamp, message);
         }
         else {
             boolean isUpToDate = exitStatus == ExitStatus.UP_TO_DATE;
-            message = BuildLocalize.buildMessagesFinished(StringUtil.wordsToBeginFromLowerCase(myContentName));
-            myBuildProgress.finish(endBuildStamp, isUpToDate, message.get());
+            message = BuildLocalize.buildMessagesFinished(myContentName.map(StringUtil::wordsToBeginFromLowerCase));
+            myBuildProgress.finish(endBuildStamp, isUpToDate, message);
         }
     }
 
@@ -280,7 +276,7 @@ public class BuildViewServiceImpl {
         MessageEvent.Kind kind = convertCategory(compilerMessage.getCategory());
         VirtualFile virtualFile = compilerMessage.getVirtualFile();
         Navigatable navigatable = compilerMessage.getNavigatable();
-        String title = getMessageTitle(compilerMessage);
+        LocalizeValue title = compilerMessage.getMessage().map(BuildViewServiceImpl::getMessageTitle);
         BuildIssue issue = buildIssue(
             compilerMessage.getModuleNames(),
             title,
@@ -301,7 +297,7 @@ public class BuildViewServiceImpl {
                 filePosition = new FilePosition(file, line, column);
             }
             else {
-                filePosition = new FilePosition(file, 0, 0);
+                filePosition = new FilePosition(file);
             }
 
             myBuildProgress.fileMessage(title, compilerMessage.getMessage(), kind, filePosition);
@@ -310,13 +306,13 @@ public class BuildViewServiceImpl {
             if (kind == MessageEvent.Kind.ERROR || kind == MessageEvent.Kind.WARNING) {
                 myBuildProgress.message(title, compilerMessage.getMessage(), kind, navigatable);
             }
-            myConsolePrinter.print(compilerMessage.getMessage(), kind);
+            myConsolePrinter.print(compilerMessage.getMessage().get(), kind);
         }
     }
 
-    private static String getMessageTitle(CompilerMessage compilerMessage) {
+    private static String getMessageTitle(String compilerMessage) {
         String message = null;
-        String[] messages = StringUtil.splitByLines(compilerMessage.getMessage());
+        String[] messages = StringUtil.splitByLines(compilerMessage);
         if (messages.length > 1) {
             String line0 = messages[0];
             String line1 = messages[1];
@@ -341,8 +337,8 @@ public class BuildViewServiceImpl {
 
     private @Nullable BuildIssue buildIssue(
         Collection<String> moduleNames,
-        String title,
-        String message,
+        LocalizeValue title,
+        LocalizeValue message,
         MessageEvent.Kind kind,
         @Nullable VirtualFile virtualFile,
         @Nullable Navigatable navigatable
@@ -361,7 +357,6 @@ public class BuildViewServiceImpl {
         return contextActions;
     }
 
-    
     private static MessageEvent.Kind convertCategory(CompilerMessageCategory category) {
         return switch (category) {
             case ERROR -> MessageEvent.Kind.ERROR;

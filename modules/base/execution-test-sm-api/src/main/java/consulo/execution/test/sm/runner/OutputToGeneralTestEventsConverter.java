@@ -6,6 +6,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.event.*;
 import consulo.execution.util.ConsoleBuffer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
@@ -67,7 +68,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
 
     @Override
-    public void process(String text, Key outputType) {
+    public void process(LocalizeValue text, Key outputType) {
         mySplitter.process(text, outputType);
     }
 

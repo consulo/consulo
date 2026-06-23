@@ -15,6 +15,7 @@
  */
 package consulo.process.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
@@ -39,45 +40,46 @@ public class ProcessOutput {
     myExitCode = exitCode;
   }
 
+  public void appendStdout(LocalizeValue text) {
+    myStdoutBuilder.append(text);
+  }
+
   public void appendStdout(@Nullable String text) {
     myStdoutBuilder.append(text);
+  }
+
+  public void appendStderr(LocalizeValue text) {
+    myStderrBuilder.append(text);
   }
 
   public void appendStderr(@Nullable String text) {
     myStderrBuilder.append(text);
   }
 
-  
   public String getStdout() {
     return myStdoutBuilder.toString();
   }
 
-  
   public String getStderr() {
     return myStderrBuilder.toString();
   }
 
-  
   public List<String> getStdoutLines() {
     return getStdoutLines(true);
   }
 
-  
   public List<String> getStdoutLines(boolean excludeEmptyLines) {
     return splitLines(getStdout(), excludeEmptyLines);
   }
 
-  
   public List<String> getStderrLines() {
     return getStderrLines(true);
   }
 
-  
   public List<String> getStderrLines(boolean excludeEmptyLines) {
     return splitLines(getStderr(), excludeEmptyLines);
   }
 
-  
   private static List<String> splitLines(String s, boolean excludeEmptyLines) {
     String converted = StringUtil.convertLineSeparators(s);
     return StringUtil.split(converted, "\n", true, excludeEmptyLines);

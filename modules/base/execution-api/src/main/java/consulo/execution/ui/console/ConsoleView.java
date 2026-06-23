@@ -17,6 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.codeEditor.Editor;
 import consulo.execution.ui.ExecutionConsole;
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,6 +34,10 @@ public interface ConsoleView extends ExecutionConsole {
     Key<ConsoleView> KEY = Key.create(ConsoleView.class);
 
     Key<ConsoleView> CONSOLE_VIEW_IN_EDITOR_VIEW = Key.create("CONSOLE_VIEW_IN_EDITOR_VIEW");
+
+    default void print(LocalizeValue s, ConsoleViewContentType contentType) {
+        print(s.get(), contentType);
+    }
 
     void print(String s, ConsoleViewContentType contentType);
 

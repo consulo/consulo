@@ -114,7 +114,6 @@ public class ConsoleViewRunningState extends ConsoleState {
     myUserInputWriter.flush();
   }
 
-  
   @Override
   public ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler) {
     return dispose().attachTo(console, processHandler);

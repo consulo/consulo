@@ -80,13 +80,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
                 successfullyProcessed.add(copyItem);
             }
             catch (IOException e) {
-                context.addMessage(
-                    CompilerMessageCategory.ERROR,
-                    CompilerLocalize.errorCopying(item.getFile().getPath(), toPath, e.getMessage()).get(),
-                    null,
-                    -1,
-                    -1
-                );
+                context.newError(CompilerLocalize.errorCopying(item.getFile().getPath(), toPath, e.getMessage())).add();
             }
         }
         return successfullyProcessed.toArray(new ProcessingItem[successfullyProcessed.size()]);
@@ -97,7 +91,6 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     }
 
     @Override
-    
     public String getDescription() {
         return CompilerLocalize.fileCopyingCompilerDescription().get();
     }
@@ -165,5 +158,4 @@ public abstract class CopyingCompiler implements PackagingCompiler {
             return destinationPath;
         }
     }
-
 }

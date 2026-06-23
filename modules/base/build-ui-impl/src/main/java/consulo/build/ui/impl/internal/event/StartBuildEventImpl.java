@@ -18,12 +18,12 @@ package consulo.build.ui.impl.internal.event;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.BuildViewSettingsProvider;
 import consulo.build.ui.DefaultBuildDescriptor;
-import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.StartBuildEvent;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 
 import org.jspecify.annotations.Nullable;
@@ -39,7 +39,7 @@ public class StartBuildEventImpl extends StartEventImpl implements StartBuildEve
     private final DefaultBuildDescriptor myBuildDescriptor;
     private @Nullable BuildViewSettingsProvider myBuildViewSettingsProvider;
 
-    public StartBuildEventImpl(BuildDescriptor descriptor, @BuildEventsNls.Message String message) {
+    public StartBuildEventImpl(BuildDescriptor descriptor, LocalizeValue message) {
         super(descriptor.getId(), null, descriptor.getStartTime(), message);
         myBuildDescriptor =
             descriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor) descriptor : new DefaultBuildDescriptor(descriptor);

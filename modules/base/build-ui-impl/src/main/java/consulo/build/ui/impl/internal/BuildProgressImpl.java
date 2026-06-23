@@ -11,6 +11,7 @@ import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.compiler.CompilerManager;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.collection.Lists;
@@ -66,13 +67,13 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> startChildProgress(String title) {
+    public BuildProgress<BuildProgressDescriptor> startChildProgress(LocalizeValue title) {
         BuildDescriptor buildDescriptor = Objects.requireNonNull(myDescriptor).getBuildDescriptor();
         BuildProgressImpl progress = new BuildProgressImpl(this);
         progress.myListeners.addAll(myListeners);
         return progress.start(new BuildProgressDescriptor() {
             @Override
-            public String getTitle() {
+            public LocalizeValue getTitle() {
                 return title;
             }
 
@@ -84,12 +85,12 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> progress(String title) {
+    public BuildProgress<BuildProgressDescriptor> progress(LocalizeValue title) {
         return progress(title, -1, -1, "");
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> progress(String title, long total, long progress, String unit) {
+    public BuildProgress<BuildProgressDescriptor> progress(LocalizeValue title, long total, long progress, String unit) {
         Object parentId = myParentProgress != null ? myParentProgress.getId() : null;
         onEvent(
             getBuildId(),
@@ -99,26 +100,26 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> output(String text, boolean stdOut) {
+    public BuildProgress<BuildProgressDescriptor> output(LocalizeValue text, boolean stdOut) {
         onEvent(getBuildId(), new OutputBuildEventImpl(getId(), text, stdOut));
         return this;
     }
 
     @Override
     public BuildProgress<BuildProgressDescriptor> fileMessage(
-        String title,
-        String message,
+        LocalizeValue title,
+        LocalizeValue message,
         MessageEvent.Kind kind,
         FilePosition filePosition
     ) {
         StringBuilder fileLink = new StringBuilder(filePosition.getFile().getPath());
-        if (filePosition.getStartLine() > 0) {
-            fileLink.append(":").append(filePosition.getStartLine() + 1);
-            if (filePosition.getStartColumn() > 0) {
-                fileLink.append(":").append(filePosition.getStartColumn() + 1);
+        if (filePosition.startLine() > 0) {
+            fileLink.append(":").append(filePosition.startLine() + 1);
+            if (filePosition.startColumn() > 0) {
+                fileLink.append(":").append(filePosition.startColumn() + 1);
             }
         }
-        String detailedMessage = fileLink.toString() + '\n' + message;
+        LocalizeValue detailedMessage = LocalizeValue.join(LocalizeValue.of(fileLink.toString() + '\n'), message);
         FileMessageEventImpl event =
             new FileMessageEventImpl(getId(), kind, CompilerManager.NOTIFICATION_GROUP, title, detailedMessage, filePosition);
         onEvent(getBuildId(), event);
@@ -127,8 +128,8 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
 
     @Override
     public BuildProgress<BuildProgressDescriptor> message(
-        String title,
-        String message,
+        LocalizeValue title,
+        LocalizeValue message,
         MessageEvent.Kind kind,
         @Nullable Navigatable navigatable
     ) {
@@ -158,7 +159,7 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, String message) {
+    public BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, LocalizeValue message) {
         assertStarted();
         assert myParentProgress != null;
         EventResult result = new SuccessResultImpl(isUpToDate);
@@ -173,7 +174,7 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> fail(long timeStamp, String message) {
+    public BuildProgress<BuildProgressDescriptor> fail(long timeStamp, LocalizeValue message) {
         assertStarted();
         assert myParentProgress != null;
         FinishEvent event = new FinishEventImpl(getId(), myParentProgress.getId(), timeStamp, message, new FailureResultImpl());
@@ -187,7 +188,7 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> cancel(long timeStamp, String message) {
+    public BuildProgress<BuildProgressDescriptor> cancel(long timeStamp, LocalizeValue message) {
         assertStarted();
         assert myParentProgress != null;
         FinishEventImpl event = new FinishEventImpl(getId(), myParentProgress.getId(), timeStamp, message, new SkippedResultImpl());

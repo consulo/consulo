@@ -123,11 +123,10 @@ public class ArchivesBuilder {
             new DFSTBuilder<>(GraphGenerator.generate(CachingSemiGraph.cache(new ArchivesGraph())));
         GraphEdge<ArchivePackageInfo> dependency = builder.getCircularDependency();
         if (dependency != null) {
-            LocalizeValue message = CompilerLocalize.packagingCompilerErrorCannotBuildCircularDependencyFoundBetween0And1(
+            myContext.newError(CompilerLocalize.packagingCompilerErrorCannotBuildCircularDependencyFoundBetween0And1(
                 dependency.from().getPresentableDestination(),
                 dependency.to().getPresentableDestination()
-            );
-            myContext.addMessage(CompilerMessageCategory.ERROR, message.get(), null, -1, -1);
+            )).add();
             return null;
         }
 
@@ -144,13 +143,9 @@ public class ArchivesBuilder {
     @SuppressWarnings("unchecked")
     private <T> void buildArchive(ArchivePackageInfo archive) throws IOException {
         if (archive.getPackedFiles().isEmpty() && archive.getPackedArchives().isEmpty()) {
-            myContext.addMessage(
-                CompilerMessageCategory.WARNING,
-                "Archive '" + archive.getPresentableDestination() + "' has no files so it won't be created",
-                null,
-                -1,
-                -1
-            );
+            myContext.newWarning(LocalizeValue.localizeTODO(
+                "Archive '" + archive.getPresentableDestination() + "' has no files so it won't be created"
+            )).add();
             return;
         }
 

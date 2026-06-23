@@ -15,15 +15,15 @@
  */
 package consulo.build.ui.impl.internal.event;
 
-import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.StartEvent;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public class StartEventImpl extends AbstractBuildEvent implements StartEvent {
-    public StartEventImpl(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
+    public StartEventImpl(Object eventId, @Nullable Object parentId, long eventTime, LocalizeValue message) {
         super(eventId, parentId, eventTime, message);
     }
 }
