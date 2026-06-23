@@ -131,7 +131,7 @@ public final class ScriptRunnerUtil {
             processHandler.addProcessListener(new ProcessListener() {
                 @Override
                 public void onTextAvailable(ProcessEvent event, Key outputType) {
-                    LOG.debug(outputType + ": " + event.getText());
+                    LOG.debug(outputType + ": " + event.getText().get());
                 }
             });
         }

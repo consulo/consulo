@@ -42,6 +42,7 @@ public abstract class OutputLineSplitter {
     public void process(LocalizeValue text, Key outputType) {
         process(text.get(), outputType);
     }
+
     public void process(String text, Key outputType) {
         int from = 0;
         int to = 0;
