@@ -73,7 +73,6 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
         return myToolActionId != null;
     }
 
-
     public AsyncResult<Void> execute(UIAccess uiAccess, DataContext context, long executionId) {
         AsyncResult<Void> result = AsyncResult.undefined();
         uiAccess.give(() -> {
