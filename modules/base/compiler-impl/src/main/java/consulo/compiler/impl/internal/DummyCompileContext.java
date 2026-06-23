@@ -32,21 +32,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class DummyCompileContext implements CompileContext {
-    private class MyMessageBuilder extends AbstractCompileMessageBuilder {
-        private MyMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
-            super(category, message);
-        }
-
-        @Override
-        public MessageBuilder url(String url) {
-            return this;
-        }
-
-        @Override
-        public void add() {
-        }
-    }
-
     protected DummyCompileContext() {
     }
 
@@ -58,7 +43,16 @@ public class DummyCompileContext implements CompileContext {
 
     @Override
     public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
-        return new MyMessageBuilder(category, message);
+        return new AbstractCompileMessageBuilder(category, message) {
+            @Override
+            public MessageBuilder url(String url) {
+                return this;
+            }
+
+            @Override
+            public void add() {
+            }
+        };
     }
 
     @Override
