@@ -19,7 +19,7 @@ public interface BuildProgress<T extends BuildProgressDescriptor> {
 
     BuildProgress<T> progress(LocalizeValue title, long total, long progress, String unit);
 
-    BuildProgress<T> output(LocalizeValue text, boolean stdOut);
+    BuildProgress<T> output(String text, boolean stdOut);
 
     BuildProgress<T> message(LocalizeValue title, LocalizeValue message, MessageEvent.Kind kind, @Nullable Navigatable navigatable);
 

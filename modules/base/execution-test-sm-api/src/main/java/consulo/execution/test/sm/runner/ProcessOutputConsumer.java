@@ -11,7 +11,7 @@ import consulo.util.dataholder.Key;
 public interface ProcessOutputConsumer extends Disposable {
     void setProcessor(GeneralTestEventsProcessor processor);
 
-    void process(LocalizeValue text, Key outputType);
+    void process(String text, Key outputType);
 
     /**
      * @deprecated use {@link #flushBufferOnProcessTermination(int)}

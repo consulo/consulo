@@ -100,7 +100,7 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
     }
 
     @Override
-    public BuildProgress<BuildProgressDescriptor> output(LocalizeValue text, boolean stdOut) {
+    public BuildProgress<BuildProgressDescriptor> output(String text, boolean stdOut) {
         onEvent(getBuildId(), new OutputBuildEventImpl(getId(), text, stdOut));
         return this;
     }

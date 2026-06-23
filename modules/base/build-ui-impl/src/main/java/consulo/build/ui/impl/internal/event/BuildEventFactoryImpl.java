@@ -123,7 +123,7 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     }
 
     @Override
-    public OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, LocalizeValue message, boolean stdOut) {
+    public OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, String message, boolean stdOut) {
         return new OutputBuildEventImpl(eventId, parentId, message, stdOut);
     }
 }

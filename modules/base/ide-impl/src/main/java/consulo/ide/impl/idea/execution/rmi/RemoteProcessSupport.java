@@ -278,7 +278,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
 
             @Override
             public void onTextAvailable(ProcessEvent event, Key outputType) {
-                String text = event.getText().get();
+                String text = event.getText();
                 if (outputType == ProcessOutputTypes.STDERR) {
                     LOG.warn(text.trim());
                 }

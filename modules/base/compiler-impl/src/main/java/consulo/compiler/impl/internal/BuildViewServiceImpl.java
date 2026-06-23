@@ -59,7 +59,7 @@ public class BuildViewServiceImpl {
                 text = '\n' + text;
             }
             isNewLinePosition = StringUtil.endsWithLineBreak(message);
-            progress.output(LocalizeValue.of(text), kind != MessageEvent.Kind.ERROR);
+            progress.output(text, kind != MessageEvent.Kind.ERROR);
         }
 
         private static String wrapWithAnsiColor(MessageEvent.Kind kind, String message) {

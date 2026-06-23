@@ -68,7 +68,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
 
     @Override
-    public void process(LocalizeValue text, Key outputType) {
+    public void process(String text, Key outputType) {
         mySplitter.process(text, outputType);
     }
 
