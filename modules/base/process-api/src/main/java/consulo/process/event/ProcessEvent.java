@@ -20,20 +20,24 @@ import consulo.process.ProcessHandler;
 import java.util.EventObject;
 
 public class ProcessEvent extends EventObject {
-    private String myText;
-    private int myExitCode;
+    private final String myText;
+    private final int myExitCode;
 
     public ProcessEvent(ProcessHandler source) {
-        super(source);
+        this(source, "", 0);
     }
 
     public ProcessEvent(ProcessHandler source, String text) {
-        super(source);
-        myText = text;
+        this(source, text, 0);
     }
 
     public ProcessEvent(ProcessHandler source, int exitCode) {
+        this(source, "", exitCode);
+    }
+
+    private ProcessEvent(Object source, String text, int exitCode) {
         super(source);
+        myText = text;
         myExitCode = exitCode;
     }
 

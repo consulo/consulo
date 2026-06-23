@@ -84,7 +84,6 @@ public class ConsoleViewRunningState extends ConsoleState {
     }
 
     @Override
-
     public ConsoleState dispose() {
         if (myProcessHandler != null) {
             myProcessHandler.removeProcessListener(myProcessListener);

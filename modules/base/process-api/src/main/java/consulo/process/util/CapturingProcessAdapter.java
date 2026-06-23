@@ -15,46 +15,46 @@
  */
 package consulo.process.util;
 
-import consulo.localize.LocalizeValue;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author traff
  */
 public class CapturingProcessAdapter implements ProcessListener {
-  private final ProcessOutput myOutput;
+    private final ProcessOutput myOutput;
 
-  public CapturingProcessAdapter() {
-    this(new ProcessOutput());
-  }
-
-  public CapturingProcessAdapter(ProcessOutput output) {
-    myOutput = output;
-  }
-
-  @Override
-  public void onTextAvailable(ProcessEvent event, Key outputType) {
-    addToOutput(event.getText(), outputType);
-  }
-
-  protected void addToOutput(String text, Key outputType) {
-    if (outputType == ProcessOutputTypes.STDOUT) {
-      myOutput.appendStdout(text);
+    public CapturingProcessAdapter() {
+        this(new ProcessOutput());
     }
-    else if (outputType == ProcessOutputTypes.STDERR) {
-      myOutput.appendStderr(text);
+
+    public CapturingProcessAdapter(ProcessOutput output) {
+        myOutput = output;
     }
-  }
 
-  @Override
-  public void processTerminated(ProcessEvent event) {
-    myOutput.setExitCode(event.getExitCode());
-  }
+    @Override
+    public void onTextAvailable(ProcessEvent event, Key outputType) {
+        addToOutput(event.getText(), outputType);
+    }
 
-  public ProcessOutput getOutput() {
-    return myOutput;
-  }
+    protected void addToOutput(@Nullable String text, Key outputType) {
+        if (outputType == ProcessOutputTypes.STDOUT) {
+            myOutput.appendStdout(text);
+        }
+        else if (outputType == ProcessOutputTypes.STDERR) {
+            myOutput.appendStderr(text);
+        }
+    }
+
+    @Override
+    public void processTerminated(ProcessEvent event) {
+        myOutput.setExitCode(event.getExitCode());
+    }
+
+    public ProcessOutput getOutput() {
+        return myOutput;
+    }
 }

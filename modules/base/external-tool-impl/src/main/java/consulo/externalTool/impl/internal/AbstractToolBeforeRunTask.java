@@ -26,88 +26,95 @@ import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 /**
  * @author traff
  */
 public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends AbstractToolBeforeRunTask, T extends Tool>
-  extends BeforeRunTask<ToolBeforeRunTask> {
-  private final static String ACTION_ID_ATTRIBUTE = "actionId";
-  private static final Logger LOG = Logger.getInstance(AbstractToolBeforeRunTask.class);
-  protected String myToolActionId;
+    extends BeforeRunTask<ToolBeforeRunTask> {
+    private final static String ACTION_ID_ATTRIBUTE = "actionId";
+    private static final Logger LOG = Logger.getInstance(AbstractToolBeforeRunTask.class);
+    protected String myToolActionId;
 
-  public AbstractToolBeforeRunTask(Key<ToolBeforeRunTask> providerId) {
-    super(providerId);
-  }
-
-  public @Nullable String getToolActionId() {
-    return myToolActionId;
-  }
-
-  @Override
-  public void writeExternal(Element element) {
-    super.writeExternal(element);
-    if (myToolActionId != null) {
-      element.setAttribute(ACTION_ID_ATTRIBUTE, myToolActionId);
+    public AbstractToolBeforeRunTask(Key<ToolBeforeRunTask> providerId) {
+        super(providerId);
     }
-  }
 
-  @Override
-  public void readExternal(Element element) {
-    super.readExternal(element);
-    myToolActionId = element.getAttributeValue(ACTION_ID_ATTRIBUTE);
-  }
+    public @Nullable String getToolActionId() {
+        return myToolActionId;
+    }
 
-  @Override
-  public ToolBeforeRunTask clone() {
-    return (ToolBeforeRunTask)super.clone();
-  }
-
-  public void setToolActionId(String toolActionId) {
-    myToolActionId = toolActionId;
-  }
-
-  public boolean isExecutable() {
-    return myToolActionId != null;
-  }
-
-  
-  public AsyncResult<Void> execute(UIAccess uiAccess, DataContext context, long executionId) {
-    AsyncResult<Void> result = AsyncResult.undefined();
-    uiAccess.give(() -> {
-      boolean runToolResult = ToolAction.runTool(myToolActionId, context, null, executionId, new ProcessAdapter() {
-        @Override
-        public void processTerminated(ProcessEvent event) {
-          if(event.getExitCode() == 0) {
-            result.setDone();
-          }
-          else {
-            result.setRejected();
-          }
+    @Override
+    public void writeExternal(Element element) {
+        super.writeExternal(element);
+        if (myToolActionId != null) {
+            element.setAttribute(ACTION_ID_ATTRIBUTE, myToolActionId);
         }
-      });
-
-      if(!runToolResult) {
-        result.setRejected();
-      }
-    }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
-
-    return result;
-  }
-
-  public @Nullable T findCorrespondingTool() {
-    if (myToolActionId == null) {
-      return null;
     }
-    List<T> tools = getTools();
-    for (T tool : tools) {
-      if (myToolActionId.equals(tool.getActionId())) {
-        return tool;
-      }
-    }
-    return null;
-  }
 
-  protected abstract List<T> getTools();
+    @Override
+    public void readExternal(Element element) {
+        super.readExternal(element);
+        myToolActionId = element.getAttributeValue(ACTION_ID_ATTRIBUTE);
+    }
+
+    @Override
+    public ToolBeforeRunTask clone() {
+        return (ToolBeforeRunTask) super.clone();
+    }
+
+    public void setToolActionId(String toolActionId) {
+        myToolActionId = toolActionId;
+    }
+
+    public boolean isExecutable() {
+        return myToolActionId != null;
+    }
+
+
+    public AsyncResult<Void> execute(UIAccess uiAccess, DataContext context, long executionId) {
+        AsyncResult<Void> result = AsyncResult.undefined();
+        uiAccess.give(() -> {
+            boolean runToolResult = ToolAction.runTool(
+                myToolActionId,
+                context,
+                null,
+                executionId,
+                new ProcessAdapter() {
+                    @Override
+                    public void processTerminated(ProcessEvent event) {
+                        if (event.getExitCode() == 0) {
+                            result.setDone();
+                        }
+                        else {
+                            result.setRejected();
+                        }
+                    }
+                }
+            );
+
+            if (!runToolResult) {
+                result.setRejected();
+            }
+        }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+
+        return result;
+    }
+
+    public @Nullable T findCorrespondingTool() {
+        if (myToolActionId == null) {
+            return null;
+        }
+        List<T> tools = getTools();
+        for (T tool : tools) {
+            if (myToolActionId.equals(tool.getActionId())) {
+                return tool;
+            }
+        }
+        return null;
+    }
+
+    protected abstract List<T> getTools();
 }

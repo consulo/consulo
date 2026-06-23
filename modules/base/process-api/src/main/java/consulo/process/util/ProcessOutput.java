@@ -38,11 +38,11 @@ public class ProcessOutput {
         myExitCode = exitCode;
     }
 
-    public void appendStdout(@Nullable String text) {
+    public void appendStdout(String text) {
         myStdoutBuilder.append(text);
     }
 
-    public void appendStderr(@Nullable String text) {
+    public void appendStderr(String text) {
         myStderrBuilder.append(text);
     }
 
