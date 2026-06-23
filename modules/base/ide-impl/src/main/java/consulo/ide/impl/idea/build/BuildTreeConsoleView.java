@@ -634,8 +634,8 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         if (failureNode == null) {
             failureNode = new ExecutionNodeImpl(myProject, parentNode, true, this::isCorrectThread);
             failureNode.setName(failureNodeName);
-            if (filePosition != null && filePosition.getStartLine() >= 0) {
-                String hint = ":" + (filePosition.getStartLine() + 1);
+            if (filePosition != null && filePosition.startLine() >= 0) {
+                String hint = ":" + (filePosition.startLine() + 1);
                 failureNode.setHint(hint);
             }
             parentNode.add(failureNode);

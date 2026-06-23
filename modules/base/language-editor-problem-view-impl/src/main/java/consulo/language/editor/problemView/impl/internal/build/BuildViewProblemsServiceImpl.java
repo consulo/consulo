@@ -123,12 +123,12 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
 
         @Override
         public int getLine() {
-            return myEvent.getFilePosition().getStartLine();
+            return myEvent.getFilePosition().startLine();
         }
 
         @Override
         public int getColumn() {
-            return myEvent.getFilePosition().getStartColumn();
+            return myEvent.getFilePosition().startColumn();
         }
 
         @Override

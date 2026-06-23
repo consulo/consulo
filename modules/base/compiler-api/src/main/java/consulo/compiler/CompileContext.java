@@ -32,6 +32,38 @@ import org.jspecify.annotations.Nullable;
  * An interface allowing access and modification of the data associated with the current compile session.
  */
 public interface CompileContext extends UserDataHolder {
+    interface MessageBuilder {
+        MessageBuilder url(String url);
+
+        default MessageBuilder optionalUrl(@Nullable String url) {
+            return url == null ? this : url(url);
+        }
+
+        MessageBuilder position(int row, int column);
+
+        MessageBuilder navigatable(Navigatable navigatable);
+
+        default MessageBuilder optionalNavigatable(@Nullable Navigatable navigatable) {
+            return navigatable == null ? this : navigatable(navigatable);
+        }
+
+        void add();
+    }
+
+    default MessageBuilder newInfo(LocalizeValue message) {
+        return newMessage(CompilerMessageCategory.INFORMATION, message);
+    }
+
+    default MessageBuilder newWarning(LocalizeValue message) {
+        return newMessage(CompilerMessageCategory.WARNING, message);
+    }
+
+    default MessageBuilder newError(LocalizeValue message) {
+        return newMessage(CompilerMessageCategory.ERROR, message);
+    }
+
+    MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message);
+
     /**
      * Allows to add a message to be shown in Compiler message view.
      * If correct url, line and column numbers are supplied, the navigation to the specified file is available from the view.
@@ -44,7 +76,12 @@ public interface CompileContext extends UserDataHolder {
      */
     @Deprecated
     @DeprecationInfo("Use newError/newWarning/newInfo()...add()")
-    void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum);
+    default void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum) {
+        newMessage(category, LocalizeValue.of(message))
+            .optionalUrl(url)
+            .position(lineNum, columnNum)
+            .add();
+    }
 
     /**
      * Allows to add a message to be shown in Compiler message view, with a specified Navigatable
@@ -59,14 +96,20 @@ public interface CompileContext extends UserDataHolder {
      */
     @Deprecated
     @DeprecationInfo("Use newError/newWarning/newInfo()...add()")
-    void addMessage(
+    default void addMessage(
         CompilerMessageCategory category,
         String message,
         @Nullable String url,
         int lineNum,
         int columnNum,
-        Navigatable navigatable
-    );
+        @Nullable Navigatable navigatable
+    ) {
+        newMessage(category, LocalizeValue.of(message))
+            .optionalUrl(url)
+            .position(lineNum, columnNum)
+            .optionalNavigatable(navigatable)
+            .add();
+    }
 
     /**
      * Returns the count of messages of the specified category added during the current compile session.
@@ -94,9 +137,7 @@ public interface CompileContext extends UserDataHolder {
      * A compiler may call this method in order to request complete project rebuild.
      * This may be necessary, for example, when compiler caches are corrupted.
      */
-    default void requestRebuildNextTime(LocalizeValue message) {
-        requestRebuildNextTime(message.get());
-    }
+    void requestRebuildNextTime(LocalizeValue message);
 
     /**
      * A compiler may call this method in order to request complete project rebuild.
@@ -104,7 +145,9 @@ public interface CompileContext extends UserDataHolder {
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    void requestRebuildNextTime(String message);
+    default void requestRebuildNextTime(String message) {
+        requestRebuildNextTime(LocalizeValue.of(message));
+    }
 
     /**
      * Returns the module to which the specified file belongs. This method is aware of the file->module mapping
@@ -136,7 +179,8 @@ public interface CompileContext extends UserDataHolder {
      * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
      */
     @Deprecated
-    @Nullable VirtualFile getModuleOutputDirectory(Module module);
+    @Nullable
+    VirtualFile getModuleOutputDirectory(Module module);
 
     /**
      * Returns the test output directory for the specified module.
@@ -146,11 +190,14 @@ public interface CompileContext extends UserDataHolder {
      * output directory for tests is not configured explicitly, but the output path is present, the output path will be returned.
      */
     @Deprecated
-    @Nullable VirtualFile getModuleOutputDirectoryForTests(Module module);
+    @Nullable
+    VirtualFile getModuleOutputDirectoryForTests(Module module);
 
-    @Nullable VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
+    @Nullable
+    VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
 
-    @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
+    @Nullable
+    VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
 
     /**
      * Checks if the compilation is incremental, i.e. triggered by one of "Make" actions.

@@ -21,6 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.issue.BuildIssue;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
@@ -148,7 +149,7 @@ public interface BuildEventFactory {
         return newFailure()
             .message(message)
             .description(description)
-            .error(error)
+            .optionalError(error)
             .optionalNotification(notification)
             .optionalNavigatable(navigatable)
             .create();
@@ -160,8 +161,8 @@ public interface BuildEventFactory {
         Object parentId,
         MessageEvent.Kind kind,
         NotificationGroup group,
-        @BuildEventsNls.Message String message,
-        @Nullable @BuildEventsNls.Description String detailedMessage,
+        LocalizeValue message,
+        LocalizeValue detailedMessage,
         FilePosition filePosition
     );
 
@@ -169,7 +170,7 @@ public interface BuildEventFactory {
         Object eventId,
         @Nullable Object parentId,
         long eventTime,
-        @BuildEventsNls.Message String message,
+        LocalizeValue message,
         EventResult result
     );
 
@@ -177,7 +178,7 @@ public interface BuildEventFactory {
         Object eventId,
         @Nullable Object parentId,
         long eventTime,
-        @BuildEventsNls.Message String message,
+        LocalizeValue message,
         EventResult result
     );
 
@@ -185,8 +186,8 @@ public interface BuildEventFactory {
         Object parentId,
         MessageEvent.Kind kind,
         NotificationGroup group,
-        String message,
-        @Nullable String detailedMessage
+        LocalizeValue message,
+        LocalizeValue detailedMessage
     ) {
         return createMessageEvent(parentId, kind, group, message, detailedMessage, null);
     }
@@ -195,8 +196,8 @@ public interface BuildEventFactory {
         Object parentId,
         MessageEvent.Kind kind,
         NotificationGroup group,
-        String message,
-        @Nullable String detailedMessage,
+        LocalizeValue message,
+        LocalizeValue detailedMessage,
         @Nullable Navigatable navigatable
     );
 
@@ -204,7 +205,7 @@ public interface BuildEventFactory {
         Object eventId,
         @Nullable Object parentId,
         long eventTime,
-        @BuildEventsNls.Message String message
+        LocalizeValue message
     );
 
     BuildIssueEvent createBuildIssueEvent(
@@ -213,16 +214,11 @@ public interface BuildEventFactory {
         MessageEvent.Kind kind
     );
 
-    StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, @BuildEventsNls.Message String message);
+    StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, LocalizeValue message);
 
-    default OutputBuildEvent createOutputBuildEvent(@Nullable Object parentId, @BuildEventsNls.Message String message, boolean stdOut) {
+    default OutputBuildEvent createOutputBuildEvent(@Nullable Object parentId, LocalizeValue message, boolean stdOut) {
         return createOutputBuildEvent(new Object(), parentId, message, stdOut);
     }
 
-    OutputBuildEvent createOutputBuildEvent(
-        Object eventId,
-        @Nullable Object parentId,
-        @BuildEventsNls.Message String message,
-        boolean stdOut
-    );
+    OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, LocalizeValue message, boolean stdOut);
 }

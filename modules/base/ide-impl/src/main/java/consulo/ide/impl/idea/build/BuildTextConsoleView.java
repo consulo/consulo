@@ -44,18 +44,18 @@ public class BuildTextConsoleView extends ConsoleViewImpl implements BuildConsol
                     FilePosition position = fme.getFilePosition();
                     StringBuilder fileLink = new StringBuilder();
                     fileLink.append(position.getFile().getName());
-                    if (position.getStartLine() > 0) {
-                        fileLink.append(":").append(position.getStartLine() + 1);
+                    if (position.startLine() > 0) {
+                        fileLink.append(":").append(position.startLine() + 1);
                     }
-                    if (position.getStartColumn() > 0) {
-                        fileLink.append(":").append(position.getStartColumn() + 1);
+                    if (position.startColumn() > 0) {
+                        fileLink.append(":").append(position.startColumn() + 1);
                     }
                     print(fileLink.toString(), ConsoleViewContentType.NORMAL_OUTPUT,
                         new LazyFileHyperlinkInfo(
                             getProject(),
                             position.getFile().getPath(),
-                            position.getStartLine(),
-                            position.getStartColumn()
+                            position.startLine(),
+                            position.startColumn()
                         )
                     );
                     print(": ", ConsoleViewContentType.NORMAL_OUTPUT);

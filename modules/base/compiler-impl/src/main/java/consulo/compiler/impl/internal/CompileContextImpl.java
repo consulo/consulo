@@ -32,7 +32,6 @@ import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.util.collection.OrderedSet;
@@ -55,6 +54,53 @@ import java.util.function.Supplier;
  * @since 2003-01-21
  */
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
+    private class MyMessageBuilder extends AbstractCompileMessageBuilder {
+        private MyMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
+            super(category, message);
+        }
+
+        @Override
+        public MessageBuilder url(String url) {
+            return optionalFile(findPresentableFileForMessage(url));
+        }
+
+        private @Nullable VirtualFile findPresentableFileForMessage(String url) {
+            VirtualFile file = findFileByUrl(url);
+            if (file == null) {
+                return null;
+            }
+            return myProject.getApplication().runReadAction((Supplier<VirtualFile>)() -> {
+                if (file.isValid()) {
+                    for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
+                        VirtualFile root = entry.getKey();
+                        if (VirtualFileUtil.isAncestor(root, file, false)) {
+                            Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
+                            VirtualFile presentableFile =
+                                pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
+                            return presentableFile != null ? presentableFile : file;
+                        }
+                    }
+                }
+                return file;
+            });
+        }
+
+        private static @Nullable VirtualFile findFileByUrl(String url) {
+            VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+            VirtualFile file = virtualFileManager.findFileByUrl(url);
+            if (file == null) {
+                // groovy stubs may be placed in completely random directories which aren't refreshed automatically
+                return virtualFileManager.refreshAndFindFileByUrl(url);
+            }
+            return file;
+        }
+
+        @Override
+        public void add() {
+            addMessage(new CompilerMessageImpl(myProject, myCategory, myMessage, myFile, myRow, myColumn, myNavigatable));
+        }
+    }
+
     private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
     
     private final Project myProject;
@@ -66,7 +112,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     private final CompileCounters myCounters;
 
     private boolean myRebuildRequested = false;
-    private String myRebuildReason;
+    private LocalizeValue myRebuildReason;
     private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<>();
     private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<>();
     private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap = new HashMap<>();
@@ -179,59 +225,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
-        CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
-        addMessage(msg);
-    }
-
-    @Deprecated
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
-        CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
-        addMessage(msg);
-    }
-
-    private @Nullable VirtualFile findPresentableFileForMessage(@Nullable String url) {
-        VirtualFile file = findFileByUrl(url);
-        if (file == null) {
-            return null;
-        }
-        return myProject.getApplication().runReadAction((Supplier<VirtualFile>)() -> {
-            if (file.isValid()) {
-                for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
-                    VirtualFile root = entry.getKey();
-                    if (VirtualFileUtil.isAncestor(root, file, false)) {
-                        Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
-                        VirtualFile presentableFile =
-                            pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
-                        return presentableFile != null ? presentableFile : file;
-                    }
-                }
-            }
-            return file;
-        });
-    }
-
-    private static @Nullable VirtualFile findFileByUrl(@Nullable String url) {
-        if (url == null) {
-            return null;
-        }
-        VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-        VirtualFile file = virtualFileManager.findFileByUrl(url);
-        if (file == null) {
-            // groovy stubs may be placed in completely random directories which aren't refreshed automatically
-            return virtualFileManager.refreshAndFindFileByUrl(url);
-        }
-        return file;
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return new MyMessageBuilder(category, message);
     }
 
     @Override
@@ -250,11 +245,11 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void requestRebuildNextTime(String message) {
+    public void requestRebuildNextTime(LocalizeValue message) {
         if (!myRebuildRequested) {
             myRebuildRequested = true;
             myRebuildReason = message;
-            addMessage(CompilerMessageCategory.ERROR, message, null, -1, -1);
+            newError(message).add();
         }
     }
 
@@ -262,7 +257,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return myRebuildRequested;
     }
 
-    public String getRebuildReason() {
+    public LocalizeValue getRebuildReason() {
         return myRebuildReason;
     }
 

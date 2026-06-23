@@ -15,37 +15,43 @@
  */
 package consulo.process.event;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 
 import java.util.EventObject;
 
-public class ProcessEvent extends EventObject{
-  private String myText;
-  private int myExitCode;
+public class ProcessEvent extends EventObject {
+    private LocalizeValue myText = LocalizeValue.empty();
+    private int myExitCode;
 
-  public ProcessEvent(ProcessHandler source) {
-    super(source);
-  }
+    public ProcessEvent(ProcessHandler source) {
+        super(source);
+    }
 
-  public ProcessEvent(ProcessHandler source, String text) {
-    super(source);
-    myText = text;
-  }
+    public ProcessEvent(ProcessHandler source, LocalizeValue text) {
+        super(source);
+        myText = text;
+    }
 
-  public ProcessEvent(ProcessHandler source, int exitCode) {
-    super(source);
-    myExitCode = exitCode;
-  }
+    public ProcessEvent(ProcessHandler source, String text) {
+        super(source);
+        myText = LocalizeValue.of(text);
+    }
 
-  public ProcessHandler getProcessHandler() {
-    return (ProcessHandler)getSource();
-  }
+    public ProcessEvent(ProcessHandler source, int exitCode) {
+        super(source);
+        myExitCode = exitCode;
+    }
 
-  public String getText() {
-    return myText;
-  }
+    public ProcessHandler getProcessHandler() {
+        return (ProcessHandler) getSource();
+    }
 
-  public int getExitCode() {
-    return myExitCode;
-  }
+    public LocalizeValue getText() {
+        return myText;
+    }
+
+    public int getExitCode() {
+        return myExitCode;
+    }
 }

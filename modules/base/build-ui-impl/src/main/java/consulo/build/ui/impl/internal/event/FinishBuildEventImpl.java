@@ -15,9 +15,9 @@
  */
 package consulo.build.ui.impl.internal.event;
 
-import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FinishBuildEvent;
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,7 +28,7 @@ public class FinishBuildEventImpl extends FinishEventImpl implements FinishBuild
         Object eventId,
         @Nullable Object parentId,
         long eventTime,
-        @BuildEventsNls.Message String message,
+        LocalizeValue message,
         EventResult result
     ) {
         super(eventId, parentId, eventTime, message, result);

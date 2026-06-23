@@ -15,6 +15,7 @@
  */
 package consulo.compiler;
 
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 
@@ -26,7 +27,7 @@ import java.util.Collections;
 /**
  * Describes a single compiler message that is shown in compiler message view.
  *
- * @see CompileContext#addMessage(CompilerMessageCategory, String, String, int, int)
+ * @see CompileContext#newMessage(CompilerMessageCategory, LocalizeValue)
  */
 public interface CompilerMessage {
     /**
@@ -46,7 +47,7 @@ public interface CompilerMessage {
      *
      * @return message text
      */
-    String getMessage();
+    LocalizeValue getMessage();
 
     /**
      * Returns the navigatable object allowing to navigate to the message source.
@@ -76,8 +77,14 @@ public interface CompilerMessage {
      */
     String getRenderTextPrefix();
 
+    /**
+     * @return a line number, -1 if not available.
+     */
     int getLine();
 
+    /**
+     * @return a column number, -1 if not available.
+     */
     int getColumn();
 
     /**

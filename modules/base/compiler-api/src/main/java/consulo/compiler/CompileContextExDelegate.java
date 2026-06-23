@@ -82,23 +82,9 @@ public class CompileContextExDelegate implements CompileContextEx {
         myDelegate.addScope(additionalScope);
     }
 
-    @Deprecated
     @Override
-    public void addMessage(CompilerMessageCategory category, String message, @Nullable String url, int lineNum, int columnNum) {
-        myDelegate.addMessage(category, message, url, lineNum, columnNum);
-    }
-
-    @Deprecated
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        @Nullable String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
-        myDelegate.addMessage(category, message, url, lineNum, columnNum, navigatable);
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return myDelegate.newMessage(category, message);
     }
 
     @Override
@@ -106,7 +92,6 @@ public class CompileContextExDelegate implements CompileContextEx {
         return myDelegate.getMessageCount(category);
     }
 
-    
     @Override
     public ProgressIndicator getProgressIndicator() {
         return myDelegate.getProgressIndicator();
@@ -119,11 +104,6 @@ public class CompileContextExDelegate implements CompileContextEx {
 
     @Override
     public void requestRebuildNextTime(LocalizeValue message) {
-        myDelegate.requestRebuildNextTime(message);
-    }
-
-    @Override
-    public void requestRebuildNextTime(String message) {
         myDelegate.requestRebuildNextTime(message);
     }
 

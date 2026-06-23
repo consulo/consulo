@@ -278,7 +278,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
 
             @Override
             public void onTextAvailable(ProcessEvent event, Key outputType) {
-                String text = StringUtil.notNullize(event.getText());
+                String text = event.getText().get();
                 if (outputType == ProcessOutputTypes.STDERR) {
                     LOG.warn(text.trim());
                 }
@@ -291,8 +291,8 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
                 synchronized (myProcMap) {
                     Info o = myProcMap.get(key);
                     logText(key.second, event, outputType, o);
-                    if (o instanceof PendingInfo) {
-                        info = (PendingInfo) o;
+                    if (o instanceof PendingInfo pendingInfo) {
+                        info = pendingInfo;
                         if (outputType == ProcessOutputTypes.STDOUT) {
                             String prefix = "Port/ID:";
                             if (text.startsWith(prefix)) {
@@ -341,8 +341,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
                 info = null;
             }
         }
-        if (info instanceof PendingInfo) {
-            PendingInfo pendingInfo = (PendingInfo) info;
+        if (info instanceof PendingInfo pendingInfo) {
             if (pendingInfo.stderr.length() > 0 || pendingInfo.ref.isNull()) {
                 if (errorMessage != null) {
                     pendingInfo.stderr.append(errorMessage);
@@ -385,5 +384,4 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
             this.name = name;
         }
     }
-
 }

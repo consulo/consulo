@@ -17,13 +17,13 @@ package consulo.compiler.impl.internal;
 
 import consulo.application.ReadAction;
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.FileOrDirectoryCopyPackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -67,12 +67,8 @@ public class ArtifactCompilerUtil {
         final ZipFile jarFile = new ZipFile(new File(FileUtil.toSystemDependentName(jarPath)));
         final ZipEntry entry = jarFile.getEntry(pathInJar);
         if (entry == null) {
-            context.addMessage(
-                CompilerMessageCategory.ERROR,
-                "Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found",
-                null,
-                -1,
-                -1
+            context.newError(
+                LocalizeValue.localizeTODO("Cannot extract '" + pathInJar + "' from '" + jarFile.getName() + "': entry not found")
             );
             return Pair.empty();
         }

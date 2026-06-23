@@ -45,6 +45,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -718,13 +719,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 throw e;
             }
             catch (Exception e) {
-                context.addMessage(
-                    CompilerMessageCategory.ERROR,
-                    CompilerLocalize.compilerErrorException(e.getMessage()).get(),
-                    null,
-                    -1,
-                    -1
-                );
+                context.newError(CompilerLocalize.compilerErrorException(StringUtil.notNullize(e.getMessage()))).add();
                 LOG.error(e);
             }
         }

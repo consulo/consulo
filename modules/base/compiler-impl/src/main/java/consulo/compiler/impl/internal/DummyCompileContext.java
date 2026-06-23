@@ -22,8 +22,8 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,23 +42,22 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
+    public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
+        return new AbstractCompileMessageBuilder(category, message) {
+            @Override
+            public MessageBuilder url(String url) {
+                return this;
+            }
+
+            @Override
+            public void add() {
+            }
+        };
+    }
+
+    @Override
     public Project getProject() {
         return null;
-    }
-
-    @Override
-    public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
-    }
-
-    @Override
-    public void addMessage(
-        CompilerMessageCategory category,
-        String message,
-        @Nullable String url,
-        int lineNum,
-        int columnNum,
-        Navigatable navigatable
-    ) {
     }
 
     @Override
@@ -77,7 +76,7 @@ public class DummyCompileContext implements CompileContext {
     }
 
     @Override
-    public void requestRebuildNextTime(String message) {
+    public void requestRebuildNextTime(LocalizeValue message) {
     }
 
     @Override

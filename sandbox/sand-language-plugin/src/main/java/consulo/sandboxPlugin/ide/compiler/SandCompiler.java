@@ -20,6 +20,7 @@ import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.TranslatingCompiler;
+import consulo.localize.LocalizeValue;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
@@ -45,7 +46,7 @@ public class SandCompiler implements TranslatingCompiler {
     SandBundleType sandBundleType = SandBundleType.INSTANCE.get();
 
     try {
-      context.addMessage(CompilerMessageCategory.WARNING, "my warning", null, -1, -1);
+      context.newWarning(LocalizeValue.of("my warning")).add();
       Thread.sleep(5000L);
     }
     catch (InterruptedException e) {
@@ -53,7 +54,7 @@ public class SandCompiler implements TranslatingCompiler {
     }
 
     if (myAddError) {
-      context.addMessage(CompilerMessageCategory.ERROR, "my error", null, -1, -1);
+      context.newError(LocalizeValue.of("my error")).add();
     }
     myAddError = !myAddError;
   }

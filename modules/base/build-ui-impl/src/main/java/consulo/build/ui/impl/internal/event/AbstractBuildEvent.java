@@ -25,10 +25,6 @@ public abstract class AbstractBuildEvent implements BuildEvent {
         myMessage = message;
     }
 
-    public AbstractBuildEvent(Object eventId, @Nullable Object parentId, long eventTime, @BuildEventsNls.Message String message) {
-        this(eventId, parentId, eventTime, LocalizeValue.ofNullable(message));
-    }
-
     @Override
     public Object getId() {
         return myEventId;

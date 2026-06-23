@@ -15,6 +15,7 @@
  */
 package consulo.process.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
@@ -39,7 +40,7 @@ public class CapturingProcessAdapter implements ProcessListener {
     addToOutput(event.getText(), outputType);
   }
 
-  protected void addToOutput(String text, Key outputType) {
+  protected void addToOutput(LocalizeValue text, Key outputType) {
     if (outputType == ProcessOutputTypes.STDOUT) {
       myOutput.appendStdout(text);
     }

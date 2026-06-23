@@ -2,6 +2,7 @@
 package consulo.execution.test.sm.runner;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 
 /**
@@ -10,7 +11,7 @@ import consulo.util.dataholder.Key;
 public interface ProcessOutputConsumer extends Disposable {
     void setProcessor(GeneralTestEventsProcessor processor);
 
-    void process(String text, Key outputType);
+    void process(LocalizeValue text, Key outputType);
 
     /**
      * @deprecated use {@link #flushBufferOnProcessTermination(int)}

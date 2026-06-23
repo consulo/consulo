@@ -20,6 +20,7 @@ import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.*;
 import consulo.build.ui.issue.BuildIssue;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.NotificationGroup;
 import jakarta.inject.Singleton;
@@ -65,15 +66,21 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
         Object parentId,
         MessageEvent.Kind kind,
         NotificationGroup group,
-        String message,
-        @Nullable String detailedMessage,
+        LocalizeValue message,
+        LocalizeValue detailedMessage,
         FilePosition filePosition
     ) {
         return new FileMessageEventImpl(parentId, kind, group, message, detailedMessage, filePosition);
     }
 
     @Override
-    public FinishEvent createFinishEvent(Object eventId, @Nullable Object parentId, long eventTime, String message, EventResult result) {
+    public FinishEvent createFinishEvent(
+        Object eventId,
+        @Nullable Object parentId,
+        long eventTime,
+        LocalizeValue message,
+        EventResult result
+    ) {
         return new FinishEventImpl(eventId, parentId, eventTime, message, result);
     }
 
@@ -82,7 +89,7 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
         Object eventId,
         @Nullable Object parentId,
         long eventTime,
-        String message,
+        LocalizeValue message,
         EventResult result
     ) {
         return new FinishBuildEventImpl(eventId, parentId, eventTime, message, result);
@@ -93,15 +100,15 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
         Object parentId,
         MessageEvent.Kind kind,
         NotificationGroup group,
-        String message,
-        @Nullable String detailedMessage,
+        LocalizeValue message,
+        LocalizeValue detailedMessage,
         @Nullable Navigatable navigatable
     ) {
         return new MessageEventImpl(parentId, kind, group, message, detailedMessage, navigatable);
     }
 
     @Override
-    public StartEvent createStartEvent(Object eventId, @Nullable Object parentId, long eventTime, String message) {
+    public StartEvent createStartEvent(Object eventId, @Nullable Object parentId, long eventTime, LocalizeValue message) {
         return new StartEventImpl(eventId, parentId, eventTime, message);
     }
 
@@ -111,12 +118,12 @@ public class BuildEventFactoryImpl implements BuildEventFactory {
     }
 
     @Override
-    public StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, String message) {
+    public StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, LocalizeValue message) {
         return new StartBuildEventImpl(descriptor, message);
     }
 
     @Override
-    public OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, String message, boolean stdOut) {
+    public OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, LocalizeValue message, boolean stdOut) {
         return new OutputBuildEventImpl(eventId, parentId, message, stdOut);
     }
 }

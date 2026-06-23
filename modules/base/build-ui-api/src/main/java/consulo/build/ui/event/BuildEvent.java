@@ -51,7 +51,7 @@ public interface BuildEvent {
      */
     LocalizeValue getMessage();
 
-    LocalizeValue getHint();
-
     LocalizeValue getDescription();
+
+    LocalizeValue getHint();
 }
