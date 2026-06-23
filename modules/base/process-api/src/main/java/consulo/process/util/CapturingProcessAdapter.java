@@ -40,7 +40,7 @@ public class CapturingProcessAdapter implements ProcessListener {
     addToOutput(event.getText(), outputType);
   }
 
-  protected void addToOutput(LocalizeValue text, Key outputType) {
+  protected void addToOutput(String text, Key outputType) {
     if (outputType == ProcessOutputTypes.STDOUT) {
       myOutput.appendStdout(text);
     }

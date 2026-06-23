@@ -216,9 +216,9 @@ public interface BuildEventFactory {
 
     StartBuildEvent createStartBuildEvent(BuildDescriptor descriptor, LocalizeValue message);
 
-    default OutputBuildEvent createOutputBuildEvent(@Nullable Object parentId, LocalizeValue message, boolean stdOut) {
+    default OutputBuildEvent createOutputBuildEvent(@Nullable Object parentId, String message, boolean stdOut) {
         return createOutputBuildEvent(new Object(), parentId, message, stdOut);
     }
 
-    OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, LocalizeValue message, boolean stdOut);
+    OutputBuildEvent createOutputBuildEvent(Object eventId, @Nullable Object parentId, String message, boolean stdOut);
 }

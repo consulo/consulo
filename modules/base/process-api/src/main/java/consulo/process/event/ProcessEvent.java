@@ -15,27 +15,21 @@
  */
 package consulo.process.event;
 
-import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 
 import java.util.EventObject;
 
 public class ProcessEvent extends EventObject {
-    private LocalizeValue myText = LocalizeValue.empty();
+    private String myText;
     private int myExitCode;
 
     public ProcessEvent(ProcessHandler source) {
         super(source);
     }
 
-    public ProcessEvent(ProcessHandler source, LocalizeValue text) {
-        super(source);
-        myText = text;
-    }
-
     public ProcessEvent(ProcessHandler source, String text) {
         super(source);
-        myText = LocalizeValue.of(text);
+        myText = text;
     }
 
     public ProcessEvent(ProcessHandler source, int exitCode) {
@@ -47,7 +41,7 @@ public class ProcessEvent extends EventObject {
         return (ProcessHandler) getSource();
     }
 
-    public LocalizeValue getText() {
+    public String getText() {
         return myText;
     }
 

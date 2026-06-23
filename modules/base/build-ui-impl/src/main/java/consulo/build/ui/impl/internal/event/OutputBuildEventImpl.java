@@ -25,12 +25,12 @@ import org.jspecify.annotations.Nullable;
 public class OutputBuildEventImpl extends AbstractBuildEvent implements OutputBuildEvent {
     private final boolean myStdOut;
 
-    public OutputBuildEventImpl(@Nullable Object parentId, LocalizeValue message, boolean stdOut) {
+    public OutputBuildEventImpl(@Nullable Object parentId, String message, boolean stdOut) {
         this(new Object(), parentId, message, stdOut);
     }
 
-    public OutputBuildEventImpl(Object eventId, @Nullable Object parentId, LocalizeValue message, boolean stdOut) {
-        super(eventId, parentId, -1, message);
+    public OutputBuildEventImpl(Object eventId, @Nullable Object parentId, String message, boolean stdOut) {
+        super(eventId, parentId, -1, LocalizeValue.of(message));
         myStdOut = stdOut;
     }
 

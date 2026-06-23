@@ -80,9 +80,9 @@ public final class ScriptRunnerUtil {
             @Override
             public void onTextAvailable(ProcessEvent event, Key outputType) {
                 if (outputTypeFilter.test(outputType)) {
-                    LocalizeValue text = event.getText();
-                    outputBuilder.append(text.get());
-                    LOG.debug(text.get());
+                    String text = event.getText();
+                    outputBuilder.append(text);
+                    LOG.debug(text);
                 }
             }
         });
@@ -131,7 +131,7 @@ public final class ScriptRunnerUtil {
             processHandler.addProcessListener(new ProcessListener() {
                 @Override
                 public void onTextAvailable(ProcessEvent event, Key outputType) {
-                    LOG.debug(outputType + ": " + event.getText().get());
+                    LOG.debug(outputType + ": " + event.getText());
                 }
             });
         }
@@ -192,11 +192,11 @@ public final class ScriptRunnerUtil {
 
         @Override
         public void onTextAvailable(ProcessEvent event, Key outputType) {
-            LocalizeValue text = event.getText();
+            String text = event.getText();
             if (myScriptOutputType.test(outputType)) {
-                myFilteredOutput.append(text.get());
+                myFilteredOutput.append(text);
             }
-            myMergedOutput.append(text.get());
+            myMergedOutput.append(text);
         }
     }
 

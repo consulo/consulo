@@ -15,10 +15,8 @@
  */
 package consulo.process.util;
 
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -27,109 +25,101 @@ import java.util.List;
  * @author yole
  */
 public class ProcessOutput {
-  private final StringBuilder myStdoutBuilder = new StringBuilder();
-  private final StringBuilder myStderrBuilder = new StringBuilder();
-  private @Nullable Integer myExitCode;
-  private boolean myTimeout;
-  private boolean myCancelled;
+    private final StringBuilder myStdoutBuilder = new StringBuilder();
+    private final StringBuilder myStderrBuilder = new StringBuilder();
+    private @Nullable Integer myExitCode;
+    private boolean myTimeout;
+    private boolean myCancelled;
 
-  public ProcessOutput() {
-  }
-
-  public ProcessOutput(int exitCode) {
-    myExitCode = exitCode;
-  }
-
-  public void appendStdout(LocalizeValue text) {
-    myStdoutBuilder.append(text.get());
-  }
-
-  public void appendStdout(@Nullable String text) {
-    myStdoutBuilder.append(text);
-  }
-
-  public void appendStderr(LocalizeValue text) {
-    myStderrBuilder.append(text.get());
-  }
-
-  public void appendStderr(@Nullable String text) {
-    myStderrBuilder.append(text);
-  }
-
-  public String getStdout() {
-    return myStdoutBuilder.toString();
-  }
-
-  public String getStderr() {
-    return myStderrBuilder.toString();
-  }
-
-  public List<String> getStdoutLines() {
-    return getStdoutLines(true);
-  }
-
-  public List<String> getStdoutLines(boolean excludeEmptyLines) {
-    return splitLines(getStdout(), excludeEmptyLines);
-  }
-
-  public List<String> getStderrLines() {
-    return getStderrLines(true);
-  }
-
-  public List<String> getStderrLines(boolean excludeEmptyLines) {
-    return splitLines(getStderr(), excludeEmptyLines);
-  }
-
-  private static List<String> splitLines(String s, boolean excludeEmptyLines) {
-    String converted = StringUtil.convertLineSeparators(s);
-    return StringUtil.split(converted, "\n", true, excludeEmptyLines);
-  }
-
-  /**
-   * If exit code is nonzero or the process timed out, logs stderr and exit code and returns false,
-   * else just returns true.
-   *
-   * @param logger where to put error information
-   * @return true iff exit code is zero
-   */
-  public boolean checkSuccess(Logger logger) {
-    if (getExitCode() != 0 || isTimeout()) {
-      logger.info(getStderr() + (isTimeout() ? "\nTimed out" : "\nExit code " + getExitCode()));
-      return false;
+    public ProcessOutput() {
     }
-    return true;
-  }
 
-  public void setExitCode(int exitCode) {
-    myExitCode = exitCode;
-  }
+    public ProcessOutput(int exitCode) {
+        myExitCode = exitCode;
+    }
 
-  public int getExitCode() {
-    Integer code = myExitCode;
-    return code == null ? -1 : code;
-  }
+    public void appendStdout(@Nullable String text) {
+        myStdoutBuilder.append(text);
+    }
 
-  /**
-   * @return false if exit code wasn't set,
-   * for example, when our CapturingProcessHandler.runProcess() is interrupted)
-   */
-  public boolean isExitCodeSet() {
-    return myExitCode != null;
-  }
+    public void appendStderr(@Nullable String text) {
+        myStderrBuilder.append(text);
+    }
 
-  public void setTimeout() {
-    myTimeout = true;
-  }
+    public String getStdout() {
+        return myStdoutBuilder.toString();
+    }
 
-  public boolean isTimeout() {
-    return myTimeout;
-  }
+    public String getStderr() {
+        return myStderrBuilder.toString();
+    }
 
-  public void setCancelled() {
-    myCancelled = true;
-  }
+    public List<String> getStdoutLines() {
+        return getStdoutLines(true);
+    }
 
-  public boolean isCancelled() {
-    return myCancelled;
-  }
+    public List<String> getStdoutLines(boolean excludeEmptyLines) {
+        return splitLines(getStdout(), excludeEmptyLines);
+    }
+
+    public List<String> getStderrLines() {
+        return getStderrLines(true);
+    }
+
+    public List<String> getStderrLines(boolean excludeEmptyLines) {
+        return splitLines(getStderr(), excludeEmptyLines);
+    }
+
+    private static List<String> splitLines(String s, boolean excludeEmptyLines) {
+        String converted = StringUtil.convertLineSeparators(s);
+        return StringUtil.split(converted, "\n", true, excludeEmptyLines);
+    }
+
+    /**
+     * If exit code is nonzero or the process timed out, logs stderr and exit code and returns false,
+     * else just returns true.
+     *
+     * @param logger where to put error information
+     * @return true iff exit code is zero
+     */
+    public boolean checkSuccess(Logger logger) {
+        if (getExitCode() != 0 || isTimeout()) {
+            logger.info(getStderr() + (isTimeout() ? "\nTimed out" : "\nExit code " + getExitCode()));
+            return false;
+        }
+        return true;
+    }
+
+    public void setExitCode(int exitCode) {
+        myExitCode = exitCode;
+    }
+
+    public int getExitCode() {
+        Integer code = myExitCode;
+        return code == null ? -1 : code;
+    }
+
+    /**
+     * @return false if exit code wasn't set,
+     * for example, when our CapturingProcessHandler.runProcess() is interrupted)
+     */
+    public boolean isExitCodeSet() {
+        return myExitCode != null;
+    }
+
+    public void setTimeout() {
+        myTimeout = true;
+    }
+
+    public boolean isTimeout() {
+        return myTimeout;
+    }
+
+    public void setCancelled() {
+        myCancelled = true;
+    }
+
+    public boolean isCancelled() {
+        return myCancelled;
+    }
 }
