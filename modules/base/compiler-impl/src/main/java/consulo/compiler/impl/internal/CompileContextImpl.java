@@ -32,7 +32,6 @@ import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.util.collection.OrderedSet;
@@ -55,41 +54,45 @@ import java.util.function.Supplier;
  * @since 2003-01-21
  */
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
-    private class MyMessageBuilder implements MessageBuilder {
-        private final CompilerMessageCategory myCategory;
-        private final LocalizeValue myMessage;
-
-        private @Nullable Navigatable myNavigatable = null;
-        private @Nullable VirtualFile myFile = null;
-        private int myRow = -1;
-        private int myColumn = -1;
-
+    private class MyMessageBuilder extends AbstractCompileMessageBuilder {
         private MyMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
-            myCategory = category;
-            myMessage = message;
+            super(category, message);
         }
 
         @Override
         public MessageBuilder url(String url) {
-            myFile = findPresentableFileForMessage(url);
-            return this;
+            return optionalFile(findPresentableFileForMessage(url));
         }
 
-        @Override
-        public MessageBuilder optionalUrl(@Nullable String url) {
-            return url == null ? this : url(url);
+        private @Nullable VirtualFile findPresentableFileForMessage(String url) {
+            VirtualFile file = findFileByUrl(url);
+            if (file == null) {
+                return null;
+            }
+            return myProject.getApplication().runReadAction((Supplier<VirtualFile>)() -> {
+                if (file.isValid()) {
+                    for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
+                        VirtualFile root = entry.getKey();
+                        if (VirtualFileUtil.isAncestor(root, file, false)) {
+                            Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
+                            VirtualFile presentableFile =
+                                pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
+                            return presentableFile != null ? presentableFile : file;
+                        }
+                    }
+                }
+                return file;
+            });
         }
 
-        @Override
-        public MessageBuilder position(int row, int column) {
-            myRow = row;
-            return this;
-        }
-
-        @Override
-        public MessageBuilder navigatable(Navigatable navigatable) {
-            myNavigatable = navigatable;
-            return this;
+        private static @Nullable VirtualFile findFileByUrl(String url) {
+            VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+            VirtualFile file = virtualFileManager.findFileByUrl(url);
+            if (file == null) {
+                // groovy stubs may be placed in completely random directories which aren't refreshed automatically
+                return virtualFileManager.refreshAndFindFileByUrl(url);
+            }
+            return file;
         }
 
         @Override
@@ -224,40 +227,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     @Override
     public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
         return new MyMessageBuilder(category, message);
-    }
-
-    private @Nullable VirtualFile findPresentableFileForMessage(@Nullable String url) {
-        VirtualFile file = findFileByUrl(url);
-        if (file == null) {
-            return null;
-        }
-        return myProject.getApplication().runReadAction((Supplier<VirtualFile>)() -> {
-            if (file.isValid()) {
-                for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
-                    VirtualFile root = entry.getKey();
-                    if (VirtualFileUtil.isAncestor(root, file, false)) {
-                        Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
-                        VirtualFile presentableFile =
-                            pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
-                        return presentableFile != null ? presentableFile : file;
-                    }
-                }
-            }
-            return file;
-        });
-    }
-
-    private static @Nullable VirtualFile findFileByUrl(@Nullable String url) {
-        if (url == null) {
-            return null;
-        }
-        VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-        VirtualFile file = virtualFileManager.findFileByUrl(url);
-        if (file == null) {
-            // groovy stubs may be placed in completely random directories which aren't refreshed automatically
-            return virtualFileManager.refreshAndFindFileByUrl(url);
-        }
-        return file;
     }
 
     @Override

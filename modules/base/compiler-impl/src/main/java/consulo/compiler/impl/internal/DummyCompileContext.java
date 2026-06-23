@@ -24,7 +24,6 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -33,19 +32,13 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class DummyCompileContext implements CompileContext {
-    private class MyMessageBuilder implements MessageBuilder {
+    private class MyMessageBuilder extends AbstractCompileMessageBuilder {
+        private MyMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
+            super(category, message);
+        }
+
         @Override
         public MessageBuilder url(String url) {
-            return this;
-        }
-
-        @Override
-        public MessageBuilder position(int row, int column) {
-            return this;
-        }
-
-        @Override
-        public MessageBuilder navigatable(Navigatable navigatable) {
             return this;
         }
 
@@ -65,7 +58,7 @@ public class DummyCompileContext implements CompileContext {
 
     @Override
     public MessageBuilder newMessage(CompilerMessageCategory category, LocalizeValue message) {
-        return new MyMessageBuilder();
+        return new MyMessageBuilder(category, message);
     }
 
     @Override
