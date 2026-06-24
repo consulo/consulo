@@ -15,35 +15,35 @@
  */
 package consulo.ide.impl.idea.designer.propertyTable;
 
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.ide.impl.idea.designer.model.ErrorInfo;
 import consulo.ide.impl.idea.designer.model.PropertiesContainer;
 import consulo.ide.impl.idea.designer.model.Property;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
 import consulo.ide.impl.idea.designer.propertyTable.renderers.LabelPropertyRenderer;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.logging.Logger;
 import consulo.ui.ex.Cell;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.util.lang.function.PairFunction;
-import consulo.util.lang.function.ThrowableRunnable;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.ui.ex.util.TextAttributesUtil;
-import consulo.logging.Logger;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
-
+import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.PairFunction;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.TableUI;
@@ -58,8 +58,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author Alexander Lobas
