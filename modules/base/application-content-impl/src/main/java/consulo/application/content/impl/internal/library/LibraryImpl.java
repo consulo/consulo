@@ -107,13 +107,12 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     String typeString = element.getAttributeValue(LIBRARY_TYPE_ATTR);
     LibraryKind kind = LibraryKindRegistry.getInstance().findKindById(typeString);
     if (kind != null && !(kind instanceof PersistentLibraryKind<?>)) {
-      LOG.error("Cannot load non-persistable library kind: " + typeString);
+      LOG.error("Cannot load non-persistent library kind: " + typeString);
       return null;
     }
     return (PersistentLibraryKind<?>)kind;
   }
 
-  
   private Collection<OrderRootType> getAllRootTypes() {
     return OrderRootType.getAllTypes();
   }
@@ -171,7 +170,6 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     return new LibraryImpl(this, this, myLibraryOwner);
   }
 
-  
   public Library cloneLibrary(LibraryOwner libraryOwner) {
     LOG.assertTrue(myLibraryTable == null);
     return new LibraryImpl(this, null, libraryOwner);
@@ -207,7 +205,6 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     return this;
   }
 
-  
   private VirtualFilePointerListener getListener() {
     return myLibraryOwner.getListener();
   }
@@ -251,7 +248,6 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     }
   }
 
-  
   private static String getJarDirectoryRootType(@Nullable String type) {
     return type != null ? type : BinariesOrderRootType.ID;
   }
@@ -291,7 +287,6 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     }
   }
 
-  
   private VirtualFilePointerContainer getOrCreateExcludedRoots() {
     VirtualFilePointerContainer excludedRoots = myExcludedRoots;
     if (excludedRoots == null) {
@@ -401,13 +396,11 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     return false;
   }
 
-  
   @Override
   public String[] getExcludedRootUrls() {
     return myExcludedRoots != null ? myExcludedRoots.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  
   @Override
   public VirtualFile[] getExcludedRoots() {
     return myExcludedRoots != null ? myExcludedRoots.getFiles() : VirtualFile.EMPTY_ARRAY;
@@ -642,7 +635,6 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     return result;
   }
 
-  
   @Override
   public String toString() {
     return "Library: name:" + myName + "; roots:" + myRoots.values();

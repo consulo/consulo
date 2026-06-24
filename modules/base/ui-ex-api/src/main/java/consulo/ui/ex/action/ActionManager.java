@@ -66,7 +66,7 @@ public abstract class ActionManager {
      *
      * @param actionId Id of the registered action
      * @return Action associated with the specified actionId, <code>null</code> if
-     * there is no actions associated with the speicified actionId
+     * there is no actions associated with the specified actionId
      * @throws java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
      * @see IdeActions
      */

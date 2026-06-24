@@ -53,7 +53,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 24/11/2021
+ * @since 2021-11-24
  */
 public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtmlViewImpl.MyHtmlPanel> implements HtmlView {
     private static final int FOCUS_ELEMENT_DY = 100;
@@ -66,11 +66,10 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         }
 
         @Override
-        protected HtmlBlockPanel createHtmlBlockPanel(UserAgentContext ucontext, HtmlRendererContext rcontext) {
-            return new ScrollPreservingHtmlBlockPanel(JBColor.WHITE, true, ucontext, rcontext, this);
+        protected HtmlBlockPanel createHtmlBlockPanel(UserAgentContext uContext, HtmlRendererContext rContext) {
+            return new ScrollPreservingHtmlBlockPanel(JBColor.WHITE, true, uContext, rContext, this);
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopAWTHtmlViewImpl.this;
@@ -83,7 +82,6 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     }
 
     @Override
-    
     public CompletableFuture<?> render(RenderData renderData) {
         CompletableFuture<?> future = new CompletableFuture<>();
 

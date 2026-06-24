@@ -82,11 +82,11 @@ public class mxGraphMlUtils {
   }
 
   /**
-   * Checks if the childrens of element has a Node with name = tag.
+   * Checks if there's a child Node with name = tag.
    *
    * @param element Element
    * @param tag     Name of the node.
-   * @return Returns <code>true</code> if the childrens of element has a Node with name = tag.
+   * @return <code>true</code> if there's a child Node with name = tag.
    */
   public static boolean childsHasTag(Element element, String tag) {
     NodeList nl = element.getChildNodes();
@@ -104,7 +104,7 @@ public class mxGraphMlUtils {
   }
 
   /**
-   * Returns the first Element that has name = tag in the childrens of element.
+   * Returns the first child Element that has name = tag.
    *
    * @param element Element
    * @param tag     Name of the Element
@@ -130,8 +130,7 @@ public class mxGraphMlUtils {
   }
 
   /**
-   * Returns a list with the elements included in the childrens of element
-   * that have name = tag.
+   * Returns a list of child elements with name = tag.
    *
    * @param element Element
    * @param tag     name of the Element.
@@ -175,7 +174,7 @@ public class mxGraphMlUtils {
    * Create a style map from a String with style definitions.
    *
    * @param style Definition of the style.
-   * @param asig  Asignation simbol used in 'style'.
+   * @param asig  Assignation symbol used in 'style'.
    * @return Map with the style properties.
    */
   public static Map<String, Object> getStyleMap(String style, String asig) {

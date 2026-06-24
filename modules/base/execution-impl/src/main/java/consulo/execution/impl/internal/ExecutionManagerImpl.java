@@ -416,8 +416,8 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     @Override
-    public boolean isStarting(String exectutorId, String runnerId) {
-        return myInProgress.contains(new InProgressEntry(exectutorId, runnerId));
+    public boolean isStarting(String executorId, String runnerId) {
+        return myInProgress.contains(new InProgressEntry(executorId, runnerId));
     }
 
     @Override

@@ -57,17 +57,17 @@ public class DesktopTextBoxWithExtensions {
             public void setForegroundColor(ColorValue foregroundColor) {
                 myForegroundColor = foregroundColor;
 
-                updateForegroudColor();
+                updateForegroundColor();
             }
 
             @Override
             public void updateUI() {
                 super.updateUI();
 
-                updateForegroudColor();
+                updateForegroundColor();
             }
 
-            private void updateForegroudColor() {
+            private void updateForegroundColor() {
                 if (myForegroundColor == null) {
                     setForeground(null);
                 }
@@ -76,9 +76,8 @@ public class DesktopTextBoxWithExtensions {
                 }
             }
 
-            
             @Override
-            public consulo.ui.Component toUIComponent() {
+            public Component toUIComponent() {
                 return Supported.this;
             }
         }
@@ -123,7 +122,6 @@ public class DesktopTextBoxWithExtensions {
             return null;
         }
 
-        
         @Override
         public JTextField getTextField() {
             return toAWTComponent();
@@ -176,7 +174,6 @@ public class DesktopTextBoxWithExtensions {
             };
         }
 
-        
         @Override
         public TextBoxWithExtensions setExtensions(Extension... extensions) {
             List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(extensions.length);
@@ -190,7 +187,6 @@ public class DesktopTextBoxWithExtensions {
             return this;
         }
 
-        
         @Override
         public TextBoxWithExtensions addFirstExtension(Extension extension) {
             List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(toAWTComponent().getExtensions());
@@ -201,7 +197,6 @@ public class DesktopTextBoxWithExtensions {
             return this;
         }
 
-        
         @Override
         public TextBoxWithExtensions addLastExtension(Extension extension) {
             List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>();

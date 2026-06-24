@@ -88,13 +88,13 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         private Dimension calcSize(Container target, Function<Component, Dimension> dimensionSupplier) {
             synchronized (target.getTreeLock()) {
                 Dimension dim = new Dimension(0, 0);
-                int nmembers = target.getComponentCount();
+                int nMembers = target.getComponentCount();
                 boolean firstVisibleComponent = true;
                 boolean useBaseline = getAlignOnBaseline();
                 int maxAscent = 0;
                 int maxDescent = 0;
 
-                for (int i = 0; i < nmembers; i++) {
+                for (int i = 0; i < nMembers; i++) {
                     Component m = target.getComponent(i);
                     if (m.isVisible()) {
                         Dimension d = dimensionSupplier.apply(m);

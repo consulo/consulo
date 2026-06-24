@@ -929,7 +929,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
         state.g.fill(currentPath);
       }
 
-      // FIXME: Overlaps with fill in composide mode
+      // FIXME: Overlaps with fill in composite mode
       if (stroked && state.strokeColor != null) {
         state.g.draw(currentPath);
       }
@@ -994,13 +994,13 @@ public class DesktopCanvas2DImpl implements Canvas2D {
       join = BasicStroke.JOIN_BEVEL;
     }
 
-    float miterlimit = (float)state.miterLimit;
+    float miterLimit = (float)state.miterLimit;
 
     if (lastStroke == null ||
         lastStrokeWidth != sw ||
         lastCap != cap ||
         lastJoin != join ||
-        lastMiterLimit != miterlimit ||
+        lastMiterLimit != miterLimit ||
         lastDashed != state.dashed ||
         (state.dashed && lastDashPattern != state.dashPattern)) {
       float[] dash = null;
@@ -1013,11 +1013,11 @@ public class DesktopCanvas2DImpl implements Canvas2D {
         }
       }
 
-      lastStroke = new BasicStroke(sw, cap, join, miterlimit, dash, 0);
+      lastStroke = new BasicStroke(sw, cap, join, miterLimit, dash, 0);
       lastStrokeWidth = sw;
       lastCap = cap;
       lastJoin = join;
-      lastMiterLimit = miterlimit;
+      lastMiterLimit = miterLimit;
       lastDashed = state.dashed;
       lastDashPattern = state.dashPattern;
     }

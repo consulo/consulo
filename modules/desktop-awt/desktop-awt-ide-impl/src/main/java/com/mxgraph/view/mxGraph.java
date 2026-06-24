@@ -88,7 +88,7 @@ import java.util.*;
  * removed.
  * <p/>
  * mxEvent.SPLIT_EDGE fires between begin- and endUpdate in splitEdge. The
- * <code>edge</code> property contains the edge to be splitted, the
+ * <code>edge</code> property contains the edge to be split, the
  * <code>cells</code>, <code>newEdge</code>, <code>dx</code> and
  * <code>dy</code> properties contain the respective arguments that were passed
  * to splitEdge.

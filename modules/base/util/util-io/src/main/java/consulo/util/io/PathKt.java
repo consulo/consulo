@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * FIXME need reorganizate it
+ * FIXME need reorganize it
  *
  * from kotlin
  */

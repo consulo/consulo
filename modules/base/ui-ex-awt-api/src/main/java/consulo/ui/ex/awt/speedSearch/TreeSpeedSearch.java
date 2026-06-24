@@ -41,7 +41,7 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     protected boolean myCanExpand;
 
     private static final Function<TreePath, String> TO_STRING = path -> path.getLastPathComponent().toString();
-    private final Function<? super TreePath, String> myToStringConvertor;
+    private final Function<? super TreePath, String> myToStringConverter;
     public static final Function<TreePath, String> NODE_DESCRIPTOR_TOSTRING = path -> {
         NodeDescriptor descriptor = TreeUtil.getLastUserObject(NodeDescriptor.class, path);
         if (descriptor != null) {
@@ -50,8 +50,8 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
         return TO_STRING.apply(path);
     };
 
-    public TreeSpeedSearch(JTree tree, Function<? super TreePath, String> toStringConvertor) {
-        this(tree, toStringConvertor, false);
+    public TreeSpeedSearch(JTree tree, Function<? super TreePath, String> toStringConverter) {
+        this(tree, toStringConverter, false);
     }
 
     public TreeSpeedSearch(JTree tree) {
@@ -69,7 +69,7 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     public TreeSpeedSearch(JTree tree, Function<? super TreePath, String> toString, boolean canExpand) {
         super(tree);
         setComparator(new SpeedSearchComparator(false, true));
-        myToStringConvertor = toString;
+        myToStringConverter = toString;
         myCanExpand = canExpand;
 
         new MySelectAllAction(tree, this).registerCustomShortcutSet(tree, null);
@@ -110,7 +110,7 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     @Override
     protected String getElementText(Object element) {
         TreePath path = (TreePath) element;
-        String string = myToStringConvertor.apply(path);
+        String string = myToStringConverter.apply(path);
         if (string == null) {
             return TO_STRING.apply(path);
         }

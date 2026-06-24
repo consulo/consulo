@@ -47,6 +47,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.TableUI;
+import javax.swing.plaf.basic.BasicTableUI;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -129,9 +130,9 @@ public abstract class PropertyTable extends JBTable {
     if (columnNames.length != 2) throw new IllegalArgumentException("Invalid number of columns. Expected 2, got " + columnNames.length);
     myColumnNames = columnNames;
 
-    TableColumnModel mmodel = getColumnModel();
+    TableColumnModel mModel = getColumnModel();
     for (int i = 0; i < columnNames.length; i++) {
-      mmodel.getColumn(i).setHeaderValue(columnNames[i]);
+      mModel.getColumn(i).setHeaderValue(columnNames[i]);
     }
   }
 
@@ -848,12 +849,13 @@ public abstract class PropertyTable extends JBTable {
       message = "No message";
     }
 
-    Messages.showMessageDialog(formatErrorGettingValueMesage(message),
+    Messages.showMessageDialog(
+        formatErrorGettingValueMessage(message),
                                "Invalid Input",
                                Messages.getErrorIcon());
   }
 
-  private static String formatErrorGettingValueMesage(String message) {
+  private static String formatErrorGettingValueMessage(String message) {
     return MessageFormat.format("Error setting value: {0}", message);
   }
 
@@ -867,7 +869,7 @@ public abstract class PropertyTable extends JBTable {
    * Reimplementation of LookAndFeel's SelectNextRowAction action.
    * Standard implementation isn't smart enough.
    *
-   * @see javax.swing.plaf.basic.BasicTableUI
+   * @see BasicTableUI
    */
   private class MySelectNextPreviousRowAction extends AbstractAction {
     private boolean selectNext;
@@ -910,7 +912,7 @@ public abstract class PropertyTable extends JBTable {
    * Reimplementation of LookAndFeel's StartEditingAction action.
    * Standard implementation isn't smart enough.
    *
-   * @see javax.swing.plaf.basic.BasicTableUI
+   * @see BasicTableUI
    */
   private class MyStartEditingAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
@@ -1068,7 +1070,6 @@ public abstract class PropertyTable extends JBTable {
     return result;
   }
 
-  
   private static Pair<Integer, Integer> getBeforeIconAndAfterIndents(Property property, Icon icon) {
     int nodeIndent = UIUtil.getTreeLeftChildIndent() + UIUtil.getTreeRightChildIndent();
     int beforeIcon = nodeIndent * getDepth(property);
@@ -1172,7 +1173,6 @@ public abstract class PropertyTable extends JBTable {
     }
   }
 
-  
   protected abstract TextAttributesKey getErrorAttributes(HighlightSeverity severity);
 
   private class PropertyCellRenderer implements TableCellRenderer {
@@ -1310,7 +1310,7 @@ public abstract class PropertyTable extends JBTable {
         }
         catch (Exception e) {
           LOG.debug(e);
-          renderer.append(formatErrorGettingValueMesage(e.getMessage()), SimpleTextAttributes.ERROR_ATTRIBUTES);
+          renderer.append(formatErrorGettingValueMessage(e.getMessage()), SimpleTextAttributes.ERROR_ATTRIBUTES);
           return renderer;
         }
       }
@@ -1329,7 +1329,6 @@ public abstract class PropertyTable extends JBTable {
       super(null, StringUtil.notNullize(name));
     }
 
-    
     @Override
     public PropertyRenderer getRenderer() {
       return new LabelPropertyRenderer(null);

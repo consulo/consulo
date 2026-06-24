@@ -66,7 +66,7 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
 
   /**
    * @param base      the base component that delegates performing of actions to the dependant component
-   * @param dependant the dependant component that should perform suported actions instead of the base component
+   * @param dependant the dependant component that should perform supported actions instead of the base component
    * @param actions   a list of supported actions
    */
   //@ApiStatus.Experimental

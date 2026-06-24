@@ -44,7 +44,7 @@ public abstract class LanguageInjectionSupport {
 
     /**
      * Special hack to {@link PsiLanguageInjectionHost} after
-     * calling {@link #addInjectionInPlace(Language, PsiLanguageInjectionHost)} for hidding information hint
+     * calling {@link #addInjectionInPlace(Language, PsiLanguageInjectionHost)} for hiding information hint
      */
     public static final Key<Predicate<PsiLanguageInjectionHost>> FIX_KEY = Key.create("inject fix key");
 

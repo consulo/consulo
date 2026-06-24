@@ -41,8 +41,8 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   @Nullable Attribute get(String name, Namespace namespace) {
     if (!myNs.equals(namespace)) return null;
     for (int i = 0; i < myNameValues.length; i+=2) {
-      String aname = myNameValues[i];
-      if (aname.equals(name)) {
+      String aName = myNameValues[i];
+      if (aName.equals(name)) {
         return get(i/2);
       }
     }
@@ -52,8 +52,8 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   String getValue(String name, Namespace namespace, String def) {
     if (!myNs.equals(namespace)) return def;
     for (int i = 0; i < myNameValues.length; i+=2) {
-      String aname = myNameValues[i];
-      if (aname.equals(name)) {
+      String aName = myNameValues[i];
+      if (aName.equals(name)) {
         return myNameValues[i + 1];
       }
     }

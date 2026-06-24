@@ -163,16 +163,15 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     }, false, ApplicationManager.getApplication());
   }
 
-  
   @Override
   protected String getName(T value) {
     return myProcessor.getName(value);
   }
 
   @Override
-  public void loadBundledScheme(URL url, ThrowableFunction<Element, T, Throwable> convertor) {
+  public void loadBundledScheme(URL url, ThrowableFunction<Element, T, Throwable> converter) {
     try {
-      addNewScheme(convertor.apply(JDOMUtil.load(URLUtil.openStream(url))), false);
+      addNewScheme(converter.apply(JDOMUtil.load(URLUtil.openStream(url))), false);
     }
     catch (Throwable e) {
       LOG.error("Cannot read scheme from " + url, e);
@@ -184,7 +183,6 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   }
 
   @Override
-  
   public Collection<E> loadSchemes() {
     Map<String, E> result = new LinkedHashMap<String, E>();
     if (myProvider != null && myProvider.isEnabled()) {
@@ -272,7 +270,6 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     }
   }
 
-  
   private String checkFileNameIsFree(String subPath, String schemeName) {
     for (T scheme : mySchemes) {
       if (scheme instanceof ExternalizableScheme) {
@@ -289,7 +286,6 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     return subPath;
   }
 
-  
   private Collection<String> collectAllFileNames() {
     Set<String> result = new HashSet<String>();
     for (T scheme : mySchemes) {

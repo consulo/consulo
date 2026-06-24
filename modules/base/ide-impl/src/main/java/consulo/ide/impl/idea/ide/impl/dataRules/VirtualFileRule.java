@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 public final class VirtualFileRule {
   static VirtualFile getData(DataSnapshot dataProvider) {
-    // Try to detect multiselection.
+    // Try to detect multi-selection.
     PsiElement[] psiElements = dataProvider.get(PsiElement.KEY_OF_ARRAY);
     if (psiElements != null) {
       for (PsiElement elem : psiElements) {

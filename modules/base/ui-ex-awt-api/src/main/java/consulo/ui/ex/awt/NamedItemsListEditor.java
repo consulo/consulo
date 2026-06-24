@@ -69,7 +69,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     private final Supplier<T> myFactory;
     private final Cloner<T> myCloner;
     private final List<T> myItems = new ArrayList<>();
-    private final HashingStrategy<T> myComparer;
+    private final HashingStrategy<T> myComparator;
     private List<T> myResultItems;
     private final List<T> myOriginalItems;
     private boolean myShowIcons;
@@ -79,11 +79,11 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         Namer<T> namer,
         Supplier<T> factory,
         Cloner<T> cloner,
-        HashingStrategy<T> comparer,
+        HashingStrategy<T> comparator,
         List<T> items,
         Provider<MasterDetailsStateService> masterDetailsStateService
     ) {
-        this(namer, factory, cloner, comparer, items, true, masterDetailsStateService);
+        this(namer, factory, cloner, comparator, items, true, masterDetailsStateService);
     }
 
     @RequiredUIAccess
@@ -91,7 +91,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         Namer<T> namer,
         Supplier<T> factory,
         Cloner<T> cloner,
-        HashingStrategy<T> comparer,
+        HashingStrategy<T> comparator,
         List<T> items,
         boolean initInConstructor,
         Provider<MasterDetailsStateService> masterDetailsStateService
@@ -100,7 +100,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         myNamer = namer;
         myFactory = factory;
         myCloner = cloner;
-        myComparer = comparer;
+        myComparator = comparator;
 
         myOriginalItems = items;
         myResultItems = items;
@@ -305,7 +305,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         }
 
         for (int i = 0; i < myItems.size(); i++) {
-            if (!myComparer.equals(myItems.get(i), myResultItems.get(i))) {
+            if (!myComparator.equals(myItems.get(i), myResultItems.get(i))) {
                 return true;
             }
         }

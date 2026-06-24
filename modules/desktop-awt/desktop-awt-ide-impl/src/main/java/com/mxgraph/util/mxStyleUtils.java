@@ -34,11 +34,11 @@ public class mxStyleUtils {
   }
 
   /**
-   * Returns the stylenames in a style of the form stylename[;key=value] or an
-   * empty array if the given style does not contain any stylenames.
+   * Returns the style-names in a style of the form stylename[;key=value] or an
+   * empty array if the given style does not contain any style-names.
    *
    * @param style String of the form stylename[;stylename][;key=value].
-   * @return Returns the stylename from the given formatted string.
+   * @return Returns the style-name from the given formatted string.
    */
   public static String[] getStylenames(String style) {
     List<String> result = new ArrayList<String>();
@@ -57,17 +57,17 @@ public class mxStyleUtils {
   }
 
   /**
-   * Returns the index of the given stylename in the given style. This returns
-   * -1 if the given stylename does not occur (as a stylename) in the given
+   * Returns the index of the given style-name in the given style. This returns
+   * -1 if the given style-name does not occur (as a style-name) in the given
    * style, otherwise it returns the index of the first character.
    */
-  public static int indexOfStylename(String style, String stylename) {
-    if (style != null && stylename != null) {
+  public static int indexOfStylename(String style, String styleName) {
+    if (style != null && styleName != null) {
       String[] tokens = style.split(";");
       int pos = 0;
 
       for (int i = 0; i < tokens.length; i++) {
-        if (tokens[i].equals(stylename)) {
+        if (tokens[i].equals(styleName)) {
           return pos;
         }
 
@@ -79,11 +79,11 @@ public class mxStyleUtils {
   }
 
   /**
-   * Adds the specified stylename to the given style if it does not already
-   * contain the stylename.
+   * Adds the specified style-name to the given style if it does not already
+   * contain the style-name.
    */
-  public static String addStylename(String style, String stylename) {
-    if (indexOfStylename(style, stylename) < 0) {
+  public static String addStylename(String style, String styleName) {
+    if (indexOfStylename(style, styleName) < 0) {
       if (style == null) {
         style = "";
       }
@@ -91,24 +91,24 @@ public class mxStyleUtils {
         style += ';';
       }
 
-      style += stylename;
+      style += styleName;
     }
 
     return style;
   }
 
   /**
-   * Removes all occurrences of the specified stylename in the given style and
+   * Removes all occurrences of the specified style-name in the given style and
    * returns the updated style. Trailing semicolons are preserved.
    */
-  public static String removeStylename(String style, String stylename) {
+  public static String removeStylename(String style, String styleName) {
     StringBuffer buffer = new StringBuffer();
 
     if (style != null) {
       String[] tokens = style.split(";");
 
       for (int i = 0; i < tokens.length; i++) {
-        if (!tokens[i].equals(stylename)) {
+        if (!tokens[i].equals(styleName)) {
           buffer.append(tokens[i] + ";");
         }
       }
@@ -118,7 +118,7 @@ public class mxStyleUtils {
   }
 
   /**
-   * Removes all stylenames from the given style and returns the updated
+   * Removes all style-names from the given style and returns the updated
    * style.
    */
   public static String removeAllStylenames(String style) {
