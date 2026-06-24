@@ -455,14 +455,14 @@ public abstract class MergeRequestProcessor implements Disposable {
                 }
             });
 
-            DataProvider requestProvider = myRequest.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-            if (requestProvider instanceof UiDataProvider uiDataProvider) {
-                sink.uiDataSnapshot(uiDataProvider);
+            UiDataProvider requestProvider = myRequest.getUserData(DiffUserDataKeys.DATA_PROVIDER);
+            if (requestProvider != null) {
+                sink.uiDataSnapshot(requestProvider);
             }
 
-            DataProvider contextProvider = myContext.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-            if (contextProvider instanceof UiDataProvider uiDataProvider) {
-                sink.uiDataSnapshot(uiDataProvider);
+            UiDataProvider contextProvider = myContext.getUserData(DiffUserDataKeys.DATA_PROVIDER);
+            if (contextProvider != null) {
+                sink.uiDataSnapshot(contextProvider);
             }
         }
     }
