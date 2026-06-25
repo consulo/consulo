@@ -108,7 +108,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
     /**
      * @param file    {@code file} for which composite is being constructed
-     * @param editors {@code edittors} that should be placed into the composite
+     * @param editors {@code editors} that should be placed into the composite
      * @throws IllegalArgumentException if {@code editors}
      *                                  is {@code null} or {@code providers} is {@code null} or {@code myEditor} arrays is empty
      */

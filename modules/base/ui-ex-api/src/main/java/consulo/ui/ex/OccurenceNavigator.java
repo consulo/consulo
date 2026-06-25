@@ -51,12 +51,12 @@ public interface OccurenceNavigator {
   };
 
   class OccurenceInfo {
-    private final Navigatable myNavigateable;
+    private final Navigatable myNavigatable;
     private final int myOccurrenceNumber;
     private final int myOccurrencesCount;
 
-    public OccurenceInfo(Navigatable navigateable, int occurrenceNumber, int occurrencesCount) {
-      myNavigateable = navigateable;
+    public OccurenceInfo(Navigatable navigatable, int occurrenceNumber, int occurrencesCount) {
+      myNavigatable = navigatable;
       myOccurrenceNumber = occurrenceNumber;
       myOccurrencesCount = occurrencesCount;
     }
@@ -70,7 +70,7 @@ public interface OccurenceNavigator {
     }
 
     public Navigatable getNavigateable() {
-      return myNavigateable;
+      return myNavigatable;
     }
 
     public int getOccurenceNumber() {

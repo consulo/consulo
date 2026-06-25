@@ -90,7 +90,7 @@ import java.util.HashMap;
  * 
  * In the next configuration events from user1 and user2 will be logged
  * regardless of the logger levels. Events for other users and records without a
- * userid in the MDC will be logged if they are ERROR level messages. With this
+ * user-id in the MDC will be logged if they are ERROR level messages. With this
  * configuration, the root level is never checked since DynamicThresholdFilter
  * will either accept or deny all records.
  * 

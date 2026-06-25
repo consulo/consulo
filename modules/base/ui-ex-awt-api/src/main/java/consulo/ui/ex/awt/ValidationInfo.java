@@ -57,7 +57,7 @@ public final class ValidationInfo {
      * @param component the component containing the invalid data.
      */
     @Deprecated
-    @DeprecationInfo("Use variant with LocalizaValue")
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ValidationInfo(String message, @Nullable JComponent component) {
         this(LocalizeValue.of(message), component);
     }

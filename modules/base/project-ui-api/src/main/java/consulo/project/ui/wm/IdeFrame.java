@@ -46,7 +46,7 @@ public interface IdeFrame extends FocusableFrame {
 
     void setFileTitle(String fileTitle, File ioFile);
 
-    <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensioClass);
+    <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass);
 
     @Nullable BalloonLayout getBalloonLayout();
 

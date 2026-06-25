@@ -48,8 +48,7 @@ public class mxHtmlColor {
    *
    * @param str the 24/32bit hex string value (ARGB)
    * @return java.awt.Color (24bit RGB on JDK 1.1, 24/32bit ARGB on JDK1.2)
-   * @throws NumberFormatException if the specified string cannot be interpreted as a
-   *                               hexidecimal integer
+   * @throws NumberFormatException if the specified string cannot be interpreted as a hexadecimal integer
    */
   public static Color parseColor(String str) throws NumberFormatException {
     if (str == null || str.equals(mxConstants.NONE)) {

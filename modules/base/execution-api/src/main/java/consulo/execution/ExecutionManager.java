@@ -93,5 +93,5 @@ public interface ExecutionManager {
 
   void restartRunProfile(ExecutionEnvironment environment);
 
-  boolean isStarting(String exectutorId, String runnerId);
+  boolean isStarting(String executorId, String runnerId);
 }

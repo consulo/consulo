@@ -57,12 +57,12 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
         if (!hasOccurenceToGo(navigator)) {
             return;
         }
-        OccurenceNavigator.OccurenceInfo occurenceInfo = go(navigator);
-        if (occurenceInfo == null) {
+        OccurenceNavigator.OccurenceInfo occurrenceInfo = go(navigator);
+        if (occurrenceInfo == null) {
             return;
         }
 
-        Navigatable descriptor = occurenceInfo.getNavigateable();
+        Navigatable descriptor = occurrenceInfo.getNavigateable();
         if (descriptor != null && descriptor.canNavigate()) {
             descriptor.navigate(false);
         }

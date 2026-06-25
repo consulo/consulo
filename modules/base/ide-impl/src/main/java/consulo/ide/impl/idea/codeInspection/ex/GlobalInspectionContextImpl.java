@@ -849,8 +849,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         };
 
     @Override
-    public void close(boolean noSuspisiousCodeFound) {
-        if (!noSuspisiousCodeFound && (myView == null || myView.isRerun())) {
+    public void close(boolean noSuspiciousCodeFound) {
+        if (!noSuspiciousCodeFound && (myView == null || myView.isRerun())) {
             return;
         }
         AnalysisUIOptions.getInstance(getProject()).save(myUIOptions);
@@ -859,7 +859,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             contentManager.removeContent(myContent, true);
         }
         myView = null;
-        super.close(noSuspisiousCodeFound);
+        super.close(noSuspiciousCodeFound);
     }
 
     @Override

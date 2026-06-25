@@ -86,7 +86,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
   }
 
   @Deprecated
-  @DeprecationInfo("installPainters parameter not used. use contructor without it")
+  @DeprecationInfo("installPainters parameter not used. use constructor without it")
   public IdeGlassPaneImpl(JRootPane rootPane, boolean installPainters) {
     myRootPane = rootPane;
     setOpaque(false);
@@ -287,8 +287,8 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
       if (event.isAltDown() && SwingUtilities.isLeftMouseButton(event) && event.getID() == MouseEvent.MOUSE_PRESSED) {
         Component c = SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY());
         Balloon balloon = JBPopupFactory.getInstance().getParentBalloonFor(c);
-        if (balloon instanceof Balloon awtBallon) {
-          JComponent component = awtBallon.getComponent();
+        if (balloon instanceof Balloon awtBalloon) {
+          JComponent component = awtBalloon.getComponent();
           component.getToolkit().getSystemClipboard().setContents(new StringSelection(UIUtil.getDebugText(component)), EmptyClipboardOwner.INSTANCE);
         }
       }

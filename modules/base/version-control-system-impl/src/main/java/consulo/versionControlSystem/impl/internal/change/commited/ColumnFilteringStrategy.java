@@ -49,9 +49,9 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   private final ChangeListColumn myColumn;
   private final Class<? extends CommittedChangesProvider> myProviderClass;
   private final MyListModel myModel;
-  private final CommittedChangeListToStringConverter ourConvertorInstance = new CommittedChangeListToStringConverter();
+  private final CommittedChangeListToStringConverter ourConverterInstance = new CommittedChangeListToStringConverter();
 
-  private Object[] myPrefferedSelection;
+  private Object[] myPreferredSelection;
 
   public ColumnFilteringStrategy(ChangeListColumn column,
                                  Class<? extends CommittedChangesProvider> providerClass) {
@@ -102,7 +102,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
 
   @Override
   public void setFilterBase(List<CommittedChangeList> changeLists) {
-    myPrefferedSelection = null;
+    myPreferredSelection = null;
     appendFilterBase(changeLists);
   }
 
@@ -118,7 +118,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
 
   @Override
   public void resetFilterBase() {
-    myPrefferedSelection = myValueList.getSelectedValues();
+    myPreferredSelection = myValueList.getSelectedValues();
     myValueList.clearSelection();
     myModel.clear();
     myValueList.revalidate();
@@ -127,9 +127,9 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
 
   @Override
   public void appendFilterBase(List<CommittedChangeList> changeLists) {
-    Object[] oldSelection = myModel.isEmpty() ? myPrefferedSelection : myValueList.getSelectedValues();
+    Object[] oldSelection = myModel.isEmpty() ? myPreferredSelection : myValueList.getSelectedValues();
 
-    myModel.addNext(changeLists, ourConvertorInstance);
+    myModel.addNext(changeLists, ourConverterInstance);
     if (oldSelection != null) {
       for (Object o : oldSelection) {
         myValueList.setSelectedValue(o, false);
@@ -177,10 +177,10 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
       myValues = ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
-    public <T> void addNext(Collection<T> values, Function<T, String> convertor) {
+    public <T> void addNext(Collection<T> values, Function<T, String> converter) {
       TreeSet<String> set = new TreeSet<String>(Arrays.asList(myValues));
       for (T value : values) {
-        String converted = convertor.apply(value);
+        String converted = converter.apply(value);
         if (converted != null) {
           // also works as filter
           set.add(converted);

@@ -86,7 +86,7 @@ public class CompilerCacheManager implements Disposable {
             myGenericCachesMap.put(compiler, genericCache);
             myCacheDisposables.add(() -> {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Closing cache for feneric compiler " + compiler.getId());
+                    LOG.debug("Closing cache for generic compiler " + compiler.getId());
                 }
                 genericCache.close();
             });

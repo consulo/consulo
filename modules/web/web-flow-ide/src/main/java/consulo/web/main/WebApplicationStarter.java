@@ -49,14 +49,14 @@ public class WebApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  public void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, CommandLineArgs args) {
+  public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, CommandLineArgs args) {
     StartupProgress startupProgress = mySplashRef.get();
     if (startupProgress != null) {
       startupProgress.dispose();
       mySplashRef.set(null);
     }
 
-    appInitalizeMark.run();
+    appInitializeMark.run();
 
     /*AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
       System.out.println("Save All");

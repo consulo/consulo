@@ -24,7 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 06-Jul-24
+ * @since 2024-07-06
  */
 public class DiffUtil {
     public static <T> void putDataKey(UserDataHolder holder, Key<T> key, @Nullable T value) {

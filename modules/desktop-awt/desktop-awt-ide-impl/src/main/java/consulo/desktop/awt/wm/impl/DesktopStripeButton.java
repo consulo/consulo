@@ -57,7 +57,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     private static final String uiClassID = "StripeButtonUI";
 
     /**
-     * This is analog of Swing mnemomic. We cannot use the standard ones
+     * This is analog of Swing mnemonic. We cannot use the standard ones
      * because it causes typing of "funny" characters into the editor.
      */
     private int myMnemonic;

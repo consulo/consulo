@@ -110,9 +110,9 @@ public class CompositeDependencyCache implements DependencyCache {
     
     @SuppressWarnings("unchecked")
     public <T extends DependencyCache> T findChild(Class<T> clazz) {
-        for (DependencyCache dependencyCach : myDependencyCaches) {
-            if (dependencyCach.getClass() == clazz) {
-                return (T)dependencyCach;
+        for (DependencyCache dependencyCache : myDependencyCaches) {
+            if (dependencyCache.getClass() == clazz) {
+                return (T)dependencyCache;
             }
         }
         throw new IllegalArgumentException("Child is not found for class: " + clazz.getName());

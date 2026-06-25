@@ -107,7 +107,7 @@ public class Suspension<T extends @Nullable Object> {
 
 	/**
 	 * Executes code only if this suspension has not (yet) been cancel. The
-	 * given code will be executed with a lock on the cancelation state to
+	 * given code will be executed with a lock on the cancellation state to
 	 * prevent race conditions if other threads try to cancel a suspension while
 	 * it is resumed.
 	 *

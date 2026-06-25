@@ -92,7 +92,7 @@ public class StatisticsPanel implements UiDataProvider {
         SMRunnerUtil.registerAsAction(enterKey, "go-to-selected-suite-or-parent", gotoSuiteOrParentAction, myStatisticsTableView);
         // Context menu in Table
         PopupHandler.installPopupHandler(myStatisticsTableView, IdeActions.GROUP_TESTTREE_POPUP, ActionPlaces.TESTTREE_VIEW_POPUP);
-        // set this statistic tab as dataprovider for test's table view
+        // set this statistic tab as data-provider for test's table view
         DataManager.registerUiDataProvider(myStatisticsTableView, this);
     }
 

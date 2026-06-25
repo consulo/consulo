@@ -103,10 +103,10 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
             //noinspection StatementWithEmptyBody
             while (displayNames.remove("")) ;
 
-            List<String> groppedProjects = groups.stream().flatMap(g -> g.getProjects().stream()).toList();
+            List<String> groupedProjects = groups.stream().flatMap(g -> g.getProjects().stream()).toList();
 
             List<String> reviewList = new ArrayList<>(recentPaths);
-            reviewList.removeAll(groppedProjects);
+            reviewList.removeAll(groupedProjects);
             Collections.reverse(reviewList);
 
             Iterator<String> reviewIterator = reviewList.iterator();

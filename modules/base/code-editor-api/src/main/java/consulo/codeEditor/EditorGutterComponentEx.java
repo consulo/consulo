@@ -52,8 +52,8 @@ public interface EditorGutterComponentEx extends EditorGutter {
     @Nullable Point getCenterPoint(GutterIconRenderer renderer);
 
     @Deprecated
-    default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
-        setLineNumberConvertor(lineNumberConvertor, null);
+    default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConverter) {
+        setLineNumberConvertor(lineNumberConverter, null);
     }
 
     @Deprecated

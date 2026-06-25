@@ -887,11 +887,11 @@ public class mxUtils {
   }
 
   /**
-   * Returns the stylename in a style of the form stylename[;key=value] or an
+   * Returns the style-name in a style of the form stylename[;key=value] or an
    * empty string if the given style does not contain a stylename.
    *
    * @param style String of the form stylename[;key=value].
-   * @return Returns the stylename from the given formatted string.
+   * @return Returns the style-name from the given formatted string.
    * @deprecated Use <code>mxStyleUtils.getStylename(String)</code> (Jan 2012)
    */
   public static String getStylename(String style) {
@@ -899,11 +899,11 @@ public class mxUtils {
   }
 
   /**
-   * Returns the stylenames in a style of the form stylename[;key=value] or an
-   * empty array if the given style does not contain any stylenames.
+   * Returns the style-names in a style of the form stylename[;key=value] or an
+   * empty array if the given style does not contain any style-names.
    *
    * @param style String of the form stylename[;stylename][;key=value].
-   * @return Returns the stylename from the given formatted string.
+   * @return Returns the style-name from the given formatted string.
    * @deprecated Use <code>mxStyleUtils.getStylenames(String)</code> (Jan 2012)
    */
   public static String[] getStylenames(String style) {
@@ -911,19 +911,18 @@ public class mxUtils {
   }
 
   /**
-   * Returns the index of the given stylename in the given style. This returns
-   * -1 if the given stylename does not occur (as a stylename) in the given
+   * Returns the index of the given style-name in the given style. This returns
+   * -1 if the given style-name does not occur (as a style-name) in the given
    * style, otherwise it returns the index of the first character.
    *
    * @deprecated Use <code>mxStyleUtils.indexOfStylename(String, String)</code> (Jan 2012)
    */
-  public static int indexOfStylename(String style, String stylename) {
-    return mxStyleUtils.indexOfStylename(style, stylename);
+  public static int indexOfStylename(String style, String styleName) {
+    return mxStyleUtils.indexOfStylename(style, styleName);
   }
 
   /**
-   * Removes all stylenames from the given style and returns the updated
-   * style.
+   * Removes all style-names from the given style and returns the updated style.
    *
    * @deprecated Use <code>mxStyleUtils.removeAllStylenames(String)</code> (Jan 2012)
    */
@@ -1312,8 +1311,7 @@ public class mxUtils {
    *
    * @param colorString the 24/32bit hex string value (ARGB)
    * @return java.awt.Color (24bit RGB on JDK 1.1, 24/32bit ARGB on JDK1.2)
-   * @throws NumberFormatException if the specified string cannot be interpreted as a
-   *                               hexidecimal integer
+   * @throws NumberFormatException if the specified string cannot be interpreted as a hexadecimal integer
    */
   public static Color parseColor(String colorString) throws NumberFormatException {
     return mxHtmlColor.parseColor(colorString);

@@ -34,7 +34,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 27/04/2021
+ * @since 2021-04-27
  */
 public class DesktopSwtContainerStartup implements ContainerStartup {
     
@@ -72,7 +72,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
 
     }
 
-    private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
+    private static void start(StatCollector stat, Runnable appInitializeMark, String[] args) {
         ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(DesktopSwtContainerStartup.class));
 
         try {
@@ -88,7 +88,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
         StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
             ApplicationStarter app = new DesktopSwtApplicationStarter(commandLineArgs, stat);
 
-            app.run(stat, appInitalizeMark, newConfigFolder);
+            app.run(stat, appInitializeMark, newConfigFolder);
         });
     }
 }

@@ -87,7 +87,7 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
     public Set<String> getUserMacroNames() {
         myLock.readLock().lock();
         try {
-            return new HashSet<>(myMacros.keySet()); // keyset should not escape the lock
+            return new HashSet<>(myMacros.keySet()); // key-set should not escape the lock
         }
         finally {
             myLock.readLock().unlock();

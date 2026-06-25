@@ -83,12 +83,12 @@ public class DebuggerUIImplUtil {
     private DebuggerUIImplUtil() {
     }
 
-    public static void enableEditorOnCheck(JCheckBox checkbox, JComponent textfield) {
+    public static void enableEditorOnCheck(JCheckBox checkbox, JComponent textField) {
         checkbox.addActionListener(e -> {
             boolean selected = checkbox.isSelected();
-            textfield.setEnabled(selected);
+            textField.setEnabled(selected);
         });
-        textfield.setEnabled(checkbox.isSelected());
+        textField.setEnabled(checkbox.isSelected());
     }
 
     public static void focusEditorOnCheck(JCheckBox checkbox, JComponent component) {
