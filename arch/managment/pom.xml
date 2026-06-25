@@ -1027,6 +1027,13 @@
                 <updatePolicy>interval:60</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>consulo-proxy</id>
+            <url>https://maven.consulo.dev/repository/proxy/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
     </repositories>
 
     <pluginRepositories>
