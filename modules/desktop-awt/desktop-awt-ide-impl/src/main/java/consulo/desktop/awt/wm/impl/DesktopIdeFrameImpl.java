@@ -248,8 +248,11 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     public DesktopIdeFrameImpl(ActionManager actionManager, DataManager dataManager, Application application) {
         myJFrame = new MyFrame();
-        myJFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
-        myJFrame.toUIWindow().putUserData(UiDataProvider.KEY, sink -> {
+
+        consulo.ui.Window uiWindow = Objects.requireNonNull(myJFrame.toUIWindow());
+
+        uiWindow.putUserData(IdeFrame.KEY, this);
+        uiWindow.putUserData(UiDataProvider.KEY, sink -> {
             if (myProject != null && myProject.isInitialized()) {
                 sink.set(Project.KEY, myProject);
             }

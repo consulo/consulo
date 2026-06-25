@@ -130,29 +130,42 @@ public class DesktopDataManagerImpl extends BaseDataManager {
             return new UiDataProviderAdapter(myApplication, uiProvider);
         }
 
-        DataProvider dataProvider = null;
-        if (component instanceof DataProvider) {
-            dataProvider = (DataProvider) component;
+        if (component instanceof DataProvider dataProvider) {
+            return dataProvider;
         }
-        else if (component instanceof JComponent jComponent) {
+
+        if (component instanceof JComponent jComponent) {
             // Check for registered UiDataProvider first (via DataManager.registerUiDataProvider)
             Object uiDataObj = jComponent.getClientProperty(UiDataProvider.KEY);
             if (uiDataObj instanceof UiDataProvider uiProvider) {
                 return new UiDataProviderAdapter(myApplication, uiProvider);
             }
         }
+
         // special case for desktop impl. Later removed since we don't want use AWT
-        else if (component instanceof FromSwingComponentWrapper) {
+        if (component instanceof FromSwingComponentWrapper) {
             consulo.ui.Component uiComponent = ((FromSwingComponentWrapper) component).toUIComponent();
-            return uiComponent::getUserData;
-        }
-        // special case for desktop impl. Later removed since we don't want use AWT
-        else if (component instanceof FromSwingWindowWrapper) {
-            consulo.ui.Window uiWindow = ((FromSwingWindowWrapper) component).toUIWindow();
-            return uiWindow::getUserData;
+
+            if (uiComponent != null) {
+                UiDataProvider provider = uiComponent.getUserData(UiDataProvider.KEY);
+                if (provider != null) {
+                    return new UiDataProviderAdapter(myApplication, provider);
+                }
+            }
         }
 
-        return dataProvider;
+        // special case for desktop impl. Later removed since we don't want use AWT
+        if (component instanceof FromSwingWindowWrapper) {
+            consulo.ui.Window uiWindow = ((FromSwingWindowWrapper) component).toUIWindow();
+            if (uiWindow != null) {
+                UiDataProvider provider = uiWindow.getUserData(UiDataProvider.KEY);
+                if (provider != null) {
+                    return new UiDataProviderAdapter(myApplication, provider);
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
