@@ -60,9 +60,9 @@ public class AddToFavoritesAction extends AnAction {
 
     private final String myFavoritesListName;
 
-    public AddToFavoritesAction(String choosenList) {
-        getTemplatePresentation().setText(choosenList, false);
-        myFavoritesListName = choosenList;
+    public AddToFavoritesAction(String chosenList) {
+        getTemplatePresentation().setText(chosenList, false);
+        myFavoritesListName = chosenList;
     }
 
     @Override

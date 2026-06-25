@@ -91,7 +91,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         int i = Comparing.compare(o2.getUpdated(), o1.getUpdated());
         return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
     };
-    private static final Function<Task, String> KEY_CONVERTOR = Task::getId;
+    private static final Function<Task, String> KEY_CONVERTER = Task::getId;
 
     private final Project myProject;
 
@@ -117,7 +117,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         }
     });
 
-   
     private LocalTask myActiveTask = createDefaultTask();
     private Future<?> myCacheRefreshTimer;
 
@@ -228,7 +227,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         myDispatcher.addListener(listener, parentDisposable);
     }
 
-   
     @Override
     public LocalTask getActiveTask() {
         return myActiveTask;
@@ -239,7 +237,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return myTasks.get(id);
     }
 
-   
     @Override
     public List<Task> getIssues(@Nullable String query) {
         return getIssues(query, true);
@@ -263,7 +260,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         if (tasks == null) {
             return getCachedIssues(withClosed);
         }
-        myIssueCache.putAll(ContainerUtil.newMapFromValues(tasks.iterator(), KEY_CONVERTOR));
+        myIssueCache.putAll(ContainerUtil.newMapFromValues(tasks.iterator(), KEY_CONVERTER));
         return ContainerUtil.filter(tasks, task -> withClosed || !task.isClosed());
     }
 
@@ -573,7 +570,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         return e == null;
     }
 
-   
     @Override
     public Config getState() {
         myConfig.tasks = ContainerUtil.map(myTasks.values(), LocalTaskImpl::new);

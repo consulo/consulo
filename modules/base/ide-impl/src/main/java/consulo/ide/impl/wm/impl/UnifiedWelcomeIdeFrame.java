@@ -71,7 +71,7 @@ public class UnifiedWelcomeIdeFrame implements IdeFrameEx {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> @Nullable E getNorthExtension(Class<? extends E> extensionClass) {
         return null;
     }
 

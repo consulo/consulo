@@ -52,8 +52,8 @@ public class ScrambledInputStream extends InputStream{
     myOriginalStream.close();
   }
 
-  public synchronized void mark(int readlimit) {
-    myOriginalStream.mark(readlimit);
+  public synchronized void mark(int readLimit) {
+    myOriginalStream.mark(readLimit);
   }
 
   public synchronized void reset() throws IOException {

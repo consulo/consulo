@@ -81,7 +81,7 @@ public class PopupPositionManager {
     }
   }
 
-  private static Component discoverPopup(Key<JBPopup> datakey, Component focusOwner) {
+  private static Component discoverPopup(Key<JBPopup> dataKey, Component focusOwner) {
     if (focusOwner == null) {
       focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
@@ -89,7 +89,7 @@ public class PopupPositionManager {
     if (focusOwner == null) return null;
 
     DataContext dataContext = DataManager.getInstance().getDataContext(focusOwner);
-    JBPopup popup = dataContext.getData(datakey);
+    JBPopup popup = dataContext.getData(dataKey);
     if (popup != null && popup.isVisible() && !popup.isDisposed()) {
       return popup.getContent();
     }

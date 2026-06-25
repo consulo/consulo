@@ -70,7 +70,7 @@ public interface IdeFocusManager extends FocusRequestor {
     }
 
     /**
-     * Executes given runnable after all focus activities are finished, immediately or later with the given modaliy state
+     * Executes given runnable after all focus activities are finished, immediately or later with the given modality state
      */
     public abstract void doWhenFocusSettlesDown(@RequiredUIAccess Runnable runnable, ModalityState modality);
 
@@ -91,7 +91,7 @@ public interface IdeFocusManager extends FocusRequestor {
 
     /**
      * Reports of focus transfer is enabled right now. It can be disabled if app is inactive. In this case
-     * all focus requests will be either postponed or executed only if <code>FocusCommand</code> can be executed on an inaactive app.
+     * all focus requests will be either postponed or executed only if <code>FocusCommand</code> can be executed on an inactive app.
      */
     public abstract boolean isFocusTransferEnabled();
 

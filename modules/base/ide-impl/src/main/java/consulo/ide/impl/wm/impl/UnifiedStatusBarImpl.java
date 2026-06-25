@@ -107,11 +107,11 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     centerPanel().add(myInfoAndProgressPanel.getUIComponent());
 
     if (master == null) {
-      UnifiedToolWindowsSwitcher swicher = new UnifiedToolWindowsSwitcher(this);
-      swicher.update();
+      UnifiedToolWindowsSwitcher switcher = new UnifiedToolWindowsSwitcher(this);
+      switcher.update();
 
-      Disposer.register(this, swicher);
-      leftPanel().add(swicher.getUIComponent());
+      Disposer.register(this, switcher);
+      leftPanel().add(switcher.getUIComponent());
     }
 
     myComponent.putUserData(UiDataProvider.KEY, sink -> {

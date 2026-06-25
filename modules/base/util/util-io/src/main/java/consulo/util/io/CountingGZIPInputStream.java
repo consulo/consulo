@@ -84,8 +84,8 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     }
 
     @Override
-    public synchronized void mark(int readlimit) {
-      myInputStream.mark(readlimit);
+    public synchronized void mark(int readLimit) {
+      myInputStream.mark(readLimit);
     }
 
     @Override

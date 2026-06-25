@@ -52,7 +52,7 @@ public class mxStencil implements mxIShape {
   protected Element fgNode = null;
 
   /**
-   * Holds the strokewidth direction from the description.
+   * Holds the stroke-width direction from the description.
    */
   protected String strokewidth = null;
 

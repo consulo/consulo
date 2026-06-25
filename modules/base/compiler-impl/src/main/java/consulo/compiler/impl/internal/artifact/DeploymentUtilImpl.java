@@ -107,8 +107,8 @@ public class DeploymentUtilImpl {
         int i = path.indexOf("..");
         if (i != -1) {
             String filepath = path.substring(0, i - 1);
-            File filepart = new File(filepath);
-            if (filepart.exists() && !filepart.isDirectory()) {
+            File filePart = new File(filepath);
+            if (filePart.exists() && !filePart.isDirectory()) {
                 LOG.error("Incorrect file path: '" + path + '\'');
             }
         }

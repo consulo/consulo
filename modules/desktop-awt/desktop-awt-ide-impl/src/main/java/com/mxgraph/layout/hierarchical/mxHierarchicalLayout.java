@@ -39,7 +39,7 @@ JGraphLayout.Stoppable*/ {
   protected boolean resizeParent = true;
 
   /**
-   * Specifies if the parnent should be moved if resizeParent is enabled.
+   * Specifies if the parent should be moved if resizeParent is enabled.
    * Default is false. @See resizeParent.
    */
   protected boolean moveParent = false;

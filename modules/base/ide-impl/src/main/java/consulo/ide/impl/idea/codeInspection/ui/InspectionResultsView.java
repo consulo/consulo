@@ -103,7 +103,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     private InspectionTree myTree;
     private final Browser myBrowser;
     private Map<HighlightDisplayLevel, Map<String, InspectionGroupNode>> myGroups = null;
-    private OccurenceNavigator myOccurenceNavigator;
+    private OccurenceNavigator myOccurrenceNavigator;
     private InspectionProfile myInspectionProfile;
     private final AnalysisScope myScope;
     private static final String HELP_ID = "reference.toolWindows.inspections";
@@ -144,7 +144,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         myTree = new InspectionTree(project, globalInspectionContext);
         initTreeListeners();
 
-        myOccurenceNavigator = initOccurenceNavigator();
+        myOccurrenceNavigator = initOccurenceNavigator();
 
         myBrowser = new Browser(this);
 
@@ -374,7 +374,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         mySplitter.dispose();
         myBrowser.dispose();
         myTree = null;
-        myOccurenceNavigator = null;
+        myOccurrenceNavigator = null;
         myInspectionProfile = null;
     }
 
@@ -583,37 +583,37 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     }
 
     private OccurenceNavigator getOccurenceNavigator() {
-        return myOccurenceNavigator;
+        return myOccurrenceNavigator;
     }
 
     @Override
     public boolean hasNextOccurence() {
-        return myOccurenceNavigator != null && myOccurenceNavigator.hasNextOccurence();
+        return myOccurrenceNavigator != null && myOccurrenceNavigator.hasNextOccurence();
     }
 
     @Override
     public boolean hasPreviousOccurence() {
-        return myOccurenceNavigator != null && myOccurenceNavigator.hasPreviousOccurence();
+        return myOccurrenceNavigator != null && myOccurrenceNavigator.hasPreviousOccurence();
     }
 
     @Override
     public OccurenceInfo goNextOccurence() {
-        return myOccurenceNavigator != null ? myOccurenceNavigator.goNextOccurence() : null;
+        return myOccurrenceNavigator != null ? myOccurrenceNavigator.goNextOccurence() : null;
     }
 
     @Override
     public OccurenceInfo goPreviousOccurence() {
-        return myOccurenceNavigator != null ? myOccurenceNavigator.goPreviousOccurence() : null;
+        return myOccurrenceNavigator != null ? myOccurrenceNavigator.goPreviousOccurence() : null;
     }
 
     @Override
     public String getNextOccurenceActionName() {
-        return myOccurenceNavigator != null ? myOccurenceNavigator.getNextOccurenceActionName() : "";
+        return myOccurrenceNavigator != null ? myOccurrenceNavigator.getNextOccurenceActionName() : "";
     }
 
     @Override
     public String getPreviousOccurenceActionName() {
-        return myOccurenceNavigator != null ? myOccurenceNavigator.getPreviousOccurenceActionName() : "";
+        return myOccurrenceNavigator != null ? myOccurrenceNavigator.getPreviousOccurenceActionName() : "";
     }
 
     public Project getProject() {
@@ -789,8 +789,8 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         if (toolWrapper != null) {
             QuickFixAction[] quickFixes = myProvider.getQuickFixes(toolWrapper, myTree);
             if (quickFixes != null) {
-                for (QuickFixAction quickFixe : quickFixes) {
-                    actions.add(quickFixe);
+                for (QuickFixAction quickFix : quickFixes) {
+                    actions.add(quickFix);
                 }
             }
 

@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.Transform;
  * can be painted directly, or containers which will paint their children.
  */
 public abstract class SvgGraphic extends SvgElement {
-
 	String title;
 	String description;
 	SvgFill fill;
@@ -50,7 +49,7 @@ public abstract class SvgGraphic extends SvgElement {
 	
 	/**
 	 * Returns the value of the <code>desc</code> element that is a child of this svg element.
-	 * If there is no <code>desc</code> element that is a direct decendent of this element, null
+	 * If there is no <code>desc</code> element that is a direct descendant of this element, null
 	 * is returned.
 	 * @return the <code>desc</code> of this svg element
 	 */
@@ -176,12 +175,11 @@ public abstract class SvgGraphic extends SvgElement {
 	
 	/**
 	 * Returns the value of the <code>title</code> element that is a child of this svg element.
-	 * If there is no <code>title</code> element that is a direct decendent of this element, null
+	 * If there is no <code>title</code> element that is a direct descendant of this element, null
 	 * is returned.
 	 * @return the <code>title</code> of this svg element
 	 */
 	public String getTitle() {
 		return (title == null) ? null : title;
 	}
-
 }

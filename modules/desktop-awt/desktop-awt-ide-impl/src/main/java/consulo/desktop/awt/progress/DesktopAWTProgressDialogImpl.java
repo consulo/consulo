@@ -53,9 +53,9 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
             String text2 = myProgressWindow.getText2().getNullIfEmpty();
 
             if (myProgressBar.isShowing()) {
-                int perc = (int) (fraction * 100);
+                int percent = (int) (fraction * 100);
                 myProgressBar.setIndeterminate(myProgressWindow.isIndeterminate());
-                myProgressBar.setValue(perc);
+                myProgressBar.setValue(percent);
             }
 
             myTextLabel.setText(fitTextToLabel(text, myTextLabel));

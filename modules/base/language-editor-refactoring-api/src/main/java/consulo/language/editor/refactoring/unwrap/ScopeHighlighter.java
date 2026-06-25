@@ -33,10 +33,9 @@ import java.util.function.Function;
 public class ScopeHighlighter {
   public static final Function<PsiElement, TextRange> NATURAL_RANGER = PsiElement::getTextRange;
 
-  
   private final Editor myEditor;
   
-  private final List<RangeHighlighter> myActiveHighliters = new ArrayList<>();
+  private final List<RangeHighlighter> myActiveHighlighters = new ArrayList<>();
   
   private final Function<? super PsiElement, ? extends TextRange> myRanger;
 
@@ -90,13 +89,13 @@ public class ScopeHighlighter {
   private void addHighlighter(TextRange r, int level, TextAttributesKey attributesKey) {
     MarkupModel markupModel = myEditor.getMarkupModel();
     RangeHighlighter highlighter = markupModel.addRangeHighlighter(attributesKey, r.getStartOffset(), r.getEndOffset(), level, HighlighterTargetArea.EXACT_RANGE);
-    myActiveHighliters.add(highlighter);
+    myActiveHighlighters.add(highlighter);
   }
 
   public void dropHighlight() {
-    for (RangeHighlighter h : myActiveHighliters) {
+    for (RangeHighlighter h : myActiveHighlighters) {
       h.dispose();
     }
-    myActiveHighliters.clear();
+    myActiveHighlighters.clear();
   }
 }

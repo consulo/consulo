@@ -80,7 +80,7 @@ public abstract class Task {
   }
 
   /**
-   * @return true if bugtracking issue is associated
+   * @return true if bug-tracker issue is associated
    */
   public abstract boolean isIssue();
 

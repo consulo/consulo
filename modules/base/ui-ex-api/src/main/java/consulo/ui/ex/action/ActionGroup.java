@@ -88,8 +88,8 @@ public abstract class ActionGroup extends AnAction {
         private final AnAction[] myChildren;
         private final boolean myPopup;
 
-        private ImmutableActionGroup(AnAction[] chilren, boolean popup, LocalizeValue actionText) {
-            myChildren = chilren;
+        private ImmutableActionGroup(AnAction[] children, boolean popup, LocalizeValue actionText) {
+            myChildren = children;
             myPopup = popup;
 
             if (actionText.isNotEmpty()) {

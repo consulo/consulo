@@ -49,7 +49,6 @@ import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.ui.ex.errorTreeView.HotfixData;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
 import consulo.ui.ex.errorTreeView.SimpleErrorData;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -87,7 +86,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
     private JPanel myProgressPanel;
 
     private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
-    private MyOccurenceNavigatorSupport myOccurenceNavigatorSupport;
+    private MyOccurrenceNavigatorSupport myOccurrenceNavigatorSupport;
 
     private boolean myCanHideWarningsOrInfos = true;
 
@@ -143,7 +142,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
         myBuilder = new ErrorViewTreeBuilder(myTree, treeModel, myErrorViewStructure);
 
         myExporterToTextFile = new ErrorViewTextExporter(myErrorViewStructure);
-        myOccurenceNavigatorSupport = new MyOccurenceNavigatorSupport(myTree);
+        myOccurrenceNavigatorSupport = new MyOccurrenceNavigatorSupport(myTree);
 
         myAutoScrollToSourceHandler.install(myTree);
         TreeUtil.installActions(myTree);
@@ -546,32 +545,32 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
 
     @Override
     public OccurenceInfo goNextOccurence() {
-        return myOccurenceNavigatorSupport.goNextOccurence();
+        return myOccurrenceNavigatorSupport.goNextOccurence();
     }
 
     @Override
     public OccurenceInfo goPreviousOccurence() {
-        return myOccurenceNavigatorSupport.goPreviousOccurence();
+        return myOccurrenceNavigatorSupport.goPreviousOccurence();
     }
 
     @Override
     public boolean hasNextOccurence() {
-        return myOccurenceNavigatorSupport.hasNextOccurence();
+        return myOccurrenceNavigatorSupport.hasNextOccurence();
     }
 
     @Override
     public boolean hasPreviousOccurence() {
-        return myOccurenceNavigatorSupport.hasPreviousOccurence();
+        return myOccurrenceNavigatorSupport.hasPreviousOccurence();
     }
 
     @Override
     public String getNextOccurenceActionName() {
-        return myOccurenceNavigatorSupport.getNextOccurenceActionName();
+        return myOccurrenceNavigatorSupport.getNextOccurenceActionName();
     }
 
     @Override
     public String getPreviousOccurenceActionName() {
-        return myOccurenceNavigatorSupport.getPreviousOccurenceActionName();
+        return myOccurrenceNavigatorSupport.getPreviousOccurenceActionName();
     }
 
     private class RerunAction extends AnAction {
@@ -704,8 +703,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
         }
     }
 
-    private static class MyOccurenceNavigatorSupport extends OccurenceNavigatorSupport {
-        public MyOccurenceNavigatorSupport(Tree tree) {
+    private static class MyOccurrenceNavigatorSupport extends OccurenceNavigatorSupport {
+        public MyOccurrenceNavigatorSupport(Tree tree) {
             super(tree);
         }
 

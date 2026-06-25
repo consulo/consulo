@@ -58,7 +58,7 @@ public class SMTestProxy extends AbstractTestProxy {
     private final String myName;
     private boolean myIsSuite;
     private final String myLocationUrl;
-    private final String myMetainfo;
+    private final String myMetaInfo;
     private final boolean myPreservePresentableName;
 
     private List<SMTestProxy> myChildren;
@@ -94,13 +94,13 @@ public class SMTestProxy extends AbstractTestProxy {
         String testName,
         boolean isSuite,
         @Nullable String locationUrl,
-        @Nullable String metainfo,
+        @Nullable String metaInfo,
         boolean preservePresentableName
     ) {
         myName = testName;
         myIsSuite = isSuite;
         myLocationUrl = locationUrl;
-        myMetainfo = metainfo;
+        myMetaInfo = metaInfo;
         myPreservePresentableName = preservePresentableName;
     }
 
@@ -277,7 +277,7 @@ public class SMTestProxy extends AbstractTestProxy {
                 String path = VirtualFileManager.extractPath(locationUrl);
                 if (!DumbService.isDumb(project) || DumbService.isDumbAware(myLocator)) {
                     return DumbService.getInstance(project).computeWithAlternativeResolveEnabled(() -> {
-                        List<Location> locations = myLocator.getLocation(protocolId, path, myMetainfo, project, searchScope);
+                        List<Location> locations = myLocator.getLocation(protocolId, path, myMetaInfo, project, searchScope);
                         return !locations.isEmpty() ? locations.get(0) : null;
                     });
                 }
@@ -758,7 +758,7 @@ public class SMTestProxy extends AbstractTestProxy {
 
     @Override
     public @Nullable String getMetainfo() {
-        return myMetainfo;
+        return myMetaInfo;
     }
 
     /**

@@ -45,7 +45,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     }
 
     /**
-     * If return false - this provider will be avaliable from 'Import Module' action from project structore
+     * If return false - this provider will be available from 'Import Module' action from project structure
      */
     default boolean isOnlyForNewImport() {
         return true;
