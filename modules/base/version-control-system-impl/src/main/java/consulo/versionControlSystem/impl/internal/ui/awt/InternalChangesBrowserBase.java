@@ -222,7 +222,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         sink.set(DATA_KEY, this);
         List<Change> selectedChanges = getSelectedChanges();
         sink.set(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
-        sink.set(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG));
+        sink.set(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG).toList());
         sink.set(DeleteProvider.KEY, myDeleteProvider);
     }
 
@@ -438,7 +438,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
 
     protected Stream<VirtualFile> getSelectedFiles() {
         return Stream.concat(
-            getAfterRevisionsFiles(getSelectedChanges().stream()),
+            getAfterRevisionsFiles(getSelectedChanges().stream()).stream(),
             getVirtualFiles(myViewer.getSelectionPaths(), null)
         ).distinct();
     }

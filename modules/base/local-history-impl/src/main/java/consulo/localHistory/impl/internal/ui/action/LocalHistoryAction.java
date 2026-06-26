@@ -97,6 +97,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     }
 
     protected @Nullable VirtualFile getFile(AnActionEvent e) {
-        return Streams.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
+        return files != null && files.length == 1 ? files[0] : null;
     }
 }

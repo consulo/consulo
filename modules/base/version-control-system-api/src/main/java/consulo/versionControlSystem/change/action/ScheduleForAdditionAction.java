@@ -111,16 +111,17 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         return result;
     }
 
-    
     private Stream<VirtualFile> getUnversionedFiles(AnActionEvent e, Project project) {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
-        boolean hasExplicitUnversioned = !Streams.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY));
+
+        List<VirtualFile> virtualFiles = e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY);
+        boolean hasExplicitUnversioned = virtualFiles != null && !virtualFiles.isEmpty();
 
         return hasExplicitUnversioned
-            ? e.getRequiredData(ChangesListView.UNVERSIONED_FILES_DATA_KEY)
+            ? virtualFiles.stream()
             : checkVirtualFiles(e)
-            ? Streams.notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM))
+            ? Streams.stream(e.getData(VirtualFile.KEY_OF_ARRAY))
             .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager))
             : Stream.empty();
     }

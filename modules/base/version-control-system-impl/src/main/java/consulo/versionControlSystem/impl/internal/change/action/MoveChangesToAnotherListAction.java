@@ -17,13 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeListChooser;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
-import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
@@ -33,12 +27,18 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.ChangesViewManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeListChooser;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListViewImpl;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -78,12 +78,13 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
             return false;
         }
 
-        return !VcsUtil.isEmpty(e.getData(ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY))
+        List<VirtualFile> data = e.getData(ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY);
+        return data != null && !data.isEmpty()
             || !ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES))
             || !ArrayUtil.isEmpty(e.getData(VirtualFile.KEY_OF_ARRAY));
     }
 
-    
+
     private static List<Change> getChangesForSelectedFiles(
         Project project,
         VirtualFile[] selectedFiles,
@@ -228,7 +229,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
         return ObjectUtil.chooseNotNull(emptyList, ContainerUtil.getFirstItem(lists));
     }
 
-    
+
     private static List<LocalChangeList> getPreferredLists(List<LocalChangeList> lists, Collection<Change> changes) {
         Set<Change> changesSet = new HashSet<>(changes);
 

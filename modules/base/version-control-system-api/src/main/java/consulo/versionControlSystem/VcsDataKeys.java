@@ -73,5 +73,4 @@ public interface VcsDataKeys {
     Key<VcsRevisionNumber> VCS_REVISION_NUMBER = Key.create("VCS_REVISION_NUMBER");
     Key<VcsRevisionNumber[]> VCS_REVISION_NUMBERS = Key.create("VCS_REVISION_NUMBERS");
     Key<VcsHistoryProvider> HISTORY_PROVIDER = Key.create("VCS_HISTORY_PROVIDER");
-    Key<Stream<VirtualFile>> VIRTUAL_FILE_STREAM = Key.create("virtualFileStream");
 }

@@ -26,31 +26,31 @@ import java.util.stream.Stream;
  * @since 27-Jun-24
  */
 public class Streams {
-  public static <T> boolean isEmpty(@Nullable Stream<T> stream) {
-    return stream == null || !stream.findAny().isPresent();
-  }
-
-  public static <T> Stream<T> notNullize(@Nullable Stream<T> stream) {
-    return stream == null ? Stream.<T>empty() : stream;
-  }
-
-  @SafeVarargs
-  public static <T> Stream<T> concat(Stream<T>... args) {
-    return Stream.of(args).reduce(Stream.empty(), Stream::concat);
-  }
-
-  @SafeVarargs
-  public static <T> Stream<T> stream(T... args) {
-    return args == null ? Stream.<T>empty() : Arrays.stream(args);
-  }
-
-  public static @Nullable <T> T getIfSingle(Stream<T> stream) {
-    if (stream == null) {
-      return null;
+    public static <T> boolean isEmpty(@Nullable Stream<T> stream) {
+        return stream == null || !stream.findAny().isPresent();
     }
-    return stream.limit(2)
-                 .map(Optional::ofNullable)
-                 .reduce(Optional.empty(), (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty())
-                 .orElse(null);
-  }
+
+    public static <T> Stream<T> notNullize(@Nullable Stream<T> stream) {
+        return stream == null ? Stream.<T>empty() : stream;
+    }
+
+    @SafeVarargs
+    public static <T> Stream<T> concat(Stream<T>... args) {
+        return Stream.of(args).reduce(Stream.empty(), Stream::concat);
+    }
+
+    @SafeVarargs
+    public static <T> Stream<T> stream(T @Nullable ... args) {
+        return args == null ? Stream.<T>empty() : Arrays.stream(args);
+    }
+
+    public static @Nullable <T> T getIfSingle(@Nullable Stream<T> stream) {
+        if (stream == null) {
+            return null;
+        }
+        return stream.limit(2)
+            .map(Optional::ofNullable)
+            .reduce(Optional.empty(), (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty())
+            .orElse(null);
+    }
 }

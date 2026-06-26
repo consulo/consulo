@@ -28,6 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -78,7 +79,6 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
             .showCenteredInCurrentWindow(project);
     }
 
-    
     protected abstract List<String> getBranchNamesExceptCurrent(T repository);
 
     private static VirtualFile getAffectedFile(AnActionEvent event) {
@@ -91,7 +91,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
-        VirtualFile file = VcsUtil.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
+        VirtualFile file = ArrayUtil.getFirstElement(e.getData(VirtualFile.KEY_OF_ARRAY));
 
         presentation.setVisible(project != null);
         presentation.setEnabled(project != null && file != null && isEnabled(getRepositoryManager(project).getRepositoryForFile(file)));
@@ -101,12 +101,10 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         return repository != null && !repository.isFresh() && !noBranchesToCompare(repository);
     }
 
-    
     protected abstract AbstractRepositoryManager<T> getRepositoryManager(Project project);
 
     protected abstract boolean noBranchesToCompare(T repository);
 
-    
     protected abstract Collection<Change> getDiffChanges(
         Project project,
         VirtualFile file,

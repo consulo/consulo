@@ -35,13 +35,7 @@ public interface VcsContext extends PlaceProvider<String> {
 
   @Nullable VirtualFile getSelectedFile();
 
-  
   VirtualFile[] getSelectedFiles();
-
-  
-  default Stream<VirtualFile> getSelectedFilesStream() {
-    return Arrays.stream(getSelectedFiles());
-  }
 
   Editor getEditor();
 
@@ -55,10 +49,8 @@ public interface VcsContext extends PlaceProvider<String> {
 
   File getSelectedIOFile();
 
-  
   FilePath[] getSelectedFilePaths();
 
-  
   default Stream<FilePath> getSelectedFilePathsStream() {
     return Arrays.stream(getSelectedFilePaths());
   }

@@ -96,7 +96,7 @@ public class RollbackAction extends AnAction implements DumbAware {
         ChangeListManager manager = ChangeListManager.getInstance(e.getRequiredData(Project.KEY));
         Set<VirtualFile> modifiedWithoutEditing = new HashSet<>(manager.getModifiedWithoutEditing());
 
-        return Streams.notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM)).anyMatch(
+        return Streams.stream(e.getData(VirtualFile.KEY_OF_ARRAY)).anyMatch(
             file -> manager.haveChangesUnder(file) != ThreeState.NO
                 || manager.isFileAffected(file)
                 || modifiedWithoutEditing.contains(file)

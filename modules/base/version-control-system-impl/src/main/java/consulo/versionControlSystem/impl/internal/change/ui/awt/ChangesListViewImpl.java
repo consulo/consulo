@@ -32,6 +32,8 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.collection.Streams;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
@@ -60,294 +62,288 @@ import static java.util.stream.Collectors.toList;
 
 // TODO: Check if we could extend DnDAwareTree here instead of directly implementing DnDAware
 public class ChangesListViewImpl extends Tree implements ChangesListView, UiDataProvider, DnDAware {
-  private final Project myProject;
-  private boolean myShowFlatten = false;
-  private final CopyProvider myCopyProvider;
+    private final Project myProject;
+    private boolean myShowFlatten = false;
+    private final CopyProvider myCopyProvider;
 
-  public static final String HELP_ID = "ideaInterface.changes";
-  public static final Key<Stream<VirtualFile>> IGNORED_FILES_DATA_KEY = Key.create("ChangeListView.IgnoredFiles");
-  public static final Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
-  public static final Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
+    public static final String HELP_ID = "ideaInterface.changes";
+    public static final Key<List<VirtualFile>> IGNORED_FILES_DATA_KEY = Key.create("ChangeListView.IgnoredFiles");
+    public static final Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
+    public static final Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
 
-  public ChangesListViewImpl(Project project) {
-    myProject = project;
+    public ChangesListViewImpl(Project project) {
+        myProject = project;
 
-    setModel(TreeModelBuilder.buildEmpty(project));
+        setModel(TreeModelBuilder.buildEmpty(project));
 
-    setShowsRootHandles(true);
-    setRootVisible(false);
-    setDragEnabled(true);
+        setShowsRootHandles(true);
+        setRootVisible(false);
+        setDragEnabled(true);
 
-    myCopyProvider = new ChangesBrowserNodeCopyProvider(this);
+        myCopyProvider = new ChangesBrowserNodeCopyProvider(this);
 
-    ChangesBrowserNodeRenderer renderer = new ChangesBrowserNodeRenderer(project, () -> myShowFlatten, true);
-    setCellRenderer(renderer);
+        ChangesBrowserNodeRenderer renderer = new ChangesBrowserNodeRenderer(project, () -> myShowFlatten, true);
+        setCellRenderer(renderer);
 
-    new TreeSpeedSearch(this, TO_TEXT_CONVERTER);
-    SmartExpander.installOn(this);
-    new TreeLinkMouseListener(renderer).installOn(this);
-  }
+        new TreeSpeedSearch(this, TO_TEXT_CONVERTER);
+        SmartExpander.installOn(this);
+        new TreeLinkMouseListener(renderer).installOn(this);
+    }
 
-  @Override
-  public DefaultTreeModel getModel() {
-    return (DefaultTreeModel)super.getModel();
-  }
+    @Override
+    public DefaultTreeModel getModel() {
+        return (DefaultTreeModel) super.getModel();
+    }
 
-  public boolean isShowFlatten() {
-    return myShowFlatten;
-  }
+    public boolean isShowFlatten() {
+        return myShowFlatten;
+    }
 
-  public void setShowFlatten(boolean showFlatten) {
-    myShowFlatten = showFlatten;
-  }
+    public void setShowFlatten(boolean showFlatten) {
+        myShowFlatten = showFlatten;
+    }
 
-  public void updateModel(DefaultTreeModel newModel) {
-    TreeState state = TreeState.createOn(this, getRoot());
-    state.setScrollToSelection(false);
-    DefaultTreeModel oldModel = getModel();
-    setModel(newModel);
-    ChangesBrowserNode newRoot = getRoot();
-    expandPath(new TreePath(newRoot.getPath()));
-    state.applyTo(this, newRoot);
-    expandDefaultChangeList(oldModel, newRoot);
-  }
+    public void updateModel(DefaultTreeModel newModel) {
+        TreeState state = TreeState.createOn(this, getRoot());
+        state.setScrollToSelection(false);
+        DefaultTreeModel oldModel = getModel();
+        setModel(newModel);
+        ChangesBrowserNode newRoot = getRoot();
+        expandPath(new TreePath(newRoot.getPath()));
+        state.applyTo(this, newRoot);
+        expandDefaultChangeList(oldModel, newRoot);
+    }
 
-  private void expandDefaultChangeList(DefaultTreeModel oldModel, ChangesBrowserNode root) {
-    if (((ChangesBrowserNode)oldModel.getRoot()).getFileCount() == 0 && TreeUtil.collectExpandedPaths(this).size() == 1) {
-      TreeNode toExpand = null;
-      for (int i = 0; i < root.getChildCount(); i++) {
-        TreeNode node = root.getChildAt(i);
-        if (node instanceof ChangesBrowserChangeListNode && node.getChildCount() > 0) {
-          ChangeList object = ((ChangesBrowserChangeListNode)node).getUserObject();
-          if (object instanceof LocalChangeList) {
-            if (((LocalChangeList)object).isDefault()) {
-              toExpand = node;
-              break;
+    private void expandDefaultChangeList(DefaultTreeModel oldModel, ChangesBrowserNode root) {
+        if (((ChangesBrowserNode) oldModel.getRoot()).getFileCount() == 0 && TreeUtil.collectExpandedPaths(this).size() == 1) {
+            TreeNode toExpand = null;
+            for (int i = 0; i < root.getChildCount(); i++) {
+                TreeNode node = root.getChildAt(i);
+                if (node instanceof ChangesBrowserChangeListNode && node.getChildCount() > 0) {
+                    ChangeList object = ((ChangesBrowserChangeListNode) node).getUserObject();
+                    if (object instanceof LocalChangeList) {
+                        if (((LocalChangeList) object).isDefault()) {
+                            toExpand = node;
+                            break;
+                        }
+                    }
+                }
             }
-          }
+
+            if (toExpand != null) {
+                expandPath(new TreePath(new Object[]{root, toExpand}));
+            }
         }
-      }
-
-      if (toExpand != null) {
-        expandPath(new TreePath(new Object[]{root, toExpand}));
-      }
-    }
-  }
-
-  @Override
-  public void uiDataSnapshot(DataSink sink) {
-    sink.set(VcsDataKeys.CHANGES, getSelectedChanges().toArray(Change[]::new));
-    sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, getLeadSelection().toArray(Change[]::new));
-    sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
-    sink.set(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
-    sink.set(VcsDataKeys.VIRTUAL_FILE_STREAM, getSelectedFiles());
-    VirtualFile file = Streams.getIfSingle(getSelectedFiles());
-    if (file != null && !file.isDirectory()) {
-      sink.set(Navigatable.KEY, OpenFileDescriptorFactory.getInstance(myProject).newBuilder(file).build());
-    }
-    sink.set(Navigatable.KEY_OF_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
-    if (getSelectionObjectsStream().anyMatch(userObject -> !(userObject instanceof ChangeList))) {
-      sink.set(DeleteProvider.KEY, new VirtualFileDeleteProvider());
-    }
-    sink.set(CopyProvider.KEY, myCopyProvider);
-    sink.set(UNVERSIONED_FILES_DATA_KEY, getSelectedUnversionedFiles());
-    sink.set(IGNORED_FILES_DATA_KEY, getSelectedIgnoredFiles());
-    sink.set(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY, getSelectedModifiedWithoutEditing().collect(toList()));
-    sink.set(LOCALLY_DELETED_CHANGES, getSelectedLocallyDeletedChanges().collect(toList()));
-    sink.set(MISSING_FILES_DATA_KEY, getSelectedMissingFiles().collect(toList()));
-    sink.set(VcsDataKeys.HAVE_LOCALLY_DELETED, getSelectedMissingFiles().findAny().isPresent());
-    sink.set(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, getSelectedModifiedWithoutEditing().findAny().isPresent());
-    sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, haveSelectedChanges());
-    sink.set(HelpManager.HELP_ID, HELP_ID);
-    TreePath selectionPath = getSelectionPath();
-    if (selectionPath != null && selectionPath.getPathCount() > 1) {
-      ChangesBrowserNode<?> firstNode = (ChangesBrowserNode)selectionPath.getPathComponent(1);
-      if (firstNode instanceof ChangesBrowserChangeListNode) {
-        sink.set(VcsDataKeys.CHANGES_IN_LIST_KEY, firstNode.getAllChangesUnder());
-      }
-    }
-  }
-
-  
-  private Stream<VirtualFile> getSelectedUnversionedFiles() {
-    return getSelectedVirtualFiles(UNVERSIONED_FILES_TAG);
-  }
-
-  
-  private Stream<VirtualFile> getSelectedIgnoredFiles() {
-    return getSelectedVirtualFiles(IGNORED_FILES_TAG);
-  }
-
-  
-  private Stream<VirtualFile> getSelectedModifiedWithoutEditing() {
-    return getSelectedVirtualFiles(MODIFIED_WITHOUT_EDITING_TAG);
-  }
-
-  
-  private Stream<VirtualFile> getSelectedVirtualFiles(@Nullable Object tag) {
-    return getSelectionNodesStream(tag)
-      .flatMap(ChangesBrowserNode::getFilesUnderStream)
-      .distinct();
-  }
-
-  
-  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream() {
-    return getSelectionNodesStream(null);
-  }
-
-  
-  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@Nullable Object tag) {
-    return Streams.stream(getSelectionPaths())
-                  .filter(path -> isUnderTag(path, tag))
-                  .map(TreePath::getLastPathComponent)
-                  .map(node -> ((ChangesBrowserNode<?>)node));
-  }
-
-  
-  private Stream<Object> getSelectionObjectsStream() {
-    return getSelectionNodesStream().map(ChangesBrowserNode::getUserObject);
-  }
-
-  
-  public static Stream<VirtualFile> getVirtualFiles(@Nullable TreePath[] paths, @Nullable Object tag) {
-    return Streams.stream(paths)
-                  .filter(path -> isUnderTag(path, tag))
-                  .map(TreePath::getLastPathComponent)
-                  .map(node -> ((ChangesBrowserNode<?>)node))
-                  .flatMap(ChangesBrowserNode::getFilesUnderStream)
-                  .distinct();
-  }
-
-  public static boolean isUnderTag(TreePath path, @Nullable Object tag) {
-    boolean result = true;
-
-    if (tag != null) {
-      result = path.getPathCount() > 1 && ((ChangesBrowserNode)path.getPathComponent(1)).getUserObject() == tag;
     }
 
-    return result;
-  }
-
-  
-  public static Stream<Change> getChanges(Project project, @Nullable TreePath[] paths) {
-    Stream<Change> changes = Streams.stream(paths)
-                                    .map(TreePath::getLastPathComponent)
-                                    .map(node -> ((ChangesBrowserNode<?>)node))
-                                    .flatMap(node -> node.getObjectsUnderStream(Change.class))
-                                    .map(Change.class::cast);
-    Stream<Change> hijackedChanges = getVirtualFiles(paths, MODIFIED_WITHOUT_EDITING_TAG)
-      .map(file -> toHijackedChange(project, file))
-      .filter(Objects::nonNull);
-
-    return Stream.concat(changes, hijackedChanges).distinct();
-  }
-
-  private static @Nullable Change toHijackedChange(Project project, VirtualFile file) {
-    VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
-    if (before != null) {
-      ContentRevision afterRevision = new CurrentContentRevision(VcsUtil.getFilePath(file));
-      return new Change(before, afterRevision, FileStatus.HIJACKED);
-    }
-    return null;
-  }
-
-  
-  private Stream<LocallyDeletedChange> getSelectedLocallyDeletedChanges() {
-    return getSelectionNodesStream(LOCALLY_DELETED_NODE_TAG)
-      .flatMap(node -> node.getObjectsUnderStream(LocallyDeletedChange.class))
-      .distinct();
-  }
-
-  
-  private Stream<FilePath> getSelectedMissingFiles() {
-    return getSelectedLocallyDeletedChanges().map(LocallyDeletedChange::getPath);
-  }
-
-  
-  protected Stream<VirtualFile> getSelectedFiles() {
-    return Stream.concat(
-      getAfterRevisionsFiles(getSelectedChanges()),
-      getSelectedVirtualFiles(null)
-    ).distinct();
-  }
-
-  // TODO: Does not correspond to getSelectedChanges() - for instance, hijacked changes are not tracked here
-  private boolean haveSelectedChanges() {
-    return getSelectionNodesStream().anyMatch(
-      node -> node instanceof ChangesBrowserChangeNode || node instanceof ChangesBrowserChangeListNode && node.getChildCount() > 0);
-  }
-
-  
-  private Stream<Change> getLeadSelection() {
-    return getSelectionNodesStream()
-      .filter(node -> node instanceof ChangesBrowserChangeNode)
-      .map(ChangesBrowserChangeNode.class::cast)
-      .map(ChangesBrowserChangeNode::getUserObject)
-      .distinct();
-  }
-
-  
-  public ChangesBrowserNode<?> getRoot() {
-    return (ChangesBrowserNode<?>)getModel().getRoot();
-  }
-
-  
-  public Stream<Change> getChanges() {
-    return getRoot().getObjectsUnderStream(Change.class);
-  }
-
-  
-  public Stream<Change> getSelectedChanges() {
-    return getChanges(myProject, getSelectionPaths());
-  }
-
-  
-  private Stream<ChangeList> getSelectedChangeLists() {
-    return getSelectionObjectsStream()
-      .filter(userObject -> userObject instanceof ChangeList)
-      .map(ChangeList.class::cast)
-      .distinct();
-  }
-
-  public void setMenuActions(ActionGroup menuGroup) {
-    PopupHandler.installPopupHandler(this, menuGroup, ActionPlaces.CHANGES_VIEW_POPUP, ActionManager.getInstance());
-    editSourceRegistration();
-  }
-
-  protected void editSourceRegistration() {
-    EditSourceOnDoubleClickHandler.install(this);
-    EditSourceOnEnterKeyHandler.install(this);
-  }
-
-  @Override
-  
-  public JComponent getComponent() {
-    return this;
-  }
-
-  @Override
-  public void processMouseEvent(MouseEvent e) {
-    if (MouseEvent.MOUSE_RELEASED == e.getID() && !isSelectionEmpty() && !e.isShiftDown() && !e.isControlDown() &&
-      !e.isMetaDown() && !e.isPopupTrigger()) {
-      if (isOverSelection(e.getPoint())) {
-        clearSelection();
-        TreePath path = getPathForLocation(e.getPoint().x, e.getPoint().y);
-        if (path != null) {
-          setSelectionPath(path);
+    @Override
+    public void uiDataSnapshot(DataSink sink) {
+        sink.set(VcsDataKeys.CHANGES, getSelectedChanges().toArray(Change[]::new));
+        sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, getLeadSelection().toArray(Change[]::new));
+        sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
+        List<VirtualFile> selectedFiles = getSelectedFiles();
+        sink.set(VirtualFile.KEY_OF_ARRAY, selectedFiles.toArray(VirtualFile[]::new));
+        VirtualFile file = selectedFiles.size() == 1 ? selectedFiles.getFirst() : null;
+        if (file != null && !file.isDirectory()) {
+            sink.set(Navigatable.KEY, OpenFileDescriptorFactory.getInstance(myProject).newBuilder(file).build());
         }
-      }
+        sink.set(Navigatable.KEY_OF_ARRAY, ChangesUtil.getNavigatableArray(myProject, selectedFiles.stream()));
+        if (getSelectionObjectsStream().anyMatch(userObject -> !(userObject instanceof ChangeList))) {
+            sink.set(DeleteProvider.KEY, new VirtualFileDeleteProvider());
+        }
+        sink.set(CopyProvider.KEY, myCopyProvider);
+        sink.set(UNVERSIONED_FILES_DATA_KEY, getSelectedUnversionedFiles());
+        sink.set(IGNORED_FILES_DATA_KEY, getSelectedIgnoredFiles());
+        List<VirtualFile> selectedModifiedWithoutEditing = getSelectedModifiedWithoutEditing();
+        sink.set(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY, selectedModifiedWithoutEditing);
+        sink.set(LOCALLY_DELETED_CHANGES, getSelectedLocallyDeletedChanges().collect(toList()));
+        List<FilePath> selectedMissingFiles = getSelectedMissingFiles();
+        sink.set(MISSING_FILES_DATA_KEY, selectedMissingFiles);
+        sink.set(VcsDataKeys.HAVE_LOCALLY_DELETED, ContainerUtil.getFirstItem(selectedMissingFiles) != null);
+        sink.set(VcsDataKeys.HAVE_MODIFIED_WITHOUT_EDITING, ContainerUtil.getFirstItem(selectedModifiedWithoutEditing) != null);
+        sink.set(VcsDataKeys.HAVE_SELECTED_CHANGES, haveSelectedChanges());
+        sink.set(HelpManager.HELP_ID, HELP_ID);
+        TreePath selectionPath = getSelectionPath();
+        if (selectionPath != null && selectionPath.getPathCount() > 1) {
+            ChangesBrowserNode<?> firstNode = (ChangesBrowserNode) selectionPath.getPathComponent(1);
+            if (firstNode instanceof ChangesBrowserChangeListNode) {
+                sink.set(VcsDataKeys.CHANGES_IN_LIST_KEY, firstNode.getAllChangesUnder());
+            }
+        }
     }
 
-    super.processMouseEvent(e);
-  }
+    private List<VirtualFile> getSelectedUnversionedFiles() {
+        return getSelectedVirtualFiles(UNVERSIONED_FILES_TAG);
+    }
 
-  @Override
-  public boolean isOverSelection(Point point) {
-    return TreeUtil.isOverSelection(this, point);
-  }
+    private List<VirtualFile> getSelectedIgnoredFiles() {
+        return getSelectedVirtualFiles(IGNORED_FILES_TAG);
+    }
 
-  @Override
-  public void dropSelectionButUnderPoint(Point point) {
-    TreeUtil.dropSelectionButUnderPoint(this, point);
-  }
+    private List<VirtualFile> getSelectedModifiedWithoutEditing() {
+        return getSelectedVirtualFiles(MODIFIED_WITHOUT_EDITING_TAG);
+    }
+
+    private List<VirtualFile> getSelectedVirtualFiles(@Nullable Object tag) {
+        return getSelectionNodesStream(tag)
+            .flatMap(ChangesBrowserNode::getFilesUnderStream)
+            .distinct()
+            .toList();
+    }
+
+    private Stream<ChangesBrowserNode<?>> getSelectionNodesStream() {
+        return getSelectionNodesStream(null);
+    }
+
+    private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@Nullable Object tag) {
+        return Streams.stream(getSelectionPaths())
+            .filter(path -> isUnderTag(path, tag))
+            .map(TreePath::getLastPathComponent)
+            .map(node -> ((ChangesBrowserNode<?>) node));
+    }
+
+
+    private Stream<Object> getSelectionObjectsStream() {
+        return getSelectionNodesStream().map(ChangesBrowserNode::getUserObject);
+    }
+
+    public static Stream<VirtualFile> getVirtualFiles(@Nullable TreePath[] paths, @Nullable Object tag) {
+        return Streams.stream(paths)
+            .filter(path -> isUnderTag(path, tag))
+            .map(TreePath::getLastPathComponent)
+            .map(node -> ((ChangesBrowserNode<?>) node))
+            .flatMap(ChangesBrowserNode::getFilesUnderStream)
+            .distinct();
+    }
+
+    public static boolean isUnderTag(TreePath path, @Nullable Object tag) {
+        boolean result = true;
+
+        if (tag != null) {
+            result = path.getPathCount() > 1 && ((ChangesBrowserNode) path.getPathComponent(1)).getUserObject() == tag;
+        }
+
+        return result;
+    }
+
+
+    public static Stream<Change> getChanges(Project project, @Nullable TreePath[] paths) {
+        Stream<Change> changes = Streams.stream(paths)
+            .map(TreePath::getLastPathComponent)
+            .map(node -> ((ChangesBrowserNode<?>) node))
+            .flatMap(node -> node.getObjectsUnderStream(Change.class))
+            .map(Change.class::cast);
+        Stream<Change> hijackedChanges = getVirtualFiles(paths, MODIFIED_WITHOUT_EDITING_TAG)
+            .map(file -> toHijackedChange(project, file))
+            .filter(Objects::nonNull);
+
+        return Stream.concat(changes, hijackedChanges).distinct();
+    }
+
+    private static @Nullable Change toHijackedChange(Project project, VirtualFile file) {
+        VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
+        if (before != null) {
+            ContentRevision afterRevision = new CurrentContentRevision(VcsUtil.getFilePath(file));
+            return new Change(before, afterRevision, FileStatus.HIJACKED);
+        }
+        return null;
+    }
+
+
+    private Stream<LocallyDeletedChange> getSelectedLocallyDeletedChanges() {
+        return getSelectionNodesStream(LOCALLY_DELETED_NODE_TAG)
+            .flatMap(node -> node.getObjectsUnderStream(LocallyDeletedChange.class))
+            .distinct();
+    }
+
+    private List<FilePath> getSelectedMissingFiles() {
+        return getSelectedLocallyDeletedChanges().map(LocallyDeletedChange::getPath).toList();
+    }
+
+    protected List<VirtualFile> getSelectedFiles() {
+        return ContainerUtil.concat(getAfterRevisionsFiles(getSelectedChanges()), getSelectedVirtualFiles(null))
+            .stream()
+            .distinct()
+            .toList();
+    }
+
+    // TODO: Does not correspond to getSelectedChanges() - for instance, hijacked changes are not tracked here
+    private boolean haveSelectedChanges() {
+        return getSelectionNodesStream().anyMatch(
+            node -> node instanceof ChangesBrowserChangeNode || node instanceof ChangesBrowserChangeListNode && node.getChildCount() > 0);
+    }
+
+
+    private Stream<Change> getLeadSelection() {
+        return getSelectionNodesStream()
+            .filter(node -> node instanceof ChangesBrowserChangeNode)
+            .map(ChangesBrowserChangeNode.class::cast)
+            .map(ChangesBrowserChangeNode::getUserObject)
+            .distinct();
+    }
+
+
+    public ChangesBrowserNode<?> getRoot() {
+        return (ChangesBrowserNode<?>) getModel().getRoot();
+    }
+
+
+    public Stream<Change> getChanges() {
+        return getRoot().getObjectsUnderStream(Change.class);
+    }
+
+
+    public Stream<Change> getSelectedChanges() {
+        return getChanges(myProject, getSelectionPaths());
+    }
+
+
+    private Stream<ChangeList> getSelectedChangeLists() {
+        return getSelectionObjectsStream()
+            .filter(userObject -> userObject instanceof ChangeList)
+            .map(ChangeList.class::cast)
+            .distinct();
+    }
+
+    public void setMenuActions(ActionGroup menuGroup) {
+        PopupHandler.installPopupHandler(this, menuGroup, ActionPlaces.CHANGES_VIEW_POPUP, ActionManager.getInstance());
+        editSourceRegistration();
+    }
+
+    protected void editSourceRegistration() {
+        EditSourceOnDoubleClickHandler.install(this);
+        EditSourceOnEnterKeyHandler.install(this);
+    }
+
+    @Override
+
+    public JComponent getComponent() {
+        return this;
+    }
+
+    @Override
+    public void processMouseEvent(MouseEvent e) {
+        if (MouseEvent.MOUSE_RELEASED == e.getID() && !isSelectionEmpty() && !e.isShiftDown() && !e.isControlDown() &&
+            !e.isMetaDown() && !e.isPopupTrigger()) {
+            if (isOverSelection(e.getPoint())) {
+                clearSelection();
+                TreePath path = getPathForLocation(e.getPoint().x, e.getPoint().y);
+                if (path != null) {
+                    setSelectionPath(path);
+                }
+            }
+        }
+
+        super.processMouseEvent(e);
+    }
+
+    @Override
+    public boolean isOverSelection(Point point) {
+        return TreeUtil.isOverSelection(this, point);
+    }
+
+    @Override
+    public void dropSelectionButUnderPoint(Point point) {
+        TreeUtil.dropSelectionButUnderPoint(this, point);
+    }
 }

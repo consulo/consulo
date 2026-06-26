@@ -55,7 +55,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
 
   protected SpecificFilesViewDialog(Project project,
                                     String title,
-                                    Key<Stream<VirtualFile>> shownDataKey,
+                                    Key<List<VirtualFile>> shownDataKey,
                                     List<VirtualFile> initDataFiles) {
     super(project, true);
     setTitle(title);

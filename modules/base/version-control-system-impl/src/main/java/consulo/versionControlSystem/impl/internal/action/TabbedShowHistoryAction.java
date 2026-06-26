@@ -100,8 +100,9 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
 
     
     private static Pair<FilePath, VirtualFile> getPathAndParentFile(VcsContext context) {
-        if (context.getSelectedFilesStream().findAny().isPresent()) {
-            VirtualFile file = getIfSingle(context.getSelectedFilesStream());
+        VirtualFile[] selectedFiles = context.getSelectedFiles();
+        if (selectedFiles != null && selectedFiles.length > 0) {
+            VirtualFile file = selectedFiles.length == 1 ? selectedFiles[0] : null;
             return file != null ? Pair.create(VcsUtil.getFilePath(file), file) : Pair.empty();
         }
 

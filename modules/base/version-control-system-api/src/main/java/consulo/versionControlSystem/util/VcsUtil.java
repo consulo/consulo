@@ -28,6 +28,7 @@ import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.collection.Streams;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
@@ -652,18 +653,22 @@ public class VcsUtil {
         return mappings;
     }
 
+    @Deprecated
     public static @Nullable <T> T getIfSingle(@Nullable Stream<T> items) {
-        return items == null ? null : items.limit(2).map(Optional::ofNullable).reduce(Optional.empty(), (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty()).orElse(null);
+        return Streams.getIfSingle(items);
     }
 
+    @Deprecated
     public static <T> boolean isEmpty(@Nullable Stream<T> items) {
-        return items == null || !items.findAny().isPresent();
+        return Streams.isEmpty(items);
     }
 
+    @Deprecated
     public static <T> Stream<T> notNullize(@Nullable Stream<T> items) {
         return ObjectUtil.notNull(items, Stream.empty());
     }
 
+    @Deprecated
     public static <T> Stream<T> toStream(@Nullable T... items) {
         return items == null ? Stream.empty() : Stream.of(items);
     }
