@@ -15,15 +15,21 @@
  */
 package consulo.diff.impl.internal.action;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataSink;
 import consulo.dataContext.DataSnapshot;
+import consulo.dataContext.UiDataRule;
 import consulo.diff.DiffDataKeys;
 import consulo.navigation.Navigatable;
-import org.jspecify.annotations.Nullable;
 
-public final class DiffNavigatableArrayRule {
-    static @Nullable Navigatable[] getData(DataSnapshot dataProvider) {
-        Navigatable element = dataProvider.get(DiffDataKeys.NAVIGATABLE);
-        if (element == null) return null;
-        return new Navigatable[]{element};
+@ExtensionImpl
+public class DiffUiDataRule implements UiDataRule {
+    @Override
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
+        Navigatable navigatable = snapshot.get(DiffDataKeys.NAVIGATABLE);
+        if (navigatable != null) {
+            sink.set(DiffDataKeys.NAVIGATABLE_ARRAY, new Navigatable[]{navigatable});
+        }
     }
 }
+

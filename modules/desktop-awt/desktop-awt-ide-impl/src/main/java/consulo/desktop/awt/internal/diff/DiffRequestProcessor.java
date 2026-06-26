@@ -20,10 +20,7 @@ import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.UiDataProvider;
+import consulo.dataContext.*;
 import consulo.desktop.awt.internal.diff.action.OpenInEditorAction;
 import consulo.desktop.awt.internal.diff.external.ExternalDiffTool;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
@@ -46,6 +43,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
@@ -453,12 +451,13 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     protected void buildToolbar(@Nullable List<AnAction> viewerActions) {
         ActionGroup group = collectToolbarActions(viewerActions);
+        
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DIFF_TOOLBAR, group, true);
 
-        DataManager.registerUiDataProvider(toolbar.getComponent(), myMainPanel);
-        toolbar.setTargetComponent(toolbar.getComponent());
+        toolbar.setTargetComponent(myContentPanel.getTargetComponent());
 
         myToolbarPanel.setContent(toolbar.getComponent());
+
         for (AnAction action : group.getChildren(null)) {
             AWTDiffUtil.registerAction(action, myMainPanel);
         }
@@ -669,6 +668,9 @@ public abstract class DiffRequestProcessor implements Disposable {
                 e.getPresentation().setEnabledAndVisible(true);
                 return;
             }
+
+            Component data = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+            consulo.ui.Component data1 = e.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
 
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoNext()) {
@@ -887,12 +889,6 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Override
         public void uiDataSnapshot(DataSink sink) {
-            DataProvider contentProvider =
-                ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
-            if (contentProvider instanceof UiDataProvider uiDataProvider) {
-                sink.uiDataSnapshot(uiDataProvider);
-            }
-
             sink.set(OpenInEditorAction.KEY, myOpenInEditorAction);
             sink.set(DiffDataKeys.DIFF_REQUEST, myActiveRequest);
             sink.set(Project.KEY, myProject);
