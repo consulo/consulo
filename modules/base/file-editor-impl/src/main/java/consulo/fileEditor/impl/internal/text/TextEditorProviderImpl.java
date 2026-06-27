@@ -83,7 +83,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         return new EditorWrapper(editor);
     }
 
-    public void setStateImpl(Project project, Editor editor, TextEditorState state) {
+    public void setStateImpl(@Nullable Project project, Editor editor, TextEditorState state) {
         if (state.CARETS != null && state.CARETS.length > 0) {
             if (editor.getCaretModel().supportsMultipleCarets()) {
                 CaretModel caretModel = editor.getCaretModel();

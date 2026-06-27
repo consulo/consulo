@@ -121,7 +121,7 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     }
 
     @Override
-    public void setStateImpl(Project project, Editor editor, TextEditorState state) {
+    public void setStateImpl(@Nullable Project project, Editor editor, TextEditorState state) {
         super.setStateImpl(project, editor, state);
         // Folding
         CodeFoldingState foldState = state.getFoldingState();
