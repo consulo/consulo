@@ -26,6 +26,7 @@ import jakarta.inject.Singleton;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
@@ -39,38 +40,38 @@ public class ApplicationConcurrencyImpl implements ApplicationConcurrency {
 
     private final CoroutineContext myCoroutineContext;
 
+    private final Executor myVirtualsExecutor;
+
     @Inject
     public ApplicationConcurrencyImpl(Application application) {
+        myVirtualsExecutor = Executors.newVirtualThreadPerTaskExecutor();
+
         myScheduledExecutorService = new AppScheduledExecutorService("Global Instance", this);
-        myCoroutineContext = new CoroutineContext(myScheduledExecutorService, myScheduledExecutorService);
+
+        myCoroutineContext = new CoroutineContext(myVirtualsExecutor, myScheduledExecutorService);
         myCoroutineContext.putCopyableUserData(Application.KEY, application);
     }
 
-    
     @Override
     public CoroutineContext coroutineContext() {
         return myCoroutineContext;
     }
 
-    
     @Override
     public Executor executor() {
         return myScheduledExecutorService.getBackendExecutorService();
     }
 
-    
     @Override
     public ExecutorService getExecutorService() {
         return myScheduledExecutorService.getBackendExecutorService();
     }
 
-    
     @Override
     public ScheduledExecutorService getScheduledExecutorService() {
         return myScheduledExecutorService;
     }
 
-    
     @Override
     public ScheduledExecutorService createBoundedScheduledExecutorService(String name, int maxThreads) {
         AppDelayQueue delayQueue = ((AppScheduledExecutorService) getScheduledExecutorService()).getDelayQueue();
@@ -78,21 +79,18 @@ public class ApplicationConcurrencyImpl implements ApplicationConcurrency {
     }
 
     @Override
-    
     public ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                                 Executor backendExecutor,
                                                                 int maxThreads) {
         return new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
     }
 
-    
     @Override
     public ExecutorService createBoundedApplicationPoolExecutor(String name, int maxThreads, Disposable parentDisposable) {
         return createBoundedApplicationPoolExecutor(name, getExecutorService(), maxThreads, parentDisposable);
     }
 
     @Override
-    
     public ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                                 Executor backendExecutor,
                                                                 int maxThreads,
