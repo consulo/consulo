@@ -19,6 +19,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,8 +36,7 @@ public class FileEditorBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
+  public static @Nullable String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
     return ourInstance.getMessage(key);
   }
 }

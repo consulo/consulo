@@ -36,128 +36,129 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 @ExtensionImpl(order = "last")
 public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
-  private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);
+    private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);
 
-  private static final String FOLDING_ELEMENT = "folding";
+    private static final String FOLDING_ELEMENT = "folding";
 
-  @Inject
-  public PsiAwareTextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
-    super(textEditorComponentContainerFactory);
-  }
-
-  @RequiredUIAccess
-  @Override
-  
-  public FileEditor createEditor(Project project, VirtualFile file) {
-    return new PsiAwareTextEditorImpl(project, file, this);
-  }
-
-  @Override
-  
-  public FileEditorState readState(Element element, Project project, VirtualFile file) {
-    TextEditorState state = (TextEditorState)super.readState(element, project, file);
-
-    // Foldings
-    Element child = element.getChild(FOLDING_ELEMENT);
-    Document document = FileDocumentManager.getInstance().getCachedDocument(file);
-    if (child != null) {
-      if (document == null) {
-        Element detachedStateCopy = child.clone();
-        state.setDelayedFoldState(() -> {
-          Document document1 = FileDocumentManager.getInstance().getCachedDocument(file);
-          return document1 == null ? null : CodeFoldingManager.getInstance(project).readFoldingState(detachedStateCopy, document1);
-        });
-      }
-      else {
-        //PsiDocumentManager.getInstance(project).commitDocument(document);
-        state.setFoldingState(CodeFoldingManager.getInstance(project).readFoldingState(child, document));
-      }
-    }
-    return state;
-  }
-
-  @Override
-  public void writeState(FileEditorState _state, Project project, Element element) {
-    super.writeState(_state, project, element);
-
-    TextEditorState state = (TextEditorState)_state;
-
-    // Foldings
-    CodeFoldingState foldingState = state.getFoldingState();
-    if (foldingState != null) {
-      Element e = new Element(FOLDING_ELEMENT);
-      try {
-        CodeFoldingManager.getInstance(project).writeFoldingState(foldingState, e);
-      }
-      catch (WriteExternalException e1) {
-        //ignore
-      }
-      element.addContent(e);
-    }
-  }
-
-  
-  @Override
-  public TextEditorState getStateImpl(Project project, Editor editor, FileEditorStateLevel level) {
-    TextEditorState state = super.getStateImpl(project, editor, level);
-    // Save folding only on FULL level. It's very expensive to commit document on every
-    // type (caused by undo).
-    if (FileEditorStateLevel.FULL == level) {
-      // Folding
-      if (project != null && !project.isDisposed() && !editor.isDisposed() && project.isInitialized()) {
-        state.setFoldingState(CodeFoldingManager.getInstance(project).saveFoldingState(editor));
-      }
-      else {
-        state.setFoldingState(null);
-      }
-    }
-
-    return state;
-  }
-
-  @Override
-  public void setStateImpl(Project project, Editor editor, TextEditorState state) {
-    super.setStateImpl(project, editor, state);
-    // Folding
-    CodeFoldingState foldState = state.getFoldingState();
-    if (project != null && foldState != null && AsyncEditorLoader.isEditorLoaded(editor)) {
-      if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
-        PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
-        LOG.error("File should be parsed when changing editor state, otherwise UI might be frozen for a considerable time");
-      }
-      editor.getFoldingModel().runBatchFoldingOperation(() -> CodeFoldingManager.getInstance(project).restoreFoldingState(editor, foldState));
-    }
-  }
-
-  
-  @Override
-  protected EditorWrapper createWrapperForEditor(Editor editor) {
-    return new PsiAwareEditorWrapper(editor);
-  }
-
-  private final class PsiAwareEditorWrapper extends EditorWrapper {
-    private final TextEditorBackgroundHighlighter myBackgroundHighlighter;
-
-    private PsiAwareEditorWrapper(Editor editor) {
-      super(editor);
-      Project project = editor.getProject();
-      myBackgroundHighlighter = project == null ? null : new TextEditorBackgroundHighlighter(project, editor);
+    @Inject
+    public PsiAwareTextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
+        super(textEditorComponentContainerFactory);
     }
 
     @Override
-    public BackgroundEditorHighlighter getBackgroundHighlighter() {
-      return myBackgroundHighlighter;
+    @RequiredUIAccess
+    public FileEditor createEditor(Project project, VirtualFile file) {
+        return new PsiAwareTextEditorImpl(project, file, this);
     }
 
     @Override
-    public boolean isValid() {
-      return !getEditor().isDisposed();
+    public FileEditorState readState(Element element, Project project, VirtualFile file) {
+        TextEditorState state = (TextEditorState) super.readState(element, project, file);
+
+        // Foldings
+        Element child = element.getChild(FOLDING_ELEMENT);
+        Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+        if (child != null) {
+            if (document == null) {
+                Element detachedStateCopy = child.clone();
+                state.setDelayedFoldState(() -> {
+                    Document document1 = FileDocumentManager.getInstance().getCachedDocument(file);
+                    return document1 == null ? null
+                        : CodeFoldingManager.getInstance(project).readFoldingState(detachedStateCopy, document1);
+                });
+            }
+            else {
+                //PsiDocumentManager.getInstance(project).commitDocument(document);
+                state.setFoldingState(CodeFoldingManager.getInstance(project).readFoldingState(child, document));
+            }
+        }
+        return state;
     }
-  }
+
+    @Override
+    public void writeState(FileEditorState _state, Project project, Element element) {
+        super.writeState(_state, project, element);
+
+        TextEditorState state = (TextEditorState) _state;
+
+        // Foldings
+        CodeFoldingState foldingState = state.getFoldingState();
+        if (foldingState != null) {
+            Element e = new Element(FOLDING_ELEMENT);
+            try {
+                CodeFoldingManager.getInstance(project).writeFoldingState(foldingState, e);
+            }
+            catch (WriteExternalException e1) {
+                //ignore
+            }
+            element.addContent(e);
+        }
+    }
+
+    @Override
+    public TextEditorState getStateImpl(@Nullable Project project, Editor editor, FileEditorStateLevel level) {
+        TextEditorState state = super.getStateImpl(project, editor, level);
+        // Save folding only on FULL level. It's very expensive to commit document on every
+        // type (caused by undo).
+        if (FileEditorStateLevel.FULL == level) {
+            // Folding
+            if (project != null && !project.isDisposed() && !editor.isDisposed() && project.isInitialized()) {
+                state.setFoldingState(CodeFoldingManager.getInstance(project).saveFoldingState(editor));
+            }
+            else {
+                state.setFoldingState(null);
+            }
+        }
+
+        return state;
+    }
+
+    @Override
+    public void setStateImpl(@Nullable Project project, Editor editor, TextEditorState state) {
+        super.setStateImpl(project, editor, state);
+        // Folding
+        CodeFoldingState foldState = state.getFoldingState();
+        if (project != null && foldState != null && AsyncEditorLoader.isEditorLoaded(editor)) {
+            if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
+                PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+                LOG.error("File should be parsed when changing editor state, otherwise UI might be frozen for a considerable time");
+            }
+            editor.getFoldingModel().runBatchFoldingOperation(() -> CodeFoldingManager.getInstance(project).restoreFoldingState(
+                editor,
+                foldState
+            ));
+        }
+    }
+
+    @Override
+    protected EditorWrapper createWrapperForEditor(Editor editor) {
+        return new PsiAwareEditorWrapper(editor);
+    }
+
+    private final class PsiAwareEditorWrapper extends EditorWrapper {
+        private final TextEditorBackgroundHighlighter myBackgroundHighlighter;
+
+        private PsiAwareEditorWrapper(Editor editor) {
+            super(editor);
+            Project project = editor.getProject();
+            myBackgroundHighlighter = project == null ? null : new TextEditorBackgroundHighlighter(project, editor);
+        }
+
+        @Override
+        public BackgroundEditorHighlighter getBackgroundHighlighter() {
+            return myBackgroundHighlighter;
+        }
+
+        @Override
+        public boolean isValid() {
+            return !getEditor().isDisposed();
+        }
+    }
 }

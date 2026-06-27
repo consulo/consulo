@@ -23,26 +23,27 @@ package consulo.fileEditor.structureView.tree;
  * @see TreeModel#getSorters()
  */
 public interface TreeAction {
-  /**
-   * Returns the presentation for the action.
-   *
-   * @return the action presentation.
-   * @see ActionPresentationData#ActionPresentationData(String, String, consulo.ui.image.Image)
-   */
-  ActionPresentation getPresentation();
+    /**
+     * Returns the presentation for the action.
+     *
+     * @return the action presentation.
+     * @see ActionPresentationData#ActionPresentationData(consulo.localize.LocalizeValue, consulo.localize.LocalizeValue, consulo.ui.image.Image)
+     */
+    ActionPresentation getPresentation();
 
-  /**
-   * Returns a unique identifier for the action.
-   *
-   * @return the action identifier.
-   */
-  String getName();
+    /**
+     * Returns a unique identifier for the action.
+     *
+     * @return the action identifier.
+     */
+    String getName();
 
-  /**
-   * Return identifier which will be store state in {@link consulo.component.PropertiesComponent}
-   * @return property identifier
-   */
-  default String getSerializePropertyName() {
-    return getName();
-  }
+    /**
+     * Return identifier which will be store state in {@link consulo.component.PropertiesComponent}
+     *
+     * @return property identifier
+     */
+    default String getSerializePropertyName() {
+        return getName();
+    }
 }
