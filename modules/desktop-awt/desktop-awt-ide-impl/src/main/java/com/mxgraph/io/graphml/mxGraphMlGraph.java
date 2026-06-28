@@ -27,7 +27,7 @@ public class mxGraphMlGraph {
 
   private String id = "";
 
-  private String edgedefault = "";
+  private String edgeDefault = "";
 
   private List<mxGraphMlNode> nodes = new ArrayList<mxGraphMlNode>();
 
@@ -37,11 +37,11 @@ public class mxGraphMlGraph {
    * Constructs a graph with id and edge default direction.
    *
    * @param id          Graph's ID
-   * @param edgedefault Edge Default direction.("directed" or "undirected")
+   * @param edgeDefault Edge Default direction.("directed" or "undirected")
    */
-  public mxGraphMlGraph(String id, String edgedefault) {
+  public mxGraphMlGraph(String id, String edgeDefault) {
     this.id = id;
-    this.edgedefault = edgedefault;
+    this.edgeDefault = edgeDefault;
   }
 
   /**
@@ -57,7 +57,7 @@ public class mxGraphMlGraph {
    */
   public mxGraphMlGraph(Element graphElement) {
     this.id = graphElement.getAttribute(mxGraphMlConstants.ID);
-    this.edgedefault = graphElement.getAttribute(mxGraphMlConstants.EDGE_DEFAULT);
+    this.edgeDefault = graphElement.getAttribute(mxGraphMlConstants.EDGE_DEFAULT);
 
     //Adds node elements
     List<Element> nodeElements = mxGraphMlUtils.childsTags(graphElement, mxGraphMlConstants.NODE);
@@ -75,10 +75,10 @@ public class mxGraphMlGraph {
       mxGraphMlEdge edge = new mxGraphMlEdge(edgeElem);
 
       if (edge.getEdgeDirected().equals("")) {
-        if (edgedefault.equals(mxGraphMlConstants.EDGE_DIRECTED)) {
+        if (edgeDefault.equals(mxGraphMlConstants.EDGE_DIRECTED)) {
           edge.setEdgeDirected("true");
         }
-        else if (edgedefault.equals(mxGraphMlConstants.EDGE_UNDIRECTED)) {
+        else if (edgeDefault.equals(mxGraphMlConstants.EDGE_UNDIRECTED)) {
           edge.setEdgeDirected("false");
         }
       }
@@ -209,7 +209,7 @@ public class mxGraphMlGraph {
   /**
    * Returns the point represented for the port name.
    * The specials names North, NorthWest, NorthEast, East, West, South, SouthEast and SouthWest.
-   * are accepted. Else, the values acepted follow the pattern "double,double".
+   * are accepted. Else, the values accepted follow the pattern "double,double".
    * where double must be in the range 0..1
    *
    * @param source Port Name.
@@ -305,11 +305,12 @@ public class mxGraphMlGraph {
   }
 
   public String getEdgedefault() {
-    return edgedefault;
+    return edgeDefault;
   }
 
-  public void setEdgedefault(String edgedefault) {
-    this.edgedefault = edgedefault;
+  @SuppressWarnings("SpellCheckingInspection")
+  public void setEdgedefault(String edgeDefault) {
+    this.edgeDefault = edgeDefault;
   }
 
   public String getId() {
@@ -357,8 +358,8 @@ public class mxGraphMlGraph {
     if (!id.equals("")) {
       graph.setAttribute(mxGraphMlConstants.ID, id);
     }
-    if (!edgedefault.equals("")) {
-      graph.setAttribute(mxGraphMlConstants.EDGE_DEFAULT, edgedefault);
+    if (!edgeDefault.equals("")) {
+      graph.setAttribute(mxGraphMlConstants.EDGE_DEFAULT, edgeDefault);
     }
 
     for (mxGraphMlNode node : nodes) {

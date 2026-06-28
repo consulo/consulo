@@ -36,7 +36,7 @@ import java.util.List;
  * This class fires the following event:
  * <p/>
  * mxEvent.LAYOUT_CELLS fires between begin- and endUpdate after all cells have
- * been layouted in layoutCells. The <code>cells</code> property contains all
+ * been laid out in layoutCells. The <code>cells</code> property contains all
  * cells that have been passed to layoutCells.
  */
 public class mxLayoutManager extends mxEventSource {
@@ -54,7 +54,7 @@ public class mxLayoutManager extends mxEventSource {
   protected boolean enabled = true;
 
   /**
-   * Optional string that specifies the attributename to be passed to
+   * Optional string that specifies the attribute-name to be passed to
    * mxCell.is to check if the rule applies to a cell. Default is true.
    */
   protected boolean bubbling = true;

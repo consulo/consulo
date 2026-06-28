@@ -35,17 +35,17 @@ public class WindowsCredentialStore implements CredentialStore {
 
     @Override
     public @Nullable Credentials get(CredentialAttributes attributes) {
-        CredAdvapi32.PCREDENTIAL pcredential = new CredAdvapi32.PCREDENTIAL();
+        CredAdvapi32.PCREDENTIAL pCredential = new CredAdvapi32.PCREDENTIAL();
 
         boolean read = false;
         try {
             // MSDN doc doesn't mention threading safety, so let's just be careful and synchronize the access
             synchronized (INSTANCE) {
-                read = INSTANCE.CredRead(attributes.getServiceName(), CredAdvapi32.CRED_TYPE_GENERIC, 0, pcredential);
+                read = INSTANCE.CredRead(attributes.getServiceName(), CredAdvapi32.CRED_TYPE_GENERIC, 0, pCredential);
             }
 
             if (read) {
-                CredAdvapi32.CREDENTIAL credential = new CredAdvapi32.CREDENTIAL(pcredential.credential);
+                CredAdvapi32.CREDENTIAL credential = new CredAdvapi32.CREDENTIAL(pCredential.credential);
 
                 byte[] secretBytes = credential.CredentialBlob.getByteArray(0, credential.CredentialBlobSize);
                 String secret = new String(secretBytes, StandardCharsets.UTF_8);
@@ -58,9 +58,9 @@ public class WindowsCredentialStore implements CredentialStore {
             SharedLogger.LOG.warn(e);
         }
         finally {
-            if (pcredential.credential != null) {
+            if (pCredential.credential != null) {
                 synchronized (INSTANCE) {
-                    INSTANCE.CredFree(pcredential.credential);
+                    INSTANCE.CredFree(pCredential.credential);
                 }
             }
         }

@@ -70,7 +70,7 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
             }
             if (!myChangeListRemoteState.getState()) {
                 renderer.append(spaceAndThinSpace());
-                renderer.append(VcsLocalize.changesNodetitleHaveOutdatedFiles().get(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+                renderer.append(VcsLocalize.changesNodeTitleHaveOutdatedFiles(), SimpleTextAttributes.ERROR_ATTRIBUTES);
             }
         }
         else {

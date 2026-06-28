@@ -37,7 +37,7 @@ public final class Lists {
      * - less memory
      * - slower modification in highly contented case (which is the kind of situation you shouldn't use COWAL anyway)
      * <p/>
-     * N.B. Avoid using {@code list.toArray(new T[list.size()])} on this list because it is inherently racey and
+     * N.B. Avoid using {@code list.toArray(new T[list.size()])} on this list because it is inherently racy and
      * therefore can return array with null elements at the end.
      */
     public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList() {
@@ -62,7 +62,7 @@ public final class Lists {
 
     @SafeVarargs
     public static <T> List<T> append(List<? extends T> list, T... values) {
-        return ContainerUtil.concat(list, List.of(values));
+        return concat(list, List.of(values));
     }
 
     // Generalized Quick Sort. Does neither array.clone() nor list.toArray()
@@ -123,9 +123,9 @@ public final class Lists {
         // Swap partition elements back to middle
         int n = off + len;
         int s = Math.min(a - off, b - a);
-        vecswap(x, off, b - s, s);
+        vecSwap(x, off, b - s, s);
         s = Math.min(d - c, n - d - 1);
-        vecswap(x, b, n - s, s);
+        vecSwap(x, b, n - s, s);
 
         // Recursively sort non-partition-elements
         if ((s = b - a) > 1) {
@@ -148,7 +148,7 @@ public final class Lists {
     /*
      * Swaps x[a .. (a+n-1)] with x[b .. (b+n-1)].
      */
-    private static <T> void vecswap(List<T> x, int a, int b, int n) {
+    private static <T> void vecSwap(List<T> x, int a, int b, int n) {
         for (int i = 0; i < n; i++, a++, b++) {
             swapElements(x, a, b);
         }

@@ -359,33 +359,33 @@ changes.newchangelist.warning.already.exists.text:
     text: Changelist ''{0}'' already exists.
 changes.newchangelist.warning.already.exists.title:
     text: Wrong Changelist Name
-changes.nodetitle.changecount:
+changes.node.title.change.count:
     text: ({0,choice, 0#No files|1#1 file|2#{0} files})
-changes.nodetitle.directory.changecount:
+changes.node.title.directory.change.count:
     text: ({0,choice, 0#No directories|1#1 directory|2#{0} directories})
-changes.nodetitle.directory.file.changecount:
+changes.node.title.directory.file.change.count:
     text: ({0,choice, 0#No directories|1#1 directory|2#{0} directories} and {1,choice, 0#no files|1#1 file|2#{1} files})
-changes.nodetitle.have.outdated.files:
+changes.node.title.have.outdated.files:
     text: Some files are changed on server
-changes.nodetitle.ignored.files:
+changes.node.title.ignored.files:
     text: Ignored Files
-changes.nodetitle.locally.deleted.files:
+changes.node.title.locally.deleted.files:
     text: Locally Deleted Files
-changes.nodetitle.locked.folders:
+changes.node.title.locked.folders:
     text: Locked working copy folders
-changes.nodetitle.locked.folders.tooltip:
+changes.node.title.locked.folders.tooltip:
     text: Some folders are locked; VCS operations are not allowed for them. Cleanup should be performed.
-changes.nodetitle.logicallt.locked.folders:
+changes.node.title.logically.locked.folders:
     text: Explicitly locked files
-changes.nodetitle.modified.without.editing:
+changes.node.title.modified.without.editing:
     text: Modified without Checkout
-changes.nodetitle.switched.files:
+changes.node.title.switched.files:
     text: Switched Files
-changes.nodetitle.switched.roots:
+changes.node.title.switched.roots:
     text: Roots Switches
-changes.nodetitle.unversioned.files:
+changes.node.title.unversioned.files:
     text: Unversioned Files
-changes.nodetitle.updating:
+changes.node.title.updating:
     text: (updating...)
 changes.remove.active.empty.prompt:
     text: 'Select the changelist to make active:'

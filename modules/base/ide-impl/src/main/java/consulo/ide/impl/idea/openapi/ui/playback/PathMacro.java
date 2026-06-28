@@ -22,33 +22,31 @@ import java.util.Map;
 import java.util.Set;
 
 public class PathMacro {
-  
-  private Map<String, File> myMap = new HashMap<String, File>();
+    private Map<String, File> myMap = new HashMap<>();
 
-  public PathMacro setScriptDir(File dir) {
-    myMap.put("\\{script\\.dir\\}", dir);
-    return this;
-  }
-
-  public PathMacro setBaseDir(File dir) {
-    myMap.put("\\{base\\.dir\\}", dir);
-    return this;
-  }
-  
-  public File resolveFile(String path, File defaultDir) {
-    Set<String> macros = myMap.keySet();
-    String actualtPath = path;
-    for (Iterator<String> iterator = macros.iterator(); iterator.hasNext(); ) {
-      String each = iterator.next();
-      actualtPath = actualtPath.replaceAll(each, myMap.get(each).getAbsolutePath());
+    public PathMacro setScriptDir(File dir) {
+        myMap.put("\\{script\\.dir\\}", dir);
+        return this;
     }
 
-    File file = new File(actualtPath);
-    if (!file.isAbsolute()) {
-      file = new File(defaultDir, actualtPath);
+    public PathMacro setBaseDir(File dir) {
+        myMap.put("\\{base\\.dir\\}", dir);
+        return this;
     }
 
-    return file;
-  }
+    public File resolveFile(String path, File defaultDir) {
+        Set<String> macros = myMap.keySet();
+        String actualPath = path;
+        for (Iterator<String> iterator = macros.iterator(); iterator.hasNext(); ) {
+            String each = iterator.next();
+            actualPath = actualPath.replaceAll(each, myMap.get(each).getAbsolutePath());
+        }
 
+        File file = new File(actualPath);
+        if (!file.isAbsolute()) {
+            file = new File(defaultDir, actualPath);
+        }
+
+        return file;
+    }
 }

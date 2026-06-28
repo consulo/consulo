@@ -25,13 +25,13 @@ import consulo.codeEditor.Editor;
  * @see RangeHighlighter#setEditorFilter(MarkupEditorFilter)
  */
 public interface MarkupEditorFilter {
-  MarkupEditorFilter EMPTY = editor -> true;
+    MarkupEditorFilter EMPTY = editor -> true;
 
-  /**
-   * Checks if the highlighter is active in the specified editor.
-   *
-   * @param editor the editor to check for.
-   * @return true if the highlighter is available, false otherwise.
-   */
-  boolean avaliableIn(Editor editor);
+    /**
+     * Checks if the highlighter is active in the specified editor.
+     *
+     * @param editor the editor to check for.
+     * @return true if the highlighter is available, false otherwise.
+     */
+    boolean availableIn(Editor editor);
 }
