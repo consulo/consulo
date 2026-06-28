@@ -15,56 +15,54 @@
  */
 package consulo.externalService;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;
 
 /**
- * @author VISTALL
- * @since 04/09/2021
- * <p>
  * States:
- * - YES - send or get requests, with user authorize (not anonymous)
- * - UNSURE - send or get requests anonymous
+ * - YES - send or get requests, with user authorization (not anonymous)
+ * - UNSURE - send or get requests anonymously
  * - NO - disabled service
+ *
+ * @author VISTALL
+ * @since 2021-09-04
  */
 public enum ExternalService {
-  ERROR_REPORTING(LocalizeValue.localizeTODO("Error Reporting"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO),
-  DEVELOPER_LIST(LocalizeValue.localizeTODO("Developer List (Error Reporting)"), ThreeState.NO, ThreeState.YES, ThreeState.NO),
-  STATISTICS(LocalizeValue.localizeTODO("Statistics"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO) {
-    
-    @Override
-    public ThreeState getDefaultState() {
-      // disable fully statistics for sandbox/internal mode
-      if (ApplicationProperties.isInSandbox() || ApplicationManager.getApplication().isInternal()) {
-        return ThreeState.NO;
-      }
-      return super.getDefaultState();
+    ERROR_REPORTING(LocalizeValue.localizeTODO("Error Reporting"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO),
+    DEVELOPER_LIST(LocalizeValue.localizeTODO("Developer List (Error Reporting)"), ThreeState.NO, ThreeState.YES, ThreeState.NO),
+    STATISTICS(LocalizeValue.localizeTODO("Statistics"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO) {
+        @Override
+        public ThreeState getDefaultState() {
+            // disable fully statistics for sandbox/internal mode
+            if (ApplicationProperties.isInSandbox() || Application.get().isInternal()) {
+                return ThreeState.NO;
+            }
+            return super.getDefaultState();
+        }
+    },
+    STORAGE(LocalizeValue.localizeTODO("Settings Synchronization"), ThreeState.NO, ThreeState.YES, ThreeState.NO);
+
+    private final LocalizeValue myName;
+    private final ThreeState myDefaultState;
+    private final ThreeState[] myAllowedStates;
+
+    ExternalService(LocalizeValue name, ThreeState defaultState, ThreeState... allowedStates) {
+        myName = name;
+        myDefaultState = defaultState;
+        myAllowedStates = allowedStates;
     }
-  },
-  STORAGE(LocalizeValue.localizeTODO("Settings Synchronize"), ThreeState.NO, ThreeState.YES, ThreeState.NO);
 
-  private final LocalizeValue myName;
-  private final ThreeState myDefaultState;
-  private final ThreeState[] myAllowedStates;
+    public ThreeState[] getAllowedStates() {
+        return myAllowedStates;
+    }
 
-  ExternalService(LocalizeValue name, ThreeState defaultState, ThreeState... allowedStates) {
-    myName = name;
-    myDefaultState = defaultState;
-    myAllowedStates = allowedStates;
-  }
+    public LocalizeValue getName() {
+        return myName;
+    }
 
-  public ThreeState[] getAllowedStates() {
-    return myAllowedStates;
-  }
-
-  public LocalizeValue getName() {
-    return myName;
-  }
-
-  
-  public ThreeState getDefaultState() {
-    return myDefaultState;
-  }
+    public ThreeState getDefaultState() {
+        return myDefaultState;
+    }
 }

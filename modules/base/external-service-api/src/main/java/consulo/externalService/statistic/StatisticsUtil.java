@@ -19,82 +19,86 @@ import consulo.util.collection.ContainerUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 10-Sep-16
+ * @since 2016-09-10
  */
 public class StatisticsUtil {
-  /**
-   * Constructs a proper UsageDescriptor for a boolean value,
-   * by adding "enabled" or "disabled" suffix to the given key, depending on the value.
-   */
-  public static UsageDescriptor getBooleanUsage(String key, boolean value) {
-    key += value ? ".enabled" : ".disabled";
-    return new UsageDescriptor(key, 1);
-  }
-
-  /**
-   * Constructs a proper UsageDescriptor for a counting value.
-   * If one needs to know a number of some items in the project, there is no direct way to report usages per-project.
-   * Therefore this workaround: create several keys representing interesting ranges, and report that key which correspond to the range
-   * which the given value belongs to.
-   * <p>
-   * For example, to report a number of commits in Git repository, you can call this method like that:
-   * ```
-   * val usageDescriptor = getCountingUsage("git.commit.count", listOf(0, 1, 100, 10000, 100000), realCommitCount)
-   * ```
-   * and if there are e.g. 50000 commits in the repository, one usage of the following key will be reported: `git.commit.count.10K+`.
-   * <p>
-   * NB:
-   * (1) the list of steps must be sorted ascendingly; If it is not, the result is undefined.
-   * (2) the value should lay somewhere inside steps ranges. If it is below the first step, the following usage will be reported:
-   * `git.commit.count.<1`.
-   *
-   * @key The key prefix which will be appended with "." and range code.
-   * @steps Limits of the ranges. Each value represents the start of the next range. The list must be sorted ascendingly.
-   * @value Value to be checked among the given ranges.
-   */
-  public static UsageDescriptor getCountingUsage(String key, int value, List<Integer> steps) {
-    if (steps.isEmpty()) return new UsageDescriptor(key + "." + value, 1);
-
-    if (value < steps.get(0)) {
-      return new UsageDescriptor(key + ".<" + steps.get(0), 1);
+    /**
+     * Constructs a proper UsageDescriptor for a boolean value,
+     * by adding "enabled" or "disabled" suffix to the given key, depending on the value.
+     */
+    public static UsageDescriptor getBooleanUsage(String key, boolean value) {
+        key += value ? ".enabled" : ".disabled";
+        return new UsageDescriptor(key, 1);
     }
 
-    int index = Arrays.binarySearch(steps.toArray(), value);
-    int stepIndex;
+    /**
+     * Constructs a proper UsageDescriptor for a counting value.
+     * If one needs to know a number of some items in the project, there is no direct way to report usages per-project.
+     * Therefore this workaround: create several keys representing interesting ranges, and report that key which correspond to the range
+     * which the given value belongs to.
+     * <p>
+     * For example, to report a number of commits in Git repository, you can call this method like that:
+     * ```
+     * val usageDescriptor = getCountingUsage("git.commit.count", listOf(0, 1, 100, 10000, 100000), realCommitCount)
+     * ```
+     * and if there are e.g. 50000 commits in the repository, one usage of the following key will be reported: `git.commit.count.10K+`.
+     * <p>
+     * NB:
+     * (1) the list of steps must be sorted ascendingly; If it is not, the result is undefined.
+     * (2) the value should lay somewhere inside steps ranges. If it is below the first step, the following usage will be reported:
+     * `git.commit.count.<1`.
+     *
+     * @param key The key prefix which will be appended with "." and range code.
+     * @param steps Limits of the ranges. Each value represents the start of the next range. The list must be sorted ascendingly.
+     * @param value Value to be checked among the given ranges.
+     */
+    public static UsageDescriptor getCountingUsage(String key, int value, List<Integer> steps) {
+        if (steps.isEmpty()) {
+            return new UsageDescriptor(key + "." + value, 1);
+        }
 
-    if (index == steps.size()) {
-      stepIndex = ContainerUtil.getLastItem(steps);
+        if (value < steps.get(0)) {
+            return new UsageDescriptor(key + ".<" + steps.get(0), 1);
+        }
+
+        int index = Arrays.binarySearch(steps.toArray(), value);
+        int stepIndex;
+
+        if (index == steps.size()) {
+            stepIndex = Objects.requireNonNull(ContainerUtil.getLastItem(steps));
+        }
+        else if (index >= 0) {
+            stepIndex = index;
+        }
+        else {
+            stepIndex = -index - 2;
+        }
+
+        int step = steps.get(stepIndex);
+
+        boolean addPlus = stepIndex == steps.size() - 1 || steps.get(stepIndex + 1) != step + 1;
+
+        String maybePlus = addPlus ? "+" : "";
+        return new UsageDescriptor(key + "." + humanize(step) + maybePlus, 1);
     }
-    else if (index >= 0) {
-      stepIndex = index;
+
+    private static final int kilo = 1000;
+    private static final int mega = kilo * kilo;
+
+    private static String humanize(int number) {
+        if (number == 0) {
+            return "0";
+        }
+        int m = number / mega;
+        int k = (number % mega) / kilo;
+        int r = (number % kilo);
+        String ms = m > 0 ? (m + "M") : "";
+        String ks = k > 0 ? (k + "K") : "";
+        String rs = r > 0 ? String.valueOf(r) : "";
+        return ms + ks + rs;
     }
-    else {
-      stepIndex = -index - 2;
-    }
-
-    int step = steps.get(stepIndex);
-
-    boolean addPlus = stepIndex == steps.size() - 1 || steps.get(stepIndex + 1) != step + 1;
-
-    String maybePlus = addPlus ? "+" : "";
-    return new UsageDescriptor(key + "." + humanize(step) + maybePlus, 1);
-  }
-
-  private static final int kilo = 1000;
-  private static final int mega = kilo * kilo;
-
-  private static String humanize(int number) {
-    if (number == 0) return "0";
-    int m = number / mega;
-    int k = (number % mega) / kilo;
-    int r = (number % kilo);
-    String ms = m > 0 ? (m + "M") : "";
-    String ks = k > 0 ? (k + "K") : "";
-    String rs = r > 0 ? String.valueOf(r) : "";
-    return ms + ks + rs;
-  }
-
 }

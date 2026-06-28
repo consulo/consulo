@@ -16,31 +16,32 @@
 package consulo.externalService.statistic;
 
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 public class GroupDescriptor {
-  private String myId;
-  private String myDisplayName;
-  protected static final String ID_ATTR = "id";
-  private static final String GROUP_PREFIX = "group.";
+    private @Nullable String myId;
+    private @Nullable String myDisplayName;
+    protected static final String ID_ATTR = "id";
+    private static final String GROUP_PREFIX = "group.";
 
-  public GroupDescriptor() {
-  }
+    public GroupDescriptor() {
+    }
 
-  public GroupDescriptor(String id, String displayName) {
-    myId = id;
-    myDisplayName = displayName;
-  }
+    public GroupDescriptor(String id, String displayName) {
+        myId = id;
+        myDisplayName = displayName;
+    }
 
-  public void readExternal(Element element) {
-    myId = element.getAttributeValue(ID_ATTR);
-    myDisplayName = FeatureStatisticsBundle.message(GROUP_PREFIX + myId);
-  }
+    public void readExternal(Element element) {
+        myId = element.getAttributeValue(ID_ATTR);
+        myDisplayName = FeatureStatisticsBundle.message(GROUP_PREFIX + myId);
+    }
 
-  public String getId() {
-    return myId;
-  }
+    public @Nullable String getId() {
+        return myId;
+    }
 
-  public String getDisplayName() {
-    return myDisplayName;
-  }
+    public @Nullable String getDisplayName() {
+        return myDisplayName;
+    }
 }
