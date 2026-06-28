@@ -15,7 +15,6 @@
  */
 package consulo.externalService.statistic;
 
-import consulo.application.Application;
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
@@ -135,9 +134,7 @@ public class FeatureDescriptor {
     }
 
     public void triggerUsed() {
-        long current = System.currentTimeMillis();
-        long delta = myUsageCount > 0 ? current - Math.max(myLastTimeUsed, Application.get().getStartTime()) : 0;
-        myLastTimeUsed = current;
+        myLastTimeUsed = System.currentTimeMillis();
         myUsageCount++;
     }
 
