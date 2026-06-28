@@ -572,6 +572,26 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return true;
     }
 
+    @Override
+    public <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref,
+                                                             ThrowableSupplier<T, E> computation) throws E {
+        //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
+        RWLock.ReadToken status = myLock.startTryRead();
+        if (status != null && !status.readRequested()) {
+            return false;
+        }
+        try {
+            T t = computation.get();
+            ref.set(t);
+        }
+        finally {
+            if (status != null) {
+                myLock.endRead(status);
+            }
+        }
+        return true;
+    }
+
     @RequiredUIAccess
     @Override
     public void executeSuspendingWriteAction(@Nullable ComponentManager project, String title, Runnable runnable) {

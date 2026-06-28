@@ -15,6 +15,7 @@
  */
 package consulo.execution.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.execution.ProgramRunnerUtil;
@@ -28,17 +29,17 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
 
 import org.jspecify.annotations.Nullable;
@@ -49,15 +50,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseRunConfigurationAction extends ActionGroup {
+public abstract class BaseRunConfigurationAction extends AsyncActionGroup {
     protected static final Logger LOG = Logger.getInstance(BaseRunConfigurationAction.class);
-
-    @Deprecated
-    protected BaseRunConfigurationAction(String text, String description, Image icon) {
-        super(text, description, icon);
-        setPopup(true);
-        setEnabledInModalContext(true);
-    }
 
     protected BaseRunConfigurationAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
@@ -65,12 +59,13 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         setEnabledInModalContext(true);
     }
 
-    
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        return e != null ? getChildren(e.getDataContext()) : EMPTY_ARRAY;
+    public Coroutine<?, List<AnAction>> getChildrenAsync(AnActionEvent e) {
+        return ActionSafeReadLock.apply(e, presentation -> List.of(getChildren(e.getDataContext())))
+            .toCoroutine();
     }
 
+    @RequiredReadAction
     private AnAction[] getChildren(DataContext dataContext) {
         final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         RunnerAndConfigurationSettings existing = context.findExisting();
@@ -108,7 +103,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
             return Collections.emptyList();
         }
 
-        List<ConfigurationFromContext> enabledConfigurations = new ArrayList<ConfigurationFromContext>();
+        List<ConfigurationFromContext> enabledConfigurations = new ArrayList<>();
         for (ConfigurationFromContext configurationFromContext : fromContext) {
             if (isEnabledFor(configurationFromContext.getConfiguration())) {
                 enabledConfigurations.add(configurationFromContext);
@@ -125,7 +120,9 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
-        final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+        Project project = e.getData(Project.KEY);
+
+        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         RunnerAndConfigurationSettings existing = context.findExisting();
         if (existing == null) {
             final List<ConfigurationFromContext> producers = getConfigurationsFromContext(context);
@@ -136,7 +133,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
                 Editor editor = dataContext.getData(Editor.KEY);
                 Collections.sort(producers, ConfigurationFromContext.NAME_COMPARATOR);
                 ListPopup popup = JBPopupFactory.getInstance()
-                    .createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionLocalize.configurationActionChooserTitle()
+                    .createListPopup(project, new BaseListPopupStep<ConfigurationFromContext>(ExecutionLocalize.configurationActionChooserTitle()
                         .get(), producers) {
                         @Override
                         
@@ -175,19 +172,15 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         perform(context);
     }
 
-    private void perform(ConfigurationFromContext configurationFromContext, final ConfigurationContext context) {
+    private void perform(ConfigurationFromContext configurationFromContext, ConfigurationContext context) {
         RunnerAndConfigurationSettings configurationSettings = configurationFromContext.getConfigurationSettings();
         context.setConfiguration(configurationSettings);
-        configurationFromContext.onFirstRun(context, new Runnable() {
-            @Override
-            public void run() {
-                perform(context);
-            }
-        });
+        configurationFromContext.onFirstRun(context, () -> perform(context));
     }
 
     protected abstract void perform(ConfigurationContext context);
 
+    @RequiredReadAction
     private boolean canBePerformed(DataContext dataContext) {
         ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         RunnerAndConfigurationSettings existing = context.findExisting();
@@ -199,30 +192,31 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
-        Presentation presentation = event.getPresentation();
-        RunnerAndConfigurationSettings existing = context.findExisting();
-        RunnerAndConfigurationSettings configuration = existing;
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, presentation -> {
+            ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
+            RunnerAndConfigurationSettings existing = context.findExisting();
+            RunnerAndConfigurationSettings configuration = existing;
 
-        presentation.setPerformGroup(canBePerformed(event.getDataContext()));
+            presentation.setPerformGroup(canBePerformed(event.getDataContext()));
 
-        if (configuration == null) {
-            configuration = context.getConfiguration();
-        }
-        if (configuration == null) {
-            presentation.setEnabledAndVisible(false);
-        }
-        else {
-            presentation.setEnabledAndVisible(true);
-            List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);
-            if (existing == null && !fromContext.isEmpty()) {
-                //todo[nik,anna] it's dirty fix. Otherwise wrong configuration will be returned from context.getConfiguration()
-                context.setConfiguration(fromContext.get(0).getConfigurationSettings());
+            if (configuration == null) {
+                configuration = context.getConfiguration();
             }
-            String name = suggestRunActionName((LocatableConfiguration) configuration.getConfiguration());
-            updatePresentation(presentation, existing != null || fromContext.size() <= 1 ? name : "", context);
-        }
+            if (configuration == null) {
+                presentation.setEnabledAndVisible(false);
+            }
+            else {
+                presentation.setEnabledAndVisible(true);
+                List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);
+                if (existing == null && !fromContext.isEmpty()) {
+                    //todo[nik,anna] it's dirty fix. Otherwise wrong configuration will be returned from context.getConfiguration()
+                    context.setConfiguration(fromContext.get(0).getConfigurationSettings());
+                }
+                String name = suggestRunActionName((LocatableConfiguration) configuration.getConfiguration());
+                updatePresentation(presentation, existing != null || fromContext.size() <= 1 ? name : "", context);
+            }
+        }).toCoroutine();
     }
 
     @Override

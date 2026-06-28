@@ -990,18 +990,18 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         @Override
         public void actionPerformed(AnActionEvent e) {
             JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-            ListPopupStep step = popupFactory.createActionsStep(
+            ListPopup listPopup = popupFactory.createActionGroupPopup(
+                myActionGroup.getTemplatePresentation().getText(),
                 myActionGroup,
                 e.getDataContext(),
                 false,
                 false,
-                myActionGroup.getTemplatePresentation().getText(),
-                myTree,
                 true,
-                myPreselection != null ? myPreselection.getDefaultIndex() : 0,
-                true
+                null,
+                -1,
+                null,
+                false
             );
-            ListPopup listPopup = popupFactory.createListPopup(step);
             listPopup.setHandleAutoSelectionBeforeShow(true);
             listPopup.showUnderneathOf(myNorthPanel);
         }

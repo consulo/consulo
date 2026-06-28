@@ -31,6 +31,7 @@ import consulo.util.collection.Maps;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
@@ -131,6 +132,9 @@ public abstract class BaseDataManager implements DataManagerEx {
                 }
                 return (T) (Boolean) false; //FIXME [VISTALL] stub
             }
+            if (Application.KEY == dataId) {
+                return (T) Application.get();
+            }
             if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId) {
                 return (T) component;
             }
@@ -147,12 +151,14 @@ public abstract class BaseDataManager implements DataManagerEx {
     }
 
     protected static final Set<Key> ourSafeKeys = Set.of(
+        Application.KEY,
         Project.KEY,
         Editor.KEY,
         PlatformDataKeys.IS_MODAL_CONTEXT,
         UIExAWTDataKey.CONTEXT_COMPONENT,
         PlatformDataKeys.CONTEXT_UI_COMPONENT,
-        ModalityState.KEY
+        ModalityState.KEY,
+        CoroutineContext.KEY
     );
 
     protected final Application myApplication;

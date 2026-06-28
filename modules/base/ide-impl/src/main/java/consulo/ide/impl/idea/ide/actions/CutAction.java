@@ -24,6 +24,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = IdeActions.ACTION_CUT)
 public class CutAction extends AnAction implements DumbAware {
@@ -43,17 +45,18 @@ public class CutAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        CutProvider provider = event.getData(CutProvider.KEY);
-        Project project = event.getData(Project.KEY);
-        presentation.setEnabled(project != null && project.isOpen() && provider != null && provider.isCutEnabled(dataContext));
-        if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
-            presentation.setVisible(provider.isCutVisible(dataContext));
-        }
-        else {
-            presentation.setVisible(true);
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, presentation -> {
+            DataContext dataContext = event.getDataContext();
+            CutProvider provider = event.getData(CutProvider.KEY);
+            Project project = event.getData(Project.KEY);
+            presentation.setEnabled(project != null && project.isOpen() && provider != null && provider.isCutEnabled(dataContext));
+            if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
+                presentation.setVisible(provider.isCutVisible(dataContext));
+            }
+            else {
+                presentation.setVisible(true);
+            }
+        }).toCoroutine();
     }
 }

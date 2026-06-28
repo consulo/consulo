@@ -23,9 +23,12 @@ import consulo.application.dumb.PossiblyDumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
@@ -277,6 +280,17 @@ public abstract class AnAction implements PossiblyDumbAware {
      * @param e Carries information on the invocation place and data available
      */
     public void update(AnActionEvent e) {
+    }
+
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(CodeExecution.run(() -> {
+            try {
+                update(e);
+            }
+            catch (Throwable t) {
+                Logger.getInstance(AnAction.class).error(t);
+            }
+        }));
     }
 
     /**

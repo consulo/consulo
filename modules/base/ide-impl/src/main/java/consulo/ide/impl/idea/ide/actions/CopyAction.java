@@ -23,6 +23,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = IdeActions.ACTION_COPY)
 public class CopyAction extends AnAction implements DumbAware {
@@ -41,16 +43,17 @@ public class CopyAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        CopyProvider provider = event.getData(CopyProvider.KEY);
-        presentation.setEnabled(provider != null && provider.isCopyEnabled(dataContext));
-        if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
-            presentation.setVisible(provider.isCopyVisible(dataContext));
-        }
-        else {
-            presentation.setVisible(true);
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, presentation -> {
+            DataContext dataContext = event.getDataContext();
+            CopyProvider provider = event.getData(CopyProvider.KEY);
+            presentation.setEnabled(provider != null && provider.isCopyEnabled(dataContext));
+            if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
+                presentation.setVisible(provider.isCopyVisible(dataContext));
+            }
+            else {
+                presentation.setVisible(true);
+            }
+        }).toCoroutine();
     }
 }

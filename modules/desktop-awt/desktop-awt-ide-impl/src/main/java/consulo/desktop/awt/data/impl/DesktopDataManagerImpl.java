@@ -81,6 +81,10 @@ public class DesktopDataManagerImpl extends BaseDataManager {
                 return (T) TargetAWT.wrap(component);
             }
 
+            if (Application.KEY == dataId) {
+                return (T) Application.get();
+            }
+
             if (ModalityState.KEY == dataId) {
                 return (T) (component != null ? ModalityState.nonModal() : ModalityState.nonModal());
             }

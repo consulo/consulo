@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -145,7 +146,7 @@ public abstract class JBPopupFactory {
      */
     @Deprecated
     
-    public ListPopupStep createActionsStep(
+    public PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -173,7 +174,7 @@ public abstract class JBPopupFactory {
      */
     @Deprecated
     
-    public ListPopupStep createActionsStep(
+    public PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         boolean showNumbers,
@@ -199,7 +200,7 @@ public abstract class JBPopupFactory {
     }
 
     
-    public abstract ListPopupStep createActionsStep(
+    public abstract PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         @Nullable String actionPlace,
@@ -448,6 +449,7 @@ public abstract class JBPopupFactory {
      * @return the popup instance.
      */
     @Deprecated
+    @DeprecationInfo("Use with project parameter")
     public abstract ListPopup createListPopup(ListPopupStep step);
 
     /**
