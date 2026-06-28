@@ -17,6 +17,7 @@
 package consulo.util.concurrent.coroutine;
 
 import consulo.util.concurrent.coroutine.internal.RunLock;
+import consulo.util.dataholder.Key;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -30,6 +31,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author eso
  */
 public final class CoroutineContext extends CoroutineEnvironment {
+    public static final Key<CoroutineContext> KEY = Key.create(CoroutineContext.class);
+
     private final Executor executor;
 
     private final ScheduledExecutorService scheduler;

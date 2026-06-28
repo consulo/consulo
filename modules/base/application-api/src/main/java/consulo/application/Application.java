@@ -35,6 +35,7 @@ import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -127,6 +128,14 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
      */
     boolean tryRunReadAction(@RequiredReadAction Runnable action);
+
+    /**
+     * Grab the lock and run the action, if write is not running. Set value to ref holder if locked successful
+     *
+     * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
+     */
+    <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref,
+                                                      @RequiredReadAction ThrowableSupplier<T, E> computation) throws E;
 
     /**
      * Runs the specified computation in a read action. Can be called from any thread. The action is executed

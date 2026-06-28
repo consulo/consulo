@@ -6,9 +6,12 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -219,9 +222,18 @@ public abstract class ActionGroup extends AnAction {
      */
     public abstract AnAction[] getChildren(@Nullable AnActionEvent e);
 
-    
     public AnAction[] getChildren(@Nullable AnActionEvent e, ActionManager actionManager) {
         return getChildren(null);
+    }
+
+    /**
+     * Asynchronous counterpart of {@link #getChildren(AnActionEvent)}, mirroring {@link AnAction#updateAsync(AnActionEvent)}.
+     * <p>
+     * The default implementation wraps the synchronous {@link #getChildren(AnActionEvent)} call into a coroutine step.
+     * Override to compute children on a specific thread (EDT, read lock, etc.) using the coroutine step DSL.
+     */
+    public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
+        return Coroutine.first(CodeExecution.supply(() -> Arrays.asList(getChildren(e))));
     }
 
     @Override
@@ -229,7 +241,6 @@ public abstract class ActionGroup extends AnAction {
         return super.isDumbAware() || getClass() == DefaultActionGroup.class;
     }
 
-    
     public List<AnAction> postProcessVisibleChildren(List<AnAction> visibleChildren) {
         return Collections.unmodifiableList(visibleChildren);
     }

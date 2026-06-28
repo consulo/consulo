@@ -3,6 +3,8 @@ package consulo.ide.impl.idea.ui.popup;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -39,24 +41,22 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class PopupFactoryImpl extends JBPopupFactory {
-    
     @Override
     public ListPopup createConfirmation(String title, Runnable onYes, int defaultOptionIndex) {
         return createConfirmation(title, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get(), onYes, defaultOptionIndex);
     }
 
-    
     @Override
     public ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, int defaultOptionIndex) {
         return createConfirmation(title, yesText, noText, onYes, EmptyRunnable.getInstance(), defaultOptionIndex);
     }
 
-    
     @Override
     public JBPopup createMessage(String text) {
         return createListPopup(new BaseListPopupStep<>(null, text));
@@ -81,7 +81,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return null;
     }
 
-    
     @Override
     public ListPopup createConfirmation(
         String title,
@@ -113,13 +112,11 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return app == null || !app.isUnitTestMode() ? new ListPopupImpl(step) : new MockConfirmation(step, yesText);
     }
 
-    
     public static Supplier<DataContext> getComponentContextSupplier(Component component) {
         return () -> DataManager.getInstance().getDataContext(component);
     }
 
     @Override
-    
     public ListPopup createActionGroupPopup(
         String title,
         ActionGroup actionGroup,
@@ -149,7 +146,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         );
     }
 
-    
     @Override
     public ListPopup createActionGroupPopup(
         String title,
@@ -180,9 +176,9 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         );
     }
 
-    
+    @SuppressWarnings("unchecked")
     @Override
-    public ListPopupStep<ActionPopupItem> createActionsStep(
+    public PopupStep createActionsStep(
         ActionGroup actionGroup,
         DataContext dataContext,
         @Nullable String actionPlace,
@@ -194,7 +190,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         int defaultOptionIndex,
         boolean autoSelectionEnabled
     ) {
-        return ActionPopupStep.createActionsStep(
+        ProgressIndicator indicator = new EmptyProgressIndicator();
+        CompletableFuture<ListPopupStep<ActionPopupItem>> stepFuture = ActionPopupStep.createActionsStep(
             actionGroup,
             dataContext,
             showNumbers,
@@ -207,23 +204,32 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
             actionPlace,
             null,
             defaultOptionIndex,
-            new BasePresentationFactory()
+            new BasePresentationFactory(),
+            indicator
         );
+        return new AsyncPopupStep<>() {
+            @Override
+            public PopupStep call() throws Exception {
+                return stepFuture.get();
+            }
+
+            @Override
+            public void cancelBackgroundWork() {
+                indicator.cancel();
+            }
+        };
     }
 
-    
     @Override
     public ListPopup createListPopup(ListPopupStep step) {
         return new ListPopupImpl(step);
     }
 
-    
     @Override
     public ListPopup createListPopup(ComponentManager project, ListPopupStep step) {
         return new ListPopupImpl((Project) project, step);
     }
 
-    
     @Override
     public ListPopup createListPopup(ListPopupStep step, int maxRowCount) {
         ListPopupImpl popup = new ListPopupImpl(step);
@@ -231,25 +237,22 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return popup;
     }
 
-    
     @Override
     public TreePopup createTree(JBPopup parent, TreePopupStep aStep, Object parentValue) {
         return new TreePopupImpl((Project) aStep.getProject(), parent, aStep, parentValue);
     }
 
-    
     @Override
     public TreePopup createTree(TreePopupStep aStep) {
         return new TreePopupImpl((Project) aStep.getProject(), null, aStep, null);
     }
 
-    
     @Override
     public ComponentPopupBuilder createComponentPopupBuilder(JComponent content, JComponent preferableFocusComponent) {
         return new ComponentPopupBuilderImpl(content, preferableFocusComponent);
     }
 
-    
+
     @Override
     public RelativePoint guessBestPopupLocation(DataContext dataContext) {
         Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -276,7 +279,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return guessBestPopupLocation(focusOwner);
     }
 
-    
     @Override
     public RelativePoint guessBestPopupLocation(JComponent component) {
         Point popupMenuPoint = null;
@@ -357,7 +359,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return getVisibleBestPopupLocation(editor) != null;
     }
 
-    
     public RelativePoint guessBestPopupLocation(Editor editor) {
         Point p = getVisibleBestPopupLocation(editor);
         if (p == null) {
@@ -394,7 +395,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
     }
 
     @Override
-    
     public List<JBPopup> getChildPopups(Component component) {
         return AbstractPopup.getChildPopups(component);
     }
@@ -404,7 +404,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return IdeEventQueueProxy.getInstance().isPopupActive();
     }
 
-    
     @Override
     public BalloonBuilder createHtmlTextBalloonBuilder(
         String htmlContent,
@@ -421,6 +420,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         text.setEditable(false);
         NonOpaquePanel.setTransparent(text);
         text.setBorder(null);
+
 
         JLabel label = new JLabel();
         JPanel content =
@@ -447,7 +447,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return builder;
     }
 
-    
     @Override
     public BalloonBuilder createHtmlTextBalloonBuilder(
         String htmlContent,

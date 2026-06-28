@@ -28,8 +28,8 @@ import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
 import consulo.ide.localize.IdeLocalize;
-import consulo.ide.runAnything.RunAnythingContext;
 import consulo.localize.LocalizeValue;
+import consulo.ide.runAnything.RunAnythingContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -283,7 +283,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         }
 
         DataContext dataContext = e.getDataContext();
-        List<ActionPopupItem> actionItems = ActionPopupStep.createActionItems(
+        ActionPopupStep.createActionItems(
             new DefaultActionGroup(createItems()),
             dataContext,
             false,
@@ -292,12 +292,12 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
             true,
             ActionPlaces.POPUP,
             new BasePresentationFactory()
-        );
-
-        ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
-        popup.setSize(new Dimension(300, 300));
-        popup.setRequestFocus(false);
-        popup.showUnderneathOf(component);
+        ).thenAccept(actionItems -> SwingUtilities.invokeLater(() -> {
+            ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext), dataContext);
+            popup.setSize(new Dimension(300, 300));
+            popup.setRequestFocus(false);
+            popup.showUnderneathOf(component);
+        }));
     }
 
     private List<ContextItem> createItems() {

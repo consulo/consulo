@@ -2,7 +2,6 @@
 package consulo.codeEditor.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.application.util.Dumpable;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.*;
@@ -13,6 +12,7 @@ import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.impl.softwrap.SoftWrapHelper;
 import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
@@ -793,7 +793,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @RequiredReadAction
     public int getOffset() {
         validateCallContext();
-        assertReadContext();
+        checkThread();
         while (true) {
             PositionMarker marker = myPositionMarker;
             if (marker == null) {
@@ -1080,7 +1080,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getSelectionStart() {
-        assertReadContext();
+        checkThread();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
             if (marker != null) {
@@ -1141,7 +1141,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getSelectionEnd() {
-        assertReadContext();
+        checkThread();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
             if (marker != null) {
@@ -1201,7 +1201,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public boolean hasSelection() {
-        assertReadContext();
+        checkThread();
         SelectionMarker marker = mySelectionMarker;
         return marker != null && marker.isValid()
             && (marker.getEndOffset() > marker.getStartOffset() || isVirtualSelectionEnabled() && marker.hasVirtualSelection());
@@ -1396,7 +1396,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     @Override
     @RequiredReadAction
     public int getLeadSelectionOffset() {
-        assertReadContext();
+        checkThread();
         int caretOffset = getOffset();
         if (hasSelection()) {
             RangeMarker marker = mySelectionMarker;
@@ -1524,18 +1524,18 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
     }
 
-    @RequiredReadAction
-    private static void assertReadContext() {
-        Application.get().assertReadAccessAllowed();
+    @RequiredUIAccess
+    private static void checkThread() {
+        CodeEditorAssertion.assertEditorThreading();
     }
 
     private boolean isVirtualSelectionEnabled() {
         return myEditor.isColumnMode();
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     boolean hasVirtualSelection() {
-        assertReadContext();
+        checkThread();
         SelectionMarker marker = mySelectionMarker;
         return marker != null && marker.isValid() && isVirtualSelectionEnabled() && marker.hasVirtualSelection();
     }
@@ -1552,7 +1552,6 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
 
     @Override
-    
     public CodeEditorBase getEditor() {
         return myEditor;
     }

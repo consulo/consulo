@@ -566,6 +566,28 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
     }
 
     /**
+     * Converts this continuation into a {@link CompletableFuture} that
+     * completes when this continuation finishes execution.
+     *
+     * @return A completable future that will be completed with the result
+     * of the coroutine execution, cancelled if the coroutine is
+     * cancelled, or completed exceptionally if the coroutine fails
+     */
+    public CompletableFuture<T> toFuture() {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        onFinish(c -> future.complete(c.getResult()));
+        // fail() sets error BEFORE calling cancel(), so check error here
+        // to let onError handle the future instead of cancelling it
+        onCancel(c -> {
+            if (c.getError() == null) {
+                future.cancel(false);
+            }
+        });
+        onError(c -> future.completeExceptionally(c.getError()));
+        return future;
+    }
+
+    /**
      * Returns the scope in which the coroutine is executed.
      *
      * @return The coroutine scope

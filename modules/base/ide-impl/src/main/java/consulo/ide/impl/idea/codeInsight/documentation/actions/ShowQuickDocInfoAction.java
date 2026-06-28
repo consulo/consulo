@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
+import consulo.codeEditor.EditorKeys;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
@@ -33,8 +34,9 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = "QuickJavaDoc")
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
@@ -51,7 +53,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         setInjectedContext(true);
     }
 
-    
+
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new CodeInsightActionHandler() {
@@ -74,53 +76,53 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        Editor editor = event.getData(Editor.KEY);
-        PsiElement element = event.getData(PsiElement.KEY);
-        if (editor == null && element == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        if (LookupManager.getInstance(project).getActiveLookup() != null) {
-            presentation.setEnabled(isValidForLookup());
-        }
-        else {
-            if (editor != null) {
-                if (event.hasData(EditorGutter.KEY)) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, presentation -> {
+                Project project = event.getData(Project.KEY);
+                if (project == null) {
                     presentation.setEnabled(false);
                     return;
                 }
-                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-                if (file == null) {
+
+                Editor editor = event.getData(EditorKeys.EDITOR_SNAPSHOT);
+                PsiElement element = event.getData(PsiElement.KEY);
+                if (editor == null && element == null) {
                     presentation.setEnabled(false);
+                    return;
                 }
 
-                if (element == null && file != null) {
-                    try {
-                        PsiReference ref = file.findReferenceAt(editor.getCaretModel().getOffset());
-                        if (ref instanceof PsiPolyVariantReference) {
-                            element = ref.getElement();
+                if (LookupManager.getInstance(project).getActiveLookup() != null) {
+                    presentation.setEnabled(isValidForLookup());
+                }
+                else {
+                    if (editor != null) {
+                        if (event.hasData(EditorGutter.KEY)) {
+                            presentation.setEnabled(false);
+                            return;
+                        }
+                        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                        if (file == null) {
+                            presentation.setEnabled(false);
+                        }
+
+                        if (element == null && file != null) {
+                            try {
+                                PsiReference ref = file.findReferenceAt(editor.getCaretModel().getOffset());
+                                if (ref instanceof PsiPolyVariantReference) {
+                                    element = ref.getElement();
+                                }
+                            }
+                            catch (IndexNotReadyException ignored) {
+                            }
                         }
                     }
-                    catch (IndexNotReadyException e) {
-                        element = null;
+
+                    if (element != null) {
+                        presentation.setEnabled(true);
                     }
                 }
-            }
-
-            if (element != null) {
-                presentation.setEnabled(true);
-            }
-        }
+            })
+            .toCoroutine();
     }
 
     @Override

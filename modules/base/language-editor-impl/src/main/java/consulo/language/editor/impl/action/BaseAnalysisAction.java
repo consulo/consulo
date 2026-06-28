@@ -41,8 +41,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.layout.VerticalLayout;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -53,9 +54,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class BaseAnalysisAction extends AnAction {
-    
     private final LocalizeValue myTitle;
-    
     private final LocalizeValue myAnalysisNoon;
     private static final Logger LOG = Logger.getInstance(BaseAnalysisAction.class);
 
@@ -71,12 +70,13 @@ public abstract class BaseAnalysisAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = event.getData(Project.KEY);
-        boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
-        presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return ActionSafeReadLock.run(event, presentation -> {
+            DataContext dataContext = event.getDataContext();
+            Project project = event.getData(Project.KEY);
+            boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
+            presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
+        }).toCoroutine();
     }
 
     @Override
@@ -112,7 +112,6 @@ public abstract class BaseAnalysisAction extends AnAction {
                 HelpManager.getInstance().invokeHelp(getHelpTopic());
             }
 
-            
             @Override
             protected Action[] createActions() {
                 return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

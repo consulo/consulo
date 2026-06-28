@@ -17,6 +17,7 @@ package consulo.compiler.impl.internal.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
 import consulo.compiler.artifact.Artifact;
@@ -35,6 +36,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -68,72 +70,74 @@ public class CompileAction extends CompileActionBase {
     }
 
     @Override
-    @RequiredReadAction
-    public void update(AnActionEvent event) {
-        super.update(event);
-        Presentation presentation = event.getPresentation();
-        if (!presentation.isEnabled()) {
-            return;
-        }
-        DataContext dataContext = event.getDataContext();
-
-        presentation.setText(CompilerLocalize.actionCompileText().map(NO_MNEMONIC));
-        presentation.setEnabledAndVisible(true);
-
-        Project project = dataContext.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-
-        Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
-
-        VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
-        if (module == null && files.length == 0) {
-            presentation.setEnabled(false);
-            presentation.setVisible(!ActionPlaces.isPopupPlace(event.getPlace()));
-            return;
-        }
-
-        if (module != null) {
-            presentation.setText(CompilerLocalize.actionCompileModuleText(trimName(module.getName())));
-        }
-        else {
-            PsiPackage aPackage = null;
-            if (files.length == 1) {
-                PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
-                if (directory != null) {
-                    aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
-                }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return Coroutine.first(ReadLock.apply(o -> {
+            super.update(event);
+            Presentation presentation = event.getPresentation();
+            if (!presentation.isEnabled()) {
+                return null;
             }
-            else if (dataContext.getData(PsiElement.KEY) instanceof PsiPackage psiPackage) {
-                aPackage = psiPackage;
+            DataContext dataContext = event.getDataContext();
+
+            presentation.setText(CompilerLocalize.actionCompileText().map(NO_MNEMONIC));
+            presentation.setEnabledAndVisible(true);
+
+            Project project = dataContext.getData(Project.KEY);
+            if (project == null) {
+                presentation.setEnabled(false);
+                return null;
             }
 
-            if (aPackage != null) {
-                String name = aPackage.getQualifiedName();
-                presentation.setText(
-                    StringUtil.isNotEmpty(name)
-                        ? CompilerLocalize.actionCompile0Text(trimName(name))
-                        : CompilerLocalize.actionCompileDefaultText()
-                );
+            Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+
+            VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
+            if (module == null && files.length == 0) {
+                presentation.setEnabled(false);
+                presentation.setVisible(!ActionPlaces.isPopupPlace(event.getPlace()));
+                return null;
             }
-            else if (files.length == 1) {
-                VirtualFile file = files[0];
-                FileType fileType = file.getFileType();
-                if (CompilerManager.getInstance(project).isCompilableFileType(fileType) || isCompilableResourceFile(project, file)) {
-                    presentation.setText(CompilerLocalize.actionCompile0Text(trimName(file.getName())));
-                }
-                else {
-                    presentation.setEnabled(false);
-                    // the action should be invisible in popups for non-java files
-                    presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
-                }
+
+            if (module != null) {
+                presentation.setText(CompilerLocalize.actionCompileModuleText(trimName(module.getName())));
             }
             else {
-                presentation.setText(CompilerLocalize.actionCompileSelectedFilesText());
+                PsiPackage aPackage = null;
+                if (files.length == 1) {
+                    PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
+                    if (directory != null) {
+                        aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
+                    }
+                }
+                else if (dataContext.getData(PsiElement.KEY) instanceof PsiPackage psiPackage) {
+                    aPackage = psiPackage;
+                }
+
+                if (aPackage != null) {
+                    String name = aPackage.getQualifiedName();
+                    presentation.setText(
+                        StringUtil.isNotEmpty(name)
+                            ? CompilerLocalize.actionCompile0Text(trimName(name))
+                            : CompilerLocalize.actionCompileDefaultText()
+                    );
+                }
+                else if (files.length == 1) {
+                    VirtualFile file = files[0];
+                    FileType fileType = file.getFileType();
+                    if (CompilerManager.getInstance(project).isCompilableFileType(fileType) || isCompilableResourceFile(project, file)) {
+                        presentation.setText(CompilerLocalize.actionCompile0Text(trimName(file.getName())));
+                    }
+                    else {
+                        presentation.setEnabled(false);
+                        // the action should be invisible in popups for non-java files
+                        presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
+                    }
+                }
+                else {
+                    presentation.setText(CompilerLocalize.actionCompileSelectedFilesText());
+                }
             }
-        }
+            return null;
+        }));
     }
 
     @RequiredReadAction

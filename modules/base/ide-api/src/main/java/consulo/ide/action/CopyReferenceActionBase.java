@@ -16,6 +16,7 @@
 package consulo.ide.action;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -37,6 +38,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.StringSelection;
@@ -51,7 +53,15 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ReadLock.apply(i -> {
+            updateInReadAction(e);
+            return null;
+        }).toCoroutine();
+    }
+
+    @RequiredReadAction
+    protected void updateInReadAction(AnActionEvent e) {
         boolean plural = false;
         boolean enabled;
         boolean paths = false;
@@ -94,7 +104,6 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction {
         }
     }
 
-    
     @RequiredReadAction
     protected List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
         return CopyReferenceUtil.getElementsToCopy(editor, dataContext);

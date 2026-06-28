@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.internal.CopyPathProviderUtil;
 import consulo.language.editor.internal.CopyReferenceUtil;
@@ -30,9 +31,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -73,26 +76,27 @@ public class CopyPathProvider extends DumbAwareAction {
             return dataContext;
         }
 
-        return DataContext.builder()
-            .parent(dataContext)
+        return SimpleDataContext.builder().setParent(dataContext)
             .add(VirtualFile.KEY, (VirtualFile) file)
             .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile) file})
             .build();
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Editor editor = e.getData(Editor.KEY);
-        Project project = e.getData(Project.KEY);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, p -> {
+            Editor editor = e.getData(Editor.KEY);
+            Project project = e.getData(Project.KEY);
 
-        DataContext dataContext = e.getDataContext();
-        String qualifiedName = project != null
-            ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
-            : null;
+            DataContext dataContext = e.getDataContext();
+            String qualifiedName = project != null
+                ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
+                : null;
 
-        Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
-        presentation.setEnabledAndVisible(qualifiedName != null);
+            Presentation presentation = e.getPresentation();
+            presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
+            presentation.setEnabledAndVisible(qualifiedName != null);
+        }).toCoroutine();
     }
 
     public @Nullable String getQualifiedName(Project project, List<PsiElement> elements, Editor editor, DataContext dataContext) {

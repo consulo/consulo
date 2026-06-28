@@ -2,40 +2,32 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.application.Application;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.ProgressWrapper;
-import consulo.application.internal.SensitiveProgressWrapper;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.logging.Logger;
-import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.internal.DumbInternalUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.XmlActionGroupStub;
-import consulo.util.collection.*;
-import consulo.util.lang.function.Predicates;
+import consulo.util.concurrent.coroutine.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class ActionUpdater {
     private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
-    private static final Executor ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Action Updater", 2);
 
     private final PresentationFactory myFactory;
     private final DataContext myDataContext;
@@ -44,16 +36,16 @@ public class ActionUpdater {
     private final boolean myToolbarAction;
     private final Project myProject;
 
-    private final Map<AnAction, Presentation> myUpdatedPresentations = new ConcurrentHashMap<>();
-    private final Map<ActionGroup, List<AnAction>> myGroupChildren = new ConcurrentHashMap<>();
+    private final boolean myDumbMode;
+    // caches store futures so concurrent expansion shares a single in-flight computation per action/group
+    private final Map<AnAction, CompletableFuture<Presentation>> myUpdatedPresentations = new ConcurrentHashMap<>();
+    private final Map<ActionGroup, CompletableFuture<List<AnAction>>> myGroupChildren = new ConcurrentHashMap<>();
     private final Map<ActionGroup, Boolean> myCanBePerformedCache = new ConcurrentHashMap<>();
-    private final UpdateStrategy myRealUpdateStrategy;
-    private final UpdateStrategy myCheapStrategy;
     private final ActionManager myActionManager;
-    
     private final UIAccess myUiAccess;
 
-    private boolean myAllowPartialExpand = true;
+    // the progress indicator of the currently running async expansion; used to wire coroutine cancellation
+    private volatile @Nullable ProgressIndicator myExpansionIndicator;
 
     public ActionUpdater(
         ActionManager actionManager,
@@ -66,329 +58,292 @@ public class ActionUpdater {
     ) {
         myUiAccess = uiAccess;
         myProject = dataContext.getData(Project.KEY);
+        myDumbMode = DumbInternalUtil.isDumbMode(myProject);
         myActionManager = actionManager;
         myFactory = presentationFactory;
         myDataContext = dataContext;
         myPlace = place;
         myContextMenuAction = isContextMenuAction;
         myToolbarAction = isToolbarAction;
-        myRealUpdateStrategy = new UpdateStrategy(
-            action -> {
-                // clone the presentation to avoid partially changing the cached one if update is interrupted
-                Presentation presentation = myFactory.getPresentation(action).clone();
-                presentation.setEnabledAndVisible(true);
-                Supplier<Boolean> doUpdate = () -> doUpdate(action, createActionEvent(action, presentation));
-                boolean success = callAction(uiAccess, action, "update", doUpdate);
-                return success ? presentation : null;
-            },
-            group -> callAction(
-                uiAccess,
-                group,
-                "getChildren",
-                () -> group.getChildren(createActionEvent(
-                    group,
-                    orDefault(
-                        group,
-                        myUpdatedPresentations
-                            .get(group)
-                    )
-                ))
-            ),
-            group -> callAction(
-                uiAccess,
-                group,
-                "canBePerformed",
-                () -> myUpdatedPresentations.get(group).isPerformGroup()
-            )
-        );
-        myCheapStrategy =
-            new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
     }
 
     private void applyPresentationChanges() {
-        for (Map.Entry<AnAction, Presentation> entry : myUpdatedPresentations.entrySet()) {
+        for (Map.Entry<AnAction, CompletableFuture<Presentation>> entry : myUpdatedPresentations.entrySet()) {
+            // expansion has completed when this runs, so the futures are resolved
+            Presentation cloned = entry.getValue().getNow(null);
+            if (cloned == null) {
+                continue;
+            }
             Presentation original = myFactory.getPresentation(entry.getKey());
-            Presentation cloned = entry.getValue();
-
             original.copyFrom(cloned);
         }
+    }
+
+    private @Nullable Presentation cachedPresentation(AnAction action) {
+        CompletableFuture<Presentation> future = myUpdatedPresentations.get(action);
+        return future != null ? future.getNow(null) : null;
     }
 
     private DataContext getDataContext(AnAction action) {
         return myDataContext;
     }
 
-    @SuppressWarnings("deprecation")
-    private static boolean isUpdateInBackground(AnAction action) {
-        return action instanceof UpdateInBackground || action.getActionUpdateThread() == ActionUpdateThread.BGT;
-    }
 
-    private static <T> T callAction(UIAccess uiAccess, AnAction action, String operation, Supplier<T> call) {
-        if (isUpdateInBackground(action) || UIAccess.isUIThread()) {
-            return call.get();
-        }
-
-        ProgressIndicator progress = Objects.requireNonNull(ProgressManager.getInstance().getProgressIndicator());
-
-        return ActionUIActionRunner.compute(
-            uiAccess,
-            () -> {
-                long start = System.currentTimeMillis();
-                try {
-                    return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
-                }
-                finally {
-                    long elapsed = System.currentTimeMillis() - start;
-                    if (elapsed > 100) {
-                        LOG.warn(
-                            "Slow (" + elapsed + "ms) '" + operation + "' on action " + action + " of " + action.getClass() + ". " +
-                                "Consider speeding it up and/or implementing UpdateInBackground."
-                        );
-                    }
-                }
-            }
-        );
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     */
-    public List<AnAction> expandActionGroup(ActionGroup group, boolean hideDisabled) {
-        try {
-            return expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
-        }
-        finally {
-            applyPresentationChanges();
-        }
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     * don't check progress.isCanceled (to obtain full list of actions)
-     */
-    public List<AnAction> expandActionGroupFull(ActionGroup group, boolean hideDisabled) {
-        try {
-            myAllowPartialExpand = false;
-            return expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
-        }
-        finally {
-            myAllowPartialExpand = true;
-            applyPresentationChanges();
-        }
-    }
-
-    private List<AnAction> expandActionGroup(ActionGroup group, boolean hideDisabled, UpdateStrategy strategy) {
-        return removeUnnecessarySeparators(doExpandActionGroup(group, hideDisabled, strategy));
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     */
-    public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled) {
-        return expandActionGroupWithTimeout(group, hideDisabled, Registry.intValue("actionSystem.update.timeout.ms"));
-    }
-
-    /**
-     * @return actions from the given and nested non-popup groups that are visible after updating
-     */
-    public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled, int timeoutMs) {
-        List<AnAction> result = ProgressIndicatorUtils.withTimeout(timeoutMs, () -> expandActionGroup(group, hideDisabled));
-        try {
-            return result != null ? result : expandActionGroup(group, hideDisabled, myCheapStrategy);
-        }
-        finally {
-            applyPresentationChanges();
-        }
-    }
-
-    
     public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
         ActionGroup group,
         boolean hideDisabled
     ) {
-        CompletableFuture<List<? extends AnAction>> future = new CompletableFuture<>();
-        ProgressIndicator indicator = new EmptyProgressIndicator();
-
-        future.whenComplete((anActions, throwable) -> {
-            if (throwable != null) {
-                indicator.cancel();
-
-                ActionUIActionRunner.compute(myUiAccess, () -> {
-                    applyPresentationChanges();
-                    return null;
-                });
-            }
-        });
-
-        ourExecutor.execute(() -> {
-            while (future.state() == Future.State.RUNNING) {
-                try {
-                    ProgressManager.getInstance().runProcess(
-                        () -> {
-                            List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
-
-                            ActionUIActionRunner.compute(
-                                myUiAccess,
-                                () -> {
-                                    applyPresentationChanges();
-                                    future.complete(result);
-                                    return null;
-                                }
-                            );
-                        },
-                        new SensitiveProgressWrapper(indicator)
-                    );
-                }
-                catch (ProcessCanceledException e) {
-                    future.cancel(false);
-                }
-                catch (Throwable e) {
-                    future.completeExceptionally(e);
-                }
-            }
-        });
-        return future;
+        return expandActionGroupAsync(group, hideDisabled, new EmptyProgressIndicator());
     }
 
-    private List<AnAction> doExpandActionGroup(ActionGroup group, boolean hideDisabled, UpdateStrategy strategy) {
+    public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
+        ActionGroup group,
+        boolean hideDisabled,
+        ProgressIndicator indicator
+    ) {
+        myExpansionIndicator = indicator;
+
+        CompletableFuture<List<? extends AnAction>> result = new CompletableFuture<>();
+
+        doExpandActionGroupAsync(group, hideDisabled)
+            .thenApply(ActionUpdater::removeUnnecessarySeparators)
+            // apply presentation changes and publish the result on the UI thread
+            .thenApplyAsync(list -> {
+                applyPresentationChanges();
+                return (List<? extends AnAction>) list;
+            }, myUiAccess::execute)
+            .whenComplete((list, throwable) -> {
+                if (throwable == null) {
+                    result.complete(list);
+                    return;
+                }
+
+                indicator.cancel();
+
+                Throwable cause = unwrapCoroutineException(throwable);
+                if (cause instanceof ProcessCanceledException || cause instanceof CancellationException) {
+                    // cancellation is normal control flow, not an error: signal it as a cancelled future
+                    result.cancel(false);
+                }
+                else {
+                    myUiAccess.execute(this::applyPresentationChanges);
+                    result.completeExceptionally(throwable);
+                }
+            });
+
+        return result;
+    }
+
+    private CompletableFuture<List<AnAction>> doExpandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
         if (group instanceof XmlActionGroupStub) {
             throw new IllegalStateException("Trying to expand non-unstubbed group");
         }
-        if (myAllowPartialExpand) {
-            ProgressManager.checkCanceled();
-        }
+        checkCanceled();
 
-        Presentation presentation = update(group, strategy);
-        if (presentation == null || !presentation.isVisible()) { // don't process invisible groups
-            return Collections.emptyList();
-        }
-
-        List<AnAction> children = getGroupChildren(group, strategy);
-        List<AnAction> result = ContainerUtil.concat(children, child -> expandGroupChild(child, hideDisabled, strategy));
-        return group.postProcessVisibleChildren(result);
-    }
-
-    private List<AnAction> getGroupChildren(ActionGroup group, UpdateStrategy strategy) {
-        return myGroupChildren.computeIfAbsent(
-            group,
-            __ -> {
-                AnAction[] children = strategy.getChildren.apply(group);
-                int nullIndex = ArrayUtil.indexOf(children, null);
-                if (nullIndex < 0) {
-                    return Arrays.asList(children);
-                }
-
-                LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + myActionManager.getId(group));
-                return ContainerUtil.filter(children, Predicates.notNull());
+        return updateAsync(group).thenCompose(presentation -> {
+            if (presentation == null || !presentation.isVisible()) { // don't process invisible groups
+                return CompletableFuture.completedFuture(Collections.emptyList());
             }
-        );
+
+            return getGroupChildrenAsync(group).thenCompose(children -> expandChildren(children, hideDisabled)
+                .thenApply(group::postProcessVisibleChildren));
+        });
     }
 
-    private List<AnAction> expandGroupChild(AnAction child, boolean hideDisabled, UpdateStrategy strategy) {
-        Presentation presentation = update(child, strategy);
-        if (presentation == null) {
-            return Collections.emptyList();
+    /**
+     * Expands all children concurrently and concatenates the results preserving the original order.
+     */
+    private CompletableFuture<List<AnAction>> expandChildren(List<AnAction> children, boolean hideDisabled) {
+        List<CompletableFuture<List<AnAction>>> futures = new ArrayList<>(children.size());
+        for (AnAction child : children) {
+            futures.add(expandGroupChild(child, hideDisabled));
         }
 
-        if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) { // don't create invisible items in the menu
-            return Collections.emptyList();
-        }
-        if (child instanceof ActionGroup actionGroup) {
-            JBIterable<AnAction> childrenIterable = iterateGroupChildren(actionGroup, strategy);
-            if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) {
-                return Collections.emptyList();
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenApply(__ -> {
+            List<AnAction> result = new ArrayList<>();
+            for (CompletableFuture<List<AnAction>> future : futures) {
+                result.addAll(future.join());
+            }
+            return result;
+        });
+    }
+
+    /**
+     * Returns the (cached) updated presentation for an action, computing it asynchronously on first request.
+     * The cache stores the future itself so concurrent requests share a single in-flight update.
+     */
+    private CompletableFuture<Presentation> updateAsync(AnAction action) {
+        return myUpdatedPresentations.computeIfAbsent(action, this::computeUpdatedPresentation);
+    }
+
+    private CompletableFuture<Presentation> computeUpdatedPresentation(AnAction action) {
+        // clone the presentation to avoid partially changing the cached one if update is interrupted
+        Presentation presentation = myFactory.getPresentation(action).clone();
+        presentation.setEnabledAndVisible(true);
+        AnActionEvent event = createActionEvent(action, presentation);
+        return updateActionAsync(action, event).thenApply(success -> success ? presentation : null);
+    }
+
+    private CompletableFuture<List<AnAction>> getGroupChildrenAsync(ActionGroup group) {
+        return myGroupChildren.computeIfAbsent(group, _ -> computeGroupChildren(group));
+    }
+
+    private CompletableFuture<List<AnAction>> computeGroupChildren(ActionGroup group) {
+        // getChildren is always requested after the group's own update, so its presentation is cached
+        AnActionEvent event = createActionEvent(group, orDefault(group, cachedPresentation(group)));
+        return launchCoroutineAsync(group.getChildrenAsync(event));
+    }
+
+    private CompletableFuture<List<AnAction>> expandGroupChild(AnAction child, boolean hideDisabled) {
+        return updateAsync(child).thenCompose(presentation -> {
+            if (presentation == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+
+            if (!presentation.isVisible() || (!presentation.isEnabled() && hideDisabled)) { // don't create invisible items in the menu
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            if (!(child instanceof ActionGroup actionGroup)) {
+                return CompletableFuture.completedFuture(Collections.singletonList(child));
             }
 
             boolean isPopup = actionGroup.isPopup(myPlace);
-            boolean hasEnabled = false, hasVisible = false;
-            if (hideDisabled || isPopup) {
-                for (AnAction action : childrenIterable) {
-                    Presentation p = update(action, strategy);
-                    if (p == null) {
-                        continue;
-                    }
-                    hasVisible |= p.isVisible();
-                    hasEnabled |= p.isEnabled();
-                    // stop early if all the required flags are collected
-                    if (hasEnabled && hasVisible) {
-                        break;
-                    }
-                    if (hideDisabled && hasEnabled && !isPopup) {
-                        break;
-                    }
-                    if (isPopup && hasVisible && !hideDisabled) {
-                        break;
-                    }
+            return collectChildrenFlags(actionGroup, hideDisabled, isPopup).thenCompose(flags -> {
+                boolean hasEnabled = flags.hasEnabled();
+                boolean hasVisible = flags.hasVisible();
+
+                if (hideDisabled && !hasEnabled) {
+                    return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-            }
+                if (isPopup) {
+                    boolean canBePerformed = canBePerformed(actionGroup);
+                    boolean performOnly = canBePerformed && (actionGroup instanceof AlwaysPerformingActionGroup || !hasVisible);
+                    presentation.putClientProperty("actionGroup.perform.only", performOnly ? true : null);
 
-            if (hideDisabled && !hasEnabled) {
-                return Collections.emptyList();
-            }
-            if (isPopup) {
-                boolean canBePerformed = canBePerformed(actionGroup, strategy);
-                boolean performOnly = canBePerformed && (actionGroup instanceof AlwaysPerformingActionGroup || !hasVisible);
-                presentation.putClientProperty("actionGroup.perform.only", performOnly ? true : null);
+                    if (!hasVisible && actionGroup.disableIfNoVisibleChildren()) {
+                        if (actionGroup.hideIfNoVisibleChildren()) {
+                            return CompletableFuture.completedFuture(Collections.emptyList());
+                        }
+                        if (!canBePerformed) {
+                            presentation.setEnabled(false);
+                        }
+                    }
 
-                if (!hasVisible && actionGroup.disableIfNoVisibleChildren()) {
-                    if (actionGroup.hideIfNoVisibleChildren()) {
-                        return Collections.emptyList();
+                    if (hideDisabled && !(child instanceof CompactActionGroup)) {
+                        return CompletableFuture.completedFuture(List.of(new EmptyAction.DelegatingCompactActionGroup((ActionGroup) child)));
                     }
-                    if (!canBePerformed) {
-                        presentation.setEnabled(false);
-                    }
+                    return CompletableFuture.completedFuture(Collections.singletonList(child));
                 }
 
-                if (hideDisabled && !(child instanceof CompactActionGroup)) {
-                    return Collections.singletonList(new EmptyAction.DelegatingCompactActionGroup((ActionGroup) child));
-                }
-                return Collections.singletonList(child);
-            }
+                return doExpandActionGroupAsync((ActionGroup) child, hideDisabled || actionGroup instanceof CompactActionGroup);
+            });
+        });
+    }
 
-            return doExpandActionGroup((ActionGroup) child, hideDisabled || actionGroup instanceof CompactActionGroup, strategy);
+    private record ChildrenFlags(boolean hasEnabled, boolean hasVisible) {
+    }
+
+    /**
+     * Asynchronously computes whether a group has enabled/visible descendants, mirroring the early-exit loop
+     * of the former synchronous implementation.
+     */
+    private CompletableFuture<ChildrenFlags> collectChildrenFlags(ActionGroup actionGroup, boolean hideDisabled, boolean isPopup) {
+        if (!(hideDisabled || isPopup)) {
+            return CompletableFuture.completedFuture(new ChildrenFlags(false, false));
         }
-
-        return Collections.singletonList(child);
+        return iterateGroupChildren(actionGroup)
+            .thenCompose(leaves -> foldChildrenFlags(leaves, 0, false, false, hideDisabled, isPopup));
     }
 
-    
-    private JBIterable<AnAction> iterateGroupChildren(ActionGroup group, UpdateStrategy strategy) {
-        boolean isDumb = myProject != null && DumbService.getInstance(myProject).isDumb();
-        return JBTreeTraverser.<AnAction>from(o -> {
-                if (o == group) {
-                    return null;
-                }
-                if (o instanceof AlwaysVisibleActionGroup) {
-                    return null;
-                }
-                if (isDumb && !o.isDumbAware()) {
-                    return null;
-                }
-                if (!(o instanceof ActionGroup oo)) {
-                    return null;
-                }
-                Presentation presentation = update(oo, strategy);
-                if (presentation == null || !presentation.isVisible()) {
-                    return null;
-                }
-                if (oo.isPopup(myPlace) || strategy.canBePerformed.test(oo)) {
-                    return null;
-                }
-                return getGroupChildren(oo, strategy);
-            })
-            .withRoots(getGroupChildren(group, strategy))
-            .unique()
-            .traverse(TreeTraversal.LEAVES_DFS)
-            .filter(o -> !(o instanceof AnSeparator) && !(isDumb && !o.isDumbAware()))
-            .take(1000);
+    private CompletableFuture<ChildrenFlags> foldChildrenFlags(
+        List<AnAction> leaves, int index, boolean hasEnabled, boolean hasVisible, boolean hideDisabled, boolean isPopup
+    ) {
+        // stop early if all the required flags are collected (same conditions as the former synchronous loop)
+        if (hasEnabled && hasVisible
+            || hideDisabled && hasEnabled && !isPopup
+            || isPopup && hasVisible && !hideDisabled
+            || index >= leaves.size()) {
+            return CompletableFuture.completedFuture(new ChildrenFlags(hasEnabled, hasVisible));
+        }
+        return updateAsync(leaves.get(index)).thenCompose(p -> {
+            boolean enabled = hasEnabled;
+            boolean visible = hasVisible;
+            if (p != null) {
+                visible |= p.isVisible();
+                enabled |= p.isEnabled();
+            }
+            return foldChildrenFlags(leaves, index + 1, enabled, visible, hideDisabled, isPopup);
+        });
     }
 
-    boolean canBePerformedCached(ActionGroup group) {
-        return !Boolean.FALSE.equals(myCanBePerformedCache.get(group));
+    /**
+     * Asynchronous replacement of the former {@code JBTreeTraverser}-based leaves traversal.
+     * Collects up to 1000 unique non-separator leaf actions in DFS order, descending into visible,
+     * non-popup, non-performable sub-groups.
+     */
+    private CompletableFuture<List<AnAction>> iterateGroupChildren(ActionGroup group) {
+        List<AnAction> result = new ArrayList<>();
+        Set<AnAction> visited = new HashSet<>();
+        return getGroupChildrenAsync(group)
+            .thenCompose(roots -> traverseLeaves(roots, 0, group, result, visited))
+            .thenApply(__ -> result);
     }
 
-    private boolean canBePerformed(ActionGroup group, UpdateStrategy strategy) {
-        return myCanBePerformedCache.computeIfAbsent(group, __ -> strategy.canBePerformed.test(group));
+    private CompletableFuture<Void> traverseLeaves(
+        List<AnAction> nodes, int index, ActionGroup root, List<AnAction> out, Set<AnAction> visited
+    ) {
+        if (index >= nodes.size() || out.size() >= 1000) {
+            return CompletableFuture.completedFuture(null);
+        }
+        AnAction o = nodes.get(index);
+        if (!visited.add(o)) { // unique()
+            return traverseLeaves(nodes, index + 1, root, out, visited);
+        }
+        return descendableChildren(o, root).thenCompose(children -> {
+            if (children != null) {
+                // internal node: descend first (DFS), then continue with the remaining siblings
+                return traverseLeaves(children, 0, root, out, visited)
+                    .thenCompose(__ -> traverseLeaves(nodes, index + 1, root, out, visited));
+            }
+            // leaf: keep it unless it is a separator or a non-dumb-aware action in dumb mode
+            if (!(o instanceof AnSeparator) && !(myDumbMode && !o.isDumbAware())) {
+                out.add(o);
+            }
+            return traverseLeaves(nodes, index + 1, root, out, visited);
+        });
+    }
+
+    /**
+     * Returns the children to descend into if the node is a traversable sub-group, or {@code null} if it is a leaf.
+     */
+    private CompletableFuture<List<AnAction>> descendableChildren(AnAction o, ActionGroup root) {
+        if (o == root || o instanceof AlwaysVisibleActionGroup || (myDumbMode && !o.isDumbAware()) || !(o instanceof ActionGroup oo)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return updateAsync(oo).thenCompose(presentation -> {
+            if (presentation == null || !presentation.isVisible()
+                || oo.isPopup(myPlace) || computeCanBePerformed(oo)) {
+                return CompletableFuture.completedFuture(null);
+            }
+            return getGroupChildrenAsync(oo);
+        });
+    }
+
+    private void checkCanceled() {
+        ProgressIndicator indicator = myExpansionIndicator;
+        if (indicator != null && indicator.isCanceled()) {
+            throw new ProcessCanceledException();
+        }
+        ProgressManager.checkCanceled();
+    }
+
+    private boolean canBePerformed(ActionGroup group) {
+        return myCanBePerformedCache.computeIfAbsent(group, this::computeCanBePerformed);
+    }
+
+    private boolean computeCanBePerformed(ActionGroup group) {
+        Presentation p = cachedPresentation(group);
+        return p != null && p.isPerformGroup();
     }
 
     private Presentation orDefault(AnAction action, Presentation presentation) {
@@ -426,54 +381,6 @@ public class ActionUpdater {
         return event;
     }
 
-    private boolean hasEnabledChildren(ActionGroup group, UpdateStrategy strategy) {
-        return hasChildrenWithState(group, false, true, strategy);
-    }
-
-    boolean hasVisibleChildren(ActionGroup group) {
-        return hasVisibleChildren(group, myRealUpdateStrategy);
-    }
-
-    private boolean hasVisibleChildren(ActionGroup group, UpdateStrategy strategy) {
-        return hasChildrenWithState(group, true, false, strategy);
-    }
-
-    private boolean hasChildrenWithState(ActionGroup group, boolean checkVisible, boolean checkEnabled, UpdateStrategy strategy) {
-        if (group instanceof AlwaysVisibleActionGroup) {
-            return true;
-        }
-
-        for (AnAction anAction : getGroupChildren(group, strategy)) {
-            ProgressManager.checkCanceled();
-            if (anAction instanceof AnSeparator) {
-                continue;
-            }
-            Project project = getDataContext(anAction).getData(Project.KEY);
-            if (project != null && DumbService.getInstance(project).isDumb() && !anAction.isDumbAware()) {
-                continue;
-            }
-
-            Presentation presentation = orDefault(anAction, update(anAction, strategy));
-            if (anAction instanceof ActionGroup childGroup) {
-                // popup menu must be visible itself
-                if (childGroup.isPopup()) {
-                    if ((checkVisible && !presentation.isVisible()) || (checkEnabled && !presentation.isEnabled())) {
-                        continue;
-                    }
-                }
-
-                if (hasChildrenWithState(childGroup, checkVisible, checkEnabled, strategy)) {
-                    return true;
-                }
-            }
-            else if ((checkVisible && presentation.isVisible()) || (checkEnabled && presentation.isEnabled())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void handleUpdateException(AnAction action, Presentation presentation, Throwable exc) {
         String id = myActionManager.getId(action);
         if (id != null) {
@@ -484,57 +391,97 @@ public class ActionUpdater {
         }
     }
 
-    private @Nullable Presentation update(AnAction action, UpdateStrategy strategy) {
-        Presentation cached = myUpdatedPresentations.get(action);
-        if (cached != null) {
-            return cached;
-        }
-
-        Presentation presentation = strategy.update.apply(action);
-        if (presentation != null) {
-            myUpdatedPresentations.put(action, presentation);
-        }
-        return presentation;
-    }
-
-    // returns false if exception was thrown and handled
-    boolean doUpdate(AnAction action, AnActionEvent e) {
+    /**
+     * Runs the action's coroutine-based {@link AnAction#updateAsync(AnActionEvent)} non-blockingly and applies the
+     * dumb-aware bookkeeping around it. The returned future yields {@code true} if the action should be kept.
+     */
+    private CompletableFuture<Boolean> updateActionAsync(AnAction action, AnActionEvent e) {
         if (Application.get().isDisposed()) {
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
+        Presentation presentation = e.getPresentation();
+        Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB);
+        if (wasEnabledBefore != null && !myDumbMode) {
+            presentation.putClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB, null);
+            presentation.setEnabled(wasEnabledBefore);
+            presentation.setVisible(true);
+        }
+        boolean enabledBeforeUpdate = presentation.isEnabled();
+        boolean notAllowed = myDumbMode && !action.isDumbAware();
         long startTime = System.currentTimeMillis();
-        boolean result;
-        try {
-            result = !ActionImplUtil.performDumbAwareUpdate(action, e, false);
-        }
-        catch (ProcessCanceledException ex) {
-            throw ex;
-        }
-        catch (Throwable exc) {
-            handleUpdateException(action, e.getPresentation(), exc);
-            return false;
-        }
-        long endTime = System.currentTimeMillis();
-        if (endTime - startTime > 10 && LOG.isDebugEnabled()) {
-            LOG.debug("Action " + action + ": updated in " + (endTime - startTime) + " ms");
-        }
-        return result;
+
+        return launchCoroutineAsync(action.updateAsync(e)).handle((ignored, throwable) -> {
+            try {
+                if (throwable != null) {
+                    Throwable cause = unwrapCoroutineException(throwable);
+                    if (cause instanceof ProcessCanceledException pce) {
+                        throw pce;
+                    }
+                    if (cause instanceof IndexNotReadyException) {
+                        // in dumb mode this is expected for non-dumb-aware actions; otherwise log it
+                        if (!notAllowed) {
+                            handleUpdateException(action, presentation, cause);
+                        }
+                        return false;
+                    }
+                    handleUpdateException(action, presentation, cause);
+                    return false;
+                }
+
+                presentation.putClientProperty(ActionImplUtil.WOULD_BE_ENABLED_IF_NOT_DUMB_MODE, notAllowed && presentation.isEnabled());
+                presentation.putClientProperty(ActionImplUtil.WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE, notAllowed && presentation.isVisible());
+
+                long elapsed = System.currentTimeMillis() - startTime;
+                if (elapsed > 10 && LOG.isDebugEnabled()) {
+                    LOG.debug("Action " + action + ": updated in " + elapsed + " ms");
+                }
+                return true;
+            }
+            finally {
+                if (notAllowed) {
+                    if (wasEnabledBefore == null) {
+                        presentation.putClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB, enabledBeforeUpdate);
+                    }
+                    presentation.setEnabled(false);
+                }
+            }
+        });
     }
 
-    private static class UpdateStrategy {
-        final Function<AnAction, Presentation> update;
-        final Function<ActionGroup, AnAction[]> getChildren;
-        final Predicate<ActionGroup> canBePerformed;
+    /**
+     * Launches a coroutine non-blockingly in a fresh {@link CoroutineScope} and bridges it to a {@link CompletableFuture}.
+     * The current expansion {@link ProgressIndicator} (if any) is wired to cancel the scope.
+     */
+    private <T> CompletableFuture<T> launchCoroutineAsync(Coroutine<?, T> coroutine) {
+        CoroutineContext context = myProject instanceof CoroutineContextOwner owner
+            ? owner.coroutineContext()
+            : Application.get().coroutineContext();
 
-        UpdateStrategy(
-            Function<AnAction, Presentation> update,
-            Function<ActionGroup, AnAction[]> getChildren,
-            Predicate<ActionGroup> canBePerformed
-        ) {
-            this.update = update;
-            this.getChildren = getChildren;
-            this.canBePerformed = canBePerformed;
+        CoroutineScope scope = new CoroutineScope(context);
+        scope.putCopyableUserData(UIAccess.KEY, myUiAccess);
+
+        ProgressIndicator indicator = myExpansionIndicator;
+        if (indicator != null) {
+            indicator.addListener(new ProgressIndicatorListener() {
+                @Override
+                public void canceled() {
+                    scope.cancel();
+                }
+            });
         }
+
+        return coroutine.runAsync(scope, null).toFuture();
+    }
+
+    /**
+     * Unwraps {@link CompletionException} and {@link CoroutineException} layers to expose the original failure cause.
+     */
+    private static Throwable unwrapCoroutineException(Throwable throwable) {
+        Throwable cause = throwable;
+        while ((cause instanceof CompletionException || cause instanceof CoroutineException) && cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
     }
 }
