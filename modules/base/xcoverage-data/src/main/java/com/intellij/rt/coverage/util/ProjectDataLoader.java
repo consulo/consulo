@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.rt.coverage.util;
 
 import com.intellij.rt.coverage.data.ClassData;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 /**
  * @author anna
- * @since 05-May-2009
+ * @since 2009-05-05
  */
 public class ProjectDataLoader {
     public static ProjectData load(File sessionDataFile) {
@@ -42,10 +41,10 @@ public class ProjectDataLoader {
             }
             for (int c = 0; c < classCount; c++) {
                 ClassData classInfo = dict.get(CoverageIOUtil.readINT(in));
-                int methCount = CoverageIOUtil.readINT(in);
+                int methodCount = CoverageIOUtil.readINT(in);
                 Map<Integer, LineData> lines = new HashMap<Integer, LineData>(4, 0.99f);
                 int maxLine = 1;
-                for (int m = 0; m < methCount; m++) {
+                for (int m = 0; m < methodCount; m++) {
                     String methodSig = expand(in, dict);
                     int lineCount = CoverageIOUtil.readINT(in);
                     for (int l = 0; l < lineCount; l++) {

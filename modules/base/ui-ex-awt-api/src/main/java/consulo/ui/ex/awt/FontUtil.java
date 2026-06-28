@@ -18,32 +18,26 @@ package consulo.ui.ex.awt;
 import java.awt.*;
 
 public class FontUtil {
-    
     public static String rightArrow(Font font) {
         return canDisplay(font, '→', "->");
     }
 
-    
     public static String upArrow(Font font, String defaultValue) {
         return canDisplay(font, '↑', defaultValue);
     }
 
-    
     public static String canDisplay(Font font, char value, String defaultValue) {
         return font.canDisplay(value) ? String.valueOf(value) : defaultValue;
     }
 
-    
     public static Font minusOne(Font font) {
         return font.deriveFont(font.getSize() - 1f);
     }
 
-    
     public static String spaceAndThinSpace() {
         return " " + thinSpace();
     }
 
-    
     public static String thinSpace() {
         return canDisplay(UIUtil.getLabelFont(), ' ', " ");
     }

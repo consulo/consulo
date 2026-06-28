@@ -44,7 +44,7 @@ class PatternDialog extends DialogWrapper {
     private final JTextField myPatternStringField;
     private final ColorAndFontDescriptionPanel myColorAndFontDescriptionPanel;
     private final ColorAndFontDescription myColorAndFontDescription;
-    private final JCheckBox myUsedDefaultColorsCeckBox;
+    private final JCheckBox myUsedDefaultColorsCheckBox;
 
     @RequiredUIAccess
     public PatternDialog(Component parent, TodoPattern pattern) {
@@ -63,8 +63,8 @@ class PatternDialog extends DialogWrapper {
         myPatternStringField = new JTextField(pattern.getPatternString());
 
         // use default colors check box
-        myUsedDefaultColorsCeckBox = new JCheckBox(LanguageTodoLocalize.checkboxTodoUseDefaultColors().get());
-        myUsedDefaultColorsCeckBox.setSelected(!attrs.shouldUseCustomTodoColor());
+        myUsedDefaultColorsCheckBox = new JCheckBox(LanguageTodoLocalize.checkboxTodoUseDefaultColors().get());
+        myUsedDefaultColorsCheckBox.setSelected(!attrs.shouldUseCustomTodoColor());
 
         myColorAndFontDescriptionPanel = new ColorAndFontDescriptionPanel();
 
@@ -86,7 +86,7 @@ class PatternDialog extends DialogWrapper {
         myColorAndFontDescriptionPanel.reset(myColorAndFontDescription);
 
         updateCustomColorsPanel();
-        myUsedDefaultColorsCeckBox.addActionListener(e -> updateCustomColorsPanel());
+        myUsedDefaultColorsCheckBox.addActionListener(e -> updateCustomColorsPanel());
 
         init();
     }
@@ -127,7 +127,7 @@ class PatternDialog extends DialogWrapper {
     }
 
     private boolean useCustomTodoColor() {
-        return !myUsedDefaultColorsCeckBox.isSelected();
+        return !myUsedDefaultColorsCheckBox.isSelected();
     }
 
     @Override
@@ -182,7 +182,7 @@ class PatternDialog extends DialogWrapper {
         gb.fill = GridBagConstraints.HORIZONTAL;
         gb.gridwidth = GridBagConstraints.REMAINDER;
         gb.weightx = 1;
-        panel.add(myUsedDefaultColorsCeckBox, gb);
+        panel.add(myUsedDefaultColorsCheckBox, gb);
 
         gb.gridy++;
         gb.gridx = 0;

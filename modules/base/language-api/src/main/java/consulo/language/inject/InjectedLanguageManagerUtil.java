@@ -36,7 +36,7 @@ public class InjectedLanguageManagerUtil {
   /**
    * Used in RegExp plugin for value pattern annotator
    * <p>
-   * Annotator that is used to validate the "Value-Pattern" textfield: The regex entered there should contain exactly
+   * Annotator that is used to validate the "Value-Pattern" text-field: The regex entered there should contain exactly
    * one capturing group that determines the text-range the configured language will be injected into.
    */
   public static final Key<Boolean> VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT = Key.create("IS_VALUE_REGEXP");

@@ -33,14 +33,14 @@ import java.util.concurrent.ExecutorService;
  * The base class for coroutine steps that perform communication through
  * instances of {@link AsynchronousChannel}. It contains the inner class
  * {@link ChannelCallback} that implements most of the {@link CompletionHandler}
- * interface needed for asynchonous channel communication. The actual channel
+ * interface needed for asynchronous channel communication. The actual channel
  * operation must be provided to it as an implementation of the function
  * interface {@link ChannelOperation}.
  *
  * <p>To simplify the generic declaration of subclasses both input and output
  * type are declared as {@link ByteBuffer}, where the returned value will be the
  * input value. Input buffers must be provided by the preceding step in a
- * coroutine and initialize it for the respective channel step implemenation.
+ * coroutine and initialize it for the respective channel step implementation.
  * For a reading step this means that the buffer must have an adequate capacity.
  * For a writing step it must contain the data to write and it must have been
  * flipped if necessary (see {@link Buffer#flip()} for details).</p>
@@ -100,8 +100,7 @@ public abstract class AsynchronousChannelStep<I extends @Nullable Object, O exte
     @FunctionalInterface
     protected interface ChannelOperation<C extends AsynchronousChannel> {
         /**
-         * Performs an asnychronous channel operation if necessary or returns
-         * FALSE.
+         * Performs an asynchronous channel operation if necessary or returns FALSE.
          *
          * @param bytesProcessed The number of bytes that have been processed by
          *                       a previous invocation

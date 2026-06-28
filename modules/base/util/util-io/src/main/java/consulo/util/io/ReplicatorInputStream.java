@@ -40,8 +40,8 @@ public class ReplicatorInputStream extends InputStream {
   }
 
   @Override
-  public synchronized void mark(int readlimit) {
-    mySource.mark(readlimit);
+  public synchronized void mark(int readLimit) {
+    mySource.mark(readLimit);
     markedSize = myTarget.size();
   }
 

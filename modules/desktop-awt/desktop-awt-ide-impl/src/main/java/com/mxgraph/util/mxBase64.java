@@ -35,12 +35,12 @@ import java.util.Arrays;
  * har a few demands on the decoded input. Normally though, these fast versions should be used if the source if
  * the input is known and it hasn't bee tampered with.<br><br>
  * <p/>
- * If you find the code useful or you find a bug, please send me a note at base64 @ miginfocom . com.
+ * If you find the code useful or you find a bug, please send me a note at base64@miginfocom.com.
  * <p/>
  * Licence (BSD):
  * ==============
  * <p/>
- * Copyright (c) 2004, Mikael Grev, MiG InfoCom AB. (base64 @ miginfocom . com)
+ * Copyright (c) 2004, Mikael Grev, MiG InfoCom AB. (base64@miginfocom.com)
  * All rights reserved.
  * <p/>
  * Redistribution and use in source and binary forms, with or without modification,
@@ -70,6 +70,7 @@ import java.util.Arrays;
  * @version 2.2
  */
 public class mxBase64 {
+  @SuppressWarnings("SpellCheckingInspection")
   private static final char[] CA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 
   private static final int[] IA = new int[256];
