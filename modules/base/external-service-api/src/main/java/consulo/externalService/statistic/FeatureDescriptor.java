@@ -166,7 +166,7 @@ public class FeatureDescriptor {
         return myDaysBeforeFirstShowUp;
     }
 
-    public int getDaysBetweenSuccesiveShowUps() {
+    public int getDaysBetweenSuccessiveShowUps() {
         return myDaysBetweenSuccessiveShowUps;
     }
 

@@ -80,7 +80,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
         }
 
         long current = System.currentTimeMillis();
-        long successiveInterval = descriptor.getDaysBetweenSuccesiveShowUps() * timeUnit + descriptor.getShownCount() * 2;
+        long successiveInterval = descriptor.getDaysBetweenSuccessiveShowUps() * timeUnit + descriptor.getShownCount() * 2;
         long firstShowUpInterval = descriptor.getDaysBeforeFirstShowUp() * timeUnit;
         long lastTimeUsed = descriptor.getLastTimeUsed();
         long lastTimeShown = descriptor.getLastTimeShown();
