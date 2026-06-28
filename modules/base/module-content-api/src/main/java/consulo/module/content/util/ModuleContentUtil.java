@@ -63,7 +63,6 @@ public class ModuleContentUtil {
   }
 
   @RequiredReadAction
-  
   public static List<ContentFolder> getContentFolders(Project project) {
     ModuleManager moduleManager = ModuleManager.getInstance(project);
     List<ContentFolder> contentFolders = new ArrayList<>();

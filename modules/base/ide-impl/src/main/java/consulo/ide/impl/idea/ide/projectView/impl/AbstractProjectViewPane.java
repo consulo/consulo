@@ -35,6 +35,9 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.Navigatable;
@@ -73,9 +76,9 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -86,8 +89,8 @@ import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
@@ -501,11 +504,16 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         if (element instanceof Module module) {
             return module.isDisposed() ? null : module;
         }
-        if (element instanceof PsiDirectory directory) {
-            return ModuleUtilCore.findModuleForFile(directory.getVirtualFile(), project);
+        else if (element instanceof PsiDirectory directory) {
+            return moduleContext(project, directory.getVirtualFile());
         }
-        if (element instanceof VirtualFile file) {
-            return ModuleUtilCore.findModuleForFile(file, project);
+        else if (element instanceof VirtualFile file) {
+            ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+
+            VirtualFile contentRootFolder = fileIndex.getContentRootForFile(file);
+            if (contentRootFolder != null && Objects.equals(contentRootFolder, file)) {
+                return fileIndex.getModuleForFile(file);
+            }
         }
         return null;
     }
