@@ -29,6 +29,7 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +65,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
         String projectId = projectElement.getAttributeValue(PROJECT_ID_ATTR);
         String frameworks = projectElement.getAttributeValue(VALUES_ATTR);
         if (!StringUtil.isEmptyOrSpaces(projectId) && !StringUtil.isEmptyOrSpaces(frameworks)) {
-          Set<UsageDescriptor> frameworkDescriptors = new HashSet<UsageDescriptor>();
+          Set<UsageDescriptor> frameworkDescriptors = new HashSet<>();
           for (String key : StringUtil.split(frameworks, TOKENIZER)) {
             UsageDescriptor descriptor = getUsageDescriptor(key);
             if (descriptor != null) frameworkDescriptors.add(descriptor);
@@ -103,7 +104,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
     return element;
   }
 
-  private static UsageDescriptor getUsageDescriptor(String usage) {
+  private static @Nullable UsageDescriptor getUsageDescriptor(String usage) {
     // for instance, usage can be: "_foo"(equals "_foo=1") or "_foo=2"
     try {
       int i = usage.indexOf('=');

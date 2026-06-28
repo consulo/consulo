@@ -15,211 +15,212 @@
  */
 package consulo.externalService.statistic;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class FeatureDescriptor {
-  
-  private String myId;
-  private String myGroupId;
-  
-  private String myTipFileName;
-  
-  private String myDisplayName;
-  private int myDaysBeforeFirstShowUp;
-  private int myDaysBetweenSuccesiveShowUps;
-  private Set<String> myDependencies;
-  private int myMinUsageCount;
+    private @Nullable String myId = null;
+    private @Nullable String myGroupId = null;
 
-  private int myUsageCount;
-  private long myLastTimeShown;
-  private long myLastTimeUsed;
-  private int myShownCount;
-  private ProductivityFeaturesProvider myProvider;
+    private @Nullable String myTipFileName = null;
 
-  private static final String ATTRIBUTE_COUNT = "count";
-  private static final String ATTRIBUTE_LAST_SHOWN = "last-shown";
-  private static final String ATTRIBUTE_LAST_USED = "last-used";
-  private static final String ATTRIBUTE_SHOWN_COUNT = "shown-count";
-  private static final String ATTRIBUTE_ID = "id";
-  private static final String ATTRIBUTE_TIP_FILE = "tip-file";
-  private static final String ATTRIBUTE_FIRST_SHOW = "first-show";
-  private static final String ATTRIBUTE_SUCCESSIVE_SHOW = "successive-show";
-  private static final String ATTRIBUTE_MIN_USAGE_COUNT = "min-usage-count";
-  private static final String ELEMENT_DEPENDENCY = "dependency";
+    private @Nullable String myDisplayName = null;
+    private int myDaysBeforeFirstShowUp;
+    private int myDaysBetweenSuccessiveShowUps;
+    private @Nullable Set<String> myDependencies = null;
+    private int myMinUsageCount;
 
-  public FeatureDescriptor(GroupDescriptor group) {
-    myGroupId = group.getId();
-  }
+    private int myUsageCount;
+    private long myLastTimeShown;
+    private long myLastTimeUsed;
+    private int myShownCount;
+    private @Nullable ProductivityFeaturesProvider myProvider = null;
 
-  public FeatureDescriptor(String id) {
-    myId = id;
-  }
+    private static final String ATTRIBUTE_COUNT = "count";
+    private static final String ATTRIBUTE_LAST_SHOWN = "last-shown";
+    private static final String ATTRIBUTE_LAST_USED = "last-used";
+    private static final String ATTRIBUTE_SHOWN_COUNT = "shown-count";
+    private static final String ATTRIBUTE_ID = "id";
+    private static final String ATTRIBUTE_TIP_FILE = "tip-file";
+    private static final String ATTRIBUTE_FIRST_SHOW = "first-show";
+    private static final String ATTRIBUTE_SUCCESSIVE_SHOW = "successive-show";
+    private static final String ATTRIBUTE_MIN_USAGE_COUNT = "min-usage-count";
+    private static final String ELEMENT_DEPENDENCY = "dependency";
 
-  public FeatureDescriptor(String id, String tipFileName, String displayName) {
-    myId = id;
-    myTipFileName = tipFileName;
-    myDisplayName = displayName;
-  }
-
-  public FeatureDescriptor(String id,
-                           String groupId,
-                           String tipFileName,
-                           String displayName,
-                           int daysBeforeFirstShowUp,
-                           int daysBetweenSuccessiveShowUps,
-                           Set<String> dependencies,
-                           int minUsageCount,
-                           ProductivityFeaturesProvider provider) {
-    myId = id;
-    myGroupId = groupId;
-    myTipFileName = tipFileName;
-    myDisplayName = displayName;
-    myDaysBeforeFirstShowUp = daysBeforeFirstShowUp;
-    myDaysBetweenSuccesiveShowUps = daysBetweenSuccessiveShowUps;
-    myDependencies = dependencies;
-    myMinUsageCount = minUsageCount;
-    myProvider = provider;
-  }
-
-  public void readExternal(Element element) {
-    myId = element.getAttributeValue(ATTRIBUTE_ID);
-    myTipFileName = element.getAttributeValue(ATTRIBUTE_TIP_FILE);
-    myDisplayName = FeatureStatisticsBundle.message(myId);
-    myDaysBeforeFirstShowUp = Integer.parseInt(element.getAttributeValue(ATTRIBUTE_FIRST_SHOW));
-    myDaysBetweenSuccesiveShowUps = Integer.parseInt(element.getAttributeValue(ATTRIBUTE_SUCCESSIVE_SHOW));
-    String minUsageCount = element.getAttributeValue(ATTRIBUTE_MIN_USAGE_COUNT);
-    myMinUsageCount = minUsageCount == null ? 1 : Integer.parseInt(minUsageCount);
-    List dependencies = element.getChildren(ELEMENT_DEPENDENCY);
-    if (dependencies != null && !dependencies.isEmpty()) {
-      myDependencies = new HashSet<String>();
-      for (Object dependency : dependencies) {
-        Element dependencyElement = (Element)dependency;
-        myDependencies.add(dependencyElement.getAttributeValue(ATTRIBUTE_ID));
-      }
+    public FeatureDescriptor(GroupDescriptor group) {
+        myGroupId = group.getId();
     }
-  }
 
-  
-  public String getId() {
-    return myId;
-  }
-
-  public String getGroupId() {
-    return myGroupId;
-  }
-
-  
-  public String getTipFileName() {
-    return myTipFileName;
-  }
-
-  
-  public String getDisplayName() {
-    return myDisplayName;
-  }
-
-  public int getUsageCount() {
-    return myUsageCount;
-  }
-
-  public Class<? extends ProductivityFeaturesProvider> getProvider() {
-    if (myProvider == null) {
-      return null;
+    public FeatureDescriptor(String id) {
+        myId = id;
     }
-    return myProvider.getClass();
-  }
 
-  public void triggerUsed() {
-    long current = System.currentTimeMillis();
-    long delta = myUsageCount > 0 ? current - Math.max(myLastTimeUsed, ApplicationManager.getApplication().getStartTime()) : 0;
-    myLastTimeUsed = current;
-    myUsageCount++;
-  }
+    public FeatureDescriptor(String id, String tipFileName, String displayName) {
+        myId = id;
+        myTipFileName = tipFileName;
+        myDisplayName = displayName;
+    }
 
-  public boolean isUnused() {
-    return myUsageCount < myMinUsageCount;
-  }
+    public FeatureDescriptor(
+        String id,
+        String groupId,
+        String tipFileName,
+        String displayName,
+        int daysBeforeFirstShowUp,
+        int daysBetweenSuccessiveShowUps,
+        Set<String> dependencies,
+        int minUsageCount,
+        ProductivityFeaturesProvider provider
+    ) {
+        myId = id;
+        myGroupId = groupId;
+        myTipFileName = tipFileName;
+        myDisplayName = displayName;
+        myDaysBeforeFirstShowUp = daysBeforeFirstShowUp;
+        myDaysBetweenSuccessiveShowUps = daysBetweenSuccessiveShowUps;
+        myDependencies = dependencies;
+        myMinUsageCount = minUsageCount;
+        myProvider = provider;
+    }
 
-  @Override
-  public String toString() {
-    StringBuilder buffer = new StringBuilder();
+    public void readExternal(Element element) {
+        myId = element.getAttributeValue(ATTRIBUTE_ID);
+        myTipFileName = element.getAttributeValue(ATTRIBUTE_TIP_FILE);
+        myDisplayName = FeatureStatisticsBundle.message(myId);
+        myDaysBeforeFirstShowUp = Integer.parseInt(element.getAttributeValue(ATTRIBUTE_FIRST_SHOW));
+        myDaysBetweenSuccessiveShowUps = Integer.parseInt(element.getAttributeValue(ATTRIBUTE_SUCCESSIVE_SHOW));
+        String minUsageCount = element.getAttributeValue(ATTRIBUTE_MIN_USAGE_COUNT);
+        myMinUsageCount = minUsageCount == null ? 1 : Integer.parseInt(minUsageCount);
+        List dependencies = element.getChildren(ELEMENT_DEPENDENCY);
+        if (dependencies != null && !dependencies.isEmpty()) {
+            myDependencies = new HashSet<>();
+            for (Object dependency : dependencies) {
+                Element dependencyElement = (Element) dependency;
+                myDependencies.add(dependencyElement.getAttributeValue(ATTRIBUTE_ID));
+            }
+        }
+    }
 
-    buffer.append("id = [");
-    buffer.append(myId);
-    buffer.append("], displayName = [");
-    buffer.append(myDisplayName);
-    buffer.append("], groupId = [");
-    buffer.append(myGroupId);
-    buffer.append("], usageCount = [");
-    buffer.append(myUsageCount);
-    buffer.append("]");
+    public @Nullable String getId() {
+        return myId;
+    }
 
-    return buffer.toString();
-  }
+    public @Nullable String getGroupId() {
+        return myGroupId;
+    }
 
-  public int getDaysBeforeFirstShowUp() {
-    return myDaysBeforeFirstShowUp;
-  }
+    public @Nullable String getTipFileName() {
+        return myTipFileName;
+    }
 
-  public int getDaysBetweenSuccesiveShowUps() {
-    return myDaysBetweenSuccesiveShowUps;
-  }
+    public @Nullable String getDisplayName() {
+        return myDisplayName;
+    }
 
-  public int getMinUsageCount() {
-    return myMinUsageCount;
-  }
+    public int getUsageCount() {
+        return myUsageCount;
+    }
 
-  public long getLastTimeShown() {
-    return myLastTimeShown;
-  }
+    public @Nullable Class<? extends ProductivityFeaturesProvider> getProvider() {
+        if (myProvider == null) {
+            return null;
+        }
+        return myProvider.getClass();
+    }
 
-  public String[] getDependencyFeatures() {
-    if (myDependencies == null) return ArrayUtil.EMPTY_STRING_ARRAY;
-    return ArrayUtil.toStringArray(myDependencies);
-  }
+    public void triggerUsed() {
+        long current = System.currentTimeMillis();
+        long delta = myUsageCount > 0 ? current - Math.max(myLastTimeUsed, Application.get().getStartTime()) : 0;
+        myLastTimeUsed = current;
+        myUsageCount++;
+    }
 
-  public void triggerShown() {
-    myLastTimeShown = System.currentTimeMillis();
-    myShownCount++;
-  }
+    public boolean isUnused() {
+        return myUsageCount < myMinUsageCount;
+    }
 
-  public long getLastTimeUsed() {
-    return myLastTimeUsed;
-  }
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
 
-  public int getShownCount() {
-    return myShownCount;
-  }
+        buffer.append("id = [");
+        buffer.append(myId);
+        buffer.append("], displayName = [");
+        buffer.append(myDisplayName);
+        buffer.append("], groupId = [");
+        buffer.append(myGroupId);
+        buffer.append("], usageCount = [");
+        buffer.append(myUsageCount);
+        buffer.append("]");
 
-  public void copyStatistics(FeatureDescriptor statistics) {
-    myUsageCount = statistics.getUsageCount();
-    myLastTimeShown = statistics.getLastTimeShown();
-    myLastTimeUsed = statistics.getLastTimeUsed();
-    myShownCount = statistics.getShownCount();
-  }
+        return buffer.toString();
+    }
 
-  public void readStatistics(Element element) {
-    String count = element.getAttributeValue(ATTRIBUTE_COUNT);
-    String lastShown = element.getAttributeValue(ATTRIBUTE_LAST_SHOWN);
-    String lastUsed = element.getAttributeValue(ATTRIBUTE_LAST_USED);
-    String shownCount = element.getAttributeValue(ATTRIBUTE_SHOWN_COUNT);
+    public int getDaysBeforeFirstShowUp() {
+        return myDaysBeforeFirstShowUp;
+    }
 
-    myUsageCount = count == null ? 0 : Integer.parseInt(count);
-    myLastTimeShown = lastShown == null ? 0 : Long.parseLong(lastShown);
-    myLastTimeUsed = lastUsed == null ? 0 : Long.parseLong(lastUsed);
-    myShownCount = shownCount == null ? 0 : Integer.parseInt(shownCount);
-  }
+    public int getDaysBetweenSuccesiveShowUps() {
+        return myDaysBetweenSuccessiveShowUps;
+    }
 
-  public void writeStatistics(Element element) {
-    element.setAttribute(ATTRIBUTE_COUNT, String.valueOf(getUsageCount()));
-    element.setAttribute(ATTRIBUTE_LAST_SHOWN, String.valueOf(getLastTimeShown()));
-    element.setAttribute(ATTRIBUTE_LAST_USED, String.valueOf(getLastTimeUsed()));
-    element.setAttribute(ATTRIBUTE_SHOWN_COUNT, String.valueOf(getShownCount()));
-  }
+    public int getMinUsageCount() {
+        return myMinUsageCount;
+    }
+
+    public long getLastTimeShown() {
+        return myLastTimeShown;
+    }
+
+    public String[] getDependencyFeatures() {
+        if (myDependencies == null) {
+            return ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+        return ArrayUtil.toStringArray(myDependencies);
+    }
+
+    public void triggerShown() {
+        myLastTimeShown = System.currentTimeMillis();
+        myShownCount++;
+    }
+
+    public long getLastTimeUsed() {
+        return myLastTimeUsed;
+    }
+
+    public int getShownCount() {
+        return myShownCount;
+    }
+
+    public void copyStatistics(FeatureDescriptor statistics) {
+        myUsageCount = statistics.getUsageCount();
+        myLastTimeShown = statistics.getLastTimeShown();
+        myLastTimeUsed = statistics.getLastTimeUsed();
+        myShownCount = statistics.getShownCount();
+    }
+
+    public void readStatistics(Element element) {
+        String count = element.getAttributeValue(ATTRIBUTE_COUNT);
+        String lastShown = element.getAttributeValue(ATTRIBUTE_LAST_SHOWN);
+        String lastUsed = element.getAttributeValue(ATTRIBUTE_LAST_USED);
+        String shownCount = element.getAttributeValue(ATTRIBUTE_SHOWN_COUNT);
+
+        myUsageCount = count == null ? 0 : Integer.parseInt(count);
+        myLastTimeShown = lastShown == null ? 0 : Long.parseLong(lastShown);
+        myLastTimeUsed = lastUsed == null ? 0 : Long.parseLong(lastUsed);
+        myShownCount = shownCount == null ? 0 : Integer.parseInt(shownCount);
+    }
+
+    public void writeStatistics(Element element) {
+        element.setAttribute(ATTRIBUTE_COUNT, String.valueOf(getUsageCount()));
+        element.setAttribute(ATTRIBUTE_LAST_SHOWN, String.valueOf(getLastTimeShown()));
+        element.setAttribute(ATTRIBUTE_LAST_USED, String.valueOf(getLastTimeUsed()));
+        element.setAttribute(ATTRIBUTE_SHOWN_COUNT, String.valueOf(getShownCount()));
+    }
 }
