@@ -21,6 +21,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 /**
  * @author anna
@@ -45,8 +47,10 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        e.getPresentation().setEnabled(project != null && !AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            Project project = e.getData(Project.KEY);
+            e.getPresentation().setEnabled(project != null && !AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
+        }).toCoroutine();
     }
 }
