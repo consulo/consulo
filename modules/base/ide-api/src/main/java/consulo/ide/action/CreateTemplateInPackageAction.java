@@ -16,6 +16,7 @@
 
 package consulo.ide.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.extension.ExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.util.IdeView;
@@ -64,6 +65,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
 
     protected abstract @Nullable PsiElement getNavigationElement(T createdElement);
 
+    @RequiredReadAction
     @Override
     @SuppressWarnings("unchecked")
     protected boolean isAvailable(DataContext dataContext) {
