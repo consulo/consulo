@@ -25,6 +25,8 @@ import consulo.eawt.wrapper.event.PressureListenerWrapper;
 import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -52,23 +54,24 @@ public class MacGestureSupportForEditor {
           fillActionsList(shortcut, IdeKeyEventDispatcher.isModalContext(component));
           ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
           AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
+          UIAccess uiAccess = UIAccess.current();
           for (AnAction action : actions) {
             DataContext dataContext = DataManager.getInstance().getDataContext(component);
             Presentation presentation = myPresentationFactory.getPresentation(action);
             AnActionEvent actionEvent = new AnActionEvent(null, dataContext, ActionPlaces.MAIN_MENU, presentation,
                                                           ActionManager.getInstance(),
                                                           0);
-            ActionUpdateInvoker.updateSync(action, actionEvent);
-
-            if (presentation.isEnabled()) {
+            ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, false).whenCompleteAsync((enabled, throwable) -> {
+              if (!Boolean.TRUE.equals(enabled)) {
+                return;
+              }
               actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
               Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
-              if (context != null && !context.isShowing()) continue;
+              if (context != null && !context.isShowing()) return;
 
               action.actionPerformed(actionEvent);
-
-            }
+            }, uiAccess);
           }
           e.consume();
           IdeMouseEventDispatcher.forbidForceTouch();

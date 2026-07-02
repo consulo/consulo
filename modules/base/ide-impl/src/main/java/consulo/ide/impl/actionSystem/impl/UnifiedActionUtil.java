@@ -17,13 +17,17 @@ package consulo.ide.impl.actionSystem.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -31,52 +35,55 @@ import java.util.function.Consumer;
  * @since 17/08/2021
  */
 public class UnifiedActionUtil {
-  public static void expandActionGroup(ActionGroup group, DataContext context, ActionManager actionManager,
-                                       PresentationFactory menuItemPresentationFactory, Consumer<MenuItem> actionAdded) {
-    Map<AnAction, Presentation> actions = new LinkedHashMap<>();
+    @RequiredUIAccess
+    public static CompletableFuture<Void> expandActionGroup(ActionGroup group,
+                                                            DataContext context,
+                                                            ActionManager actionManager,
+                                                            PresentationFactory menuItemPresentationFactory,
+                                                            Consumer<MenuItem> actionAdded) {
+        if (group == null) {
+            return CompletableFuture.completedFuture(null);
+        }
 
-    expandActionGroup0(group, context, actions, actionManager, menuItemPresentationFactory);
+        UIAccess uiAccess = UIAccess.current();
+        AnAction[] children = group.getChildren(null);
+        List<AnAction> actions = new ArrayList<>();
+        List<Presentation> presentations = new ArrayList<>();
+        List<CompletableFuture<?>> updates = new ArrayList<>();
+        for (AnAction action : children) {
+            Presentation presentation = menuItemPresentationFactory.getPresentation(action);
+            AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
+            e.setInjectedContext(action.isInInjectedContext());
+            actions.add(action);
+            presentations.add(presentation);
+            updates.add(ActionRunnerAsync.performDumbAwareUpdateAsync(action, e));
+        }
 
-    for (Map.Entry<AnAction, Presentation> entry : actions.entrySet()) {
-      AnAction action = entry.getKey();
-      Presentation presentation = entry.getValue();
+        return CompletableFuture.allOf(updates.toArray(new CompletableFuture[0])).whenCompleteAsync((r, throwable) -> {
+            for (int i = 0; i < actions.size(); i++) {
+                AnAction action = actions.get(i);
+                Presentation presentation = presentations.get(i);
 
-      if (action instanceof AnSeparator) {
-        actionAdded.accept(MenuSeparator.create());
-      }
-      else if (action instanceof ActionGroup) {
-        MenuItem menu = Menu.create(presentation.getTextValue());
-        menu.setIcon(presentation.getIcon());
-        actionAdded.accept(menu);
-        expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, ((Menu)menu)::add);
-      }
-      else {
-        MenuItem menu = MenuItem.create(presentation.getTextValue());
-        menu.addClickListener(event -> {
-          DataContext dataContext = DataManager.getInstance().getDataContext();
+                if (action instanceof AnSeparator) {
+                    actionAdded.accept(MenuSeparator.create());
+                }
+                else if (action instanceof ActionGroup actionGroup) {
+                    MenuItem menu = Menu.create(presentation.getTextValue());
+                    menu.setIcon(presentation.getIcon());
+                    actionAdded.accept(menu);
+                    expandActionGroup(actionGroup, context, actionManager, menuItemPresentationFactory, ((Menu) menu)::add);
+                }
+                else {
+                    MenuItem menu = MenuItem.create(presentation.getTextValue());
+                    menu.addClickListener(event -> {
+                        DataContext dataContext = DataManager.getInstance().getDataContext();
 
-          action.actionPerformed(AnActionEvent.createFromDataContext("Test", presentation, dataContext));
-        });
-        menu.setIcon(presentation.getIcon());
-        actionAdded.accept(menu);
-      }
+                        action.actionPerformed(AnActionEvent.createFromDataContext("Test", presentation, dataContext));
+                    });
+                    menu.setIcon(presentation.getIcon());
+                    actionAdded.accept(menu);
+                }
+            }
+        }, uiAccess);
     }
-  }
-
-  private static void expandActionGroup0(ActionGroup group,
-                                         DataContext context,
-                                         Map<AnAction, Presentation> newVisibleActions,
-                                         ActionManager actionManager,
-                                         PresentationFactory menuItemPresentationFactory) {
-    if (group == null) return;
-    AnAction[] children = group.getChildren(null);
-    for (AnAction action : children) {
-      Presentation presentation = menuItemPresentationFactory.getPresentation(action);
-      AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
-      e.setInjectedContext(action.isInInjectedContext());
-      ActionUpdateInvoker.updateSync(action, e);
-
-      newVisibleActions.put(action, presentation);
-    }
-  }
 }

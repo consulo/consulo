@@ -32,6 +32,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ui.ex.action.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
@@ -42,6 +43,7 @@ import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -127,27 +129,41 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
         VerticalLayout projectActionLayout = VerticalLayout.create();
 
+        VerticalLayout quickStartLayout = VerticalLayout.create();
+        projectActionLayout.add(quickStartLayout);
+
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup quickStart = (ActionGroup) actionManager.getAction(IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);
         List<AnAction> group = new ArrayList<>();
         collectAllActions(group, quickStart);
 
+        List<AnActionEvent> events = new ArrayList<>(group.size());
+        List<CompletableFuture<?>> updates = new ArrayList<>(group.size());
         for (AnAction action : group) {
             AnActionEvent e =
                 AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
-            ActionUpdateInvoker.updateSync(action, e);
-
-            Presentation presentation = e.getPresentation();
-            if (presentation.isVisible()) {
-                LocalizeValue text = presentation.getTextValue();
-
-                Hyperlink component = Hyperlink.create(text, (event) -> action.actionPerformed(e));
-
-                component.setIcon(presentation.getIcon());
-
-                projectActionLayout.add(component);
-            }
+            events.add(e);
+            updates.add(ActionRunnerAsync.performDumbAwareUpdateAsync(action, e));
         }
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture.allOf(updates.toArray(new CompletableFuture[0])).whenCompleteAsync((r, throwable) -> {
+            for (int i = 0; i < group.size(); i++) {
+                AnAction action = group.get(i);
+                AnActionEvent e = events.get(i);
+
+                Presentation presentation = e.getPresentation();
+                if (presentation.isVisible()) {
+                    LocalizeValue text = presentation.getTextValue();
+
+                    Hyperlink component = Hyperlink.create(text, (event) -> action.actionPerformed(e));
+
+                    component.setIcon(presentation.getIcon());
+
+                    quickStartLayout.add(component);
+                }
+            }
+        }, uiAccess);
 
         projectActionLayout.add(Button.create(
             "Settings",

@@ -33,6 +33,8 @@ import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Animator;
@@ -55,6 +57,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -78,7 +81,6 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
   private final MyTimerListener myTimerListener;
   private List<AnAction> myVisibleActions;
-  private List<AnAction> myNewVisibleActions;
   private final MenuItemPresentationFactory myPresentationFactory;
   private final DataManager myDataManager;
   private final ActionManager myActionManager;
@@ -101,7 +103,6 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     myFrame = frame;
     myTimerListener = new MyTimerListener();
     myVisibleActions = new ArrayList<>();
-    myNewVisibleActions = new ArrayList<>();
     myPresentationFactory = new MenuItemPresentationFactory();
     myDataManager = dataManager;
     myEnableIcons = !Platform.current().os().isEnabledTopMenu();
@@ -334,40 +335,50 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
   @RequiredUIAccess
   void updateMenuActions() {
-    myNewVisibleActions.clear();
-
-    if (!myDisabled) {
-      DataContext dataContext = myDataManager.getDataContext(this);
-      expandActionGroup(dataContext, myNewVisibleActions, myActionManager);
+    UIAccess uiAccess = UIAccess.current();
+    if (myDisabled) {
+      applyVisibleActions(new ArrayList<>());
+      return;
     }
 
-    if (!myNewVisibleActions.equals(myVisibleActions)) {
-      // should rebuild UI
-      boolean changeBarVisibility = myNewVisibleActions.isEmpty() || myVisibleActions.isEmpty();
-
-      List<AnAction> temp = myVisibleActions;
-      myVisibleActions = myNewVisibleActions;
-      myNewVisibleActions = temp;
-
-      removeAll();
-      boolean enableMnemonics = !UISettings.getInstance().DISABLE_MNEMONICS;
-      for (AnAction action : myVisibleActions) {
-        add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, myEnableIcons));
-      }
-
-      updateMnemonicsVisibility();
-      if (myClockPanel != null) {
-        add(myClockPanel);
-        add(myButton);
-      }
-      validate();
-
-      if (changeBarVisibility) {
-        invalidate();
-        JFrame frame = (JFrame)SwingUtilities.getAncestorOfClass(JFrame.class, this);
-        if (frame != null) {
-          frame.validate();
+    DataContext dataContext = myDataManager.getDataContext(this);
+    expandActionGroupAsync(dataContext, myActionManager)
+      .whenCompleteAsync((newVisibleActions, throwable) -> {
+        if (newVisibleActions != null) {
+          applyVisibleActions(newVisibleActions);
         }
+      }, uiAccess);
+  }
+
+  @RequiredUIAccess
+  private void applyVisibleActions(List<AnAction> newVisibleActions) {
+    if (newVisibleActions.equals(myVisibleActions)) {
+      return;
+    }
+
+    // should rebuild UI
+    boolean changeBarVisibility = newVisibleActions.isEmpty() || myVisibleActions.isEmpty();
+
+    myVisibleActions = newVisibleActions;
+
+    removeAll();
+    boolean enableMnemonics = !UISettings.getInstance().DISABLE_MNEMONICS;
+    for (AnAction action : myVisibleActions) {
+      add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, myEnableIcons));
+    }
+
+    updateMnemonicsVisibility();
+    if (myClockPanel != null) {
+      add(myClockPanel);
+      add(myButton);
+    }
+    validate();
+
+    if (changeBarVisibility) {
+      invalidate();
+      JFrame frame = (JFrame)SwingUtilities.getAncestorOfClass(JFrame.class, this);
+      if (frame != null) {
+        frame.validate();
       }
     }
   }
@@ -388,11 +399,16 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     }
   }
 
-  @RequiredUIAccess
-  private void expandActionGroup(DataContext context, List<AnAction> newVisibleActions, ActionManager actionManager) {
+  private CompletableFuture<List<AnAction>> expandActionGroupAsync(DataContext context, ActionManager actionManager) {
     ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
-    if (mainActionGroup == null) return;
+    if (mainActionGroup == null) {
+      return CompletableFuture.completedFuture(new ArrayList<>());
+    }
+
     AnAction[] children = mainActionGroup.getChildren(null, myActionManager);
+    List<AnAction> groups = new ArrayList<>();
+    List<AnActionEvent> events = new ArrayList<>();
+    List<CompletableFuture<?>> updates = new ArrayList<>();
     for (AnAction action : children) {
       if (!(action instanceof ActionGroup)) {
         continue;
@@ -400,11 +416,20 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
       Presentation presentation = myPresentationFactory.getPresentation(action);
       AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
-      ActionUpdateInvoker.updateSync(action, e);
-      if (presentation.isVisible()) { // add only visible items
-        newVisibleActions.add(action);
-      }
+      groups.add(action);
+      events.add(e);
+      updates.add(ActionRunnerAsync.performDumbAwareUpdateAsync(action, e));
     }
+
+    return CompletableFuture.allOf(updates.toArray(new CompletableFuture[0])).thenApply(__ -> {
+      List<AnAction> visible = new ArrayList<>();
+      for (int i = 0; i < groups.size(); i++) {
+        if (events.get(i).getPresentation().isVisible()) { // add only visible items
+          visible.add(groups.get(i));
+        }
+      }
+      return visible;
+    });
   }
 
   @Override

@@ -19,6 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
 import consulo.ui.PopupMenu;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.BasePresentationFactory;
@@ -78,11 +79,12 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
         PopupMenu popupMenu = PopupMenu.create(component);
 
-        UnifiedActionUtil.expandActionGroup(myGroup, context, myManager, presentationFactory, popupMenu::add);
-
-        myManager.addActionPopup(this);
-
-        popupMenu.show(x, y);
+        UIAccess uiAccess = UIAccess.current();
+        UnifiedActionUtil.expandActionGroup(myGroup, context, myManager, presentationFactory, popupMenu::add)
+            .whenCompleteAsync((r, throwable) -> {
+                myManager.addActionPopup(this);
+                popupMenu.show(x, y);
+            }, uiAccess);
     }
 
     @Override

@@ -28,6 +28,8 @@ import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;
 import consulo.ui.ex.awt.JBCardLayout;
@@ -42,6 +44,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -100,31 +103,44 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
 
         DataManager manager = DataManager.getInstance();
 
+        VerticalLayout quickStartLayout = VerticalLayout.create();
+        layout.add(quickStartLayout);
+
+        List<AnActionEvent> events = new ArrayList<>(group.size());
+        List<CompletableFuture<?>> updates = new ArrayList<>(group.size());
         for (AnAction action : group) {
             AnActionEvent e = AnActionEvent.createFromAnAction(action,
                 null,
                 ActionPlaces.WELCOME_SCREEN,
                 manager.getDataContext(welcomePanel)
             );
-
-            ActionUpdateInvoker.updateSync(action, e);
-
-            Button button = Button.create(e.getPresentation().getTextValue());
-            button.setIcon(e.getPresentation().getIcon());
-            button.addStyle(ButtonStyle.BORDERLESS);
-            button.addClickListener(event -> {
-                AnActionEvent in = AnActionEvent.createFromAnAction(action,
-                    null,
-                    ActionPlaces.WELCOME_SCREEN,
-                    manager.getDataContext(event.getComponent()),
-                    event.getInputDetails()
-                );
-                
-                action.actionPerformed(in);
-            });
-
-            layout.add(button);
+            events.add(e);
+            updates.add(ActionRunnerAsync.performDumbAwareUpdateAsync(action, e));
         }
+
+        UIAccess uiAccess = UIAccess.current();
+        CompletableFuture.allOf(updates.toArray(new CompletableFuture[0])).whenCompleteAsync((r, throwable) -> {
+            for (int i = 0; i < group.size(); i++) {
+                AnAction action = group.get(i);
+                AnActionEvent e = events.get(i);
+
+                Button button = Button.create(e.getPresentation().getTextValue());
+                button.setIcon(e.getPresentation().getIcon());
+                button.addStyle(ButtonStyle.BORDERLESS);
+                button.addClickListener(event -> {
+                    AnActionEvent in = AnActionEvent.createFromAnAction(action,
+                        null,
+                        ActionPlaces.WELCOME_SCREEN,
+                        manager.getDataContext(event.getComponent()),
+                        event.getInputDetails()
+                    );
+
+                    action.actionPerformed(in);
+                });
+
+                quickStartLayout.add(button);
+            }
+        }, uiAccess);
 
         layout.add(createActionComponent(LocalizeValue.localizeTODO("Configure"),
             IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE,
