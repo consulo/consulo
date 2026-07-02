@@ -630,12 +630,18 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         AnAction nextErrorAction = createAction("GotoNextError", AllIcons.Actions.FindAndShowNextMatchesSmall);
         AnAction prevErrorAction = createAction("GotoPreviousError", AllIcons.Actions.FindAndShowPrevMatchesSmall);
-        DefaultActionGroup navigateGroup = new DefaultActionGroup(nextErrorAction, prevErrorAction) {
+        class NavigateActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
+            NavigateActionGroup() {
+                super(nextErrorAction, prevErrorAction);
+            }
+
             @Override
             public void update(AnActionEvent e) {
                 e.getPresentation().setEnabledAndVisible(showNavigation);
             }
-        };
+        }
+
+        DefaultActionGroup navigateGroup = new NavigateActionGroup();
 
         AnAction statusAction = new StatusAction();
         ActionGroup actions = new DefaultActionGroup(statusAction, navigateGroup);

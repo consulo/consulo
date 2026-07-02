@@ -41,7 +41,7 @@ import java.util.TreeSet;
 /**
  * @author Dmitry Batkovich
  */
-public class InspectionFilterAction extends DefaultActionGroup implements Toggleable, DumbAware {
+public class InspectionFilterAction extends DefaultActionGroup implements Toggleable, DumbAware, AnActionWithSyncUpdate {
     private final SeverityRegistrarImpl mySeverityRegistrar;
     private final InspectionsFilter myInspectionsFilter;
 
@@ -55,7 +55,6 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().putClientProperty(Toggleable.SELECTED_PROPERTY, !myInspectionsFilter.isEmptyFilter());
     }
 

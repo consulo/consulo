@@ -26,7 +26,7 @@ import consulo.ui.ex.action.util.ActionGroupUtil;
  * @see SmartPopupActionGroup
  * @see NonEmptyActionGroup
  */
-public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAware {
+public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public NonTrivialActionGroup() {
         super();
     }

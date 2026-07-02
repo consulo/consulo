@@ -15,6 +15,7 @@ import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.ActionWithDelegate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -24,7 +25,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public class LineMarkerActionWrapper extends ActionGroup implements PriorityAction, ActionWithDelegate<AnAction> {
+public class LineMarkerActionWrapper extends ActionGroup implements PriorityAction, ActionWithDelegate<AnAction>, AnActionWithSyncUpdate {
     private static final Logger LOG = Logger.getInstance(LineMarkerActionWrapper.class);
     public static final Key<Pair<PsiElement, MyDataContext>> LOCATION_WRAPPER = Key.create("LOCATION_WRAPPER");
 

@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 
 import org.jspecify.annotations.Nullable;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * @author yole
  */
-public class MarkRootGroup extends ActionGroup implements DumbAware {
+public class MarkRootGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     @Override
     public void update(AnActionEvent e) {
         e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));

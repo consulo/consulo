@@ -17,8 +17,10 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 /**
  * @author peter
  */
-public class ExcludingActionGroup extends ActionGroup {
+public class ExcludingActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
     private final ActionGroup myDelegate;
     private final Set<AnAction> myExcludes;
 
@@ -41,7 +43,7 @@ public class ExcludingActionGroup extends ActionGroup {
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        myDelegate.update(e);
+        ActionUpdateInvoker.updateSync(myDelegate, e);
     }
 
     @Override

@@ -387,7 +387,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         return null;
     }
 
-    private class MyAddAction extends ActionGroup implements ActionGroupWithPreselection {
+    private class MyAddAction extends ActionGroup implements ActionGroupWithPreselection, AnActionWithSyncUpdate {
         private AnAction[] myChildren;
         private final boolean myFromPopup;
 
@@ -402,7 +402,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         @Override
         @RequiredUIAccess
         public void update(AnActionEvent e) {
-            super.update(e);
             if (myFromPopup) {
                 setPopup(false);
             }

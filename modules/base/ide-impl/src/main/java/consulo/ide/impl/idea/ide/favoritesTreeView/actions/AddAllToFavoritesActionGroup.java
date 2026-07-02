@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
 import org.jspecify.annotations.Nullable;
 
@@ -33,7 +34,7 @@ import java.util.List;
  * @since 2005-03-03
  */
 @ActionImpl(id = "AddAllToFavorites")
-public class AddAllToFavoritesActionGroup extends ActionGroup {
+public class AddAllToFavoritesActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
     public AddAllToFavoritesActionGroup() {
         super(ActionLocalize.groupAddalltofavoritesText());
         setPopup(true);
@@ -68,7 +69,6 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
     }
 }

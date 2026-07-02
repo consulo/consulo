@@ -16,15 +16,17 @@
 package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  */
-public class CustomisedActionGroup extends ActionGroup {
+public class CustomisedActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
     private boolean myForceUpdate;
     private final ActionGroup myGroup;
     private AnAction[] myChildren;
@@ -65,7 +67,7 @@ public class CustomisedActionGroup extends ActionGroup {
     }
 
     public void update(AnActionEvent e) {
-        myGroup.update(e);
+        ActionUpdateInvoker.updateSync(myGroup, e);
     }
 
     @Override

@@ -140,7 +140,7 @@ public final class EmptyAction extends AnAction implements AnActionWithSyncUpdat
         }
     }
 
-    public static class MyDelegatingActionGroup extends ActionGroup {
+    public static class MyDelegatingActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
         
         private final ActionGroup myDelegate;
 
@@ -168,7 +168,7 @@ public final class EmptyAction extends AnAction implements AnActionWithSyncUpdat
 
         @Override
         public void update(AnActionEvent e) {
-            myDelegate.update(e);
+            ActionUpdateInvoker.updateSync(myDelegate, e);
         }
 
         @Override

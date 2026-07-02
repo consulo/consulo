@@ -22,6 +22,9 @@ import consulo.annotation.DeprecationInfo;
  * @since 2026-06-30
  */
 public interface AnActionWithSyncUpdate {
+    /**
+     * Always run in background thread, without any locks. If need locking use {@link AnActionWithAsyncUpdate}
+     */
     void update(AnActionEvent e);
 
     @Deprecated

@@ -27,6 +27,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -43,7 +44,7 @@ import java.util.Set;
  * @author anna
  * @since 2007-01-29
  */
-public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup {
+public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup, AnActionWithSyncUpdate {
     private final Project myProject;
     private final InspectionManagerImpl myManager;
     private final Set<InspectionTreeNode> myNodesToSuppress = new HashSet<>();
@@ -132,7 +133,6 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(InspectionManagerImpl.getSuppressActions(myToolWrapper) != null);
     }
 

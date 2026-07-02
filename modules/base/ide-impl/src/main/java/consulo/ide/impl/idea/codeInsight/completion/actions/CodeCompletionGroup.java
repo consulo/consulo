@@ -25,6 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
@@ -39,7 +40,7 @@ import consulo.ui.ex.action.Presentation;
         @ActionRef(type = HippieBackwardCompletionAction.class)
     }
 )
-public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware {
+public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public CodeCompletionGroup() {
         super(ActionLocalize.groupCodecompletiongroupText(), true);
     }

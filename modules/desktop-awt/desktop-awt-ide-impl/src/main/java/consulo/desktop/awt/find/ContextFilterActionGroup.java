@@ -28,7 +28,7 @@ import consulo.ui.image.ImageEffects;
  * @author VISTALL
  * @since 2024-12-04
  */
-public class ContextFilterActionGroup extends DefaultActionGroup implements DumbAware {
+public class ContextFilterActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private final Image myPrimaryImage;
     
     public ContextFilterActionGroup() {
@@ -44,8 +44,6 @@ public class ContextFilterActionGroup extends DefaultActionGroup implements Dumb
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
-
         SearchSession search = e.getData(SearchSession.KEY);
         if (search != null && search.getFindModel().getSearchContext() != FindSearchContext.ANY) {
             e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));

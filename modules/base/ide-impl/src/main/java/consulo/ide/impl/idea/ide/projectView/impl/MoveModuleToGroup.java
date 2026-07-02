@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author cdr
  */
-public class MoveModuleToGroup extends ActionGroup {
+public class MoveModuleToGroup extends ActionGroup implements AnActionWithSyncUpdate {
     private final ModuleGroup myModuleGroup;
 
     public MoveModuleToGroup(ModuleGroup moduleGroup) {

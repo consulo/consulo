@@ -24,7 +24,7 @@ import java.util.List;
  * @see CompactActionGroup
  */
 @ActionAPI
-public abstract class ActionGroup extends AnAction implements AnActionWithSyncUpdate {
+public abstract class ActionGroup extends AnAction {
     public abstract static class Builder {
         protected final List<AnAction> myActions = new ArrayList<>();
         protected boolean myPopup;
@@ -33,31 +33,26 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
         protected Builder() {
         }
 
-        
         public Builder text(LocalizeValue text) {
             myText = text;
             return this;
         }
-
         
         public Builder setPopup() {
             myPopup = true;
             return this;
         }
-
         
         public Builder add(AnAction anAction) {
             myActions.add(anAction);
             return this;
         }
 
-        
         public Builder addAll(List<? extends AnAction> items) {
             myActions.addAll(items);
             return this;
         }
 
-        
         public Builder addAll(AnAction... actions) {
             for (AnAction action : actions) {
                 myActions.add(action);
@@ -65,12 +60,10 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
             return this;
         }
 
-        
         public Builder addSeparator() {
             return add(AnSeparator.create());
         }
 
-        
         public Builder addSeparator(LocalizeValue separatorText) {
             return add(AnSeparator.create(separatorText));
         }
@@ -83,7 +76,6 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
             return myActions.isEmpty();
         }
 
-        
         public abstract ActionGroup build();
     }
 
@@ -105,7 +97,6 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
             return myPopup;
         }
 
-        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myChildren;
@@ -116,7 +107,6 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
         private ImmutableBuilder() {
         }
 
-        
         @Override
         public ActionGroup build() {
             return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY), myPopup, myText);
@@ -128,7 +118,6 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
         return newImmutableBuilder().addAll(actions).build();
     }
 
-    
     public static Builder newImmutableBuilder() {
         return new ImmutableBuilder();
     }
@@ -191,10 +180,6 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
     }
 
     /**

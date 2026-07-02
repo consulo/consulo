@@ -120,7 +120,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         return UIUtil.uiTraverser().withRoot(root).preOrderDfsTraversal().filter(ActionToolbar.class);
     }
 
-    private static class OptionsGroup extends ActionGroup implements DumbAware {
+    private static class OptionsGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
         private final ToolWindow myToolWindow;
 
         public OptionsGroup(ToolWindow toolWindow) {

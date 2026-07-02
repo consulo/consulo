@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * from kotlin
  */
-public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware {
+public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private abstract class ContextItem extends LegacyAnAction {
         protected RunAnythingContext context;
 

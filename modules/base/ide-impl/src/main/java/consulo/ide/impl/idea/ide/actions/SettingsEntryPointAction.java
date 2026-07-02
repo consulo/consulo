@@ -21,7 +21,7 @@ import java.util.List;
  * @author Alexander Lobas
  */
 @ActionImpl(id = "SettingsEntryPoint")
-public final class SettingsEntryPointAction extends DumbAwareActionGroup implements RightAlignedToolbarAction {
+public final class SettingsEntryPointAction extends DumbAwareActionGroup implements RightAlignedToolbarAction, AnActionWithSyncUpdate {
     public enum IconState {
         Default(PlatformIconGroup.generalGearplain()),
         ApplicationUpdate(PlatformIconGroup.ideNotificationIdeupdate()),

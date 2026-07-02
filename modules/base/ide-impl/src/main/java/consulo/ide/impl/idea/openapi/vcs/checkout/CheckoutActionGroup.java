@@ -23,6 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -33,7 +34,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 @ActionImpl(id = "Vcs.Checkout")
-public class CheckoutActionGroup extends ActionGroup implements DumbAware {
+public class CheckoutActionGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private final Application myApplication;
 
     @Inject
@@ -45,7 +46,6 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        super.update(e);
         if (!myApplication.getExtensionPoint(CheckoutProvider.class).hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
         }

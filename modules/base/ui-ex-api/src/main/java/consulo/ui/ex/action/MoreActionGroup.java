@@ -21,7 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
  * @author VISTALL
  * @since 2024-05-12
  */
-public class MoreActionGroup extends DefaultActionGroup {
+public class MoreActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
     private final boolean myHorizontal;
 
     public MoreActionGroup() {

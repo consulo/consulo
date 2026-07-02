@@ -1756,7 +1756,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
     }
 
-    private class MyShowFilterPopupAction extends DefaultActionGroup implements DumbAware {
+    private class MyShowFilterPopupAction extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
         private final Image myPrimaryImage;
 
         MyShowFilterPopupAction() {
@@ -1783,8 +1783,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
-
             if (!FindSearchContext.ANY.equals(mySelectedContext)) {
                 e.getPresentation().setIcon(ImageEffects.layered(myPrimaryImage, PlatformIconGroup.greenbadge()));
             }

@@ -24,12 +24,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 @ActionImpl(id = "RecentProjectListGroup")
-public class RecentProjectsGroup extends ActionGroup implements DumbAware {
+public class RecentProjectsGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private final Provider<RecentProjectsManager> myRecentProjectsManager;
 
     @Inject

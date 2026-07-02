@@ -16,6 +16,7 @@ import consulo.execution.service.ServiceViewContributor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.CheckedActionGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ToggleAction;
@@ -27,7 +28,7 @@ import java.util.Set;
 import static consulo.execution.dashboard.RunDashboardRunConfigurationStatus.*;
 
 @ActionImpl(id = "RunDashboard.Filter", parents = @ActionParentRef(@ActionRef(type = ServiceViewFilterGroup.class)))
-public final class RunDashboardFilterActionGroup extends DefaultActionGroup implements CheckedActionGroup, DumbAware {
+public final class RunDashboardFilterActionGroup extends DefaultActionGroup implements CheckedActionGroup, DumbAware, AnActionWithSyncUpdate {
 
   @Inject
   public RunDashboardFilterActionGroup() {

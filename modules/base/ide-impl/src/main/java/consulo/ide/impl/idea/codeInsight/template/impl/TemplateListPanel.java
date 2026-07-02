@@ -704,7 +704,11 @@ public class TemplateListPanel extends JPanel implements Disposable {
         };
         rename.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_RENAME).getShortcutSet(), myTree);
 
-        final DefaultActionGroup move = new DefaultActionGroup(CodeInsightLocalize.actionTextMove(), true) {
+        class MoveActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
+            MoveActionGroup() {
+                super(CodeInsightLocalize.actionTextMove(), true);
+            }
+
             @Override
             public void update(AnActionEvent e) {
                 final Map<TemplateImpl, DefaultMutableTreeNode> templates = getSelectedTemplates();
@@ -748,7 +752,9 @@ public class TemplateListPanel extends JPanel implements Disposable {
                     });
                 }
             }
-        };
+        }
+
+        final DefaultActionGroup move = new MoveActionGroup();
 
         myTree.addMouseListener(new PopupHandler() {
             @Override

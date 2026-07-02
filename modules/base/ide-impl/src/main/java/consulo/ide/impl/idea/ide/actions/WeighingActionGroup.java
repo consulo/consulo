@@ -29,7 +29,7 @@ import java.util.Objects;
 /**
  * @author peter
  */
-public abstract class WeighingActionGroup extends ActionGroup {
+public abstract class WeighingActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
     public static final Key<Double> WEIGHT_KEY = Key.create("WeighingActionGroup.WEIGHT");
 
     public static final double DEFAULT_WEIGHT = 0;
@@ -40,7 +40,7 @@ public abstract class WeighingActionGroup extends ActionGroup {
 
     @Override
     public void update(AnActionEvent e) {
-        getDelegate().update(e);
+        ActionUpdateInvoker.updateSync(getDelegate(), e);
     }
 
     protected abstract ActionGroup getDelegate();

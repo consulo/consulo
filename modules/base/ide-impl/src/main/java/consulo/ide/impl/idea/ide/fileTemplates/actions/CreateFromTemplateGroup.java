@@ -39,7 +39,7 @@ import java.util.Collection;
 import java.util.List;
 
 @ActionImpl(id = "NewFromTemplate")
-public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
+public class CreateFromTemplateGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     public CreateFromTemplateGroup() {
         super(ActionLocalize.actionNewfromtemplateText());
     }
