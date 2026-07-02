@@ -16,7 +16,7 @@
 package consulo.execution.debug.impl.internal.frame.action;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public abstract class XWatchesTreeActionBase extends AnAction {
+public abstract class XWatchesTreeActionBase extends LegacyAnAction {
     protected XWatchesTreeActionBase(LocalizeValue text) {
         super(text);
     }

@@ -1,11 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
+import consulo.application.Application;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -342,9 +344,12 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
             inputEvent == null ? 0 : inputEvent.getModifiers()
         );
         event.setInjectedContext(action.isInInjectedContext());
-        if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
-            ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
-        }
+        UIAccess uiAccess = Application.get().getLastUIAccess();
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+            if (Boolean.TRUE.equals(enabled)) {
+                ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);
+            }
+        }, uiAccess);
     }
 
     public void performActionItem(ActionPopupItem item, @Nullable InputEvent inputEvent) {

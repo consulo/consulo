@@ -563,7 +563,7 @@ public class EditorSearchSession implements SearchSession, UiDataProvider, Selec
         return myComponent.prepareAsync();
     }
 
-    private abstract static class ButtonAction extends DumbAwareAction implements CustomComponentAction, ActionListener {
+    private abstract static class ButtonAction extends LegacyDumbAwareAction implements CustomComponentAction, ActionListener {
         private final String myTitle;
         private final char myMnemonic;
 

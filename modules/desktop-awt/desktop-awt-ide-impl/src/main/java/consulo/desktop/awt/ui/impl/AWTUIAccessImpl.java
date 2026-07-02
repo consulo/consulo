@@ -115,6 +115,10 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
   @Override
   public void giveAndWait(Runnable runnable) {
     ComponentStoreImpl.assertIfInsideSavingSession();
+    if (SwingUtilities.isEventDispatchThread()) {
+      runnable.run();
+      return;
+    }
     try {
       SwingUtilities.invokeAndWait(runnable);
     }

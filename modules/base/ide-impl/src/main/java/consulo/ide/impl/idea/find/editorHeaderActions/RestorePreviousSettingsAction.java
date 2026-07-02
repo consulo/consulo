@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.EditorSearchSession;
@@ -31,7 +30,7 @@ import java.awt.event.KeyEvent;
  * @author zajac
  * @since 2011-03-05
  */
-public class RestorePreviousSettingsAction extends AnAction implements ShortcutProvider, DumbAware {
+public class RestorePreviousSettingsAction extends LegacyDumbAwareAction implements ShortcutProvider {
   @Override
   public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);

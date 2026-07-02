@@ -25,7 +25,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 
@@ -33,7 +33,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "ManageRecentProjects")
-public class ManageRecentProjectsAction extends DumbAwareAction {
+public class ManageRecentProjectsAction extends LegacyDumbAwareAction {
     public ManageRecentProjectsAction() {
         super(ActionLocalize.actionManagerecentprojectsText());
     }

@@ -26,8 +26,8 @@ import consulo.module.ModuleManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -41,7 +41,7 @@ import java.awt.*;
  * @since 2005-02-09
  */
 @ActionImpl(id = "ShowModulesDependencies")
-public class ShowModuleDependenciesAction extends AnAction {
+public class ShowModuleDependenciesAction extends LegacyAnAction {
     public ShowModuleDependenciesAction() {
         super(ActionLocalize.actionShowmodulesdependenciesText(), ActionLocalize.actionShowmodulesdependenciesDescription());
     }

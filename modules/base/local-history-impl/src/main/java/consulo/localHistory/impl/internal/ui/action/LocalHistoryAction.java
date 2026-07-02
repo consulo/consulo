@@ -15,15 +15,14 @@
  */
 package consulo.localHistory.impl.internal.ui.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.LocalHistoryImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -32,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 
-public abstract class LocalHistoryAction extends AnAction implements DumbAware {
+public abstract class LocalHistoryAction extends LegacyDumbAwareAction {
     protected LocalHistoryAction() {
     }
 

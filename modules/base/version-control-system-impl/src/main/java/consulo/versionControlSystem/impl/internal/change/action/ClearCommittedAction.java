@@ -16,14 +16,13 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesPanel;
 
@@ -32,7 +31,7 @@ import consulo.versionControlSystem.impl.internal.change.commited.CommittedChang
  * @since 2012-04-23
  */
 @ActionImpl(id = "CommittedChanges.Clear")
-public class ClearCommittedAction extends AnAction implements DumbAware {
+public class ClearCommittedAction extends LegacyDumbAwareAction {
     public ClearCommittedAction() {
         super(
             ActionLocalize.actionCommittedchangesClearText(),

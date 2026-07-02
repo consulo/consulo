@@ -16,7 +16,6 @@
 package consulo.execution.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataManager;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionUtil;
@@ -30,16 +29,16 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
 @ActionImpl(id = IdeActions.ACTION_RERUN)
-public class FakeRerunAction extends AnAction implements DumbAware {
+public class FakeRerunAction extends LegacyDumbAwareAction {
     public FakeRerunAction() {
         super(CommonLocalize.actionRerun(), CommonLocalize.actionRerun(), PlatformIconGroup.actionsRestart());
     }

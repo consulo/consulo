@@ -20,8 +20,8 @@ import consulo.language.editor.util.IdeView;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @since 15.1
  */
-public abstract class CreateInDirectoryActionBase extends AnAction {
+public abstract class CreateInDirectoryActionBase extends LegacyAnAction {
     protected CreateInDirectoryActionBase() {
     }
 

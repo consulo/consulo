@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal.auth;
 
-import consulo.application.dumb.DumbAware;
 import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.internal.ExternalServiceConfigurationImpl;
@@ -25,8 +24,8 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.ui.image.Image;
@@ -43,7 +42,7 @@ import java.nio.charset.StandardCharsets;
  * @author VISTALL
  * @since 2017-03-01
  */
-public class LoginAction extends AnAction implements RightAlignedToolbarAction, DumbAware {
+public class LoginAction extends LegacyDumbAwareAction implements RightAlignedToolbarAction {
   private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
 
   public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {

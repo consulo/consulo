@@ -53,7 +53,7 @@ import java.util.List;
  * from kotlin
  */
 public abstract class RunAnythingChooseContextAction extends ActionGroup implements DumbAware {
-    private abstract class ContextItem extends AnAction {
+    private abstract class ContextItem extends LegacyAnAction {
         protected RunAnythingContext context;
 
         private ContextItem(RunAnythingContext context) {
@@ -170,7 +170,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     boolean isSelected
                 ) {
                     AnActionEvent event = ActionImplUtil.createEmptyEvent();
-                    ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
+                    ActionImplUtil.performDumbAwareUpdate(actionItem.getAction(), event);
 
                     LocalizeValue description = event.getPresentation().getDescription();
                     if (description.isNotEmpty()) {

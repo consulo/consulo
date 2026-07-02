@@ -563,7 +563,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         return FindUtil.showInUsageView(null, collectNonBinaryElements(), myTitle, myEditor.getProject());
     }
 
-    private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class BackAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         public BackAction() {
             super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
@@ -581,7 +581,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
     }
 
-    private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ForwardAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         public ForwardAction() {
             super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
@@ -619,7 +619,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
     }
 
-    private class EditSourceActionBase extends AnAction {
+    private class EditSourceActionBase extends LegacyAnAction {
         private final boolean myFocusEditor;
 
         public EditSourceActionBase(boolean focusEditor, Image icon, LocalizeValue text) {

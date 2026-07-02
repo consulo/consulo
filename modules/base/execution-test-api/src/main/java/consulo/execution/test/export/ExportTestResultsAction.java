@@ -40,7 +40,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.io.FileUtil;
@@ -71,7 +71,7 @@ import java.net.URL;
 import java.util.function.Supplier;
 
 @ActionImpl(id = ExportTestResultsAction.ID)
-public class ExportTestResultsAction extends DumbAwareAction {
+public class ExportTestResultsAction extends LegacyDumbAwareAction {
     public static final String ID = "ExportTestResults";
 
     private static final Logger LOG = Logger.getInstance(ExportTestResultsAction.class);

@@ -14,7 +14,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 @ActionImpl(id = "RunDashboard.EditConfiguration")
-public final class EditConfigurationAction extends AnAction {
+public final class EditConfigurationAction extends LegacyAnAction {
     public EditConfigurationAction() {
         super(ActionLocalize.actionRundashboardEditconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsEditsource());
     }

@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.fileEditor.history.IdeDocumentHistory;
@@ -14,12 +13,12 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.undoRedo.CommandProcessor;
 
 @ActionImpl(id = "GotoLine")
-public class GotoLineAction extends AnAction implements DumbAware {
+public class GotoLineAction extends LegacyDumbAwareAction {
     public GotoLineAction() {
         super(ActionLocalize.actionGotolineText(), ActionLocalize.actionGotolineDescription());
         setEnabledInModalContext(true);

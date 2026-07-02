@@ -16,14 +16,13 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 
 import javax.swing.*;
@@ -34,7 +33,7 @@ import java.awt.event.MouseEvent;
  * @author Vladimir Kondratyev
  */
 @ActionImpl(id = "ShowPopupMenu")
-public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAction {
+public class ShowPopupMenuAction extends LegacyDumbAwareAction implements PopupAction {
     public ShowPopupMenuAction() {
         super(ActionLocalize.actionShowpopupmenuText());
         setEnabledInModalContext(true);

@@ -78,7 +78,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
                     && baseRefactoringAction.hasAvailableHandler(dataContext)) {
                     Presentation presentation = new Presentation();
                     AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, presentation, actionManager, 0);
-                    child.update(event);
+                    ActionUpdateInvoker.updateSync(child, event);
                     if (presentation.isEnabled() && presentation.isVisible()) {
                         destinationGroup.add(child);
                     }

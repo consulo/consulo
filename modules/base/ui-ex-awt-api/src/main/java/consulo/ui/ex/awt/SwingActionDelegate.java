@@ -1,5 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -20,7 +21,7 @@ import static consulo.ui.ex.awt.UIExAWTDataKey.CONTEXT_COMPONENT;
 /**
  * @author Sergey.Malenkov
  */
-public class SwingActionDelegate extends AnAction implements DumbAware {
+public class SwingActionDelegate extends AnAction implements DumbAware, AnActionWithSyncUpdate {
   private static final Key<Function<String, JComponent>> FUNCTION = Key.create("SwingActionsMapping");
   private final String mySwingActionId;
 

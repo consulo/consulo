@@ -36,6 +36,7 @@ import consulo.project.startup.StartupManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -45,7 +46,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public class ExecutorAction extends AnAction implements DumbAware {
+public class ExecutorAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     private final Executor myExecutor;
     private final ExecutorRegistry myExecutorRegistry;
     private final RunCurrentFileService myRunCurrentFileService;

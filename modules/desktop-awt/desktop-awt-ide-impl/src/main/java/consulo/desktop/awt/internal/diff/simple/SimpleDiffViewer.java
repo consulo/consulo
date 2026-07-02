@@ -18,7 +18,6 @@ package consulo.desktop.awt.internal.diff.simple;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.dataContext.DataSink;
 import consulo.application.ReadAction;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Caret;
@@ -55,6 +54,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -505,7 +505,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     // Modification operations
     //
 
-    private abstract class ApplySelectedChangesActionBase extends AnAction implements DumbAware {
+    private abstract class ApplySelectedChangesActionBase extends LegacyDumbAwareAction {
         protected final Side myModifiedSide;
         private final boolean myShortcut;
 

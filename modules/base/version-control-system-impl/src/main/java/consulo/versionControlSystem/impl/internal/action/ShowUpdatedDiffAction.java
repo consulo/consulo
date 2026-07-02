@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
@@ -39,6 +38,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -57,7 +57,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @ActionImpl(id = "Diff.UpdatedFiles", shortcutFrom = @ActionRef(id = "CompareDirs"))
-public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
+public class ShowUpdatedDiffAction extends LegacyDumbAwareAction {
     public ShowUpdatedDiffAction() {
         super(
             VcsLocalize.actionDiffUpdatedFilesText(),

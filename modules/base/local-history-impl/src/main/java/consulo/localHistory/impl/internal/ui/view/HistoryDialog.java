@@ -509,7 +509,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         HelpManager.getInstance().invokeHelp(getHelpId());
     }
 
-    protected abstract class MyAction extends AnAction {
+    protected abstract class MyAction extends LegacyAnAction {
         protected MyAction(LocalizeValue text, LocalizeValue description, Image icon) {
             super(text, description, icon);
         }

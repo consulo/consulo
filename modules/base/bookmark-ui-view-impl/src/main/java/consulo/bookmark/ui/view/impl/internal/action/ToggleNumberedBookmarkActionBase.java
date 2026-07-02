@@ -15,19 +15,18 @@
  */
 package consulo.bookmark.ui.view.impl.internal.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author max
  */
-public abstract class ToggleNumberedBookmarkActionBase extends AnAction implements DumbAware {
+public abstract class ToggleNumberedBookmarkActionBase extends LegacyDumbAwareAction {
     private final int myNumber;
 
     public ToggleNumberedBookmarkActionBase(int n) {

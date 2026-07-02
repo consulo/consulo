@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
@@ -31,8 +30,8 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -48,7 +47,7 @@ import java.util.List;
 /**
  * @author yole
  */
-public class ReopenProjectAction extends AnAction implements DumbAware {
+public class ReopenProjectAction extends LegacyDumbAwareAction {
     private final String myProjectPath;
     private final String myProjectName;
     private List<String> myExtensions;

@@ -27,6 +27,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.coroutine.UIAction;
@@ -34,7 +35,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
-abstract class TabNavigationActionBase extends AnAction implements DumbAware {
+abstract class TabNavigationActionBase extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);
 
     protected enum Direction {

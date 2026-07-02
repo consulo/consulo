@@ -667,7 +667,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             .setRemoveAction(e -> removeRows())
             .disableDownAction()
             .disableUpAction()
-            .addExtraAction(new AnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+            .addExtraAction(new LegacyAnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
@@ -688,13 +688,12 @@ public class TemplateListPanel extends JPanel implements Disposable {
     }
 
     private void installPopup() {
-        final DumbAwareAction rename = new DumbAwareAction(IdeLocalize.actionAnonymousTextRename()) {
+        final LegacyDumbAwareAction rename = new LegacyDumbAwareAction(IdeLocalize.actionAnonymousTextRename()) {
             @Override
             public void update(AnActionEvent e) {
                 int selected = getSingleSelectedIndex();
                 TemplateGroup templateGroup = getGroup(selected);
                 e.getPresentation().setEnabledAndVisible(templateGroup != null);
-                super.update(e);
             }
 
             @Override

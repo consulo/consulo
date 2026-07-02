@@ -29,15 +29,15 @@ import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
  */
-public class MoveModulesToGroupAction extends AnAction {
+public class MoveModulesToGroupAction extends LegacyAnAction {
     protected final ModuleGroup myModuleGroup;
 
     public MoveModulesToGroupAction(@Nullable ModuleGroup moduleGroup, LocalizeValue title, LocalizeValue description) {

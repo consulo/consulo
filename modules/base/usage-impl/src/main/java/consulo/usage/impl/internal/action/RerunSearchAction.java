@@ -21,8 +21,8 @@ import consulo.application.ReadAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.image.Image;
 import consulo.usage.UsageView;
 import consulo.usage.internal.UsageViewEx;
@@ -34,7 +34,7 @@ import java.util.Objects;
  * @author gregsh
  */
 @ActionImpl(id = "UsageView.Rerun", shortcutFrom = @ActionRef(id = IdeActions.ACTION_RERUN))
-public class RerunSearchAction extends DumbAwareAction {
+public class RerunSearchAction extends LegacyDumbAwareAction {
     @Override
     protected @Nullable Image getTemplateIcon() {
         return PlatformIconGroup.actionsRerun();

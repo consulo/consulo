@@ -16,20 +16,19 @@
 package consulo.bookmark.ui.view.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.localize.BookmarkLocalize;
 import consulo.codeEditor.Editor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "ToggleBookmark")
-public class ToggleBookmarkAction extends AnAction implements DumbAware {
+public class ToggleBookmarkAction extends LegacyDumbAwareAction {
     @Inject
     public ToggleBookmarkAction() {
         super(BookmarkLocalize.actionBookmarkToggleText(), BookmarkLocalize.actionBookmarkToggleDescription());

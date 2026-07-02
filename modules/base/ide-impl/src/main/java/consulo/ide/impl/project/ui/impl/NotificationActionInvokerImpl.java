@@ -16,8 +16,11 @@
 package consulo.ide.impl.project.ui.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.project.ui.internal.NotificationActionInvoker;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Singleton;
@@ -31,8 +34,11 @@ import jakarta.inject.Singleton;
 public class NotificationActionInvokerImpl implements NotificationActionInvoker {
   @Override
   public void invoke(AnAction action, AnActionEvent event) {
-    if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
-      ActionImplUtil.performActionDumbAware(action, event);
-    }
+    UIAccess uiAccess = Application.get().getLastUIAccess();
+    ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+      if (Boolean.TRUE.equals(enabled)) {
+        ActionImplUtil.performActionDumbAware(action, event);
+      }
+    }, uiAccess);
   }
 }

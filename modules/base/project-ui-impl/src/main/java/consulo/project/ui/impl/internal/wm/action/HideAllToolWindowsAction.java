@@ -16,20 +16,19 @@
 package consulo.project.ui.impl.internal.wm.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
 @ActionImpl(id = "HideAllWindows")
-public class HideAllToolWindowsAction extends AnAction implements DumbAware {
+public class HideAllToolWindowsAction extends LegacyDumbAwareAction {
     public HideAllToolWindowsAction() {
         super(ActionLocalize.actionHideallwindowsText(), ActionLocalize.actionHideallwindowsDescription());
     }

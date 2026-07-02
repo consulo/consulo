@@ -24,8 +24,8 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 
 import java.util.Collection;
@@ -34,7 +34,7 @@ import java.util.Collection;
  * @author anna
  * @since 2005-02-28
  */
-class AddToNewFavoritesListAction extends AnAction {
+class AddToNewFavoritesListAction extends LegacyAnAction {
     public AddToNewFavoritesListAction() {
         super(
             IdeLocalize.actionAddToNewFavoritesList(),

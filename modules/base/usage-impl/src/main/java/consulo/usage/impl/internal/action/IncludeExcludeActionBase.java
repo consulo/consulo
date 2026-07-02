@@ -17,15 +17,15 @@ package consulo.usage.impl.internal.action;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 
 /**
  * @author max
  */
-public abstract class IncludeExcludeActionBase extends AnAction {
+public abstract class IncludeExcludeActionBase extends LegacyAnAction {
     protected IncludeExcludeActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }

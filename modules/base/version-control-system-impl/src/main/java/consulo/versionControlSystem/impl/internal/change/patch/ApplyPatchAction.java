@@ -41,7 +41,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -93,7 +93,7 @@ import static consulo.versionControlSystem.impl.internal.patch.PatchFileType.isP
         ),
     }
 )
-public class ApplyPatchAction extends DumbAwareAction {
+public class ApplyPatchAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(ApplyPatchAction.class);
 
     public ApplyPatchAction() {

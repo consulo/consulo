@@ -17,14 +17,14 @@ package consulo.ide.impl.idea.ui.popup;
 
 import consulo.application.localize.ApplicationLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author VISTALL
  * @since 2023-06-26
  */
-public class NothingHereAction extends AnAction {
+public class NothingHereAction extends LegacyAnAction {
   public static final NothingHereAction INSTANCE = new NothingHereAction();
 
   public NothingHereAction() {

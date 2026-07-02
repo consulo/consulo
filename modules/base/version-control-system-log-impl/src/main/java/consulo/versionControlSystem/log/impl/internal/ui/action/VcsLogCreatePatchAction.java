@@ -21,13 +21,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 
 @ActionImpl(id = "Vcs.Log.CreatePatch", shortcutFrom = @ActionRef(id = "ChangesView.CreatePatch"))
-public class VcsLogCreatePatchAction extends DumbAwareAction {
+public class VcsLogCreatePatchAction extends LegacyDumbAwareAction {
     public static final String CREATE_PATCH_ID = "ChangesView.CreatePatch";
 
     public VcsLogCreatePatchAction() {

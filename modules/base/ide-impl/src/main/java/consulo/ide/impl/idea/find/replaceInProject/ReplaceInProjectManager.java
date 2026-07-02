@@ -306,7 +306,7 @@ public class ReplaceInProjectManager {
     }
 
     private void addReplaceActions(final ReplaceContext replaceContext) {
-        replaceContext.getUsageView().addButtonToLowerPane(new DumbAwareAction(FindLocalize.findReplaceAllAction()) {
+        replaceContext.getUsageView().addButtonToLowerPane(new LegacyDumbAwareAction(FindLocalize.findReplaceAllAction()) {
             {
                 setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)));
             }
@@ -336,7 +336,7 @@ public class ReplaceInProjectManager {
             }
         });
 
-        replaceContext.getUsageView().addButtonToLowerPane(new AnAction() {
+        replaceContext.getUsageView().addButtonToLowerPane(new LegacyAnAction() {
             {
                 setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)));
             }

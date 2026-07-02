@@ -18,7 +18,6 @@ package consulo.versionControlSystem.impl.internal.change.action;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
@@ -33,8 +32,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
@@ -58,7 +57,7 @@ import java.util.*;
  * @since 2006-11-02
  */
 @ActionImpl(id = "ChangesView.Revert")
-public class RollbackAction extends AnAction implements DumbAware {
+public class RollbackAction extends LegacyDumbAwareAction {
     public RollbackAction() {
         super(
             ActionLocalize.actionChangesviewRevertText(),

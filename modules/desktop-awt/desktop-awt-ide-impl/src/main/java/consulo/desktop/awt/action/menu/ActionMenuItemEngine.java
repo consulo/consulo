@@ -23,8 +23,10 @@ import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -37,9 +39,9 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.util.TextWithMnemonic;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,31 +74,37 @@ public class ActionMenuItemEngine {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             IdeFocusManager fm = IdeFocusManager.findInstanceByContext(myContext);
-            String id = ActionManager.getInstance().getId(myAction.getAction());
+            ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
+            String id = actionManager.getId(myAction.getAction());
             if (id != null) {
                 FeatureUsageTracker.getInstance().triggerFeatureUsed("context.menu.click.stats." + id.replace(' ', '.'));
             }
-            fm.runOnOwnContext(myContext, () -> {
-                AnActionEvent event =
-                    new AnActionEvent(new MouseEvent(myButton,
-                        MouseEvent.MOUSE_PRESSED,
-                        0,
-                        e.getModifiers(),
-                        myButton.getWidth() / 2,
-                        myButton.getHeight() / 2,
-                        1,
-                        false),
-                        myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers(), true, false);
-                AnAction menuItemAction = myAction.getAction();
-                if (ActionImplUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
-                    ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-                    actionManager.fireBeforeActionPerformed(menuItemAction, myContext, event);
-                    ActionImplUtil.performActionDumbAware(menuItemAction, event);
-                    actionManager.queueActionPerformedEvent(menuItemAction, myContext, event);
+            AnActionEvent event =
+                new AnActionEvent(new MouseEvent(myButton,
+                    MouseEvent.MOUSE_PRESSED,
+                    0,
+                    e.getModifiers(),
+                    myButton.getWidth() / 2,
+                    myButton.getHeight() / 2,
+                    1,
+                    false),
+                    myContext, myPlace, myPresentation, actionManager, e.getModifiers(), true, false);
+            AnAction menuItemAction = myAction.getAction();
+
+            UIAccess uiAccess = UIAccess.current();
+
+            ActionRunnerAsync.lastUpdateAndCheckDumbAsync(menuItemAction, event, false).whenCompleteAsync((enabled, throwable) -> {
+                if (throwable == null && Boolean.TRUE.equals(enabled)) {
+                    fm.runOnOwnContext(myContext, () -> {
+                        actionManager.fireBeforeActionPerformed(menuItemAction, myContext, event);
+                        ActionImplUtil.performActionDumbAware(menuItemAction, event);
+                        actionManager.queueActionPerformedEvent(menuItemAction, myContext, event);
+                    });
                 }
-            });
+            }, uiAccess);
         }
     }
 
@@ -286,7 +294,7 @@ public class ActionMenuItemEngine {
     @RequiredUIAccess
     private void updateIcon(AnAction action) {
         if (isToggleable() && (myPresentation.getIcon() == null || myInsideCheckedGroup)) {
-            action.update(myEvent);
+            ActionUpdateInvoker.updateSync(action, myEvent);
 
             ((JCheckBoxMenuItem) myButton).setState(Toggleable.isSelected(myEvent.getPresentation()));
         }

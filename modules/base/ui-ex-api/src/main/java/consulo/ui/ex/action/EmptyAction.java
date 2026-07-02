@@ -33,7 +33,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  * @see EmptyActionGroup
  */
-public final class EmptyAction extends AnAction {
+public final class EmptyAction extends AnAction implements AnActionWithSyncUpdate {
     private boolean myEnabled;
 
     public EmptyAction() {
@@ -106,8 +106,8 @@ public final class EmptyAction extends AnAction {
             new MyDelegatingAction(action);
     }
 
-    public static class MyDelegatingAction extends AnAction {
-        
+    public static class MyDelegatingAction extends AnAction implements AnActionWithSyncUpdate {
+
         private final AnAction myDelegate;
 
         public MyDelegatingAction(AnAction action) {
@@ -118,7 +118,9 @@ public final class EmptyAction extends AnAction {
 
         @Override
         public void update(AnActionEvent e) {
-            myDelegate.update(e);
+            if (myDelegate instanceof AnActionWithSyncUpdate sync) {
+                sync.update(e);
+            }
         }
 
         @Override

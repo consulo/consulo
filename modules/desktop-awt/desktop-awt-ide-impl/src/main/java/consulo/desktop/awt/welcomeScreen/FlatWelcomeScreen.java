@@ -107,7 +107,7 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
                 manager.getDataContext(welcomePanel)
             );
 
-            action.update(e);
+            ActionUpdateInvoker.updateSync(action, e);
 
             Button button = Button.create(e.getPresentation().getTextValue());
             button.setIcon(e.getPresentation().getIcon());

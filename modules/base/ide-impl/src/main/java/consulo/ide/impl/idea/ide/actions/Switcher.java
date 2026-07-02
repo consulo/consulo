@@ -97,7 +97,7 @@ import static javax.swing.KeyStroke.getKeyStroke;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = IdeActions.ACTION_SWITCHER)
-public class Switcher extends AnAction implements DumbAware {
+public class Switcher extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(Switcher.class);
     private static final Key<SwitcherPanel> SWITCHER_KEY = Key.create("SWITCHER_KEY");
     private static final String TOGGLE_CHECK_BOX_ACTION_ID = "SwitcherRecentEditedChangedToggleCheckBox";
@@ -207,7 +207,7 @@ public class Switcher extends AnAction implements DumbAware {
         return switcher;
     }
 
-    public static class ToggleCheckBoxAction extends DumbAwareAction implements DumbAware {
+    public static class ToggleCheckBoxAction extends LegacyDumbAwareAction implements DumbAware {
         public ToggleCheckBoxAction() {
         }
 

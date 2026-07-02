@@ -653,7 +653,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         }
     }
 
-    private final class RemoveStripeButtonAction extends AnAction implements DumbAware {
+    private final class RemoveStripeButtonAction extends LegacyDumbAwareAction {
         public RemoveStripeButtonAction() {
             Presentation presentation = getTemplatePresentation();
             presentation.setText(ActionLocalize.actionRemovestripebuttonText());
@@ -675,7 +675,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         }
     }
 
-    private final class HideAction extends AnAction implements DumbAware {
+    private final class HideAction extends LegacyDumbAwareAction {
         public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopInternalDecorator.HIDE_ACTIVE_WINDOW_ACTION_ID;
 
         public HideAction() {

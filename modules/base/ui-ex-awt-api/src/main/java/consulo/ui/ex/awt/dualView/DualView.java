@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package consulo.ui.ex.awt.dualView;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 
 import consulo.component.util.config.Storage;
 import consulo.localize.LocalizeValue;
@@ -411,37 +412,49 @@ public class DualView extends JPanel {
     }
 
     public AnAction getExpandAllAction() {
-        return new AnAction(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall()) {
-            @Override
-            public void update(AnActionEvent e) {
-                Presentation presentation = e.getPresentation();
-                presentation.setVisible(true);
-                presentation.setEnabled(myCurrentView == myTreeView);
-            }
-
-            @Override
-            @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                expandAll();
-            }
-        };
+        return new ExpandAllAction();
     }
 
     public AnAction getCollapseAllAction() {
-        return new AnAction(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall()) {
-            @Override
-            public void update(AnActionEvent e) {
-                Presentation presentation = e.getPresentation();
-                presentation.setVisible(true);
-                presentation.setEnabled(myCurrentView == myTreeView);
-            }
+        return new CollapseAllAction();
+    }
 
-            @Override
-            @RequiredUIAccess
-            public void actionPerformed(AnActionEvent e) {
-                collapseAll();
-            }
-        };
+    private final class ExpandAllAction extends AnAction implements AnActionWithSyncUpdate {
+        ExpandAllAction() {
+            super(UILocalize.treeViewExpandAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsExpandall());
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            Presentation presentation = e.getPresentation();
+            presentation.setVisible(true);
+            presentation.setEnabled(myCurrentView == myTreeView);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            expandAll();
+        }
+    }
+
+    private final class CollapseAllAction extends AnAction implements AnActionWithSyncUpdate {
+        CollapseAllAction() {
+            super(UILocalize.treeViewCollapseAllActionName(), LocalizeValue.empty(), PlatformIconGroup.actionsCollapseall());
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            Presentation presentation = e.getPresentation();
+            presentation.setVisible(true);
+            presentation.setEnabled(myCurrentView == myTreeView);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            collapseAll();
+        }
     }
 
     public void setCellWrapper(CellWrapper wrapper) {

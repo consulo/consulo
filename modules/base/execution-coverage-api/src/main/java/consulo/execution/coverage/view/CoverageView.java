@@ -340,7 +340,7 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
         }
     }
 
-    private class GoUpAction extends AnAction {
+    private class GoUpAction extends LegacyAnAction {
         private final CoverageViewTreeStructure myTreeStructure;
 
         public GoUpAction(CoverageViewTreeStructure treeStructure) {

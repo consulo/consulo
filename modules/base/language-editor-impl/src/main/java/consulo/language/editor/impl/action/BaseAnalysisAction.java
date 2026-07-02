@@ -40,6 +40,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.layout.VerticalLayout;
@@ -53,7 +54,7 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class BaseAnalysisAction extends AnAction {
+public abstract class BaseAnalysisAction extends AnAction implements AnActionWithAsyncUpdate {
     private final LocalizeValue myTitle;
     private final LocalizeValue myAnalysisNoon;
     private static final Logger LOG = Logger.getInstance(BaseAnalysisAction.class);

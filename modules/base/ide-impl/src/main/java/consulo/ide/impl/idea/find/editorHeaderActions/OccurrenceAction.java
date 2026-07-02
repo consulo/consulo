@@ -20,12 +20,12 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
 
-public abstract class OccurrenceAction extends DumbAwareAction implements ShortcutProvider {
+public abstract class OccurrenceAction extends LegacyDumbAwareAction implements ShortcutProvider {
   protected OccurrenceAction(String baseActionId, Image icon) {
     copyFrom(ActionManager.getInstance().getAction(baseActionId));
     getTemplatePresentation().setIcon(icon);

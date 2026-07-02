@@ -21,7 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -30,7 +30,7 @@ import consulo.versionControlSystem.history.*;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = "Vcs.ShowDiffWithLocal")
-public class ShowDiffWithLocalAction extends DumbAwareAction {
+public class ShowDiffWithLocalAction extends LegacyDumbAwareAction {
     public ShowDiffWithLocalAction() {
         super(
             LocalizeValue.localizeTODO("Compare with Local"),

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
@@ -25,15 +24,15 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = IdeActions.ACTION_CLOSE_ALL_EDITORS)
-public class CloseAllEditorsAction extends AnAction implements DumbAware {
+public class CloseAllEditorsAction extends LegacyDumbAwareAction {
     public CloseAllEditorsAction() {
         super(ActionLocalize.actionClosealleditorsText(), ActionLocalize.actionClosealleditorsDescription());
     }

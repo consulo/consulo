@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -24,8 +23,8 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -51,7 +50,7 @@ import java.util.*;
  * @author max
  */
 @ActionImpl(id = "ChangesView.Move")
-public class MoveChangesToAnotherListAction extends AnAction implements DumbAware {
+public class MoveChangesToAnotherListAction extends LegacyDumbAwareAction {
     public MoveChangesToAnotherListAction() {
         super(
             ActionLocalize.actionChangesviewMoveText(),

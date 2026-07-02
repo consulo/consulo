@@ -44,6 +44,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.BorderLayoutPanel;
@@ -129,7 +130,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
         mySwitchModeAction = new SwitchModeAction();
 
-        new AnAction() {
+        new LegacyAnAction() {
             @Override
             public void update(AnActionEvent e) {
                 Project project = e.getData(Project.KEY);

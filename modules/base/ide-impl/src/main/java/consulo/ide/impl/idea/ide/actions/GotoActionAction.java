@@ -20,6 +20,8 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
@@ -329,10 +331,15 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 );
             }
 
-            if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
-                if (action instanceof ActionGroup actionGroup && !event.getPresentation().isPerformGroup()) {
+            AnActionEvent finalEvent = event;
+            UIAccess uiAccess = Application.get().getLastUIAccess();
+            ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, finalEvent, false).whenCompleteAsync((enabled, throwable) -> {
+                if (!Boolean.TRUE.equals(enabled)) {
+                    return;
+                }
+                if (action instanceof ActionGroup actionGroup && !finalEvent.getPresentation().isPerformGroup()) {
                     ListPopup popup = JBPopupFactory.getInstance()
-                        .createActionGroupPopup(event.getPresentation().getTextValue().get(), actionGroup, context, false, callback, -1);
+                        .createActionGroupPopup(finalEvent.getPresentation().getTextValue().get(), actionGroup, context, false, callback, -1);
                     Window window = SwingUtilities.getWindowAncestor(component);
                     if (window != null) {
                         popup.showInCenterOf(window);
@@ -343,14 +350,14 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 }
                 else {
                     ActionManagerEx manager = ActionManagerEx.getInstanceEx();
-                    manager.fireBeforeActionPerformed(action, context, event);
-                    ActionImplUtil.performActionDumbAware(action, event);
+                    manager.fireBeforeActionPerformed(action, context, finalEvent);
+                    ActionImplUtil.performActionDumbAware(action, finalEvent);
                     if (callback != null) {
                         callback.run();
                     }
-                    manager.fireAfterActionPerformed(action, context, event);
+                    manager.fireAfterActionPerformed(action, context, finalEvent);
                 }
-            }
+            }, uiAccess);
         });
     }
 

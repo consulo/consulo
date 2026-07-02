@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.internal.anomalies;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -227,7 +228,7 @@ public class TopAnomaliesAction extends ActionGroup {
         return "";
     }
 
-    private static abstract class ResettableAction extends AnAction {
+    private static abstract class ResettableAction extends LegacyAnAction {
         protected ResettableAction(@Nullable String text) {
             super(text);
         }

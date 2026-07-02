@@ -288,7 +288,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         return start;
     }
 
-    private class MyAction extends DumbAwareAction {
+    private class MyAction extends LegacyDumbAwareAction {
         private final boolean myNext;
 
         
@@ -319,7 +319,6 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             boolean enabled = myMultiline || !isUpDownKey(e) || canMoveInEditor(myNext);
             //enabled &= getModel().hasHistory(myNext);
             e.getPresentation().setEnabled(enabled);
@@ -350,7 +349,7 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         }
     }
 
-    private class MyBrowseAction extends DumbAwareAction {
+    private class MyBrowseAction extends LegacyDumbAwareAction {
         @Override
         public void update(AnActionEvent e) {
             boolean enabled = hasHistory();

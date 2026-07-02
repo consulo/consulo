@@ -31,7 +31,7 @@ import java.util.Set;
  */
 @Deprecated
 @DeprecationInfo("Be careful while using this class. In most cases AnAction will be enough")
-public abstract class AnActionButton extends AnAction implements ShortcutProvider {
+public abstract class AnActionButton extends AnAction implements ShortcutProvider, AnActionWithSyncUpdate {
     public static class AnActionButtonWrapper extends AnActionButton implements ActionWithDelegate<AnAction> {
         private final AnAction myAction;
 
@@ -48,7 +48,9 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
 
         @Override
         public void updateButton(AnActionEvent e) {
-            myAction.update(e);
+            if (myAction instanceof AnActionWithSyncUpdate sync) {
+                sync.update(e);
+            }
             boolean enabled = e.getPresentation().isEnabled();
             boolean visible = e.getPresentation().isVisible();
             if (enabled && visible) {
@@ -86,7 +88,6 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     private boolean myEnabled = true;
     private boolean myVisible = true;
     private ShortcutSet myShortcut;
-    private AnAction myAction = null;
     private JComponent myContextComponent;
     private Set<AnActionButtonUpdater> myUpdaters;
 
@@ -142,14 +143,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
 
     @Override
     public final void update(AnActionEvent e) {
-        boolean myActionVisible = true;
-        boolean myActionEnabled = true;
-        if (myAction != null) {
-            myAction.update(e);
-            myActionEnabled = e.getPresentation().isEnabled();
-            myActionVisible = e.getPresentation().isVisible();
-        }
-        boolean enabled = isEnabled() && isContextComponentOk() && myActionEnabled;
+        boolean enabled = isEnabled() && isContextComponentOk();
         if (enabled && myUpdaters != null) {
             for (AnActionButtonUpdater updater : myUpdaters) {
                 if (!updater.isEnabled(e)) {
@@ -159,7 +153,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
             }
         }
         e.getPresentation().setEnabled(enabled);
-        e.getPresentation().setVisible(isVisible() && myActionVisible);
+        e.getPresentation().setVisible(isVisible());
 
         if (enabled) {
             updateButton(e);

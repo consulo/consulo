@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.ui.MainFrame;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
@@ -28,7 +28,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
 @ActionImpl(id = VcsLogActionPlaces.VCS_LOG_FOCUS_TEXT_FILTER)
-public class FocusTextFilterAction extends DumbAwareAction {
+public class FocusTextFilterAction extends LegacyDumbAwareAction {
     public FocusTextFilterAction() {
         super(VersionControlSystemLogLocalize.actionFocusTextFilterText(), VersionControlSystemLogLocalize.actionFocusTextFilterDescription());
     }

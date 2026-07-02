@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.coroutine.UIAction;
@@ -32,7 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import org.jspecify.annotations.Nullable;
 
-public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
+public abstract class BaseShowDiffAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     protected BaseShowDiffAction(LocalizeValue text, LocalizeValue description) {
         this(text, description, null);
     }
@@ -51,13 +52,12 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
             if (ActionPlaces.isPopupPlace(e.getPlace())) {
                 presentation.setVisible(canShow);
             }
+            updatePresentation(e);
             return null;
         }));
     }
 
-    @Override
-    public void update(AnActionEvent e) {
-
+    protected void updatePresentation(AnActionEvent e) {
     }
 
     @Override

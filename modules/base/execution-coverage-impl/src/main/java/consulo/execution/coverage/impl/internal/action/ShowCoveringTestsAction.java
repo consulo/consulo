@@ -18,8 +18,8 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.PanelWithText;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
@@ -44,7 +44,7 @@ import java.util.*;
  * @author anna
  * @since 2008-05-29
  */
-public class ShowCoveringTestsAction extends AnAction {
+public class ShowCoveringTestsAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(ShowCoveringTestsAction.class);
 
     private final String myClassFQName;

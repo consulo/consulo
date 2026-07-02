@@ -333,7 +333,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         return (T)getSelectedObject();
     }
 
-    private class CopyAction extends DumbAwareAction {
+    private class CopyAction extends LegacyDumbAwareAction {
         public CopyAction() {
             super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
             registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
@@ -357,7 +357,6 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
         @Override
         public void update(AnActionEvent event) {
-            super.update(event);
             event.getPresentation().setEnabled(getSelectedObject() != null);
         }
     }

@@ -21,7 +21,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
@@ -32,7 +32,7 @@ import java.util.BitSet;
 import java.util.List;
 
 @ActionImpl(id = "Vcs.RollbackChangedLines")
-public class RollbackLineStatusAction extends DumbAwareAction {
+public class RollbackLineStatusAction extends LegacyDumbAwareAction {
     public RollbackLineStatusAction() {
         super(
             ActionLocalize.actionVcsRollbackchangedlinesText(),

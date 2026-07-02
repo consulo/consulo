@@ -23,7 +23,7 @@ import consulo.language.editor.generation.PatternProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
@@ -32,7 +32,7 @@ import jakarta.inject.Inject;
  * @author Dmitry Avdeev
  */
 @ActionImpl(id = "GeneratePattern")
-public class GenerateByPatternAction extends AnAction {
+public class GenerateByPatternAction extends LegacyAnAction {
     private final Application myApplication;
 
     @Inject

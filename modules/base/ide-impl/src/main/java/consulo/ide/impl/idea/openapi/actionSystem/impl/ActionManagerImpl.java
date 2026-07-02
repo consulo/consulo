@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.*;
 import consulo.application.Application;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
@@ -1320,8 +1321,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    public boolean performDumbAwareUpdate(AnAction action, AnActionEvent e, boolean beforeActionPerformed) {
-        return ActionImplUtil.performDumbAwareUpdate(action, e, beforeActionPerformed);
+    public boolean performDumbAwareUpdate(AnAction action, AnActionEvent e) {
+        return ActionImplUtil.performDumbAwareUpdate(action, e);
     }
 
     //@Override
@@ -1514,46 +1515,42 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                     inputEvent.getModifiersEx()
                 );
 
-                ActionImplUtil.performDumbAwareUpdate(action, event, false);
-                if (!event.getPresentation().isEnabled()) {
-                    result.setRejected();
-                    return;
-                }
+                UIAccess uiAccess = Application.get().getLastUIAccess();
+                ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+                    if (!Boolean.TRUE.equals(enabled)) {
+                        result.setRejected();
+                        return;
+                    }
 
-                ActionImplUtil.lastUpdateAndCheckDumb(action, event, false);
-                if (!event.getPresentation().isEnabled()) {
-                    result.setRejected();
-                    return;
-                }
+                    Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+                    if (component != null && !component.isShowing() && !ActionPlaces.TOUCHBAR_GENERAL.equals(place)) {
+                        result.setRejected();
+                        return;
+                    }
 
-                Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-                if (component != null && !component.isShowing() && !ActionPlaces.TOUCHBAR_GENERAL.equals(place)) {
-                    result.setRejected();
-                    return;
-                }
+                    fireBeforeActionPerformed(action, context, event);
 
-                fireBeforeActionPerformed(action, context, event);
+                    Disposable eventListenerDisposable = Disposable.newDisposable("tryToExecuteNow");
+                    result.doWhenProcessed(() -> Disposer.dispose(eventListenerDisposable));
 
-                Disposable eventListenerDisposable = Disposable.newDisposable("tryToExecuteNow");
-                result.doWhenProcessed(() -> Disposer.dispose(eventListenerDisposable));
-
-                UIUtil.addAwtListener(
-                    event1 -> {
-                        if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {
-                            if (!result.isProcessed()) {
-                                WindowEvent we = (WindowEvent) event1;
-                                IdeFocusManager.findInstanceByComponent(we.getWindow())
-                                    .doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
+                    UIUtil.addAwtListener(
+                        event1 -> {
+                            if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {
+                                if (!result.isProcessed()) {
+                                    WindowEvent we = (WindowEvent) event1;
+                                    IdeFocusManager.findInstanceByComponent(we.getWindow())
+                                        .doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
+                                }
                             }
-                        }
-                    },
-                    AWTEvent.WINDOW_EVENT_MASK,
-                    eventListenerDisposable
-                );
+                        },
+                        AWTEvent.WINDOW_EVENT_MASK,
+                        eventListenerDisposable
+                    );
 
-                ActionImplUtil.performActionDumbAware(action, event);
-                result.setDone();
-                queueActionPerformedEvent(action, context, event);
+                    ActionImplUtil.performActionDumbAware(action, event);
+                    result.setDone();
+                    queueActionPerformedEvent(action, context, event);
+                }, uiAccess);
             },
             IdeaModalityState.defaultModalityState()
         );

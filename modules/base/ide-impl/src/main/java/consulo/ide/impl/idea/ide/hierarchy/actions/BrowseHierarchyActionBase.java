@@ -36,8 +36,8 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
@@ -52,7 +52,7 @@ import java.util.function.Consumer;
 /**
  * @author yole
  */
-public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> extends AnAction {
+public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> extends LegacyAnAction {
     private static final ExtensionPointCacheKey CACHE_KEY =
         ExtensionPointCacheKey.<HierarchyProvider, ByLanguageValue<List<HierarchyProvider>>>create(
             "HierarchyProvider",

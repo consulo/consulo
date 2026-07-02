@@ -22,15 +22,15 @@ import consulo.execution.test.sm.ui.TestResultsViewer;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 
 /**
  * @author Roman Chernyatchik
  */
 @ActionImpl(id = "ShowTestStatistics")
-public class ShowStatisticsAction extends AnAction {
+public class ShowStatisticsAction extends LegacyAnAction {
     public ShowStatisticsAction() {
         super(ExecutionTestLocalize.actionShowStatisticsText());
     }

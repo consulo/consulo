@@ -3,10 +3,12 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import org.jspecify.annotations.Nullable;
@@ -16,7 +18,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-final class FNKeyAction extends DumbAwareAction {
+final class FNKeyAction extends LegacyDumbAwareAction {
     private static final boolean SHOW_ACTION_TEMPLATE_TEXT = Boolean.getBoolean("touchbar.fn.mode.show.template");
 
     private final int myFN;
@@ -88,7 +90,7 @@ final class FNKeyAction extends DumbAwareAction {
             return;
         }
 
-        myAction.update(e);
+        ActionUpdateInvoker.updateSync(myAction, e);
         myIsActionDisabled = !e.getPresentation().isEnabled();
         e.getPresentation().setEnabledAndVisible(true); // FN-keys are always enabled and visible
 
@@ -101,6 +103,6 @@ final class FNKeyAction extends DumbAwareAction {
 
     @Override
     public ActionUpdateThread getActionUpdateThread() {
-        return myAction == null ? ActionUpdateThread.BGT : myAction.getActionUpdateThread();
+        return myAction instanceof AnActionWithSyncUpdate sync ? sync.getActionUpdateThread() : ActionUpdateThread.BGT;
     }
 }

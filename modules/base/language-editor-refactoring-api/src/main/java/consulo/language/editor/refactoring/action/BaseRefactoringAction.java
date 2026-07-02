@@ -38,6 +38,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.undoRedo.CommandProcessor;
@@ -50,7 +51,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class BaseRefactoringAction extends AnAction {
+public abstract class BaseRefactoringAction extends AnAction implements AnActionWithAsyncUpdate {
     private final Predicate<Language> myLanguageCondition = this::isAvailableForLanguage;
 
     protected BaseRefactoringAction() {

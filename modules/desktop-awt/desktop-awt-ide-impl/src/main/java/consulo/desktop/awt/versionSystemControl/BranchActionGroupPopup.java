@@ -105,7 +105,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
                 return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
             }
         };
-        AnAction restoreSizeButton = new AnAction(
+        AnAction restoreSizeButton = new LegacyAnAction(
             DistributedVcsLocalize.actionBranchactiongrouppopupAnonymousTextRestoreSize(),
             LocalizeValue.empty(),
             PlatformIconGroup.generalCollapsecomponent()

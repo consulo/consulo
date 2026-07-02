@@ -16,13 +16,12 @@
 package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -34,7 +33,7 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.EditChangelistDi
  * @since 2006-11-02
  */
 @ActionImpl(id = "ChangesView.Rename")
-public class RenameChangeListAction extends AnAction implements DumbAware {
+public class RenameChangeListAction extends LegacyDumbAwareAction {
     public RenameChangeListAction() {
         super(ActionLocalize.actionChangesviewRenameText(), ActionLocalize.actionChangesviewRenameDescription());
     }

@@ -274,7 +274,7 @@ public class PushLog extends JPanel implements UiDataProvider {
         myTree.setRowHeight(0);
     }
 
-    private class MyShowCommitInfoAction extends DumbAwareAction {
+    private class MyShowCommitInfoAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {

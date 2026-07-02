@@ -9,13 +9,13 @@ import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.EmptyRunnable;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
 @ActionImpl(id = "RemoteServers.ConnectServer")
-public class RemoteServerConnectAction extends DumbAwareAction {
+public class RemoteServerConnectAction extends LegacyDumbAwareAction {
     public RemoteServerConnectAction() {
         super(RemoteServerLocalize.actionRemoteserversConnectserverText(), RemoteServerLocalize.actionRemoteserversConnectserverDescription(), PlatformIconGroup.actionsExecute());
     }

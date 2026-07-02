@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -1049,7 +1048,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        private abstract class ApplySelectedChangesActionBase extends AnAction implements DumbAware {
+        private abstract class ApplySelectedChangesActionBase extends LegacyDumbAwareAction {
             private final boolean myShortcut;
 
             public ApplySelectedChangesActionBase(boolean shortcut) {
@@ -1309,7 +1308,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             }
         }
 
-        public class ApplyNonConflictsAction extends DumbAwareAction {
+        public class ApplyNonConflictsAction extends LegacyDumbAwareAction {
             
             private final ThreeSide mySide;
 

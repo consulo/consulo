@@ -52,8 +52,8 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
@@ -74,7 +74,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @ActionImpl(id = IdeActions.ACTION_QUICK_IMPLEMENTATIONS)
-public class ShowImplementationsAction extends AnAction implements PopupAction {
+public class ShowImplementationsAction extends LegacyAnAction implements PopupAction {
     public static final String CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE = "codeassists.quickdefinition.lookup";
     public static final String CODEASSISTS_QUICKDEFINITION_FEATURE = "codeassists.quickdefinition";
 

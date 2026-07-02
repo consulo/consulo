@@ -27,6 +27,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBLabel;
@@ -93,7 +94,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         };
 
         JPanel panel = ToolbarDecorator.createDecorator(myLocalTable)
-            .addExtraAction(new AnAction(
+            .addExtraAction(new LegacyAnAction(
                 LocalizeValue.localizeTODO("Share"),
                 LocalizeValue.empty(),
                 PlatformIconGroup.actionsShow()
@@ -134,7 +135,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         JPanel sharedPanel = new JPanel(new BorderLayout());
         sharedPanel.setBorder(IdeBorderFactory.createTitledBorder("Shared colors", false));
         JPanel shared = ToolbarDecorator.createDecorator(mySharedTable)
-            .addExtraAction(new AnAction(
+            .addExtraAction(new LegacyAnAction(
                 LocalizeValue.localizeTODO("Unshare"),
                 LocalizeValue.empty(),
                 PlatformIconGroup.actionsCancel()

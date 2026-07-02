@@ -20,7 +20,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
@@ -42,7 +42,7 @@ import java.awt.*;
 /**
  * @author Dmitry Batkovich
  */
-public abstract class AdvancedSettingsAction extends DumbAwareAction {
+public abstract class AdvancedSettingsAction extends LegacyDumbAwareAction {
     private final int myCheckBoxIndent;
     private Project myProject;
     private InspectionConfigTreeNode myRoot;
@@ -56,7 +56,6 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         InspectionProfileImpl inspectionProfile = getInspectionProfile();
         Image icon = PlatformIconGroup.generalGearplain();
         e.getPresentation().setIcon(

@@ -35,7 +35,7 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.popup.AWTListPopup;
@@ -61,7 +61,7 @@ import java.util.*;
  * @author nik
  */
 @ActionImpl(id = "BuildArtifact")
-public class BuildArtifactAction extends DumbAwareAction {
+public class BuildArtifactAction extends LegacyDumbAwareAction {
     public static final NotificationGroup NOTIFICATION_GROUP =
         NotificationGroup.balloonGroup("cleanArtifact", CompilerLocalize.notificationGroupCleanArtifactDisplayName());
 

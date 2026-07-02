@@ -25,7 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
@@ -34,7 +34,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 import java.util.List;
 
-public abstract class XFetchValueActionBase extends AnAction {
+public abstract class XFetchValueActionBase extends LegacyAnAction {
     protected XFetchValueActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }

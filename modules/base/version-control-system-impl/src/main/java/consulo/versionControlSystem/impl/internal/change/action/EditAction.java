@@ -19,8 +19,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.EditFileProvider;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -40,7 +40,7 @@ import java.util.List;
  * @since 2006-12-15
  */
 @ActionImpl(id = "ChangesView.Edit")
-public class EditAction extends AnAction {
+public class EditAction extends LegacyAnAction {
     public EditAction() {
         super(ActionLocalize.actionChangesviewEditText(), ActionLocalize.actionChangesviewEditDescription());
     }

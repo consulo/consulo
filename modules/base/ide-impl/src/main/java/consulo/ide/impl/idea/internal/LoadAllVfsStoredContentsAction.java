@@ -1,14 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ManagingFS;
@@ -28,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
-public class LoadAllVfsStoredContentsAction extends AnAction implements DumbAware {
+public class LoadAllVfsStoredContentsAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(LoadAllVfsStoredContentsAction.class);
 
     private final ProgressManager myProgressManager;

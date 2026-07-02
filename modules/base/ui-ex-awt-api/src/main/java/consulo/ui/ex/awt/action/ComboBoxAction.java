@@ -31,7 +31,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.function.Predicate;
 
-public abstract class ComboBoxAction extends AnAction implements CustomComponentAction {
+public abstract class ComboBoxAction extends AnAction implements CustomComponentAction, AnActionWithSyncUpdate {
     private String myPopupTitle;
 
     protected ComboBoxAction() {

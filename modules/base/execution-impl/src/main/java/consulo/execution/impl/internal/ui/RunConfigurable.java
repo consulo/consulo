@@ -1289,7 +1289,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MyRemoveAction extends DumbAwareAction {
+    private class MyRemoveAction extends LegacyDumbAwareAction {
         public MyRemoveAction() {
             super(
                 ExecutionLocalize.removeRunConfigurationActionName(),
@@ -1424,7 +1424,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MyCopyAction extends AnAction {
+    private class MyCopyAction extends LegacyAnAction {
         public MyCopyAction() {
             super(
                 ExecutionLocalize.copyConfigurationActionName(),
@@ -1465,7 +1465,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MySaveAction extends DumbAwareAction {
+    private class MySaveAction extends LegacyDumbAwareAction {
         public MySaveAction() {
             super(
                 ExecutionLocalize.actionNameSaveConfiguration(),
@@ -1543,7 +1543,7 @@ public class RunConfigurable extends BaseConfigurable {
         return initialPosition - position;
     }
 
-    private class MyMoveAction extends DumbAwareAction {
+    private class MyMoveAction extends LegacyDumbAwareAction {
         private final int myDirection;
 
         protected MyMoveAction(LocalizeValue text, Image icon, int direction) {
@@ -1574,7 +1574,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MyEditDefaultsAction extends DumbAwareAction {
+    private class MyEditDefaultsAction extends LegacyDumbAwareAction {
         public MyEditDefaultsAction() {
             super(
                 ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText(),
@@ -1621,7 +1621,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
     }
 
-    private class MyCreateFolderAction extends DumbAwareAction {
+    private class MyCreateFolderAction extends LegacyDumbAwareAction {
         private MyCreateFolderAction() {
             super(
                 ExecutionLocalize.runConfigurationCreateFolderText(),

@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 
 /**
@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
  * @author yole
  */
 @ActionImpl(id = "TabList")
-public class TabListAction extends AnAction {
+public class TabListAction extends LegacyAnAction {
     public TabListAction() {
         super(ActionLocalize.actionTablistText(), ActionLocalize.actionTablistDescription());
     }

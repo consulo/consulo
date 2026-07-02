@@ -1368,7 +1368,7 @@ public abstract class DialogWrapper {
     }
 
     protected static void installEnterHook(JComponent root) {
-        new DumbAwareAction() {
+        new LegacyDumbAwareAction() {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

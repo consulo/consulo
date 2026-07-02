@@ -92,7 +92,7 @@ public class ToggleActionCommand extends AbstractCommand {
                 .getDataContext(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()), ActionPlaces.UNKNOWN,
                               presentation, ActionManager.getInstance(), 0);
 
-        ActionImplUtil.performDumbAwareUpdate(action, event, false);
+        ActionImplUtil.performDumbAwareUpdate(action, event);
 
         Boolean state = (Boolean)event.getPresentation().getClientProperty(ToggleAction.SELECTED_PROPERTY);
         if (state.booleanValue() != on) {

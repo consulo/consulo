@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.execution.executor.Executor;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
@@ -16,9 +15,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.FontUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
@@ -33,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 
 @ActionImpl(id = IdeActions.ACTION_RUN_ANYTHING)
-public class RunAnythingAction extends AnAction implements DumbAware {
+public class RunAnythingAction extends LegacyDumbAwareAction {
     public static final String RUN_ANYTHING_ACTION_ID = "RunAnything";
     public static final Key<Executor> EXECUTOR_KEY = Key.create("EXECUTOR_KEY");
     public static final AtomicBoolean SHIFT_IS_PRESSED = new AtomicBoolean(false);

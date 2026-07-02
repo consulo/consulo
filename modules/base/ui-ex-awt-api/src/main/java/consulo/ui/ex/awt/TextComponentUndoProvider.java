@@ -47,10 +47,9 @@ public class TextComponentUndoProvider implements Disposable {
         Shortcut[] undoShortcuts = activeKeymap.getShortcuts(IdeActions.ACTION_UNDO);
         Shortcut[] redoShortcuts = activeKeymap.getShortcuts(IdeActions.ACTION_REDO);
 
-        AnAction undoAction = new AnAction() {
+        AnAction undoAction = new LegacyAnAction() {
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 e.getPresentation().setEnabled(canUndo());
             }
 
@@ -61,10 +60,9 @@ public class TextComponentUndoProvider implements Disposable {
             }
         };
 
-        AnAction redoAction = new AnAction() {
+        AnAction redoAction = new LegacyAnAction() {
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 e.getPresentation().setEnabled(canRedo());
             }
 

@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.speedSearch;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.awt.tree.Tree;
@@ -132,7 +132,7 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
         return paths;
     }
 
-    private static class MySelectAllAction extends DumbAwareAction {
+    private static class MySelectAllAction extends LegacyDumbAwareAction {
         
         private final JTree myTree;
         

@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class WindowAction extends AnAction implements DumbAware {
+public abstract class WindowAction extends LegacyDumbAwareAction {
     public static void setEnabledFor(Window window, boolean enabled) {
         JRootPane root = getRootPane(window);
         if (root != null) {

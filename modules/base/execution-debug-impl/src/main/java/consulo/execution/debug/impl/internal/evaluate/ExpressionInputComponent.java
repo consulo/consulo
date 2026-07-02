@@ -27,7 +27,7 @@ import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.util.ShortcutUtil;
@@ -90,7 +90,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         }
         myExpressionEditor.selectAll();
 
-        new AnAction("XEvaluateDialog.ShowHistory") {
+        new LegacyAnAction("XEvaluateDialog.ShowHistory") {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

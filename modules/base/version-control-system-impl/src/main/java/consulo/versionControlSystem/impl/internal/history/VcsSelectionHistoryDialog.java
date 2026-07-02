@@ -480,7 +480,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         sink.set(HelpManager.HELP_ID, myHelpId);
     }
 
-    private class MyDiffAction extends DumbAwareAction {
+    private class MyDiffAction extends LegacyDumbAwareAction {
         public MyDiffAction() {
             super(VcsLocalize.actionNameCompare(), VcsLocalize.actionDescriptionCompare(), PlatformIconGroup.actionsDiff());
             setShortcutSet(CommonShortcuts.getDiff());
@@ -512,7 +512,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         }
     }
 
-    private class MyDiffLocalAction extends DumbAwareAction {
+    private class MyDiffLocalAction extends LegacyDumbAwareAction {
         public MyDiffLocalAction() {
             super(
                 VcsLocalize.showDiffWithLocalActionText(),

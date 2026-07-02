@@ -28,7 +28,7 @@ import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware {
+public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     private final boolean myFocusEditor;
 
     protected BaseNavigateToSourceAction(boolean focusEditor) {

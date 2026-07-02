@@ -15,20 +15,19 @@
  */
 package consulo.task.impl.internal.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
-public abstract class BaseTaskAction extends AnAction implements DumbAware {
+public abstract class BaseTaskAction extends LegacyDumbAwareAction {
     protected BaseTaskAction() {
     }
 

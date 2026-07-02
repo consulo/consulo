@@ -5,6 +5,8 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.component.util.localize.BundleBase;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.io.URLUtil;
 import consulo.webBrowser.BrowserUtil;
 import consulo.platform.base.localize.ActionLocalize;
@@ -12,7 +14,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.WebSearchEngine;
@@ -22,7 +24,7 @@ import jakarta.inject.Inject;
 import java.awt.datatransfer.DataFlavor;
 
 @ActionImpl(id = "$SearchWeb")
-public class SearchWebAction extends AnAction implements DumbAware {
+public class SearchWebAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     private final WebSearchOptions myWebSearchOptions;
 
     @Inject
@@ -47,11 +49,12 @@ public class SearchWebAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        DataContext dataContext = e.getDataContext();
-        CopyProvider provider = e.getData(CopyProvider.KEY);
-        boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);
-        presentation.setEnabledAndVisible(available);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            DataContext dataContext = e.getDataContext();
+            CopyProvider provider = e.getData(CopyProvider.KEY);
+            boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);
+            presentation.setEnabledAndVisible(available);
+        }).toCoroutine();
     }
 }

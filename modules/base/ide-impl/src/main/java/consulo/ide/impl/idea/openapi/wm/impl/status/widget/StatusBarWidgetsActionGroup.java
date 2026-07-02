@@ -90,7 +90,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         }
     }
 
-    private static class HideCurrentWidgetAction extends DumbAwareAction {
+    private static class HideCurrentWidgetAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -107,7 +107,6 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             StatusBarWidgetFactory factory = getFactory(e);
             e.getPresentation().setEnabledAndVisible(factory != null && factory.isConfigurable());
             if (factory != null) {

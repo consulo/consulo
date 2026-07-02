@@ -18,6 +18,9 @@ package consulo.ui.ex.action.util;
 
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 
 import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
@@ -32,6 +35,57 @@ public class ActionGroupUtil {
 
   public static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e) {
     return isGroupEmpty(actionGroup, e, new HashMap<>());
+  }
+
+  /**
+   * Asynchronously validates the group and produces {@code true} if it has no enabled and visible action.
+   * Each child is updated through its own update coroutine, and the walk short-circuits as soon as the first
+   * enabled action is visited. The resulting boolean is passed to the next coroutine step.
+   */
+  public static Coroutine<?, Boolean> isGroupEmptyAsync(ActionGroup actionGroup, AnActionEvent e) {
+    return Coroutine.first(CodeExecution.<Object, Boolean>apply(
+      (input, continuation) -> isGroupEmptyAsync(actionGroup, e, continuation, new HashMap<>())));
+  }
+
+  private static boolean isGroupEmptyAsync(
+    ActionGroup actionGroup,
+    AnActionEvent e,
+    Continuation<?> continuation,
+    Map<AnAction, Presentation> action2presentation
+  ) {
+    for (AnAction action : actionGroup.getChildren(e)) {
+      if (action instanceof AnSeparator) continue;
+      if (isActionEnabledAndVisibleAsync(e, action2presentation, action, continuation)) {
+        if (action instanceof ActionGroup group) {
+          if (!isGroupEmptyAsync(group, e, continuation, action2presentation)) {
+            return false;
+          }
+          // else continue for-loop
+        }
+        else {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  private static boolean isActionEnabledAndVisibleAsync(
+    AnActionEvent e,
+    Map<AnAction, Presentation> action2presentation,
+    AnAction action,
+    Continuation<?> continuation
+  ) {
+    Presentation presentation = getPresentation(action, action2presentation);
+    AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(), ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), e.getModifiers());
+    event.setInjectedContext(action.isInInjectedContext());
+
+    Coroutine<?, ?> update = ActionUpdateInvoker.createUpdateCoroutine(action, event);
+    if (update != null) {
+      update.runBlocking(continuation.scope(), null);
+    }
+
+    return presentation.isEnabled() && presentation.isVisible();
   }
 
   @Deprecated
@@ -89,7 +143,7 @@ public class ActionGroupUtil {
     AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(), ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), e.getModifiers());
     event.setInjectedContext(action.isInInjectedContext());
 
-    ((ActionManagerEx)ActionManager.getInstance()).performDumbAwareUpdate(action, event, false);
+    ((ActionManagerEx)ActionManager.getInstance()).performDumbAwareUpdate(action, event);
 
     return presentation.isEnabled() && presentation.isVisible();
   }

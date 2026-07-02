@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
@@ -37,7 +37,7 @@ import static consulo.execution.impl.internal.dashboard.action.RunDashboardActio
 /**
  * @author konstantin.aleev
  */
-public abstract class ExecutorAction extends DumbAwareAction {
+public abstract class ExecutorAction extends LegacyDumbAwareAction {
     private static final Key<List<RunDashboardRunConfigurationNode>> RUNNABLE_LEAVES_KEY =
         Key.create("RUNNABLE_LEAVES_KEY");
 

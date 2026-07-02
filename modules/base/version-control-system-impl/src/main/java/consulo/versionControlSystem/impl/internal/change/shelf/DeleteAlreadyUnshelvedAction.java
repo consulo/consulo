@@ -17,13 +17,13 @@ package consulo.versionControlSystem.impl.internal.change.shelf;
 
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
-public class DeleteAlreadyUnshelvedAction extends AnAction {
+public class DeleteAlreadyUnshelvedAction extends LegacyAnAction {
     public DeleteAlreadyUnshelvedAction() {
         super(VcsLocalize.deleteAllAlreadyUnshelved());
     }

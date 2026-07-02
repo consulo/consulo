@@ -21,6 +21,7 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 
@@ -98,7 +99,7 @@ public class UpDownHandler {
     }
   }
   
-  static class UpDownAction extends AnAction {
+  static class UpDownAction extends LegacyAnAction {
     private final int myDirection;
     private final SelectionMover myMover;
     private final JComponent myInput;

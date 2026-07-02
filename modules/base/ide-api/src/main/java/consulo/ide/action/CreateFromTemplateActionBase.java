@@ -31,6 +31,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 
@@ -39,7 +40,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
-public abstract class CreateFromTemplateActionBase extends AnAction {
+public abstract class CreateFromTemplateActionBase extends LegacyAnAction {
     public CreateFromTemplateActionBase(LocalizeValue title, LocalizeValue description, Image icon) {
         super(title, description, icon);
     }

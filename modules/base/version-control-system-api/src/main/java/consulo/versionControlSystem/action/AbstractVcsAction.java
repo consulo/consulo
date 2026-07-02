@@ -19,7 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
-public abstract class AbstractVcsAction extends DumbAwareAction {
+public abstract class AbstractVcsAction extends LegacyDumbAwareAction {
     protected AbstractVcsAction() {
     }
 

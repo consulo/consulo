@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ArrayUtil;
@@ -52,7 +52,7 @@ import java.util.function.Consumer;
  * Compares selected file/folder with itself in another branch.
  */
 @UsedInPlugin
-public abstract class DvcsCompareWithBranchAction<T extends Repository> extends DumbAwareAction {
+public abstract class DvcsCompareWithBranchAction<T extends Repository> extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(DvcsCompareWithBranchAction.class);
 
     @Override

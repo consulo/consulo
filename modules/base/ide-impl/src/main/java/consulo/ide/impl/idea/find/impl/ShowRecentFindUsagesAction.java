@@ -23,8 +23,8 @@ import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * @author cdr
  */
-public class ShowRecentFindUsagesAction extends AnAction {
+public class ShowRecentFindUsagesAction extends LegacyAnAction {
   @Override
   public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(e.hasData(UsageView.USAGE_VIEW_KEY) && e.hasData(Project.KEY));

@@ -23,10 +23,10 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 @ActionImpl(id = "DeleteBookmark")
-public class DeleteBookmarkAction extends DumbAwareAction {
+public class DeleteBookmarkAction extends LegacyDumbAwareAction {
     public DeleteBookmarkAction() {
         super("Delete", "Delete current bookmark", PlatformIconGroup.generalRemove());
         setShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"));

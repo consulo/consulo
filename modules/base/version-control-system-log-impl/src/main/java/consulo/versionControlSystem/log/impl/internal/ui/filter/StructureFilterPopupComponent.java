@@ -346,7 +346,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
         }
     }
 
-    private class SelectFoldersAction extends DumbAwareAction {
+    private class SelectFoldersAction extends LegacyDumbAwareAction {
         public static final String STRUCTURE_FILTER_TEXT = "Select Folders...";
 
         SelectFoldersAction() {

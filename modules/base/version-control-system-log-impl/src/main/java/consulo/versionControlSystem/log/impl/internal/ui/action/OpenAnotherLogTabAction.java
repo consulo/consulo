@@ -21,7 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
 import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
@@ -29,7 +29,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
 @ActionImpl(id = "Vcs.Log.OpenAnotherTab")
-public class OpenAnotherLogTabAction extends DumbAwareAction {
+public class OpenAnotherLogTabAction extends LegacyDumbAwareAction {
     public OpenAnotherLogTabAction() {
         super(
             VersionControlSystemLogLocalize.actionOpenAnotherTabText(),

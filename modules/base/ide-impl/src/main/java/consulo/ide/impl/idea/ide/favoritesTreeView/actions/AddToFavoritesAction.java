@@ -39,6 +39,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
@@ -52,7 +53,7 @@ import java.util.Set;
  * @author anna
  * @since 2005-02-15
  */
-public class AddToFavoritesAction extends AnAction {
+public class AddToFavoritesAction extends AnAction implements AnActionWithAsyncUpdate {
     private static final Logger LOG = Logger.getInstance(AddToFavoritesAction.class);
     private static final Set<String> POPUP_PLACES_IN_PROJECT_VIEW = Set.of(
         ActionPlaces.J2EE_VIEW_POPUP,

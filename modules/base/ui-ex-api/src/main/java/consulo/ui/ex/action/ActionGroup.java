@@ -24,7 +24,7 @@ import java.util.List;
  * @see CompactActionGroup
  */
 @ActionAPI
-public abstract class ActionGroup extends AnAction {
+public abstract class ActionGroup extends AnAction implements AnActionWithSyncUpdate {
     public abstract static class Builder {
         protected final List<AnAction> myActions = new ArrayList<>();
         protected boolean myPopup;
@@ -226,12 +226,6 @@ public abstract class ActionGroup extends AnAction {
         return getChildren(null);
     }
 
-    /**
-     * Asynchronous counterpart of {@link #getChildren(AnActionEvent)}, mirroring {@link AnAction#updateAsync(AnActionEvent)}.
-     * <p>
-     * The default implementation wraps the synchronous {@link #getChildren(AnActionEvent)} call into a coroutine step.
-     * Override to compute children on a specific thread (EDT, read lock, etc.) using the coroutine step DSL.
-     */
     public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
         return Coroutine.first(CodeExecution.supply(() -> Arrays.asList(getChildren(e))));
     }

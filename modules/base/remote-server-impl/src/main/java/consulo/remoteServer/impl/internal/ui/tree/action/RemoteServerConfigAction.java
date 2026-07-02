@@ -9,12 +9,12 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
 @ActionImpl(id = "RemoteServers.EditServerConfig", shortcutFrom = @ActionRef(id = "EditSourceInNewWindow"))
-public class RemoteServerConfigAction extends DumbAwareAction {
+public class RemoteServerConfigAction extends LegacyDumbAwareAction {
     public RemoteServerConfigAction() {
         super(RemoteServerLocalize.actionRemoteserversEditserverconfigText(), RemoteServerLocalize.actionRemoteserversEditserverconfigDescription(), PlatformIconGroup.actionsEdit());
     }

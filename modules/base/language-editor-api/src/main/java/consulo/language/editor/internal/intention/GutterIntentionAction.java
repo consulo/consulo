@@ -67,7 +67,7 @@ public class GutterIntentionAction implements Comparable<IntentionAction>, Icona
     public boolean isAvailable(DataContext dataContext) {
         if (myTextValue == null) {
             AnActionEvent event = createActionEvent(dataContext);
-            myAction.update(event);
+            ActionUpdateInvoker.updateSync(myAction, event);
             if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
                 LocalizeValue text = event.getPresentation().getTextValue();
                 myTextValue = text.isNotEmpty() ? text : myAction.getTemplatePresentation().getTextValue();

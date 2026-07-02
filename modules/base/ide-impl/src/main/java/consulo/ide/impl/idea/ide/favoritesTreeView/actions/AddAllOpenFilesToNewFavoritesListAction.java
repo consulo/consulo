@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 
@@ -28,7 +29,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
  * @author anna
  * @since 2005-02-28
  */
-class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
+class AddAllOpenFilesToNewFavoritesListAction extends AnAction implements AnActionWithAsyncUpdate {
     public AddAllOpenFilesToNewFavoritesListAction() {
         super(
             IdeLocalize.actionAddAllOpenTabsToNewFavoritesList(),

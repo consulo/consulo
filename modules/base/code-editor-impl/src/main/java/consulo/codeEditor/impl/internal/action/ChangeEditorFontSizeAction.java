@@ -15,20 +15,19 @@
  */
 package consulo.codeEditor.impl.internal.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorFontsConstants;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class ChangeEditorFontSizeAction extends AnAction implements DumbAware {
+public abstract class ChangeEditorFontSizeAction extends LegacyDumbAwareAction {
     private final int myStep;
 
     protected ChangeEditorFontSizeAction(LocalizeValue text, int increaseStep) {

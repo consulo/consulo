@@ -278,7 +278,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
     @SuppressWarnings({"NonStaticInitializer"})
     private JComponent createRightActionsToolbar() {
-        myIncludeAction = new AnAction(InspectionLocalize.inspectionsResultViewIncludeActionText()) {
+        myIncludeAction = new LegacyAnAction(InspectionLocalize.inspectionsResultViewIncludeActionText()) {
             {
                 registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
             }
@@ -297,7 +297,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
             }
         };
 
-        myExcludeAction = new AnAction(InspectionLocalize.inspectionsResultViewExcludeActionText()) {
+        myExcludeAction = new LegacyAnAction(InspectionLocalize.inspectionsResultViewExcludeActionText()) {
             {
                 registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0)), myTree);
             }
@@ -927,7 +927,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         myInspectionProfile = (InspectionProfile) myInspectionProfile.getProfileManager().getProfile(name);
     }
 
-    private class RerunAction extends AnAction {
+    private class RerunAction extends LegacyAnAction {
         public RerunAction(JComponent comp) {
             super(
                 InspectionLocalize.inspectionActionRerun(),

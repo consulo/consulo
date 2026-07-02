@@ -21,7 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.versionControlSystem.log.VcsLogUi;
@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.Set;
 
 @ActionImpl(id = "Vcs.Log.GoToRef", shortcutFrom = @ActionRef(id = IdeActions.ACTION_FIND))
-public class GoToHashOrRefAction extends DumbAwareAction {
+public class GoToHashOrRefAction extends LegacyDumbAwareAction {
     public GoToHashOrRefAction() {
         super(
             VersionControlSystemLogLocalize.actionGoToRefText(),

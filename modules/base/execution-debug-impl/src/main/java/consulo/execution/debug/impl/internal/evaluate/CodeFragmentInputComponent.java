@@ -82,7 +82,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
     splitter.setSecondComponent(resultPanel);
   }
 
-  private class HistoryNavigationAction extends AnAction {
+  private class HistoryNavigationAction extends LegacyAnAction {
     private final boolean myForward;
 
     public HistoryNavigationAction(boolean forward, String actionId, Disposable parentDisposable) {

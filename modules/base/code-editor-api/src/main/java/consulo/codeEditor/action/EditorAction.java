@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
@@ -31,7 +32,7 @@ import org.jspecify.annotations.Nullable;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public abstract class EditorAction extends AnAction implements DumbAware {
+public abstract class EditorAction extends AnAction implements DumbAware, AnActionWithUIUpdate {
     private EditorActionHandler myHandler;
     private boolean myHandlersLoaded;
 
@@ -107,11 +108,6 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         }
     }
 
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     protected @Nullable Editor getEditor(DataContext dataContext) {
         return dataContext.getData(Editor.KEY);
     }
@@ -143,7 +139,11 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void updateAtUI(AnActionEvent e) {
+        updateInUI(e);
+    }
+
+    public void updateInUI(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);

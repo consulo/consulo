@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -353,7 +354,7 @@ public class ActionMacro implements JDOMExternalizable {
       if (action == null) return;
       Presentation presentation = action.getTemplatePresentation().clone();
       AnActionEvent event = new AnActionEvent(null, context, "MACRO_PLAYBACK", presentation, ActionManager.getInstance(), 0);
-      action.beforeActionPerformedUpdate(event);
+      ActionUpdateInvoker.updateSync(action, event);
       if (!presentation.isEnabled()) {
         return;
       }

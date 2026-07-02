@@ -135,7 +135,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
         for (AnAction action : group) {
             AnActionEvent e =
                 AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
-            action.update(e);
+            ActionUpdateInvoker.updateSync(action, e);
 
             Presentation presentation = e.getPresentation();
             if (presentation.isVisible()) {

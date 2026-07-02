@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.find;
 
 import consulo.application.ReadAction;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.find.FindManager;
@@ -20,7 +19,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-public final class FindAllAction extends AnAction implements ShortcutProvider, DumbAware {
+public final class FindAllAction extends LegacyDumbAwareAction implements ShortcutProvider {
     public FindAllAction() {
         super(IdeLocalize.showInFindWindowButtonName(), IdeLocalize.showInFindWindowButtonDescription());
     }

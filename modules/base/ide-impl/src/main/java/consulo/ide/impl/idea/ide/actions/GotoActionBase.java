@@ -57,7 +57,7 @@ import java.util.Map;
 /**
  * @author msk
  */
-public abstract class GotoActionBase extends AnAction {
+public abstract class GotoActionBase extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(GotoActionBase.class);
 
     protected static Class myInAction = null;
@@ -332,7 +332,7 @@ public abstract class GotoActionBase extends AnAction {
             }
         };
 
-        abstract class HistoryAction extends DumbAwareAction {
+        abstract class HistoryAction extends LegacyDumbAwareAction {
             @Override
             @RequiredUIAccess
             public void update(AnActionEvent e) {

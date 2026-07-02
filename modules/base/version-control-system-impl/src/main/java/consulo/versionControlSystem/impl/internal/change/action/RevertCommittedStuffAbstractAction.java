@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.change.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -23,8 +22,8 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
@@ -46,7 +45,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-abstract class RevertCommittedStuffAbstractAction extends AnAction implements DumbAware {
+abstract class RevertCommittedStuffAbstractAction extends LegacyDumbAwareAction {
     private final Function<AnActionEvent, Change[]> myForUpdateConverter;
     private final Function<AnActionEvent, Change[]> myForPerformConverter;
 

@@ -23,7 +23,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerStopper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Sergey Simonchik
  */
-public class StopProcessAction extends DumbAwareAction {
+public class StopProcessAction extends LegacyDumbAwareAction {
 
   private final ProcessHandler myProcessHandler;
 

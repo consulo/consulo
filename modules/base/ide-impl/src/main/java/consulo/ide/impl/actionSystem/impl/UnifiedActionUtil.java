@@ -74,7 +74,7 @@ public class UnifiedActionUtil {
       Presentation presentation = menuItemPresentationFactory.getPresentation(action);
       AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
-      action.update(e);
+      ActionUpdateInvoker.updateSync(action, e);
 
       newVisibleActions.put(action, presentation);
     }

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
@@ -33,7 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 
-public class CloseTab extends AnAction implements DumbAware {
+public class CloseTab extends LegacyDumbAwareAction {
     private final Project myProject;
     private final VirtualFile myFile;
     private final FileEditorWindow myEditorWindow;

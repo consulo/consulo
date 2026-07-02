@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SystemNotifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
@@ -251,7 +251,7 @@ public abstract class AbstractViewManager implements ViewManager, BuildProgressL
         return getViewName().get();
     }
 
-    private static class PinBuildViewAction extends DumbAwareAction implements Toggleable {
+    private static class PinBuildViewAction extends LegacyDumbAwareAction implements Toggleable {
         private final Content myContent;
 
         PinBuildViewAction(MultipleBuildsView buildsView) {

@@ -20,7 +20,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.versionControlSystem.log.VcsLogUi;
@@ -29,7 +29,7 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 
 @ActionImpl(id = "Vcs.Log.ShowTooltip", shortcutFrom = @ActionRef(id = IdeActions.ACTION_QUICK_JAVADOC))
-public class ShowCommitTooltipAction extends DumbAwareAction {
+public class ShowCommitTooltipAction extends LegacyDumbAwareAction {
     public ShowCommitTooltipAction() {
         super(VersionControlSystemLogLocalize.actionShowCommitTooltipText(), VersionControlSystemLogLocalize.actionShowCommitTooltipDescription());
     }

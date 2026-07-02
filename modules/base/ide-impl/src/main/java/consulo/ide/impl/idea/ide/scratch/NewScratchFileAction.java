@@ -15,7 +15,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -26,7 +26,7 @@ import static consulo.ide.impl.idea.ide.scratch.ScratchFileActions.createContext
 import static consulo.ide.impl.idea.ide.scratch.ScratchFileActions.doCreateNewScratch;
 
 @ActionImpl(id = "NewScratchFile")
-public class NewScratchFileAction extends DumbAwareAction {
+public class NewScratchFileAction extends LegacyDumbAwareAction {
     private static final Image ICON = ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsScratch());
 
     private final NotNullLazyValue<LocalizeValue> myActionText = NotNullLazyValue.createValue(

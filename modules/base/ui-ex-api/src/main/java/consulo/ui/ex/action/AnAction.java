@@ -23,12 +23,9 @@ import consulo.application.dumb.PossiblyDumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
-import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
@@ -265,51 +262,6 @@ public abstract class AnAction implements PossiblyDumbAware {
     }
 
     /**
-     * Updates the state of the action. Default implementation does nothing.
-     * Override this method to provide the ability to dynamically change action's
-     * state and(or) presentation depending on the context (For example
-     * when your action state depends on the selection you can check for
-     * selection and change the state accordingly).
-     * This method can be called frequently, for instance, if an action is added to a toolbar,
-     * it will be updated twice a second. This means that this method is supposed to work really fast,
-     * no real work should be done at this phase. For example, checking selection in a tree or a list,
-     * is considered valid, but working with a file system is not. If you cannot understand the state of
-     * the action fast you should do it in the {@link #actionPerformed(AnActionEvent)} method and notify
-     * the user that action cannot be executed if it's the case.
-     *
-     * @param e Carries information on the invocation place and data available
-     */
-    public void update(AnActionEvent e) {
-    }
-
-    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return Coroutine.first(CodeExecution.run(() -> {
-            try {
-                update(e);
-            }
-            catch (Throwable t) {
-                Logger.getInstance(AnAction.class).error(t);
-            }
-        }));
-    }
-
-    /**
-     * Same as {@link #update(AnActionEvent)} but is calls immediately before actionPerformed() as final check guard.
-     * Default implementation delegates to {@link #update(AnActionEvent)}.
-     *
-     * @param e Carries information on the invocation place and data available
-     */
-    public void beforeActionPerformedUpdate(AnActionEvent e) {
-        boolean worksInInjected = isInInjectedContext();
-        e.setInjectedContext(worksInInjected);
-        update(e);
-        if (!e.getPresentation().isEnabled() && worksInInjected) {
-            e.setInjectedContext(false);
-            update(e);
-        }
-    }
-
-    /**
      * Returns a template presentation that will be used
      * as a template for created presentations.
      *
@@ -323,7 +275,6 @@ public abstract class AnAction implements PossiblyDumbAware {
         return presentation;
     }
 
-    
     protected Presentation createTemplatePresentation() {
         Presentation presentation = Presentation.newTemplatePresentation();
         presentation.setIcon(getTemplateIcon());
@@ -380,20 +331,6 @@ public abstract class AnAction implements PossiblyDumbAware {
     @Override
     public boolean isDumbAware() {
         return this instanceof DumbAware;
-    }
-
-    /**
-     * Specifies the thread and the way {@link AnAction#update(AnActionEvent)},
-     * {@link ActionGroup#getChildren(AnActionEvent)} or other update-like methods shall be called.
-     * <p>
-     * The preferred value is {@link ActionUpdateThread#BGT}.
-     * <p>
-     * The default value is {@link ActionUpdateThread#EDT}.
-     *
-     * @see ActionUpdateThread
-     */
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     /**

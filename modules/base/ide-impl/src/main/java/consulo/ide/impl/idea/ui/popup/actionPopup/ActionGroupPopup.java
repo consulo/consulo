@@ -219,7 +219,7 @@ public class ActionGroupPopup extends ListPopupImpl {
             0
         );
         actionEvent.setInjectedContext(action.isInInjectedContext());
-        ActionImplUtil.performDumbAwareUpdate(action, actionEvent, false);
+        ActionImplUtil.performDumbAwareUpdate(action, actionEvent);
         return presentation;
     }
 

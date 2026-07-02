@@ -8,12 +8,12 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.getDeploymentTarget;
 
 @ActionImpl(id = "Servers.DeployWithDebug")
-public class DeployWithDebugAction extends DumbAwareAction {
+public class DeployWithDebugAction extends LegacyDumbAwareAction {
     public DeployWithDebugAction() {
         super(
             RemoteServerLocalize.actionServersDeploywithdebugText(),

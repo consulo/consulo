@@ -26,7 +26,7 @@ import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author peter
  */
 @ActionImpl(id = "ChangeTemplateDataLanguage")
-public class ChangeTemplateDataLanguageAction extends AnAction {
+public class ChangeTemplateDataLanguageAction extends LegacyAnAction {
     public ChangeTemplateDataLanguageAction() {
         super(ActionLocalize.actionChangetemplatedatalanguageText());
     }

@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.codeInsight.hints.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ide.impl.idea.codeInsight.hints.DeclarativeInlayHintsPassFactory;
@@ -12,11 +11,11 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 @ActionImpl(id = "DisableDeclarativeInlayAction")
-public class DisableDeclarativeInlayAction extends AnAction implements DumbAware {
+public class DisableDeclarativeInlayAction extends LegacyDumbAwareAction {
     public DisableDeclarativeInlayAction() {
         super(CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText());
     }

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * @author nik
  */
-public class HideContentAction extends DumbAwareAction {
+public class HideContentAction extends LegacyDumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public HideContentAction(ArtifactEditorEx artifactEditor) {

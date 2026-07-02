@@ -16,19 +16,18 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
 
 @ActionImpl(id = "PrevSplitter")
-public class PrevSplitAction extends AnAction implements DumbAware {
+public class PrevSplitAction extends LegacyDumbAwareAction {
     public PrevSplitAction() {
         super(ActionLocalize.actionPrevsplitterText(), ActionLocalize.actionPrevsplitterDescription());
     }

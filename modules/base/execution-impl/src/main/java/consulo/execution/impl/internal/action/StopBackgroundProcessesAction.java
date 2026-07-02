@@ -15,7 +15,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ActionImpl(id = "StopBackgroundProcesses")
-public class StopBackgroundProcessesAction extends DumbAwareAction {
+public class StopBackgroundProcessesAction extends LegacyDumbAwareAction {
     public StopBackgroundProcessesAction() {
         super(ActionLocalize.actionStopbackgroundprocessesText(), ActionLocalize.actionStopbackgroundprocessesDescription());
     }

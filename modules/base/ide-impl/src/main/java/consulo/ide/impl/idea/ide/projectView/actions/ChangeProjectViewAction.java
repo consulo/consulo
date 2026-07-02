@@ -22,11 +22,11 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 @ActionImpl(id = "ProjectViewChangeView")
-public final class ChangeProjectViewAction extends AnAction {
+public final class ChangeProjectViewAction extends LegacyAnAction {
     public ChangeProjectViewAction() {
         super(ActionLocalize.actionProjectviewchangeviewText(), ActionLocalize.actionProjectviewchangeviewText());
     }

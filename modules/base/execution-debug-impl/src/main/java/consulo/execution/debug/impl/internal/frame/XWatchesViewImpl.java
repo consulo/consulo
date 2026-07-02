@@ -203,7 +203,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             @Override
             protected void addActions(ActionGroup.Builder builder, boolean showMultiline) {
                 AnAction addToWatchesAction =
-                    new DumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
+                    new LegacyDumbAwareAction(ActionsBundle.actionText(XDebuggerActions.ADD_TO_WATCH), null, ExecutionDebugIconGroup.actionAddtowatch()) {
                         @Override
                         @RequiredUIAccess
                         public void actionPerformed(AnActionEvent e) {

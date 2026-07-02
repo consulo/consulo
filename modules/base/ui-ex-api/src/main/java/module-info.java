@@ -59,6 +59,7 @@ module consulo.ui.ex.api {
         consulo.execution.coverage.impl,
         consulo.external.service.impl,
         consulo.version.control.system.impl,
+        consulo.code.editor.api,
         consulo.code.editor.impl,
         consulo.project.ui.impl,
         consulo.module.content.api,

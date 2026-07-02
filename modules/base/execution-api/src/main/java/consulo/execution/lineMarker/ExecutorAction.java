@@ -34,6 +34,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -46,7 +47,7 @@ import java.util.function.Function;
 /**
  * @author Dmitry Avdeev
  */
-public class ExecutorAction extends AnAction {
+public class ExecutorAction extends LegacyAnAction {
     private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
     

@@ -21,8 +21,8 @@ import consulo.application.ReadAction;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
@@ -32,7 +32,7 @@ import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 
 @ActionImpl(id = "TogglePopupHints")
-public class TogglePopupHintsAction extends AnAction {
+public class TogglePopupHintsAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(TogglePopupHintsAction.class);
 
     public TogglePopupHintsAction() {

@@ -15,7 +15,6 @@
  */
 package consulo.compiler.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
@@ -26,12 +25,12 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
-public abstract class CompileActionBase extends AnAction implements DumbAware {
+public abstract class CompileActionBase extends LegacyDumbAwareAction {
     protected CompileActionBase() {
     }
 
@@ -65,7 +64,6 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         Project project = e.getData(Project.KEY);
         if (project == null || !project.isInitialized()) {
             e.getPresentation().setEnabled(false);

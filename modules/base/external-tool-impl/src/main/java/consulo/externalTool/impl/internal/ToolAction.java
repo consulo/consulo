@@ -16,13 +16,12 @@
 
 package consulo.externalTool.impl.internal;
 
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.pathMacro.MacroManager;
 import consulo.process.event.ProcessListener;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
 /**
  * @author Eugene Belyaev
  */
-public class ToolAction extends AnAction implements DumbAware {
+public class ToolAction extends LegacyDumbAwareAction {
   private final String myActionId;
 
   public ToolAction(Tool tool) {

@@ -29,11 +29,11 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 @ActionImpl(id = "CodeInspection.OnEditor")
-public class CodeInspectionOnEditorAction extends AnAction {
+public class CodeInspectionOnEditorAction extends LegacyAnAction {
     public CodeInspectionOnEditorAction() {
         super(ActionLocalize.actionCodeinspectionOneditorText(), ActionLocalize.actionCodeinspectionOneditorDescription());
     }

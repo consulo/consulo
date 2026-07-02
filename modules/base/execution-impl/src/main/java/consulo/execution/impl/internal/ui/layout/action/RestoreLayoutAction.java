@@ -8,13 +8,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author Jeka
  */
-public final class RestoreLayoutAction extends DumbAwareAction {
+public final class RestoreLayoutAction extends LegacyDumbAwareAction {
     public RestoreLayoutAction() {
         super(
             ActionLocalize.actionRunnerRestorelayoutText(),

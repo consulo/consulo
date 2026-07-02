@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -29,7 +28,7 @@ import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
@@ -45,7 +44,7 @@ import java.awt.event.KeyEvent;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = IdeActions.ACTION_SEARCH_EVERYWHERE)
-public class SearchEverywhereAction extends AnAction implements DumbAware {
+public class SearchEverywhereAction extends LegacyDumbAwareAction {
     private final KeyMapSetting myKeyMapSetting;
 
     @Inject

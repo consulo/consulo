@@ -1385,7 +1385,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class BackAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         BackAction() {
             super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
@@ -1406,7 +1406,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ForwardAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         ForwardAction() {
             super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
@@ -1461,7 +1461,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         return ActionPlaces.JAVADOC_TOOLBAR.equals(e.getPlace());
     }
 
-    private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ExternalDocAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         private ExternalDocAction() {
             super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), PlatformIconGroup.actionsPreviousoccurence());
             registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
@@ -1675,7 +1675,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class MyShowSettingsAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class MyShowSettingsAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         private final boolean myOnToolbar;
 
         MyShowSettingsAction(boolean onToolbar) {
@@ -1890,7 +1890,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class ShowAsToolwindowAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class ShowAsToolwindowAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         ShowAsToolwindowAction() {
             super(LocalizeValue.localizeTODO("Open as Tool Window"));
         }
@@ -1915,7 +1915,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
         }
     }
 
-    private class RestoreDefaultSizeAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    private class RestoreDefaultSizeAction extends LegacyAnAction implements HintManagerImpl.ActionToIgnore {
         RestoreDefaultSizeAction() {
             super(LocalizeValue.localizeTODO("Restore Size"));
         }

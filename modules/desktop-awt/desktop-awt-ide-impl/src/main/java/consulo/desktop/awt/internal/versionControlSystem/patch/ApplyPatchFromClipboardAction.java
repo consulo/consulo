@@ -10,7 +10,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.patch.ApplyPatchDefaultExecutor;
@@ -23,7 +23,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 
 @ActionImpl(id = "ChangesView.ApplyPatchFromClipboard")
-public class ApplyPatchFromClipboardAction extends DumbAwareAction {
+public class ApplyPatchFromClipboardAction extends LegacyDumbAwareAction {
     public ApplyPatchFromClipboardAction() {
         super(
             ActionLocalize.actionChangesviewApplypatchfromclipboardText(),

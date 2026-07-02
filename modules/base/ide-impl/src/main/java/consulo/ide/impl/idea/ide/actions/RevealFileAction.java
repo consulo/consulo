@@ -23,13 +23,13 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "RevealIn")
-public class RevealFileAction extends DumbAwareAction {
+public class RevealFileAction extends LegacyDumbAwareAction {
     public RevealFileAction() {
         getTemplatePresentation().setText(getActionName(null));
     }

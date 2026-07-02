@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 import java.util.Collections;
 
@@ -32,7 +32,7 @@ import java.util.Collections;
  * @author anna
  * @author Konstantin Bulenkov
  */
-public class SendToFavoritesAction extends AnAction {
+public class SendToFavoritesAction extends LegacyAnAction {
     private final String toName;
 
     public SendToFavoritesAction(String name) {

@@ -15,12 +15,11 @@
  */
 package consulo.diff.impl.internal.action;
 
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.ActionUtil;
 
-public abstract class PrevDifferenceAction extends AnAction implements DumbAware {
+public abstract class PrevDifferenceAction extends LegacyDumbAwareAction {
   public PrevDifferenceAction() {
     ActionUtil.copyFrom(this, IdeActions.ACTION_PREVIOUS_DIFF);
   }

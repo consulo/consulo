@@ -3,14 +3,13 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.WriteAction;
-import consulo.application.dumb.DumbAware;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.NewVirtualFile;
@@ -23,7 +22,7 @@ import java.nio.charset.Charset;
  * Adds <a href="http://unicode.org/faq/utf_bom.html">file's BOM</a> to files with UTF-XXX encoding.
  */
 @ActionImpl(id = "AddBom")
-public class AddBomAction extends AnAction implements DumbAware {
+public class AddBomAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(AddBomAction.class);
 
     public AddBomAction() {

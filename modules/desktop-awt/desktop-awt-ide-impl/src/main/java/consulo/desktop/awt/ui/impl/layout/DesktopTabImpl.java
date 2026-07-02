@@ -24,7 +24,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
  * @since 2017-09-12
  */
 public class DesktopTabImpl implements Tab {
-    private static class CloseAction extends DumbAwareAction {
+    private static class CloseAction extends LegacyDumbAwareAction {
         private final BiConsumer<Tab, Component> myCloseHandler;
         private final DesktopTabImpl myTabInfo;
 

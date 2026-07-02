@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.Application;
 import consulo.language.file.FileTypeManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * @author max
  */
-public class PruneEmptyDirectoriesAction extends AnAction {
+public class PruneEmptyDirectoriesAction extends LegacyAnAction {
     @Override
     public void update(AnActionEvent e) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);

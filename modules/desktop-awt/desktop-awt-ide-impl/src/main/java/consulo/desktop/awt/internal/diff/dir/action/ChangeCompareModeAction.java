@@ -19,14 +19,14 @@ import consulo.application.AllIcons;
 import consulo.desktop.awt.internal.diff.dir.DirDiffTableModel;
 import consulo.diff.dir.DirDiffSettings;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.image.Image;
 
 /**
  * @author Konstantin Bulenkov
  */
-class ChangeCompareModeAction extends AnAction {
+class ChangeCompareModeAction extends LegacyAnAction {
     private final static Image ON = AllIcons.Actions.Checked;
     private final static Image ON_SELECTED = AllIcons.Actions.Checked_selected;
     private final static Image OFF = Image.empty(ON.getHeight());

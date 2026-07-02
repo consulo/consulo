@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileSystemTree;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.image.Image;
 
-public abstract class FileChooserAction extends AnAction implements DumbAware {
+public abstract class FileChooserAction extends LegacyDumbAwareAction {
     protected FileChooserAction() {
         setEnabledInModalContext(true);
     }

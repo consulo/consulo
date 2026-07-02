@@ -29,8 +29,8 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
  * @author VISTALL
  * @since 2013-10-15
  */
-public class ShowDiagramAction extends AnAction {
+public class ShowDiagramAction extends LegacyAnAction {
     private final Application myApplication;
     private final ProgressBuilderFactory myProgressBuilderFactory;
 

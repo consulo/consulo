@@ -16,8 +16,8 @@
 package consulo.versionControlSystem.impl.internal.annotate;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.action.UpToDateLineNumberListener;
@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.transferable.TextTransferable;
 /**
  * @author Konstantin Bulenkov
  */
-public class CopyRevisionNumberFromAnnotateAction extends AnAction implements UpToDateLineNumberListener {
+public class CopyRevisionNumberFromAnnotateAction extends LegacyAnAction implements UpToDateLineNumberListener {
     private final FileAnnotation myAnnotation;
     private int myLineNumber = -1;
 

@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
-public class VcsLogGearActionGroup extends DumbAwareAction {
+public class VcsLogGearActionGroup extends LegacyDumbAwareAction {
     
     private final String myActionGroup;
 

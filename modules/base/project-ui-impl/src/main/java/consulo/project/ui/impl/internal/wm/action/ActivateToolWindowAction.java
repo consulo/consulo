@@ -36,7 +36,7 @@ import java.awt.event.KeyEvent;
  * Usually shown in View|Tool-windows sub-menu.
  * Dynamically registered in Settings|Keymap for each newly-registered tool window.
  */
-public class ActivateToolWindowAction extends DumbAwareAction {
+public class ActivateToolWindowAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     private final String myToolWindowId;
 
     private ActivateToolWindowAction(String toolWindowId) {

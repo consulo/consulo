@@ -33,8 +33,8 @@ public class SimplePasteAction extends EditorAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        super.update(e);
+    public void updateInUI(AnActionEvent e) {
+        super.updateInUI(e);
         if (ActionPlaces.isPopupPlace(e.getPlace())) {
             Presentation presentation = e.getPresentation();
             presentation.setVisible(presentation.isEnabled());

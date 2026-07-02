@@ -17,12 +17,12 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "ToggleInlineHintsAction")
-public class ToggleInlineHintsAction extends DumbAwareAction {
+public class ToggleInlineHintsAction extends LegacyDumbAwareAction {
     private final Application myApplication;
 
     @Inject

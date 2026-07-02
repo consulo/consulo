@@ -256,7 +256,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
         if (action == null) return false;
         DataContext context = DataManager.getInstance().getDataContext(IdeFocusManager.findInstance().getFocusOwner());
         AnActionEvent anActionEvent = AnActionEvent.createFromAnAction(action, event, ActionPlaces.MAIN_MENU, context);
-        action.update(anActionEvent);
+        ActionUpdateInvoker.updateSync(action, anActionEvent);
         if (!anActionEvent.getPresentation().isEnabled()) return false;
 
         ((ActionManagerEx)myActionManager).fireBeforeActionPerformed(action, anActionEvent.getDataContext(), anActionEvent);

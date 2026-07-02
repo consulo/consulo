@@ -517,7 +517,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     // Actions
     //
 
-    private class ShowInExternalToolAction extends DumbAwareAction {
+    private class ShowInExternalToolAction extends LegacyDumbAwareAction {
         public ShowInExternalToolAction() {
             EmptyAction.setupAction(this, "Diff.ShowInExternalTool", null);
         }
@@ -604,7 +604,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
     }
 
-    private class ShowActionGroupPopupAction extends DumbAwareAction {
+    private class ShowActionGroupPopupAction extends LegacyDumbAwareAction {
         public ShowActionGroupPopupAction() {
             EmptyAction.setupAction(this, "Diff.ShowSettingsPopup", null);
         }

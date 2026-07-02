@@ -39,8 +39,8 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.undoRedo.CommandProcessor;
 
 import java.util.*;
@@ -50,7 +50,7 @@ import java.util.*;
  * @since 2002-08-20
  */
 @ActionImpl(id = "SaveAsTemplate")
-public class SaveAsTemplateAction extends AnAction {
+public class SaveAsTemplateAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
 
     public SaveAsTemplateAction() {

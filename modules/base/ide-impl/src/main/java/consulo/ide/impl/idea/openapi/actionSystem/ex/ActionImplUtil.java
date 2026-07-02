@@ -134,16 +134,11 @@ public class ActionImplUtil {
     /**
      * @param action                action
      * @param e                     action event
-     * @param beforeActionPerformed whether to call
-     *                              {@link AnAction#beforeActionPerformedUpdate(AnActionEvent)}
-     *                              or
-     *                              {@link AnAction#update(AnActionEvent)}
      * @return true if update tried to access indices in dumb mode
      */
     public static boolean performDumbAwareUpdate(
         AnAction action,
-        AnActionEvent e,
-        boolean beforeActionPerformed
+        AnActionEvent e
     ) {
         Presentation presentation = e.getPresentation();
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
@@ -158,12 +153,8 @@ public class ActionImplUtil {
         boolean notAllowed = dumbMode && !action.isDumbAware();
 
         try {
-            if (beforeActionPerformed) {
-                action.beforeActionPerformedUpdate(e);
-            }
-            else {
-                action.update(e);
-            }
+            ActionUpdateInvoker.updateSync(action, e);
+
             presentation.putClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE, notAllowed && presentation.isEnabled());
             presentation.putClientProperty(WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE, notAllowed && presentation.isVisible());
         }
@@ -193,8 +184,9 @@ public class ActionImplUtil {
         return DumbInternalUtil.isDumbMode(project);
     }
 
+    @Deprecated
     public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
-        performDumbAwareUpdate(action, e, true);
+        performDumbAwareUpdate(action, e);
 
         Project project = e.getData(Project.KEY);
         if (project != null && DumbService.getInstance(project).isDumb() && !action.isDumbAware()) {
@@ -293,7 +285,7 @@ public class ActionImplUtil {
     ) {
         Presentation presentation = action.getTemplatePresentation().clone();
         AnActionEvent event = new AnActionEvent(inputEvent, dataContext, place, presentation, ActionManager.getInstance(), 0);
-        performDumbAwareUpdate(action, event, true);
+        performDumbAwareUpdate(action, event);
         ActionManagerEx manager = ActionManagerEx.getInstanceEx();
         if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
             manager.fireBeforeActionPerformed(action, dataContext, event);

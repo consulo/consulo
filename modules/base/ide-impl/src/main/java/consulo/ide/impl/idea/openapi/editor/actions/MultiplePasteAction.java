@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.CopyPasteManagerEx;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
@@ -46,7 +45,7 @@ import java.util.List;
  * @author max
  */
 @ActionImpl(id = "PasteMultiple")
-public class MultiplePasteAction extends AnAction implements DumbAware {
+public class MultiplePasteAction extends LegacyDumbAwareAction {
     public MultiplePasteAction() {
         super(ActionLocalize.actionPastemultipleText(), ActionLocalize.actionPastemultipleDescription());
         setEnabledInModalContext(true);

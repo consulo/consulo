@@ -21,7 +21,7 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public abstract class XDebuggerTreeActionBase extends AnAction {
+public abstract class XDebuggerTreeActionBase extends LegacyAnAction {
     protected XDebuggerTreeActionBase(LocalizeValue text) {
         super(text);
     }

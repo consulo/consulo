@@ -30,6 +30,7 @@ import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -50,7 +51,7 @@ import java.nio.charset.Charset;
  * @author cdr
  */
 @ActionImpl(id = "ChangeFileEncodingAction")
-public class ChangeFileEncodingAction extends AnAction implements DumbAware {
+public class ChangeFileEncodingAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     
     private final Application myApplication;
     private final boolean myAllowDirectories;

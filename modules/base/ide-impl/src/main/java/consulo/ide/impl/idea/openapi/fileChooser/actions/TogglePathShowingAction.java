@@ -18,14 +18,13 @@ package consulo.ide.impl.idea.openapi.fileChooser.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.PathField;
-import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
 @ActionImpl(id = "FileChooser.TogglePathShowing")
-public class TogglePathShowingAction extends AnAction implements DumbAware {
+public class TogglePathShowingAction extends LegacyDumbAwareAction {
     public TogglePathShowingAction() {
         super(ActionLocalize.actionFilechooserTogglepathshowingText());
         setEnabledInModalContext(true);

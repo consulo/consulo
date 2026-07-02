@@ -16,20 +16,19 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "ShowNavBar")
-public class ShowNavBarAction extends AnAction implements DumbAware, PopupAction {
+public class ShowNavBarAction extends LegacyDumbAwareAction implements PopupAction {
     public ShowNavBarAction() {
         super(ActionLocalize.actionShownavbarText());
     }

@@ -20,14 +20,13 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
-import consulo.application.dumb.DumbAware;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.unscramble.UnscrambleService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author yole
@@ -40,7 +39,7 @@ import consulo.ui.ex.action.IdeActions;
         anchor = ActionRefAnchor.AFTER
     )
 )
-public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
+public class AnalyzeStacktraceAction extends LegacyDumbAwareAction {
     public AnalyzeStacktraceAction() {
         super(ExecutionLocalize.actionAnalyzestacktraceText());
     }

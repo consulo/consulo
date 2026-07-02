@@ -29,7 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.ContainerUtil;
@@ -49,7 +49,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class AnnotateStackTraceAction extends DumbAwareAction {
+public class AnnotateStackTraceAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(AnnotateStackTraceAction.class);
 
     private final EditorHyperlinkSupport myHyperlinks;

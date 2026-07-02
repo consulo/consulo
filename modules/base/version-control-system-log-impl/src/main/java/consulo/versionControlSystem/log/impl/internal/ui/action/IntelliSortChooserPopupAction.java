@@ -34,7 +34,7 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
 import java.awt.*;
 import java.util.function.Function;
 
-public class IntelliSortChooserPopupAction extends DumbAwareAction {
+public class IntelliSortChooserPopupAction extends LegacyDumbAwareAction {
     public IntelliSortChooserPopupAction() {
         super(VersionControlSystemLogLocalize.actionIntelliSortChooserPopupText(), VersionControlSystemLogLocalize.actionIntelliSortChooserPopupDescription(), PlatformIconGroup.vcslogIntellisort());
     }
@@ -69,7 +69,6 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
         e.getPresentation().setEnabled(properties != null);
         if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {

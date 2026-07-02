@@ -17,16 +17,15 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "Exit")
-public class ExitAction extends AnAction implements DumbAware {
+public class ExitAction extends LegacyDumbAwareAction {
     private final Application myApplication;
 
     @Inject

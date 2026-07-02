@@ -15,7 +15,6 @@
  */
 package consulo.execution.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
@@ -26,7 +25,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
-public class CloseAction extends AnAction implements DumbAware {
+public class CloseAction extends LegacyDumbAwareAction {
     private RunContentDescriptor myContentDescriptor;
     private final Project myProject;
     private Executor myExecutor;

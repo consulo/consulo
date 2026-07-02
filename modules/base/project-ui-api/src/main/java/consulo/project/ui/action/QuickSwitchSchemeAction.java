@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
+public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     protected static final Image ourCurrentAction = PlatformIconGroup.actionsForward();
     protected static final Image ourNotCurrentAction = Image.empty(Image.DEFAULT_ICON_SIZE);
     
@@ -104,7 +104,6 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && isEnabled());
     }
 

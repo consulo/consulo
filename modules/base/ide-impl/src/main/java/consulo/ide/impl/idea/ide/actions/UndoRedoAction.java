@@ -23,6 +23,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.coroutine.UIAction;
@@ -33,7 +34,7 @@ import consulo.undoRedo.UndoManager;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.Couple;
 
-public abstract class UndoRedoAction extends DumbAwareAction {
+public abstract class UndoRedoAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public UndoRedoAction(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);

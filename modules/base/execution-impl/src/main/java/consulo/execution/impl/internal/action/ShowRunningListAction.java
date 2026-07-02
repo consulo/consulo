@@ -31,8 +31,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Set;
 
 @ActionImpl(id = "ShowLiveRunConfigurations")
-public class ShowRunningListAction extends AnAction {
+public class ShowRunningListAction extends LegacyAnAction {
     public ShowRunningListAction() {
         super(ExecutionLocalize.showRunningListActionName(), ExecutionLocalize.showRunningListActionDescription());
     }

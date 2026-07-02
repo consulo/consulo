@@ -140,7 +140,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
         if (timeManagementExist()) {
             group.add(
-                new AnAction("Post work item to bug-tracker", "Post work item to bug-tracker", PlatformIconGroup.actionsExport()) {
+                new LegacyAnAction("Post work item to bug-tracker", "Post work item to bug-tracker", PlatformIconGroup.actionsExport()) {
                     @Override
                     @RequiredUIAccess
                     public void actionPerformed(AnActionEvent e) {
@@ -295,7 +295,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
         myTimer = null;
     }
 
-    private class StartStopAction extends AnAction {
+    private class StartStopAction extends LegacyAnAction {
         @Override
         public void update(AnActionEvent e) {
             if (myTimeTrackingManager.getState().autoMode) {

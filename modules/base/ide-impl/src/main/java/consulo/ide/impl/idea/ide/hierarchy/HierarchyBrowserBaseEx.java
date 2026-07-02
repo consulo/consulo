@@ -578,7 +578,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
     }
 
-    static class BaseOnThisElementAction<H extends HierarchyProvider> extends AnAction {
+    static class BaseOnThisElementAction<H extends HierarchyProvider> extends LegacyAnAction {
         private final String myActionId;
         private final Key<?> myBrowserDataKey;
         private final Class<H> myHierarchyProviderClass;

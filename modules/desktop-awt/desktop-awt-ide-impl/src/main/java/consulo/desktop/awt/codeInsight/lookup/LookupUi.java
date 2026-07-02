@@ -314,7 +314,7 @@ class LookupUi {
         }
     }
 
-    private class HintAction extends DumbAwareAction {
+    private class HintAction extends LegacyDumbAwareAction {
         private HintAction() {
             super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsIntentionbulb());
 
@@ -386,7 +386,7 @@ class LookupUi {
         }
     }
 
-    private static class DelegatedAction extends DumbAwareAction implements HintManagerImpl.ActionToIgnore {
+    private static class DelegatedAction extends LegacyDumbAwareAction implements HintManagerImpl.ActionToIgnore {
         private final AnAction delegateAction;
 
         private DelegatedAction(AnAction action) {

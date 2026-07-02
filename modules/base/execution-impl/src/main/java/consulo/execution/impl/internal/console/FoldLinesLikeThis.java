@@ -9,7 +9,7 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -18,7 +18,7 @@ import jakarta.inject.Provider;
 /**
  * @author peter
  */
-public class FoldLinesLikeThis extends DumbAwareAction {
+public class FoldLinesLikeThis extends LegacyDumbAwareAction {
     private final Provider<ShowConfigurableService> myShowConfigurableService;
 
     @Inject

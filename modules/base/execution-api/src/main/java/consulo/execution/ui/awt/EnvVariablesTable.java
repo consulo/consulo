@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.CopyPasteManager;
@@ -141,7 +142,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
     
     @Override
     protected AnAction[] createExtraActions() {
-        AnAction copyButton = new AnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+        AnAction copyButton = new LegacyAnAction(CodeEditorLocalize.actionCopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

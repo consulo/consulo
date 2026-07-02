@@ -19,13 +19,12 @@ import consulo.annotation.component.ActionImpl;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 @ActionImpl(id = "JumpToLastChange")
-public class JumpToLastEditAction extends AnAction implements DumbAware {
+public class JumpToLastEditAction extends LegacyDumbAwareAction {
     public JumpToLastEditAction() {
         super(ActionLocalize.actionJumptolastchangeText(), ActionLocalize.actionJumptolastchangeDescription());
     }

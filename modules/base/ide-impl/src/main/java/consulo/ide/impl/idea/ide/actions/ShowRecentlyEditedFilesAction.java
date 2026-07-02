@@ -20,13 +20,13 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * @author max
  */
 @ActionImpl(id = "RecentChangedFiles")
-public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
+public class ShowRecentlyEditedFilesAction extends LegacyDumbAwareAction {
     public ShowRecentlyEditedFilesAction() {
         super(ActionLocalize.actionRecentchangedfilesText(), ActionLocalize.actionRecentchangedfilesDescription());
     }

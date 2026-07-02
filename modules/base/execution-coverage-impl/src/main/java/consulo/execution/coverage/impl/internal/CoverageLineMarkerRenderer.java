@@ -340,7 +340,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
     }
 
-    private abstract class BaseGotoCoveredLineAction extends AnAction {
+    private abstract class BaseGotoCoveredLineAction extends LegacyAnAction {
         private final Editor myEditor;
         private final int myLineNumber;
 
@@ -413,7 +413,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
     }
 
-    private class EditCoverageColorsAction extends AnAction {
+    private class EditCoverageColorsAction extends LegacyAnAction {
         private final Editor myEditor;
         private final int myLineNumber;
 

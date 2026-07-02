@@ -400,7 +400,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
       Presentation presentation = myPresentationFactory.getPresentation(action);
       AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
       e.setInjectedContext(action.isInInjectedContext());
-      action.update(e);
+      ActionUpdateInvoker.updateSync(action, e);
       if (presentation.isVisible()) { // add only visible items
         newVisibleActions.add(action);
       }

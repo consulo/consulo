@@ -17,14 +17,14 @@ package consulo.ide.impl.idea.ui.navigation;
 
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.action.ShadowAction;
-import consulo.application.dumb.DumbAware;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
-abstract class NavigationAction extends AnAction implements DumbAware {
+abstract class NavigationAction extends LegacyDumbAwareAction {
 
   private final ShadowAction myShadow;
 

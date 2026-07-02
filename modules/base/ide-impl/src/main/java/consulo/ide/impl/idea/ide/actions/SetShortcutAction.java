@@ -4,11 +4,11 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -19,7 +19,7 @@ import consulo.util.dataholder.Key;
 
 import java.awt.*;
 
-public class SetShortcutAction extends AnAction implements DumbAware {
+public class SetShortcutAction extends LegacyDumbAwareAction {
     public final static Key<AnAction> SELECTED_ACTION = Key.create("SelectedAction");
 
     public SetShortcutAction() {

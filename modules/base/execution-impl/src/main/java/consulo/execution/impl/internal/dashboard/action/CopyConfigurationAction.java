@@ -16,15 +16,15 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 
 /**
  * @author konstantin.aleev
  */
 @ActionImpl(id = "RunDashboard.CopyConfiguration")
-public final class CopyConfigurationAction extends AnAction {
+public final class CopyConfigurationAction extends LegacyAnAction {
     public CopyConfigurationAction() {
         super(ActionLocalize.actionRundashboardCopyconfigurationText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
     }

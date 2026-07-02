@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
@@ -25,6 +24,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
@@ -35,7 +35,7 @@ import java.util.Objects;
 /**
  * @author Vladislav.Kaznacheev
  */
-public abstract class WelcomePopupAction extends AnAction implements DumbAware {
+public abstract class WelcomePopupAction extends LegacyDumbAwareAction {
     protected WelcomePopupAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }

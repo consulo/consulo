@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseRunConfigurationAction extends AsyncActionGroup {
+public abstract class BaseRunConfigurationAction extends AsyncActionGroup implements AnActionWithAsyncUpdate {
     protected static final Logger LOG = Logger.getInstance(BaseRunConfigurationAction.class);
 
     protected BaseRunConfigurationAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {

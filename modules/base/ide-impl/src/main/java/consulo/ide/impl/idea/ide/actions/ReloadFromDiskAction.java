@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.ide.localize.IdeLocalize;
@@ -26,7 +25,7 @@ import consulo.language.psi.PsiManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -40,7 +39,7 @@ import consulo.undoRedo.CommandProcessor;
         relatedToAction = @ActionRef(id = IdeActions.ACTION_SYNCHRONIZE)
     )*/
 )
-public class ReloadFromDiskAction extends AnAction implements DumbAware {
+public class ReloadFromDiskAction extends LegacyDumbAwareAction {
     public ReloadFromDiskAction() {
         super(ActionLocalize.actionReloadfromdiskText(), ActionLocalize.actionReloadfromdiskDescription());
     }

@@ -573,7 +573,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
         return myOccurrenceNavigatorSupport.getPreviousOccurenceActionName();
     }
 
-    private class RerunAction extends AnAction {
+    private class RerunAction extends LegacyAnAction {
         private final Runnable myRerunAction;
 
         public RerunAction(Runnable rerunAction) {
@@ -597,7 +597,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements UiDataProvider,
         }
     }
 
-    private class StopAction extends AnAction {
+    private class StopAction extends LegacyAnAction {
         public StopAction() {
             super(IdeLocalize.actionStop(), LocalizeValue.empty(), AllIcons.Actions.Suspend);
         }

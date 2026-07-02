@@ -181,7 +181,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         LocalFileSystem.getInstance().addVirtualFileListener(myVfsListener);
     }
 
-    private class SaveAction extends AnAction {
+    private class SaveAction extends LegacyAnAction {
         private SaveAction() {
             super(LocalizeValue.localizeTODO("Save"), LocalizeValue.empty(), PlatformIconGroup.actionsMenu_saveall());
         }
@@ -308,7 +308,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         return file.exists() ? file : null;
     }
 
-    private class StopAction extends AnAction {
+    private class StopAction extends LegacyAnAction {
         private StopAction() {
             super(LocalizeValue.localizeTODO("Stop"), LocalizeValue.empty(), PlatformIconGroup.actionsSuspend());
         }
@@ -328,7 +328,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         }
     }
 
-    private class ActivateFrameAndRun extends AnAction {
+    private class ActivateFrameAndRun extends LegacyAnAction {
         private ActivateFrameAndRun() {
             super(LocalizeValue.localizeTODO("Activate Frame And Run"), LocalizeValue.empty(), PlatformIconGroup.nodesDeploy());
         }
@@ -345,7 +345,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         }
     }
 
-    private class RunOnFameActivationAction extends AnAction {
+    private class RunOnFameActivationAction extends LegacyAnAction {
 
         private RunOnFameActivationAction() {
             super(LocalizeValue.localizeTODO("Run On Frame Activation"), LocalizeValue.empty(), PlatformIconGroup.actionsExecute());

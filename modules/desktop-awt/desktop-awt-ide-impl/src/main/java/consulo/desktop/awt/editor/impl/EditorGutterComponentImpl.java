@@ -2156,7 +2156,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
 
         AnActionEvent actionEvent = AnActionEvent.createFromAnAction(action, e, place, context);
-        action.update(actionEvent);
+        ActionUpdateInvoker.updateSync(action, actionEvent);
         if (actionEvent.getPresentation().isEnabledAndVisible()) {
             ActionImplUtil.performActionDumbAwareWithCallbacks(action, actionEvent, context);
         }

@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.dumb.DumbAware;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ import java.util.List;
  * @author anna
  * @since 2007-06-28
  */
-public class DumpConfigurationTypesAction extends AnAction implements DumbAware {
+public class DumpConfigurationTypesAction extends LegacyDumbAwareAction {
     public DumpConfigurationTypesAction() {
         super("Dump Configurations");
     }

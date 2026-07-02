@@ -18,10 +18,9 @@ package consulo.ide.impl.idea.internal.psiView;
 import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
@@ -29,7 +28,7 @@ import jakarta.inject.Inject;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "PsiViewer")
-public class PsiViewerAction extends AnAction implements DumbAware {
+public class PsiViewerAction extends LegacyDumbAwareAction {
     
     private final Application myApplication;
 

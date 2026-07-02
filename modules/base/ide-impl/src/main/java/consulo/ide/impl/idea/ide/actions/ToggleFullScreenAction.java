@@ -25,6 +25,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.coroutine.UIAction;
@@ -38,7 +39,7 @@ import java.awt.*;
  * @author pegov
  */
 @ActionImpl(id = "ToggleFullScreen")
-public class ToggleFullScreenAction extends AnAction implements DumbAware {
+public class ToggleFullScreenAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     public ToggleFullScreenAction() {
         super(ActionLocalize.actionTogglefullscreenText(), ActionLocalize.actionTogglefullscreenDescription());
     }

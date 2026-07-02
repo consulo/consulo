@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.actions.AboutManager;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
@@ -25,13 +24,13 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 @ActionImpl(id = "About")
-public class AboutAction extends AnAction implements DumbAware {
+public class AboutAction extends LegacyDumbAwareAction {
     private final Provider<AboutManager> myAboutManager;
     private final Provider<WindowManager> myWindowManager;
     private final Application myApplication;

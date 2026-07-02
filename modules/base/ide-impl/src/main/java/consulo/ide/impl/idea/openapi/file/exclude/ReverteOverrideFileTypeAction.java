@@ -3,15 +3,15 @@ package consulo.ide.impl.idea.openapi.file.exclude;
 
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * removes destruction caused by {@link OverrideFileTypeAction} and restores the original file type
  */
-public class ReverteOverrideFileTypeAction extends AnAction {
+public class ReverteOverrideFileTypeAction extends LegacyAnAction {
   @Override
   @RequiredUIAccess
   public void update(AnActionEvent e) {

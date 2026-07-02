@@ -19,10 +19,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -30,7 +30,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
 /**
  * @author yole
  */
-public abstract class SplitterActionBase extends AnAction implements DumbAware {
+public abstract class SplitterActionBase extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     protected SplitterActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }

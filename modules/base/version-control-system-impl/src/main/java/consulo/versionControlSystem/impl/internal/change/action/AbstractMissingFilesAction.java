@@ -17,10 +17,9 @@ package consulo.versionControlSystem.impl.internal.change.action;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
@@ -40,7 +39,7 @@ import java.util.List;
  * @author yole
  * @since 2006-11-02
  */
-public abstract class AbstractMissingFilesAction extends AnAction implements DumbAware {
+public abstract class AbstractMissingFilesAction extends LegacyDumbAwareAction {
     protected AbstractMissingFilesAction() {
     }
 

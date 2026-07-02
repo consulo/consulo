@@ -175,7 +175,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             WHEN_FOCUSED
         );
 
-        myEditButton = new DumbAwareAction(
+        myEditButton = new LegacyDumbAwareAction(
             ProjectLocalize.moduleClasspathButtonEdit(),
             LocalizeValue.empty(),
             PlatformIconGroup.actionsEdit()
@@ -217,7 +217,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         }.installOn(myEntryTable);
 
         ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-        AnAction navigateAction = new AnAction(ProjectLocalize.classpathPanelNavigateActionText()) {
+        AnAction navigateAction = new LegacyAnAction(ProjectLocalize.classpathPanelNavigateActionText()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -242,7 +242,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             myEntryTable
         );
         actionGroup.add(myEditButton);
-        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
+        actionGroup.add(new LegacyDumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -622,7 +622,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         }
     }
 
-    private class AnalyzeDependencyAction extends AnAction {
+    private class AnalyzeDependencyAction extends LegacyAnAction {
         private AnalyzeDependencyAction() {
             super("Analyze This Dependency");
         }

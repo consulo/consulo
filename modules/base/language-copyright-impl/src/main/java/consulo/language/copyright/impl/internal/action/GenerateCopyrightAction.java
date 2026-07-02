@@ -30,7 +30,7 @@ import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -39,7 +39,7 @@ import consulo.ui.ex.awt.UIUtil;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "GenerateCopyright", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_GENERATE)))
-public class GenerateCopyrightAction extends AnAction {
+public class GenerateCopyrightAction extends LegacyAnAction {
     public GenerateCopyrightAction() {
         super("Copyright", "Generate/Update the copyright notice.", null);
     }

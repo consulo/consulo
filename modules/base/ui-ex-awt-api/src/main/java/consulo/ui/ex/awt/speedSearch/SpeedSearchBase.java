@@ -1,5 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.speedSearch;
+import consulo.ui.ex.action.LegacyAnAction;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -113,7 +114,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
             }
         });
 
-        new AnAction() {
+        new LegacyAnAction() {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

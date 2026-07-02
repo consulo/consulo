@@ -29,6 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
@@ -43,7 +44,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Optional;
 
-public class CopyPathProvider extends DumbAwareAction {
+public class CopyPathProvider extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public CopyPathProvider() {
     }
 

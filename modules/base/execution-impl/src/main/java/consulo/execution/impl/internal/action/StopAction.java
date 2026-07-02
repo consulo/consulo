@@ -41,7 +41,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ActionImpl(id = "Stop")
-public class StopAction extends DumbAwareAction {
+public class StopAction extends LegacyDumbAwareAction {
     private WeakReference<JBPopup> myActivePopupRef = null;
 
     public StopAction() {

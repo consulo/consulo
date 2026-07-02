@@ -15,15 +15,14 @@
  */
 package consulo.versionControlSystem.impl.internal.change.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
@@ -37,7 +36,7 @@ import java.util.Objects;
 /**
  * @author yole
  */                                                                            
-public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
+public class OpenRepositoryVersionAction extends LegacyDumbAwareAction {
   public OpenRepositoryVersionAction() {
     super(VcsLocalize.openRepositoryVersionText(), VcsLocalize.openRepositoryVersionDescription(), PlatformIconGroup.nodesPpweb());
   }

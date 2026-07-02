@@ -27,8 +27,8 @@ import consulo.module.ModuleManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2012-10-31
  */
 @ActionImpl(id = "ImportModule")
-public class ImportModuleAction extends AnAction {
+public class ImportModuleAction extends LegacyAnAction {
     public ImportModuleAction() {
         super(ActionLocalize.actionImportmoduleText());
     }

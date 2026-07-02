@@ -30,6 +30,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.ActionPromoter;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
@@ -43,6 +44,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.KeyboardLayoutUtil;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -52,6 +54,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.*;
@@ -67,6 +70,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.im.InputContext;
 import java.util.List;
 import java.util.*;
@@ -612,6 +616,14 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
     @RequiredUIAccess
     public boolean processAction(InputEvent e, ActionProcessor processor) {
+        if (ActionRunnerAsync.ENABLED) {
+            return processAction(e, ActionPlaces.MAIN_MENU, myContext.getDataContext(), myContext.getActions(), processor, myPresentationFactory);
+        }
+        return processActionSync(e, processor);
+    }
+
+    @RequiredUIAccess
+    private boolean processActionSync(InputEvent e, ActionProcessor processor) {
         ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
         Project project = myContext.getDataContext().getData(Project.KEY);
         boolean dumb = project != null && DumbService.getInstance(project).isDumb();
@@ -628,7 +640,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 processor.createEvent(e, myContext.getDataContext(), ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance());
 
             try (AccessToken ignored = ProhibitAWTEvents.start("update")) {
-                ActionImplUtil.performDumbAwareUpdate(action, actionEvent, true);
+                ActionImplUtil.performDumbAwareUpdate(action, actionEvent);
             }
 
             if (dumb && !action.isDumbAware()) {
@@ -660,6 +672,127 @@ public final class IdeKeyEventDispatcher implements Disposable {
         }
 
         return false;
+    }
+
+    @RequiredUIAccess
+    public boolean processAction(
+        InputEvent e,
+        String place,
+        DataContext context,
+        List<AnAction> actions,
+        ActionProcessor processor,
+        PresentationFactory presentationFactory
+    ) {
+        if (actions.isEmpty()) {
+            return false;
+        }
+        List<AnAction> sorted = new ArrayList<>(actions);
+        sorted.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
+
+        int index = 0;
+        for (; index < sorted.size(); index++) {
+            AnAction action = sorted.get(index);
+            if (!(action instanceof AnActionWithUIUpdate atUI)) {
+                break;
+            }
+            Presentation presentation = presentationFactory.getPresentation(action);
+            AnActionEvent actionEvent = processor.createEvent(e, context, place, presentation, ActionManager.getInstance());
+            atUI.updateAtUI(actionEvent);
+            if (presentation.isEnabled()) {
+                ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+                processor.onUpdatePassed(e, action, actionEvent);
+                actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+                processor.performAction(e, action, actionEvent);
+                actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+                return true;
+            }
+        }
+
+        if (index >= sorted.size()) {
+            return false;
+        }
+
+        if (e instanceof KeyEvent) {
+            setState(KeyState.STATE_PROCESSED);
+            setPressedWasProcessed(e.getID() == KeyEvent.KEY_PRESSED);
+        }
+
+        IdeEventQueue.getInstance().beginAsyncInputDispatch();
+        performFirstEnabledAsync(sorted, index, e, place, context, e.getComponent(), processor, presentationFactory);
+        return true;
+    }
+
+    @RequiredUIAccess
+    private void performFirstEnabledAsync(
+        List<AnAction> actions,
+        int index,
+        InputEvent e,
+        String place,
+        DataContext context,
+        Component releaseTarget,
+        ActionProcessor processor,
+        PresentationFactory presentationFactory
+    ) {
+        if (index >= actions.size()) {
+            releaseUnhandledEvent(e, releaseTarget);
+            IdeEventQueue.getInstance().endAsyncInputDispatch();
+            return;
+        }
+
+        AnAction action = actions.get(index);
+        Presentation presentation = presentationFactory.getPresentation(action);
+        AnActionEvent actionEvent = processor.createEvent(e, context, place, presentation, ActionManager.getInstance());
+        UIAccess uiAccess = UIAccess.current();
+
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, true).whenCompleteAsync((enabled, throwable) -> {
+            if (throwable == null && Boolean.TRUE.equals(enabled)) {
+                ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+                processor.onUpdatePassed(e, action, actionEvent);
+                actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+                processor.performAction(e, action, actionEvent);
+                actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+                IdeEventQueue.getInstance().endAsyncInputDispatch();
+            }
+            else {
+                performFirstEnabledAsync(actions, index + 1, e, place, context, releaseTarget, processor, presentationFactory);
+            }
+        }, uiAccess);
+    }
+
+    @RequiredUIAccess
+    private void releaseUnhandledEvent(InputEvent e, Component releaseTarget) {
+        if (releaseTarget == null) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        if (e instanceof KeyEvent ke) {
+            setPressedWasProcessed(false);
+            setState(KeyState.STATE_INIT);
+            KeyEvent copy = new KeyEvent(
+                releaseTarget,
+                ke.getID(),
+                now,
+                ke.getModifiers(),
+                ke.getKeyCode(),
+                ke.getKeyChar(),
+                ke.getKeyLocation()
+            );
+            IdeEventQueue.getInstance().dispatchToAwtDirectly(copy);
+        }
+        else if (e instanceof MouseEvent me) {
+            MouseEvent copy = new MouseEvent(
+                releaseTarget,
+                me.getID(),
+                now,
+                me.getModifiers(),
+                me.getX(),
+                me.getY(),
+                me.getClickCount(),
+                me.isPopupTrigger(),
+                me.getButton()
+            );
+            IdeEventQueue.getInstance().dispatchToAwtDirectly(copy);
+        }
     }
 
     private static void showDumbModeWarningLaterIfNobodyConsumesEvent(InputEvent e, AnActionEvent... actionEvents) {
@@ -895,9 +1028,12 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 ActionManager.getInstance(),
                 0
             );
-            if (ActionImplUtil.lastUpdateAndCheckDumb(action, event, true)) {
-                ActionImplUtil.performActionDumbAware(action, event);
-            }
+            UIAccess uiAccess = Application.get().getLastUIAccess();
+            ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, true).whenCompleteAsync((enabled, throwable) -> {
+                if (Boolean.TRUE.equals(enabled)) {
+                    ActionImplUtil.performActionDumbAware(action, event);
+                }
+            }, uiAccess);
         }
 
         @Override
@@ -916,7 +1052,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                         AnActionEvent event =
                             new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), 0);
 
-                        ActionImplUtil.performDumbAwareUpdate(action, event, true);
+                        ActionImplUtil.performDumbAwareUpdate(action, event);
                         return presentation.isEnabled() && presentation.isVisible();
                     }
                 )

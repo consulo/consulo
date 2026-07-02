@@ -9,6 +9,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.application.util.NotNullLazyValue;
 import consulo.util.lang.Pair;
 import consulo.application.util.VolatileNotNullLazyValue;
@@ -48,7 +49,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
         final Function<? super Charset, String> charsetFilter
     ) {
         for (final Charset charset : charsets) {
-            AnAction action = new DumbAwareAction(charset.displayName(), null, Image.empty(Image.DEFAULT_ICON_SIZE)) {
+            AnAction action = new LegacyDumbAwareAction(charset.displayName(), null, Image.empty(Image.DEFAULT_ICON_SIZE)) {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
@@ -57,7 +58,6 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
 
                 @Override
                 public void update(AnActionEvent e) {
-                    super.update(e);
                     String description = charsetFilter.apply(charset);
                     Image defer;
                     if (virtualFile == null || virtualFile.isDirectory()) {

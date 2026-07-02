@@ -1582,7 +1582,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     private static final String ACTION_NAME = "Show All in View";
 
-    private abstract class ShowFindUsagesAction extends DumbAwareAction {
+    private abstract class ShowFindUsagesAction extends LegacyDumbAwareAction {
         ShowFindUsagesAction() {
             super(ACTION_NAME, ACTION_NAME, PlatformIconGroup.generalPin_tab());
         }
@@ -1754,7 +1754,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return myTextField;
     }
 
-    private class MyCopyReferenceAction extends DumbAwareAction {
+    private class MyCopyReferenceAction extends LegacyDumbAwareAction {
         @RequiredUIAccess
         @Override
         public void update(AnActionEvent e) {

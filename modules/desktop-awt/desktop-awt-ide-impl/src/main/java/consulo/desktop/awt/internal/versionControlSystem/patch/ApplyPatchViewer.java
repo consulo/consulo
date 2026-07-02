@@ -538,7 +538,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         }
     }
 
-    private abstract class ApplySelectedChangesActionBase extends DumbAwareAction {
+    private abstract class ApplySelectedChangesActionBase extends LegacyDumbAwareAction {
         private final boolean myShortcut;
 
         public ApplySelectedChangesActionBase(boolean shortcut) {
@@ -642,7 +642,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
         protected abstract void apply(List<ApplyPatchChange> changes);
     }
 
-    private class ApplyNonConflictsAction extends DumbAwareAction {
+    private class ApplyNonConflictsAction extends LegacyDumbAwareAction {
         public ApplyNonConflictsAction() {
             ActionImplUtil.copyFrom(this, "Diff.ApplyNonConflicts");
         }

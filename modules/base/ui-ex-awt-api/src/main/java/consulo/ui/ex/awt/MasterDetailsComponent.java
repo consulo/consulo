@@ -34,7 +34,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -807,7 +806,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     protected void onItemDeleted(Object item) {
     }
 
-    protected class MyDeleteAction extends AnAction implements DumbAware {
+    protected class MyDeleteAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
         private final Predicate<Object[]> myCondition;
 
         public MyDeleteAction() {

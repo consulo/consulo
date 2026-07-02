@@ -1,6 +1,5 @@
 package consulo.execution;
 
-import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
@@ -179,7 +178,7 @@ public class RunContentExecutor implements Disposable {
         return this;
     }
 
-    private class RerunAction extends AnAction {
+    private class RerunAction extends LegacyAnAction {
         public RerunAction(JComponent consolePanel) {
             super(CommonLocalize.actionRerun(), CommonLocalize.actionRerun(), PlatformIconGroup.actionsRestart());
             registerCustomShortcutSet(CommonShortcuts.getRerun(), consolePanel);
@@ -202,7 +201,7 @@ public class RunContentExecutor implements Disposable {
         }
     }
 
-    private class StopAction extends AnAction implements DumbAware {
+    private class StopAction extends LegacyDumbAwareAction {
         public StopAction() {
             super(ActionLocalize.actionStopText(), ActionLocalize.actionStopText(), PlatformIconGroup.actionsSuspend());
         }

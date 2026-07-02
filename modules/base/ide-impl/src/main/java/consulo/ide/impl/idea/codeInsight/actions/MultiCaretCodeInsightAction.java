@@ -26,8 +26,8 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.SimpleReference;
 
@@ -41,7 +41,7 @@ import consulo.util.lang.ref.SimpleReference;
  *
  * @see MultiCaretCodeInsightActionHandler
  */
-public abstract class MultiCaretCodeInsightAction extends AnAction {
+public abstract class MultiCaretCodeInsightAction extends LegacyAnAction {
     protected MultiCaretCodeInsightAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }

@@ -33,6 +33,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.HyperlinkAdapter;
@@ -134,8 +135,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     protected void executeAction(String actionId) {
         AnAction action = ActionManager.getInstance().getAction(actionId);
         AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(), ActionManager.getInstance(), 0);
-        action.beforeActionPerformedUpdate(event);
-        action.update(event);
+        ActionUpdateInvoker.updateSync(action, event);
 
         if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
             action.actionPerformed(event);

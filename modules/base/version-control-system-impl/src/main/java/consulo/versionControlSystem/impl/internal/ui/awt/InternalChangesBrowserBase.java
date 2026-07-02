@@ -362,7 +362,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     }
 
     protected void buildToolBar(DefaultActionGroup toolBarGroup) {
-        myDiffAction = new DumbAwareAction() {
+        myDiffAction = new LegacyDumbAwareAction() {
             @Override
             @RequiredUIAccess
             public void update(AnActionEvent e) {

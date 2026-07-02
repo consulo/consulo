@@ -35,6 +35,8 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.event.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
@@ -136,24 +138,27 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                         true,
                         DesktopAWTInputDetails.convert(StatusButton.this, me)
                     );
-                    if (!ActionImplUtil.lastUpdateAndCheckDumb(action, event, false)) {
-                        return;
-                    }
-
-                    if (presentation.isEnabled()) {
-                        ActionManagerEx manager = ActionManagerEx.getInstanceEx();
-                        manager.fireBeforeActionPerformed(action, context, event);
-
-                        action.actionPerformed(event);
-
-                        manager.queueActionPerformedEvent(action, context, event);
-                        //ActionsCollector.getInstance().record(event.getProject(), action, event, null);
-
-                        ActionToolbar toolbar = getActionToolbar();
-                        if (toolbar != null) {
-                            toolbar.updateActionsAsync();
+                    UIAccess uiAccess = UIAccess.current();
+                    ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+                        if (!Boolean.TRUE.equals(enabled)) {
+                            return;
                         }
-                    }
+
+                        if (presentation.isEnabled()) {
+                            ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+                            manager.fireBeforeActionPerformed(action, context, event);
+
+                            action.actionPerformed(event);
+
+                            manager.queueActionPerformedEvent(action, context, event);
+                            //ActionsCollector.getInstance().record(event.getProject(), action, event, null);
+
+                            ActionToolbar toolbar = getActionToolbar();
+                            if (toolbar != null) {
+                                toolbar.updateActionsAsync();
+                            }
+                        }
+                    }, uiAccess);
                 }
             };
             updateUI();
@@ -227,7 +232,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
     }
 
-    private class StatusAction extends DumbAwareAction implements CustomComponentAction {
+    private class StatusAction extends LegacyDumbAwareAction implements CustomComponentAction {
         @Override
         
         public JComponent createCustomComponent(Presentation presentation, String place) {

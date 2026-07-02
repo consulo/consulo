@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.*;
@@ -68,6 +67,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolder;
@@ -712,7 +712,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     // Modification operations
     //
 
-    private abstract class ApplySelectedChangesActionBase extends AnAction implements DumbAware {
+    private abstract class ApplySelectedChangesActionBase extends LegacyDumbAwareAction {
         protected final Side myModifiedSide;
         protected final boolean myShortcut;
 

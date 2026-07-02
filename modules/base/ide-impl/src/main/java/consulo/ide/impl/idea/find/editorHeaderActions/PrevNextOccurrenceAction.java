@@ -7,14 +7,14 @@ import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.fileEditor.impl.internal.search.SearchUtils;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.util.collection.ContainerUtil;
 
 import java.util.List;
 
-public abstract class PrevNextOccurrenceAction extends DumbAwareAction implements ContextAwareShortcutProvider {
+public abstract class PrevNextOccurrenceAction extends LegacyDumbAwareAction implements ContextAwareShortcutProvider {
     protected final boolean mySearch;
 
     PrevNextOccurrenceAction(String templateActionId, boolean search) {

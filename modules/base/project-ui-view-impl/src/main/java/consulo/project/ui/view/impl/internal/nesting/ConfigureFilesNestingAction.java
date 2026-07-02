@@ -10,12 +10,12 @@ import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 @ActionImpl(id = "ProjectView.FileNesting")
-public class ConfigureFilesNestingAction extends DumbAwareAction {
+public class ConfigureFilesNestingAction extends LegacyDumbAwareAction {
     private final Provider<ProjectViewSharedSettings> myProjectViewSharedSettings;
 
     @Inject

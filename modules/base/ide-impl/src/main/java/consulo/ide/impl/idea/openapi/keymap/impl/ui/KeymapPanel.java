@@ -408,7 +408,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         group.add(commonActionsManager.createExpandAllAction(treeExpander, myActionsTree.getTree()));
         group.add(commonActionsManager.createCollapseAllAction(treeExpander, myActionsTree.getTree()));
 
-        group.add(new DumbAwareAction(
+        group.add(new LegacyDumbAwareAction(
             KeyMapLocalize.editShortcutActionText(),
             KeyMapLocalize.editShortcutActionDescription(),
             ImageEffects.layered(PlatformIconGroup.actionsEdit(), PlatformIconGroup.generalDropdown())
@@ -1175,7 +1175,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         }
 
         if (restrictions.allowAbbreviation) {
-            group.add(new DumbAwareAction(IdeLocalize.actionAnonymousTextAddAbbreviation()) {
+            group.add(new LegacyDumbAwareAction(IdeLocalize.actionAnonymousTextAddAbbreviation()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(AnActionEvent e) {
@@ -1213,7 +1213,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         }
 
         for (final String abbreviation : abbreviations) {
-            group.addAction(new DumbAwareAction(IdeLocalize.actionTextRemoveAbbreviation0(abbreviation)) {
+            group.addAction(new LegacyDumbAwareAction(IdeLocalize.actionTextRemoveAbbreviation0(abbreviation)) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(AnActionEvent e) {
@@ -1224,7 +1224,6 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
                 @RequiredUIAccess
                 @Override
                 public void update(AnActionEvent e) {
-                    super.update(e);
                 }
             });
         }

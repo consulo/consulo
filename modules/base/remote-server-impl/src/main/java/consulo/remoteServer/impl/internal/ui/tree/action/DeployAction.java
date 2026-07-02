@@ -10,7 +10,7 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 
 import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.getDeploymentTarget;
@@ -19,7 +19,7 @@ import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.get
  * @author michael.golubev
  */
 @ActionImpl(id = "Servers.Deploy", parents = @ActionParentRef(@ActionRef(id = "RunDashboardContentToolbar")))
-public class DeployAction extends DumbAwareAction {
+public class DeployAction extends LegacyDumbAwareAction {
     public DeployAction() {
         super(RemoteServerLocalize.actionServersDeployText(), RemoteServerLocalize.actionServersDeployDescription(), PlatformIconGroup.nodesDeploy());
     }

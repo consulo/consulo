@@ -30,7 +30,7 @@ import java.util.List;
 public class InlineProgressIndicator extends ProgressIndicatorBase implements Disposable {
     private final ActionToolbar myToolbar;
 
-    private class CancelAction extends DumbAwareAction {
+    private class CancelAction extends LegacyDumbAwareAction {
         public CancelAction(LocalizeValue text, LocalizeValue description) {
             super(text, description, PlatformIconGroup.actionsClose());
         }

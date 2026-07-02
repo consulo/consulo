@@ -20,13 +20,10 @@ import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 
 @ActionImpl(id = IdeActions.ACTION_CLOSE)
-public class CloseAction extends AnAction implements DumbAware {
+public class CloseAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     public CloseAction() {
         super(ActionLocalize.actionClosecontentText(), ActionLocalize.actionClosecontentDescription());
     }

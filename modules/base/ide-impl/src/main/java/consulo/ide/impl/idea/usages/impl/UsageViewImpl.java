@@ -1072,7 +1072,7 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    private class ShowSettings extends AnAction {
+    private class ShowSettings extends LegacyAnAction {
         @RequiredUIAccess
         private ShowSettings() {
             super(UsageLocalize.actionTextUsageViewSettings(), LocalizeValue.empty(), PlatformIconGroup.generalGearplain());

@@ -951,7 +951,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
     }
 
-    abstract static class AbstractActionForSomeSelection extends AnAction implements DumbAware {
+    abstract static class AbstractActionForSomeSelection extends LegacyDumbAwareAction {
         private final int mySuitableSelectedElements;
         private final FileHistoryPanelImpl mySelectionProvider;
 
@@ -1479,7 +1479,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
     }
 
-    public class MyCreatePatch extends DumbAwareAction {
+    public class MyCreatePatch extends LegacyDumbAwareAction {
         private final CreatePatchFromChangesAction myUsualDelegate;
 
         public MyCreatePatch() {

@@ -39,7 +39,6 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         Presentation presentation = e.getPresentation();
         boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
         presentation.setEnabledAndVisible(isEnabled);

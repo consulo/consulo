@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
  * An action which has a selected state, and which toggles its selected state when performed.
  * Can be used to represent a menu item with a checkbox, or a toolbar button which keeps its pressed state.
  */
-public abstract class ToggleAction extends AnAction implements Toggleable {
+public abstract class ToggleAction extends AnAction implements Toggleable, AnActionWithSyncUpdate {
     public ToggleAction() {
     }
 

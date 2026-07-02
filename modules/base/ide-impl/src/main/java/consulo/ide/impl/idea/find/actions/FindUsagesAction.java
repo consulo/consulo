@@ -32,6 +32,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -42,7 +43,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "FindUsages")
-public class FindUsagesAction extends AnAction {
+public class FindUsagesAction extends AnAction implements AnActionWithAsyncUpdate {
     @Inject
     public FindUsagesAction() {
         this(ActionLocalize.actionFindusagesText(), ActionLocalize.actionFindusagesDescription());

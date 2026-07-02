@@ -18,6 +18,7 @@ package consulo.ui.ex.dialog.action;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
@@ -26,7 +27,7 @@ import consulo.ui.ex.dialog.DialogDescriptor;
  * @author VISTALL
  * @since 2021-12-13
  */
-public class DialogOkAction extends DumbAwareAction {
+public class DialogOkAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public DialogOkAction(LocalizeValue actionText) {
         super(actionText, LocalizeValue.empty(), null);
     }

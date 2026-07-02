@@ -38,6 +38,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
@@ -54,7 +55,7 @@ import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
 @ActionImpl(id = IdeActions.ACTION_EDITOR_REFORMAT)
-public class ReformatCodeAction extends AnAction implements DumbAware {
+public class ReformatCodeAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     private static final Logger LOG = Logger.getInstance(ReformatCodeAction.class);
 
     private static final String HELP_ID = "editing.codeReformatting";

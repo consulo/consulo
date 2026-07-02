@@ -35,6 +35,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
@@ -49,7 +50,7 @@ import java.util.List;
 import static consulo.ui.ex.action.Presentation.NO_MNEMONIC;
 
 @ActionImpl(id = IdeActions.ACTION_COMPILE)
-public class CompileAction extends CompileActionBase {
+public class CompileAction extends CompileActionBase implements AnActionWithAsyncUpdate {
     public CompileAction() {
         super(CompilerLocalize.actionCompileText(), CompilerLocalize.actionCompileDescription(), null);
     }

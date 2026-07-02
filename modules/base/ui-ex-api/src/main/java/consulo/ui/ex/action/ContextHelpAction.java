@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = IdeActions.ACTION_CONTEXT_HELP)
-public class ContextHelpAction extends AnAction implements DumbAware {
+public class ContextHelpAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
     private final String myHelpID;
 
     @Inject

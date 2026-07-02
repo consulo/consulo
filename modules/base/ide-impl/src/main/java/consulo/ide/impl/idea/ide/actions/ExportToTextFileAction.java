@@ -27,7 +27,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 
 @ActionImpl(id = IdeActions.ACTION_EXPORT_TO_TEXT_FILE)
-public class ExportToTextFileAction extends AnAction {
+public class ExportToTextFileAction extends LegacyAnAction {
     public ExportToTextFileAction() {
         super(ActionLocalize.actionExporttotextfileText(), LocalizeValue.empty(), PlatformIconGroup.actionsExport());
     }

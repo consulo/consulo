@@ -7,13 +7,13 @@ import consulo.execution.impl.internal.service.ServiceViewModel;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
 @ActionImpl(id = "ServiceView.JumpToServices")
-public final class JumpToServicesAction extends DumbAwareAction {
+public final class JumpToServicesAction extends LegacyDumbAwareAction {
   public JumpToServicesAction() {
     super(ActionLocalize.actionServiceviewJumptoservicesText());
   }

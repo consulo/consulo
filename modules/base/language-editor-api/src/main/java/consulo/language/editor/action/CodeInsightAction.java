@@ -18,6 +18,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
@@ -26,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CodeInsightAction extends AnAction {
+public abstract class CodeInsightAction extends AnAction implements AnActionWithSyncUpdate {
     protected CodeInsightAction() {
     }
 

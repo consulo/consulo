@@ -71,7 +71,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         }
     }
 
-    private class HideAction extends DumbAwareAction {
+    private class HideAction extends LegacyDumbAwareAction {
         private HideAction() {
             super(UILocalize.toolWindowHideActionName(), LocalizeValue.empty(), PlatformIconGroup.generalHidetoolwindow());
         }

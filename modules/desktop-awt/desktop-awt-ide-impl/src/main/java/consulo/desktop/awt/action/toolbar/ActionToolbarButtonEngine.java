@@ -20,7 +20,9 @@ import consulo.desktop.awt.action.DesktopActionPopupMenuImpl;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.UIAccess;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -198,23 +200,26 @@ public class ActionToolbarButtonEngine {
         
         AnActionEvent event = AnActionEvent.createFromInputEvent(e, myPlace, myPresentation, context, false, true, inputDetails);
 
-        if (!ActionImplUtil.lastUpdateAndCheckDumb(myIdeAction, event, false)) {
-            return;
-        }
-
-        if (myButton.isEnabled()) {
-            ActionManagerEx manager = ActionManagerEx.getInstanceEx();
-            DataContext dataContext = event.getDataContext();
-            manager.fireBeforeActionPerformed(myIdeAction, dataContext, event);
-
-            if (!myButton.isEnabled() || !myButton.isVisible()) {
+        UIAccess uiAccess = UIAccess.current();
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(myIdeAction, event, false).whenCompleteAsync((enabled, throwable) -> {
+            if (!Boolean.TRUE.equals(enabled)) {
                 return;
             }
 
-            actionPerformed(event);
+            if (myButton.isEnabled()) {
+                ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+                DataContext dataContext = event.getDataContext();
+                manager.fireBeforeActionPerformed(myIdeAction, dataContext, event);
 
-            manager.queueActionPerformedEvent(myIdeAction, dataContext, event);
-        }
+                if (!myButton.isEnabled() || !myButton.isVisible()) {
+                    return;
+                }
+
+                actionPerformed(event);
+
+                manager.queueActionPerformedEvent(myIdeAction, dataContext, event);
+            }
+        }, uiAccess);
     }
 
     public void removeNotify() {
@@ -229,9 +234,11 @@ public class ActionToolbarButtonEngine {
             myPresentation.addPropertyChangeListener(myPresentationListener = this::presentationPropertyChanded);
         }
         AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, myGetDataContext.get(), false, true, null);
-        ActionImplUtil.performDumbAwareUpdate(myIdeAction, e, false);
-        updateToolTipText();
-        updateIcon();
+        UIAccess uiAccess = UIAccess.current();
+        ActionRunnerAsync.performDumbAwareUpdateAsync(myIdeAction, e).whenCompleteAsync((r, t) -> {
+            updateToolTipText();
+            updateIcon();
+        }, uiAccess);
     }
 
     public void setNoIconsInPopup(boolean noIconsInPopup) {

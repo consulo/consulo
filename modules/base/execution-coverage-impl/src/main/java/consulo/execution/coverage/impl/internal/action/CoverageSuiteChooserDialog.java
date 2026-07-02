@@ -343,7 +343,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
         }
     }
 
-    private class DeleteSuiteAction extends AnAction {
+    private class DeleteSuiteAction extends LegacyAnAction {
         public DeleteSuiteAction() {
             super(CommonLocalize.buttonDelete(), CommonLocalize.buttonDelete(), PlatformIconGroup.generalRemove());
             registerCustomShortcutSet(CommonShortcuts.getDelete(), mySuitesTree);

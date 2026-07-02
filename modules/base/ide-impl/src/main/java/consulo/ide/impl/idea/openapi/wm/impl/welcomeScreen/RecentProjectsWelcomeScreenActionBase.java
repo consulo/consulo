@@ -21,7 +21,7 @@ import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import consulo.ui.image.Image;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAction {
+public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAwareAction {
     protected RecentProjectsWelcomeScreenActionBase() {
     }
 

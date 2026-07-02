@@ -25,8 +25,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.Messages;
@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class JumpFromRemoteFileToLocalAction extends AnAction {
+public class JumpFromRemoteFileToLocalAction extends LegacyAnAction {
     private final HttpVirtualFile myFile;
     private final Project myProject;
 

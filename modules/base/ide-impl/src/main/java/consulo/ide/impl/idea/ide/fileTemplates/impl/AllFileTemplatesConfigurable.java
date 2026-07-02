@@ -231,7 +231,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myTabbedPane.addChangeListener(e -> onTabChanged());
 
         DefaultActionGroup group = new DefaultActionGroup();
-        AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
+        AnAction removeAction = new LegacyAnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -241,13 +241,12 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             @RequiredUIAccess
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
                 e.getPresentation()
                     .setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
             }
         };
-        AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
+        AnAction addAction = new LegacyAnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -257,11 +256,10 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             @RequiredUIAccess
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myOtherTemplatesList));
             }
         };
-        AnAction cloneAction = new AnAction(IdeLocalize.actionCopyTemplate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+        AnAction cloneAction = new LegacyAnAction(IdeLocalize.actionCopyTemplate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -271,7 +269,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             @RequiredUIAccess
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 e.getPresentation().setEnabled(
                     myCurrentTab != myCodeTemplatesList
                         && myCurrentTab != myOtherTemplatesList
@@ -279,7 +276,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 );
             }
         };
-        AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), PlatformIconGroup.generalReset()) {
+        AnAction resetAction = new LegacyAnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), PlatformIconGroup.generalReset()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -289,7 +286,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             @RequiredUIAccess
             @Override
             public void update(AnActionEvent e) {
-                super.update(e);
                 FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
                 e.getPresentation().setEnabled(selectedItem instanceof BundledFileTemplate && !selectedItem.isDefault());
             }

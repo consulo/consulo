@@ -40,7 +40,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PlaceHolder;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -48,7 +48,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 
 @ActionImpl(id = "FileStructurePopup")
-public class ViewStructureAction extends DumbAwareAction {
+public class ViewStructureAction extends LegacyDumbAwareAction {
     public ViewStructureAction() {
         super(ActionLocalize.actionFilestructurepopupText(), ActionLocalize.actionFilestructurepopupDescription());
         setEnabledInModalContext(true);

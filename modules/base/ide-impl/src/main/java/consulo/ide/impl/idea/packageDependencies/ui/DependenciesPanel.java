@@ -715,7 +715,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
     }
 
 
-    private class RerunAction extends AnAction {
+    private class RerunAction extends LegacyAnAction {
         public RerunAction(JComponent comp) {
             super(CommonLocalize.actionRerun(), AnalysisScopeLocalize.actionRerunDependency(), PlatformIconGroup.actionsRerun());
             registerCustomShortcutSet(CommonShortcuts.getRerun(), comp);
@@ -776,7 +776,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         }
     }
 
-    private class ShowDetailedInformationAction extends AnAction {
+    private class ShowDetailedInformationAction extends LegacyAnAction {
         private ShowDetailedInformationAction() {
             super(LocalizeValue.localizeTODO("Show indirect dependencies"));
         }
@@ -828,14 +828,13 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         }
     }
 
-    private class RemoveFromScopeAction extends AnAction {
+    private class RemoveFromScopeAction extends LegacyAnAction {
         private RemoveFromScopeAction() {
             super(LocalizeValue.localizeTODO("Remove from scope"));
         }
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             e.getPresentation().setEnabled(!getSelectedScope(myLeftTree).isEmpty());
         }
 
@@ -852,14 +851,13 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         }
     }
 
-    private class AddToScopeAction extends AnAction {
+    private class AddToScopeAction extends LegacyAnAction {
         private AddToScopeAction() {
             super(LocalizeValue.localizeTODO("Add to scope"));
         }
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             e.getPresentation().setEnabled(getScope() != null);
         }
 
@@ -915,7 +913,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         }
     }
 
-    private class SelectInLeftTreeAction extends AnAction {
+    private class SelectInLeftTreeAction extends LegacyAnAction {
         public SelectInLeftTreeAction() {
             super(
                 AnalysisScopeLocalize.actionSelectInLeftTree(),
@@ -960,7 +958,7 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         }
     }
 
-    private class MarkAsIllegalAction extends AnAction {
+    private class MarkAsIllegalAction extends LegacyAnAction {
         public MarkAsIllegalAction() {
             super(
                 AnalysisScopeLocalize.markDependencyIllegalText(),

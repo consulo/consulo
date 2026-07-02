@@ -19,7 +19,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Cell;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.primitive.ints.IntList;
@@ -183,7 +183,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     return rows;
   }
 
-  private static class MySelectAllAction extends DumbAwareAction {
+  private static class MySelectAllAction extends LegacyDumbAwareAction {
     
     private final JTable myTable;
     

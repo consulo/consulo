@@ -33,7 +33,7 @@ import java.util.List;
  * @since 2005-03-03
  */
 @ActionImpl(id = IdeActions.ADD_TO_FAVORITES)
-public class AddToFavoritesActionGroup extends ActionGroup {
+public class AddToFavoritesActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
     public AddToFavoritesActionGroup() {
         super(ActionLocalize.groupAddtofavoritesText(), true);
     }

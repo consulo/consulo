@@ -19,8 +19,8 @@ import consulo.desktop.awt.internal.diff.dir.DirDiffTableModel;
 import consulo.diff.dir.DirDiffOperation;
 import consulo.diff.impl.internal.dir.DirDiffElementImpl;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 
 import javax.swing.*;
 
@@ -28,7 +28,7 @@ import javax.swing.*;
  * @author lene
  * @since 2012-04-23
  */
-public class SetNoOperation extends AnAction {
+public class SetNoOperation extends LegacyAnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {

@@ -18,19 +18,18 @@ package consulo.ide.impl.idea.codeEditor.printing;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(id = "Print")
-public class PrintAction extends AnAction implements DumbAware {
+public class PrintAction extends LegacyDumbAwareAction {
     public PrintAction() {
         super(ActionLocalize.actionPrintText(), ActionLocalize.actionPrintDescription(), PlatformIconGroup.generalPrint());
     }

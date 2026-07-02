@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import consulo.ui.image.Image;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
-public abstract class TreeExpandAllActionBase extends DumbAwareAction implements DumbAware {
+public abstract class TreeExpandAllActionBase extends LegacyDumbAwareAction implements DumbAware {
     protected TreeExpandAllActionBase(
         LocalizeValue text,
         LocalizeValue description,

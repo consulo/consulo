@@ -16,6 +16,7 @@ import consulo.project.Project;
 import consulo.project.internal.DumbInternalUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.concurrent.coroutine.*;
 import org.jspecify.annotations.Nullable;
@@ -37,14 +38,12 @@ public class ActionUpdater {
     private final Project myProject;
 
     private final boolean myDumbMode;
-    // caches store futures so concurrent expansion shares a single in-flight computation per action/group
     private final Map<AnAction, CompletableFuture<Presentation>> myUpdatedPresentations = new ConcurrentHashMap<>();
     private final Map<ActionGroup, CompletableFuture<List<AnAction>>> myGroupChildren = new ConcurrentHashMap<>();
     private final Map<ActionGroup, Boolean> myCanBePerformedCache = new ConcurrentHashMap<>();
     private final ActionManager myActionManager;
     private final UIAccess myUiAccess;
 
-    // the progress indicator of the currently running async expansion; used to wire coroutine cancellation
     private volatile @Nullable ProgressIndicator myExpansionIndicator;
 
     public ActionUpdater(
@@ -69,7 +68,6 @@ public class ActionUpdater {
 
     private void applyPresentationChanges() {
         for (Map.Entry<AnAction, CompletableFuture<Presentation>> entry : myUpdatedPresentations.entrySet()) {
-            // expansion has completed when this runs, so the futures are resolved
             Presentation cloned = entry.getValue().getNow(null);
             if (cloned == null) {
                 continue;
@@ -107,7 +105,6 @@ public class ActionUpdater {
 
         doExpandActionGroupAsync(group, hideDisabled)
             .thenApply(ActionUpdater::removeUnnecessarySeparators)
-            // apply presentation changes and publish the result on the UI thread
             .thenApplyAsync(list -> {
                 applyPresentationChanges();
                 return (List<? extends AnAction>) list;
@@ -122,7 +119,6 @@ public class ActionUpdater {
 
                 Throwable cause = unwrapCoroutineException(throwable);
                 if (cause instanceof ProcessCanceledException || cause instanceof CancellationException) {
-                    // cancellation is normal control flow, not an error: signal it as a cancelled future
                     result.cancel(false);
                 }
                 else {
@@ -150,9 +146,6 @@ public class ActionUpdater {
         });
     }
 
-    /**
-     * Expands all children concurrently and concatenates the results preserving the original order.
-     */
     private CompletableFuture<List<AnAction>> expandChildren(List<AnAction> children, boolean hideDisabled) {
         List<CompletableFuture<List<AnAction>>> futures = new ArrayList<>(children.size());
         for (AnAction child : children) {
@@ -168,16 +161,11 @@ public class ActionUpdater {
         });
     }
 
-    /**
-     * Returns the (cached) updated presentation for an action, computing it asynchronously on first request.
-     * The cache stores the future itself so concurrent requests share a single in-flight update.
-     */
     private CompletableFuture<Presentation> updateAsync(AnAction action) {
         return myUpdatedPresentations.computeIfAbsent(action, this::computeUpdatedPresentation);
     }
 
     private CompletableFuture<Presentation> computeUpdatedPresentation(AnAction action) {
-        // clone the presentation to avoid partially changing the cached one if update is interrupted
         Presentation presentation = myFactory.getPresentation(action).clone();
         presentation.setEnabledAndVisible(true);
         AnActionEvent event = createActionEvent(action, presentation);
@@ -189,7 +177,6 @@ public class ActionUpdater {
     }
 
     private CompletableFuture<List<AnAction>> computeGroupChildren(ActionGroup group) {
-        // getChildren is always requested after the group's own update, so its presentation is cached
         AnActionEvent event = createActionEvent(group, orDefault(group, cachedPresentation(group)));
         return launchCoroutineAsync(group.getChildrenAsync(event));
     }
@@ -243,10 +230,6 @@ public class ActionUpdater {
     private record ChildrenFlags(boolean hasEnabled, boolean hasVisible) {
     }
 
-    /**
-     * Asynchronously computes whether a group has enabled/visible descendants, mirroring the early-exit loop
-     * of the former synchronous implementation.
-     */
     private CompletableFuture<ChildrenFlags> collectChildrenFlags(ActionGroup actionGroup, boolean hideDisabled, boolean isPopup) {
         if (!(hideDisabled || isPopup)) {
             return CompletableFuture.completedFuture(new ChildrenFlags(false, false));
@@ -258,7 +241,6 @@ public class ActionUpdater {
     private CompletableFuture<ChildrenFlags> foldChildrenFlags(
         List<AnAction> leaves, int index, boolean hasEnabled, boolean hasVisible, boolean hideDisabled, boolean isPopup
     ) {
-        // stop early if all the required flags are collected (same conditions as the former synchronous loop)
         if (hasEnabled && hasVisible
             || hideDisabled && hasEnabled && !isPopup
             || isPopup && hasVisible && !hideDisabled
@@ -276,11 +258,6 @@ public class ActionUpdater {
         });
     }
 
-    /**
-     * Asynchronous replacement of the former {@code JBTreeTraverser}-based leaves traversal.
-     * Collects up to 1000 unique non-separator leaf actions in DFS order, descending into visible,
-     * non-popup, non-performable sub-groups.
-     */
     private CompletableFuture<List<AnAction>> iterateGroupChildren(ActionGroup group) {
         List<AnAction> result = new ArrayList<>();
         Set<AnAction> visited = new HashSet<>();
@@ -296,16 +273,14 @@ public class ActionUpdater {
             return CompletableFuture.completedFuture(null);
         }
         AnAction o = nodes.get(index);
-        if (!visited.add(o)) { // unique()
+        if (!visited.add(o)) {
             return traverseLeaves(nodes, index + 1, root, out, visited);
         }
         return descendableChildren(o, root).thenCompose(children -> {
             if (children != null) {
-                // internal node: descend first (DFS), then continue with the remaining siblings
                 return traverseLeaves(children, 0, root, out, visited)
                     .thenCompose(__ -> traverseLeaves(nodes, index + 1, root, out, visited));
             }
-            // leaf: keep it unless it is a separator or a non-dumb-aware action in dumb mode
             if (!(o instanceof AnSeparator) && !(myDumbMode && !o.isDumbAware())) {
                 out.add(o);
             }
@@ -313,9 +288,6 @@ public class ActionUpdater {
         });
     }
 
-    /**
-     * Returns the children to descend into if the node is a traversable sub-group, or {@code null} if it is a leaf.
-     */
     private CompletableFuture<List<AnAction>> descendableChildren(AnAction o, ActionGroup root) {
         if (o == root || o instanceof AlwaysVisibleActionGroup || (myDumbMode && !o.isDumbAware()) || !(o instanceof ActionGroup oo)) {
             return CompletableFuture.completedFuture(null);
@@ -391,10 +363,6 @@ public class ActionUpdater {
         }
     }
 
-    /**
-     * Runs the action's coroutine-based {@link AnAction#updateAsync(AnActionEvent)} non-blockingly and applies the
-     * dumb-aware bookkeeping around it. The returned future yields {@code true} if the action should be kept.
-     */
     private CompletableFuture<Boolean> updateActionAsync(AnAction action, AnActionEvent e) {
         if (Application.get().isDisposed()) {
             return CompletableFuture.completedFuture(false);
@@ -411,7 +379,12 @@ public class ActionUpdater {
         boolean notAllowed = myDumbMode && !action.isDumbAware();
         long startTime = System.currentTimeMillis();
 
-        return launchCoroutineAsync(action.updateAsync(e)).handle((ignored, throwable) -> {
+        Coroutine<?, ?> coroutine = ActionUpdateInvoker.createUpdateCoroutine(action, e);
+        CompletableFuture<?> updateFuture = coroutine == null
+            ? CompletableFuture.completedFuture(null)
+            : launchCoroutineAsync(coroutine);
+
+        return updateFuture.handle((ignored, throwable) -> {
             try {
                 if (throwable != null) {
                     Throwable cause = unwrapCoroutineException(throwable);
@@ -419,7 +392,6 @@ public class ActionUpdater {
                         throw pce;
                     }
                     if (cause instanceof IndexNotReadyException) {
-                        // in dumb mode this is expected for non-dumb-aware actions; otherwise log it
                         if (!notAllowed) {
                             handleUpdateException(action, presentation, cause);
                         }
@@ -449,10 +421,6 @@ public class ActionUpdater {
         });
     }
 
-    /**
-     * Launches a coroutine non-blockingly in a fresh {@link CoroutineScope} and bridges it to a {@link CompletableFuture}.
-     * The current expansion {@link ProgressIndicator} (if any) is wired to cancel the scope.
-     */
     private <T> CompletableFuture<T> launchCoroutineAsync(Coroutine<?, T> coroutine) {
         CoroutineContext context = myProject instanceof CoroutineContextOwner owner
             ? owner.coroutineContext()
@@ -474,9 +442,6 @@ public class ActionUpdater {
         return coroutine.runAsync(scope, null).toFuture();
     }
 
-    /**
-     * Unwraps {@link CompletionException} and {@link CoroutineException} layers to expose the original failure cause.
-     */
     private static Throwable unwrapCoroutineException(Throwable throwable) {
         Throwable cause = throwable;
         while ((cause instanceof CompletionException || cause instanceof CoroutineException) && cause.getCause() != null) {

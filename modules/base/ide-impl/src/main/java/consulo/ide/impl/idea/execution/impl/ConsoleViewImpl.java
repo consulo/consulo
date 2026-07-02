@@ -6,7 +6,6 @@ import com.google.common.base.CharMatcher;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
@@ -1204,7 +1203,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
             .findFirstSafe(extension -> extension.shouldFoldLine(myProject, lineText));
     }
 
-    private static class ClearThisConsoleAction extends DumbAwareAction {
+    private static class ClearThisConsoleAction extends LegacyDumbAwareAction {
         private final ConsoleView myConsoleView;
 
         ClearThisConsoleAction(ConsoleView consoleView) {
@@ -1301,7 +1300,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         insertUserText(typeOffset, textToUse);
     }
 
-    private abstract static class ConsoleAction extends AnAction implements DumbAware {
+    private abstract static class ConsoleAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
@@ -1718,7 +1717,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         return myProject;
     }
 
-    private class HyperlinkNavigationAction extends DumbAwareAction {
+    private class HyperlinkNavigationAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {

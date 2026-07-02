@@ -21,11 +21,11 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 
 @ActionImpl(id = "ShelvedChanges.CleanMarkedToDelete")
-public class CleanUnshelvedAction extends DumbAwareAction {
+public class CleanUnshelvedAction extends LegacyDumbAwareAction {
     public CleanUnshelvedAction() {
         super(
             LocalizeValue.localizeTODO("Clean Already Unshelved..."),
@@ -36,7 +36,6 @@ public class CleanUnshelvedAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         Project project = e.getData(Project.KEY);
         Presentation presentation = e.getPresentation();
         if (project == null) {

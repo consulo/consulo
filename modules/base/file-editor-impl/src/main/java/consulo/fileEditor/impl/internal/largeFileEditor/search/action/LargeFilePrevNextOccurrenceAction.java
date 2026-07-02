@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class LargeFilePrevNextOccurrenceAction extends DumbAwareAction implements ContextAwareShortcutProvider {
+public final class LargeFilePrevNextOccurrenceAction extends LegacyDumbAwareAction implements ContextAwareShortcutProvider {
 
     private final LfeSearchManager mySearchManager;
     private final boolean myDirectionForward;

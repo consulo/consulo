@@ -26,8 +26,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.undoRedo.CommandProcessor;
@@ -158,7 +158,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         return Pair.create(element, descriptor);
     }
 
-    public class SuppressTreeAction extends AnAction {
+    public class SuppressTreeAction extends LegacyAnAction {
         private final SuppressIntentionAction mySuppressAction;
 
         public SuppressTreeAction(SuppressIntentionAction suppressAction) {
@@ -201,7 +201,6 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
 
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             if (!ReadAction.compute(this::isAvailable)) {
                 e.getPresentation().setVisible(false);
             }

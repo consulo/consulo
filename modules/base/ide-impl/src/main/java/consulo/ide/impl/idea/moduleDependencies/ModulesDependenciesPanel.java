@@ -194,7 +194,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
     private static void appendDependenciesAction(DefaultActionGroup group) {
         final AnAction analyzeDepsAction = ActionManager.getInstance().getAction(IdeActions.ACTION_ANALYZE_DEPENDENCIES);
-        group.add(new AnAction(
+        group.add(new LegacyAnAction(
             analyzeDepsAction.getTemplatePresentation().getTextValue(),
             analyzeDepsAction.getTemplatePresentation().getDescription(),
             PlatformIconGroup.toolwindowsToolwindowmoduledependencies()
@@ -207,7 +207,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
             @Override
             public void update(AnActionEvent e) {
-                analyzeDepsAction.update(e);
+                ActionUpdateInvoker.updateSync(analyzeDepsAction, e);
             }
         });
     }

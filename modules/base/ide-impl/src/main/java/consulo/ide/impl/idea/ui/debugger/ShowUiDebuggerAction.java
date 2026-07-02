@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.ui.debugger;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
-public class ShowUiDebuggerAction extends AnAction {
+public class ShowUiDebuggerAction extends LegacyAnAction {
 
   private UiDebugger myDebugger;
 

@@ -270,7 +270,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private class ClearAction extends DumbAwareAction {
+    private class ClearAction extends LegacyDumbAwareAction {
         ClearAction() {
             super(PlatformIconGroup.actionsCancel());
         }
@@ -288,7 +288,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private class NewLineAction extends DumbAwareAction {
+    private class NewLineAction extends LegacyDumbAwareAction {
         NewLineAction() {
             super(FindLocalize.findNewLine(), LocalizeValue.empty(), AllIcons.Actions.SearchNewLine);
             setShortcutSet(new CustomShortcutSet(NEW_LINE_KEYSTROKE));

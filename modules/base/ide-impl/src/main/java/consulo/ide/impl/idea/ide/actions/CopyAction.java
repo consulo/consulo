@@ -27,7 +27,7 @@ import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = IdeActions.ACTION_COPY)
-public class CopyAction extends AnAction implements DumbAware {
+public class CopyAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     public CopyAction() {
         super(
             ActionLocalize.action$copyText(),

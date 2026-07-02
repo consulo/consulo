@@ -106,6 +106,9 @@ public class IdeEventQueue extends EventQueue {
      * Swing event.
      */
     private int myEventCount;
+
+    private int myAsyncInputDispatchCount;
+    private final java.util.ArrayDeque<KeyEvent> myHeldKeyEvents = new java.util.ArrayDeque<>();
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private boolean myIsInInputEvent;
@@ -658,6 +661,11 @@ public class IdeEventQueue extends EventQueue {
 
     @RequiredUIAccess
     public void _dispatchEvent(AWTEvent e) {
+        if (myAsyncInputDispatchCount > 0 && e instanceof KeyEvent && !myHeldKeyEvents.contains(e)) {
+            myHeldKeyEvents.add((KeyEvent) e);
+            return;
+        }
+
         if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
             DnDManagerImpl dndManager = (DnDManagerImpl) DnDManager.getInstance();
             dndManager.setLastDropHandler(null);
@@ -847,6 +855,27 @@ public class IdeEventQueue extends EventQueue {
         }
         catch (Throwable t) {
             processException(t);
+        }
+    }
+
+    public void dispatchToAwtDirectly(AWTEvent e) {
+        defaultDispatchEvent(e);
+    }
+
+    public void beginAsyncInputDispatch() {
+        myAsyncInputDispatchCount++;
+    }
+
+    public void endAsyncInputDispatch() {
+        if (--myAsyncInputDispatchCount <= 0) {
+            myAsyncInputDispatchCount = 0;
+            flushHeldKeyEvents();
+        }
+    }
+
+    private void flushHeldKeyEvents() {
+        while (myAsyncInputDispatchCount == 0 && !myHeldKeyEvents.isEmpty()) {
+            _dispatchEvent(myHeldKeyEvents.poll());
         }
     }
 

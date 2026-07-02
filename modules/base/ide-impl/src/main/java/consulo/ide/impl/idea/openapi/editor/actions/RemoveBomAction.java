@@ -16,12 +16,11 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -38,7 +37,7 @@ import java.util.List;
  * @since 2011-03-30
  */
 @ActionImpl(id = "RemoveBom")
-public class RemoveBomAction extends AnAction implements DumbAware {
+public class RemoveBomAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(RemoveBomAction.class);
 
     public RemoveBomAction() {

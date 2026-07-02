@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.TitledHandler;
 import consulo.localize.LocalizeValue;
@@ -39,7 +38,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.event.KeyEvent;
 
 @ActionImpl(id = IdeActions.ACTION_DELETE)
-public class DeleteAction extends AnAction implements DumbAware {
+public class DeleteAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(DeleteAction.class);
 
     @Inject

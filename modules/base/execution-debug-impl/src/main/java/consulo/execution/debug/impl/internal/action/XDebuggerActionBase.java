@@ -20,7 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author nik
  */
-public abstract class XDebuggerActionBase extends AnAction {
+public abstract class XDebuggerActionBase extends LegacyAnAction {
     private final boolean myHideDisabledInPopup;
 
     protected XDebuggerActionBase() {

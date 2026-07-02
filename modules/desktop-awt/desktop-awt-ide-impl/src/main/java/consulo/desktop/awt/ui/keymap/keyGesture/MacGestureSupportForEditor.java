@@ -58,7 +58,7 @@ public class MacGestureSupportForEditor {
             AnActionEvent actionEvent = new AnActionEvent(null, dataContext, ActionPlaces.MAIN_MENU, presentation,
                                                           ActionManager.getInstance(),
                                                           0);
-            action.beforeActionPerformedUpdate(actionEvent);
+            ActionUpdateInvoker.updateSync(action, actionEvent);
 
             if (presentation.isEnabled()) {
               actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);

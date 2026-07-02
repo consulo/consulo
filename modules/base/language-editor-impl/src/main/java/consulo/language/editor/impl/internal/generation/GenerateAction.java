@@ -28,10 +28,12 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "Generate")
-public class GenerateAction extends DumbAwareAction {
+public class GenerateAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public GenerateAction() {
         super(ActionLocalize.actionGenerateText(), ActionLocalize.actionGenerateDescription());
     }
@@ -60,17 +62,21 @@ public class GenerateAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        if (ActionPlaces.isPopupPlace(e.getPlace())) {
-            e.getPresentation().setEnabledAndVisible(isEnabled(e));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        if (!e.hasData(Project.KEY) || !e.hasData(Editor.KEY)) {
+            return Coroutine.first(CodeExecution.run(() -> setEnabled(e, false)));
         }
-        else {
-            e.getPresentation().setEnabled(isEnabled(e));
-        }
+        return ActionGroupUtil.isGroupEmptyAsync(getGroup(), e)
+            .then(CodeExecution.consume(empty -> setEnabled(e, !empty)));
     }
 
-    private static boolean isEnabled(AnActionEvent e) {
-        return e.hasData(Project.KEY) && e.hasData(Editor.KEY) && !ActionGroupUtil.isGroupEmpty(getGroup(), e);
+    private static void setEnabled(AnActionEvent e, boolean enabled) {
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            e.getPresentation().setEnabledAndVisible(enabled);
+        }
+        else {
+            e.getPresentation().setEnabled(enabled);
+        }
     }
 
     private static DefaultActionGroup getGroup() {

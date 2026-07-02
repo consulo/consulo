@@ -642,7 +642,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return false;
     }
 
-    private class AddModuleAction extends AnAction implements DumbAware {
+    private class AddModuleAction extends LegacyDumbAwareAction {
         private final boolean myImport;
 
         public AddModuleAction(boolean anImport) {
@@ -659,7 +659,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         @RequiredUIAccess
         @Override
         public void update(AnActionEvent e) {
-            super.update(e);
             if (myImport) {
                 Presentation presentation = e.getPresentation();
                 presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions(true).isEmpty());

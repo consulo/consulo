@@ -211,7 +211,7 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
         myThreadList.setSelectedIndex(index);
     }
 
-    private class SortThreadsAction extends DumbAwareAction {
+    private class SortThreadsAction extends LegacyDumbAwareAction {
         private final Comparator<ThreadState> BY_TYPE = (o1, o2) -> {
             int s1 = getThreadStateCode(o1).ordinal();
             int s2 = getThreadStateCode(o2).ordinal();

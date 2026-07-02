@@ -30,6 +30,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -55,7 +56,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
+public abstract class BaseOpenInBrowserAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     private static final Logger LOG = Logger.getInstance(BaseOpenInBrowserAction.class);
 
     protected BaseOpenInBrowserAction(WebBrowser browser) {

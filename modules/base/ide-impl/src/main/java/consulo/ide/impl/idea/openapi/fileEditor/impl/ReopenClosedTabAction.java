@@ -21,8 +21,8 @@ import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import org.jspecify.annotations.Nullable;
@@ -33,7 +33,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "ReopenClosedTab")
-public class ReopenClosedTabAction extends AnAction {
+public class ReopenClosedTabAction extends LegacyAnAction {
     public ReopenClosedTabAction() {
         super(ActionLocalize.actionReopenclosedtabText());
     }

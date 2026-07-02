@@ -11,6 +11,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyAnAction;
 
 import javax.swing.*;
 
@@ -18,7 +19,7 @@ import javax.swing.*;
  * @author zajac
  * @since 2011-03-05
  */
-public class SwitchToReplace extends AnAction {
+public class SwitchToReplace extends LegacyAnAction {
     public SwitchToReplace(JComponent shortcutHolder) {
         AnAction replaceAction = ActionManager.getInstance().getAction(IdeActions.ACTION_REPLACE);
         if (replaceAction != null) {

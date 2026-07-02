@@ -7,7 +7,7 @@ import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
@@ -16,7 +16,7 @@ import consulo.ui.ex.action.Presentation;
  * @since 2012-02-14
  */
 @ActionImpl(id = "HideCoverage")
-public class HideCoverageInfoAction extends AnAction {
+public class HideCoverageInfoAction extends LegacyAnAction {
     public HideCoverageInfoAction() {
         super(
             ExecutionCoverageLocalize.actionHideCoverageText(),

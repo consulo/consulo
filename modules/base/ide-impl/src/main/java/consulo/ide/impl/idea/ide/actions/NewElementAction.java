@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
@@ -40,7 +39,7 @@ import java.util.function.Predicate;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "NewElement")
-public class NewElementAction extends AnAction implements DumbAware, PopupAction {
+public class NewElementAction extends LegacyDumbAwareAction implements PopupAction {
     private final ActionManager myActionManager;
 
     @Inject

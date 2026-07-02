@@ -35,6 +35,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.image.Image;
@@ -45,7 +46,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CopyReferenceActionBase extends DumbAwareAction {
+public abstract class CopyReferenceActionBase extends DumbAwareAction implements AnActionWithAsyncUpdate {
     protected CopyReferenceActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);

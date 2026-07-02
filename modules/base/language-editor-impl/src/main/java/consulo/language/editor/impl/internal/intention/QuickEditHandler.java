@@ -53,6 +53,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.IdeActions;
@@ -158,7 +159,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                 EditorActionHandler editorEscape =
                     EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ESCAPE);
                 if (!myAction.isShowInBalloon()) {
-                    new AnAction() {
+                    new LegacyAnAction() {
                         @Override
                         public void update(AnActionEvent e) {
                             Editor editor = e.getData(Editor.KEY);

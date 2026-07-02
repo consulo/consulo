@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -41,7 +40,7 @@ import java.util.Map;
  * @author anna
  * @since 2007-06-28
  */
-public class DumpIntentionsAction extends AnAction implements DumbAware {
+public class DumpIntentionsAction extends LegacyDumbAwareAction {
     public DumpIntentionsAction() {
         super("Dump Intentions");
     }

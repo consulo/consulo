@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author VISTALL
  * @since 2026-06-28
  */
-public abstract class AsyncToggleAction extends AnAction implements Toggleable {
+public abstract class AsyncToggleAction extends AnAction implements Toggleable, AnActionWithAsyncUpdate {
     public AsyncToggleAction() {
     }
 

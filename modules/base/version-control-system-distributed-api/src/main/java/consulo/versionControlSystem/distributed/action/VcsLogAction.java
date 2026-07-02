@@ -18,7 +18,7 @@ package consulo.versionControlSystem.distributed.action;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
@@ -31,7 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 
-public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAction {
+public abstract class VcsLogAction<Repo extends Repository> extends LegacyDumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {

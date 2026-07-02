@@ -7,9 +7,9 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
-public class ClearConsoleAction extends DumbAwareAction {
+public class ClearConsoleAction extends LegacyDumbAwareAction {
     public ClearConsoleAction() {
         super(
             ExecutionLocalize.clearAllFromConsoleActionName(),

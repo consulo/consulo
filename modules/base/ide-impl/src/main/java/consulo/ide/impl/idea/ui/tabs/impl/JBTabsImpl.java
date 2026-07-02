@@ -1995,7 +1995,7 @@ public abstract class JBTabsImpl extends JComponent
         return this;
     }
 
-    private abstract static class BaseNavigationAction extends AnAction {
+    private abstract static class BaseNavigationAction extends LegacyAnAction {
 
         private final ShadowAction myShadow;
         private final ActionManager myActionManager;

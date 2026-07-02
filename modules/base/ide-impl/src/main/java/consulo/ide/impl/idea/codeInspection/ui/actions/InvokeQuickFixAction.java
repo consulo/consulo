@@ -38,7 +38,7 @@ import java.util.List;
  * @author anna
  * @since 2006-01-11
  */
-public class InvokeQuickFixAction extends AnAction {
+public class InvokeQuickFixAction extends LegacyAnAction {
     private final InspectionResultsView myView;
 
     public InvokeQuickFixAction(InspectionResultsView view) {

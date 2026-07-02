@@ -15,13 +15,12 @@
  */
 package consulo.versionControlSystem.change.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -52,7 +51,7 @@ import java.util.stream.Stream;
  * @author yole
  * @since 2006-11-02
  */
-public abstract class ScheduleForAdditionAction extends AnAction implements DumbAware {
+public abstract class ScheduleForAdditionAction extends LegacyDumbAwareAction {
     private static final Set<String> ALLOWED_PLACES =
         Set.of(ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, ActionPlaces.CHANGES_VIEW_POPUP);
 

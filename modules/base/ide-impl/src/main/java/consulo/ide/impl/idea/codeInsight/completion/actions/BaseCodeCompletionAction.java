@@ -11,14 +11,14 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import java.awt.event.InputEvent;
 
 /**
  * @author peter
  */
-public abstract class BaseCodeCompletionAction extends DumbAwareAction implements HintManagerImpl.ActionToIgnore {
+public abstract class BaseCodeCompletionAction extends LegacyDumbAwareAction implements HintManagerImpl.ActionToIgnore {
     protected BaseCodeCompletionAction() {
         setEnabledInModalContext(true);
         setInjectedContext(true);

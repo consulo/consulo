@@ -501,7 +501,7 @@ class EventLogConsole {
         document.insertString(document.getTextLength(), s);
     }
 
-    public static class ClearLogAction extends DumbAwareAction {
+    public static class ClearLogAction extends LegacyDumbAwareAction {
         private EventLogConsole myConsole;
 
         public ClearLogAction(EventLogConsole console) {

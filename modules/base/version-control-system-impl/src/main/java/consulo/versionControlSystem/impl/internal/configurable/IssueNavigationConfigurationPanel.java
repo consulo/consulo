@@ -167,7 +167,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
             }
         });
 
-        builder.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
+        builder.add(new LegacyDumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -196,7 +196,7 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
             }
         });
 
-        builder.add(new DumbAwareAction(CommonLocalize.buttonEdit(), LocalizeValue.empty(), PlatformIconGroup.actionsEdit()) {
+        builder.add(new LegacyDumbAwareAction(CommonLocalize.buttonEdit(), LocalizeValue.empty(), PlatformIconGroup.actionsEdit()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {

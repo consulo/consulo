@@ -33,7 +33,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @ActionImpl(id = "ShowFilePath")
-public class ShowFilePathAction extends AnAction {
+public class ShowFilePathAction extends LegacyAnAction {
     private static final Logger LOG = Logger.getInstance(ShowFilePathAction.class);
 
     @UsedInPlugin

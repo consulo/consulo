@@ -15,11 +15,10 @@
  */
 package consulo.diff.internal;
 
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.EmptyAction;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
-public abstract class GoToChangePopupAction extends AnAction implements DumbAware {
+public abstract class GoToChangePopupAction extends LegacyDumbAwareAction {
     public GoToChangePopupAction() {
         setEnabledInModalContext(true);
         EmptyAction.setupAction(this, "GotoChangedFile", null);

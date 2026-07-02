@@ -1363,7 +1363,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         }
     }
 
-    private class ShowInFindToolWindowAction extends DumbAwareAction {
+    private class ShowInFindToolWindowAction extends LegacyDumbAwareAction {
 
         ShowInFindToolWindowAction() {
             super(
@@ -1592,7 +1592,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         }
     }
 
-    private class CompleteCommandAction extends DumbAwareAction {
+    private class CompleteCommandAction extends LegacyDumbAwareAction {
         @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {

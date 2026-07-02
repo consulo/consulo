@@ -10,12 +10,12 @@ import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
 @ActionImpl(id = "RemoteServers.DisconnectServer")
-public class RemoteServerDisconnectAction extends DumbAwareAction {
+public class RemoteServerDisconnectAction extends LegacyDumbAwareAction {
     public RemoteServerDisconnectAction() {
         super(RemoteServerLocalize.actionRemoteserversDisconnectserverText(), RemoteServerLocalize.actionRemoteserversDisconnectserverDescription(), PlatformIconGroup.actionsSuspend());
     }

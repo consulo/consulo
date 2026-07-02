@@ -30,14 +30,14 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Pack
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import java.util.Collections;
 
 /**
  * @author nik
  */
-public class InlineArtifactAction extends DumbAwareAction {
+public class InlineArtifactAction extends LegacyDumbAwareAction {
   private final ArtifactEditorEx myEditor;
 
   public InlineArtifactAction(ArtifactEditorEx editor) {

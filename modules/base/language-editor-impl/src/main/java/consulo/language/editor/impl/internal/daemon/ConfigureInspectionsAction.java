@@ -20,12 +20,12 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 /**
  * from kotlin
  */
-public class ConfigureInspectionsAction extends DumbAwareAction {
+public class ConfigureInspectionsAction extends LegacyDumbAwareAction {
     public ConfigureInspectionsAction() {
         super(DaemonLocalize.popupActionConfigureInspections());
     }

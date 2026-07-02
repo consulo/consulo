@@ -32,7 +32,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -51,7 +51,7 @@ import static consulo.util.lang.Pair.pair;
  * @author yole
  */
 @ActionImpl(id = "CreateLauncherScript")
-public class CreateLauncherScriptAction extends DumbAwareAction {
+public class CreateLauncherScriptAction extends LegacyDumbAwareAction {
     private static final Logger LOG = Logger.getInstance(CreateLauncherScriptAction.class);
     private static final String CONTENTS = "/Contents";
 

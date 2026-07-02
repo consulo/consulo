@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author yole
  */
 @ActionImpl(id = "ScrollTreeToCenter", shortcutFrom = @ActionRef(id = "EditorScrollToCenter"))
-public class ScrollTreeToCenterAction extends AnAction {
+public class ScrollTreeToCenterAction extends LegacyAnAction {
     public ScrollTreeToCenterAction() {
         super(ActionLocalize.actionScrolltreetocenterText());
     }

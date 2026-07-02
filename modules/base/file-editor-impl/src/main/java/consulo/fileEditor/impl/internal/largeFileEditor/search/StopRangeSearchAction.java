@@ -1,14 +1,13 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileEditor.impl.internal.largeFileEditor.search;
 
-import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionUpdateThread;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
-public final class StopRangeSearchAction extends AnAction implements DumbAware {
+public final class StopRangeSearchAction extends LegacyDumbAwareAction {
 
     private final RangeSearch myRangeSearch;
 

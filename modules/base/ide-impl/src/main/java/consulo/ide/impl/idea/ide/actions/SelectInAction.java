@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.platform.base.localize.ActionLocalize;
@@ -29,6 +28,7 @@ import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ActionImpl(id = "SelectIn")
-public class SelectInAction extends AnAction implements DumbAware {
+public class SelectInAction extends LegacyDumbAwareAction {
     public SelectInAction() {
         super(ActionLocalize.actionSelectinText(), ActionLocalize.actionSelectinText());
     }

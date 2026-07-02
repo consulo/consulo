@@ -29,7 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
@@ -37,7 +37,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class ConsoleExecuteAction extends DumbAwareAction {
+public class ConsoleExecuteAction extends LegacyDumbAwareAction {
     public static final String CONSOLE_EXECUTE_ACTION_ID = "Console.Execute";
 
     private final LanguageConsoleView myConsoleView;

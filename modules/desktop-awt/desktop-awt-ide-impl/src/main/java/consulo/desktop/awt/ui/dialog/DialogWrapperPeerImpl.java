@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.dialog;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
@@ -52,7 +51,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.touchBar.TouchBarController;
@@ -595,7 +594,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDisposeActions.add(() -> StackingPopupDispatcher.getInstance().restorePersistentPopups());
     }
 
-    private class AnCancelAction extends AnAction implements DumbAware {
+    private class AnCancelAction extends LegacyDumbAwareAction {
         @Override
         public void update(AnActionEvent e) {
             Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

@@ -150,7 +150,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             setTitle(component.getClass().getName());
 
             DefaultActionGroup actions = new DefaultActionGroup();
-            actions.addAction(new AnAction("Highlight") {
+            actions.addAction(new LegacyAnAction("Highlight") {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
@@ -165,7 +165,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
             actions.addSeparator();
 
-            actions.add(new DumbAwareAction("Refresh") {
+            actions.add(new LegacyDumbAwareAction("Refresh") {
                 @Override
                 @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {

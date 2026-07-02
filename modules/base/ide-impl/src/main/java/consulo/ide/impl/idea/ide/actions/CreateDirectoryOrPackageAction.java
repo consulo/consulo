@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.editor.util.IdeView;
@@ -40,8 +39,8 @@ import consulo.ui.HasValidator;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
@@ -53,7 +52,7 @@ import javax.swing.*;
 import java.util.function.Consumer;
 
 @ActionImpl(id = "NewDir")
-public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
+public class CreateDirectoryOrPackageAction extends LegacyDumbAwareAction {
     public CreateDirectoryOrPackageAction() {
         super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage());
     }

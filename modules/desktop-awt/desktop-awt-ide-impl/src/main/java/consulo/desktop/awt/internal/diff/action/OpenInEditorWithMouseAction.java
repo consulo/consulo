@@ -18,7 +18,6 @@ package consulo.desktop.awt.internal.diff.action;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,7 +32,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class OpenInEditorWithMouseAction extends AnAction implements DumbAware {
+public abstract class OpenInEditorWithMouseAction extends LegacyDumbAwareAction {
   
   private List<? extends Editor> myEditors = Collections.emptyList();
 

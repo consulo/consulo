@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.lang.customFolding;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
@@ -38,8 +37,8 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
@@ -53,7 +52,7 @@ import java.util.Set;
  * @author Rustam Vishnyakov
  */
 @ActionImpl(id = "GotoCustomRegion")
-public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
+public class GotoCustomRegionAction extends LegacyDumbAwareAction implements PopupAction {
     public GotoCustomRegionAction() {
         super(IdeLocalize.gotoCustomRegionMenuItem());
     }

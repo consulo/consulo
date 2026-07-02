@@ -126,7 +126,7 @@ final class TBPanelActionGroup extends TBPanel {
 
             boolean result;
             try {
-                result = !ActionImplUtil.performDumbAwareUpdate(action, event, false);
+                result = !ActionImplUtil.performDumbAwareUpdate(action, event);
             }
             catch (Throwable exc) {
                 continue;

@@ -92,7 +92,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         add(new ShowOnlyCleanupInspectionsAction());
     }
 
-    private class ResetFilterAction extends DumbAwareAction {
+    private class ResetFilterAction extends LegacyDumbAwareAction {
         public ResetFilterAction() {
             super("Reset Filter");
         }

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -33,8 +32,8 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -52,7 +51,7 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "TogglePresentationMode")
-public class TogglePresentationModeAction extends AnAction implements DumbAware {
+public class TogglePresentationModeAction extends LegacyDumbAwareAction {
     private static final Map<Object, Object> ourSavedValues = new LinkedHashMap<>();
     private static float ourSavedScaleFactor = JBUI.scale(1f);
     private static int ourSavedConsoleFontSize;

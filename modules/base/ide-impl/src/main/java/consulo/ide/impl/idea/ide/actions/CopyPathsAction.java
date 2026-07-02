@@ -2,11 +2,10 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -15,7 +14,7 @@ import java.awt.datatransfer.StringSelection;
 import static consulo.ui.ex.action.ActionPlaces.KEYBOARD_SHORTCUT;
 
 @ActionImpl(id = "CopyPaths")
-public class CopyPathsAction extends AnAction implements DumbAware {
+public class CopyPathsAction extends LegacyDumbAwareAction {
     public CopyPathsAction() {
         super(ActionLocalize.actionCopypathsText(), ActionLocalize.actionCopypathsDescription());
         setEnabledInModalContext(true);

@@ -24,7 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,7 +33,7 @@ import java.io.OutputStream;
  * @author egor
  */
 @ActionImpl(id = EOFAction.ACTION_ID)
-public class EOFAction extends DumbAwareAction {
+public class EOFAction extends LegacyDumbAwareAction {
     public static final String ACTION_ID = "SendEOF";
 
     public EOFAction() {

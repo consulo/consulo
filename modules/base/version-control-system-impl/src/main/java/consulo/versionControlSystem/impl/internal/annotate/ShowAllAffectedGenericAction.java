@@ -25,7 +25,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
@@ -47,7 +47,7 @@ import java.util.List;
  * @since 2011-03-16
  */
 @ActionImpl(id = VcsActions.ACTION_SHOW_ALL_AFFECTED)
-public class ShowAllAffectedGenericAction extends AnAction {
+public class ShowAllAffectedGenericAction extends LegacyAnAction {
     @Inject
     public ShowAllAffectedGenericAction() {
         super(

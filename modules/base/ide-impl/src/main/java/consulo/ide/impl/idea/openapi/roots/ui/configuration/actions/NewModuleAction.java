@@ -18,12 +18,11 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.module.creation.NewProjectDialog;
@@ -37,7 +36,7 @@ import consulo.util.concurrent.AsyncResult;
  * @since 2004-01-05
  */
 @ActionImpl(id = "NewModule")
-public class NewModuleAction extends AnAction implements DumbAware {
+public class NewModuleAction extends LegacyDumbAwareAction {
     public NewModuleAction() {
         super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription());
     }
@@ -81,7 +80,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 }

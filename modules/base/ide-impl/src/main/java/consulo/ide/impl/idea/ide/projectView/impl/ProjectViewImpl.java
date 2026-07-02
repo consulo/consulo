@@ -364,7 +364,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         return result;
     }
 
-    private class ChangeViewAction extends AnAction {
+    private class ChangeViewAction extends LegacyAnAction {
         private final String myId;
         private final @Nullable String mySubId;
 

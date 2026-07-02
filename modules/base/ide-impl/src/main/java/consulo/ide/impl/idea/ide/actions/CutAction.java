@@ -28,7 +28,7 @@ import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(id = IdeActions.ACTION_CUT)
-public class CutAction extends AnAction implements DumbAware {
+public class CutAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     public CutAction() {
         super(
             ActionLocalize.action$cutText(),

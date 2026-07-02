@@ -118,7 +118,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 @ActionImpl(id = "ShowUsages")
-public class ShowUsagesAction extends AnAction implements PopupAction {
+public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
     public static final String ID = "ShowUsages";
 
     public static int getUsagesPageSize() {

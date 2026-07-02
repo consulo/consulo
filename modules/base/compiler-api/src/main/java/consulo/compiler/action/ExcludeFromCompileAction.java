@@ -20,7 +20,7 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  * @author Eugene Zhuravlev
  * @since 2012-09-12
  */
-public abstract class ExcludeFromCompileAction extends AnAction {
+public abstract class ExcludeFromCompileAction extends LegacyAnAction {
     private final Project myProject;
 
     public ExcludeFromCompileAction(Project project) {

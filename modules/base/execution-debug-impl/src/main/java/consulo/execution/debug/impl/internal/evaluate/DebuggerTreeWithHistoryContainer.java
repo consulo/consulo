@@ -101,7 +101,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         return ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
     }
 
-    private class GoForwardAction extends AnAction {
+    private class GoForwardAction extends LegacyAnAction {
         public GoForwardAction() {
             super(CodeInsightLocalize.quickDefinitionForward(), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
         }
@@ -121,7 +121,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         }
     }
 
-    private class GoBackwardAction extends AnAction {
+    private class GoBackwardAction extends LegacyAnAction {
         public GoBackwardAction() {
             super(CodeInsightLocalize.quickDefinitionBack(), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
         }
@@ -141,7 +141,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
         }
     }
 
-    private class SetAsRootAction extends AnAction {
+    private class SetAsRootAction extends LegacyAnAction {
         private final Tree myTree;
 
         public SetAsRootAction(Tree tree) {

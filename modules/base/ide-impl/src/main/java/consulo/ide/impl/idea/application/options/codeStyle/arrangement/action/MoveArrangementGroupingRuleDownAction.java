@@ -21,9 +21,8 @@ import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementGroupingRulesControl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -32,7 +31,7 @@ import javax.swing.table.DefaultTableModel;
  * @since 2012-11-14
  */
 @ActionImpl(id = ArrangementConstants.GROUPING_RULE_MOVE_DOWN)
-public class MoveArrangementGroupingRuleDownAction extends AnAction implements DumbAware {
+public class MoveArrangementGroupingRuleDownAction extends LegacyDumbAwareAction {
     public MoveArrangementGroupingRuleDownAction() {
         super(
             ApplicationLocalize.arrangementActionRuleMoveDownText(),

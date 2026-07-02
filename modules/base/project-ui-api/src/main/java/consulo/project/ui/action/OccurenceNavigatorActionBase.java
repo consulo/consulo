@@ -40,7 +40,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
+abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     protected OccurenceNavigatorActionBase(
         LocalizeValue text,
         LocalizeValue description,

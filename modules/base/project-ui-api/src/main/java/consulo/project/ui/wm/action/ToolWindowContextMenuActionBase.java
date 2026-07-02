@@ -4,11 +4,12 @@ package consulo.project.ui.wm.action;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import org.jspecify.annotations.Nullable;
 
-public abstract class ToolWindowContextMenuActionBase extends AnAction {
+public abstract class ToolWindowContextMenuActionBase extends AnAction implements AnActionWithSyncUpdate {
     @Override
     @RequiredUIAccess
     public final void actionPerformed(AnActionEvent e) {

@@ -194,7 +194,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         }
         myAddExcludedRootActionButton = new AddExcludedRootActionButton();
         toolbarDecorator.addExtraAction(myAddExcludedRootActionButton);
-        toolbarDecorator.addExtraAction(new AnAction("Remove", null, PlatformIconGroup.generalRemove()) {
+        toolbarDecorator.addExtraAction(new LegacyAnAction("Remove", null, PlatformIconGroup.generalRemove()) {
             {
                 registerCustomShortcutSet(CommonShortcuts.getDelete(), null);
             }
@@ -541,7 +541,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         return roots;
     }
 
-    private class AddExcludedRootActionButton extends AnAction {
+    private class AddExcludedRootActionButton extends LegacyAnAction {
         public AddExcludedRootActionButton() {
             super("Exclude", null, PlatformIconGroup.modulesAddexcludedroot());
         }

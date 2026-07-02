@@ -15,13 +15,12 @@
  */
 package consulo.versionControlSystem.impl.internal.change.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
@@ -34,7 +33,7 @@ import java.util.Arrays;
 /**
  * @author yole
  */
-public class RollbackDialogAction extends AnAction implements DumbAware {
+public class RollbackDialogAction extends LegacyDumbAwareAction {
   public RollbackDialogAction() {
     ActionUtil.copyFrom(this, IdeActions.CHANGES_VIEW_REVERT);
   }

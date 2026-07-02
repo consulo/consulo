@@ -608,7 +608,7 @@ public class ScrollingUtil {
         installActions(table, UISettings.getInstance().CYCLE_SCROLLING);
     }
 
-    private abstract static class MyScrollingAction extends DumbAwareAction implements ScrollingAction {
+    private abstract static class MyScrollingAction extends LegacyDumbAwareAction implements ScrollingAction {
         private final JComponent myComponent;
 
         MyScrollingAction(JComponent component) {

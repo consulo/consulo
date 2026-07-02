@@ -1928,7 +1928,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
     }
 
-    private class MyEnterAction extends DumbAwareAction {
+    private class MyEnterAction extends LegacyDumbAwareAction {
         private final boolean myEnterAsOK;
 
         private MyEnterAction(boolean enterAsOK) {

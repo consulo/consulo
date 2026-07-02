@@ -549,7 +549,7 @@ public class SingleInspectionProfilePanel extends JPanel {
 
         actions.add(actionManager.createExpandAllAction(myTreeExpander, myTreeTable));
         actions.add(actionManager.createCollapseAllAction(myTreeExpander, myTreeTable));
-        actions.add(new DumbAwareAction(
+        actions.add(new LegacyDumbAwareAction(
             LocalizeValue.localizeTODO("Reset to Empty"),
             LocalizeValue.localizeTODO("Reset to empty"),
             PlatformIconGroup.generalReset()

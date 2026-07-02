@@ -19,7 +19,7 @@ import consulo.application.util.registry.Registry;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.Collections;
 
 //@ActionImpl(id = "Vcs.Show.Graph.History")
-public class ShowGraphHistoryAction extends DumbAwareAction {
+public class ShowGraphHistoryAction extends LegacyDumbAwareAction {
     public ShowGraphHistoryAction() {
         super(
             VersionControlSystemLogLocalize.actionShowGraphHistoryText(),

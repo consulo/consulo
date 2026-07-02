@@ -9,14 +9,14 @@ import consulo.execution.debug.stream.ChainStatus;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author Vitaliy.Bibaev
  */
 @ActionImpl(id = "StreamTracerAction")
-public class TraceStreamAction extends AnAction {
+public class TraceStreamAction extends LegacyAnAction {
     public TraceStreamAction() {
         super(XDebuggerLocalize.actionStreamtraceractionText(), XDebuggerLocalize.actionStreamtraceractionText(), ExecutionDebugIconGroup.actionTracestream());
     }

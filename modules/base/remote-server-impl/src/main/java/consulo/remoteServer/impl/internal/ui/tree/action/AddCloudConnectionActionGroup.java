@@ -45,7 +45,7 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         return actions;
     }
 
-    private static class AddCloudConnectionAction extends DumbAwareAction {
+    private static class AddCloudConnectionAction extends LegacyDumbAwareAction {
         private final ServerType<?> myServerType;
 
         AddCloudConnectionAction(ServerType<?> serverType) {

@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.impl.internal.wm.action;
 
-import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -23,7 +22,7 @@ import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -36,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class ResizeToolWindowAction extends AnAction implements DumbAware {
+public abstract class ResizeToolWindowAction extends LegacyDumbAwareAction {
     private ToolWindow myLastWindow;
     private ToolWindowManager myLastManager;
 

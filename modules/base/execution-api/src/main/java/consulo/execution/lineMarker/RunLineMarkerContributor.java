@@ -28,6 +28,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -75,7 +76,7 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
     DataContext parent = DataManager.getInstance().getDataContext();
     DataContext dataContext = DataContext.builder().parent(parent).add(PsiElement.KEY, element).build();
     AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.STATUS_BAR_PLACE, dataContext);
-    action.update(event);
+    ActionUpdateInvoker.updateSync(action, event);
     Presentation presentation = event.getPresentation();
     return presentation.isEnabled() && presentation.isVisible() ? presentation.getText() : null;
   }

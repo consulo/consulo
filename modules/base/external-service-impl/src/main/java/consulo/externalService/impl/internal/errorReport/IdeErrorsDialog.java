@@ -20,7 +20,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.dumb.DumbAware;
 import consulo.application.internal.MessagePool;
 import consulo.application.internal.MessagePoolListener;
 import consulo.application.progress.ProgressIndicator;
@@ -298,7 +297,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         myAttachmentWarningPanel.add(myAttachmentWarningLabel, BorderLayout.EAST);
     }
 
-    private class ForwardAction extends AnAction implements DumbAware {
+    private class ForwardAction extends LegacyDumbAwareAction {
         public ForwardAction() {
             super(LocalizeValue.localizeTODO("Next"), LocalizeValue.empty(), PlatformIconGroup.actionsForward());
             AnAction forward = ActionManager.getInstance().getAction("Forward");
@@ -320,7 +319,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
     }
 
-    private class BackAction extends AnAction implements DumbAware {
+    private class BackAction extends LegacyDumbAwareAction {
         public BackAction() {
             super(LocalizeValue.localizeTODO("Previous"), LocalizeValue.empty(), PlatformIconGroup.actionsBack());
             AnAction back = ActionManager.getInstance().getAction("Back");

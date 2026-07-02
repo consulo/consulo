@@ -682,10 +682,10 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         comboComponent.setOpaque(false);
         DataContext dataContext = SimpleDataContext.getProjectContext(myProject);
         AnActionEvent event = AnActionEvent.createFromAnAction(changeAction, null, ActionPlaces.UNKNOWN, dataContext);
-        changeAction.update(event);
+        ActionUpdateInvoker.updateSync(changeAction, event);
         panel.revalidate();
         if (!editor) {
-            myResetRunnables.add(() -> changeAction.update(event));
+            myResetRunnables.add(() -> ActionUpdateInvoker.updateSync(changeAction, event));
         }
         return panel;
     }
