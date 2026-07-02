@@ -56,12 +56,6 @@ public abstract class CodeInsightAction extends AnAction implements AnActionWith
         actionPerformedImpl(project, editor);
     }
 
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         return dataContext.getData(Editor.KEY);
     }

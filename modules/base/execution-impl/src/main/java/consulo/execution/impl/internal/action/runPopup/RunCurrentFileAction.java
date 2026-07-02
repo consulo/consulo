@@ -22,12 +22,6 @@ public class RunCurrentFileAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
-    @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);

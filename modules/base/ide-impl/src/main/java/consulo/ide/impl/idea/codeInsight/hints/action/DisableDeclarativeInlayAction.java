@@ -10,7 +10,6 @@ import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 
@@ -18,12 +17,6 @@ import consulo.ui.ex.action.LegacyDumbAwareAction;
 public class DisableDeclarativeInlayAction extends LegacyDumbAwareAction {
     public DisableDeclarativeInlayAction() {
         super(CodeEditorLocalize.inlayHintsDeclarativeDisableActionNoProviderText());
-    }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override

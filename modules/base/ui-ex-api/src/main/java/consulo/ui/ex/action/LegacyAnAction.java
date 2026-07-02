@@ -52,4 +52,8 @@ public abstract class LegacyAnAction extends AnAction implements AnActionWithSyn
     public LegacyAnAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
+
+    @Override
+    public void update(AnActionEvent e) {
+    }
 }

@@ -8,14 +8,15 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
 @ActionImpl(id = "RemoteServers.DisconnectServer")
-public class RemoteServerDisconnectAction extends LegacyDumbAwareAction {
+public class RemoteServerDisconnectAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public RemoteServerDisconnectAction() {
         super(RemoteServerLocalize.actionRemoteserversDisconnectserverText(), RemoteServerLocalize.actionRemoteserversDisconnectserverDescription(), PlatformIconGroup.actionsSuspend());
     }
@@ -36,10 +37,5 @@ public class RemoteServerDisconnectAction extends LegacyDumbAwareAction {
         if (connection != null) {
             connection.disconnect();
         }
-    }
-
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

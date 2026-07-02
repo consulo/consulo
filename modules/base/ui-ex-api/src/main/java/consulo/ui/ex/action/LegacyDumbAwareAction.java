@@ -52,4 +52,8 @@ public abstract class LegacyDumbAwareAction extends DumbAwareAction implements A
     public LegacyDumbAwareAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
+
+    @Override
+    public void update(AnActionEvent e) {
+    }
 }

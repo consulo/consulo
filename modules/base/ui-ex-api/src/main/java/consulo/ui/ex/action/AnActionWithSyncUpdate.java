@@ -15,15 +15,17 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.DeprecationInfo;
+
 /**
  * @author VISTALL
  * @since 2026-06-30
  */
-@Deprecated
 public interface AnActionWithSyncUpdate {
-    default void update(AnActionEvent e) {
-    }
+    void update(AnActionEvent e);
 
+    @Deprecated
+    @DeprecationInfo("Always will be runs in background")
     default ActionUpdateThread getActionUpdateThread() {
         return ActionUpdateThread.BGT;
     }

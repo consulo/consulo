@@ -8,8 +8,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.remoteServer.impl.internal.ui.tree.DeploymentNode;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 
 import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.getDeploymentTarget;
@@ -18,7 +19,7 @@ import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.get
  * @author michael.golubev
  */
 @ActionImpl(id = "Servers.Undeploy", parents = @ActionParentRef(@ActionRef(id = "RunDashboardContentToolbar")))
-public class UndeployAction extends LegacyDumbAwareAction {
+public class UndeployAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public UndeployAction() {
         super(RemoteServerLocalize.actionServersUndeployText(), RemoteServerLocalize.actionServersUndeployDescription(), PlatformIconGroup.nodesUndeploy());
     }
@@ -38,11 +39,5 @@ public class UndeployAction extends LegacyDumbAwareAction {
         if (node != null) {
             node.undeploy();
         }
-    }
-
-    @Override
-    
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

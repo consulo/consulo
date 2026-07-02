@@ -45,7 +45,7 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
         return actions;
     }
 
-    private static class AddCloudConnectionAction extends LegacyDumbAwareAction {
+    private static class AddCloudConnectionAction extends DumbAwareAction implements AnActionWithSyncUpdate {
         private final ServerType<?> myServerType;
 
         AddCloudConnectionAction(ServerType<?> serverType) {
@@ -66,12 +66,6 @@ public class AddCloudConnectionActionGroup extends ActionGroup implements DumbAw
             else {
                 e.getPresentation().setText(myServerType.getPresentableName());
             }
-        }
-
-        @Override
-        
-        public ActionUpdateThread getActionUpdateThread() {
-            return ActionUpdateThread.EDT;
         }
 
         @Override

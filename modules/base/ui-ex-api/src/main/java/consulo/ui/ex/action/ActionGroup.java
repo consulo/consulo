@@ -193,6 +193,10 @@ public abstract class ActionGroup extends AnAction implements AnActionWithSyncUp
     public void actionPerformed(AnActionEvent e) {
     }
 
+    @Override
+    public void update(AnActionEvent e) {
+    }
+
     /**
      * Returns the type of the group.
      *

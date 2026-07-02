@@ -6,7 +6,6 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.remoteServer.impl.internal.ui.tree.DeploymentNode;
 import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 
@@ -37,11 +36,5 @@ public class DeployWithDebugAction extends LegacyDumbAwareAction {
         if (node != null) {
             node.deployWithDebug();
         }
-    }
-
-    @Override
-    
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 }

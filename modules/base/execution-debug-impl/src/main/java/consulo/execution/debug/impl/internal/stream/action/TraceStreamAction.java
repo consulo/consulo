@@ -8,7 +8,8 @@ import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.stream.ChainStatus;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -16,7 +17,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author Vitaliy.Bibaev
  */
 @ActionImpl(id = "StreamTracerAction")
-public class TraceStreamAction extends LegacyAnAction {
+public class TraceStreamAction extends AnAction implements AnActionWithSyncUpdate {
     public TraceStreamAction() {
         super(XDebuggerLocalize.actionStreamtraceractionText(), XDebuggerLocalize.actionStreamtraceractionText(), ExecutionDebugIconGroup.actionTracestream());
     }
@@ -59,13 +60,6 @@ public class TraceStreamAction extends LegacyAnAction {
             }
         }
     }
-
-    
-    @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
-    }
-
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {

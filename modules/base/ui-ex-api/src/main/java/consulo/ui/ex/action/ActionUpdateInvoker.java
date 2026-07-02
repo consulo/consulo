@@ -58,7 +58,7 @@ public final class ActionUpdateInvoker {
                 }));
             }
             return Coroutine.first(CodeExecution.<Object, Object>apply(input -> {
-                Application.get().runReadAction(() -> sync.update(e));
+                sync.update(e);
                 return input;
             }));
         }
@@ -74,6 +74,7 @@ public final class ActionUpdateInvoker {
         }
 
         if (action instanceof AnActionWithUIUpdate atUI) {
+            UIAccess.assertIsUIThread();
             atUI.updateAtUI(e);
             return;
         }
