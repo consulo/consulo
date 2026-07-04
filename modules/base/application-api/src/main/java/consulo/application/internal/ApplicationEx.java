@@ -18,10 +18,12 @@ package consulo.application.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
+import java.util.concurrent.atomic.AtomicBoolean;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
@@ -63,6 +65,38 @@ public interface ApplicationEx extends Application {
      * @see #runWriteAction(Runnable)
      */
     boolean isWriteActionPending();
+
+    /**
+     * Runs the action immediately when no write action is pending or in progress, otherwise defers
+     * it until the write action queue is processed. The lock signals the continuation - the UI
+     * thread queue is never used for the waiting.
+     * <p>
+     * The action may run on the calling thread (immediate case) or on the thread which finishes the
+     * write action, so it must be cheap and thread-agnostic (e.g. resubmitting a task to an executor).
+     */
+    default void runWhenWriteActionIsCompleted(Runnable action) {
+        if (!isWriteActionPending() && !isWriteActionInProgress()) {
+            action.run();
+            return;
+        }
+
+        AtomicBoolean executed = new AtomicBoolean();
+        ApplicationListener listener = new ApplicationListener() {
+            @Override
+            public void afterWriteActionFinished(Object writeAction) {
+                if (!isWriteActionPending() && !isWriteActionInProgress() && executed.compareAndSet(false, true)) {
+                    removeApplicationListener(this);
+                    action.run();
+                }
+            }
+        };
+        addApplicationListener(listener);
+        // the write action might have finished between the check above and the listener registration
+        if (!isWriteActionPending() && !isWriteActionInProgress() && executed.compareAndSet(false, true)) {
+            removeApplicationListener(listener);
+            action.run();
+        }
+    }
 
     default AccessToken startSaveBlock() {
         doNotSave();

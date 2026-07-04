@@ -139,7 +139,10 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   }
 
   private void invokeLater(Runnable runnable) {
-    myApplication.invokeLaterOnWriteThread(runnable, myApplication.getAnyModalityState(), myApplication.getDisposed());
+    // first wait for the write action queue to be processed (signaled by the lock, without occupying
+    // the UI thread queue), and only then post the cheap reschedule runnable to the write thread
+    ((ApplicationEx)myApplication).runWhenWriteActionIsCompleted(
+      () -> myApplication.invokeLaterOnWriteThread(runnable, myApplication.getAnyModalityState(), myApplication.getDisposed()));
   }
 
   @Override
