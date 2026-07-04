@@ -15,17 +15,19 @@
  */
 package consulo.ide.navigationToolbar;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.DataSnapshot;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -36,22 +38,36 @@ import java.util.function.Predicate;
  * @author anna
  * @since 2008-02-04
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface NavBarModelExtension {
-    @Nullable String getPresentableText(Object object);
+@Deprecated
+public interface NavBarModelExtension extends consulo.language.ui.navigationBar.NavBarModelExtension {
+    default @Nullable Image getIcon(Object object) {
+        return null;
+    }
+
+    @Nullable
+    String getPresentableText(Object object);
 
     default @Nullable String getPresentableText(Object object, boolean forPopup) {
         return getPresentableText(object);
     }
 
-    @Nullable PsiElement getParent(PsiElement psiElement);
+    default @Nullable PsiElement getParent(PsiElement psiElement) {
+        return null;
+    }
 
-    @Nullable PsiElement adjustElement(PsiElement psiElement);
+    default @Nullable PsiElement adjustElement(PsiElement psiElement) {
+        return psiElement;
+    }
 
-    Collection<VirtualFile> additionalRoots(Project project);
+    default Collection<VirtualFile> additionalRoots(Project project) {
+        return List.of();
+    }
 
     default @Nullable Object getData(Key<?> dataId, DataProvider provider) {
         return null;
+    }
+
+    default void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
     }
 
     default @Nullable String getPopupMenuGroup(DataProvider provider) {
@@ -68,5 +84,9 @@ public interface NavBarModelExtension {
 
     default boolean normalizeChildren() {
         return true;
+    }
+
+    default @Nullable Boolean shouldExpandOnClick(PsiElement psiElement) {
+        return null;
     }
 }

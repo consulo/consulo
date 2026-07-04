@@ -15,11 +15,14 @@
  */
 package consulo.virtualFileSystem.status;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author mike
  */
+@TopicAPI(ComponentScope.PROJECT)
 public interface FileStatusListener {
   /**
    * Indicates that some file statuses were changed. On this event client should recalculate all statuses it's dependent on.

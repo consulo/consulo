@@ -73,7 +73,6 @@ public abstract class XDebuggerActionBase extends LegacyAnAction {
         return project != null && isEnabled(project, e);
     }
 
-    
     protected abstract DebuggerActionHandler getHandler();
 
     private boolean isEnabled(Project project, AnActionEvent event) {

@@ -57,6 +57,8 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.execution.debug.api;
     requires consulo.builtin.web.server.api;
     requires consulo.color.scheme.ui.api;
+    requires consulo.navigation.bar.api;
+    requires consulo.navigation.bar.impl;
 
     // TODO remove
     requires gnu.trove;

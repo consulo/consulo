@@ -59,6 +59,8 @@
                 <include>consulo:consulo-virtual-file-system-http-impl</include>
                 <include>consulo:consulo-datacontext-api</include>
                 <include>consulo:consulo-navigation-api</include>
+                <include>consulo:consulo-navigation-bar-api</include>
+                <include>consulo:consulo-navigation-bar-impl</include>
                 <include>consulo:consulo-module-api</include>
                 <include>consulo:consulo-index-io</include>
                 <include>consulo:consulo-file-chooser-api</include>
@@ -73,6 +75,7 @@
                 <include>consulo:consulo-ui-ex-api</include>
                 <include>consulo:consulo-configurable-api</include>
                 <include>consulo:consulo-language-api</include>
+                <include>consulo:consulo-language-ui-api</include>
                 <include>consulo:consulo-language-duplicate-analysis-api</include>
                 <include>consulo:consulo-code-editor-api</include>
                 <include>consulo:consulo-process-api</include>

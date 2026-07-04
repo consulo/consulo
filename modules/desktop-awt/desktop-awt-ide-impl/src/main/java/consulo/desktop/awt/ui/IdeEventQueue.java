@@ -661,7 +661,7 @@ public class IdeEventQueue extends EventQueue {
 
     @RequiredUIAccess
     public void _dispatchEvent(AWTEvent e) {
-        if (myAsyncInputDispatchCount > 0 && e instanceof KeyEvent && !myHeldKeyEvents.contains(e)) {
+        if (myAsyncInputDispatchCount > 0 && e instanceof KeyEvent) {
             myHeldKeyEvents.add((KeyEvent) e);
             return;
         }
@@ -874,8 +874,10 @@ public class IdeEventQueue extends EventQueue {
     }
 
     private void flushHeldKeyEvents() {
+        // repost instead of dispatching inline: keeps the chronological order relative to the action
+        // which has just been performed, and lets a modal event pump started by that action deliver them
         while (myAsyncInputDispatchCount == 0 && !myHeldKeyEvents.isEmpty()) {
-            _dispatchEvent(myHeldKeyEvents.poll());
+            postEvent(myHeldKeyEvents.poll());
         }
     }
 

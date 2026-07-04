@@ -20,11 +20,9 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
-import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -34,14 +32,13 @@ import java.util.List;
  * @since 2005-03-03
  */
 @ActionImpl(id = "AddAllToFavorites")
-public class AddAllToFavoritesActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
+public class AddAllToFavoritesActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
     public AddAllToFavoritesActionGroup() {
         super(ActionLocalize.groupAddalltofavoritesText());
         setPopup(true);
     }
 
     @Override
-    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
             return AnAction.EMPTY_ARRAY;
@@ -68,7 +65,8 @@ public class AddAllToFavoritesActionGroup extends ActionGroup implements AnActio
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> presentation.setEnabled(AddToFavoritesAction.canCreateNodes(e)))
+            .toCoroutine();
     }
 }

@@ -171,7 +171,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
       public void fileStatusChanged(VirtualFile virtualFile) {
         fileStatusesChanged();
       }
-    });
+    }, project);
   }
 
   private void clearInvalidFiles() {

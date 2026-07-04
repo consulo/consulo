@@ -128,7 +128,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
         myShowOnlyFilteredItems = VcsConfiguration.getInstance(myProject).UPDATE_FILTER_BY_SCOPE;
 
         myFileStatusManager = FileStatusManager.getInstance(myProject);
-        myFileStatusManager.addFileStatusListener(myFileStatusListener);
+        myFileStatusManager.addFileStatusListener(myFileStatusListener, this);
         createTree();
         init();
         myTreeExpander = new DefaultTreeExpander(myTree);
@@ -143,10 +143,6 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     @Override
     public void dispose() {
         Disposer.dispose(myRoot);
-        if (myFileStatusListener != null) {
-            myFileStatusManager.removeFileStatusListener(myFileStatusListener);
-            myFileStatusListener = null;
-        }
     }
 
     public void setCanGroupByChangeList(boolean canGroupByChangeList) {

@@ -252,9 +252,10 @@ public final class IdeMouseEventDispatcher {
         fillActionsList(c, shortcut, IdeKeyEventDispatcher.isModalContext(c));
 
         if (ActionRunnerAsync.ENABLED) {
+            boolean processed = false;
             if (!myActions.isEmpty()) {
                 DataContext dataContext = DataManager.getInstance().getDataContext(c);
-                IdeEventQueue.getInstance().getKeyEventDispatcher().processAction(
+                processed = IdeEventQueue.getInstance().getKeyEventDispatcher().processAction(
                     e,
                     ActionPlaces.MOUSE_SHORTCUT,
                     dataContext,
@@ -262,6 +263,12 @@ public final class IdeMouseEventDispatcher {
                     newMouseActionProcessor(modifiers),
                     myPresentationFactory
                 );
+            }
+            if (processed) {
+                // the original event must not reach the component: either the action will be performed,
+                // or an event copy will be re-dispatched when no action turns out to be enabled
+                e.consume();
+                return true;
             }
             return e.getButton() > 3;
         }

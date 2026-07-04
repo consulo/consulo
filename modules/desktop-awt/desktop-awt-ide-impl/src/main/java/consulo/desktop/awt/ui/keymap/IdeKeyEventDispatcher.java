@@ -18,7 +18,10 @@ package consulo.desktop.awt.ui.keymap;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
+import consulo.logging.Logger;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -57,6 +60,9 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.concurrent.coroutine.CoroutineException;
+
+import java.util.concurrent.CompletionException;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.util.collection.ContainerUtil;
@@ -85,6 +91,8 @@ import java.util.concurrent.TimeUnit;
  * @author Vladimir Kondratyev
  */
 public final class IdeKeyEventDispatcher implements Disposable {
+    private static final Logger LOG = Logger.getInstance(IdeKeyEventDispatcher.class);
+
     private KeyStroke myFirstKeyStroke;
     /**
      * When we "dispatch" key event via keymap, i.e. when registered action has been executed
@@ -689,19 +697,34 @@ public final class IdeKeyEventDispatcher implements Disposable {
         List<AnAction> sorted = new ArrayList<>(actions);
         sorted.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
 
+        Project project = context.getData(Project.KEY);
+        boolean dumb = project != null && DumbService.getInstance(project).isDumb();
+
         int index = 0;
         for (; index < sorted.size(); index++) {
             AnAction action = sorted.get(index);
             if (!(action instanceof AnActionWithUIUpdate atUI)) {
                 break;
             }
+            if (dumb && !action.isDumbAware()) {
+                continue;
+            }
             Presentation presentation = presentationFactory.getPresentation(action);
             AnActionEvent actionEvent = processor.createEvent(e, context, place, presentation, ActionManager.getInstance());
-            atUI.updateAtUI(actionEvent);
+            try (AccessToken ignored = ProhibitAWTEvents.start("update")) {
+                atUI.updateAtUI(actionEvent);
+            }
+            catch (IndexNotReadyException ignored) {
+                continue;
+            }
             if (presentation.isEnabled()) {
                 ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
                 processor.onUpdatePassed(e, action, actionEvent);
                 actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+                Component component = actionEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+                if (component != null && !component.isShowing()) {
+                    return true;
+                }
                 processor.performAction(e, action, actionEvent);
                 actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
                 return true;
@@ -734,29 +757,79 @@ public final class IdeKeyEventDispatcher implements Disposable {
         PresentationFactory presentationFactory
     ) {
         if (index >= actions.size()) {
-            releaseUnhandledEvent(e, releaseTarget);
-            IdeEventQueue.getInstance().endAsyncInputDispatch();
+            try {
+                releaseUnhandledEvent(e, releaseTarget);
+            }
+            finally {
+                IdeEventQueue.getInstance().endAsyncInputDispatch();
+            }
             return;
         }
 
-        AnAction action = actions.get(index);
-        Presentation presentation = presentationFactory.getPresentation(action);
-        AnActionEvent actionEvent = processor.createEvent(e, context, place, presentation, ActionManager.getInstance());
-        UIAccess uiAccess = UIAccess.current();
+        AnAction action;
+        Presentation presentation;
+        AnActionEvent actionEvent;
+        UIAccess uiAccess;
+        try {
+            action = actions.get(index);
+            presentation = presentationFactory.getPresentation(action);
+            actionEvent = processor.createEvent(e, context, place, presentation, ActionManager.getInstance());
+            uiAccess = UIAccess.current();
+        }
+        catch (Throwable t) {
+            IdeEventQueue.getInstance().endAsyncInputDispatch();
+            throw t;
+        }
 
-        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, true).whenCompleteAsync((enabled, throwable) -> {
-            if (throwable == null && Boolean.TRUE.equals(enabled)) {
-                ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-                processor.onUpdatePassed(e, action, actionEvent);
-                actionManager.fireBeforeActionPerformed(action, actionEvent.getDataContext(), actionEvent);
-                processor.performAction(e, action, actionEvent);
-                actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
-                IdeEventQueue.getInstance().endAsyncInputDispatch();
+        AnAction finalAction = action;
+        AnActionEvent finalActionEvent = actionEvent;
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, false).whenCompleteAsync((enabled, throwable) -> {
+            IdeEventQueue queue = IdeEventQueue.getInstance();
+            boolean holdReleased = false;
+            try {
+                if (throwable != null) {
+                    logUpdateFailure(finalAction, throwable);
+                }
+                if (throwable == null && Boolean.TRUE.equals(enabled)) {
+                    ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+                    processor.onUpdatePassed(e, finalAction, finalActionEvent);
+                    actionManager.fireBeforeActionPerformed(finalAction, finalActionEvent.getDataContext(), finalActionEvent);
+                    Component component = finalActionEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+                    if (component != null && !component.isShowing()) {
+                        holdReleased = true;
+                        queue.endAsyncInputDispatch();
+                        return;
+                    }
+                    // release the input hold BEFORE performing: a modal dialog opened by the action must
+                    // receive keyboard events, and the held events are reposted behind this action anyway
+                    holdReleased = true;
+                    queue.endAsyncInputDispatch();
+                    processor.performAction(e, finalAction, finalActionEvent);
+                    actionManager.fireAfterActionPerformed(finalAction, finalActionEvent.getDataContext(), finalActionEvent);
+                }
+                else {
+                    holdReleased = true; // the next step takes the ownership of the input hold
+                    performFirstEnabledAsync(actions, index + 1, e, place, context, releaseTarget, processor, presentationFactory);
+                }
             }
-            else {
-                performFirstEnabledAsync(actions, index + 1, e, place, context, releaseTarget, processor, presentationFactory);
+            catch (Throwable t) {
+                if (!holdReleased) {
+                    queue.endAsyncInputDispatch();
+                }
+                LOG.error(t);
             }
         }, uiAccess);
+    }
+
+    private static void logUpdateFailure(AnAction action, Throwable throwable) {
+        Throwable cause = throwable;
+        while ((cause instanceof CompletionException || cause instanceof CoroutineException) && cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        if (cause instanceof ProcessCanceledException) {
+            return;
+        }
+        LOG.warn("Action update failed: " + action.getClass().getName(), cause);
     }
 
     @RequiredUIAccess

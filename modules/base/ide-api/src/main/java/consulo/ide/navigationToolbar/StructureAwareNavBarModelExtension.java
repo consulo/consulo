@@ -16,190 +16,48 @@
 package consulo.ide.navigationToolbar;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ui.UISettings;
-import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.fileEditor.structureView.StructureViewBuilder;
-import consulo.fileEditor.structureView.StructureViewModel;
-import consulo.fileEditor.structureView.StructureViewTreeElement;
-import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.tree.NodeProvider;
-import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
-import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.ref.SoftReference;
-
 import org.jspecify.annotations.Nullable;
-import java.util.Arrays;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-/**
- * from kotlin
- */
-public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarModelExtension {
-  private @Nullable SoftReference<PsiFile> currentFile;
-  private @Nullable SoftReference<StructureViewModel> currentFileStructure;
-  private long currentFileModCount = -1;
+@Deprecated
+public abstract class StructureAwareNavBarModelExtension extends consulo.language.editor.ui.navigationBar.StructureAwareNavBarModelExtension {
+    protected abstract Language getLanguage();
 
-  
-  protected abstract Language getLanguage();
-
-  
-  protected List<NodeProvider<?>> getApplicableNodeProviders() {
-    return Collections.emptyList();
-  }
-
-  protected boolean acceptParentFromModel(PsiElement psiElement) {
-    return true;
-  }
-
-  @Override
-  @RequiredReadAction
-  public PsiElement getLeafElement(DataContext dataContext) {
-    if (UISettings.getInstance().getShowMembersInNavigationBar()) {
-      PsiFile psiFile = dataContext.getData(PsiFile.KEY);
-      Editor editor = dataContext.getData(Editor.KEY);
-      if (psiFile == null || editor == null) return null;
-      PsiElement psiElement = psiFile.findElementAt(editor.getCaretModel().getOffset());
-      if (psiElement != null && psiElement.getLanguage() == getLanguage()) {
-        StructureViewModel model = buildStructureViewModel(psiFile, editor);
-        if (model != null) {
-          Object currentEditorElement = model.getCurrentEditorElement();
-          if (currentEditorElement instanceof PsiElement) {
-            return ((PsiElement)currentEditorElement).getOriginalElement();
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  @Override
-  @RequiredReadAction
-  public boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
-    if (UISettings.getInstance().getShowMembersInNavigationBar()) {
-      if (object instanceof PsiElement) {
-        if (((PsiElement)object).getLanguage() == getLanguage()) {
-          StructureViewModel model = buildStructureViewModel(((PsiElement)object).getContainingFile(), null);
-          if (model != null) {
-            return processStructureViewChildren(model.getRoot(), object, processor);
-          }
-        }
-      }
-    }
-    return super.processChildren(object, rootElement, processor);
-  }
-
-  @Override
-  @RequiredReadAction
-  public @Nullable PsiElement getParent(PsiElement psiElement) {
-    if (psiElement.getLanguage() == getLanguage()) {
-      PsiFile containingFile = psiElement.getContainingFile();
-      if (containingFile == null) {
-        return null;
-      }
-
-      StructureViewModel model = buildStructureViewModel(containingFile, null);
-      if (model != null) {
-        PsiElement parentInModel = findParentInModel(model.getRoot(), psiElement);
-        if(acceptParentFromModel(parentInModel)) {
-          return parentInModel;
-        }
-      }
-    }
-    return super.getParent(psiElement);
-  }
-
-  @Override
-  public boolean normalizeChildren() {
-    return false;
-  }
-
-  @RequiredReadAction
-  private @Nullable PsiElement findParentInModel(StructureViewTreeElement root, PsiElement psiElement) {
-    for (TreeElement child : childrenFromNodeAndProviders(root)) {
-      if(child instanceof StructureViewTreeElement) {
-        if(Comparing.equal(((StructureViewTreeElement)child).getValue(), psiElement)) {
-          return ObjectUtil.tryCast(root.getValue(), PsiElement.class);
-        }
-        PsiElement target = findParentInModel((StructureViewTreeElement)child, psiElement);
-        if(target != null) {
-          return target;
-        }
-      }
+    protected List<NodeProvider<?>> getApplicableNodeProviders() {
+        return Collections.emptyList();
     }
 
-    return null;
-  }
-
-  @RequiredReadAction
-  private boolean processStructureViewChildren(StructureViewTreeElement parent, Object object, Predicate<Object> processor) {
-    List<TreeElement> children = childrenFromNodeAndProviders(parent);
-
-    boolean result = true;
-    if (Comparing.equal(parent.getValue(), object)) {
-      for (TreeElement child : children) {
-        if (child instanceof StructureViewTreeElement) {
-          if (!processor.test(((StructureViewTreeElement)child).getValue())) {
-            result = false;
-          }
-        }
-      }
-
-    }
-    else {
-      for (TreeElement child : children) {
-        if (child instanceof StructureViewTreeElement) {
-          if (!processStructureViewChildren((StructureViewTreeElement)child, object, processor)) {
-            result = false;
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  @RequiredReadAction
-  private List<TreeElement> childrenFromNodeAndProviders(StructureViewTreeElement parent) {
-    List<TreeElement> children;
-    if (parent instanceof PsiTreeElementBase) {
-      children = ((PsiTreeElementBase)parent).getChildrenWithoutCustomRegions();
-    }
-    else {
-      children = Arrays.asList(parent.getChildren());
+    protected boolean acceptParentFromModel(PsiElement psiElement) {
+        return true;
     }
 
-    List<TreeElement> fromProviders = getApplicableNodeProviders().stream().flatMap(nodeProvider -> nodeProvider.provideNodes(parent).stream()).collect(Collectors.toList());
-    return ContainerUtil.concat(children, fromProviders);
-  }
-
-  private @Nullable StructureViewModel buildStructureViewModel(PsiFile file, @Nullable Editor editor) {
-    if (Comparing.equal(SoftReference.deref(currentFile), file) && currentFileModCount == file.getModificationStamp()) {
-      StructureViewModel model = SoftReference.deref(currentFileStructure);
-      if (model != null) {
-        return model;
-      }
+    @Override
+    @RequiredReadAction
+    public PsiElement getLeafElement(DataContext dataContext) {
+        return super.getLeafElement(dataContext);
     }
 
-    StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(file);
-    if (builder instanceof TreeBasedStructureViewBuilder) {
-      StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(editor);
-
-      currentFile = new SoftReference<>(file);
-      currentFileStructure = new SoftReference<>(model);
-      currentFileModCount = file.getModificationStamp();
-      return model;
+    @Override
+    @RequiredReadAction
+    public boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
+        return super.processChildren(object, rootElement, processor);
     }
 
-    return null;
-  }
+    @Override
+    @RequiredReadAction
+    public @Nullable PsiElement getParent(PsiElement psiElement) {
+        return super.getParent(psiElement);
+    }
+
+    @Override
+    public boolean normalizeChildren() {
+        return false;
+    }
 }

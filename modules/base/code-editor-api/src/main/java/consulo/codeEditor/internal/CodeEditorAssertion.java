@@ -18,6 +18,7 @@ package consulo.codeEditor.internal;
 import consulo.application.Application;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.ThreadIssueException;
 
 /**
  * This is hack - in idea world we must not allow running Code Editor code from read lock (not ui thread)
@@ -35,6 +36,8 @@ public class CodeEditorAssertion {
             return;
         }
 
-        UIAccess.assertIsUIThread();
+        if (!UIAccess.isUIThread()) {
+            throw new ThreadIssueException("Call must be called inside UI thread");
+        }
     }
 }

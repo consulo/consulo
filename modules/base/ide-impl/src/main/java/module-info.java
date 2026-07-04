@@ -154,6 +154,7 @@ open module consulo.ide.impl {
     requires consulo.execution.test.sm.api;
     requires consulo.external.system.api;
     requires consulo.module.ui.api;
+    requires consulo.navigation.bar.api;
 
     provides consulo.ui.image.IconLibraryDescriptor with
         consulo.ide.impl.ui.impl.LightIconLibraryDescriptor,

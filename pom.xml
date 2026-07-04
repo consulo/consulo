@@ -86,6 +86,7 @@
     <module>modules/base/module-content-impl</module>
     <module>modules/base/file-chooser-api</module>
     <module>modules/base/language-api</module>
+    <module>modules/base/language-ui-api</module>
     <module>modules/base/language-ignore-api</module>
     <module>modules/base/language-ignore-impl</module>
     <module>modules/base/index-io</module>
@@ -96,6 +97,8 @@
     <module>modules/base/project-ui-api</module>
     <module>modules/base/project-ui-impl</module>
     <module>modules/base/navigation-api</module>
+    <module>modules/base/navigation-bar-api</module>
+    <module>modules/base/navigation-bar-impl</module>
     <module>modules/base/code-editor-api</module>
     <module>modules/base/process-api</module>
     <module>modules/base/process-impl</module>

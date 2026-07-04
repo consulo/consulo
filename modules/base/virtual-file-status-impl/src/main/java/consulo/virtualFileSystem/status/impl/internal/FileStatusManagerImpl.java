@@ -59,7 +59,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     private static class FileStatusNull implements FileStatus {
         private static final FileStatus INSTANCE = new FileStatusNull();
 
-        
         @Override
         public LocalizeValue getText() {
             throw new AssertionError("Should not be called");
@@ -70,13 +69,13 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
             throw new AssertionError("Should not be called");
         }
 
-        
+
         @Override
         public EditorColorKey getColorKey() {
             throw new AssertionError("Should not be called");
         }
 
-        
+
         @Override
         public String getId() {
             throw new AssertionError("Should not be called");
@@ -108,7 +107,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    
     public FileStatus getDefaultStatus(VirtualFile file) {
         return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
     }
@@ -119,14 +117,8 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    public void addFileStatusListener(FileStatusListener listener) {
-        myListeners.add(listener);
-    }
-
-    @Override
     public void addFileStatusListener(FileStatusListener listener, Disposable parentDisposable) {
-        addFileStatusListener(listener);
-        Disposer.register(parentDisposable, () -> removeFileStatusListener(listener));
+        myProject.getMessageBus().connect(parentDisposable).subscribe(FileStatusListener.class, listener);
     }
 
     @Override
@@ -215,17 +207,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         return myCachedStatuses.get(file);
     }
 
-    @Override
-    public void removeFileStatusListener(FileStatusListener listener) {
-        myListeners.remove(listener);
-    }
-
-    @Override
-    public ColorValue getNotChangedDirectoryColor(VirtualFile file) {
-        return getRecursiveStatus(file).getColor();
-    }
-
-    
     @Override
     public FileStatus getRecursiveStatus(VirtualFile file) {
         FileStatus status = FileStatusManagerInternal.super.getRecursiveStatus(file);
