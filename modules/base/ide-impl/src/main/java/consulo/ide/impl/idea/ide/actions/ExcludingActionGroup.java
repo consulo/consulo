@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ui.ex.action.*;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionUpdateInvoker;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * @author peter
  */
-public class ExcludingActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
+public class ExcludingActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
     private final ActionGroup myDelegate;
     private final Set<AnAction> myExcludes;
 
@@ -41,9 +41,9 @@ public class ExcludingActionGroup extends ActionGroup implements AnActionWithSyn
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
-        ActionUpdateInvoker.updateSync(myDelegate, e);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(CompletableFutureStep.<Object, Presentation>await(ignored -> e.getUpdateSession().presentation(myDelegate)))
+            .then(CodeExecution.consume(presentation -> e.getPresentation().copyFrom(presentation)));
     }
 
     @Override

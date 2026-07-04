@@ -3,7 +3,7 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionUpdateInvoker;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

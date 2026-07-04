@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.ui.UISettings;

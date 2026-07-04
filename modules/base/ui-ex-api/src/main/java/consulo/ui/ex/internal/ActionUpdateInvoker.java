@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.action;
+package consulo.ui.ex.internal;
 
 import consulo.application.Application;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.coroutine.UIAction;
-import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -64,6 +70,23 @@ public final class ActionUpdateInvoker {
         }
 
         return null;
+    }
+
+    /**
+     * Runs the action's update asynchronously (no coroutine and a completed future when the action
+     * implements no update interface). This is the async entry point for modules which cannot reach
+     * the richer ide-impl runner; no dumb-mode bookkeeping is performed here.
+     */
+    public static CompletableFuture<Void> updateAsync(AnAction action, AnActionEvent e) {
+        Coroutine<?, ?> coroutine = createUpdateCoroutine(action, e);
+        if (coroutine == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        Application application = Application.get();
+        CoroutineScope scope = new CoroutineScope(application.coroutineContext());
+        scope.putCopyableUserData(UIAccess.KEY, application.getLastUIAccess());
+        return coroutine.runAsync(scope, null).toFuture().thenApply(ignored -> null);
     }
 
     @SuppressWarnings("deprecation")

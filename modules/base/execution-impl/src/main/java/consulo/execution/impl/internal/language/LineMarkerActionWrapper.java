@@ -11,7 +11,7 @@ import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionUpdateInvoker;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.action.ActionWithDelegate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

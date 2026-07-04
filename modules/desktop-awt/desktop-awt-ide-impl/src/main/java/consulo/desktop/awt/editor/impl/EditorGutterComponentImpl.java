@@ -36,6 +36,7 @@ import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -46,6 +47,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
@@ -2156,10 +2158,14 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         }
 
         AnActionEvent actionEvent = AnActionEvent.createFromAnAction(action, e, place, context);
-        ActionUpdateInvoker.updateSync(action, actionEvent);
-        if (actionEvent.getPresentation().isEnabledAndVisible()) {
-            ActionImplUtil.performActionDumbAwareWithCallbacks(action, actionEvent, context);
-        }
+        UIAccess uiAccess = UIAccess.current();
+        // both callers consume the input event unconditionally, so nothing depends on a synchronous result
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, true).whenCompleteAsync((enabled, throwable) -> {
+            if (throwable == null && Boolean.TRUE.equals(enabled)) {
+                ActionImplUtil.performActionDumbAwareWithCallbacks(action, actionEvent, context);
+                repaint();
+            }
+        }, uiAccess);
     }
 
     private @Nullable ActiveGutterRenderer getActiveRendererByMouseEvent(MouseEvent e) {

@@ -29,7 +29,8 @@ import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionUpdateInvoker;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -173,9 +174,11 @@ public class ExternalSystemUiUtil {
     Presentation presentation = new Presentation();
     DataContext context = DataManager.getInstance().getDataContext(e.getComponent());
     AnActionEvent event = new AnActionEvent(e, context, "", presentation, actionManager, 0);
-    ActionUpdateInvoker.updateSync(action, event);
-    if (presentation.isEnabled()) {
-      action.actionPerformed(event);
-    }
+    UIAccess uiAccess = UIAccess.current();
+    ActionUpdateInvoker.updateAsync(action, event).whenCompleteAsync((ignored, throwable) -> {
+      if (throwable == null && presentation.isEnabled()) {
+        action.actionPerformed(event);
+      }
+    }, uiAccess);
   }
 }

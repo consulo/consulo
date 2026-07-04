@@ -49,6 +49,10 @@ module consulo.ui.ex.api {
 
     exports consulo.ui.ex.internal to
         consulo.ide.impl,
+        consulo.external.system.api,
+        consulo.language.editor.api,
+        consulo.language.inject.advanced.impl,
+        consulo.language.editor.refactoring.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
         consulo.ui.ex.awt.api,

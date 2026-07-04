@@ -27,7 +27,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.ActionUpdateInvoker;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;

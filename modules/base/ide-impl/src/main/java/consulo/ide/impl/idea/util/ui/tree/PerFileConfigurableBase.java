@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.ui.tree;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.component.util.Iconable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

@@ -99,6 +99,8 @@ public class AnActionEvent implements PlaceProvider<String> {
 
     private final InputDetails myInputDetails;
 
+    private ActionUpdateSession myUpdateSession = ActionUpdateSession.EMPTY;
+
     /**
      * @throws IllegalArgumentException if {@code dataContext} is {@code null} or
      *                                  {@code place} is {@code null} or {@code presentation} is {@code null}
@@ -370,6 +372,18 @@ public class AnActionEvent implements PlaceProvider<String> {
 
     public final @Nullable InputDetails getInputDetails() {
         return myInputDetails;
+    }
+
+    /**
+     * The update session of the current expansion, or {@link ActionUpdateSession#EMPTY} when the
+     * update runs outside of an expansion.
+     */
+    public ActionUpdateSession getUpdateSession() {
+        return myUpdateSession;
+    }
+
+    public void setUpdateSession(ActionUpdateSession updateSession) {
+        myUpdateSession = updateSession;
     }
 
     public void accept(AnActionEventVisitor visitor) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;

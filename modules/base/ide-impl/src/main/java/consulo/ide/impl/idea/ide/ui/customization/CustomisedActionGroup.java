@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionUpdateInvoker;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
  */
-public class CustomisedActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
+public class CustomisedActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
     private boolean myForceUpdate;
     private final ActionGroup myGroup;
     private AnAction[] myChildren;
@@ -66,8 +65,10 @@ public class CustomisedActionGroup extends ActionGroup implements AnActionWithSy
         }
     }
 
-    public void update(AnActionEvent e) {
-        ActionUpdateInvoker.updateSync(myGroup, e);
+    @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(CompletableFutureStep.<Object, Presentation>await(ignored -> e.getUpdateSession().presentation(myGroup)))
+            .then(CodeExecution.consume(presentation -> e.getPresentation().copyFrom(presentation)));
     }
 
     @Override

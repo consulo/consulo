@@ -294,9 +294,10 @@ public class ActionMenuItemEngine {
     @RequiredUIAccess
     private void updateIcon(AnAction action) {
         if (isToggleable() && (myPresentation.getIcon() == null || myInsideCheckedGroup)) {
-            ActionUpdateInvoker.updateSync(action, myEvent);
-
-            ((JCheckBoxMenuItem) myButton).setState(Toggleable.isSelected(myEvent.getPresentation()));
+            UIAccess uiAccess = UIAccess.current();
+            ActionRunnerAsync.performDumbAwareUpdateAsync(action, myEvent).whenCompleteAsync((ignored, throwable) -> {
+                ((JCheckBoxMenuItem) myButton).setState(Toggleable.isSelected(myEvent.getPresentation()));
+            }, uiAccess);
         }
         else {
             if (UISettings.getInstance().SHOW_ICONS_IN_MENUS && myEnableIcons) {

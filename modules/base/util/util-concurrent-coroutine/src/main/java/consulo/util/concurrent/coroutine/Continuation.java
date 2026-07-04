@@ -240,6 +240,43 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
     }
 
     /**
+     * Continues the execution of a {@link CompletableFuture} by composing it with another
+     * future produced from its result, and then either invoking the next step in a chain
+     * or finishing the execution. Coroutine steps must always invoke a continue method to
+     * progress to a subsequent step and not use the methods of the future directly.
+     *
+     * @param previousExecution The future to continue
+     * @param next              The function producing the future to await
+     * @param nextStep          The next step
+     */
+    public final <I, O> void continueCompose(
+        CompletableFuture<I> previousExecution,
+        Function<I, CompletableFuture<O>> next,
+        @Nullable CoroutineStep<O, ?> nextStep
+    ) {
+        if (!cancelled) {
+            CompletableFuture<O> rNextExecution =
+                previousExecution.thenComposeAsync(next, this);
+
+            currentExecution = rNextExecution;
+
+            if (nextStep != null) {
+                nextStep.runAsync(rNextExecution, null, this);
+            }
+            else {
+                // only add exception handler to the end of a chain, i.e. next == null
+                rNextExecution.exceptionally(this::fail);
+
+                // and signal that no more steps will be executed
+                callChainComplete = true;
+            }
+        }
+        else if (currentExecution != null) {
+            currentExecution.cancel(false);
+        }
+    }
+
+    /**
      * Marks an error of this continuation as handled. This will remove this
      * instance from the failed continuations of the scope and thus prevent the
      * scope from throwing an exception because of this error upon completion.

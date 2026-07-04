@@ -15,6 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,7 +33,7 @@ import java.util.Objects;
 /**
  * @author peter
  */
-public abstract class WeighingActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
+public abstract class WeighingActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
     public static final Key<Double> WEIGHT_KEY = Key.create("WeighingActionGroup.WEIGHT");
 
     public static final double DEFAULT_WEIGHT = 0;
@@ -39,8 +43,9 @@ public abstract class WeighingActionGroup extends ActionGroup implements AnActio
     private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
     @Override
-    public void update(AnActionEvent e) {
-        ActionUpdateInvoker.updateSync(getDelegate(), e);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(CompletableFutureStep.<Object, Presentation>await(ignored -> e.getUpdateSession().presentation(getDelegate())))
+            .then(CodeExecution.consume(presentation -> e.getPresentation().copyFrom(presentation)));
     }
 
     protected abstract ActionGroup getDelegate();

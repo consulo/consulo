@@ -16,9 +16,10 @@ import consulo.project.Project;
 import consulo.project.internal.DumbInternalUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.ActionUpdateInvoker;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.concurrent.coroutine.*;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -26,6 +27,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class ActionUpdater {
     private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
@@ -45,6 +47,26 @@ public class ActionUpdater {
     private final UIAccess myUiAccess;
 
     private volatile @Nullable ProgressIndicator myExpansionIndicator;
+
+    private final Map<Key<?>, Object> mySharedData = new ConcurrentHashMap<>();
+
+    private final ActionUpdateSession mySession = new ActionUpdateSession() {
+        @Override
+        public CompletableFuture<Presentation> presentation(AnAction action) {
+            return updateAsync(action).thenApply(presentation -> orDefault(action, presentation));
+        }
+
+        @Override
+        public CompletableFuture<List<AnAction>> children(ActionGroup group) {
+            return getGroupChildrenAsync(group);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T sharedData(Key<T> key, Supplier<? extends T> provider) {
+            return (T) mySharedData.computeIfAbsent(key, __ -> provider.get());
+        }
+    };
 
     public ActionUpdater(
         ActionManager actionManager,
@@ -106,6 +128,9 @@ public class ActionUpdater {
         doExpandActionGroupAsync(group, hideDisabled)
             .thenApply(ActionUpdater::removeUnnecessarySeparators)
             .thenApplyAsync(list -> {
+                // a newer expansion may have been requested while this one was finishing:
+                // never apply stale presentations over the fresher ones
+                checkCanceled();
                 applyPresentationChanges();
                 return (List<? extends AnAction>) list;
             }, myUiAccess::execute)
@@ -147,6 +172,7 @@ public class ActionUpdater {
     }
 
     private CompletableFuture<List<AnAction>> expandChildren(List<AnAction> children, boolean hideDisabled) {
+        checkCanceled();
         List<CompletableFuture<List<AnAction>>> futures = new ArrayList<>(children.size());
         for (AnAction child : children) {
             futures.add(expandGroupChild(child, hideDisabled));
@@ -166,6 +192,7 @@ public class ActionUpdater {
     }
 
     private CompletableFuture<Presentation> computeUpdatedPresentation(AnAction action) {
+        checkCanceled();
         Presentation presentation = myFactory.getPresentation(action).clone();
         presentation.setEnabledAndVisible(true);
         AnActionEvent event = createActionEvent(action, presentation);
@@ -177,6 +204,7 @@ public class ActionUpdater {
     }
 
     private CompletableFuture<List<AnAction>> computeGroupChildren(ActionGroup group) {
+        checkCanceled();
         AnActionEvent event = createActionEvent(group, orDefault(group, cachedPresentation(group)));
         return launchCoroutineAsync(group.getChildrenAsync(event));
     }
@@ -247,6 +275,7 @@ public class ActionUpdater {
             || index >= leaves.size()) {
             return CompletableFuture.completedFuture(new ChildrenFlags(hasEnabled, hasVisible));
         }
+        checkCanceled();
         return updateAsync(leaves.get(index)).thenCompose(p -> {
             boolean enabled = hasEnabled;
             boolean visible = hasVisible;
@@ -272,6 +301,7 @@ public class ActionUpdater {
         if (index >= nodes.size() || out.size() >= 1000) {
             return CompletableFuture.completedFuture(null);
         }
+        checkCanceled();
         AnAction o = nodes.get(index);
         if (!visited.add(o)) {
             return traverseLeaves(nodes, index + 1, root, out, visited);
@@ -350,6 +380,7 @@ public class ActionUpdater {
             myToolbarAction
         );
         event.setInjectedContext(action.isInInjectedContext());
+        event.setUpdateSession(mySession);
         return event;
     }
 
@@ -422,6 +453,11 @@ public class ActionUpdater {
     }
 
     private <T> CompletableFuture<T> launchCoroutineAsync(Coroutine<?, T> coroutine) {
+        ProgressIndicator expansionIndicator = myExpansionIndicator;
+        if (expansionIndicator != null && expansionIndicator.isCanceled()) {
+            return CompletableFuture.failedFuture(new ProcessCanceledException());
+        }
+
         CoroutineContext context = myProject instanceof CoroutineContextOwner owner
             ? owner.coroutineContext()
             : Application.get().coroutineContext();

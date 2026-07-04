@@ -16,6 +16,8 @@
 package consulo.desktop.awt.action.toolbar;
 
 import consulo.application.Application;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
@@ -23,6 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
+import org.jspecify.annotations.Nullable;
 import consulo.ui.ex.keymap.KeymapManager;
 
 import javax.swing.*;
@@ -53,6 +56,8 @@ public abstract class ActionToolbarEngine {
 
     
     private CompletableFuture<List<? extends AnAction>> myLastUpdate = CompletableFuture.completedFuture(List.of());
+
+    private @Nullable ProgressIndicator myLastUpdateIndicator;
 
     public ActionToolbarEngine(String place,
                                ActionGroup actionGroup,
@@ -96,9 +101,12 @@ public abstract class ActionToolbarEngine {
             UIAccess.current()
         );
 
-        myLastUpdate.cancel(false);
+        cancelCurrentUpdate();
 
-        myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false);
+        ProgressIndicator indicator = new EmptyProgressIndicator();
+        myLastUpdateIndicator = indicator;
+
+        myLastUpdate = updater.expandActionGroupAsync(myActionGroup, false, indicator);
         myLastUpdate.whenComplete((result, throwable) -> {
             if (result != null) {
                 actionsUpdated(result);
@@ -162,13 +170,20 @@ public abstract class ActionToolbarEngine {
     public void removeNotify() {
         ActionToolbarsHolder.remove(myActionToolbar);
 
-        CompletableFuture<List<? extends AnAction>> lastUpdate = myLastUpdate;
-        lastUpdate.cancel(false);
+        cancelCurrentUpdate();
 
         myLastUpdate = CompletableFuture.completedFuture(List.of());
     }
 
     private void cancelCurrentUpdate() {
+        ProgressIndicator lastIndicator = myLastUpdateIndicator;
+        myLastUpdateIndicator = null;
+        if (lastIndicator != null && !lastIndicator.isCanceled()) {
+            // stops the in-flight expansion: no new child updates will be spawned,
+            // and its (now stale) presentations will never be applied
+            lastIndicator.cancel();
+        }
+
         CompletableFuture<List<? extends AnAction>> lastUpdate = myLastUpdate;
         lastUpdate.cancel(false);
 

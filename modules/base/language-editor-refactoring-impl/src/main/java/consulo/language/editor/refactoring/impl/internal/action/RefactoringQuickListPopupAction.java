@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.impl.internal.action;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;

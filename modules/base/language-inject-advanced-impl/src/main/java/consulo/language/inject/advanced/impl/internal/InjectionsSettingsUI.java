@@ -16,6 +16,7 @@
 
 package consulo.language.inject.advanced.impl.internal;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.ProjectConfigurable;

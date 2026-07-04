@@ -18,6 +18,7 @@ package consulo.ui.ex.action.util;
 
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;

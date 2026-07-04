@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.moduleDependencies;
 
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;

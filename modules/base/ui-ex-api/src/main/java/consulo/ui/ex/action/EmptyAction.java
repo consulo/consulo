@@ -15,6 +15,10 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
+
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.util.ActionUtil;
@@ -106,7 +110,7 @@ public final class EmptyAction extends AnAction implements AnActionWithSyncUpdat
             new MyDelegatingAction(action);
     }
 
-    public static class MyDelegatingAction extends AnAction implements AnActionWithSyncUpdate {
+    public static class MyDelegatingAction extends AnAction implements AnActionWithAsyncUpdate {
 
         private final AnAction myDelegate;
 
@@ -117,10 +121,9 @@ public final class EmptyAction extends AnAction implements AnActionWithSyncUpdat
         }
 
         @Override
-        public void update(AnActionEvent e) {
-            if (myDelegate instanceof AnActionWithSyncUpdate sync) {
-                sync.update(e);
-            }
+        public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+            return Coroutine.first(CompletableFutureStep.<Object, Presentation>await(ignored -> e.getUpdateSession().presentation(myDelegate)))
+                .then(CodeExecution.consume(presentation -> e.getPresentation().copyFrom(presentation)));
         }
 
         @Override
@@ -140,7 +143,7 @@ public final class EmptyAction extends AnAction implements AnActionWithSyncUpdat
         }
     }
 
-    public static class MyDelegatingActionGroup extends ActionGroup implements AnActionWithSyncUpdate {
+    public static class MyDelegatingActionGroup extends ActionGroup implements AnActionWithAsyncUpdate {
         
         private final ActionGroup myDelegate;
 
@@ -167,8 +170,9 @@ public final class EmptyAction extends AnAction implements AnActionWithSyncUpdat
         }
 
         @Override
-        public void update(AnActionEvent e) {
-            ActionUpdateInvoker.updateSync(myDelegate, e);
+        public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+            return Coroutine.first(CompletableFutureStep.<Object, Presentation>await(ignored -> e.getUpdateSession().presentation(myDelegate)))
+                .then(CodeExecution.consume(presentation -> e.getPresentation().copyFrom(presentation)));
         }
 
         @Override
