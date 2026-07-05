@@ -16,6 +16,13 @@
 package consulo.language.editor.impl.action;
 
 import consulo.codeEditor.Editor;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.document.DocumentWindow;
+import consulo.document.Document;
+import consulo.codeEditor.imaginary.ImaginaryEditor;
+import consulo.language.editor.inject.ImaginaryEditorWindow;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.action.CodeInsightAction;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -66,13 +73,18 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
     }
 
     @Override
-    @RequiredUIAccess
     protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         Editor editor = getBaseEditor(dataContext, project);
         if (!myLookForInjectedEditor) {
             return editor;
         }
-        return getInjectedEditor(project, editor, !forUpdate);
+        if (editor == null) {
+            return null;
+        }
+        // read the caret offset once here (plain captured data on the snapshot editor)
+        // and pass it down as a parameter - no editor calls below this point
+        int caretOffset = editor.getCaretModel().getOffset();
+        return getInjectedEditor(project, editor, !forUpdate, caretOffset);
     }
 
     @RequiredUIAccess
@@ -80,8 +92,16 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         return getInjectedEditor(project, editor, true);
     }
 
-    @RequiredUIAccess
     public static Editor getInjectedEditor(Project project, Editor editor, boolean commit) {
+        if (editor == null) {
+            return null;
+        }
+        // perform path/UI thread: the live caret is the source of the offset
+        return getInjectedEditor(project, editor, commit, editor.getCaretModel().getOffset());
+    }
+
+    @RequiredReadAction
+    public static Editor getInjectedEditor(Project project, Editor editor, boolean commit, int caretOffset) {
         Editor injectedEditor = editor;
         if (editor != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -90,9 +110,32 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
                 if (commit) {
                     documentManager.commitAllDocuments();
                 }
-                injectedEditor = InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(editor, psiFile);
+                if (editor instanceof ImaginaryEditor imaginaryEditor) {
+                    return getInjectedImaginaryEditor(project, imaginaryEditor, psiFile, caretOffset);
+                }
+                injectedEditor = InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(editor, psiFile, caretOffset);
             }
         }
+        return injectedEditor;
+    }
+
+    /**
+     * The real {@code EditorWindow} machinery requires a real host editor, so for the imaginary
+     * snapshot (background update path) an {@link ImaginaryEditorWindow} is built instead -
+     * same injected file, injected document window and injected-space caret offset, no checks.
+     */
+    private static Editor getInjectedImaginaryEditor(Project project, ImaginaryEditor hostEditor, PsiFile hostFile, int hostOffset) {
+        PsiElement injectedElement = InjectedLanguageManager.getInstance(project).findInjectedElementAt(hostFile, hostOffset);
+        PsiFile injectedFile = injectedElement != null ? injectedElement.getContainingFile() : null;
+        if (injectedFile == null) {
+            return hostEditor;
+        }
+        Document injectedDocument = PsiDocumentManager.getInstance(project).getDocument(injectedFile);
+        if (!(injectedDocument instanceof DocumentWindow documentWindow) || !documentWindow.isValid()) {
+            return hostEditor;
+        }
+        ImaginaryEditorWindow injectedEditor = new ImaginaryEditorWindow(project, hostEditor, injectedFile, documentWindow);
+        injectedEditor.getCaretModel().moveToOffset(documentWindow.hostToInjected(hostOffset));
         return injectedEditor;
     }
 

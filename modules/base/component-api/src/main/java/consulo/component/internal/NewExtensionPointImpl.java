@@ -351,6 +351,29 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
+    public <R> R computeSafeIfAny(
+        @InheritCallerContext Function<? super T, ? extends R> processor,
+        Predicate<R> accepter,
+        R defaultValue) {
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0, n = extensionCache.size(); i < n; i++) {
+            T t = extensionCache.get(i).extension();
+            try {
+                R r = processor.apply(t);
+                if (accepter.test(r)) {
+                    return r;
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, t);
+            }
+        }
+        return defaultValue;
+    }
+
+    @Override
     public <R extends @Nullable Object, CR extends Collection<? super R>>
     CR collectMapped(CR results, @InheritCallerContext Function<? super T, ? extends R> processor) {
         List<ExtensionValue<T>> extensionCache = buildOrGet();

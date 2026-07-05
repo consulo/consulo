@@ -143,6 +143,26 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         return null;
     }
 
+    @SuppressWarnings("deprecation")
+    default <R> R computeSafeIfAny(
+        @InheritCallerContext Function<? super E, ? extends R> processor,
+        Predicate<R> accepter,
+        R defaultValue
+    ) {
+        for (E extension : getExtensionList()) {
+            try {
+                R result = processor.apply(extension);
+                if (accepter.test(result)) {
+                    return result;
+                }
+            }
+            catch (Throwable e) {
+                ExtensionLogger.checkException(e, extension);
+            }
+        }
+        return defaultValue;
+    }
+
     @Contract("_,!null -> !null")
     default <R extends @Nullable Object>
     R computeSafeIfAny(@InheritCallerContext Function<? super E, ? extends R> processor, R defaultValue) {

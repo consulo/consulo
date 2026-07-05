@@ -25,6 +25,7 @@ import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.extension.ExtensionException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -45,6 +46,7 @@ import consulo.language.editor.ui.navigation.GotoDeclarationHandlerEx;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.localize.ActionLocalize;
@@ -54,8 +56,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -337,39 +341,42 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     @Override
-    public ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.EDT;
-    }
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
+        return Coroutine.first(UIAction.<Object, Object>apply(input -> {
+            InputEvent inputEvent = event.getInputEvent();
+            boolean isMouseShortcut = inputEvent instanceof MouseEvent && ActionPlaces.MOUSE_SHORTCUT.equals(event.getPlace());
 
-    @Override
-    public void update(AnActionEvent event) {
-        InputEvent inputEvent = event.getInputEvent();
-        boolean isMouseShortcut = inputEvent instanceof MouseEvent && ActionPlaces.MOUSE_SHORTCUT.equals(event.getPlace());
+            Project project = event.getData(Project.KEY);
 
-        Project project = event.getData(Project.KEY);
+            if (project == null ||
+                event.hasData(EditorGutter.KEY) ||
+                !isMouseShortcut && Boolean.TRUE.equals(event.getData(EditorKeys.EDITOR_VIRTUAL_SPACE))) {
+                event.getPresentation().setEnabled(false);
+                return input;
+            }
 
-        if (project == null ||
-            event.hasData(EditorGutter.KEY) ||
-            !isMouseShortcut && Boolean.TRUE.equals(event.getData(EditorKeys.EDITOR_VIRTUAL_SPACE))) {
-            event.getPresentation().setEnabled(false);
-            return;
-        }
+            Editor editor = event.getData(Editor.KEY);
+            if (editor != null
+                && isMouseShortcut
+                && !EditorUtil.isPointOverText(editor, new RelativePoint((MouseEvent) inputEvent).getPoint(editor.getContentComponent()))) {
+                event.getPresentation().setEnabled(false);
+                return input;
+            }
 
-        Editor editor = event.getData(Editor.KEY);
-        if (editor != null
-            && isMouseShortcut
-            && !EditorUtil.isPointOverText(editor, new RelativePoint((MouseEvent) inputEvent).getPoint(editor.getContentComponent()))) {
-            event.getPresentation().setEnabled(false);
-            return;
-        }
+            return input;
+        })).then(ActionSafeReadLock.run(event, presentation -> {
+            if (!presentation.isEnabled()) {
+                return;
+            }
 
-        String actionText = myApplication.getExtensionPoint(GotoDeclarationHandler.class)
-            .computeSafeIfAny(g -> g.getActionText(event.getDataContext()));
+            LocalizeValue actionText = myApplication.getExtensionPoint(GotoDeclarationHandler.class)
+                .computeSafeIfAny(g -> g.getActionText(event.getDataContext()), LocalizeValue::isNotEmpty, LocalizeValue.empty());
 
-        if (actionText != null) {
-            event.getPresentation().setText(actionText);
-        }
+            if (actionText.isNotEmpty()) {
+                presentation.setText(actionText);
+            }
 
-        super.update(event);
+            update(event);
+        }));
     }
 }

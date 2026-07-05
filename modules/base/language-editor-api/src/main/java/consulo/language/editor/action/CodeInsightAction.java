@@ -18,7 +18,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
@@ -27,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CodeInsightAction extends AnAction implements AnActionWithSyncUpdate {
+public abstract class CodeInsightAction extends AnAction implements AnActionWithAsyncUpdate {
     protected CodeInsightAction() {
     }
 
@@ -57,6 +59,14 @@ public abstract class CodeInsightAction extends AnAction implements AnActionWith
     }
 
     protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
+        if (forUpdate) {
+            // background update path: use the imaginary snapshot - caret/selection are captured
+            // without threading checks
+            Editor snapshot = dataContext.getData(EditorKeys.EDITOR_SNAPSHOT);
+            if (snapshot != null) {
+                return snapshot;
+            }
+        }
         return dataContext.getData(Editor.KEY);
     }
 
@@ -90,6 +100,12 @@ public abstract class CodeInsightAction extends AnAction implements AnActionWith
     }
 
     @Override
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        // runs in background under a safe read lock: PSI is guarded by the read action, and the
+        // editor state comes from EditorKeys.EDITOR_SNAPSHOT - a check-free imaginary editor
+        return Coroutine.first(ActionSafeReadLock.run(e, presentation -> update(e)));
+    }
+
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
