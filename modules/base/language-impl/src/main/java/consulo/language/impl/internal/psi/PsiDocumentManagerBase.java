@@ -6,6 +6,7 @@ import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -233,24 +234,36 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     @Override
     public void commitAllDocuments() {
-        Application.get().assertIsWriteThread();
+        UIAccess.assertIsUIThread();
 
         if (myUncommittedDocuments.isEmpty()) {
             return;
         }
 
-        Document[] documents = getUncommittedDocuments();
-        for (Document document : documents) {
-            if (isCommitted(document)) {
-                boolean success = doCommitWithoutReparse(document);
-                LOG.error("Committed document in uncommitted set: " + document + ", force-committed=" + success);
+        Application app = Application.get();
+        Runnable commitBody = () -> {
+            Document[] documents = getUncommittedDocuments();
+            for (Document document : documents) {
+                if (isCommitted(document)) {
+                    boolean success = doCommitWithoutReparse(document);
+                    LOG.error("Committed document in uncommitted set: " + document + ", force-committed=" + success);
+                }
+                else if (!doCommit(document)) {
+                    LOG.error("Couldn't commit " + document);
+                }
             }
-            else if (!doCommit(document)) {
-                LOG.error("Couldn't commit " + document);
-            }
-        }
 
-        assertEverythingCommitted();
+            assertEverythingCommitted();
+        };
+
+        // commit must run as write-thread. EDT may not currently hold WIL (per-event WIL model).
+        // Self-acquire it via the application shim if available; otherwise just run.
+        if (app instanceof ApplicationWithIntentWriteLock awil) {
+            awil.runIntendedWriteActionOnCurrentThread(commitBody);
+        }
+        else {
+            commitBody.run();
+        }
     }
 
     @Override

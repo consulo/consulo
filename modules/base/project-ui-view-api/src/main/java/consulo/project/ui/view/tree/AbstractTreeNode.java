@@ -1,6 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.project.ui.view.tree;
 
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -81,6 +86,47 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileSta
 
   protected VirtualFile getVirtualFile() {
     return null;
+  }
+
+  @Override
+  @RequiredReadAction
+  protected @Nullable ColorValue computeBackgroundColor() {
+    Object value = getValue();
+    if (!(value instanceof PsiElement element)) {
+      return null;
+    }
+    return getColorForElement(element);
+  }
+
+  public static @Nullable ColorValue getColorForElement(@Nullable PsiElement psi) {
+    ColorValue color = null;
+    if (psi != null) {
+      if (!psi.isValid()) return null;
+
+      Project project = psi.getProject();
+      VirtualFile file = PsiUtilCore.getVirtualFile(psi);
+
+      if (file != null) {
+        color = VfsPresentationUtil.getFileBackgroundColor(project, file);
+      }
+      else if (psi instanceof PsiDirectory) {
+        color = VfsPresentationUtil.getFileBackgroundColor(project, ((PsiDirectory)psi).getVirtualFile());
+      }
+      else if (psi instanceof PsiDirectoryContainer) {
+        PsiDirectory[] dirs = ((PsiDirectoryContainer)psi).getDirectories();
+        for (PsiDirectory dir : dirs) {
+          ColorValue c = VfsPresentationUtil.getFileBackgroundColor(project, dir.getVirtualFile());
+          if (c != null && color == null) {
+            color = c;
+          }
+          else if (c != null) {
+            color = null;
+            break;
+          }
+        }
+      }
+    }
+    return color;
   }
 
   @Override

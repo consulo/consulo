@@ -49,6 +49,8 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
 
     private ColorValue myForcedTextForeground;
 
+    private ColorValue myBackground;
+
     private Font myFont;
 
     private boolean mySeparatorAbove = false;
@@ -117,6 +119,14 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         myForcedTextForeground = forcedTextForeground;
     }
 
+    public @Nullable ColorValue getBackground() {
+        return myBackground;
+    }
+
+    public void setBackground(@Nullable ColorValue background) {
+        myBackground = background;
+    }
+
     @Override
     public String getLocationString() {
         return myLocationString;
@@ -175,6 +185,9 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
      * @param presentation the instance to copy the parameters from.
      */
     public void updateFrom(ItemPresentation presentation) {
+        if (presentation instanceof PresentationData presentationData) {
+            setBackground(presentationData.getBackground());
+        }
         setIcon(presentation.getIcon());
         setPresentableText(presentation.getPresentableText());
         setLocationString(presentation.getLocationString());
@@ -248,6 +261,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     public void clear() {
+        myBackground = null;
         myIcon = null;
         clearText();
         myAttributesKey = null;
@@ -265,7 +279,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     @Override
     
     public Object[] getEqualityObjects() {
-        return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
+        return new Object[]{myBackground, myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText, myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};
     }
 
     @Override
@@ -282,6 +296,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
         if (from == this) {
             return;
         }
+        myBackground = from.myBackground;
         myAttributesKey = from.myAttributesKey;
         myIcon = from.myIcon;
         clearText();
@@ -304,6 +319,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     }
 
     public void applyFrom(PresentationData from) {
+        myBackground = getValue(myBackground, from.myBackground);
         myAttributesKey = getValue(myAttributesKey, from.myAttributesKey);
         myIcon = getValue(myIcon, from.myIcon);
 

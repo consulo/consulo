@@ -45,14 +45,12 @@ public abstract class BaseProgressBuilderImpl implements ProgressBuilder {
         throw new IllegalArgumentException("Duplicate using of builder");
     }
 
-    
     @Override
     public ProgressBuilder modal() {
         myModal = true;
         return this;
     }
 
-    
     @Override
     public ProgressBuilder cancelable() {
         myCancelable = true;

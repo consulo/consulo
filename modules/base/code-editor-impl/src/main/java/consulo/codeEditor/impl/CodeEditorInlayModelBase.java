@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ReadAction;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -380,7 +380,7 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     public Inlay getElementAt(EditorLocation location, boolean ignoreBlockElementWidth) {
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Insets insets = myEditor.getContentComponent().getInsets();
             Point point = location.getPoint();
             if (point.y < insets.top) {

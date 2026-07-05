@@ -117,8 +117,6 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
     
     @Override
     public DocumentReference create(Document document) {
-        myApplication.assertIsWriteThread();
-
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         return file == null ? createFromDocument(document) : create(file);
     }
@@ -136,8 +134,6 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
     
     @Override
     public DocumentReference create(VirtualFile file) {
-        myApplication.assertIsWriteThread();
-
         if (!file.isInLocalFileSystem()) { // we treat local files differently from non local because we can undo their deletion
             DocumentReference reference = file.getUserData(FILE_TO_STRONG_REF_KEY);
             if (reference == null) {

@@ -359,7 +359,7 @@ public class CoroutineScope extends CoroutineEnvironment {
      * Throws an exception if errors occurred during the coroutine executions in
      * this scope.
      */
-    void checkThrowErrors() {
+    public void checkThrowErrors() {
         if (failedContinuations.size() > 0) {
             if (failedContinuations.size() == 1) {
                 Throwable eError = failedContinuations.getFirst().getError();

@@ -16,6 +16,7 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.internal.FoldingUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
@@ -334,86 +335,88 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
 
     @Override
     public void paintComponent(Graphics g_) {
-        Rectangle clip = g_.getClipBounds();
-        if (clip.height < 0) {
-            return;
-        }
-
-        Graphics2D g = (Graphics2D) getComponentGraphics(g_);
-        AffineTransform old = setMirrorTransformIfNeeded(g, 0, getWidth());
-
-        DesktopAntialiasingTypeUtil.setupAntialiasing(g);
-        Color backgroundColor = getBackground();
-
-        if (myEditor.isDisposed()) {
-            g.setColor(myEditor.getDisposedBackground());
-            g.fillRect(clip.x, clip.y, clip.width, clip.height);
-            return;
-        }
-
-        int startVisualLine;
-        int endVisualLine;
-
-        int firstVisibleOffset;
-        int lastVisibleOffset;
-
-        Segment focusModeRange = myEditor.getFocusModeRange();
-        if (focusModeRange == null) {
-            startVisualLine = myEditor.yToVisualLine(clip.y);
-            endVisualLine = myEditor.yToVisualLine(clip.y + clip.height);
-
-            firstVisibleOffset = myEditor.visualLineStartOffset(startVisualLine);
-            lastVisibleOffset = myEditor.visualLineStartOffset(endVisualLine + 1);
-        }
-        else {
-            firstVisibleOffset = focusModeRange.getStartOffset();
-            lastVisibleOffset = focusModeRange.getEndOffset();
-
-            startVisualLine = myEditor.offsetToVisualLine(firstVisibleOffset);
-            endVisualLine = myEditor.offsetToVisualLine(lastVisibleOffset);
-        }
-
-        // paint all backgrounds
-        int gutterSeparatorX = getWhitespaceSeparatorOffset();
-        paintBackground(g, clip, 0, gutterSeparatorX, TargetAWT.from(backgroundColor));
-        paintBackground(g, clip, gutterSeparatorX, getWidth() - gutterSeparatorX, myEditor.getBackgroundColor());
-
-        paintEditorBackgrounds(g, firstVisibleOffset, lastVisibleOffset);
-
-        Object hint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-        if (!UIUtil.isJreHiDPI(g)) {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-        }
-
-        try {
-            paintAnnotations(g, startVisualLine, endVisualLine);
-
-            if (focusModeRange != null) {
-                int startY = Math.max(myEditor.visualLineToY(startVisualLine), clip.y);
-                int endY = Math.min(myEditor.visualLineToY(endVisualLine), clip.y + clip.height);
-                g.setClip(clip.x, startY, clip.width, endY - startY);
+        CodeEditorAssertion.run(() -> {
+            Rectangle clip = g_.getClipBounds();
+            if (clip.height < 0) {
+                return;
             }
 
-            paintLineMarkers(g, firstVisibleOffset, lastVisibleOffset, startVisualLine, endVisualLine);
+            Graphics2D g = (Graphics2D) getComponentGraphics(g_);
+            AffineTransform old = setMirrorTransformIfNeeded(g, 0, getWidth());
 
-            g.setClip(clip);
+            DesktopAntialiasingTypeUtil.setupAntialiasing(g);
+            Color backgroundColor = getBackground();
 
-            paintFoldingTree(g, clip, firstVisibleOffset, lastVisibleOffset);
-            paintLineNumbers(g, startVisualLine, endVisualLine);
-            paintCurrentAccessibleLine(g);
-
-            if (ExperimentalUI.isNewUI() && myPaintBackground) {
-                g.setColor(TargetAWT.to(getEditor().getColorsScheme().getColor(EditorColors.INDENT_GUIDE_COLOR)));
-                LinePainter2D.paint(g, gutterSeparatorX, clip.y, gutterSeparatorX, clip.y + clip.height);
+            if (myEditor.isDisposed()) {
+                g.setColor(myEditor.getDisposedBackground());
+                g.fillRect(clip.x, clip.y, clip.width, clip.height);
+                return;
             }
-        }
-        finally {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, hint);
-        }
 
-        if (old != null) {
-            g.setTransform(old);
-        }
+            int startVisualLine;
+            int endVisualLine;
+
+            int firstVisibleOffset;
+            int lastVisibleOffset;
+
+            Segment focusModeRange = myEditor.getFocusModeRange();
+            if (focusModeRange == null) {
+                startVisualLine = myEditor.yToVisualLine(clip.y);
+                endVisualLine = myEditor.yToVisualLine(clip.y + clip.height);
+
+                firstVisibleOffset = myEditor.visualLineStartOffset(startVisualLine);
+                lastVisibleOffset = myEditor.visualLineStartOffset(endVisualLine + 1);
+            }
+            else {
+                firstVisibleOffset = focusModeRange.getStartOffset();
+                lastVisibleOffset = focusModeRange.getEndOffset();
+
+                startVisualLine = myEditor.offsetToVisualLine(firstVisibleOffset);
+                endVisualLine = myEditor.offsetToVisualLine(lastVisibleOffset);
+            }
+
+            // paint all backgrounds
+            int gutterSeparatorX = getWhitespaceSeparatorOffset();
+            paintBackground(g, clip, 0, gutterSeparatorX, TargetAWT.from(backgroundColor));
+            paintBackground(g, clip, gutterSeparatorX, getWidth() - gutterSeparatorX, myEditor.getBackgroundColor());
+
+            paintEditorBackgrounds(g, firstVisibleOffset, lastVisibleOffset);
+
+            Object hint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+            if (!UIUtil.isJreHiDPI(g)) {
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            }
+
+            try {
+                paintAnnotations(g, startVisualLine, endVisualLine);
+
+                if (focusModeRange != null) {
+                    int startY = Math.max(myEditor.visualLineToY(startVisualLine), clip.y);
+                    int endY = Math.min(myEditor.visualLineToY(endVisualLine), clip.y + clip.height);
+                    g.setClip(clip.x, startY, clip.width, endY - startY);
+                }
+
+                paintLineMarkers(g, firstVisibleOffset, lastVisibleOffset, startVisualLine, endVisualLine);
+
+                g.setClip(clip);
+
+                paintFoldingTree(g, clip, firstVisibleOffset, lastVisibleOffset);
+                paintLineNumbers(g, startVisualLine, endVisualLine);
+                paintCurrentAccessibleLine(g);
+
+                if (ExperimentalUI.isNewUI() && myPaintBackground) {
+                    g.setColor(TargetAWT.to(getEditor().getColorsScheme().getColor(EditorColors.INDENT_GUIDE_COLOR)));
+                    LinePainter2D.paint(g, gutterSeparatorX, clip.y, gutterSeparatorX, clip.y + clip.height);
+                }
+            }
+            finally {
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, hint);
+            }
+
+            if (old != null) {
+                g.setTransform(old);
+            }
+        });
     }
 
     private void paintEditorBackgrounds(Graphics g, int firstVisibleOffset, int lastVisibleOffset) {

@@ -82,7 +82,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       queueSession(session, session.getModality());
     }
     else {
-      if (myApplication.isWriteThread()) {
+      if (myApplication.isDispatchThread()) {
         doScan(session);
         session.fireEvents(session.getEvents(), null);
       }

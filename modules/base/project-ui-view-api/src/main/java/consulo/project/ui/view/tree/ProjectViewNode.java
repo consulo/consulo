@@ -16,7 +16,9 @@
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
+import consulo.fileEditor.VfsPresentationUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
@@ -24,6 +26,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -280,5 +283,23 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
 
   public boolean isValidating() {
     return myValidating;
+  }
+
+  @Override
+  @RequiredReadAction
+  protected @Nullable ColorValue computeBackgroundColor() {
+    ColorValue elementBackgroundColor = super.computeBackgroundColor();
+    if (elementBackgroundColor != null) {
+      return elementBackgroundColor;
+    }
+    VirtualFile file = getVirtualFile();
+    if (file == null) {
+      return null;
+    }
+    Project project = getProject();
+    if (project == null || project.isDisposed()) {
+      return null;
+    }
+    return VfsPresentationUtil.getFileBackgroundColor(project, file);
   }
 }

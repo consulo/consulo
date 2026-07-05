@@ -24,6 +24,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.Delay;
 import consulo.util.lang.ref.SimpleReference;
@@ -35,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 2024-11-23
  */
 public class TestModalTaskAction extends DumbAwareAction {
-    
+
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
     public TestModalTaskAction(ProgressBuilderFactory progressBuilderFactory) {
@@ -56,9 +57,7 @@ public class TestModalTaskAction extends DumbAwareAction {
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Modal Action..."))
             .cancelable()
             .modal()
-            .execute(uiAccess, coroutine -> {
-                return coroutine
-                    .then(CodeExecution.run((c) -> {
+            .execute(uiAccess, () -> Coroutine.first(CodeExecution.run((c) -> {
                         started.set(Boolean.TRUE);
                         ProgressIndicator.from(c).setIndeterminate(true);
                     }))
@@ -67,8 +66,8 @@ public class TestModalTaskAction extends DumbAwareAction {
                     .then(Delay.sleep(5000L))
                     .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 10 seconds"))))
                     .then(Delay.sleep(5000L))
-                    .then(CodeExecution.supply(() -> "Success Result"));
-            });
+                    .then(CodeExecution.supply(() -> "Success Result"))
+            );
 
         future.whenCompleteAsync((s, throwable) -> {
             if (throwable != null) {

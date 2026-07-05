@@ -79,11 +79,9 @@ public class ShowDiagramAction extends LegacyAnAction {
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.localizeTODO("Preparing Diagram..."))
             .cancelable()
-            .execute(UIAccess.current(), coroutine -> {
-                return coroutine.then(ReadLock.apply(o -> {
-                    return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
-                }));
-            });
+            .execute(UIAccess.current(), () -> ReadLock.apply(o -> {
+                return p.getId() + URLUtil.ARCHIVE_SEPARATOR + p.getName(graphValue) + URLUtil.ARCHIVE_SEPARATOR + p.getURL(graphValue);
+            }).toCoroutine());
 
         UIAccess uiAccess = UIAccess.current();
 

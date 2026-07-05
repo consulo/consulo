@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.ThreadIssueException;
+import consulo.util.lang.function.ThrowableSupplier;
 
 /**
  * This is hack - in idea world we must not allow running Code Editor code from read lock (not ui thread)
@@ -38,6 +39,32 @@ public class CodeEditorAssertion {
 
         if (!UIAccess.isUIThread()) {
             throw new ThreadIssueException("Call must be called inside UI thread");
+        }
+    }
+
+    /**
+     * Historically, Editor models required read lock for reading them. Interacting with an Editor from EDT is allowed
+     * without any locks. Hence, editor models should use this method to ensure consistency: on EDT the action runs in
+     * place without acquiring a read lock, otherwise it runs under a read action.
+     */
+    public static <T, E extends Throwable> T compute(ThrowableSupplier<T, E> action) throws E {
+        Application application = Application.get();
+        if (application.isDispatchThread()) {
+            return action.get();
+        }
+        return application.runReadAction(action);
+    }
+
+    /**
+     * @see #compute(ThrowableSupplier)
+     */
+    public static void run(Runnable action) {
+        Application application = Application.get();
+        if (application.isDispatchThread()) {
+            action.run();
+        }
+        else {
+            application.runReadAction(action);
         }
     }
 }

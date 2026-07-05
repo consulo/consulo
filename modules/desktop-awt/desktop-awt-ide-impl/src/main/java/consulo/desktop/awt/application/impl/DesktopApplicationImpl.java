@@ -35,6 +35,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.ThreadDumper;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.component.ComponentManager;
@@ -140,7 +141,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             };
         }
 
-        Thread edt = UIUtil.invokeAndWaitIfNeeded(() -> {
+        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
             // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
             // that thread was chosen because we know for sure it's running
             AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
@@ -149,12 +150,11 @@ public class DesktopApplicationImpl extends BaseApplication {
             Disposer.register(this, () -> {
                 AWTAutoShutdownHacking.notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
             });
-            return Thread.currentThread();
         });
 
-        myLock = new ReadMostlyRWLock(edt);
-
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
+        // no permanent write thread: the write-intent lock is acquired transiently around each EDT
+        // event (see IdeEventQueue) and around each off-EDT write action, so any thread can write
+        myLock = new ReadMostlyRWLock(null);
 
         NoSwingUnderWriteAction.watchForEvents(this);
     }
@@ -245,7 +245,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         ModalityState state,
         BooleanSupplier expired
     ) {
-        LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
+        LaterInvocator.invokeLaterWithCallback(runnable, state, expired, null);
     }
 
     @RequiredUIAccess
@@ -256,7 +256,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             return;
         }
         if (SwingUtilities.isEventDispatchThread()) {
-            runIntendedWriteActionOnCurrentThread(runnable);
+            runnable.run();
             return;
         }
 
@@ -264,7 +264,21 @@ public class DesktopApplicationImpl extends BaseApplication {
             throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
         }
 
-        LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(runnable), modalityState);
+        LaterInvocator.invokeAndWait(runnable, modalityState);
+    }
+
+    @Override
+    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
+        if (!myLock.isWriteThread()) {
+            return action.compute();
+        }
+        myLock.writeIntentUnlock();
+        try {
+            return action.compute();
+        }
+        finally {
+            myLock.writeIntentLock();
+        }
     }
 
     @Override

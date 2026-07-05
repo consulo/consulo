@@ -306,7 +306,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
         ourTasks.add(this);
       }
       if (!builder.myDisposables.isEmpty()) {
-        builder.myApplication.runReadAction(() -> expireWithDisposables(this.builder.myDisposables));
+        expireWithDisposables(this.builder.myDisposables);
       }
     }
 

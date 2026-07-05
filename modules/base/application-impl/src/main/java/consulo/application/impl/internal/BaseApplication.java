@@ -106,11 +106,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     private class WriteAccessToken extends AccessToken {
-        
+
         private final Class<?> clazz;
+        private final boolean acquiredWriteIntent;
 
         WriteAccessToken(Class<?> clazz) {
             this.clazz = clazz;
+            this.acquiredWriteIntent = !myLock.isWriteThread();
+            if (acquiredWriteIntent) {
+                myLock.writeIntentLock();
+            }
             startWrite(clazz);
             markThreadNameInStackTrace();
         }
@@ -119,6 +124,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         public void finish() {
             try {
                 endWrite(clazz);
+                if (acquiredWriteIntent) {
+                    myLock.writeIntentUnlock();
+                }
             }
             finally {
                 unmarkThreadNameInStackTrace();
@@ -710,7 +718,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             .modal()
             .withProgress(progress);
 
-        ProgressResult<?> result = progressRunner.submitAndGet();
+        ProgressResult<?> result = wrapWithWriteIntent(progressRunner::submitAndGet);
 
         Throwable exception = result.getThrowable();
         if (!(exception instanceof ProcessCanceledException)) {
@@ -834,14 +842,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @RequiredUIAccess
     @Override
     public void runWriteAction(Runnable action) {
-        Class<? extends Runnable> clazz = action.getClass();
-        startWrite(clazz);
-        try {
+        runWriteActionWithClass(action.getClass(), () -> {
             action.run();
-        }
-        finally {
-            endWrite(clazz);
-        }
+            return null;
+        });
     }
 
     @RequiredUIAccess
@@ -879,12 +883,29 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         Class<?> clazz,
         ThrowableSupplier<T, E> computable
     ) throws E {
-        startWrite(clazz);
+        if (myLock.isWriteThread()) {
+            startWrite(clazz);
+            try {
+                return computable.get();
+            }
+            finally {
+                endWrite(clazz);
+            }
+        }
+        // acquire the write-intent lock first: this thread becomes the transient write thread,
+        // then escalates to the full write lock in startWrite
+        myLock.writeIntentLock();
         try {
-            return computable.get();
+            startWrite(clazz);
+            try {
+                return computable.get();
+            }
+            finally {
+                endWrite(clazz);
+            }
         }
         finally {
-            endWrite(clazz);
+            myLock.writeIntentUnlock();
         }
     }
 
@@ -948,6 +969,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Override
     public void invokeLaterOnWriteThread(Runnable action) {
         invokeLaterOnWriteThread(action, getDefaultModalityState());
+    }
+
+    protected <T> T wrapWithWriteIntent(Supplier<T> action) {
+        if (isWriteThread()) {
+            return action.get();
+        }
+        acquireWriteIntentLock(action.getClass().getName());
+        try {
+            return action.get();
+        }
+        finally {
+            releaseWriteIntentLock();
+        }
     }
 
     @Override

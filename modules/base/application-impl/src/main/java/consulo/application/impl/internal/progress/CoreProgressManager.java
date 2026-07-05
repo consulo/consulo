@@ -25,10 +25,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
-import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.CoroutineContext;
-import consulo.util.concurrent.coroutine.CoroutineContextOwner;
-import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;
@@ -415,91 +412,90 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> CompletableFuture<V> executeTask(
-        UIAccess uiAccess,
-        @Nullable ComponentManager project,
-        LocalizeValue titleText,
-        boolean modal,
-        boolean cancelable,
-        Function<Coroutine<?, V>, Coroutine<?, V>> pipelineBuilder
-    ) {
+    public <V> CompletableFuture<V> executeTask(UIAccess uiAccess,
+                                                @Nullable ComponentManager project,
+                                                LocalizeValue titleText,
+                                                boolean modal,
+                                                boolean cancelable,
+                                                Supplier<Coroutine<?, V>> supplier) {
         ProgressBuilderTaskInfo info = new ProgressBuilderTaskInfo(titleText, cancelable);
 
         BaseApplication application = (BaseApplication) Application.get();
 
         SimpleReference<IndicatorDisposable> indicatorDisposable = SimpleReference.create();
 
-        CompletableFuture<ProgressIndicator> indicatorFuture = CompletableFuture.supplyAsync(
-            () -> {
-                ProgressIndicator indicator;
-                if (modal) {
-                    indicator = application.createProgressWindow(
-                        titleText.get(),
-                        cancelable,
-                        true,
-                        project,
-                        null,
-                        ApplicationLocalize.taskButtonCancel()
-                    );
-                }
-                else {
-                    indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
-                }
+        Supplier<ProgressIndicator> indicatorFactory = () -> {
+            ProgressIndicator indicator;
+            if (modal) {
+                indicator = application.createProgressWindow(titleText.get(),
+                    cancelable,
+                    true,
+                    project,
+                    null,
+                    ApplicationLocalize.taskButtonCancel()
+                );
+            }
+            else {
+                indicator = newBackgroundableProcessIndicator(project, info, PerformInBackgroundOption.ALWAYS_BACKGROUND);
+            }
 
-                if (indicator instanceof Disposable) {
-                    IndicatorDisposable disposable = new IndicatorDisposable(indicator);
+            if (indicator instanceof Disposable) {
+                IndicatorDisposable disposable = new IndicatorDisposable(indicator);
 
-                    indicatorDisposable.set(disposable);
+                indicatorDisposable.set(disposable);
 
-                    Disposer.register(myApplication, disposable);
-                }
-                return indicator;
-            },
-            uiAccess
-        );
+                Disposer.register(myApplication, disposable);
+            }
+            return indicator;
+        };
 
-        CompletableFuture<V> future = new NewProgressRunner<>(
-            progress -> {
-                Function<ProgressIndicator, V> task = progressIndicator -> {
-                    Coroutine<?, ?> coroutine = pipelineBuilder
-                        .apply(Coroutine.first(CodeExecution.consume((v, continuation) -> {
-                            continuation.scope().putCopyableUserData(UIAccess.KEY, uiAccess);
-                            continuation.scope().putCopyableUserData(ProgressIndicator.KEY, progress);
+        // Create indicator synchronously when already on EDT to avoid a race condition:
+        // If the indicator future is incomplete when NewProgressRunner sets up the CompletableFuture chain,
+        // postComplete() may fire thenAccept(startBlocking) before the join() Signaller,
+        // causing a deadlock where EDT blocks in the event pump and the task thread stays parked.
+        CompletableFuture<ProgressIndicator> indicatorFuture = application.isDispatchThread()
+            ? CompletableFuture.completedFuture(indicatorFactory.get())
+            : CompletableFuture.supplyAsync(indicatorFactory, uiAccess);
 
-                            progressIndicator.addListener(new ProgressIndicatorListener() {
-                                @Override
-                                public void canceled() {
-                                    continuation.scope().cancel();
-                                }
-                            });
-                        })))
-                        .then(CodeExecution.setScopeParameter(VALUE));
+        CompletableFuture<V> future = new NewProgressRunner<>(progress -> {
+            Function<ProgressIndicator, V> task = progressIndicator -> {
+                Coroutine<?, ?> coroutine = supplier.get();
 
-                    CoroutineContext coroutineContext = project instanceof CoroutineContextOwner owner
-                        ? owner.coroutineContext()
-                        : myApplication.coroutineContext();
+                CoroutineContext coroutineContext = project instanceof CoroutineContextOwner owner
+                    ? owner.coroutineContext()
+                    : myApplication.coroutineContext();
 
-                    CoroutineScope.ScopeFuture<V> scopeFuture = CoroutineScope.produce(
-                        coroutineContext,
-                        scope -> (V) scope.getUserData(VALUE),
-                        rScope -> coroutine.runAsync(rScope, null)
-                    );
+                CoroutineScope scope = new CoroutineScope(coroutineContext);
+                scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+                scope.putCopyableUserData(ProgressIndicator.KEY, progress);
 
-                    try {
-                        return (V) scopeFuture.get();
+                progressIndicator.addListener(new ProgressIndicatorListener() {
+                    @Override
+                    public void canceled() {
+                        scope.cancel();
                     }
-                    catch (CancellationException e) {
-                        throw new ProcessCanceledException(e);
+                });
+
+                Continuation<?> continuation2 = coroutine.runAsync(scope, null);
+
+                try {
+                    scope.await();
+                    scope.checkThrowErrors();
+                    if (scope.isCancelled()) {
+                        throw new CancellationException("Scope is cancelled");
                     }
-                    catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                };
-                return startTask(task, progress, info);
-            },
-            modal,
-            indicatorFuture
-        ).submit(application);
+                    return (V) continuation2.getResult();
+                }
+                catch (CancellationException e) {
+                    throw new ProcessCanceledException(e);
+                }
+                catch (CoroutineException e) {
+                    throw new RuntimeException(e);
+                }
+            };
+            return startTask(task, progress, info);
+        }, modal, indicatorFuture)
+            .submit(application);
 
         future.whenComplete((v, throwable) -> {
             IndicatorDisposable disposable = indicatorDisposable.get();

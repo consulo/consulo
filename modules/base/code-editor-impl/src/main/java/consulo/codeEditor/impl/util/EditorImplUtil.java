@@ -15,8 +15,8 @@
  */
 package consulo.codeEditor.impl.util;
 
-import consulo.application.ReadAction;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
@@ -74,7 +74,7 @@ public class EditorImplUtil {
         if (CodeEditorInlayModelBase.showWhenFolded(inlay)) {
             return false;
         }
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Editor editor = inlay.getEditor();
             Inlay.Placement placement = inlay.getPlacement();
             int offset = inlay.getOffset();
@@ -156,7 +156,7 @@ public class EditorImplUtil {
             return editor.offsetToVisualPosition(lineEndOffset, true, true).column;
         }
 
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Document document = editor.getDocument();
             int lastLine = document.getLineCount() - 1;
             if (lastLine < 0) {

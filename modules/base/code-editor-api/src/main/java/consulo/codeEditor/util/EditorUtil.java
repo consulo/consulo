@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.util;
 
-import consulo.application.ReadAction;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryAdapter;
@@ -84,7 +84,7 @@ public class EditorUtil {
      * @see Inlay#isRelatedToPrecedingText()
      */
     public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             Editor e = editor;
             LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
             if (e instanceof InjectedEditor) {
@@ -396,7 +396,7 @@ public class EditorUtil {
      * Tells whether maximum allowed number of carets is reached in editor. If it's the case, notification is shown
      */
     public static boolean checkMaxCarets(Editor editor) {
-        return ReadAction.compute(() -> {
+        return CodeEditorAssertion.compute(() -> {
             CaretModel caretModel = editor.getCaretModel();
             if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
                 notifyMaxCarets(editor);
