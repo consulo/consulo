@@ -45,7 +45,7 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
     @Override
     @RequiredUIAccess
     protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
-        Editor editor = getBaseEditor(dataContext, project);
+        Editor editor = getBaseEditor(dataContext, project, forUpdate);
         if (editor == null) {
             return null;
         }

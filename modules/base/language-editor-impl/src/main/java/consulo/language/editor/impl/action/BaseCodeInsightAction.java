@@ -74,7 +74,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
 
     @Override
     protected @Nullable Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
-        Editor editor = getBaseEditor(dataContext, project);
+        Editor editor = getBaseEditor(dataContext, project, forUpdate);
         if (!myLookForInjectedEditor) {
             return editor;
         }
@@ -139,8 +139,8 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
         return injectedEditor;
     }
 
-    protected @Nullable Editor getBaseEditor(DataContext dataContext, Project project) {
-        return super.getEditor(dataContext, project, true);
+    protected @Nullable Editor getBaseEditor(DataContext dataContext, Project project, boolean forUpdate) {
+        return super.getEditor(dataContext, project, forUpdate);
     }
 
     @Override

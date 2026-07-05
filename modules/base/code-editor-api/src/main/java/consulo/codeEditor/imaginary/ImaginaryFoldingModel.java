@@ -26,19 +26,19 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Imaginary {@link FoldingModel} implementation that captures collapsed region offsets from
- * a real editor at construction time. Only {@link #isOffsetCollapsed(int)} is functional;
- * all other mutating or structural methods throw {@link UnsupportedOperationException}.
+ * Imaginary {@link FoldingModel} implementation that captures collapsed regions from
+ * a real editor at construction time. Only {@link #isOffsetCollapsed(int)} and
+ * {@link #getCollapsedRegionAtOffset(int)} are functional; all other mutating or structural
+ * methods throw {@link UnsupportedOperationException}.
  *
  * @author VISTALL
  * @since 2026-03-27
  */
 class ImaginaryFoldingModel implements FoldingModel {
-    // Flat array of [startOffset0, endOffset0, startOffset1, endOffset1, ...]
-    // containing only collapsed (non-expanded) regions, captured at construction time.
-    private final int[] myCollapsedRegions;
+    // Collapsed (non-expanded) regions captured at construction time.
+    private final FoldRegion[] myCollapsedRegions;
 
-    ImaginaryFoldingModel(int[] collapsedRegions) {
+    ImaginaryFoldingModel(FoldRegion[] collapsedRegions) {
         myCollapsedRegions = collapsedRegions;
     }
 
@@ -50,12 +50,11 @@ class ImaginaryFoldingModel implements FoldingModel {
                 count++;
             }
         }
-        int[] collapsed = new int[count * 2];
+        FoldRegion[] collapsed = new FoldRegion[count];
         int i = 0;
         for (FoldRegion region : allRegions) {
             if (!region.isExpanded()) {
-                collapsed[i++] = region.getStartOffset();
-                collapsed[i++] = region.getEndOffset();
+                collapsed[i++] = region;
             }
         }
         return new ImaginaryFoldingModel(collapsed);
@@ -63,12 +62,7 @@ class ImaginaryFoldingModel implements FoldingModel {
 
     @Override
     public boolean isOffsetCollapsed(int offset) {
-        for (int i = 0; i < myCollapsedRegions.length; i += 2) {
-            if (myCollapsedRegions[i] <= offset && offset < myCollapsedRegions[i + 1]) {
-                return true;
-            }
-        }
-        return false;
+        return getCollapsedRegionAtOffset(offset) != null;
     }
 
     @Nullable
@@ -90,7 +84,15 @@ class ImaginaryFoldingModel implements FoldingModel {
     @Nullable
     @Override
     public FoldRegion getCollapsedRegionAtOffset(int offset) {
-        throw new UnsupportedOperationException();
+        FoldRegion outermost = null;
+        for (FoldRegion region : myCollapsedRegions) {
+            if (region.getStartOffset() <= offset && offset < region.getEndOffset()) {
+                if (outermost == null || region.getStartOffset() < outermost.getStartOffset()) {
+                    outermost = region;
+                }
+            }
+        }
+        return outermost;
     }
 
     @Nullable
