@@ -44,7 +44,10 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     private final Map<Key, Object> myImmediateData = new HashMap<>();
     private final Map<Key, Supplier<?>> myLazyData = new HashMap<>();
     private final Map<Key, Function<DataSnapshot, ?>> myLazyValueData = new HashMap<>();
-    private final Set<Key> myResolving = new HashSet<>();
+    // Cycle guard is per-thread: the same sink is shared by the async context and resolved
+    // concurrently by many background action-update threads. A shared set would make one
+    // thread's in-progress resolution look like a cycle to another thread, yielding spurious nulls.
+    private final ThreadLocal<Set<Key>> myResolving = ThreadLocal.withInitial(HashSet::new);
 
     private boolean mySnapshotCollected;
 
@@ -112,7 +115,8 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
         }
 
         // Guard against cyclic lazy dependencies (e.g. a rule for A reading B whose rule reads A)
-        if (!myResolving.add(key)) {
+        Set<Key> resolving = myResolving.get();
+        if (!resolving.add(key)) {
             return null;
         }
         try {
@@ -137,7 +141,7 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
             return null;
         }
         finally {
-            myResolving.remove(key);
+            resolving.remove(key);
         }
     }
 
@@ -147,8 +151,14 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     }
 
     private @Nullable <T> T resolveUnderReadAction(Supplier<T> computation) {
-        SimpleReference<T> result = SimpleReference.create();
-        myApplication.tryRunReadAction(() -> result.set(computation.get()));
-        return result.get();
+        if (myApplication.isReadAccessAllowed()) {
+            return computation.get();
+        }
+        if (myApplication.isDispatchThread()) {
+            SimpleReference<T> result = SimpleReference.create();
+            myApplication.tryRunReadAction(() -> result.set(computation.get()));
+            return result.get();
+        }
+        return myApplication.runReadAction(computation);
     }
 }
