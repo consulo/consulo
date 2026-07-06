@@ -45,7 +45,7 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
 
     private Function<String, Image> myImageResolver = null;
 
-    private boolean myNoGapsBetweenParagraphs;
+    private final StyleSheet myStyle;
 
     @Override
     public Cursor getDefaultCursor() {
@@ -59,7 +59,15 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     }
 
     public JBHtmlEditorKit(boolean noGapsBetweenParagraphs) {
-        myNoGapsBetweenParagraphs = noGapsBetweenParagraphs;
+        StyleSheet style = new StyleSheet();
+        // link the global default style sheet to avoid mutation of a global variable
+        style.addStyleSheet(super.getStyleSheet());
+        updateStyle(style);
+        if (noGapsBetweenParagraphs) {
+            style.addRule("p { margin-top: 0; }");
+        }
+        myStyle = style;
+
         myHyperlinkListener = new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -96,14 +104,22 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     }
 
     @Override
+    public StyleSheet getStyleSheet() {
+        return myStyle;
+    }
+
+    /**
+     * Will not work as one might expect it to.
+     * To override default style you should use the provided constructor.
+     */
+    @Override
+    public void setStyleSheet(StyleSheet style) {
+        // prevent setting the global style
+    }
+
+    @Override
     public Document createDefaultDocument() {
         StyleSheet style = getStyleSheet();
-
-        updateStyle(style);
-        
-        if (myNoGapsBetweenParagraphs) {
-            style.addRule("p { margin-top: 0; }");
-        }
 
         // static class instead anonymous for exclude $this [memory leak]
         StyleSheet ss = new StyleSheetCompressionThreshold();
