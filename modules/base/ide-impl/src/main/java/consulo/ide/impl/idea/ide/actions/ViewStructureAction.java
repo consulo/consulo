@@ -40,7 +40,10 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PlaceHolder;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -48,7 +51,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 
 @ActionImpl(id = "FileStructurePopup")
-public class ViewStructureAction extends LegacyDumbAwareAction {
+public class ViewStructureAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public ViewStructureAction() {
         super(ActionLocalize.actionFilestructurepopupText(), ActionLocalize.actionFilestructurepopupDescription());
         setEnabledInModalContext(true);
@@ -110,20 +113,22 @@ public class ViewStructureAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            e.getPresentation().setEnabled(false);
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            Project project = e.getData(Project.KEY);
+            if (project == null) {
+                e.getPresentation().setEnabled(false);
+                return;
+            }
 
-        FileEditor fileEditor = e.getData(FileEditor.KEY);
-        Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
+            FileEditor fileEditor = e.getData(FileEditor.KEY);
+            Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
 
-        boolean enabled = fileEditor != null
-            && !Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))
-            && fileEditor.getStructureViewBuilder() != null;
-        e.getPresentation().setEnabled(enabled);
+            boolean enabled = fileEditor != null
+                && !Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))
+                && fileEditor.getStructureViewBuilder() != null;
+            e.getPresentation().setEnabled(enabled);
+        }).toCoroutine();
     }
 
     

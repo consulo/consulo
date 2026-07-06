@@ -35,14 +35,14 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -52,7 +52,7 @@ import java.util.function.Consumer;
 /**
  * @author yole
  */
-public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> extends LegacyAnAction {
+public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> extends AnAction implements AnActionWithAsyncUpdate {
     private static final ExtensionPointCacheKey CACHE_KEY =
         ExtensionPointCacheKey.<HierarchyProvider, ByLanguageValue<List<HierarchyProvider>>>create(
             "HierarchyProvider",
@@ -62,7 +62,9 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     private static final Logger LOG = Logger.getInstance(BrowseHierarchyActionBase.class);
     private final Class<T> myHierarchyClass;
 
-    protected BrowseHierarchyActionBase(LocalizeValue text, LocalizeValue description, Class<T> hierarchyClass) {
+    protected BrowseHierarchyActionBase(LocalizeValue text,
+                                        LocalizeValue description,
+                                        Class<T> hierarchyClass) {
         super(text, description);
         myHierarchyClass = hierarchyClass;
     }
@@ -131,15 +133,19 @@ public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> ext
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        if (!Application.get().getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
-            e.getPresentation().setVisible(false);
-        }
-        else {
-            boolean enabled = isEnabled(e);
-            e.getPresentation().setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));
-            e.getPresentation().setEnabled(enabled);
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            Application application = e.getRequiredData(Application.KEY);
+
+            if (!application.getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
+                e.getPresentation().setVisible(false);
+            }
+            else {
+                boolean enabled = isEnabled(e);
+                e.getPresentation().setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));
+                e.getPresentation().setEnabled(enabled);
+            }
+        }).toCoroutine();
     }
 
     @RequiredReadAction

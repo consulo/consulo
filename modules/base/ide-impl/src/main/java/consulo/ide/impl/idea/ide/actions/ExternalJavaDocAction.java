@@ -22,6 +22,7 @@ import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.localize.IdeLocalize;
@@ -36,10 +37,8 @@ import consulo.language.psi.PsiReference;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyAnAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
@@ -48,6 +47,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserUtil;
 import org.jspecify.annotations.Nullable;
@@ -57,7 +57,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ActionImpl(id = "ExternalJavaDoc")
-public class ExternalJavaDocAction extends LegacyAnAction {
+public class ExternalJavaDocAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public ExternalJavaDocAction() {
         super(ActionLocalize.actionExternaljavadocText(), ActionLocalize.actionExternaljavadocDescription());
         setInjectedContext(true);
@@ -160,34 +160,35 @@ public class ExternalJavaDocAction extends LegacyAnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        Editor editor = e.getData(Editor.KEY);
-        PsiElement element = getElement(e.getDataContext(), editor);
-        PsiElement originalElement = getOriginalElement(e.getData(PsiFile.KEY), editor);
-        DocumentationManagerHelper.storeOriginalElement(e.getData(Project.KEY), originalElement, element);
-        DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
-        boolean enabled;
-        if (provider instanceof ExternalDocumentationProvider edProvider) {
-            enabled = edProvider.hasDocumentationFor(element, originalElement) || edProvider.canPromptToConfigureDocumentation(element);
-        }
-        else {
-            List<String> urls = provider.getUrlFor(element, originalElement);
-            enabled = urls != null && !urls.isEmpty();
-        }
-        if (editor != null) {
-            presentation.setEnabled(enabled);
-            if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
-                presentation.setVisible(true);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);
+            PsiElement element = getElement(e.getDataContext(), editor);
+            PsiElement originalElement = getOriginalElement(e.getData(PsiFile.KEY), editor);
+            DocumentationManagerHelper.storeOriginalElement(e.getData(Project.KEY), originalElement, element);
+            DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
+            boolean enabled;
+            if (provider instanceof ExternalDocumentationProvider edProvider) {
+                enabled = edProvider.hasDocumentationFor(element, originalElement) || edProvider.canPromptToConfigureDocumentation(element);
             }
             else {
-                presentation.setVisible(enabled);
+                List<String> urls = provider.getUrlFor(element, originalElement);
+                enabled = urls != null && !urls.isEmpty();
             }
-        }
-        else {
-            presentation.setEnabled(enabled);
-            presentation.setVisible(true);
-        }
+            if (editor != null) {
+                presentation.setEnabled(enabled);
+                if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
+                    presentation.setVisible(true);
+                }
+                else {
+                    presentation.setVisible(enabled);
+                }
+            }
+            else {
+                presentation.setEnabled(enabled);
+                presentation.setVisible(true);
+            }
+        }).toCoroutine();
     }
 
     @RequiredReadAction

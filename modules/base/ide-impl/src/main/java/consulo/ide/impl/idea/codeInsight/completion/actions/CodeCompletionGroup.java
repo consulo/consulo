@@ -24,11 +24,9 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
 @ActionImpl(
     id = "CodeCompletionGroup",
@@ -40,33 +38,34 @@ import consulo.ui.ex.action.Presentation;
         @ActionRef(type = HippieBackwardCompletionAction.class)
     }
 )
-public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
+public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware, AnActionWithAsyncUpdate {
     public CodeCompletionGroup() {
         super(ActionLocalize.groupCodecompletiongroupText(), true);
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Presentation presentation = event.getPresentation();
-        DataContext dataContext = event.getDataContext();
-        Project project = dataContext.getData(Project.KEY);
-        if (project == null) {
-            presentation.setEnabled(false);
-            return;
-        }
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            DataContext dataContext = e.getDataContext();
+            Project project = dataContext.getData(Project.KEY);
+            if (project == null) {
+                presentation.setEnabled(false);
+                return;
+            }
 
-        Editor editor = dataContext.getData(Editor.KEY);
-        if (editor == null) {
-            presentation.setEnabled(false);
-            return;
-        }
-        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-        if (file == null) {
-            presentation.setEnabled(false);
-            return;
-        }
+            Editor editor = dataContext.getData(Editor.KEY);
+            if (editor == null) {
+                presentation.setEnabled(false);
+                return;
+            }
+            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+            if (file == null) {
+                presentation.setEnabled(false);
+                return;
+            }
 
-        presentation.setEnabled(true);
+            presentation.setEnabled(true);
+        }).toCoroutine();
     }
 
     @Override

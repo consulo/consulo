@@ -26,9 +26,13 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.ref.SimpleReference;
 
 /**
@@ -41,7 +45,7 @@ import consulo.util.lang.ref.SimpleReference;
  *
  * @see MultiCaretCodeInsightActionHandler
  */
-public abstract class MultiCaretCodeInsightAction extends LegacyAnAction {
+public abstract class MultiCaretCodeInsightAction extends AnAction implements AnActionWithAsyncUpdate {
     protected MultiCaretCodeInsightAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
@@ -64,7 +68,7 @@ public abstract class MultiCaretCodeInsightAction extends LegacyAnAction {
             .run(() -> {
                 MultiCaretCodeInsightActionHandler handler = getHandler();
                 try {
-                    iterateOverCarets(project, hostEditor, handler);
+                    iterateOverCarets(project, hostEditor, handler, false);
                 }
                 finally {
                     handler.postInvoke();
@@ -75,38 +79,46 @@ public abstract class MultiCaretCodeInsightAction extends LegacyAnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor hostEditor = e.getData(Editor.KEY);
         if (project == null || hostEditor == null) {
             e.getPresentation().setEnabled(false);
-            return;
+            return null;
         }
 
-        final SimpleReference<Boolean> enabled = new SimpleReference<>(false);
-        iterateOverCarets(
-            project,
-            hostEditor,
-            new MultiCaretCodeInsightActionHandler() {
-                @Override
-                public void invoke(Project project, Editor editor, Caret caret, PsiFile file) {
-                    if (isValidFor(project, editor, caret, file)) {
-                        enabled.set(true);
+        return UIAction.apply((i, continuation) -> {
+            final SimpleReference<Boolean> enabled = new SimpleReference<>(false);
+            iterateOverCarets(
+                project,
+                hostEditor,
+                new MultiCaretCodeInsightActionHandler() {
+                    @Override
+                    public void invoke(Project project, Editor editor, Caret caret, PsiFile file) {
+                        if (isValidFor(project, editor, caret, file)) {
+                            enabled.set(true);
+                        }
                     }
-                }
-            }
-        );
-        e.getPresentation().setEnabled(enabled.get());
+                },
+                true
+            );
+            e.getPresentation().setEnabled(enabled.get());
+            return null;
+        }).toCoroutine();
     }
 
     private static void iterateOverCarets(
         Project project,
         Editor hostEditor,
-        MultiCaretCodeInsightActionHandler handler
+        MultiCaretCodeInsightActionHandler handler,
+        boolean forUpdate
     ) {
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
         PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
-        documentManager.commitAllDocuments();
+
+        if (!forUpdate) {
+            documentManager.commitAllDocuments();
+        }
 
         hostEditor.getCaretModel().runForEachCaret(caret -> {
             Editor editor = hostEditor;
