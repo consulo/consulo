@@ -25,7 +25,6 @@ import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
-import consulo.util.collection.Lists;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
@@ -40,7 +39,6 @@ import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +51,6 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =
         Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
     private final Project myProject;
-    private final List<FileStatusListener> myListeners = Lists.newLockFreeCopyOnWriteList();
     private FileStatusFacade myFileStatusProvider;
 
     private static class FileStatusNull implements FileStatus {
@@ -136,9 +133,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         myCachedStatuses.clear();
         myWhetherExactlyParentToChanged.clear();
 
-        for (FileStatusListener listener : myListeners) {
-            listener.fileStatusesChanged();
-        }
+        myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusesChanged();
     }
 
     private void cacheChangedFileStatus(VirtualFile virtualFile, FileStatus fs) {
@@ -182,9 +177,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         }
         cacheChangedFileStatus(file, newStatus);
 
-        for (FileStatusListener listener : myListeners) {
-            listener.fileStatusChanged(file);
-        }
+        myProject.getMessageBus().syncPublisher(FileStatusListener.class).fileStatusChanged(file);
     }
 
     @Override

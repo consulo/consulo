@@ -243,7 +243,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
             return false;
         }
         FileStatus status = statusManager.getStatus(virtualFile);
-        if (status == FileStatus.NOT_CHANGED || status == FileStatus.ADDED || status == FileStatus.UNKNOWN || status == FileStatus.IGNORED) {
+        if (status == FileStatus.ADDED || status == FileStatus.DELETED || status == FileStatus.UNKNOWN || status == FileStatus.IGNORED) {
             log("shouldBeInstalled skipped: status=" + status, virtualFile);
             return false;
         }
@@ -332,8 +332,17 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI, Disp
 
             VcsBaseContentProvider.BaseContent baseContent = myStatusProvider.getBaseRevision(myVirtualFile);
             if (baseContent == null) {
-                log("BaseRevisionLoader failed: null returned for base revision", myVirtualFile);
-                reportTrackerBaseLoadFailed();
+                log("BaseRevisionLoader: no base revision, dropping base and keeping tracker", myVirtualFile);
+                nonModalAliveInvokeLater(() -> {
+                    LineStatusTracker tracker;
+                    synchronized (myLock) {
+                        TrackerData data = myLineStatusTrackers.get(myDocument);
+                        tracker = data != null ? data.tracker : null;
+                    }
+                    if (tracker != null) {
+                        tracker.dropBaseRevision();
+                    }
+                });
                 return;
             }
 

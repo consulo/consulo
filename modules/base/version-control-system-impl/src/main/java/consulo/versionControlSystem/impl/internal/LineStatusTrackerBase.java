@@ -154,6 +154,22 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         // refreshDirty() will call Handler.afterBulkRangeChange -> reinstallRanges().
     }
 
+    @RequiredUIAccess
+    public void dropBaseRevision() {
+        UIAccess.assertIsUIThread();
+        if (myReleased || !myInitialized) return;
+
+        myDocumentTracker.doFrozen(Side.LEFT, () -> {
+            myVcsDocument.setReadOnly(false);
+            myVcsDocument.setText(myDocument.getImmutableCharSequence());
+            myVcsDocument.setReadOnly(true);
+            myDocumentTracker.withWrite(() -> {
+                myInitialized = false;
+                destroyRanges();
+            });
+        });
+    }
+
     public void release() {
         Runnable runnable = () -> {
             if (myReleased) return;
