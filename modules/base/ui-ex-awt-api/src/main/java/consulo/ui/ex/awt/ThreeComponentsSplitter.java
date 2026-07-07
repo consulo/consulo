@@ -19,6 +19,8 @@ import consulo.application.util.registry.Registry;
 import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -384,7 +386,9 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
    * Sets component which is located as the "first" split area. The method doesn't validate and
    * repaint the splitter. If there is already
    */
+  @RequiredUIAccess
   public void setFirstComponent(@Nullable JComponent component) {
+    UIAccess.assertIsUIThread();
     if (myFirstComponent != component) {
       if (myFirstComponent != null) {
         remove(myFirstComponent);
@@ -404,7 +408,9 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   /**
    * Sets component which is located as the "second" split area. The method doesn't validate and repaint the splitter.
    */
+  @RequiredUIAccess
   public void setLastComponent(@Nullable JComponent component) {
+    UIAccess.assertIsUIThread();
     if (myLastComponent != component) {
       if (myLastComponent != null) {
         remove(myLastComponent);
@@ -424,7 +430,9 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
   /**
    * Sets component which is located as the "inner" split area. The method doesn't validate and repaint the splitter.
    */
+  @RequiredUIAccess
   public void setInnerComponent(@Nullable JComponent component) {
+    UIAccess.assertIsUIThread();
     if (myInnerComponent != component) {
       if (myInnerComponent != null) {
         remove(myInnerComponent);

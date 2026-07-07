@@ -21,21 +21,21 @@ import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.action.ShadowAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class ResizeToolWindowAction extends LegacyDumbAwareAction {
+public abstract class ResizeToolWindowAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     private ToolWindow myLastWindow;
     private ToolWindowManager myLastManager;
 
@@ -56,53 +56,56 @@ public abstract class ResizeToolWindowAction extends LegacyDumbAwareAction {
     }
 
     @Override
-    @RequiredUIAccess
-    public final void update(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            setDisabled(e);
-            return;
-        }
-
-        Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (owner == null) {
-            setDisabled(e);
-            return;
-        }
-
-        Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
-        consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
-        if (!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
-            setDisabled(e);
-            return;
-        }
-
-        ToolWindowManager mgr = ToolWindowManager.getInstance(project);
-
-        ToolWindow window = myToolWindow;
-
-        if (window != null || mgr.getActiveToolWindowId() != null) {
-            if (window == null) {
-                window = mgr.getToolWindow(mgr.getActiveToolWindowId());
-            }
-
-            if (window == null || !window.isAvailable() || !window.isVisible() || window.getType() == ToolWindowType.FLOATING || !window.isActive()) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return UIAction.apply((i) -> {
+            Project project = e.getData(Project.KEY);
+            if (project == null) {
                 setDisabled(e);
-                return;
+                return null;
             }
 
-            update(e, window, mgr);
-            if (e.getPresentation().isEnabled()) {
-                myLastWindow = window;
-                myLastManager = mgr;
+            Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            if (owner == null) {
+                setDisabled(e);
+                return null;
+            }
+
+            Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
+            consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
+            if (!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
+                setDisabled(e);
+                return null;
+            }
+
+            ToolWindowManager mgr = ToolWindowManager.getInstance(project);
+
+            ToolWindow window = myToolWindow;
+
+            if (window != null || mgr.getActiveToolWindowId() != null) {
+                if (window == null) {
+                    window = mgr.getToolWindow(mgr.getActiveToolWindowId());
+                }
+
+                if (window == null || !window.isAvailable() || !window.isVisible() || window.getType() == ToolWindowType.FLOATING || !window.isActive()) {
+                    setDisabled(e);
+                    return null;
+                }
+
+                update(e, window, mgr);
+                if (e.getPresentation().isEnabled()) {
+                    myLastWindow = window;
+                    myLastManager = mgr;
+                }
+                else {
+                    setDisabled(e);
+                }
             }
             else {
                 setDisabled(e);
             }
-        }
-        else {
-            setDisabled(e);
-        }
+
+            return null;
+        }).toCoroutine();
     }
 
     private void setDisabled(@Nullable AnActionEvent e) {
