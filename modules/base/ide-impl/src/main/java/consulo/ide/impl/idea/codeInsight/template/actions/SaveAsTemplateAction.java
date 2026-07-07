@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.template.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.EditorKeys;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -171,7 +172,7 @@ public class SaveAsTemplateAction extends LegacyAnAction {
 
     @Override
     public void update(AnActionEvent e) {
-        Editor editor = e.getData(Editor.KEY);
+        Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);
         PsiFile file = e.getData(PsiFile.KEY);
 
         if (file == null || editor == null) {
