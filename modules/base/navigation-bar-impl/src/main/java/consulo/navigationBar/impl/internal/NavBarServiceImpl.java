@@ -120,7 +120,7 @@ public class NavBarServiceImpl implements NavBarService {
     }
 
     private <T> CompletableFuture<T> readAsync(Supplier<T> supplier) {
-        CoroutineScope scope = new CoroutineScope(Application.get().coroutineContext());
+        CoroutineScope scope = CoroutineScope.of(Application.get().coroutineContext());
         return Coroutine.first(ReadLock.<@Nullable Object, T>apply(ignored -> supplier.get()))
             .runAsync(scope, null)
             .toFuture();

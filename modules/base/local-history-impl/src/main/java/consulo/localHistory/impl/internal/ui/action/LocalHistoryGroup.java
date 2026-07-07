@@ -52,7 +52,8 @@ public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAwar
         PsiElement element = e.getData(PsiElement.KEY);
         if (project == null || ActionPlaces.isPopupPlace(e.getPlace())
             && (file != null && !file.isInLocalFileSystem() || file == null && element != null)) {
-            return Coroutine.first(CodeExecution.run(() -> e.getPresentation().setEnabledAndVisible(false)));
+            e.getPresentation().setEnabledAndVisible(false);
+            return Coroutine.empty();
         }
 
         return super.updateAsync(e);

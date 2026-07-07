@@ -19,7 +19,7 @@ package consulo.util.concurrent.coroutine.step;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import consulo.util.concurrent.coroutine.Subroutine;
+import consulo.util.concurrent.coroutine.internal.Subroutine;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;

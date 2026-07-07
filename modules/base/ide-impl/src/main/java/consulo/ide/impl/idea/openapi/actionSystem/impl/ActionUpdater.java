@@ -462,7 +462,7 @@ public class ActionUpdater {
             ? owner.coroutineContext()
             : Application.get().coroutineContext();
 
-        CoroutineScope scope = new CoroutineScope(context);
+        CoroutineScope scope = CoroutineScope.of(context);
         scope.putCopyableUserData(UIAccess.KEY, myUiAccess);
 
         ProgressIndicator indicator = myExpansionIndicator;

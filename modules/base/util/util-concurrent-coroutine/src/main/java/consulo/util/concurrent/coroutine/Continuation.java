@@ -16,26 +16,17 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine;
 
-import consulo.util.concurrent.coroutine.CoroutineEvent.EventType;
-import consulo.util.concurrent.coroutine.internal.Coroutines;
-import consulo.util.concurrent.coroutine.internal.DefaultExceptionHandler;
-import consulo.util.concurrent.coroutine.internal.RunLock;
 import consulo.util.dataholder.CopyableUserDataHolder;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderEx;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiConsumer;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import static consulo.util.concurrent.coroutine.internal.Coroutines.*;
 
 /**
  * A continuation represents the state of a coroutine execution. It can be used
@@ -45,62 +36,7 @@ import static consulo.util.concurrent.coroutine.internal.Coroutines.*;
  *
  * @author eso
  */
-public class Continuation<T> extends UserDataHolderBase implements Executor {
-
-    private static final AtomicLong aNextId = new AtomicLong(1);
-
-    private final CoroutineScope scope;
-
-    private final long id = aNextId.getAndIncrement();
-
-    private final Deque<Coroutine<?, ?>> coroutineStack = new ArrayDeque<>();
-
-    private final CountDownLatch finishSignal = new CountDownLatch(1);
-
-    private final RunLock stateLock = new RunLock();
-
-    @Nullable BiConsumer<Suspension<?>, Boolean> suspensionListener = null;
-
-    @Nullable BiConsumer<CoroutineStep<?, ?>, Continuation<?>> fStepListener = null;
-
-    private @Nullable T result = null;
-
-    private boolean callChainComplete = false;
-
-    private boolean cancelled = false;
-
-    private boolean finished = false;
-
-    private @Nullable Throwable error = null;
-
-    private @Nullable CompletableFuture<?> currentExecution = null;
-
-    private @Nullable Suspension<?> currentSuspension = null;
-
-    private @Nullable Consumer<Continuation<T>> runWhenDone = null;
-
-    private @Nullable Consumer<Continuation<T>> runOnCancel = null;
-
-    private @Nullable Consumer<Continuation<T>> runOnError = null;
-
-    /**
-     * Creates a new instance for the execution of the given {@link Coroutine}
-     * in a certain scope.
-     *
-     * @param scope     The coroutine context
-     * @param coroutine The coroutine that is executed with this continuation
-     */
-    public Continuation(CoroutineScope scope, Coroutine<?, T> coroutine) {
-        this.scope = scope;
-
-        coroutineStack.push(coroutine);
-
-        suspensionListener = getConfiguration(COROUTINE_SUSPENSION_LISTENER);
-        fStepListener = getConfiguration(COROUTINE_STEP_LISTENER);
-
-        scope.coroutineStarted(this);
-        notifyListeners(EventType.STARTED);
-    }
+public interface Continuation<T> extends UserDataHolderEx, CopyableUserDataHolder, Executor {
 
     /**
      * Awaits the completion of the coroutine execution. Other than
@@ -108,14 +44,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * cancellation. An application must check these by itself if needed through
      * {@link #getError()} and {@link #isCancelled()}.
      */
-    public void await() {
-        try {
-            finishSignal.await();
-        }
-        catch (InterruptedException e) {
-            throw new CoroutineException(e);
-        }
-    }
+    void await();
 
     /**
      * Awaits the completion of this continuation but only until a timeout is
@@ -129,14 +58,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param unit    The time unit of the the timeout
      * @return TRUE if the coroutine has finished, FALSE if the timeout elapsed
      */
-    public boolean await(long timeout, TimeUnit unit) {
-        try {
-            return finishSignal.await(timeout, unit);
-        }
-        catch (InterruptedException e) {
-            throw new CoroutineException(e);
-        }
-    }
+    boolean await(long timeout, TimeUnit unit);
 
     /**
      * Cancels the execution of the associated {@link Coroutine} at the next
@@ -145,37 +67,14 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * The bMayInterruptIfRunning parameter is ignored because the thread on
      * which the current step is running is not known.
      */
-    public void cancel() {
-        stateLock.runLocked(() -> {
-            if (!finished) {
-                cancelled = true;
-                finish(null);
-
-                if (runOnCancel != null) {
-                    runOnCancel.accept(this);
-                }
-            }
-        });
-
-        if (currentSuspension != null) {
-            currentSuspension.cancel();
-        }
-        if (callChainComplete && currentExecution != null) {
-            // only cancel last CompletableFuture in a chain to avoid
-            // state-locking for each step execution which would be necessary
-            // as canceling typically occurs from a separate thread
-            currentExecution.cancel(false);
-        }
-    }
+    void cancel();
 
     /**
      * Returns the context of the executed coroutine.
      *
      * @return The coroutine context
      */
-    public final CoroutineContext context() {
-        return scope.context();
-    }
+    CoroutineContext context();
 
     /**
      * Continues the execution of a {@link CompletableFuture} by consuming it's
@@ -187,16 +86,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param rPreviousExecution The future to continue
      * @param fNext              The next code to execute
      */
-    public final <V extends @Nullable Object> void continueAccept(
-        CompletableFuture<V> rPreviousExecution, Consumer<V> fNext) {
-        if (!cancelled) {
-            currentExecution = rPreviousExecution.thenAcceptAsync(fNext, this)
-                .exceptionally(this::fail);
-        }
-        else if (currentExecution != null) {
-            currentExecution.cancel(false);
-        }
-    }
+    <V extends @Nullable Object> void continueAccept(CompletableFuture<V> rPreviousExecution, Consumer<V> fNext);
 
     /**
      * Continues the execution of a {@link CompletableFuture} by applying a
@@ -209,35 +99,11 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param next              The next code to execute
      * @param nextStep          The next step
      */
-    public final <I, O> void continueApply(
+    <I, O> void continueApply(
         CompletableFuture<I> previousExecution,
         Function<I, @Nullable O> next,
         @Nullable CoroutineStep<O, ?> nextStep
-    ) {
-        if (!cancelled) {
-            CompletableFuture<O> rNextExecution =
-                previousExecution.thenApplyAsync(next, this);
-
-            currentExecution = rNextExecution;
-
-            if (nextStep != null) {
-                // the next step is either a StepChain which contains it's own
-                // next step or the final step in a coroutine and therefore the
-                // rNextStep argument can be NULL
-                nextStep.runAsync(rNextExecution, null, this);
-            }
-            else {
-                // only add exception handler to the end of a chain, i.e. next == null
-                rNextExecution.exceptionally(this::fail);
-
-                // and signal that no more steps will be executed
-                callChainComplete = true;
-            }
-        }
-        else if (currentExecution != null) {
-            currentExecution.cancel(false);
-        }
-    }
+    );
 
     /**
      * Continues the execution of a {@link CompletableFuture} by composing it with another
@@ -249,32 +115,11 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param next              The function producing the future to await
      * @param nextStep          The next step
      */
-    public final <I, O> void continueCompose(
+    <I, O> void continueCompose(
         CompletableFuture<I> previousExecution,
         Function<I, CompletableFuture<O>> next,
         @Nullable CoroutineStep<O, ?> nextStep
-    ) {
-        if (!cancelled) {
-            CompletableFuture<O> rNextExecution =
-                previousExecution.thenComposeAsync(next, this);
-
-            currentExecution = rNextExecution;
-
-            if (nextStep != null) {
-                nextStep.runAsync(rNextExecution, null, this);
-            }
-            else {
-                // only add exception handler to the end of a chain, i.e. next == null
-                rNextExecution.exceptionally(this::fail);
-
-                // and signal that no more steps will be executed
-                callChainComplete = true;
-            }
-        }
-        else if (currentExecution != null) {
-            currentExecution.cancel(false);
-        }
-    }
+    );
 
     /**
      * Marks an error of this continuation as handled. This will remove this
@@ -283,22 +128,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @throws IllegalStateException If this instance has no error
      */
-    public void errorHandled() {
-        if (error == null) {
-            throw new IllegalStateException("No error exists");
-        }
-        scope.continuationErrorHandled(this);
-    }
-
-    /**
-     * Forwards the execution to the executor of the {@link CoroutineContext}.
-     *
-     * @see Executor#execute(Runnable)
-     */
-    @Override
-    public void execute(Runnable command) {
-        context().getExecutor().execute(command);
-    }
+    void errorHandled();
 
     /**
      * Signals that an error occurred during the coroutine execution. This will
@@ -312,38 +142,21 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * used directly as a functional argument to
      * {@link CompletableFuture#exceptionally(Function)}
      */
-    public @Nullable <O> O fail(Throwable error) {
-        if (!finished) {
-            this.error = error;
-            scope.fail(this);
-            cancel();
-
-            Objects.requireNonNull(getConfiguration(EXCEPTION_HANDLER, DefaultExceptionHandler.INSTANCE)).accept(error);
-
-            if (runOnError != null) {
-                runOnError.accept(this);
-            }
-        }
-        return null;
-    }
+    @Nullable <O> O fail(Throwable error);
 
     /**
      * Duplicated here for easier access during coroutine execution.
      *
      * @see CoroutineScope#getChannel(ChannelId)
      */
-    public final <C> Channel<C> getChannel(ChannelId<C> id) {
-        return scope.getChannel(id);
-    }
+    <C> Channel<C> getChannel(ChannelId<C> id);
 
     /**
      * Returns a configuration value with a default value of NULL.
      *
-     * @see #getConfiguration(RelationType, Object)
+     * @see #getConfiguration(Key, Object)
      */
-    public @Nullable <V> V getConfiguration(Key<V> configType) {
-        return getConfiguration(configType, null);
-    }
+    @Nullable <V> V getConfiguration(Key<V> configType);
 
     /**
      * Returns the value of a configuration relation. The lookup has the
@@ -364,34 +177,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param defaultValue The default value if no state relation exists
      * @return The configuration value (may be NULL)
      */
-    public @Nullable <V> V getConfiguration(Key<V> configType, @Nullable V defaultValue) {
-        V data = getCopyableUserData(configType);
-        if (data != null) {
-            return data;
-        }
-
-        data = scope.getCopyableUserData(configType);
-        if (data != null) {
-            return data;
-        }
-
-        data = scope.context().getCopyableUserData(configType);
-        if (data != null) {
-            return data;
-        }
-
-        Coroutine<?, ?> rCoroutine = getCurrentCoroutine();
-
-        // if rDefault is NULL always query the relation to also get
-        // default and initial values
-        if (defaultValue == null) {
-            data = rCoroutine.getUserData(configType);
-            if (data != null) {
-                return data;
-            }
-        }
-        return defaultValue;
-    }
+    @Nullable <V> V getConfiguration(Key<V> configType, @Nullable V defaultValue);
 
     /**
      * Returns either the root coroutine or, if subroutines have been started
@@ -399,27 +185,21 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The currently executing coroutine
      */
-    public final Coroutine<?, ?> getCurrentCoroutine() {
-        return coroutineStack.peek();
-    }
+    Coroutine<?, ?> getCurrentCoroutine();
 
     /**
      * Returns the current suspension.
      *
      * @return The current suspension or NULL for none
      */
-    public final @Nullable Suspension<?> getCurrentSuspension() {
-        return currentSuspension;
-    }
+    @Nullable Suspension<?> getCurrentSuspension();
 
     /**
      * Returns the error exception that caused a coroutine cancelation.
      *
      * @return The error or NULL for none
      */
-    public @Nullable Throwable getError() {
-        return error;
-    }
+    @Nullable Throwable getError();
 
     /**
      * Return the result of the coroutine execution. If this continuation has
@@ -428,15 +208,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return The result
      */
-    public T getResult() {
-        try {
-            finishSignal.await();
-        }
-        catch (InterruptedException e) {
-            throw new CoroutineException(e);
-        }
-        return getResultImpl();
-    }
+    T getResult();
 
     /**
      * Return the result of the coroutine execution or throws a
@@ -451,26 +223,14 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *                               or an error occurred
      * @throws CancellationException If the coroutine had been cancelled
      */
-    public @Nullable T getResult(long timeout, TimeUnit unit) {
-        try {
-            if (!finishSignal.await(timeout, unit)) {
-                throw new CoroutineException("Timeout reached");
-            }
-        }
-        catch (InterruptedException e) {
-            throw new CoroutineException(e);
-        }
-        return getResultImpl();
-    }
+    @Nullable T getResult(long timeout, TimeUnit unit);
 
     /**
      * Returns a state value with a default value of NULL.
      *
      * @see #getState(Key, Object)
      */
-    public @Nullable <V> V getState(Key<V> stateType) {
-        return getState(stateType, null);
-    }
+    @Nullable <V> V getState(Key<V> stateType);
 
     /**
      * Returns the value of a runtime state relation of the current execution.
@@ -484,35 +244,14 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param defaultValue The default value if no state relation exists
      * @return The runtime state value (may be null)
      */
-    public @Nullable <V> V getState(Key<V> stateType, @Nullable V defaultValue) {
-        Coroutine<?, ?> coroutine = getCurrentCoroutine();
-
-        V data = coroutine.getUserData(stateType);
-        if (data != null) {
-            return data;
-        }
-
-        data = getUserData(stateType);
-        if (data != null) {
-            return data;
-        }
-
-        data = scope.getUserData(stateType);
-        if (data != null) {
-            return data;
-        }
-
-        return defaultValue;
-    }
+    @Nullable <V> V getState(Key<V> stateType, @Nullable V defaultValue);
 
     /**
      * Returns the unique ID of this instance.
      *
      * @return The continuation ID
      */
-    public final long id() {
-        return id;
-    }
+    long id();
 
     /**
      * Checks if the execution of the coroutine has been cancelled. If it has
@@ -521,9 +260,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return TRUE if the execution has been cancelled
      */
-    public boolean isCancelled() {
-        return cancelled;
-    }
+    boolean isCancelled();
 
     /**
      * Checks if the execution of the coroutine has finished. Whether it has
@@ -533,9 +270,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *
      * @return TRUE if the execution has finished
      */
-    public boolean isFinished() {
-        return finished;
-    }
+    boolean isFinished();
 
     /**
      * Sets a function to be run if the execution of this instance is
@@ -544,19 +279,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param runOnCancel A function to be run on cancellation
      * @return This instance to allow additional invocations
      */
-    public Continuation<T> onCancel(Consumer<Continuation<T>> runOnCancel) {
-        // ensure that function is not set while cancel is in progress
-        stateLock.runLocked(() -> {
-            if (cancelled && error == null) {
-                runOnCancel.accept(this);
-            }
-            else {
-                this.runOnCancel = runOnCancel;
-            }
-        });
-
-        return this;
-    }
+    Continuation<T> onCancel(Consumer<Continuation<T>> runOnCancel);
 
     /**
      * Sets a function to be run if the execution of this instance fails.
@@ -564,23 +287,11 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param runOnError A function to be run on cancellation
      * @return This instance to allow additional invocations
      */
-    public Continuation<T> onError(Consumer<Continuation<T>> runOnError) {
-        // ensure that function is not set while cancel is in progress
-        stateLock.runLocked(() -> {
-            if (cancelled && error != null) {
-                runOnError.accept(this);
-            }
-            else {
-                this.runOnError = runOnError;
-            }
-        });
-
-        return this;
-    }
+    Continuation<T> onError(Consumer<Continuation<T>> runOnError);
 
     /**
      * Sets a function that will be invoked after the coroutine has successfully
-     * finished execution and {@link #finish(Object)} has been invoked. If the
+     * finished execution and {@link #getResult()} is available. If the
      * execution of the coroutine is cancelled (by invoking {@link #cancel()})
      * the code will not be invoked. The code will be run directly, not
      * asynchronously.
@@ -589,18 +300,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      *                    the execution has finished
      * @return This instance to allow additional invocations
      */
-    public Continuation<T> onFinish(Consumer<Continuation<T>> runWhenDone) {
-        // ensure that function is not set while finishing is in progress
-        stateLock.runLocked(() -> {
-            this.runWhenDone = runWhenDone;
-
-            if (finished && !cancelled) {
-                runWhenDone.accept(this);
-            }
-        });
-
-        return this;
-    }
+    Continuation<T> onFinish(Consumer<Continuation<T>> runWhenDone);
 
     /**
      * Converts this continuation into a {@link CompletableFuture} that
@@ -610,28 +310,14 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * of the coroutine execution, cancelled if the coroutine is
      * cancelled, or completed exceptionally if the coroutine fails
      */
-    public CompletableFuture<T> toFuture() {
-        CompletableFuture<T> future = new CompletableFuture<>();
-        onFinish(c -> future.complete(c.getResult()));
-        // fail() sets error BEFORE calling cancel(), so check error here
-        // to let onError handle the future instead of cancelling it
-        onCancel(c -> {
-            if (c.getError() == null) {
-                future.cancel(false);
-            }
-        });
-        onError(c -> future.completeExceptionally(c.getError()));
-        return future;
-    }
+    CompletableFuture<T> toFuture();
 
     /**
      * Returns the scope in which the coroutine is executed.
      *
      * @return The coroutine scope
      */
-    public final CoroutineScope scope() {
-        return scope;
-    }
+    CoroutineScope scope();
 
     /**
      * Suspends an invoking step for later invocation. Returns an instance of
@@ -645,9 +331,7 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param suspendedStep  The step to suspend
      * @return A new suspension object
      */
-    public <V extends @Nullable Object> Suspension<V> suspend(CoroutineStep<?, V> suspendingStep, @Nullable CoroutineStep<V, ?> suspendedStep) {
-        return suspendTo(new Suspension<>(suspendingStep, suspendedStep, this));
-    }
+    <V extends @Nullable Object> Suspension<V> suspend(CoroutineStep<?, V> suspendingStep, @Nullable CoroutineStep<V, ?> suspendedStep);
 
     /**
      * Suspends an invoking step for later invocation with the given instance of
@@ -658,178 +342,5 @@ public class Continuation<T> extends UserDataHolderBase implements Executor {
      * @param suspension The suspension to suspend to
      * @return The suspension object
      */
-    public <V> Suspension<V> suspendTo(Suspension<V> suspension) {
-        // only one suspension per continuation is possible
-        assert currentSuspension == null;
-
-        scope.addSuspension(suspension);
-        currentSuspension = suspension;
-        currentExecution = null;
-
-        if (suspensionListener != null) {
-            suspensionListener.accept(currentSuspension, true);
-        }
-        return suspension;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%s-%d[%s]", getCurrentCoroutine().getName(), id,
-            result);
-    }
-
-    /**
-     * Signals a finished {@link Coroutine} execution. This is invoked
-     * internally by the framework at the end of the execution.
-     *
-     * @param result The result of the coroutine execution
-     */
-    void finish(@Nullable T result) {
-        assert !finished;
-        assert coroutineStack.size() == 1;
-
-        try {
-            this.result = result;
-
-            // lock ensures that setting of fRunWhenDone is correctly synchronized
-            stateLock.runLocked(() -> finished = true);
-
-            finishSignal.countDown();
-
-            scope.coroutineFinished(this);
-            notifyListeners(EventType.FINISHED);
-
-            if (!cancelled && runWhenDone != null) {
-                runWhenDone.accept(this);
-            }
-        }
-        finally {
-            Consumer<Throwable> errorHandler = getConfiguration(EXCEPTION_HANDLER, DefaultExceptionHandler.INSTANCE);
-
-            closeManagedResources(getCurrentCoroutine(), errorHandler);
-            closeManagedResources(this, errorHandler);
-        }
-    }
-
-    /**
-     * Resumes the asynchronous execution of this coroutine at a certain step.
-     *
-     * @param resumeStep The step to resume execution at
-     * @param value      The value to resume the step with
-     */
-    final <V> void resumeAsync(@Nullable CoroutineStep<V, ?> resumeStep, @Nullable V value) {
-        if (!cancelled) {
-            CompletableFuture<V> aResumeExecution =
-                CompletableFuture.supplyAsync(() -> value, this);
-
-            currentExecution = aResumeExecution;
-
-            // the resume step is always either a StepChain which contains it's
-            // own next step or the final step in a coroutine and therefore
-            // rNextStep can be NULL
-            Objects.requireNonNull(resumeStep).runAsync(aResumeExecution, null, this);
-        }
-        else if (currentExecution != null) {
-            currentExecution.cancel(false);
-        }
-    }
-
-    /**
-     * Removes a subroutine from the coroutines stack when it has finished
-     * execution. This will also close all managed resources stored in the
-     * coroutine.
-     */
-    void subroutineFinished() {
-        closeManagedResources(getCurrentCoroutine(), getConfiguration(EXCEPTION_HANDLER, DefaultExceptionHandler.INSTANCE));
-
-        coroutineStack.pop();
-    }
-
-    /**
-     * Pushes a subroutine on the coroutines stack upon execution.
-     *
-     * @param subroutine The subroutine
-     */
-    void subroutineStarted(Subroutine<?, ?, ?> subroutine) {
-        coroutineStack.push(subroutine);
-    }
-
-    /**
-     * Gets notified by {@link Suspension#resume(Object)} upon resuming.
-     *
-     * @param suspension The suspension to resume
-     */
-    <I> void suspensionResumed(Suspension<I> suspension) {
-        assert currentSuspension == suspension;
-
-        if (!isCancelled()) {
-            if (suspensionListener != null) {
-                suspensionListener.accept(currentSuspension, false);
-            }
-        }
-        currentSuspension = null;
-    }
-
-    /**
-     * Traces the execution of coroutine steps (typically for debugging
-     * purposes). Invokes the listener provided in the relation with the type
-     * {@link Coroutines#COROUTINE_STEP_LISTENER} if it is not NULL.
-     *
-     * @param step The step to trace
-     */
-    final void trace(CoroutineStep<?, ?> step) {
-        if (fStepListener != null) {
-            fStepListener.accept(step, this);
-        }
-    }
-
-    /**
-     * Internal implementation of querying the the result.
-     *
-     * @return The result
-     */
-    @SuppressWarnings("NullAway")
-    private T getResultImpl() {
-        if (cancelled) {
-            if (error != null) {
-                if (error instanceof CoroutineException) {
-                    throw (CoroutineException) error;
-                }
-                else {
-                    throw new CoroutineException(error);
-                }
-            }
-            else {
-                throw new CancellationException();
-            }
-        }
-        // NullAway problem: technical usage of null for lazy computation of result.
-        // We cannot use Objects.requireNonNull to check value because T generic parameter also can be nullable.
-        // So there's no way to say to static validator that everything is OK. So we're suppressing NullAway validation here.
-        return result;
-    }
-
-    /**
-     * Notifies the coroutine listeners that are registered in the coroutine,
-     * the scope, and the context.
-     *
-     * @param type The event type
-     */
-    private void notifyListeners(EventType type) {
-        CopyableUserDataHolder[] rSources =
-            new CopyableUserDataHolder[]{getCurrentCoroutine(), scope, scope.context()};
-
-        CoroutineEvent event = new CoroutineEvent(this, type);
-        for (CopyableUserDataHolder rSource : rSources) {
-            List<Consumer<CoroutineEvent>> consumers = rSource.getCopyableUserData(COROUTINE_LISTENERS);
-            if (consumers != null) {
-                for (Consumer<CoroutineEvent> consumer : consumers) {
-                    consumer.accept(event);
-                }
-            }
-        }
-    }
+    <V> Suspension<V> suspendTo(Suspension<V> suspension);
 }

@@ -16,6 +16,7 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine;
 
+import consulo.util.concurrent.coroutine.internal.CoroutineImpl;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jspecify.annotations.Nullable;
@@ -145,7 +146,7 @@ public abstract class CoroutineStep<I extends @Nullable Object, O extends @Nulla
      * @param continuation The continuation of the current execution
      */
     protected void terminateCoroutine(Continuation<?> continuation) {
-        continuation.getCurrentCoroutine().terminate(continuation);
+        ((CoroutineImpl<?, ?>) continuation.getCurrentCoroutine()).terminate(continuation);
     }
 
     public Coroutine<I, O> toCoroutine() {

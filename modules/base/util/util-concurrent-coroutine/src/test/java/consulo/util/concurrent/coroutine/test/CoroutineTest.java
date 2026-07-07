@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -85,6 +86,38 @@ public class CoroutineTest {
             catch (CancellationException e) {
                 // expected
             }
+        });
+    }
+
+    /**
+     * Test of {@link Coroutine#empty()}.
+     */
+    @Test
+    public void testEmpty() {
+        CoroutineContext context = TestCoroutineContext.newSilent();
+
+        Coroutine<String, String> empty = Coroutine.empty();
+
+        // chaining steps on an empty coroutine is not supported
+        assertThrows(UnsupportedOperationException.class,
+            () -> empty.then(apply((String s) -> s)));
+
+        launch(context, scope -> {
+            // running an empty coroutine does nothing and returns a finished
+            // continuation with a NULL result
+            Continuation<String> blocking = empty.runBlocking(scope, "test");
+
+            assertTrue(blocking.isFinished());
+            assertFalse(blocking.isCancelled());
+            assertNull(blocking.getResult());
+
+            Continuation<String> async = empty.runAsync(scope, "test");
+
+            scope.await();
+
+            assertTrue(async.isFinished());
+            assertFalse(async.isCancelled());
+            assertNull(async.getResult());
         });
     }
 
@@ -279,7 +312,7 @@ public class CoroutineTest {
      * CoroutineScope.ScopeCode)}.
      */
     @Test
-    public void testProduce() {
+    public void testProduce() throws Exception {
         CoroutineContext context = TestCoroutineContext.newSilent();
 
         Coroutine<String, String> cr =
@@ -287,7 +320,7 @@ public class CoroutineTest {
                 .then(setScopeParameter(TEXT));
 
         @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
-        CoroutineScope.ScopeFuture<? extends @Nullable String> result = produce(
+        Future<? extends @Nullable String> result = produce(
             context,
             (Function<CoroutineScope, ? extends @Nullable String>) c -> c.getUserData(TEXT),
             scope -> cr.runAsync(scope, "test")

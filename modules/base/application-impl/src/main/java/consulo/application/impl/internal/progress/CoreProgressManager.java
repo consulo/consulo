@@ -465,7 +465,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                     ? owner.coroutineContext()
                     : myApplication.coroutineContext();
 
-                CoroutineScope scope = new CoroutineScope(coroutineContext);
+                CoroutineScope scope = CoroutineScope.of(coroutineContext);
                 scope.putCopyableUserData(UIAccess.KEY, uiAccess);
                 scope.putCopyableUserData(ProgressIndicator.KEY, progress);
 

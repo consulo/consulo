@@ -69,7 +69,7 @@ public abstract class AsyncToggleAction extends AnAction implements Toggleable, 
     public final void actionPerformed(AnActionEvent e) {
         CoroutineContext context = e.getRequiredData(CoroutineContext.KEY);
 
-        CoroutineScope scope = new CoroutineScope(context);
+        CoroutineScope scope = CoroutineScope.of(context);
         scope.putCopyableUserData(UIAccess.KEY, UIAccess.current());
 
         Coroutine.first(isSelectedAsync(e))

@@ -16,66 +16,41 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 package consulo.util.concurrent.coroutine;
 
-import consulo.util.concurrent.coroutine.internal.RunLock;
+import consulo.util.concurrent.coroutine.internal.CoroutineContextImpl;
 import consulo.util.dataholder.Key;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * The context for the execution of {@link Coroutine Coroutines}.
  *
  * @author eso
  */
-public final class CoroutineContext extends CoroutineEnvironment {
-    public static final Key<CoroutineContext> KEY = Key.create(CoroutineContext.class);
-
-    private final Executor executor;
-
-    private final ScheduledExecutorService scheduler;
-
-    private final AtomicLong runningScopes = new AtomicLong();
-
-    private final RunLock scopeLock = new RunLock();
-
-    private CountDownLatch scopesFinishedSignal = new CountDownLatch(1);
+public interface CoroutineContext extends CoroutineEnvironment {
+    Key<CoroutineContext> KEY = Key.create(CoroutineContext.class);
 
     /**
-     * Creates a new instance with a specific coroutine executor and scheduler.
+     * Creates a new context with a specific coroutine executor and scheduler.
      * The latter will be used to execute timed coroutine steps.
      *
      * @param executor  The coroutine executor
      * @param scheduler The scheduled executor service
+     * @return The new context instance
      */
-    public CoroutineContext(Executor executor, ScheduledExecutorService scheduler) {
-        this.executor = executor;
-        this.scheduler = scheduler;
+    static CoroutineContext of(Executor executor, ScheduledExecutorService scheduler) {
+        return new CoroutineContextImpl(executor, scheduler);
     }
 
-    public CoroutineContext copy() {
-        CoroutineContext context = new CoroutineContext(executor, scheduler);
-        copyCopyableDataTo(context);
-        return context;
-    }
+    CoroutineContext copy();
 
     /**
      * Blocks until the coroutines of all {@link CoroutineScope scopes} in this
      * context have finished execution. If no coroutines are running or all have
      * finished execution already this method returns immediately.
      */
-    public void awaitAllScopes() {
-        if (scopesFinishedSignal != null) {
-            try {
-                scopesFinishedSignal.await();
-            }
-            catch (InterruptedException e) {
-                throw new CoroutineException(e);
-            }
-        }
-    }
+    void awaitAllScopes();
 
     /**
      * Returns the executor to be used for the execution of the steps of a
@@ -83,9 +58,7 @@ public final class CoroutineContext extends CoroutineEnvironment {
      *
      * @return The coroutine executor for this context
      */
-    public Executor getExecutor() {
-        return executor;
-    }
+    Executor getExecutor();
 
     /**
      * Returns the executor to be used for the execution of timed steps in a
@@ -95,9 +68,7 @@ public final class CoroutineContext extends CoroutineEnvironment {
      *
      * @return The coroutine scheduler for this context
      */
-    public ScheduledExecutorService getScheduler() {
-        return scheduler;
-    }
+    ScheduledExecutorService getScheduler();
 
     /**
      * Returns the number of currently active {@link CoroutineScope scopes}.
@@ -107,34 +78,5 @@ public final class CoroutineContext extends CoroutineEnvironment {
      *
      * @return The number of running coroutines
      */
-    public long getScopeCount() {
-        return runningScopes.get();
-    }
-
-    /**
-     * Notifies this context that a {@link CoroutineScope} has finished
-     * executing all coroutines.
-     *
-     * @param scope The finished scope
-     */
-    void scopeFinished(CoroutineScope scope) {
-        if (runningScopes.decrementAndGet() == 0) {
-            scopeLock.runLocked(() -> scopesFinishedSignal.countDown());
-        }
-    }
-
-    /**
-     * Notifies this context that a {@link CoroutineScope} has been launched.
-     *
-     * @param scope The launched scope
-     */
-    void scopeLaunched(CoroutineScope scope) {
-        if (runningScopes.incrementAndGet() == 1) {
-            scopeLock.runLocked(() -> {
-                if (scopesFinishedSignal.getCount() == 0) {
-                    scopesFinishedSignal = new CountDownLatch(1);
-                }
-            });
-        }
-    }
+    long getScopeCount();
 }

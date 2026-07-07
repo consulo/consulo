@@ -47,204 +47,204 @@ import static java.util.Arrays.asList;
  * @author eso
  */
 public class Collect<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, Collection<O>> {
-	//~ Instance fields --------------------------------------------------------
+    //~ Instance fields --------------------------------------------------------
 
-	private final List<Coroutine<? super I, ? extends O>> aCoroutines =
-		new ArrayList<>();
+    private final List<Coroutine<? super I, ? extends O>> aCoroutines =
+        new ArrayList<>();
 
-	private Predicate<Continuation<?>> pCollectCriteria = c -> true;
+    private Predicate<Continuation<?>> pCollectCriteria = c -> true;
 
-	private Predicate<Continuation<?>> pCompletionCriteria = c -> false;
+    private Predicate<Continuation<?>> pCompletionCriteria = c -> false;
 
-	//~ Constructors -----------------------------------------------------------
+    //~ Constructors -----------------------------------------------------------
 
-	/***************************************
-	 * Creates a new instance.
-	 *
-	 * @param rFromCoroutines The coroutines to select from
-	 */
-	public Collect(
-		Collection<Coroutine<? super I, ? extends O>> rFromCoroutines) {
-		if (rFromCoroutines.size() == 0) {
-			throw new IllegalArgumentException(
-				"At least one coroutine to collect is required");
-		}
+    /***************************************
+     * Creates a new instance.
+     *
+     * @param rFromCoroutines The coroutines to select from
+     */
+    public Collect(
+        Collection<Coroutine<? super I, ? extends O>> rFromCoroutines) {
+        if (rFromCoroutines.size() == 0) {
+            throw new IllegalArgumentException(
+                "At least one coroutine to collect is required");
+        }
 
-		aCoroutines.addAll(rFromCoroutines);
-	}
+        aCoroutines.addAll(rFromCoroutines);
+    }
 
-	/***************************************
-	 * Copies the state of another instance.
-	 *
-	 * @param rOther The other instance
-	 */
-	private Collect(Collect<I, O> rOther) {
-		aCoroutines.addAll(rOther.aCoroutines);
+    /***************************************
+     * Copies the state of another instance.
+     *
+     * @param rOther The other instance
+     */
+    private Collect(Collect<I, O> rOther) {
+        aCoroutines.addAll(rOther.aCoroutines);
 
-		pCollectCriteria = rOther.pCollectCriteria;
-		pCompletionCriteria = rOther.pCompletionCriteria;
-	}
+        pCollectCriteria = rOther.pCollectCriteria;
+        pCompletionCriteria = rOther.pCompletionCriteria;
+    }
 
-	//~ Static methods ---------------------------------------------------------
+    //~ Static methods ---------------------------------------------------------
 
-	/***************************************
-	 * Suspends the coroutine execution until all coroutines finish and then
-	 * resumes the execution with a collection of the results. By default the
-	 * result of the first finished coroutine is collected. That can be modified
-	 * by providing a different selection condition to {@link #until(Predicate)}
-	 * which will return a new {@link Collect} instance. Modified instances that
-	 * select from additional coroutines or steps can be created with {@link
-	 * #and(Coroutine)} and {@link #and(CoroutineStep)}.
-	 *
-	 * @param  rFromCoroutines The coroutines to select from
-	 *
-	 * @return A new step instance
-	 */
-	@SafeVarargs
-	public static <I, O> Collect<I, O> collect(
-		Coroutine<? super I, ? extends O>... rFromCoroutines) {
-		return new Collect<I, O>(asList(rFromCoroutines));
-	}
+    /***************************************
+     * Suspends the coroutine execution until all coroutines finish and then
+     * resumes the execution with a collection of the results. By default the
+     * result of the first finished coroutine is collected. That can be modified
+     * by providing a different selection condition to {@link #until(Predicate)}
+     * which will return a new {@link Collect} instance. Modified instances that
+     * select from additional coroutines or steps can be created with {@link
+     * #and(Coroutine)} and {@link #and(CoroutineStep)}.
+     *
+     * @param  rFromCoroutines The coroutines to select from
+     *
+     * @return A new step instance
+     */
+    @SafeVarargs
+    public static <I, O> Collect<I, O> collect(
+        Coroutine<? super I, ? extends O>... rFromCoroutines) {
+        return new Collect<I, O>(asList(rFromCoroutines));
+    }
 
-	/***************************************
-	 * Suspends the coroutine execution until one coroutine step finishes. The
-	 * step arguments will be wrapped into new coroutines and then handed to
-	 * {@link #collect(Coroutine...)}.
-	 *
-	 * @param  rFromSteps The coroutine steps to select from
-	 *
-	 * @return A new step instance
-	 */
-	@SafeVarargs
-	public static <I extends @Nullable Object, O extends @Nullable Object> Collect<I, O>
-	collect(CoroutineStep<? super I, ? extends O>... rFromSteps) {
-		return new Collect<>(asList(rFromSteps).stream()
-			.map(rStep -> new Coroutine<>(rStep))
-			.collect(Collectors.toList()));
-	}
+    /***************************************
+     * Suspends the coroutine execution until one coroutine step finishes. The
+     * step arguments will be wrapped into new coroutines and then handed to
+     * {@link #collect(Coroutine...)}.
+     *
+     * @param  rFromSteps The coroutine steps to select from
+     *
+     * @return A new step instance
+     */
+    @SafeVarargs
+    public static <I extends @Nullable Object, O extends @Nullable Object> Collect<I, O>
+    collect(CoroutineStep<? super I, ? extends O>... rFromSteps) {
+        return new Collect<>(asList(rFromSteps).stream()
+            .map(rStep -> Coroutine.first(rStep))
+            .collect(Collectors.toList()));
+    }
 
-	//~ Methods ----------------------------------------------------------------
+    //~ Methods ----------------------------------------------------------------
 
-	/***************************************
-	 * Creates a new instance that collects the result of an additional
-	 * coroutine.
-	 *
-	 * @param  rCoroutine The additional coroutine to select from
-	 *
-	 * @return The new instance
-	 */
-	public Collect<I, O> and(Coroutine<? super I, ? extends O> rCoroutine) {
-		Collect<I, O> aCollect = new Collect<>(this);
+    /***************************************
+     * Creates a new instance that collects the result of an additional
+     * coroutine.
+     *
+     * @param  rCoroutine The additional coroutine to select from
+     *
+     * @return The new instance
+     */
+    public Collect<I, O> and(Coroutine<? super I, ? extends O> rCoroutine) {
+        Collect<I, O> aCollect = new Collect<>(this);
 
-		aCollect.aCoroutines.add(rCoroutine);
+        aCollect.aCoroutines.add(rCoroutine);
 
-		return aCollect;
-	}
+        return aCollect;
+    }
 
-	/***************************************
-	 * Creates a new instance that collects the result of an additional step.
-	 * The step will be wrapped into a new coroutine and handed to {@link
-	 * #and(Coroutine)}.
-	 *
-	 * @param  rStep The additional step to select from
-	 *
-	 * @return The new instance
-	 */
-	public Collect<I, O> and(CoroutineStep<? super I, ? extends O> rStep) {
-		Collect<I, O> aCollect = new Collect<>(this);
+    /***************************************
+     * Creates a new instance that collects the result of an additional step.
+     * The step will be wrapped into a new coroutine and handed to {@link
+     * #and(Coroutine)}.
+     *
+     * @param  rStep The additional step to select from
+     *
+     * @return The new instance
+     */
+    public Collect<I, O> and(CoroutineStep<? super I, ? extends O> rStep) {
+        Collect<I, O> aCollect = new Collect<>(this);
 
-		aCollect.aCoroutines.add(new Coroutine<>(rStep));
+        aCollect.aCoroutines.add(Coroutine.first(rStep));
 
-		return aCollect;
-	}
+        return aCollect;
+    }
 
-	/***************************************
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void runAsync(
-		CompletableFuture<I> previousExecution,
-		@Nullable CoroutineStep<Collection<O>, ?> nextStep,
-		Continuation<?> continuation
-	) {
-		continuation.continueAccept(previousExecution,
-			rInput -> collectAsync(rInput, nextStep, continuation));
-	}
+    /***************************************
+     * {@inheritDoc}
+     */
+    @Override
+    public void runAsync(
+        CompletableFuture<I> previousExecution,
+        @Nullable CoroutineStep<Collection<O>, ?> nextStep,
+        Continuation<?> continuation
+    ) {
+        continuation.continueAccept(previousExecution,
+            rInput -> collectAsync(rInput, nextStep, continuation));
+    }
 
-	/***************************************
-	 * Adds a condition for the termination of the result collection. If a
-	 * succefully finished continuation matches the given predicate the
-	 * collection will be completed and the suspension resumed with the result
-	 * that has been collected so far.
-	 *
-	 * <p>Any collection criteria provided through {@link #when(Predicate)} are
-	 * not automatically applied to the completion criteria and must therefore
-	 * be handled explicitly in the completion test if necessary.</p>
-	 *
-	 * @param  pCompletionCriteria A condition that checks if a result should be
-	 *                             selected
-	 *
-	 * @return A new step instance
-	 */
-	public Collect<I, O> until(Predicate<Continuation<?>> pCompletionCriteria) {
-		Collect<I, O> aCollect = new Collect<>(aCoroutines);
+    /***************************************
+     * Adds a condition for the termination of the result collection. If a
+     * succefully finished continuation matches the given predicate the
+     * collection will be completed and the suspension resumed with the result
+     * that has been collected so far.
+     *
+     * <p>Any collection criteria provided through {@link #when(Predicate)} are
+     * not automatically applied to the completion criteria and must therefore
+     * be handled explicitly in the completion test if necessary.</p>
+     *
+     * @param  pCompletionCriteria A condition that checks if a result should be
+     *                             selected
+     *
+     * @return A new step instance
+     */
+    public Collect<I, O> until(Predicate<Continuation<?>> pCompletionCriteria) {
+        Collect<I, O> aCollect = new Collect<>(aCoroutines);
 
-		aCollect.pCompletionCriteria = pCompletionCriteria;
+        aCollect.pCompletionCriteria = pCompletionCriteria;
 
-		return aCollect;
-	}
+        return aCollect;
+    }
 
-	/***************************************
-	 * Adds a condition for the result collection. If a succefully finished
-	 * continuation matches the given predicate it will be collected into the
-	 * step result.
-	 *
-	 * @param  pCollectCriteria A condition that checks if a result should be
-	 *                          collected
-	 *
-	 * @return A new step instance
-	 */
-	public Collect<I, O> when(Predicate<Continuation<?>> pCollectCriteria) {
-		Collect<I, O> aCollect = new Collect<>(aCoroutines);
+    /***************************************
+     * Adds a condition for the result collection. If a succefully finished
+     * continuation matches the given predicate it will be collected into the
+     * step result.
+     *
+     * @param  pCollectCriteria A condition that checks if a result should be
+     *                          collected
+     *
+     * @return A new step instance
+     */
+    public Collect<I, O> when(Predicate<Continuation<?>> pCollectCriteria) {
+        Collect<I, O> aCollect = new Collect<>(aCoroutines);
 
-		aCollect.pCollectCriteria = pCollectCriteria;
+        aCollect.pCollectCriteria = pCollectCriteria;
 
-		return aCollect;
-	}
+        return aCollect;
+    }
 
-	/***************************************
-	 * {@inheritDoc}
-	 */
-	@Override
-	@SuppressWarnings("NullAway")
-	protected @Nullable Collection<O> execute(@Nullable I input, Continuation<?> continuation) {
-		// even if executed blocking the selection must happen asynchronously,
-		// so we just run this step as a new coroutine in the current scope
+    /***************************************
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("NullAway")
+    protected @Nullable Collection<O> execute(@Nullable I input, Continuation<?> continuation) {
+        // even if executed blocking the selection must happen asynchronously,
+        // so we just run this step as a new coroutine in the current scope
 
-		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
-		// We cannot explain this to the static validator, so suppressing NullAway validation.
-		return new Coroutine<>(this).runAsync(continuation.scope(), input)
-			.getResult();
-	}
+        // NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
+        // We cannot explain this to the static validator, so suppressing NullAway validation.
+        return Coroutine.first(this).runAsync(continuation.scope(), input)
+            .getResult();
+    }
 
-	/***************************************
-	 * Performs the asynchronous collection.
-	 *
-	 * @param rInput        The input value
-	 * @param rNextStep     The step to resume after the suspension
-	 * @param rContinuation the current continuation
-	 */
-	void collectAsync(I rInput, @Nullable CoroutineStep<Collection<O>, ?> rNextStep, Continuation<?> rContinuation) {
-		Selection<Collection<O>, O, Collection<O>> aSelection =
-			Selection.ofMultipleValues(this, rNextStep, rContinuation,
-				pCompletionCriteria, pCollectCriteria);
+    /***************************************
+     * Performs the asynchronous collection.
+     *
+     * @param rInput        The input value
+     * @param rNextStep     The step to resume after the suspension
+     * @param rContinuation the current continuation
+     */
+    void collectAsync(I rInput, @Nullable CoroutineStep<Collection<O>, ?> rNextStep, Continuation<?> rContinuation) {
+        Selection<Collection<O>, O, Collection<O>> aSelection =
+            Selection.ofMultipleValues(this, rNextStep, rContinuation,
+                pCompletionCriteria, pCollectCriteria);
 
-		rContinuation.suspendTo(aSelection);
+        rContinuation.suspendTo(aSelection);
 
-		aCoroutines.forEach(rCoroutine -> {
-			aSelection.add(rCoroutine.runAsync(rContinuation.scope(), rInput));
-		});
+        aCoroutines.forEach(rCoroutine -> {
+            aSelection.add(rCoroutine.runAsync(rContinuation.scope(), rInput));
+        });
 
-		aSelection.seal();
-	}
+        aSelection.seal();
+    }
 }

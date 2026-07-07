@@ -48,7 +48,7 @@ public class ApplicationConcurrencyImpl implements ApplicationConcurrency {
 
         myScheduledExecutorService = new AppScheduledExecutorService("Global Instance", this);
 
-        myCoroutineContext = new CoroutineContext(myVirtualsExecutor, myScheduledExecutorService);
+        myCoroutineContext = CoroutineContext.of(myVirtualsExecutor, myScheduledExecutorService);
         myCoroutineContext.putCopyableUserData(Application.KEY, application);
     }
 

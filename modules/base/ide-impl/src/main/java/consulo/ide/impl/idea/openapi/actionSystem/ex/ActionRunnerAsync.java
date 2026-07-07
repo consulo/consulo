@@ -133,7 +133,7 @@ public final class ActionRunnerAsync {
             ? owner.coroutineContext()
             : Application.get().coroutineContext();
 
-        CoroutineScope scope = new CoroutineScope(context);
+        CoroutineScope scope = CoroutineScope.of(context);
         scope.putCopyableUserData(UIAccess.KEY, Application.get().getLastUIAccess());
 
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();

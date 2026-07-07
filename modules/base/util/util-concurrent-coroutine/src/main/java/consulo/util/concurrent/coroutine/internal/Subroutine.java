@@ -1,5 +1,8 @@
-package consulo.util.concurrent.coroutine;
+package consulo.util.concurrent.coroutine.internal;
 
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineStep;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -11,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author eso
  */
-public class Subroutine<I, T, O> extends Coroutine<I, O> {
+public class Subroutine<I, T, O> extends CoroutineImpl<I, O> {
 
 	/**
 	 * Creates a new instance that invokes the code of another coroutine as a
@@ -23,7 +26,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 * @param returnStep The step to return to after the subroutine execution
 	 */
 	public Subroutine(Coroutine<I, T> coroutine, @Nullable CoroutineStep<T, O> returnStep) {
-		init(coroutine.getRequiredCode().withLastStep(new SubroutineReturn<>(Objects.requireNonNull(returnStep))), null);
+		init(((CoroutineImpl<I, T>) coroutine).getRequiredCode().withLastStep(new SubroutineReturn<>(Objects.requireNonNull(returnStep))), null);
 	}
 
 	/**
@@ -35,7 +38,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 */
 	public void runAsync(CompletableFuture<I> execution,
 		Continuation<?> continuation) {
-		continuation.subroutineStarted(this);
+		((ContinuationImpl<?>) continuation).subroutineStarted(this);
 
 		getRequiredCode().runAsync(execution, null, continuation);
 	}
@@ -48,7 +51,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 	 * @return The result of the execution
 	 */
 	public O runBlocking(I input, Continuation<?> continuation) {
-		continuation.subroutineStarted(this);
+		((ContinuationImpl<?>) continuation).subroutineStarted(this);
 
 		return getRequiredCode().runBlocking(input, continuation);
 	}
@@ -80,7 +83,7 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 			@Nullable CoroutineStep<O, ?> nextStep,
 			Continuation<?> continuation
 		) {
-			continuation.subroutineFinished();
+			((ContinuationImpl<?>) continuation).subroutineFinished();
 
 			returnStep.runAsync(previousExecution, nextStep, continuation);
 		}
@@ -89,10 +92,11 @@ public class Subroutine<I, T, O> extends Coroutine<I, O> {
 		 * {@inheritDoc}
 		 */
 		@Override
+		@SuppressWarnings("NullAway")
 		protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
-			continuation.subroutineFinished();
+			((ContinuationImpl<?>) continuation).subroutineFinished();
 
-			return returnStep.execute(input, continuation);
+			return returnStep.runBlocking(input, continuation);
 		}
 	}
 }

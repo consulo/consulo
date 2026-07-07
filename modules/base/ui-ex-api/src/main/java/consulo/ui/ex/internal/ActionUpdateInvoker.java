@@ -84,7 +84,7 @@ public final class ActionUpdateInvoker {
         }
 
         Application application = Application.get();
-        CoroutineScope scope = new CoroutineScope(application.coroutineContext());
+        CoroutineScope scope = CoroutineScope.of(application.coroutineContext());
         scope.putCopyableUserData(UIAccess.KEY, application.getLastUIAccess());
         return coroutine.runAsync(scope, null).toFuture().thenApply(ignored -> null);
     }
@@ -104,7 +104,7 @@ public final class ActionUpdateInvoker {
 
         if (action instanceof AnActionWithAsyncUpdate async) {
             Application application = Application.get();
-            CoroutineScope scope = new CoroutineScope(application.coroutineContext());
+            CoroutineScope scope = CoroutineScope.of(application.coroutineContext());
             scope.putCopyableUserData(UIAccess.KEY, application.getLastUIAccess());
             async.updateAsync(e).runBlocking(scope, null);
         }

@@ -124,7 +124,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	@SafeVarargs
 	public static <I extends @Nullable Object, O> Select<I, O> select(CoroutineStep<? super I, ? extends O>... rFromSteps) {
 		return new Select<>(asList(rFromSteps).stream()
-			.map(rStep -> new Coroutine<>(rStep))
+			.map(rStep -> Coroutine.first(rStep))
 			.collect(Collectors.toList()));
 	}
 
@@ -157,7 +157,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 	public Select<I, O> or(CoroutineStep<? super I, ? extends O> rStep) {
 		Select<I, O> aSelect = new Select<>(this);
 
-		aSelect.aCoroutines.add(new Coroutine<>(rStep));
+		aSelect.aCoroutines.add(Coroutine.first(rStep));
 
 		return aSelect;
 	}
@@ -204,7 +204,7 @@ public class Select<I extends @Nullable Object, O extends @Nullable Object> exte
 
 		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
 		// We cannot explain this to the static validator, so suppressing NullAway validation.
-		return new Coroutine<>(this).runAsync(continuation.scope(), input)
+		return Coroutine.first(this).runAsync(continuation.scope(), input)
 			.getResult();
 	}
 

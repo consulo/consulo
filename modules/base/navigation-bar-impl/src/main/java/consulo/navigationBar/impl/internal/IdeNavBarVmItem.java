@@ -70,7 +70,7 @@ public final class IdeNavBarVmItem implements NavBarVmItem {
     }
 
     private <T> CompletableFuture<T> fetch(Function<NavBarItem, T> selector) {
-        CoroutineScope scope = new CoroutineScope(Application.get().coroutineContext());
+        CoroutineScope scope = CoroutineScope.of(Application.get().coroutineContext());
         return Coroutine.first(ReadLock.<@Nullable Object, T>apply(ignored -> {
             NavBarItem item = myPointer.dereference();
             return item == null ? null : selector.apply(item);

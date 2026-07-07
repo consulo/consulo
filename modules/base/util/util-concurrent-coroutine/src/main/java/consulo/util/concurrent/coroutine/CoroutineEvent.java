@@ -23,7 +23,7 @@ import java.util.EventObject;
  *
  * @author eso
  */
-public class CoroutineEvent extends EventObject {
+public final class CoroutineEvent extends EventObject {
 
     /**
      * The available event types.
