@@ -25,9 +25,10 @@ import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.NonTrivialActionGroup;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(
@@ -39,20 +40,22 @@ import consulo.virtualFileSystem.VirtualFile;
     },
     parents = @ActionParentRef(value = @ActionRef(id = IdeActions.GROUP_VERSION_CONTROLS), anchor = ActionRefAnchor.FIRST)
 )
-public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAware, AnActionWithSyncUpdate {
+public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAware {
     public LocalHistoryGroup() {
       super(LocalHistoryLocalize.groupLocalHistoryText(), true);
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         VirtualFile file = e.getData(VirtualFile.KEY);
         PsiElement element = e.getData(PsiElement.KEY);
         if (project == null || ActionPlaces.isPopupPlace(e.getPlace())
             && (file != null && !file.isInLocalFileSystem() || file == null && element != null)) {
-            e.getPresentation().setEnabledAndVisible(false);
+            return Coroutine.first(CodeExecution.run(() -> e.getPresentation().setEnabledAndVisible(false)));
         }
+
+        return super.updateAsync(e);
     }
 }
 

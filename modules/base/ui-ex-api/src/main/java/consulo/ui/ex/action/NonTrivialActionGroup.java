@@ -18,6 +18,8 @@ package consulo.ui.ex.action;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.util.ActionGroupUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 
 /**
  * This group hides itself when there's no enabled and visible child.
@@ -26,7 +28,7 @@ import consulo.ui.ex.action.util.ActionGroupUtil;
  * @see SmartPopupActionGroup
  * @see NonEmptyActionGroup
  */
-public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithSyncUpdate {
+public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAware, AnActionWithAsyncUpdate {
     public NonTrivialActionGroup() {
         super();
     }
@@ -36,7 +38,8 @@ public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAwa
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionGroupUtil.isGroupEmptyAsync(this, e)
+            .then(CodeExecution.consume(empty -> e.getPresentation().setVisible(Boolean.TRUE.equals(empty))));
     }
 }
