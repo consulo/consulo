@@ -15,11 +15,13 @@
  */
 package consulo.execution.debug.impl.internal;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointUtil;
+import consulo.util.concurrent.CancellablePromise;
 import consulo.util.lang.TriConsumer;
 
 import java.util.List;
@@ -31,20 +33,23 @@ import java.util.List;
  * @since 13/05/2023
  */
 public class XDebuggerLineChangeHandler {
-  private final TriConsumer<EditorGutterComponentEx, XSourcePositionImpl, List<XLineBreakpointType>> handler;
+    private final TriConsumer<EditorGutterComponentEx, XSourcePositionImpl, List<XLineBreakpointType>> handler;
 
-  public XDebuggerLineChangeHandler(TriConsumer<EditorGutterComponentEx, XSourcePositionImpl, List<XLineBreakpointType>> handler) {
-    this.handler = handler;
-  }
+    private CancellablePromise<List<XLineBreakpointType>> myReadAction;
 
-  public void lineChanged(Editor editor, XSourcePositionImpl position) {
-    List<XLineBreakpointType> types =
-      ReadAction.compute(() -> XBreakpointUtil.getAvailableLineBreakpointTypes(editor.getProject(), position, editor));
+    public XDebuggerLineChangeHandler(TriConsumer<EditorGutterComponentEx, XSourcePositionImpl, List<XLineBreakpointType>> handler) {
+        this.handler = handler;
+    }
 
-    handler.accept((EditorGutterComponentEx)editor.getGutter(), position, types);
-  }
+    public void lineChanged(Editor editor, XSourcePositionImpl position) {
+        myReadAction = ReadAction.nonBlocking(() -> XBreakpointUtil.getAvailableLineBreakpointTypes(editor.getProject(), position, editor))
+            .finishOnUiThread(Application::getAnyModalityState, types -> handler.accept((EditorGutterComponentEx) editor.getGutter(), position, types))
+            .submitDefault();
+    }
 
-  public void exitedGutter() {
-    // TODO cancel run lineChanged??
-  }
+    public void exitedGutter() {
+        if (myReadAction != null) {
+            myReadAction.cancel();
+        }
+    }
 }
