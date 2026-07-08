@@ -67,6 +67,10 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
         myShowDisabledActions = showDisabledActions;
     }
 
+    public PresentationFactory getPresentationFactory() {
+        return myPresentationFactory;
+    }
+
     private static int getDefaultOptionIndexFromSelectCondition(
         @Nullable Predicate<? super AnAction> preselectActionCondition,
         List<? extends ActionPopupItem> items

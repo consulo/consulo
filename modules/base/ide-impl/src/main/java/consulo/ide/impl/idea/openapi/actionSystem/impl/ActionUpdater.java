@@ -68,6 +68,10 @@ public class ActionUpdater {
         }
     };
 
+    public ActionUpdateSession asUpdateSession() {
+        return mySession;
+    }
+
     public ActionUpdater(
         ActionManager actionManager,
         PresentationFactory presentationFactory,
