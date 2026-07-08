@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.AsyncDataContext;
@@ -33,6 +34,8 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 27/06/2023
  */
+@Deprecated
+@DeprecationInfo("Use ActionUpdater as is")
 public class ActionGroupExpander {
 
     /**
