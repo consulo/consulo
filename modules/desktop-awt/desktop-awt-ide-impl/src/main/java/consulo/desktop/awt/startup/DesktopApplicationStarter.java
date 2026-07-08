@@ -41,6 +41,7 @@ import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.util.AppIconUtil;
+import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
@@ -216,6 +217,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         TopMenuInitializer.register(app);
 
         if (myPlatform.os().isMac()) {
+            // resolve native screen-menu availability early so the platform reports isEnabledTopMenu() from startup
+            Menu.isJbScreenMenuEnabled();
             MacTopMenuInitializer.installAutoUpdateMenu();
         }
         else if (myPlatform.os().isWindows()) {
