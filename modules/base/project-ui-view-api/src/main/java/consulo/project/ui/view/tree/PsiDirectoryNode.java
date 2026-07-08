@@ -34,6 +34,7 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -45,7 +46,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
-public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText {
+public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText, PathElementIdProvider {
     private final PsiFileSystemItemFilter myFilter;
 
     public PsiDirectoryNode(Project project, PsiDirectory value, ViewSettings viewSettings) {
@@ -64,6 +65,16 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
     public @Nullable PsiFileSystemItemFilter getFilter() {
         return myFilter;
+    }
+
+    /**
+     * Provides a fast, stable ID for tree-state serialization without resolving the PSI value
+     * (which would require a read action on the EDT). Uses the cached {@link VirtualFile} name.
+     */
+    @Override
+    public String getPathElementId() {
+        VirtualFile virtualFile = getVirtualFile();
+        return virtualFile != null ? virtualFile.getName() : "";
     }
 
     @Override

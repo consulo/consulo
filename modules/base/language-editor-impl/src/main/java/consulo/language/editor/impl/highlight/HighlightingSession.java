@@ -21,18 +21,30 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 
+import org.jspecify.annotations.Nullable;
+
 public interface HighlightingSession {
-  
+
   Project getProject();
 
-  
+
   PsiFile getPsiFile();
 
-  
+
   Document getDocument();
 
-  
+
   ProgressIndicator getProgressIndicator();
 
   EditorColorsScheme getColorsScheme();
+
+  /**
+   * Returns the EDT-captured context stored by a
+   * {@link consulo.language.editor.highlight.TextEditorHighlightingPassFactoryWithContext}
+   * for the given factory class, or {@code null} if no context was stored.
+   */
+  @Nullable
+  default Object getUIContext(Class<?> factoryClass) {
+    return null;
+  }
 }

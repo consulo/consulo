@@ -21,6 +21,7 @@ import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import consulo.codeEditor.impl.VisibleEditorsTracker;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
@@ -183,7 +184,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @RequiredUIAccess
     private static void assertIsDispatchThread() {
-        UIAccess.assertIsUIThread();
+        CodeEditorAssertion.assertEditorThreading();
     }
 
     @Override

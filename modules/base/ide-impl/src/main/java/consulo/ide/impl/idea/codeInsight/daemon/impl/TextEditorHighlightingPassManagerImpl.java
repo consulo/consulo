@@ -17,18 +17,24 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactoryWithContext;
 import consulo.language.editor.impl.highlight.DirtyScopeTrackingHighlightingPassFactory;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.impl.highlight.MainHighlightingPassFactory;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
+import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -155,7 +161,13 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
             }
             PassConfig passConfig = myRegisteredPassFactories.get(passId);
             TextEditorHighlightingPassFactory factory = passConfig.passFactory;
-            TextEditorHighlightingPass pass = factory.createHighlightingPass(psiFile, editor);
+            TextEditorHighlightingPass pass;
+            if (factory instanceof TextEditorHighlightingPassFactoryWithContext<?> contextFactory) {
+                pass = createPassWithContext(contextFactory, psiFile, editor, getUIContextForFactory(psiFile, factory.getClass()));
+            }
+            else {
+                pass = factory.createHighlightingPass(psiFile, editor);
+            }
 
             if (pass == null) {
                 passesRefusedToCreate.add(passId);
@@ -189,6 +201,31 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
         passesRefusedToCreate.forEach(passId -> statusMap.markFileUpToDate(document, passId));
 
         return (List)Arrays.asList(id2Pass.getValues());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <C> TextEditorHighlightingPass createPassWithContext(
+        TextEditorHighlightingPassFactoryWithContext<C> factory,
+        PsiFile psiFile,
+        Editor editor,
+        @Nullable Object rawContext
+    ) {
+        return factory.createHighlightingPass(psiFile, editor, (C)rawContext);
+    }
+
+    /**
+     * Retrieves the EDT-captured UI context for a {@link TextEditorHighlightingPassFactoryWithContext}
+     * from the {@link HighlightingSession} of the current {@link DaemonProgressIndicator}, if any.
+     */
+    private @Nullable Object getUIContextForFactory(PsiFile psiFile, Class<?> factoryClass) {
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        if (indicator instanceof DaemonProgressIndicator dpi) {
+            HighlightingSession session = HighlightingSessionImpl.getHighlightingSession(psiFile, dpi);
+            if (session != null) {
+                return session.getUIContext(factoryClass);
+            }
+        }
+        return null;
     }
 
     

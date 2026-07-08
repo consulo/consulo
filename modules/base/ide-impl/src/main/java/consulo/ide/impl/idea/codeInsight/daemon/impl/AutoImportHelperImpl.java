@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.language.editor.AutoImportHelper;
@@ -25,11 +24,12 @@ import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,11 +52,15 @@ public class AutoImportHelperImpl implements AutoImportHelper {
         return myDaemonListeners.canChangeFileSilently(file);
     }
 
+    @RequiredUIAccess
+    @Override
+    public boolean canChangeFileSilently(VirtualFile virtualFile) {
+        return myDaemonListeners.canChangeFileSilently(virtualFile);
+    }
+
     @Override
     public boolean mayAutoImportNow(PsiFile psiFile, boolean isInContent) {
-        Project project = psiFile.getProject();
-        boolean isInModlessContext = ModalityPerProjectEAPDescriptor.is() ? !LaterInvocator.isInModalContextForProject(project) : !LaterInvocator.isInModalContext();
-        return isInModlessContext && canChangeFileSilently(psiFile);
+        return canChangeFileSilently(psiFile);
     }
 
     @Override

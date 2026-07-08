@@ -5,6 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.FoldingListener;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
@@ -185,11 +186,11 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
     @RequiredUIAccess
     private static void assertIsDispatchThreadForEditor() {
-        UIAccess.assertIsUIThread();
+        CodeEditorAssertion.assertEditorThreading();
     }
 
     private static void assertReadAccess() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        CodeEditorAssertion.assertEditorThreading();
     }
 
     private static void assertOurRegion(FoldRegion region) {

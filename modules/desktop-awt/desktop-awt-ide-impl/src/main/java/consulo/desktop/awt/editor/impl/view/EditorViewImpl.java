@@ -15,6 +15,7 @@ import consulo.codeEditor.impl.FontLayoutService;
 import consulo.codeEditor.impl.LogicalPositionCache;
 import consulo.codeEditor.impl.internal.RealEditorView;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.desktop.awt.editor.impl.*;
@@ -679,11 +680,11 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     private static void assertIsDispatchThread() {
-        UIAccess.assertIsUIThread();
+        CodeEditorAssertion.assertEditorThreading();
     }
 
     private static void assertIsReadAccess() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        CodeEditorAssertion.assertEditorThreading();
     }
 
     @Override

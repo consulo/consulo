@@ -9,11 +9,13 @@ import consulo.application.PowerSaveMode;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -41,6 +43,8 @@ import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactoryWithContext;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
@@ -918,7 +922,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
                 // (or else it will blink like crazy since unused symbols calculation depends on resolve service)
             }
 
-            Map<FileEditor, HighlightingPass[]> passes = new HashMap<>(activeEditors.size());
+            // Collect editors and their highlighters on EDT
+            Map<FileEditor, BackgroundEditorHighlighter> editorsWithHighlighters = new HashMap<>();
             for (FileEditor fileEditor : activeEditors) {
                 if (fileEditor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor())) {
                     // make sure the highlighting is restarted when the editor is finally loaded, because otherwise some crazy things happen,
@@ -928,35 +933,63 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
 
                 BackgroundEditorHighlighter highlighter = fileEditor.getBackgroundHighlighter();
                 if (highlighter != null) {
-                    HighlightingPass[] highlightingPasses = highlighter.createPassesForEditor();
-                    passes.put(fileEditor, highlightingPasses);
+                    editorsWithHighlighters.put(fileEditor, highlighter);
                 }
             }
 
-            // wait for heavy processing to stop, re-schedule daemon but not too soon
-            boolean heavyProcessIsRunning = heavyProcessIsRunning();
-            if (heavyProcessIsRunning) {
-                boolean hasPasses = false;
-                for (Map.Entry<FileEditor, HighlightingPass[]> entry : passes.entrySet()) {
-                    HighlightingPass[] filtered =
-                        Arrays.stream(entry.getValue()).filter(DumbService::isDumbAware).toArray(HighlightingPass[]::new);
-                    entry.setValue(filtered);
-                    hasPasses |= filtered.length != 0;
-                }
-                if (!hasPasses) {
-                    HeavyProcessLatch.INSTANCE.queueExecuteOutOfHeavyProcess(() -> dca.stopProcess(
-                        true,
-                        "re-scheduled to execute after heavy processing finished"
-                    ));
-                    return;
-                }
+            if (editorsWithHighlighters.isEmpty()) {
+                return;
             }
 
-            // cancel all after calling createPasses() since there are perverts {@link consulo.ide.impl.idea.util.xml.ui.DomUIFactoryImpl} who are changing PSI there
+            // cancel previous progress and create a new one on EDT, before submitting to background
             dca.cancelUpdateProgress(true, "Cancel by alarm");
             dca.myUpdateRunnableFuture.cancel(false);
-            DaemonProgressIndicator progress = dca.createUpdateProgress(passes.keySet());
-            dca.myPassExecutorService.submitPasses(passes, progress);
+            DaemonProgressIndicator progress = dca.createUpdateProgress(editorsWithHighlighters.keySet());
+
+            // Capture EDT-only per-editor state (document, colors scheme) and, for factories implementing
+            // TextEditorHighlightingPassFactoryWithContext, their EDT-only context. The heavy pass
+            // instantiation (which needs a read action) is deferred to submitInBackground() on a job thread,
+            // so the read action runs off the EDT and does not freeze the UI.
+            List<TextEditorHighlightingPassFactoryWithContext> contextFactories = new ArrayList<>();
+            for (TextEditorHighlightingPassFactory factory : TextEditorHighlightingPassFactory.EP_NAME.getExtensionList(dca.myProject)) {
+                if (factory instanceof TextEditorHighlightingPassFactoryWithContext contextFactory) {
+                    contextFactories.add(contextFactory);
+                }
+            }
+
+            Map<FileEditor, Document> editorDocuments = new HashMap<>();
+            Map<FileEditor, EditorColorsScheme> editorSchemes = new HashMap<>();
+            Map<FileEditor, Map<Class<?>, Object>> editorUIContexts = new HashMap<>();
+            for (FileEditor fileEditor : editorsWithHighlighters.keySet()) {
+                if (fileEditor instanceof TextEditor textEditor) {
+                    Editor editor = textEditor.getEditor();
+                    editorDocuments.put(fileEditor, editor.getDocument());
+                    editorSchemes.put(fileEditor, editor.getColorsScheme());
+                    if (!contextFactories.isEmpty()) {
+                        Map<Class<?>, Object> contexts = new HashMap<>();
+                        for (TextEditorHighlightingPassFactoryWithContext factory : contextFactories) {
+                            contexts.put(factory.getClass(), factory.getContextFromUI(editor));
+                        }
+                        editorUIContexts.put(fileEditor, contexts);
+                    }
+                }
+            }
+
+            JobLauncher.getInstance().submitToJobThread(
+                () -> dca.submitInBackground(editorsWithHighlighters, progress, editorDocuments, editorSchemes, editorUIContexts),
+                future -> {
+                    try {
+                        if (!future.isCancelled()) {
+                            future.get();
+                        }
+                    }
+                    catch (CancellationException | InterruptedException ignored) {
+                    }
+                    catch (ExecutionException e) {
+                        LOG.error(e.getCause());
+                    }
+                }
+            );
         }
 
         private void clearFieldsOnDispose() {
@@ -968,6 +1001,76 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     private static boolean heavyProcessIsRunning() {
         // VFS refresh is OK
         return HeavyProcessLatch.INSTANCE.isRunningAnythingBut(HeavyProcessLatch.Type.Syncing);
+    }
+
+    /**
+     * Creates highlighting passes and submits them for execution. Called from a background job
+     * thread (not the EDT). Both the {@link HighlightingSession} creation and
+     * {@link BackgroundEditorHighlighter#createPassesForEditor()} need read access, so they run
+     * under a read action here — off the EDT, which avoids freezing the UI on the read lock.
+     * The per-editor EDT-captured UI contexts are stored in the session for background retrieval.
+     */
+    private void submitInBackground(
+        Map<FileEditor, BackgroundEditorHighlighter> editorsWithHighlighters,
+        DaemonProgressIndicator progress,
+        Map<FileEditor, Document> editorDocuments,
+        Map<FileEditor, EditorColorsScheme> editorSchemes,
+        Map<FileEditor, Map<Class<?>, Object>> editorUIContexts
+    ) {
+        if (myDisposed || progress.isCanceled()) {
+            return;
+        }
+
+        Map<FileEditor, HighlightingPass[]> passes = new HashMap<>(editorsWithHighlighters.size());
+        ProgressManager.getInstance().executeProcessUnderProgress(() -> Application.get().runReadAction(() -> {
+            for (Map.Entry<FileEditor, BackgroundEditorHighlighter> entry : editorsWithHighlighters.entrySet()) {
+                FileEditor fileEditor = entry.getKey();
+                if (progress.isCanceled()) {
+                    return;
+                }
+                // Pre-create the HighlightingSession under the read action so that factories implementing
+                // TextEditorHighlightingPassFactoryWithContext can retrieve their EDT-captured context.
+                Document document = editorDocuments.get(fileEditor);
+                if (document != null) {
+                    PsiFile psiFile = myPsiDocumentManager.getPsiFile(document);
+                    if (psiFile != null) {
+                        Map<Class<?>, Object> uiContexts = editorUIContexts.getOrDefault(fileEditor, Map.of());
+                        HighlightingSessionImpl.getOrCreateHighlightingSession(psiFile, progress, editorSchemes.get(fileEditor), uiContexts);
+                    }
+                }
+                HighlightingPass[] highlightingPasses = entry.getValue().createPassesForEditor();
+                passes.put(fileEditor, highlightingPasses);
+            }
+        }), progress);
+
+        if (progress.isCanceled()) {
+            return;
+        }
+
+        // wait for heavy processing to stop, re-schedule daemon but not too soon
+        boolean heavyProcessIsRunning = heavyProcessIsRunning();
+        if (heavyProcessIsRunning) {
+            // pass.isDumbAware() may access PSI (e.g. CodeFoldingPass), so filter under a read action
+            boolean[] hasPasses = {false};
+            Application.get().runReadAction(() -> {
+                for (Map.Entry<FileEditor, HighlightingPass[]> entry : passes.entrySet()) {
+                    HighlightingPass[] filtered =
+                        Arrays.stream(entry.getValue()).filter(DumbService::isDumbAware).toArray(HighlightingPass[]::new);
+                    entry.setValue(filtered);
+                    if (filtered.length != 0) {
+                        hasPasses[0] = true;
+                    }
+                }
+            });
+            if (!hasPasses[0]) {
+                HeavyProcessLatch.INSTANCE.queueExecuteOutOfHeavyProcess(
+                    () -> stopProcess(true, "re-scheduled to execute after heavy processing finished")
+                );
+                return;
+            }
+        }
+
+        myPassExecutorService.submitPasses(passes, progress);
     }
 
     

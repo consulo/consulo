@@ -12,6 +12,7 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
+import consulo.codeEditor.internal.CodeEditorAssertion;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.impl.internal.FontPreferencesImpl;
 import consulo.disposer.Disposable;
@@ -187,7 +188,7 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
     @Override
     @RequiredUIAccess
     public boolean isSoftWrappingEnabled() {
-        UIAccess.assertIsUIThread();
+        CodeEditorAssertion.assertEditorThreading();
         return myUseSoftWraps && !myEditor.isPurePaintingMode();
     }
 
