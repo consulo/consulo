@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.action.handler;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
@@ -43,8 +44,8 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
     myTemporary = temporary;
   }
 
+  @RequiredReadAction
   @Override
-  @RequiredUIAccess
   public boolean isEnabled(Project project, AnActionEvent event) {
     XLineBreakpointType<?>[] breakpointTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
     XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();

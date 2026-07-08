@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
@@ -35,8 +36,9 @@ public class MarkObjectAction extends XDebuggerActionBase {
         super(XDebuggerLocalize.actionMarkObjectText(), XDebuggerLocalize.actionMarkObjectDescription(), null);
     }
 
+    @RequiredReadAction
     @Override
-    public void update(AnActionEvent e) {
+    public void updateInReadAction(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         boolean enabled = false;
         Presentation presentation = e.getPresentation();

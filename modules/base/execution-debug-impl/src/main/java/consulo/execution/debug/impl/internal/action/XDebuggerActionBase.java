@@ -15,21 +15,23 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.LegacyAnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
-public abstract class XDebuggerActionBase extends LegacyAnAction {
+public abstract class XDebuggerActionBase extends AnAction implements AnActionWithAsyncUpdate {
     private final boolean myHideDisabledInPopup;
 
     protected XDebuggerActionBase() {
@@ -50,7 +52,12 @@ public abstract class XDebuggerActionBase extends LegacyAnAction {
     }
 
     @Override
-    public void update(AnActionEvent event) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> updateInReadAction(e)).toCoroutine();
+    }
+
+    @RequiredReadAction
+    public void updateInReadAction(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         boolean hidden = isHidden(event);
         if (hidden) {
@@ -68,6 +75,7 @@ public abstract class XDebuggerActionBase extends LegacyAnAction {
         presentation.setEnabled(enabled);
     }
 
+    @RequiredReadAction
     protected boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         return project != null && isEnabled(project, e);
@@ -75,6 +83,7 @@ public abstract class XDebuggerActionBase extends LegacyAnAction {
 
     protected abstract DebuggerActionHandler getHandler();
 
+    @RequiredReadAction
     private boolean isEnabled(Project project, AnActionEvent event) {
         return getHandler().isEnabled(project, event);
     }
