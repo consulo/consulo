@@ -131,7 +131,7 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction {
         if (project == null) {
             return;
         }
-        if (ChangeListManager.getInstance(project).isFreezedWithNotification("Can not " + vcsContext.getActionName() + " now")) {
+        if (ChangeListManager.getInstance(project).isFreezedWithNotification("Can not " + vcsContext.getActionName().get() + " now")) {
             return;
         }
         VirtualFile selectedFile = vcsContext.getSelectedFiles()[0];

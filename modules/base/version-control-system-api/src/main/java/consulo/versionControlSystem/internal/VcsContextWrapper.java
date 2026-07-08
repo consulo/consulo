@@ -17,11 +17,13 @@ package consulo.versionControlSystem.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Streams;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.action.VcsContext;
@@ -40,13 +42,19 @@ import java.util.stream.Stream;
 public class VcsContextWrapper implements VcsContext {
 
     protected final DataContext myContext;
+    private final Key<Editor> myEditorKey;
     protected final int myModifiers;
 
     private final String myPlace;
-    private final @Nullable String myActionName;
+    private final LocalizeValue myActionName;
 
-    public VcsContextWrapper(DataContext context, int modifiers, String place, @Nullable String actionName) {
+    public VcsContextWrapper(DataContext context,
+                             Key<Editor> editorKey,
+                             int modifiers,
+                             String place,
+                             LocalizeValue actionName) {
         myContext = context;
+        myEditorKey = editorKey;
         myModifiers = modifiers;
         myPlace = place;
         myActionName = actionName;
@@ -58,16 +66,16 @@ public class VcsContextWrapper implements VcsContext {
     }
 
     @Override
-    public @Nullable String getActionName() {
+    public LocalizeValue getActionName() {
         return myActionName;
     }
 
     public static VcsContext createCachedInstanceOn(AnActionEvent event) {
-        return new CachedVcsContext(createInstanceOn(event));
+        return new CachedVcsContext(createInstanceOn(event, Editor.KEY));
     }
 
-    public static VcsContextWrapper createInstanceOn(AnActionEvent event) {
-        return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
+    public static VcsContextWrapper createInstanceOn(AnActionEvent event, Key<Editor> editorKey) {
+        return new VcsContextWrapper(event.getDataContext(), editorKey, event.getModifiers(), event.getPlace(), event.getPresentation().getTextValue());
     }
 
     @Override
@@ -93,7 +101,7 @@ public class VcsContextWrapper implements VcsContext {
 
     @Override
     public Editor getEditor() {
-        return myContext.getData(Editor.KEY);
+        return myContext.getData(myEditorKey);
     }
 
     @Override
