@@ -90,6 +90,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         myCompilerManager = compilerManager;
     }
 
+    @RequiredReadAction
     @Override
     public Result checkAvailable(DataContext dataContext) {
         return ALWAYS_YES;

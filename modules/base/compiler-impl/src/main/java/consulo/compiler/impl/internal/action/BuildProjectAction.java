@@ -15,6 +15,7 @@
  */
 package consulo.compiler.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.CompilerRunner;
@@ -40,27 +41,30 @@ public class BuildProjectAction extends CompileActionBase {
         CompilerManager.getInstance(project).make(null);
     }
 
+    @RequiredReadAction
     @Override
-    public void update(AnActionEvent event) {
-        super.update(event);
-        Presentation presentation = event.getPresentation();
+    protected void updateInReadAction(AnActionEvent e) {
+        super.updateInReadAction(e);
+
+        Presentation presentation = e.getPresentation();
         if (!presentation.isEnabled()) {
             return;
         }
 
-        Project project = event.getData(Project.KEY);
+        Project project = e.getData(Project.KEY);
         presentation.setEnabled(project != null);
 
         if (project != null) {
             ExtensionPoint<CompilerRunner> point = project.getExtensionPoint(CompilerRunner.class);
 
             CompilerRunner.Result result = point.computeSafeIfAny(r ->
-                r.checkAvailable(event.getDataContext()) instanceof CompilerRunner.YesResult yes ? yes : null
+                r.checkAvailable(e.getDataContext()) instanceof CompilerRunner.YesResult yes ? yes : null
             );
 
             if (result instanceof CompilerRunner.YesResult yesResult) {
                 presentation.setIcon(yesResult.buildIcon());
-            } else {
+            }
+            else {
                 presentation.setIcon(PlatformIconGroup.actionsCompile());
             }
         }

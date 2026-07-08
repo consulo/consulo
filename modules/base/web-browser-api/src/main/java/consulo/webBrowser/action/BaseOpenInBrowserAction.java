@@ -17,7 +17,6 @@ package consulo.webBrowser.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -33,6 +32,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -72,16 +72,16 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction implements
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ReadLock.apply(i -> {
+        return ActionSafeReadLock.run(e, presentation -> {
             WebBrowser browser = getBrowser(e);
             if (browser == null) {
                 e.getPresentation().setEnabledAndVisible(false);
-                return null;
+                return;
             }
 
             Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = doUpdate(e);
             if (result == null) {
-                return null;
+                return;
             }
 
             String description = getTemplatePresentation().getText();
@@ -101,7 +101,6 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction implements
                 description = builder.toString();
             }
             e.getPresentation().setText(description);
-            return null;
         }).toCoroutine();
     }
 

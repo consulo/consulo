@@ -16,7 +16,6 @@
 package consulo.ide.action;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -37,6 +36,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -55,7 +55,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction implements
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ReadLock.apply(i -> {
+        return ActionSafeReadLock.apply(e, presentation -> {
             updateInReadAction(e);
             return null;
         }).toCoroutine();

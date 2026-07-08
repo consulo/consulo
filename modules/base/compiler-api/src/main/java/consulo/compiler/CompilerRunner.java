@@ -15,6 +15,7 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.build.ui.progress.BuildProgress;
@@ -44,10 +45,10 @@ public interface CompilerRunner {
 
     Result NO = NoResult.INSTANCE;
 
-    
+
+    @RequiredReadAction
     Result checkAvailable(DataContext dataContext);
 
-    
     LocalizeValue getName();
 
     default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {

@@ -15,7 +15,6 @@
  */
 package consulo.execution.impl.internal.action;
 
-import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.*;
 import consulo.execution.executor.DefaultRunExecutor;
@@ -38,6 +37,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
@@ -62,23 +62,22 @@ public class ExecutorAction extends AnAction implements DumbAware, AnActionWithA
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ReadLock.apply(i -> {
-            Presentation presentation = e.getPresentation();
+        return ActionSafeReadLock.run(e, presentation -> {
             Project project = e.getData(Project.KEY);
 
             if (project == null || project.isDisposed()) {
                 presentation.setEnabledAndVisible(false);
-                return null;
+                return;
             }
 
             presentation.setVisible(myExecutor.isApplicable(project));
             if (!presentation.isVisible()) {
-                return null;
+                return;
             }
 
             if (DumbService.getInstance(project).isDumb() || !project.isInitialized()) {
                 presentation.setEnabled(false);
-                return null;
+                return;
             }
 
             RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
@@ -103,7 +102,7 @@ public class ExecutorAction extends AnAction implements DumbAware, AnActionWithA
                 // don't compute current file to run if editors are not yet loaded
                 if (!project.isDefault() && !StartupManager.getInstance(project).postStartupActivityPassed()) {
                     presentation.setEnabled(false);
-                    return null;
+                    return;
                 }
 
                 RunCurrentFileActionStatus status = myRunCurrentFileService.getRunCurrentFileActionStatus(myExecutor, e, false);
@@ -114,7 +113,7 @@ public class ExecutorAction extends AnAction implements DumbAware, AnActionWithA
 
             presentation.setEnabled(enabled);
             presentation.setText(text);
-            return null;
+            return;
         }).toCoroutine();
     }
 
