@@ -24,10 +24,10 @@ static NSColor * customBg = nil;
     NSSize qSize = [[[[NSAttributedString alloc] initWithString:@"Q" attributes:attributes] autorelease] size];
     CGFloat fontHeight = qSize.height;
 
-    // native-like row height; margins are based on the font (not the row height) so the text indent stays stable
+    CGFloat hPadding = fontHeight * 0.4f;
     menuItemHeight = fontHeight * 1.35f;
-    marginLeft = fontHeight * 1.2f;
-    marginRight = fontHeight * 0.6f;
+    marginLeft = fontHeight * 1.2f + hPadding;
+    marginRight = fontHeight * 0.6f + hPadding;
 
     gapTxtIcon = fontHeight * 0.3f;
     gapTxtShortcut = fontHeight * 1.2f;
@@ -235,9 +235,10 @@ static NSColor * customBg = nil;
         NSRect keyBounds = NSMakeRect(rectBounds.size.width - marginRight - shortcutSize.width,
                                       rectBounds.origin.y + (rectBounds.size.height - shortcutSize.height) / 2,
                                       shortcutSize.width, shortcutSize.height);
+        NSColor * shortcutColor = (isEnabled && !isSelected) ? [NSColor secondaryLabelColor] : textColor;
         NSDictionary *keyAttr = [NSDictionary dictionaryWithObjectsAndKeys:
                 menuShortcutFont, NSFontAttributeName,
-                textColor, NSForegroundColorAttributeName,
+                shortcutColor, NSForegroundColorAttributeName,
                         nil];
         [self.keyShortcut drawInRect:keyBounds withAttributes:keyAttr];
     } else if ([owner isKindOfClass:Menu.class]) {
