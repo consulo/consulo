@@ -42,6 +42,9 @@ public class ActionGroupPopup extends ListPopupImpl {
     private final String myActionPlace;
     private final ProgressIndicator myExpansionIndicator = new EmptyProgressIndicator();
 
+    private boolean myItemsReady = false;
+    private Runnable myPendingShow;
+
     public ActionGroupPopup(
         String title,
         ActionGroup actionGroup,
@@ -212,6 +215,21 @@ public class ActionGroupPopup extends ListPopupImpl {
     }
 
     protected void onItemsSet(List<ActionPopupItem> items) {
+        myItemsReady = true;
+        Runnable pendingShow = myPendingShow;
+        if (pendingShow != null && !isDisposed()) {
+            myPendingShow = null;
+            pendingShow.run();
+        }
+    }
+
+    @Override
+    public void show(Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
+        if (!myItemsReady) {
+            myPendingShow = () -> super.show(owner, aScreenX, aScreenY, considerForcedXY);
+            return;
+        }
+        super.show(owner, aScreenX, aScreenY, considerForcedXY);
     }
 
     @RequiredUIAccess

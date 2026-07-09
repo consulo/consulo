@@ -38,10 +38,13 @@ import javax.swing.plaf.ComboBoxUI;
 public final class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
     private static final String uiClassID = "ComboBoxButtonUI";
 
+    private static final int POPUP_REOPEN_THRESHOLD_MS = 200;
+
     private final ComboBoxAction myComboBoxAction;
     private final Presentation myPresentation;
 
     private Runnable myCurrentPopupCanceler;
+    private long myPopupHiddenAt = 0;
     private PropertyChangeListener myButtonSynchronizer;
 
     private Runnable myOnClickListener;
@@ -88,18 +91,22 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     }
 
     public void showPopupImpl() {
-        hidePopupImpl();
+        if (myCurrentPopupCanceler != null) {
+            hidePopupImpl();
+            return;
+        }
+        if (System.currentTimeMillis() - myPopupHiddenAt < POPUP_REOPEN_THRESHOLD_MS) {
+            return;
+        }
 
         if (myOnClickListener != null) {
             myOnClickListener.run();
-
-            myCurrentPopupCanceler = null;
             return;
         }
 
         JBPopup popup = createPopup(() -> {
             myCurrentPopupCanceler = null;
-
+            myPopupHiddenAt = System.currentTimeMillis();
             updateSize();
         });
         popup.showUnderneathOf(this);
