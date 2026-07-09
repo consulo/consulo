@@ -743,6 +743,11 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
             return false;
         }
 
+        JComponent childContent = myChild.getContent();
+        if (childContent == null || !childContent.isShowing()) {
+            return false;
+        }
+
         Rectangle childBounds = myChild.getBounds();
         childBounds.setLocation(myChild.getLocationOnScreen());
 

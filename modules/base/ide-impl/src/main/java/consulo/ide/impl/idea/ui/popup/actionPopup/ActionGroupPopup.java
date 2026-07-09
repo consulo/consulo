@@ -42,7 +42,7 @@ public class ActionGroupPopup extends ListPopupImpl {
     private final String myActionPlace;
     private final ProgressIndicator myExpansionIndicator = new EmptyProgressIndicator();
 
-    private boolean myItemsReady = false;
+    private boolean myItemsReady = true;
     private Runnable myPendingShow;
 
     public ActionGroupPopup(
@@ -152,6 +152,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             customFilter
         );
 
+        // items are populated asynchronously below; defer show() until they arrive
+        myItemsReady = false;
         // Start async population of action items — refresh list model on EDT when complete
         ActionPopupStep.createActionItems(
             actionGroup,
