@@ -15,6 +15,7 @@
  */
 package consulo.compiler.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
@@ -24,12 +25,16 @@ import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
-public abstract class CompileActionBase extends LegacyDumbAwareAction {
+public abstract class CompileActionBase extends DumbAwareAction implements AnActionWithAsyncUpdate {
     protected CompileActionBase() {
     }
 
@@ -51,11 +56,19 @@ public abstract class CompileActionBase extends LegacyDumbAwareAction {
         }
         doAction(e.getDataContext(), project);
     }
+    
     @RequiredUIAccess
     protected abstract void doAction(DataContext dataContext, Project project);
 
     @Override
-    public void update(AnActionEvent e) {
+    public final Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            updateInReadAction(e);
+        }).toCoroutine();
+    }
+
+    @RequiredReadAction
+    protected void updateInReadAction(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null || !project.isInitialized()) {
             e.getPresentation().setEnabled(false);

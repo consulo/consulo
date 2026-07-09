@@ -6,12 +6,15 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -38,6 +41,9 @@ public class ActionGroupPopup extends ListPopupImpl {
     private final Component myComponent;
     private final String myActionPlace;
     private final ProgressIndicator myExpansionIndicator = new EmptyProgressIndicator();
+
+    private boolean myItemsReady = true;
+    private Runnable myPendingShow;
 
     public ActionGroupPopup(
         String title,
@@ -146,6 +152,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             customFilter
         );
 
+        // items are populated asynchronously below; defer show() until they arrive
+        myItemsReady = false;
         // Start async population of action items — refresh list model on EDT when complete
         ActionPopupStep.createActionItems(
             actionGroup,
@@ -168,6 +176,8 @@ public class ActionGroupPopup extends ListPopupImpl {
             int effectiveMaxRows = maxRowCount <= 0 ? 30 : maxRowCount;
             getList().setVisibleRowCount(Math.min(effectiveMaxRows, getListModel().getSize()));
             pack(true, true);
+
+            onItemsSet(items);
         }));
     }
 
@@ -201,26 +211,69 @@ public class ActionGroupPopup extends ListPopupImpl {
             if (actionItem == null) {
                 return;
             }
-            updateActionItem(actionItem);
+
+            updateActionItems(List.of(actionItem), UIAccess.current());
         });
     }
 
-    private Presentation updateActionItem(ActionPopupItem actionItem) {
+    protected void onItemsSet(List<ActionPopupItem> items) {
+        myItemsReady = true;
+        Runnable pendingShow = myPendingShow;
+        if (pendingShow != null && !isDisposed()) {
+            myPendingShow = null;
+            pendingShow.run();
+        }
+    }
+
+    @Override
+    public void show(Component owner, int aScreenX, int aScreenY, boolean considerForcedXY) {
+        if (!myItemsReady) {
+            myPendingShow = () -> super.show(owner, aScreenX, aScreenY, considerForcedXY);
+            return;
+        }
+        super.show(owner, aScreenX, aScreenY, considerForcedXY);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Void> updateActionItems(List<ActionPopupItem> items, UIAccess uiAccess) {
+        DataContext dataContext = DataManager.getInstance().getDataContext(myComponent);
+        PresentationFactory presentationFactory = getListStep() instanceof ActionPopupStep step
+            ? step.getPresentationFactory()
+            : new BasePresentationFactory();
+        ActionUpdater updater = new ActionUpdater(
+            ActionManager.getInstance(),
+            presentationFactory,
+            DataManager.getInstance().createAsyncDataContext(dataContext),
+            myActionPlace,
+            false,
+            false,
+            uiAccess
+        );
+        ActionUpdateSession session = updater.asUpdateSession();
+
+        CompletableFuture<?>[] futures = items.stream()
+            .map(item -> updateActionItem(item, dataContext, session))
+            .toArray(CompletableFuture[]::new);
+        return CompletableFuture.allOf(futures);
+    }
+
+    private CompletableFuture<Presentation> updateActionItem(ActionPopupItem actionItem, DataContext dataContext, ActionUpdateSession session) {
         AnAction action = actionItem.getAction();
         Presentation presentation = new Presentation();
         presentation.setDescription(action.getTemplatePresentation().getDescription());
 
         AnActionEvent actionEvent = new AnActionEvent(
             null,
-            DataManager.getInstance().getDataContext(myComponent),
+            dataContext,
             myActionPlace,
             presentation,
             ActionManager.getInstance(),
             0
         );
         actionEvent.setInjectedContext(action.isInInjectedContext());
-        ActionImplUtil.performDumbAwareUpdate(action, actionEvent);
-        return presentation;
+        actionEvent.setUpdateSession(session);
+
+        return ActionImplUtil.performDumbAwareUpdateAsync(action, actionEvent).thenApply(ignored -> presentation);
     }
 
     private static ListPopupStep<ActionPopupItem> createStep(
@@ -291,6 +344,7 @@ public class ActionGroupPopup extends ListPopupImpl {
     }
 
     @Override
+    @RequiredUIAccess
     public void handleSelect(boolean handleFinalChoices, InputEvent e) {
         Object selectedValue = getList().getSelectedValue();
         ActionPopupStep actionPopupStep = ObjectUtil.tryCast(getListStep(), ActionPopupStep.class);
@@ -300,10 +354,11 @@ public class ActionGroupPopup extends ListPopupImpl {
                 getActionByClass(selectedValue, actionPopupStep, KeepingPopupOpenAction.class);
             if (dontClosePopupAction != null) {
                 actionPopupStep.performAction((AnAction) dontClosePopupAction, e);
-                for (ActionPopupItem item : actionPopupStep.getValues()) {
-                    updateActionItem(item);
-                }
-                getList().repaint();
+
+                UIAccess uiAccess = UIAccess.current();
+
+                updateActionItems(actionPopupStep.getValues(), uiAccess)
+                    .whenCompleteAsync((r, t) -> getList().repaint(), uiAccess);
                 return;
             }
         }
@@ -311,6 +366,7 @@ public class ActionGroupPopup extends ListPopupImpl {
         super.handleSelect(handleFinalChoices, e);
     }
 
+    @RequiredUIAccess
     protected void handleToggleAction() {
         Object[] selectedValues = getList().getSelectedValues();
 
@@ -327,11 +383,10 @@ public class ActionGroupPopup extends ListPopupImpl {
             actionPopupStep.performAction((AnAction) action, null);
         }
 
-        for (ActionPopupItem item : actionPopupStep.getValues()) {
-            updateActionItem(item);
-        }
+        UIAccess uiAccess = UIAccess.current();
 
-        getList().repaint();
+        updateActionItems(actionPopupStep.getValues(), uiAccess)
+            .whenCompleteAsync((r, t) -> getList().repaint(), uiAccess);
     }
 
     private static @Nullable <T> T getActionByClass(

@@ -16,8 +16,10 @@
 package consulo.versionControlSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.action.VcsContextFactory;
@@ -40,8 +42,8 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
   }
 
   @Override
-  public VcsContext createContextOn(AnActionEvent event) {
-    return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
+  public VcsContext createContextOn(AnActionEvent event, Key<Editor> editorKey) {
+    return new VcsContextWrapper(event.getDataContext(), editorKey, event.getModifiers(), event.getPlace(), event.getPresentation().getTextValue());
   }
 
   @Override

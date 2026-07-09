@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.action;
 
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
@@ -61,5 +62,5 @@ public interface VcsContext extends PlaceProvider<String> {
 
   @Nullable Change[] getSelectedChanges();
 
-  String getActionName();
+  LocalizeValue getActionName();
 }

@@ -32,6 +32,7 @@ import consulo.diff.request.SimpleDiffRequest;
 import consulo.diff.util.IntPair;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.action.VcsActions;
 import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.ui.awt.TableLinkMouseListener;
@@ -130,7 +131,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
         AbstractVcs vcs,
         int selectionStart,
         int selectionEnd,
-        String title
+        LocalizeValue title
     ) {
         super(project);
         myProject = project;
@@ -209,7 +210,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements UiDataPro
             action.registerCustomShortcutSet(action.getShortcutSet(), mySplitter);
         }
 
-        setTitle(title);
+        setTitle(title.get());
         setComponent(mySplitter);
         setPreferredFocusedComponent(myList);
         setDimensionKey("VCS.FileHistoryDialog");

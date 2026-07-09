@@ -55,7 +55,7 @@ jobs:
           path: native/Loader/target/${{ matrix.target }}/release/libconsulo.dylib
           if-no-files-found: error
 
-  # ===== macOS CMake natives (MacEnvReader + MacFileSystemNotifier) =====
+  # ===== macOS CMake natives (MacEnvReader + MacFileSystemNotifier + MacScreenMenu) =====
   # Runs on macos-14 (aarch64). x86_64 is cross-built via Xcode SDK; no universal binary.
   cmake:
     strategy:
@@ -66,15 +66,24 @@ jobs:
             target_define: TARGET_X64
             env_file: printenv64
             fsn_file: fsnotifier64
+            mscm_file: libmacscreenmenu64.dylib
           - name: macos-aarch64
             target_define: TARGET_ARM64
             env_file: printenv-aarch64
             fsn_file: fsnotifier-aarch64
+            mscm_file: libmacscreenmenu-aarch64.dylib
 
     runs-on: macos-14
 
     steps:
       - uses: actions/checkout@v4
+
+      # MacScreenMenu is a JNI library and needs jni.h from a JDK (JAVA_HOME)
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
 
       # MacEnvReader
       - name: Configure MacEnvReader
@@ -102,6 +111,20 @@ jobs:
         with:
           name: ${{ matrix.fsn_file }}-${{ matrix.name }}
           path: native/MacFileSystemNotifier/build/${{ matrix.fsn_file }}
+          if-no-files-found: error
+
+      # MacScreenMenu (JNI, needs JAVA_HOME set by the setup-java step above)
+      - name: Configure MacScreenMenu
+        run: |
+          cmake -S native/MacScreenMenu -B native/MacScreenMenu/build \
+                -DCMAKE_BUILD_TYPE=Release \
+                -D${{ matrix.target_define }}=ON
+      - name: Build MacScreenMenu
+        run: cmake --build native/MacScreenMenu/build --config Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.mscm_file }}-${{ matrix.name }}
+          path: native/MacScreenMenu/build/${{ matrix.mscm_file }}
           if-no-files-found: error
 
   # ===== Publish to consulo/binaries (per-arch dirs) =====

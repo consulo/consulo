@@ -17,6 +17,7 @@ package consulo.localHistory.impl.internal.ui.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.ui.view.SelectionHistoryDialog;
@@ -47,16 +48,15 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
         new SelectionHistoryDialog(p, gw, f, from, to).show();
     }
 
-    
     @Override
     protected LocalizeValue getTextValue(AnActionEvent e) {
         VcsSelection sel = getSelection(e);
-        return sel == null ? super.getTextValue(e) : LocalizeValue.ofNullable(sel.getActionName());
+        return sel == null ? super.getTextValue(e) : sel.getActionName();
     }
 
     @Override
     public void update(AnActionEvent e) {
-        if (!e.hasData(Editor.KEY)) {
+        if (!e.hasData(EditorKeys.EDITOR_SNAPSHOT)) {
             e.getPresentation().setVisible(false);
         }
         else {

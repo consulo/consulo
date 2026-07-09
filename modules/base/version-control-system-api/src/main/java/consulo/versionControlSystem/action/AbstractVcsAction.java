@@ -15,12 +15,12 @@
  */
 package consulo.versionControlSystem.action;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.codeEditor.EditorKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
-public abstract class AbstractVcsAction extends LegacyDumbAwareAction {
+public abstract class AbstractVcsAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     protected AbstractVcsAction() {
     }
 
@@ -58,9 +58,10 @@ public abstract class AbstractVcsAction extends LegacyDumbAwareAction {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void update(AnActionEvent e) {
         //noinspection deprecation - required for compatibility with external plugins.
-        performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e));
+        performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e, EditorKeys.EDITOR_SNAPSHOT));
     }
 
     @Override

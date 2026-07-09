@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.action.VcsContext;
@@ -43,7 +44,7 @@ public class CachedVcsContext implements VcsContext {
   private final FilePath mySelectedFilePath;
   private final ChangeList[] mySelectedChangeLists;
   private final Change[] mySelectedChanges;
-  private final String myActionName;
+  private final LocalizeValue myActionName;
 
   public CachedVcsContext(VcsContext baseContext) {
     myProject = baseContext.getProject();
@@ -136,7 +137,7 @@ public class CachedVcsContext implements VcsContext {
   }
 
   @Override
-  public String getActionName() {
+  public LocalizeValue getActionName() {
     return myActionName;
   }
 }

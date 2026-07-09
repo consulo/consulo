@@ -66,6 +66,5 @@ public interface XLineBreakpointTypeResolver {
     @RequiredReadAction
     @Nullable XLineBreakpointType<?> resolveBreakpointType(Project project, VirtualFile virtualFile, int line);
 
-    
     FileType getFileType();
 }

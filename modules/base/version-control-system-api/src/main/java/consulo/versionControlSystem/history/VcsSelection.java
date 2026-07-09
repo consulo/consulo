@@ -18,27 +18,29 @@ package consulo.versionControlSystem.history;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 public final class VcsSelection {
   private final Document myDocument;
   private final int mySelectionStartLineNumber;
   private final int mySelectionEndLineNumber;
-  private final String myActionName;
-  private final String myDialogTitle;
+  private final LocalizeValue myActionName;
+  private final LocalizeValue myDialogTitle;
 
   public VcsSelection(Document document, SelectionModel selectionModel) {
-    this(document, new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()), VcsBundle.message("action.name.show.history.for.selection"));
+    this(document, new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()), VcsLocalize.actionNameShowHistoryForSelection());
   }
 
-  public VcsSelection(Document document, TextRange textRange, String actionName) {
+  public VcsSelection(Document document, TextRange textRange, LocalizeValue actionName) {
     myDocument = document;
     int startOffset = textRange.getStartOffset();
     mySelectionStartLineNumber = document.getLineNumber(startOffset);
     int endOffset = textRange.getEndOffset();
     mySelectionEndLineNumber = endOffset >= document.getTextLength() ? document.getLineCount() - 1 : document.getLineNumber(endOffset);
-    myActionName = VcsBundle.message("show.history.action.name.template", actionName);
-    myDialogTitle = VcsBundle.message("show.history.dialog.title.template", actionName);
+    myActionName = VcsLocalize.showHistoryActionNameTemplate(actionName);
+    myDialogTitle = VcsLocalize.showHistoryDialogTitleTemplate(actionName);
   }
 
   public Document getDocument() {
@@ -53,11 +55,11 @@ public final class VcsSelection {
     return mySelectionEndLineNumber;
   }
 
-  public String getActionName() {
+  public LocalizeValue getActionName() {
     return myActionName;
   }
 
-  public String getDialogTitle() {
+  public LocalizeValue getDialogTitle() {
     return myDialogTitle;
   }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
@@ -49,6 +50,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
 
 public class ActionImplUtil {
@@ -137,11 +140,14 @@ public class ActionImplUtil {
      * @param e                     action event
      * @return true if update tried to access indices in dumb mode
      */
+    @Deprecated
+    @DeprecationInfo("We must use async impl!")
     public static boolean performDumbAwareUpdate(
         AnAction action,
         AnActionEvent e
     ) {
         Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(true);
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
         boolean dumbMode = isDumbMode(e.getData(Project.KEY));
         if (wasEnabledBefore != null && !dumbMode) {
@@ -175,6 +181,55 @@ public class ActionImplUtil {
         }
 
         return false;
+    }
+
+    public static CompletableFuture<Boolean> performDumbAwareUpdateAsync(
+        AnAction action,
+        AnActionEvent e
+    ) {
+        Presentation presentation = e.getPresentation();
+        Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
+        boolean dumbMode = isDumbMode(e.getData(Project.KEY));
+        if (wasEnabledBefore != null && !dumbMode) {
+            presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
+            presentation.setEnabled(wasEnabledBefore);
+            presentation.setVisible(true);
+        }
+        boolean enabledBeforeUpdate = presentation.isEnabled();
+        boolean notAllowed = dumbMode && !action.isDumbAware();
+
+        return ActionUpdateInvoker.updateAsync(action, e).handle((ignored, throwable) -> {
+            try {
+                if (throwable != null) {
+                    Throwable cause = throwable instanceof CompletionException ? throwable.getCause() : throwable;
+                    if (cause instanceof IndexNotReadyException indexNotReady) {
+                        if (notAllowed) {
+                            return true;
+                        }
+                        throw indexNotReady;
+                    }
+                    if (cause instanceof RuntimeException runtimeException) {
+                        throw runtimeException;
+                    }
+                    if (cause instanceof Error error) {
+                        throw error;
+                    }
+                    throw new RuntimeException(cause);
+                }
+
+                presentation.putClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE, notAllowed && presentation.isEnabled());
+                presentation.putClientProperty(WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE, notAllowed && presentation.isVisible());
+                return false;
+            }
+            finally {
+                if (notAllowed) {
+                    if (wasEnabledBefore == null) {
+                        presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, enabledBeforeUpdate);
+                    }
+                    presentation.setEnabled(false);
+                }
+            }
+        });
     }
 
     /**

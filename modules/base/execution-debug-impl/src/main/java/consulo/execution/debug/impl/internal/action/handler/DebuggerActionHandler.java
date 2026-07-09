@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.action.handler;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 
@@ -25,6 +26,7 @@ public abstract class DebuggerActionHandler {
 
   public abstract void perform(Project project, AnActionEvent event);
 
+  @RequiredReadAction
   public abstract boolean isEnabled(Project project, AnActionEvent event);
 
   public boolean isHidden(Project project, AnActionEvent event) {

@@ -20,6 +20,8 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
+import consulo.desktop.awt.ui.mac.screenmenu.Menu;
+import consulo.desktop.awt.wm.impl.mac.MacScreenIdeMenuBar;
 import consulo.desktop.awt.wm.navigationToolbar.IdeRootPaneNorthExtensionWithDecorator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -36,6 +38,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 import consulo.util.collection.impl.map.LinkedHashMap;
 import org.jspecify.annotations.Nullable;
@@ -69,6 +72,8 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     private final ActionManager myActionManager;
     private final DesktopIdeFrameImpl myFrame;
 
+    private IdeMenuBar myIdeMenuBar;
+
     private final boolean myGlassPaneInitialized;
 
     private boolean myFullScreen;
@@ -98,14 +103,14 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
             }
         }, this);
 
-        if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
-            menuBar = new IdeMenuBar(frame, actionManager, dataManager);
-            
-            getLayeredPane().add(menuBar, Integer.valueOf(JLayeredPane.DEFAULT_LAYER - 1));
+        Window awtWindow = TargetAWT.to(frame.getWindow());
+        if (awtWindow instanceof JFrame jFrame && Menu.isJbScreenMenuEnabled()) {
+            myIdeMenuBar = new MacScreenIdeMenuBar(jFrame, actionManager, dataManager);
         }
         else {
-            setJMenuBar(new IdeMenuBar(null, actionManager, dataManager));
+            myIdeMenuBar = new DefaultIdeMenuBar(frame, actionManager, dataManager);
         }
+        myIdeMenuBar.install(this);
 
         IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this);
         setGlassPane(glassPane);
@@ -146,6 +151,10 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
             }
             removeToolbar();
             setJMenuBar(null);
+            if (myIdeMenuBar != null) {
+                myIdeMenuBar.dispose();
+                myIdeMenuBar = null;
+            }
         }
         super.removeNotify();
     }
@@ -219,10 +228,22 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
         myContentPane.revalidate();
     }
 
+    /**
+     * Installs a floating (collapsible) menu bar into the layered pane. Called by {@link DefaultIdeMenuBar#install}.
+     */
+    void addFloatingMenuBar(JMenuBar bar) {
+        menuBar = bar;
+        getLayeredPane().add(bar, Integer.valueOf(JLayeredPane.DEFAULT_LAYER - 1));
+    }
+
     @RequiredUIAccess
     public void updateMainMenuActions() {
-        ((IdeMenuBar) menuBar).updateMenuActions();
-        menuBar.repaint();
+        if (myIdeMenuBar != null) {
+            myIdeMenuBar.updateMenuActions();
+        }
+        if (menuBar != null) {
+            menuBar.repaint();
+        }
     }
 
     private JComponent createToolbar() {
