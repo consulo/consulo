@@ -147,6 +147,7 @@ public class ActionImplUtil {
         AnActionEvent e
     ) {
         Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(true);
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
         boolean dumbMode = isDumbMode(e.getData(Project.KEY));
         if (wasEnabledBefore != null && !dumbMode) {

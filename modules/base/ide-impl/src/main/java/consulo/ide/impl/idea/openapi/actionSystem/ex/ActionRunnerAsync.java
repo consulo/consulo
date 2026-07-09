@@ -75,6 +75,7 @@ public final class ActionRunnerAsync {
 
     public static CompletableFuture<Void> performDumbAwareUpdateAsync(AnAction action, AnActionEvent e) {
         Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(true);
         boolean dumbMode = ActionImplUtil.isDumbMode(e.getData(Project.KEY));
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB);
         if (wasEnabledBefore != null && !dumbMode) {
