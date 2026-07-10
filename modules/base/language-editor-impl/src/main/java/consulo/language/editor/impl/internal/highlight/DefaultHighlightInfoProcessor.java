@@ -36,6 +36,7 @@ import java.util.List;
 
 public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     @Override
+    @RequiredReadAction
     public void highlightsInsideVisiblePartAreProduced(
         HighlightingSession session,
         @Nullable Editor editor,
@@ -53,25 +54,32 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         long modificationStamp = document.getModificationStamp();
         TextRange priorityIntersection = priorityRange.intersection(restrictRange);
         List<? extends HighlightInfo> infoCopy = new ArrayList<>(infos);
-        ((HighlightingSessionImpl)session).applyInEDT(() -> {
-            if (modificationStamp != document.getModificationStamp()) {
-                return;
-            }
-            if (priorityIntersection != null) {
-                MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
+        if (modificationStamp != document.getModificationStamp()) {
+            return;
+        }
 
-                EditorColorsScheme scheme = session.getColorsScheme();
-                UpdateHighlightersUtilImpl.setHighlightersInRange(
-                    project,
-                    document,
-                    priorityIntersection,
-                    scheme,
-                    infoCopy,
-                    (MarkupModelEx)markupModel,
-                    groupId
-                );
-            }
-            if (editor != null && !editor.isDisposed()) {
+        // Apply highlights directly from background thread under read lock
+        if (priorityIntersection != null) {
+            MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
+
+            EditorColorsScheme scheme = session.getColorsScheme();
+            UpdateHighlightersUtilImpl.setHighlightersInRange(
+                project,
+                document,
+                priorityIntersection,
+                scheme,
+                infoCopy,
+                (MarkupModelEx)markupModel,
+                groupId
+            );
+        }
+
+        // EDT-only: auto-import popup + repaint
+        if (editor != null) {
+            project.getUIAccess().give(() -> {
+                if (editor.isDisposed() || project.isDisposed()) {
+                    return;
+                }
                 // usability: show auto import popup as soon as possible
                 if (!DumbService.isDumb(project)) {
                     ShowAutoImportPassFactory siFactory =
@@ -83,8 +91,8 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                 }
 
                 repaintErrorStripeAndIcon(editor, project);
-            }
-        });
+            });
+        }
     }
 
     @RequiredUIAccess
@@ -95,7 +103,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     }
 
     @Override
-    @RequiredUIAccess
+    @RequiredReadAction
     public void highlightsOutsideVisiblePartAreProduced(
         HighlightingSession session,
         @Nullable Editor editor,
@@ -110,29 +118,33 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         if (document == null) {
             return;
         }
-        long modificationStamp = document.getModificationStamp();
-        ((HighlightingSessionImpl)session).applyInEDT(() -> {
-            if (project.isDisposed() || modificationStamp != document.getModificationStamp()) {
-                return;
-            }
+        if (project.isDisposed()) {
+            return;
+        }
 
-            EditorColorsScheme scheme = session.getColorsScheme();
+        EditorColorsScheme scheme = session.getColorsScheme();
 
-            UpdateHighlightersUtilImpl.setHighlightersOutsideRange(
-                project,
-                document,
-                psiFile,
-                infos,
-                scheme,
-                restrictedRange.getStartOffset(),
-                restrictedRange.getEndOffset(),
-                ProperTextRange.create(priorityRange),
-                groupId
-            );
-            if (editor != null) {
-                repaintErrorStripeAndIcon(editor, project);
-            }
-        });
+        // Apply highlights directly from background thread under read lock
+        UpdateHighlightersUtilImpl.setHighlightersOutsideRange(
+            project,
+            document,
+            psiFile,
+            infos,
+            scheme,
+            restrictedRange.getStartOffset(),
+            restrictedRange.getEndOffset(),
+            ProperTextRange.create(priorityRange),
+            groupId
+        );
+
+        // EDT-only: repaint
+        if (editor != null) {
+            project.getUIAccess().give(() -> {
+                if (!editor.isDisposed() && !project.isDisposed()) {
+                    repaintErrorStripeAndIcon(editor, project);
+                }
+            });
+        }
     }
 
     @Override
@@ -179,7 +191,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                     }
                     // seems that highlight info "existing" is going to disappear
                     // remove it earlier
-                    ((HighlightingSessionImpl)highlightingSession).queueDisposeHighlighterFor(existing);
+                    ((HighlightingSessionImpl)highlightingSession).disposeHighlighterFor(existing);
                 }
                 return true;
             }
@@ -187,6 +199,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     }
 
     @Override
+    @RequiredReadAction
     public void infoIsAvailable(
         HighlightingSession session,
         HighlightInfo info,
@@ -194,7 +207,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         TextRange restrictedRange,
         int groupId
     ) {
-        ((HighlightingSessionImpl)session).queueHighlightInfo(info, restrictedRange, groupId);
+        ((HighlightingSessionImpl)session).applyHighlightInfo(info, restrictedRange, groupId);
     }
 
     @Override

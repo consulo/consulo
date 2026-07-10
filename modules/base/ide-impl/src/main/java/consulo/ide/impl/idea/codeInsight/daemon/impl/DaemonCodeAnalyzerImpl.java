@@ -986,7 +986,10 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
                     catch (CancellationException | InterruptedException ignored) {
                     }
                     catch (ExecutionException e) {
-                        LOG.error(e.getCause());
+                        Throwable cause = e.getCause();
+                        if (!(cause instanceof ProcessCanceledException)) {
+                            LOG.error(cause);
+                        }
                     }
                 }
             );

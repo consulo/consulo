@@ -44,10 +44,10 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     private final int myEndOffset;
     private final boolean hasDirtyTextRange;
 
-    @RequiredUIAccess
+    @RequiredReadAction
     ShowAutoImportPass(Project project, PsiFile file, Editor editor) {
         super(project, editor.getDocument(), false);
-        UIAccess.assertIsUIThread();
+        project.getApplication().assertReadAccessAllowed();
 
         myEditor = editor;
 
