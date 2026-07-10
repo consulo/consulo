@@ -154,11 +154,9 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
         if (myApplication.isReadAccessAllowed()) {
             return computation.get();
         }
-        if (myApplication.isDispatchThread()) {
-            SimpleReference<T> result = SimpleReference.create();
-            myApplication.tryRunReadAction(() -> result.set(computation.get()));
-            return result.get();
-        }
-        return myApplication.runReadAction(computation);
+
+        SimpleReference<T> result = SimpleReference.create();
+        myApplication.tryRunReadAction(() -> result.set(computation.get()));
+        return result.get();
     }
 }

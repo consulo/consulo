@@ -19,11 +19,11 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ReadAction;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -94,6 +94,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -103,33 +104,35 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.dataholder.Key;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Supplier;
 
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.AWT)
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
+public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentAsync<Element>, Disposable, QuickActionProvider, BusyObject {
     private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);
     private static final Key<String> ID_KEY = Key.create("pane-id");
     private static final Key<String> SUB_ID_KEY = Key.create("pane-sub-id");
@@ -293,7 +296,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             .map(pane -> {
                 JComponent last = null;
                 for (Component c : UIUtil.uiParents(pane.getComponentToFocus(), false)) {
-                    if (c == myDataProvider || !(c instanceof JComponent)) return null;
+                    if (c == myDataProvider || !(c instanceof JComponent)) {
+                        return null;
+                    }
                     last = (JComponent) c;
                 }
                 return last;
@@ -390,7 +395,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     @Override
     @RequiredUIAccess
     public synchronized void addProjectPane(ProjectViewPane pane) {
-        myUninitializedPanes.add((AbstractProjectViewPane)pane);
+        myUninitializedPanes.add((AbstractProjectViewPane) pane);
         SelectInTarget selectInTarget = pane.createSelectInTarget();
         if (selectInTarget != null) {
             mySelectInTargets.put(pane.getId(), selectInTarget);
@@ -880,7 +885,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         if (path == null) {
             return null;
         }
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         Object userObject = node.getUserObject();
         if (userObject instanceof ProjectViewNode descriptor && descriptor.getValue() instanceof PsiElement psiElement) {
             return psiElement.isValid() ? psiElement : null;
@@ -936,7 +941,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                AbstractProjectViewPane pane = (AbstractProjectViewPane)value;
+                AbstractProjectViewPane pane = (AbstractProjectViewPane) value;
                 setText(pane.getTitle().get());
                 return this;
             }
@@ -1076,7 +1081,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             if (node == null) {
                 return null;
             }
-            DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
             if (parent == null) {
                 return null;
             }
@@ -1088,9 +1093,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                     OrderEntry orderEntry = element.getOrderEntry();
                     return orderEntry instanceof LibraryOrderEntry libraryOrderEntry ? libraryOrderEntry : null;
                 }
-                PsiDirectory directory = ((PsiDirectoryNode)userObject).getValue();
+                PsiDirectory directory = ((PsiDirectoryNode) userObject).getValue();
                 VirtualFile virtualFile = directory.getVirtualFile();
-                Module module = (Module)((AbstractTreeNode)((DefaultMutableTreeNode)parent.getParent()).getUserObject()).getValue();
+                Module module = (Module) ((AbstractTreeNode) ((DefaultMutableTreeNode) parent.getParent()).getUserObject()).getValue();
 
                 if (module == null) {
                     return null;
@@ -1204,7 +1209,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         for (Object element : elements) {
             //element still valid
             if (element != null && klass.isAssignableFrom(element.getClass())) {
-                result.add((T)element);
+                result.add((T) element);
             }
         }
         return result;
@@ -1232,7 +1237,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         public PsiDirectory[] getDirectories() {
             AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane != null) {
-                return ReadAction.compute(() -> viewPane.getSelectedDirectories());
+                SimpleReference<PsiDirectory[]> ref = SimpleReference.create();
+                Application.get().tryRunReadAction(ref, () -> viewPane.getSelectedDirectories());
+                return Objects.requireNonNullElse(ref.get(), PsiDirectory.EMPTY_ARRAY);
             }
 
             return PsiDirectory.EMPTY_ARRAY;
@@ -1339,8 +1346,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     @Override
+    public Coroutine<?, Element> getStateAsync() {
+        return UIAction.<Void, Element>apply((input, continuation) -> getStateImpl()).toCoroutine();
+    }
+
     @RequiredUIAccess
-    public Element getState() {
+    private Element getStateImpl() {
         Element parentNode = new Element("projectView");
         Element navigatorElement = new Element(ELEMENT_NAVIGATOR);
         AbstractProjectViewPane currentPane = getCurrentProjectViewPane();
@@ -1606,7 +1617,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             AbstractTreeBuilder treeBuilder = viewPane.getTreeBuilder();
             JTree tree = viewPane.myTree;
             if (treeBuilder != null) {
-                DefaultTreeModel treeModel = (DefaultTreeModel)tree.getModel();
+                DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
                 List<TreePath> paths = new ArrayList<>(myElements.length);
                 for (Object element : myElements) {
                     DefaultMutableTreeNode node = treeBuilder.getNodeForElement(element);

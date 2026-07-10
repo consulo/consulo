@@ -16,6 +16,7 @@
 package consulo.component.store.impl.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.ComponentManager;
@@ -29,6 +30,7 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartHashSet;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -93,7 +95,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, null, force);
       }
     }
 
@@ -121,7 +123,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, uiAccess, force);
       }
     }
 
@@ -155,7 +157,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @SuppressWarnings({"unchecked", "RequiredXAction"})
-  private <T> void commitComponentInsideSingleUIWriteThread(StateComponentInfo<T> componentInfo, StateStorageManager.ExternalizationSession session, boolean force) {
+  private <T> void commitComponentInsideSingleUIWriteThread(StateComponentInfo<T> componentInfo, StateStorageManager.ExternalizationSession session, @Nullable UIAccess uiAccess, boolean force) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
     long countToSet = -1;
@@ -172,9 +174,21 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     T state;
-    if(component instanceof PersistentStateComponentWithUIState) {
+    if(component instanceof PersistentStateComponentAsync) {
+      // the component computes its state through a coroutine that hops to the EDT (UIAction step) for UI-bound reads
+      PersistentStateComponentAsync<T> asyncComponent = (PersistentStateComponentAsync<T>)component;
+      Application application = ApplicationManager.getApplication();
+      UIAccess effectiveUiAccess = uiAccess != null ? uiAccess : application.getLastUIAccess();
+      CoroutineScope scope = CoroutineScope.of(application.coroutineContext());
+      scope.putCopyableUserData(UIAccess.KEY, effectiveUiAccess);
+      state = asyncComponent.getStateAsync().runBlocking(scope, null).getResult();
+    }
+    else if(component instanceof PersistentStateComponentWithUIState) {
       PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
-      Object uiState = uiComponent.getStateFromUI();
+      // reading UI state requires the EDT; when saving off the EDT hop to the UI thread for this read only
+      Object uiState = uiAccess == null
+        ? uiComponent.getStateFromUI()
+        : uiAccess.giveAndWaitIfNeed(() -> uiComponent.getStateFromUI());
       state = uiComponent.getState(uiState);
     }
     else {

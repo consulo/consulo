@@ -23,24 +23,29 @@ import org.jspecify.annotations.Nullable;
 import java.util.concurrent.Callable;
 
 public final class ReadAction<T> {
-    @Deprecated
-    public static AccessToken start() {
-        return Application.get().acquireReadActionLock();
-    }
-
     public static <E extends Throwable> void run(@RequiredReadAction ThrowableRunnable<E> action) throws E {
-        Application.get().runReadAction((ThrowableSupplier<@Nullable Void, E>) () -> {
+        compute((ThrowableSupplier<@Nullable Void, E>) () -> {
             action.run();
             return null;
         });
     }
 
     public static <T, E extends Throwable> T computeNotNull(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
+        Application application = Application.get();
+        if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed()) {
+            return action.get();
+        }
+
         return Application.get().runReadAction(action);
     }
 
     public static <T extends @Nullable Object, E extends Throwable> T compute(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
-        return Application.get().runReadAction(action);
+        Application application = Application.get();
+        if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed()) {
+            return action.get();
+        }
+
+        return application.runReadAction(action);
     }
 
     /**

@@ -63,7 +63,11 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -339,15 +343,54 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
+    // saves application settings off the EDT; UI-state components hop back to the UI thread internally
+    public void _saveSettingsAsync(UIAccess uiAccess) {
+        if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
+            try {
+                StoreUtil.saveAsync(getStateStore(), uiAccess, null);
+            }
+            finally {
+                mySaveSettingsIsInProgress.set(false);
+            }
+        }
+    }
+
     @RequiredUIAccess
     @Override
-    public void saveAll() {
+    public Continuation<Void> saveAll() {
         if (myDoNotSave) {
-            return;
+            return null;
         }
 
-        FileDocumentManager.getInstance().saveAllDocuments();
+        UIAccess uiAccess = UIAccess.current();
 
+        CoroutineScope scope = CoroutineScope.of(coroutineContext());
+        scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+
+        // documents are saved on the EDT (the trailing-spaces stripper reads the focus owner); settings run off the EDT
+        return Coroutine.<Void, Void>first(CodeExecution.run(
+            () -> uiAccess.giveAndWaitIfNeed(() -> FileDocumentManager.getInstance().saveAllDocuments())
+        )).then(CodeExecution.run(() -> saveOpenProjectsAndSettings(uiAccess))).runAsync(scope, null);
+    }
+
+    @Override
+    public CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess) {
+        if (myDoNotSave) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        ProgressBuilderFactory progressBuilderFactory = getInstance(ProgressBuilderFactory.class);
+
+        return progressBuilderFactory
+            .newProgressBuilder(null, LocalizeValue.localizeTODO("Save All"))
+            .execute(uiAccess, () -> Coroutine
+                .<Void, Void>first(CodeExecution.run(
+                    () -> uiAccess.giveAndWaitIfNeed(() -> FileDocumentManager.getInstance().saveAllDocuments())
+                ))
+                .then(CodeExecution.run(() -> saveOpenProjectsAndSettings(uiAccess))));
+    }
+
+    private void saveOpenProjectsAndSettings(UIAccess uiAccess) {
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         for (Project openProject : openProjects) {
             if (openProject.isDisposed()) {
@@ -358,11 +401,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
             ProjectEx project = (ProjectEx)openProject;
             if (project.isInitialized()) {
-                project.save();
+                // saves the project store off the EDT; UI-state components hop back to the UI thread internally
+                project.saveAsync(uiAccess).join();
             }
         }
 
-        saveSettings();
+        _saveSettingsAsync(uiAccess);
     }
 
     @Override
@@ -512,15 +556,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Override
     public BuildNumber getBuildNumber() {
         return ApplicationInfo.getInstance().getBuild();
-    }
-
-    
-    @Override
-    public AccessToken acquireReadActionLock() {
-        DeprecatedMethodException.report("Use runReadAction() instead");
-
-        // if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-        return isWriteThread() || myLock.isReadLockedByThisThread() ? AccessToken.EMPTY_ACCESS_TOKEN : new ReadAccessToken();
     }
 
     @Override
@@ -828,15 +863,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
                 fireAfterWriteActionFinished(clazz);
             }
         }
-    }
-
-    @RequiredUIAccess
-    
-    @Override
-    public AccessToken acquireWriteActionLock(Class clazz) {
-        DeprecatedMethodException.report("Use runWriteAction() instead");
-
-        return new WriteAccessToken(clazz);
     }
 
     @RequiredUIAccess

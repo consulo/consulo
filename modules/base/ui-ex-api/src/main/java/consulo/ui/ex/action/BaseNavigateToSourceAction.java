@@ -25,10 +25,12 @@ import consulo.navigation.NavigatableWithText;
 import consulo.navigation.internal.NavigateWithDelegate;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OpenSourceUtil;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
-public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware, AnActionWithSyncUpdate {
+public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
     private final boolean myFocusEditor;
 
     protected BaseNavigateToSourceAction(boolean focusEditor) {
@@ -58,7 +60,11 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> updateInReadAction(e)).toCoroutine();
+    }
+
+    public void updateInReadAction(AnActionEvent e) {
         boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());
         Navigatable target = ReadAction.compute(() -> findTargetForUpdate(e.getDataContext()));
         boolean enabled = target != null;

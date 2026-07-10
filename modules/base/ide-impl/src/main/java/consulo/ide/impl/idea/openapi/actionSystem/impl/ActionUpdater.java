@@ -210,7 +210,8 @@ public class ActionUpdater {
     private CompletableFuture<List<AnAction>> computeGroupChildren(ActionGroup group) {
         checkCanceled();
         AnActionEvent event = createActionEvent(group, orDefault(group, cachedPresentation(group)));
-        return launchCoroutineAsync(group.getChildrenAsync(event));
+        return launchCoroutineAsync(group.getChildrenAsync(event))
+            .thenApply(children -> children == null ? List.of() : children);
     }
 
     private CompletableFuture<List<AnAction>> expandGroupChild(AnAction child, boolean hideDisabled) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
@@ -40,8 +41,9 @@ public class PsiTreeAnchorizerValue implements TreeAnchorizerValue<PsiElement> {
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable PsiElement extractValue() {
-        return myApplication.runReadAction((Supplier<PsiElement>) myPointer::getElement);
+        return myPointer.getElement();
     }
 
     @Override

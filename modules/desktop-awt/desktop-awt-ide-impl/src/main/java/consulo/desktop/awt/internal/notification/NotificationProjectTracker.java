@@ -96,7 +96,7 @@ public class NotificationProjectTracker implements Disposable {
     private void doPrintNotification(Notification notification, EventLogConsole console) {
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
             if (!ShutDownTracker.isShutdownHookRunning() && !myProject.isDisposed()) {
-                myProject.getApplication().runReadAction(() -> console.doPrintNotification(notification));
+                myProject.getUIAccess().execute(() -> console.doPrintNotification(notification));
             }
         });
     }

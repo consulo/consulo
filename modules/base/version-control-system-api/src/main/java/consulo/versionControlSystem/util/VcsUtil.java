@@ -18,6 +18,7 @@ package consulo.versionControlSystem.util;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.document.FileDocumentManager;
 import consulo.localize.LocalizeValue;
@@ -34,6 +35,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.Change;
@@ -54,6 +56,8 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -142,71 +146,39 @@ public class VcsUtil {
         return getVcsFor(project, getFilePath(path)) == host;
     }
 
-    public static @Nullable AbstractVcs getVcsFor(final Project project, final FilePath file) {
-        final AbstractVcs[] vcss = new AbstractVcs[1];
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
-                //  a future task after the component has been disposed.
-                if (!project.isDisposed()) {
-                    ProjectLevelVcsManager mgr = ProjectLevelVcsManager.getInstance(project);
-                    vcss[0] = (mgr != null) ? mgr.getVcsFor(file) : null;
-                }
+    private static <T> T runUnderReadSafe(Project project, Function<ProjectLevelVcsManager, T> function) {
+        Application application = Application.get();
+
+        SimpleReference<T> reference = SimpleReference.create();
+
+        application.tryRunReadAction(reference,  () -> {
+            //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
+            //  a future task after the component has been disposed.
+            if (!project.isDisposed()) {
+                ProjectLevelVcsManager mgr = project.getInstanceIfCreated(ProjectLevelVcsManager.class);
+                return mgr != null ? function.apply(mgr) : null;
             }
+
+            return null;
         });
-        return vcss[0];
+
+        return reference.get();
     }
 
-    public static @Nullable AbstractVcs getVcsFor(final Project project, final VirtualFile file) {
-        final AbstractVcs[] vcss = new AbstractVcs[1];
-
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
-                //  a future task after the component has been disposed.
-                if (!project.isDisposed()) {
-                    ProjectLevelVcsManager mgr = ProjectLevelVcsManager.getInstance(project);
-                    vcss[0] = (mgr != null) ? mgr.getVcsFor(file) : null;
-                }
-            }
-        });
-        return vcss[0];
+    public static @Nullable AbstractVcs getVcsFor(Project project, FilePath file) {
+        return runUnderReadSafe(project, projectLevelVcsManager -> projectLevelVcsManager.getVcsFor(file));
     }
 
-    public static @Nullable VirtualFile getVcsRootFor(final Project project, final FilePath file) {
-        final VirtualFile[] roots = new VirtualFile[1];
-
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
-                //  a future task after the component has been disposed.
-                if (!project.isDisposed()) {
-                    ProjectLevelVcsManager mgr = ProjectLevelVcsManager.getInstance(project);
-                    roots[0] = (mgr != null) ? mgr.getVcsRootFor(file) : null;
-                }
-            }
-        });
-        return roots[0];
+    public static @Nullable AbstractVcs getVcsFor(Project project, VirtualFile file) {
+        return runUnderReadSafe(project, projectLevelVcsManager -> projectLevelVcsManager.getVcsFor(file));
     }
 
-    public static @Nullable VirtualFile getVcsRootFor(final Project project, final VirtualFile file) {
-        final VirtualFile[] roots = new VirtualFile[1];
+    public static @Nullable VirtualFile getVcsRootFor(Project project, FilePath file) {
+        return runUnderReadSafe(project, projectLevelVcsManager -> projectLevelVcsManager.getVcsRootFor(file));
+    }
 
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
-                //  a future task after the component has been disposed.
-                if (!project.isDisposed()) {
-                    ProjectLevelVcsManager mgr = ProjectLevelVcsManager.getInstance(project);
-                    roots[0] = (mgr != null) ? mgr.getVcsRootFor(file) : null;
-                }
-            }
-        });
-        return roots[0];
+    public static @Nullable VirtualFile getVcsRootFor(Project project, VirtualFile file) {
+        return runUnderReadSafe(project, projectLevelVcsManager -> projectLevelVcsManager.getVcsRootFor(file));
     }
 
     @RequiredUIAccess

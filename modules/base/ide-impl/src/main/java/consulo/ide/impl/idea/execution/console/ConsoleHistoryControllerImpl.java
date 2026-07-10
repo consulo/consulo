@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
@@ -467,12 +468,18 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
                     if (loadHistoryOld(id)) {
                         if (!myRootType.isHidden()) {
                             // migrate content
-                            AccessToken token = Application.get().acquireWriteActionLock(getClass());
-                            try {
-                                VirtualFileUtil.saveText(consoleFile, myContent);
-                            }
-                            finally {
-                                token.finish();
+                            IOException[] io = new IOException[1];
+                            WriteAction.runAndWait(() -> {
+                                try {
+                                    VirtualFileUtil.saveText(consoleFile, myContent);
+                                }
+                                catch (IOException e) {
+                                   io[0] = e;
+                                }
+                            });
+
+                            if (io[0] != null) {
+                                throw io[0];
                             }
                         }
                         return true;

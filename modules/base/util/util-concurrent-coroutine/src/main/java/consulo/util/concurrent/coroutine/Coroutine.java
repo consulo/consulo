@@ -26,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A pure Java implementation of cooperative concurrency, also known as
@@ -346,4 +347,8 @@ public interface Coroutine<I extends @Nullable Object, O extends @Nullable Objec
     @Nullable String getName();
 
     Coroutine<I, O> withName(String name);
+
+    default boolean anyStep(Predicate<CoroutineStep<?, ?>> predicate) {
+        return false;
+    }
 }

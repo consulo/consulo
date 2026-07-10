@@ -25,6 +25,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * The default implementation of {@link Coroutine}.
@@ -116,6 +117,18 @@ public class CoroutineImpl<I extends @Nullable Object, O extends @Nullable Objec
     public Coroutine<I, O> withName(String name) {
         this.name = name;
         return this;
+    }
+
+    @Override
+    public boolean anyStep(Predicate<CoroutineStep<?, ?>> predicate) {
+        return code != null && anyStep(code, predicate);
+    }
+
+    private static boolean anyStep(CoroutineStep<?, ?> step, Predicate<CoroutineStep<?, ?>> predicate) {
+        if (step instanceof StepChain<?, ?, ?> chain) {
+            return anyStep(chain.step, predicate) || (chain.next != null && anyStep(chain.next, predicate));
+        }
+        return predicate.test(step);
     }
 
     /**

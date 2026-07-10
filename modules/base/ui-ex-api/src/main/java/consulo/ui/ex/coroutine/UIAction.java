@@ -23,10 +23,18 @@ import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
+ * A coroutine step that runs its function on the UI thread.
+ * <p>
+ * The asynchronous path ({@link #runAsync}) does not block a coroutine thread: the work is
+ * scheduled on the UI thread via {@link UIAccess#execute} and the coroutine chain is composed
+ * with a future that the UI thread completes. Only the blocking path ({@link #execute}, used by
+ * {@code runBlocking}) waits on the UI thread.
+ *
  * @author VISTALL
  * @since 2026-01-31
  */
@@ -46,10 +54,16 @@ public class UIAction<I, O> extends CoroutineStep<I, O> {
     }
 
     @Override
+    public void runAsync(CompletableFuture<I> previousExecution, @Nullable CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
+        UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
+        continuation.continueCompose(previousExecution, input -> uiAccess.giveAsync(() -> myFunction.apply(input, continuation)), nextStep);
+    }
+
+    @Override
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
         SimpleReference<O> ref = new SimpleReference<>();
-        uiAccess.giveAndWait(() -> ref.set(myFunction.apply(input, continuation)));
+        uiAccess.giveAndWaitIfNeed(() -> ref.set(myFunction.apply(input, continuation)));
         return ref.get();
     }
 }

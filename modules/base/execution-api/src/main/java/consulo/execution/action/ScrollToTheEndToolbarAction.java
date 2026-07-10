@@ -15,7 +15,6 @@
  */
 package consulo.execution.action;
 
-import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -26,49 +25,51 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.action.AsyncToggleAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.CoroutineStep;
 
 /**
  * @author oleg
  */
-public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAware {
-  private final Editor myEditor;
+public class ScrollToTheEndToolbarAction extends AsyncToggleAction implements DumbAware {
+    private final Editor myEditor;
 
-  public ScrollToTheEndToolbarAction(Editor editor) {
-    super();
-    myEditor = editor;
-    LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
-    getTemplatePresentation().setText(message);
-    getTemplatePresentation().setDescription(message);
-    getTemplatePresentation().setIcon(PlatformIconGroup.runconfigurationsScroll_down());
-  }
-
-  @Override
-  public boolean isSelected(AnActionEvent e) {
-    Document document = myEditor.getDocument();
-      if (document.getLineCount() == 0) {
-          return true;
-      }
-
-      int offset = ReadAction.compute(() -> myEditor.getCaretModel().getOffset());
-
-      if (document.getLineNumber(offset) == document.getLineCount() - 1) {
-          return true;
-      }
-      return false;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void setSelected(AnActionEvent e, boolean state) {
-    if (state) {
-      EditorUtil.scrollToTheEnd(myEditor);
+    public ScrollToTheEndToolbarAction(Editor editor) {
+        super();
+        myEditor = editor;
+        LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
+        getTemplatePresentation().setText(message);
+        getTemplatePresentation().setDescription(message);
+        getTemplatePresentation().setIcon(PlatformIconGroup.runconfigurationsScroll_down());
     }
-    else {
-      int lastLine = Math.max(0, myEditor.getDocument().getLineCount() - 1);
-      LogicalPosition currentPosition = myEditor.getCaretModel().getLogicalPosition();
-      LogicalPosition position = new LogicalPosition(Math.max(0, Math.min(currentPosition.line, lastLine - 1)), currentPosition.column);
-      myEditor.getCaretModel().moveToLogicalPosition(position);
+
+    @Override
+    public CoroutineStep<Object, Boolean> isSelectedAsync(AnActionEvent e) {
+        return UIAction.apply((in, c) -> {
+            Document document = myEditor.getDocument();
+            if (document.getLineCount() == 0) {
+                return true;
+            }
+
+            int offset = myEditor.getCaretModel().getOffset();
+
+            return document.getLineNumber(offset) == document.getLineCount() - 1;
+        });
     }
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void setSelected(AnActionEvent e, boolean state) {
+        if (state) {
+            EditorUtil.scrollToTheEnd(myEditor);
+        }
+        else {
+            int lastLine = Math.max(0, myEditor.getDocument().getLineCount() - 1);
+            LogicalPosition currentPosition = myEditor.getCaretModel().getLogicalPosition();
+            LogicalPosition position = new LogicalPosition(Math.max(0, Math.min(currentPosition.line, lastLine - 1)), currentPosition.column);
+            myEditor.getCaretModel().moveToLogicalPosition(position);
+        }
+    }
 }

@@ -5,7 +5,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AppUIExecutor;
 import consulo.application.ApplicationManager;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -23,6 +23,8 @@ import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tree.TreeState;
@@ -60,7 +62,7 @@ import java.util.function.Predicate;
 @Singleton
 @State(name = "ServiceViewManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
-public final class ServiceViewManagerImpl implements ServiceViewManager, PersistentStateComponent<ServiceViewManagerImpl.State> {
+public final class ServiceViewManagerImpl implements ServiceViewManager, PersistentStateComponentAsync<ServiceViewManagerImpl.State> {
     private static final String HELP_ID = "services.tool.window";
 
     
@@ -760,7 +762,12 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }
 
     @Override
-    public State getState() {
+    public Coroutine<?, State> getStateAsync() {
+        return UIAction.<Void, State>apply((input, continuation) -> getStateImpl()).toCoroutine();
+    }
+
+    @RequiredUIAccess
+    private State getStateImpl() {
         List<String> services = ContainerUtil.mapNotNull(
             myGroups.getOrDefault(ToolWindowId.SERVICES, Collections.emptyList()),
             contributor -> contributor.getViewDescriptor(myProject).getId()

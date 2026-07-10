@@ -28,20 +28,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 public final class WriteAction {
-    @Deprecated
-    @DeprecationInfo("Use AccessRule.writeAsync()")
-    public static AccessToken start() {
-        // get useful information about the write action
-        Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
-        return start(aClass);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use AccessRule.writeAsync()")
-    @RequiredUIAccess
-    public static AccessToken start(Class clazz) {
-        return Application.get().acquireWriteActionLock(clazz);
-    }
 
     @RequiredUIAccess
     public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {

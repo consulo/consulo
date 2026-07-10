@@ -15,17 +15,21 @@
  */
 package consulo.versionControlSystem.impl.internal.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.ReadAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.action.AbstractAsyncVcsAction;
 import consulo.versionControlSystem.action.AbstractVcsAction;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.ChangesUtil;
@@ -43,7 +47,7 @@ import static consulo.util.lang.ObjectUtil.assertNotNull;
 import static consulo.versionControlSystem.util.VcsUtil.getIfSingle;
 
 @ActionImpl(id = "Vcs.ShowTabbedFileHistory")
-public class TabbedShowHistoryAction extends AbstractVcsAction {
+public class TabbedShowHistoryAction extends AbstractAsyncVcsAction {
     public TabbedShowHistoryAction() {
         super(
             VcsLocalize.actionShowTabbedFileHistoryText(),
@@ -53,13 +57,16 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
     }
 
     @Override
-    protected void update(VcsContext context, Presentation presentation) {
-        Project project = context.getProject();
+    public Coroutine<?, ?> updateAsync(VcsContext context, Presentation presentation) {
+        return ActionSafeReadLock.run(presentation, presentation1 -> {
+            Project project = context.getProject();
 
-        presentation.setEnabled(ReadAction.compute(() -> isEnabled(context)));
-        presentation.setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
+            presentation.setEnabled(isEnabled(context));
+            presentation.setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
+        }).toCoroutine();
     }
 
+    @RequiredReadAction
     protected boolean isEnabled(VcsContext context) {
         boolean result = false;
         Project project = context.getProject();
@@ -128,10 +135,5 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
         VcsHistoryProvider provider = assertNotNull(vcs.getVcsHistoryProvider());
 
         AbstractVcsHelper.getInstance(project).showFileHistory(provider, vcs.getAnnotationProvider(), path, null, vcs);
-    }
-
-    @Override
-    protected boolean forceSyncUpdate(AnActionEvent e) {
-        return true;
     }
 }

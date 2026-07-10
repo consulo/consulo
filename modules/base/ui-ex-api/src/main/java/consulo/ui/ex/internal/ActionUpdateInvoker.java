@@ -16,6 +16,9 @@
 package consulo.ui.ex.internal;
 
 import consulo.application.Application;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
@@ -34,19 +37,25 @@ import java.util.concurrent.CompletableFuture;
  * @author VISTALL
  */
 public final class ActionUpdateInvoker {
+    private static final Logger LOG = Logger.getInstance(ActionUpdateInvoker.class);
+
     private ActionUpdateInvoker() {
     }
 
-    public static boolean hasUpdate(AnAction action) {
-        return action instanceof AnActionWithAsyncUpdate
-            || action instanceof AnActionWithUIUpdate
-            || action instanceof AnActionWithSyncUpdate;
+    private static Coroutine<?, ?> checkIt(AnAction action, Coroutine<?, ?> coroutine) {
+        if (coroutine.anyStep(step -> step instanceof ReadLock || step instanceof WriteLock)) {
+            LOG.error(action + " async update coroutine must not use blocking ReadLock/WriteLock steps; " +
+                "use ActionSafeReadLock (non-blocking tryToRead) instead. Update skipped.");
+            return Coroutine.empty();
+        }
+
+        return coroutine;
     }
 
     @SuppressWarnings("deprecation")
     public static @Nullable Coroutine<?, ?> createUpdateCoroutine(AnAction action, AnActionEvent e) {
         if (action instanceof AnActionWithAsyncUpdate async) {
-            return async.updateAsync(e);
+            return checkIt(action, async.updateAsync(e));
         }
 
         if (action instanceof AnActionWithUIUpdate atUI) {
@@ -90,6 +99,7 @@ public final class ActionUpdateInvoker {
     }
 
     @SuppressWarnings("deprecation")
+    @Deprecated
     public static void updateSync(AnAction action, AnActionEvent e) {
         if (action instanceof AnActionWithSyncUpdate sync) {
             sync.update(e);

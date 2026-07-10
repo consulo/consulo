@@ -18,37 +18,41 @@ package consulo.language.editor.util;
 
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Common interface for IDE views where files can be selected (project view, packages view,
  * favorites or commander).
  */
 public interface IdeView {
-  static Key<IdeView> KEY = Key.create(IdeView.class);
-  
-  /**
-   * Selects the specified element in the view.
-   *
-   * @param element the element to select.
-   */
-  void selectElement(PsiElement element);
+    static Key<IdeView> KEY = Key.create(IdeView.class);
 
-  /**
-   * Returns the list of directories corresponding to the element currently selected in the view.
-   * Can return a list of multiple elements if a package is selected.
-   *
-   * @return the list of directories, or an empty array if nothing is selected.
-   */
-  PsiDirectory[] getDirectories();
+    /**
+     * Selects the specified element in the view.
+     *
+     * @param element the element to select.
+     */
+    void selectElement(PsiElement element);
 
-  /**
-   * Returns the directory for the element currently selected in the view. If multiple directories
-   * correspond to the selected element, shows a popup allowing the user to choose one of them.
-   *
-   * @return the selected directory, or null if there is no selection or the popup was cancelled.
-   */
-  @Nullable PsiDirectory getOrChooseDirectory();
+    /**
+     * Returns the list of directories corresponding to the element currently selected in the view.
+     * Can return a list of multiple elements if a package is selected.
+     *
+     * @return the list of directories, or an empty array if nothing is selected.
+     */
+    PsiDirectory[] getDirectories();
+
+    /**
+     * Returns the directory for the element currently selected in the view. If multiple directories
+     * correspond to the selected element, shows a popup allowing the user to choose one of them.
+     *
+     * @return the selected directory, or null if there is no selection or the popup was cancelled.
+     */
+    @Nullable
+    PsiDirectory getOrChooseDirectory();
 }

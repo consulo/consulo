@@ -30,6 +30,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
@@ -40,6 +41,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -236,10 +238,18 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     void removeApplicationListener(ApplicationListener listener);
 
     /**
-     * Saves all open documents and projects.
+     * Saves all open documents and projects asynchronously (off the UI thread).
+     *
+     * @return a {@link Continuation} that completes when the save operation finishes, or {@code null} if saving was skipped
      */
     @RequiredUIAccess
-    void saveAll();
+    @Nullable
+    Continuation<Void> saveAll();
+
+    /**
+     * Saves all open documents and projects, showing a modal progress while the save runs off the UI thread.
+     */
+    CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess);
 
     /**
      * Saves all application settings.
@@ -540,21 +550,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     // region Deprecated stuff
-
-    /**
-     * Returns lock used for read operations, should be closed in finally block
-     */
-    @Deprecated
-    @DeprecationInfo("Use runReadAction(Runnable)")
-    AccessToken acquireReadActionLock();
-
-    /**
-     * Returns lock used for write operations, should be closed in finally block
-     */
-    @Deprecated
-    @DeprecationInfo("Use runWriteAction(Runnable)")
-    @RequiredUIAccess
-    AccessToken acquireWriteActionLock(Class marker);
 
     @Deprecated
     @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

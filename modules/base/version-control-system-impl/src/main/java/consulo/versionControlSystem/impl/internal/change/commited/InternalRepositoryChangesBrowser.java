@@ -104,8 +104,8 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
         }
 
         @Override
-        public void update(AnActionEvent event) {
-            super.update(event);
+        public void updateInReadAction(AnActionEvent event) {
+            super.updateInReadAction(event);
             boolean isModalContext = Objects.equals(event.getData(PlatformDataKeys.IS_MODAL_CONTEXT), Boolean.TRUE);
             event.getPresentation().setEnabled(
                 !isModalContext && !CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))
