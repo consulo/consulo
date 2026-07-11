@@ -104,6 +104,23 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         });
     }
 
+    public void loadModulesNew(ProgressIndicator indicator) {
+        StatCollector stat = new StatCollector();
+
+        stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
+
+        indicator.setIndeterminate(true);
+
+        stat.markWith("fire modules add", () -> {
+            for (Module module : myModuleModel.myModules) {
+                fireModuleAdded(module);
+            }
+        });
+
+        myReady = true;
+        stat.dump("ModulesManager", LOG::info);
+    }
+
     @Override
     @RequiredUIAccess
     protected void fireModulesAdded() {

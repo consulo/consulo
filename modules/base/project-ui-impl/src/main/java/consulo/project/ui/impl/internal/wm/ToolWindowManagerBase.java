@@ -233,10 +233,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     public abstract void initializeUI();
 
     @RequiredUIAccess
-    protected abstract void initializeEditorComponent();
+    public abstract void initializeEditorComponent();
 
     @RequiredUIAccess
-    protected void postInitialize() {
+    public void postInitialize() {
         updateToolWindowsPane();
     }
 
@@ -284,7 +284,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     
-    protected AsyncResult<Void> registerToolWindowsFromBeans(UIAccess uiAccess) {
+    public AsyncResult<Void> registerToolWindowsFromBeans(UIAccess uiAccess) {
         List<AsyncResult<Void>> results = new ArrayList<>();
 
         myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
@@ -310,7 +310,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @RequiredUIAccess
-    protected void connectModuleExtensionListener() {
+    public void connectModuleExtensionListener() {
         myProject.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
             public void rootsChanged(ModuleRootEvent event) {

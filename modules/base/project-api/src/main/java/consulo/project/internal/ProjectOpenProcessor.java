@@ -20,6 +20,7 @@ import consulo.project.ProjectOpenContext;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -33,8 +34,14 @@ public abstract class ProjectOpenProcessor {
 
     public abstract boolean canOpenProject(File file);
 
-    
+
     public abstract AsyncResult<Project> doOpenProjectAsync(VirtualFile virtualFile,
                                                             UIAccess uiAccess,
                                                             ProjectOpenContext context);
+
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                      ProjectOpenContext context,
+                                                      Coroutine<I, VirtualFile> in) {
+        return in;
+    }
 }

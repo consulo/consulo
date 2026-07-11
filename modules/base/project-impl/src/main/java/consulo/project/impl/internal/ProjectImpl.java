@@ -73,6 +73,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
 
+    private boolean myFullyInitialized;
+
     private String myName;
 
     public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
@@ -196,6 +198,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     @Override
     public boolean isOpen() {
         return myManager.isProjectOpened(this);
+    }
+
+    public void setFullyInitialized(boolean fullyInitialized) {
+        myFullyInitialized = fullyInitialized;
+    }
+
+    public boolean isFullyInitialized() {
+        return myFullyInitialized;
     }
 
     @Override
