@@ -217,7 +217,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
     @Override
     public boolean isDispatchThread() {
-        throw new UnsupportedOperationException();
+        return false;
     }
 
     @Override
