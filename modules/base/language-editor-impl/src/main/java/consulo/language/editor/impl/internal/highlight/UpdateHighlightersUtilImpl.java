@@ -13,12 +13,16 @@ import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.RedBlackTreeVerifier;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.component.ProcessCanceledException;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
+import consulo.logging.Logger;
 import consulo.language.editor.internal.HighlightersRecycler;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -41,6 +45,30 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class UpdateHighlightersUtilImpl {
+    private static final Logger LOG = Logger.getInstance(UpdateHighlightersUtilImpl.class);
+
+    static void disposeWithFileLevelIgnoreErrors(HighlightInfo info, HighlightingSession session) {
+        if (info.isFileLevelAnnotation()) {
+            ((HighlightingSessionImpl)session).removeFileLevelHighlight(info);
+        }
+        RangeHighlighterEx highlighter = ((HighlightInfoImpl)info).getHighlighter();
+        if (highlighter == null) {
+            return;
+        }
+        try {
+            if (highlighter.getErrorStripeTooltip() == info && info.getHighlighter() == highlighter) {
+                ((HighlightInfoImpl)info).setHighlighter(null);
+                highlighter.dispose();
+            }
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            LOG.warn(e);
+        }
+    }
+
     private static boolean isCoveredByOffsets(HighlightInfo info, HighlightInfo coveredBy) {
         return coveredBy.getStartOffset() <= info.getStartOffset()
             && info.getEndOffset() <= coveredBy.getEndOffset()

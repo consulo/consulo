@@ -50,6 +50,8 @@ public abstract class DaemonCodeAnalyzerInternal extends DaemonCodeAnalyzer {
 
     public abstract void addFileLevelHighlight(Project project, int group, HighlightInfo info, PsiFile psiFile);
 
+    public abstract void removeFileLevelHighlight(Project project, HighlightInfo info, PsiFile psiFile);
+
     public abstract boolean doRestart();
 
     public abstract boolean stopProcess(boolean toRestartAlarm, String reason);

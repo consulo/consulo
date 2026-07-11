@@ -170,6 +170,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
         if (document == null) {
             return;
         }
+        List<HighlightInfo> abandoned = new ArrayList<>();
         DaemonCodeAnalyzerInternal.processHighlights(
             document,
             project,
@@ -190,12 +191,14 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                         }
                     }
                     // seems that highlight info "existing" is going to disappear
-                    // remove it earlier
-                    ((HighlightingSessionImpl)highlightingSession).disposeHighlighterFor(existing);
+                    abandoned.add(existing);
                 }
                 return true;
             }
         );
+        for (HighlightInfo existing : abandoned) {
+            UpdateHighlightersUtilImpl.disposeWithFileLevelIgnoreErrors(existing, highlightingSession);
+        }
     }
 
     @Override

@@ -23,7 +23,9 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.impl.highlight.HighlightingSession;
+import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.editor.internal.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -164,6 +166,14 @@ public class HighlightingSessionImpl implements HighlightingSession {
     if (actualInfo == info && info.getHighlighter() == highlighter) {
       highlighter.dispose();
     }
+  }
+
+  public void removeFileLevelHighlight(HighlightInfo fileLevelHighlightInfo) {
+    myProject.getUIAccess().give(() -> {
+      if (!myProject.isDisposed()) {
+        ((DaemonCodeAnalyzerInternal)DaemonCodeAnalyzer.getInstance(myProject)).removeFileLevelHighlight(myProject, fileLevelHighlightInfo, myPsiFile);
+      }
+    });
   }
 
   /**

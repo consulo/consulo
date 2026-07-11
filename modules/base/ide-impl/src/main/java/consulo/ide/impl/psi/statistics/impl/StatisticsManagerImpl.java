@@ -98,7 +98,6 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
     }
 
     @Override
-    @RequiredUIAccess
     public void incUseCount(StatisticsInfo info) {
         if (info == StatisticsInfo.EMPTY) {
             return;
@@ -106,8 +105,6 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
         if (Application.get().isUnitTestMode() && !myTestingStatistics) {
             return;
         }
-
-        UIAccess.assertIsUIThread();
 
         for (StatisticsInfo conjunct : info.getConjuncts()) {
             doIncUseCount(conjunct);
@@ -134,11 +131,9 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
     }
 
     @Override
-    @RequiredUIAccess
     public void save() {
         synchronized (LOCK) {
             if (!Application.get().isUnitTestMode()) {
-                UIAccess.assertIsUIThread();
                 for (StatisticsUnit unit : myModifiedUnits) {
                     saveUnit(unit.getNumber());
                 }
@@ -173,7 +168,6 @@ public class StatisticsManagerImpl extends StatisticsManager implements Settings
         return unit;
     }
 
-    @RequiredUIAccess
     private void saveUnit(int unitNumber) {
         if (!createStoreFolder()) {
             return;
