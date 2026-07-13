@@ -386,7 +386,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     @Override
-    @RequiredUIAccess
     public void dispose() {
         myDisposeState = ThreeState.UNSURE;
 

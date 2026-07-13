@@ -29,6 +29,8 @@ import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.component.store.internal.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -121,9 +123,16 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  
+
   protected MessageBus getMessageBus() {
     return myApplication.getMessageBus();
+  }
+
+  @Override
+  protected CoroutineContext createCoroutineContext() {
+    CoroutineContext context = myApplication.coroutineContext().copy();
+    context.putCopyableUserData(UIAccess.KEY, myApplication.getLastUIAccess());
+    return context;
   }
 
   

@@ -19,6 +19,7 @@ package consulo.util.concurrent.coroutine.step;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.internal.EmptyCoroutine;
 import consulo.util.concurrent.coroutine.internal.Subroutine;
 import org.jspecify.annotations.Nullable;
 
@@ -66,6 +67,12 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 		@Nullable CoroutineStep<O, ?> nextStep,
 		Continuation<?> continuation
 	) {
+		// an empty coroutine performs no work and cannot be turned into a subroutine, so just continue
+		if (coroutine instanceof EmptyCoroutine) {
+			continuation.continueApply(previousExecution, input -> null, nextStep);
+			return;
+		}
+
 		// subroutine needs to be created on invocation because the return step
 		// may change between invocations
 		new Subroutine<>(coroutine, nextStep).runAsync(previousExecution,
@@ -80,6 +87,9 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 	protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
 		// NullAway problem: input and output are nullable by method contract but in actual usage input can be null only if I is nullable.
 		// We cannot explain this to the static validator, so suppressing NullAway validation.
+		if (coroutine instanceof EmptyCoroutine) {
+			return null;
+		}
 		return new Subroutine<>(coroutine, apply(Function.identity())).runBlocking(input, continuation);
 	}
 }

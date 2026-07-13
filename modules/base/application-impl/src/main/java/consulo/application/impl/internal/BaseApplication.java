@@ -61,12 +61,11 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
-import consulo.util.concurrent.coroutine.Continuation;
-import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.CoroutineContext;
-import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.*;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
@@ -83,6 +82,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -335,19 +335,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     public void _saveSettings() {
         if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
             try {
-                StoreUtil.save(getStateStore(), false, null);
+                CoroutineScope scope = CoroutineScope.of(coroutineContext());
+                scope.putCopyableUserData(UIAccess.KEY, getLastUIAccess());
+                getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(scope, null);
             }
-            finally {
-                mySaveSettingsIsInProgress.set(false);
-            }
-        }
-    }
-
-    // saves application settings off the EDT; UI-state components hop back to the UI thread internally
-    public void _saveSettingsAsync(UIAccess uiAccess) {
-        if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
-            try {
-                StoreUtil.saveAsync(getStateStore(), uiAccess, null);
+            catch (Throwable e) {
+                StoreUtil.handleSaveError(getLastUIAccess(), null, e);
             }
             finally {
                 mySaveSettingsIsInProgress.set(false);
@@ -368,9 +361,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         scope.putCopyableUserData(UIAccess.KEY, uiAccess);
 
         // documents are saved on the EDT (the trailing-spaces stripper reads the focus owner); settings run off the EDT
-        return Coroutine.<Void, Void>first(CodeExecution.run(
-            () -> uiAccess.giveAndWaitIfNeed(() -> FileDocumentManager.getInstance().saveAllDocuments())
-        )).then(CodeExecution.run(() -> saveOpenProjectsAndSettings(uiAccess))).runAsync(scope, null);
+        return Coroutine.<Void, Object>first(UIAction.<Void, Object>apply(input -> {
+                FileDocumentManager.getInstance().saveAllDocuments();
+                return null;
+            }))
+            .then(callSubroutine(saveOpenProjectsAndSettings(uiAccess)))
+            .then(CodeExecution.<Object, Void>apply(input -> null))
+            .runAsync(scope, null)
+            .onError(StoreUtil.onSaveError(uiAccess, null));
     }
 
     @Override
@@ -384,15 +382,18 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return progressBuilderFactory
             .newProgressBuilder(null, LocalizeValue.localizeTODO("Save All"))
             .execute(uiAccess, () -> Coroutine
-                .<Void, Void>first(CodeExecution.run(
-                    () -> uiAccess.giveAndWaitIfNeed(() -> FileDocumentManager.getInstance().saveAllDocuments())
-                ))
-                .then(CodeExecution.run(() -> saveOpenProjectsAndSettings(uiAccess))));
+                .<Void, Object>first(UIAction.<Void, Object>apply(input -> {
+                    FileDocumentManager.getInstance().saveAllDocuments();
+                    return null;
+                }))
+                .then(callSubroutine(saveOpenProjectsAndSettings(uiAccess)))
+                .then(CodeExecution.<Object, Void>apply(input -> null)));
     }
 
-    private void saveOpenProjectsAndSettings(UIAccess uiAccess) {
-        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        for (Project openProject : openProjects) {
+    private Coroutine<Object, Object> saveOpenProjectsAndSettings(UIAccess uiAccess) {
+        Coroutine<Object, Object> chain = Coroutine.first(CodeExecution.<Object, Object>apply(input -> input));
+
+        for (Project openProject : ProjectManager.getInstance().getOpenProjects()) {
             if (openProject.isDisposed()) {
                 // debug for https://github.com/consulo/consulo/issues/296
                 LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
@@ -402,11 +403,18 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
             ProjectEx project = (ProjectEx)openProject;
             if (project.isInitialized()) {
                 // saves the project store off the EDT; UI-state components hop back to the UI thread internally
-                project.saveAsync(uiAccess).join();
+                chain = chain.then(CodeExecution.<Object, Object>apply(input -> null))
+                    .then(callSubroutine(project.saveAsync(uiAccess)));
             }
         }
 
-        _saveSettingsAsync(uiAccess);
+        return chain.then(CodeExecution.<Object, Object>apply(input -> null))
+            .then(callSubroutine(getStateStore().createSaveCoroutine(new ArrayList<>())));
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static CoroutineStep<Object, Object> callSubroutine(Coroutine<?, ?> coroutine) {
+        return CallSubroutine.call((Coroutine) coroutine);
     }
 
     @Override
@@ -492,11 +500,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return true;
     }
 
-    @RequiredUIAccess
     @Override
     public void dispose() {
-        assertIsDispatchThread();
-
         fireApplicationExiting();
 
         ShutDownTracker.getInstance().ensureStopperThreadsFinished();
@@ -522,7 +527,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    
     @Override
     public IApplicationStore getStateStore() {
         return (IApplicationStore)super.getStateStore();

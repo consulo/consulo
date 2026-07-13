@@ -27,6 +27,8 @@ import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+
+import java.util.concurrent.CompletableFuture;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -147,9 +149,15 @@ public class ProjectImplUtil {
                     Project finalProjectToClose = projectToClose;
                     confirmOpenNewProjectAsync(finalProjectToClose, uiAccess, false).doWhenDone(exitCode -> {
                         if (exitCode == ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW) {
-                            AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
-                            closeResult.doWhenDone((Runnable) reopenAsync::setDone);
-                            closeResult.doWhenRejected(() -> result.reject("not closed project"));
+                            CompletableFuture<?> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
+                            closeResult.whenComplete((closed, throwable) -> {
+                                if (throwable == null && Boolean.TRUE.equals(closed)) {
+                                    reopenAsync.setDone();
+                                }
+                                else {
+                                    result.reject("not closed project");
+                                }
+                            });
                         }
                         else if (exitCode != ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
                             result.reject("not open in new window");

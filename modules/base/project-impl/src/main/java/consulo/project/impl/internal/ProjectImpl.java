@@ -43,8 +43,11 @@ import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
@@ -55,7 +58,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -272,60 +275,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public void save() {
-        ApplicationEx application = (ApplicationEx) getApplication();
-        if (application.isDoNotSave()) {
-            // no need to save
-            return;
-        }
-
         if (!isModulesReady()) {
             LOG.warn(new Exception("Calling Project#save() but modules not initialized"));
             return;
         }
 
-        if (!mySavingInProgress.compareAndSet(false, true)) {
-            return;
-        }
-
-        try {
-            if (!isDefault()) {
-                String projectBasePath = getStateStore().getProjectBasePath();
-                if (projectBasePath != null) {
-                    File projectDir = new File(projectBasePath);
-                    File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-                    if (!projectDir.getName().equals(getName())) {
-                        try {
-                            FileUtil.writeToFile(nameFile, getName());
-                        }
-                        catch (IOException e) {
-                            LOG.error("Unable to store project name", e);
-                        }
-                    }
-                    else {
-                        FileUtil.delete(nameFile);
-                    }
-                }
-            }
-
-            StoreUtil.save(getStateStore(), false, this);
-        }
-        finally {
-            mySavingInProgress.set(false);
-            application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
-        }
-    }
-
-    
-    @Override
-    public CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
-        return CompletableFuture.runAsync(() -> saveAsyncImpl(uiAccess));
-    }
-
-    private void saveAsyncImpl(UIAccess uiAccess) {
         ApplicationEx application = (ApplicationEx) getApplication();
-
         if (application.isDoNotSave()) {
-            // no need to save
             return;
         }
 
@@ -333,29 +289,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             return;
         }
 
-        //HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
+        UIAccess uiAccess = getApplication().getLastUIAccess();
         try {
-            if (!isDefault()) {
-                String projectBasePath = getStateStore().getProjectBasePath();
-                if (projectBasePath != null) {
-                    File projectDir = new File(projectBasePath);
-                    File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-                    if (!projectDir.getName().equals(getName())) {
-                        try {
-                            FileUtil.writeToFile(nameFile, getName());
-                        }
-                        catch (IOException e) {
-                            LOG.error("Unable to store project name", e);
-                        }
-                    }
-                    else {
-                        FileUtil.delete(nameFile);
-                    }
-                }
-            }
-
-            StoreUtil.saveAsync(getStateStore(), uiAccess, this);
+            CoroutineScope scope = CoroutineScope.of(coroutineContext());
+            createSaveChain().runBlocking(scope, null);
+        }
+        catch (Throwable e) {
+            StoreUtil.handleSaveError(uiAccess, this, e);
         }
         finally {
             mySavingInProgress.set(false);
@@ -363,12 +303,54 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
     }
 
-    @RequiredUIAccess
+    @Override
+    public Coroutine<?, ?> saveAsync(UIAccess uiAccess) {
+        ApplicationEx application = (ApplicationEx) getApplication();
+        if (application.isDoNotSave()) {
+            return Coroutine.empty();
+        }
+
+        return createSaveChain()
+            .then(CodeExecution.<Object, Object>apply(input -> {
+                application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
+                return input;
+            }));
+    }
+
+    private Coroutine<Object, Object> createSaveChain() {
+        return Coroutine.<Object, Object>first(CodeExecution.<Object, Object>apply(input -> {
+                writeProjectNameFile();
+                return input;
+            }))
+            .then(CallSubroutine.call(getStateStore().createSaveCoroutine(new ArrayList<>())));
+    }
+
+    private void writeProjectNameFile() {
+        if (isDefault()) {
+            return;
+        }
+        String projectBasePath = getStateStore().getProjectBasePath();
+        if (projectBasePath == null) {
+            return;
+        }
+        File projectDir = new File(projectBasePath);
+        File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
+        if (!projectDir.getName().equals(getName())) {
+            try {
+                FileUtil.writeToFile(nameFile, getName());
+            }
+            catch (IOException e) {
+                LOG.error("Unable to store project name", e);
+            }
+        }
+        else {
+            FileUtil.delete(nameFile);
+        }
+    }
+
     @Override
     public void dispose() {
         ApplicationEx application = (ApplicationEx) getApplication();
-
-        UIAccess.assertIsUIThread();
 
         assert application.isWriteAccessAllowed();  // dispose must be under write action
 

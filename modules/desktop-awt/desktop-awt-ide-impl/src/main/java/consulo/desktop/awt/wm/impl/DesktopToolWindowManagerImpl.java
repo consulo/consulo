@@ -944,7 +944,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    public Element getStateFromUI() {
+    protected Element getStateImpl() {
         if (myFrame == null) {
             // do nothing if the project was not opened
             return null;
@@ -991,12 +991,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
             element.addContent(layoutToRestoreElement);
         }
 
-        return element;
-    }
-
-    @RequiredWriteAction
-    @Override
-    public @Nullable Element getState(Element element) {
         return element;
     }
 

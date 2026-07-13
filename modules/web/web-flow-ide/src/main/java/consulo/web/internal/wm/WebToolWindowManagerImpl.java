@@ -219,14 +219,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @Override
     @RequiredUIAccess
-    public @Nullable Element getStateFromUI() {
+    protected @Nullable Element getStateImpl() {
         return new Element("state");
-    }
-
-    @Override
-    @RequiredUIAccess
-    public @Nullable Element getState(Element element) {
-        return element;
     }
 
     @Override

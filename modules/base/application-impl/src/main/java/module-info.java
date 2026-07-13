@@ -15,6 +15,7 @@ module consulo.application.impl {
     requires transitive consulo.project.api;
     requires consulo.util.nodep;
     requires consulo.ui.impl;
+    requires consulo.ui.ex.api;
     requires consulo.container.api;
 
     requires consulo.util.jna;

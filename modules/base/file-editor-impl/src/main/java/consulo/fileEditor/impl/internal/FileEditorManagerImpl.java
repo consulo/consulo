@@ -32,10 +32,12 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentWithUIState;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;
 import consulo.component.util.ModificationTracker;
@@ -118,7 +120,7 @@ import java.util.function.Consumer;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
+public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
     private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
     private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
@@ -1459,9 +1461,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         connection.subscribe(UISettingsListener.class, new MyUISettingsListener());
     }
 
-    @RequiredUIAccess
     @Override
-    public @Nullable Element getStateFromUI() {
+    public Coroutine<?, Element> getStateAsync() {
+        return UIAction.<Void, Element>apply((input, continuation) -> getStateImpl()).toCoroutine();
+    }
+
+    @RequiredUIAccess
+    private @Nullable Element getStateImpl() {
         if (mySplitters == null) {
             // do not save if not initialized yet
             return null;
@@ -1470,12 +1476,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         Element state = new Element("state");
         getMainSplitters().writeExternal(state);
         return state;
-    }
-
-    @RequiredWriteAction
-    @Override
-    public @Nullable Element getState(Element element) {
-        return element;
     }
 
     @Override

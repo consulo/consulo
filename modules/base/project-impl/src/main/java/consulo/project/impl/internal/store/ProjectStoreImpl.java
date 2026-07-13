@@ -31,6 +31,7 @@ import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.macro.ProjectPathMacroManager;
@@ -76,6 +77,11 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   protected Project getProject() {
     return myProject;
+  }
+
+  @Override
+  protected CoroutineContext createCoroutineContext() {
+    return myProject.coroutineContext();
   }
 
   @Override

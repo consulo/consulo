@@ -21,10 +21,12 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentWithUIState;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
@@ -58,7 +60,7 @@ import java.util.List;
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl
-public final class EditorHistoryManagerImpl implements PersistentStateComponentWithUIState<Element, HistoryEntry[]>, Disposable, EditorHistoryManager {
+public final class EditorHistoryManagerImpl implements PersistentStateComponentAsync<Element>, Disposable, EditorHistoryManager {
   private static final Logger LOG = Logger.getInstance(EditorHistoryManagerImpl.class);
 
   private final Project myProject;
@@ -347,9 +349,13 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     });
   }
 
-  @RequiredUIAccess
   @Override
-  public HistoryEntry[] getStateFromUI() {
+  public Coroutine<?, Element> getStateAsync() {
+    return UIAction.<Void, Element>apply((input, continuation) -> getStateImpl()).toCoroutine();
+  }
+
+  @RequiredUIAccess
+  private Element getStateImpl() {
     VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
     for (int i = openFiles.length - 1; i >= 0; i--) {
       VirtualFile file = openFiles[i];
@@ -358,26 +364,9 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
         updateHistoryEntry(file, false);
       }
     }
-    return myEntriesList.toArray(new HistoryEntry[myEntriesList.size()]);
-  }
-
-  @RequiredWriteAction
-  @Override
-  public Element getState(HistoryEntry[] entries) {
-    /* update history before saving
-    moved to getStateFromUI
-
-    final VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
-    for (int i = openFiles.length - 1; i >= 0; i--) {
-      final VirtualFile file = openFiles[i];
-      // we have to update only files that are in history
-      if (getEntry(file) != null) {
-        updateHistoryEntry(file, false);
-      }
-    }*/
 
     Element element = new Element("state");
-    for (HistoryEntry entry : entries) {
+    for (HistoryEntry entry : myEntriesList) {
       entry.writeExternal(element, myProject);
     }
     return element;

@@ -19,7 +19,9 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentWithUIState;
+import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.ui.ex.coroutine.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
@@ -61,7 +63,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2017-09-25
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
+public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
     public static final String ID = "ToolWindowManager";
 
     /**
@@ -219,6 +221,14 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     protected void uninstallFocusWatcher(String id) {
     }
+
+    @Override
+    public Coroutine<?, Element> getStateAsync() {
+        return UIAction.<Void, Element>apply((input, continuation) -> getStateImpl()).toCoroutine();
+    }
+
+    @RequiredUIAccess
+    protected abstract Element getStateImpl();
 
     public abstract void initializeUI();
 
@@ -1047,6 +1057,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         ToolWindowInternalDecorator decorator = createInternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
         ActivateToolWindowAction.ensureToolWindowActionRegistered(toolWindow);
         myId2InternalDecorator.put(id, decorator);
+        Disposer.register(this, decorator);
         decorator.addInternalDecoratorListener(myInternalDecoratorListener);
         toolWindow.addPropertyChangeListener(myToolWindowPropertyChangeListener);
 
@@ -1056,6 +1067,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
         ToolWindowStripeButton button = createStripeButton(decorator);
         myId2StripeButton.put(id, button);
+        Disposer.register(this, button);
         addButton(button, info);
 
         // If preloaded info is visible or active then we have to show/activate the installed
@@ -1115,7 +1127,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
         // Destroy decorator
         ToolWindowInternalDecorator decorator = getInternalDecorator(id);
-        decorator.dispose();
+        Disposer.dispose(decorator);
         decorator.removeInternalDecoratorListener(myInternalDecoratorListener);
         myId2InternalDecorator.remove(id);
 
@@ -1323,13 +1335,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     @Override
-    @RequiredUIAccess
     public void dispose() {
-        for (String id : new ArrayList<>(myId2StripeButton.keySet())) {
-            unregisterToolWindow(id);
-        }
-
-        assert myId2StripeButton.isEmpty();
     }
 
     @RequiredUIAccess

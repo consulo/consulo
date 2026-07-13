@@ -117,7 +117,6 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     return LOG.isDebugEnabled() || ApplicationProperties.isInSandbox();
   }
 
-  @RequiredUIAccess
   @Override
   public synchronized void dispose() {
     myCreatedNotLazyServicesCount.set(0);

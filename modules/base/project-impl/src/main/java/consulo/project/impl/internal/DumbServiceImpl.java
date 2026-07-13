@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.project.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
@@ -134,9 +135,10 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    @RequiredUIAccess
+    @RequiredWriteAction
     public void dispose() {
-        UIAccess.assertIsUIThread();
+        myApplication.assertWriteAccessAllowed();
+
         myUpdatesQueue.clear();
         myQueuedEquivalences.clear();
         synchronized (myRunWhenSmartQueue) {

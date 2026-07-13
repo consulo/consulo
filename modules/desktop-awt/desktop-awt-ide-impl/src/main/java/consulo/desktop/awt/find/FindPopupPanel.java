@@ -271,7 +271,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                 .subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
                     @Override
                     public void projectClosed(Project project, UIAccess uiAccess) {
-                        closeImmediately();
+                        uiAccess.giveAndWaitIfNeed(() -> closeImmediately());
                     }
                 });
             Disposer.register(myDialog.getDisposable(), myDisposable);

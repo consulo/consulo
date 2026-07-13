@@ -211,6 +211,7 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     /**
      * Asserts whether the method is being called from the write thread.
      */
+    @Deprecated
     default void assertIsWriteThread() {
         assertIsDispatchThread();
     }

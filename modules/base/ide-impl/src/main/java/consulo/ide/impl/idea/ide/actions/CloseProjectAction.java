@@ -50,9 +50,11 @@ public class CloseProjectAction extends LegacyDumbAwareAction {
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
 
-        myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).doWhenDone(() -> {
-            myRecentProjectsManager.updateLastProjectPath();
-            myWelcomeFrameManager.showIfNoProjectOpened();
+        myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).whenComplete((closed, throwable) -> {
+            if (throwable == null && Boolean.TRUE.equals(closed)) {
+                myRecentProjectsManager.updateLastProjectPath();
+                myWelcomeFrameManager.showIfNoProjectOpened();
+            }
         });
     }
 

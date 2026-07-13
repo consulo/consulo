@@ -214,14 +214,8 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
     @RequiredUIAccess
     @Override
-    public @Nullable Element getStateFromUI() {
+    protected @Nullable Element getStateImpl() {
         return new Element("state");
-    }
-
-    @RequiredWriteAction
-    @Override
-    public @Nullable Element getState(Element element) {
-        return element;
     }
 
     @Override

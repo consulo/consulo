@@ -25,13 +25,10 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
 import org.jspecify.annotations.Nullable;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -48,27 +45,6 @@ public final class CompletionServiceImpl extends CompletionService {
     private static Throwable ourPhaseTrace;
 
     private @Nullable CompletionProcess myApiCompletionProcess;
-
-    @Inject
-    public CompletionServiceImpl(Application application) {
-        application.getMessageBus().connect().subscribe(
-            ProjectManagerListener.class,
-            new ProjectManagerListener() {
-                @Override
-                @RequiredUIAccess
-                public void projectClosing(Project project) {
-                    CompletionProgressIndicator indicator = getCurrentCompletionProgressIndicator();
-                    if (indicator != null && indicator.getProject() == project) {
-                        indicator.closeAndFinish(true);
-                        setCompletionPhase(CompletionPhase.NoCompletion);
-                    }
-                    else if (indicator == null) {
-                        setCompletionPhase(CompletionPhase.NoCompletion);
-                    }
-                }
-            }
-        );
-    }
 
     @Override
     public void performCompletion(CompletionParameters parameters, Consumer<? super CompletionResult> consumer) {

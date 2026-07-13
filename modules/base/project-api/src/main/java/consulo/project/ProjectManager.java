@@ -25,6 +25,8 @@ import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+
+import java.util.concurrent.CompletableFuture;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -59,14 +61,14 @@ public interface ProjectManager {
     }
 
     
-    default AsyncResult<Void> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
+    default CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
         return closeAndDisposeAsync(project, uiAccess, true, true, true);
     }
 
     boolean isProjectOpened(Project project);
 
-    
-    AsyncResult<Void> closeAndDisposeAsync(Project project, UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
+
+    CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
     /**
      * Adds listener to the specified project.

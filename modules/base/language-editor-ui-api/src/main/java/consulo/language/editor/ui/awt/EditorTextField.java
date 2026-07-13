@@ -404,8 +404,10 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
             ProjectManagerListener listener = new ProjectManagerListener() {
                 @Override
                 public void projectClosing(Project project) {
-                    releaseEditor(myEditor);
-                    myEditor = null;
+                    myProject.getUIAccess().giveAndWaitIfNeed(() -> {
+                        releaseEditor(myEditor);
+                        myEditor = null;
+                    });
                 }
             };
             ProjectManager.getInstance().addProjectManagerListener(myProject, listener);

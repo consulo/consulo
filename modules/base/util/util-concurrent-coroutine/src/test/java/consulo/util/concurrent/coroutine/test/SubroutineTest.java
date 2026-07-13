@@ -60,6 +60,28 @@ public class SubroutineTest {
     }
 
     /**
+     * Test of invoking an empty coroutine as a subroutine.
+     */
+    @Test
+    public void testEmptySubroutine() {
+        CoroutineContext context = TestCoroutineContext.newSilent();
+
+        Coroutine<String, String> cr =
+            first(call(Coroutine.<String, Object>empty()))
+                .then(apply(i -> "after"));
+
+        launch(context, scope -> {
+            Continuation<String> ca = cr.runAsync(scope, "test");
+            Continuation<String> cb = cr.runBlocking(scope, "test");
+
+            assertEquals("after", ca.getResult());
+            assertEquals("after", cb.getResult());
+            assertTrue(ca.isFinished());
+            assertTrue(cb.isFinished());
+        });
+    }
+
+    /**
      * Test of early subroutine termination.
      */
     @Test

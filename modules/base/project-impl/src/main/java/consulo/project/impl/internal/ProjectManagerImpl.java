@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.NonCancelableSection;
@@ -41,6 +42,7 @@ import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.project.ProjectCloseHandler;
 import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.store.IProjectStore;
@@ -57,13 +59,20 @@ import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.CoroutineStep;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -75,6 +84,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Singleton
@@ -309,7 +320,11 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
         String basePath = project.getBasePath();
 
-        closeAndDisposeAsync(project, uiAccess).doWhenDone(() -> ProjectImplUtil.openAsync(basePath, null, true, uiAccess));
+        closeAndDisposeAsync(project, uiAccess).whenComplete((closed, throwable) -> {
+            if (throwable == null && Boolean.TRUE.equals(closed)) {
+                ProjectImplUtil.openAsync(basePath, null, true, uiAccess);
+            }
+        });
     }
 
     @Override
@@ -489,7 +504,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     
     @Override
-    public AsyncResult<Void> closeAndDisposeAsync(
+    public CompletableFuture<Boolean> closeAndDisposeAsync(
         Project project,
         UIAccess uiAccess,
         boolean checkCanClose,
@@ -497,68 +512,82 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         boolean dispose
     ) {
         if (!isProjectOpened(project)) {
-            return AsyncResult.resolved();
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
 
-        AsyncResult<Void> mainResult = AsyncResult.undefined();
+        CoroutineScope scope = CoroutineScope.of(myApplication.coroutineContext().copy());
+        scope.putCopyableUserData(UIAccess.KEY, uiAccess);
 
-        AsyncResult<Void> closeCheckInsideUI = AsyncResult.undefined();
+        Coroutine<Void, Boolean> teardown = buildCloseCoroutine(project, uiAccess, save, dispose);
 
-        if (checkCanClose) {
-            uiAccess.give(() -> {
-                boolean canClose = canClose(project);
-                if (canClose) {
-                    closeCheckInsideUI.setDone();
-                }
-                else {
-                    closeCheckInsideUI.setRejected();
-                }
-            });
-        }
-        else {
-            closeCheckInsideUI.setDone();
+        if (!checkCanClose) {
+            return teardown.runAsync(scope, null).toFuture();
         }
 
-        closeCheckInsideUI.doWhenRejected((Runnable) mainResult::setRejected);
+        return Coroutine.<Void, Boolean>first(UIAction.apply(input -> canClose(project)))
+            .runAsync(scope, null)
+            .toFuture()
+            .thenCompose(canClose -> Boolean.TRUE.equals(canClose)
+                ? teardown.runAsync(scope, null).toFuture()
+                : CompletableFuture.completedFuture(Boolean.FALSE));
+    }
 
-        closeCheckInsideUI.doWhenDone(() -> {
+    private Coroutine<Void, Boolean> buildCloseCoroutine(Project project, UIAccess uiAccess, boolean save, boolean dispose) {
+        Coroutine<Void, Object> chain = Coroutine.first(CodeExecution.<Void, Object>apply(input -> null));
+
+        if (save) {
+            chain = chain.then(UIAction.<Object, Object>apply(input -> {
+                FileDocumentManager.getInstance().saveAllDocuments();
+                return input;
+            }));
+
+            chain = chain.then(CodeExecution.<Object, Object>apply(input -> null))
+                .then(callSubroutine(project.saveAsync(uiAccess)));
+        }
+
+        chain = appendHandlers(chain, project, ProjectCloseHandler::beforeProjectClose);
+
+        chain = chain.then(WriteLock.<Object, Object>apply(input -> {
             Thread executeThread = Thread.currentThread();
             ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
             shutDownTracker.registerStopperThread(executeThread);
             try {
-                if (save) {
-                    uiAccess.giveAndWaitIfNeed(() -> {
-                        FileDocumentManager.getInstance().saveAllDocuments();
-                        project.save();
-                    });
-                }
-
-                myApplication.getMessageBus()
-                    .syncPublisher(ProjectManagerListener.class)
-                    .projectClosing(project); // somebody can start progress here, do not wrap in write action
-
-                WriteAction.runAndWait(() -> {
-                    removeFromOpened(project);
-
-                    myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosed(project, uiAccess);
-
-                    if (dispose) {
-                        Disposer.dispose(project);
-                    }
-                });
-
-                mainResult.setDone();
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-                mainResult.rejectWithThrowable(e);
+                removeFromOpened(project);
             }
             finally {
-                shutDownTracker.unregisterStopperThread(Thread.currentThread());
+                shutDownTracker.unregisterStopperThread(executeThread);
             }
-        });
-        return mainResult;
+            return input;
+        }));
+
+        chain = appendHandlers(chain, project, ProjectCloseHandler::projectClosed);
+
+        if (dispose) {
+            chain = chain.then(UIAction.<Object, Object>apply(input -> {
+                myApplication.runWriteAction(() -> Disposer.dispose(project));
+                return input;
+            }));
+        }
+
+        return chain.then(CodeExecution.<Object, Boolean>apply(input -> Boolean.TRUE));
     }
+
+    private Coroutine<Void, Object> appendHandlers(Coroutine<Void, Object> chain, Project project, Function<ProjectCloseHandler, Coroutine<?, ?>> phase) {
+        SimpleReference<Coroutine<Void, Object>> ref = SimpleReference.create(chain);
+        project.getExtensionPoint(ProjectCloseHandler.class).forEach(handler -> {
+            Coroutine<?, ?> handlerCoroutine = phase.apply(handler);
+            ref.set(ref.get()
+                .then(CodeExecution.<Object, Object>apply(input -> null))
+                .then(callSubroutine(handlerCoroutine)));
+        });
+        return ref.get();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static CoroutineStep<Object, Object> callSubroutine(Coroutine<?, ?> coroutine) {
+        return CallSubroutine.call((Coroutine) coroutine);
+    }
+
 
     private void initAndLoadProjectAsync(
         AsyncResult<Project> projectAsyncResult,
@@ -588,7 +617,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 try {
                     if (!addToOpened(project)) {
                         closeAndDisposeAsync(project, uiAccess)
-                            .doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened"));
+                            .whenComplete((closed, throwable) -> projectAsyncResult.reject("Can't add project to opened"));
                         return;
                     }
 

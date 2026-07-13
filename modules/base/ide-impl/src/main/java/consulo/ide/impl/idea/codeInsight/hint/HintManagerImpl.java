@@ -1082,26 +1082,25 @@ public class HintManagerImpl implements HintManagerEx {
      * We have to spy for all opened projects to register MyEditorManagerListener into
      * all opened projects.
      */
+    @RequiredUIAccess
+    public void onProjectClosed(Project project) {
+        UIAccess.assertIsUIThread();
+
+        // avoid leak through consulo.ide.impl.idea.codeInsight.hint.TooltipController.myCurrentTooltip
+        TooltipController.getInstance().cancelTooltips();
+        myApplication.invokeLater(() -> hideHints(0, false, false));
+
+        myQuestionAction = null;
+        myQuestionHint = null;
+        if (myLastEditor != null && project == myLastEditor.getProject()) {
+            updateLastEditor(null);
+        }
+    }
+
     private final class MyProjectManagerListener implements ProjectManagerListener {
         @Override
         public void projectOpened(Project project) {
             project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, myEditorManagerListener);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void projectClosed(Project project) {
-            UIAccess.assertIsUIThread();
-
-            // avoid leak through consulo.ide.impl.idea.codeInsight.hint.TooltipController.myCurrentTooltip
-            TooltipController.getInstance().cancelTooltips();
-            myApplication.invokeLater(() -> hideHints(0, false, false));
-
-            myQuestionAction = null;
-            myQuestionHint = null;
-            if (myLastEditor != null && project == myLastEditor.getProject()) {
-                updateLastEditor(null);
-            }
         }
     }
 

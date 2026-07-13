@@ -20,12 +20,11 @@ import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Project interface class.
@@ -114,8 +113,8 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   void save();
 
   
-  default CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
-    return CompletableFuture.completedFuture(null);
+  default Coroutine<?, ?> saveAsync(UIAccess uiAccess) {
+    return Coroutine.empty();
   }
 
   boolean isOpen();

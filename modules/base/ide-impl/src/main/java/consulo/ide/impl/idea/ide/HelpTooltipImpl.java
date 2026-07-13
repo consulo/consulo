@@ -7,7 +7,6 @@ import consulo.application.util.HtmlChunk;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -20,7 +19,6 @@ import consulo.ui.ex.internal.HelpTooltip;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.BitUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -29,8 +27,6 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -137,7 +133,6 @@ public class HelpTooltipImpl implements HelpTooltip {
 
     protected MouseAdapter myMouseListener;
 
-    private HierarchyListener myHierarchyListener;
 
     /**
      * Location of the HelpTooltip relatively to the owner component.
@@ -317,11 +312,6 @@ public class HelpTooltipImpl implements HelpTooltip {
             }
         };
 
-        myHierarchyListener = e -> {
-            if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.PARENT_CHANGED)) {
-                scheduleHide(myLink == null, myHideDelay);
-            }
-        };
     }
 
     private void initPopupBuilder() {
@@ -398,13 +388,11 @@ public class HelpTooltipImpl implements HelpTooltip {
     private void installMouseListeners(JComponent owner) {
         owner.addMouseListener(myMouseListener);
         owner.addMouseMotionListener(myMouseListener);
-        owner.addHierarchyListener(myHierarchyListener);
     }
 
     private void uninstallMouseListeners(JComponent owner) {
         owner.removeMouseListener(myMouseListener);
         owner.removeMouseMotionListener(myMouseListener);
-        owner.removeHierarchyListener(myHierarchyListener);
     }
 
     /**
@@ -476,7 +464,6 @@ public class HelpTooltipImpl implements HelpTooltip {
         }
     }
 
-    @RequiredUIAccess
     private void scheduleShow(MouseEvent e, int delay) {
         myScheduleFuture.cancel(false);
 
@@ -485,7 +472,6 @@ public class HelpTooltipImpl implements HelpTooltip {
         }
 
         schedule(
-            UIAccess.current(),
             () -> {
                 ComponentPopupBuilder popupBuilder = myPopupBuilder;
                 if (popupBuilder == null) {
@@ -518,16 +504,15 @@ public class HelpTooltipImpl implements HelpTooltip {
         );
     }
 
-    @RequiredUIAccess
     private void scheduleHide(boolean force, int delay) {
-        schedule(UIAccess.current(), () -> hidePopup(force), delay);
+        schedule(() -> hidePopup(force), delay);
     }
 
-    private void schedule(UIAccess uiAccess, Runnable runnable, int delay) {
+    private void schedule(Runnable runnable, int delay) {
         myScheduleFuture.cancel(false);
 
         Application application = Application.get();
-        myScheduleFuture = uiAccess.getScheduler().schedule(runnable, application.getDefaultModalityState(), delay, TimeUnit.MILLISECONDS);
+        myScheduleFuture = application.getLastUIAccess().getScheduler().schedule(runnable, application.getDefaultModalityState(), delay, TimeUnit.MILLISECONDS);
     }
 
     protected void hidePopup(boolean force) {
