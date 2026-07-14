@@ -185,8 +185,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     }
 
     private void registerProjectToReload(VirtualFile file, StateStorage storage) {
-        LOG.info("[RELOAD] Registering project to reload: " + file + ", project: " + myProject.getBasePath());
-
         myChangedProjectFiles.add(storage);
 
         if (storage instanceof StateStorageBase) {
@@ -199,11 +197,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     }
 
     private boolean isReloadUnblocked() {
-        int count = myReloadBlockCount.get();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("[RELOAD] myReloadBlockCount = " + count);
-        }
-        return count == 0;
+        return myReloadBlockCount.get() == 0;
     }
 
     private void cancel() {
