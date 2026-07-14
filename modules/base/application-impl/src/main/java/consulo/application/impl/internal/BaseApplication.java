@@ -348,6 +348,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
+    @Override
+    public Coroutine<Object, Object> saveSettingsAsync() {
+        if (myDoNotSave) {
+            return Coroutine.empty();
+        }
+        return getStateStore().createSaveCoroutine(new ArrayList<>());
+    }
+
     @RequiredUIAccess
     @Override
     public Continuation<Void> saveAll() {

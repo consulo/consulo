@@ -168,6 +168,11 @@ public class RootIndexImpl implements RootIndex {
         for (DirectoryIndexExcludePolicy policy : DirectoryIndexExcludePolicy.EP_NAME.getExtensionList(project)) {
             Collections.addAll(info.excludedFromProject, policy.getExcludeRootsForProject());
         }
+
+        VirtualFile baseDir = project.getBaseDir();
+        if (baseDir != null && baseDir.isValid()) {
+            info.projectRoots.add(baseDir);
+        }
         return info;
     }
 
@@ -434,7 +439,7 @@ public class RootIndexImpl implements RootIndex {
         List<VirtualFile> hierarchy = new ArrayList<>();
         boolean hasContentRoots = false;
         while (dir != null) {
-            hasContentRoots |= info.contentRootOf.get(dir) != null;
+            hasContentRoots |= info.contentRootOf.get(dir) != null || info.projectRoots.contains(dir);
             if (!hasContentRoots && isIgnored(dir)) {
                 return null;
             }
@@ -473,12 +478,14 @@ public class RootIndexImpl implements RootIndex {
         final MultiMap<VirtualFile, Library> sourceOfLibraries = MultiMap.createSmart();
         
         final Set<VirtualFile> excludedFromProject = new HashSet<>();
-        
+
         final Map<VirtualFile, Module> excludedFromModule = new HashMap<>();
-        
+
         final Map<VirtualFile, String> packagePrefix = new HashMap<>();
 
-        
+        final Set<VirtualFile> projectRoots = new HashSet<>();
+
+
         Set<VirtualFile> getAllRoots() {
             LinkedHashSet<VirtualFile> result = new LinkedHashSet<>();
             result.addAll(classAndSourceRoots);
@@ -486,7 +493,20 @@ public class RootIndexImpl implements RootIndex {
             result.addAll(excludedFromLibraries.keySet());
             result.addAll(excludedFromModule.keySet());
             result.addAll(excludedFromProject);
+            result.addAll(projectRoots);
             return result;
+        }
+
+        private @Nullable VirtualFile findProjectRootInfo(List<VirtualFile> hierarchy) {
+            for (VirtualFile root : hierarchy) {
+                if (projectRoots.contains(root)) {
+                    return root;
+                }
+                if (excludedFromProject.contains(root) || excludedFromModule.containsKey(root)) {
+                    return null;
+                }
+            }
+            return null;
         }
 
         private boolean shouldMarkAsProjectExcluded(VirtualFile root, @Nullable List<VirtualFile> hierarchy) {
@@ -631,12 +651,13 @@ public class RootIndexImpl implements RootIndex {
         RootInfo info
     ) {
         VirtualFile moduleContentRoot = info.findModuleRootInfo(hierarchy);
+        VirtualFile projectContentRoot = info.findProjectRootInfo(hierarchy);
         VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
         VirtualFile librarySourceRoot = info.findLibraryRootInfo(hierarchy, true);
-        boolean inProject = moduleContentRoot != null || libraryClassRoot != null || librarySourceRoot != null;
+        boolean inProject = moduleContentRoot != null || projectContentRoot != null || libraryClassRoot != null || librarySourceRoot != null;
         VirtualFile nearestContentRoot;
         if (inProject) {
-            nearestContentRoot = moduleContentRoot;
+            nearestContentRoot = moduleContentRoot != null ? moduleContentRoot : projectContentRoot;
         }
         else {
             nearestContentRoot = info.findNearestContentRootForExcluded(hierarchy);

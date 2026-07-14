@@ -32,6 +32,7 @@ import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.macro.ProjectPathMacroManager;
@@ -41,7 +42,9 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -227,7 +230,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   public void loadProjectFromTemplate(ProjectImpl defaultProject) {
-    defaultProject.save();
+    CoroutineScope scope = CoroutineScope.of(defaultProject.coroutineContext());
+    defaultProject.getStateStore().createSaveCoroutine(new ArrayList<>()).runBlocking(scope, null);
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();
     if (element != null) {
@@ -291,8 +295,12 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       else {
         List<Pair<SaveSession, File>> oldList = new ArrayList<>(readonlyFiles);
         readonlyFiles.clear();
+        List<VFileEvent> retryEvents = new ArrayList<>();
         for (Pair<SaveSession, File> entry : oldList) {
-          executeSave(entry.first, false, readonlyFiles);
+          executeSave(entry.first, false, readonlyFiles, retryEvents);
+        }
+        if (!retryEvents.isEmpty()) {
+          RefreshQueue.getInstance().processEvents(retryEvents);
         }
 
         if (!readonlyFiles.isEmpty()) {

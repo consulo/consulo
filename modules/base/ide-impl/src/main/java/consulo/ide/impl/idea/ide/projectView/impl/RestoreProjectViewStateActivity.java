@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.ui.impl.internal;
+package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.internal.ProjectFrameAllocator;
 import consulo.project.startup.PostStartupActivity;
+import consulo.project.ui.view.ProjectView;
 import consulo.ui.UIAccess;
 
 /**
  * @author VISTALL
- * @since 2024-08-10
+ * @since 2026-07-13
  */
-@ExtensionImpl(order = "after InitToolWindows")
-public class IdeFrameInitializeActivity implements PostStartupActivity, DumbAware {
+@ExtensionImpl(order = "first")
+public class RestoreProjectViewStateActivity implements PostStartupActivity, DumbAware {
     @Override
     public void runActivity(Project project, UIAccess uiAccess) {
-        ProjectFrameAllocator allocator = project.getInstance(ProjectFrameAllocator.class);
-
-        uiAccess.give(allocator::initializeFrame);
+        uiAccess.give(() -> {
+            ProjectView projectView = ProjectView.getInstance(project);
+            if (projectView instanceof ProjectViewImpl impl) {
+                impl.reRestoreExpandedPaths();
+            }
+        });
     }
 }

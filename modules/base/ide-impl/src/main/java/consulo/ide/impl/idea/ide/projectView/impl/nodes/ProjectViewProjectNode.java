@@ -71,11 +71,19 @@ public class ProjectViewProjectNode extends AbstractProjectNode implements PathE
             return nodes;
         }
 
-        for (VirtualFile file : baseDir.getRequiredChildren()) {
-            if (ModuleContentUtil.findModuleForFile(file, project) == null && !file.isDirectory()) {
-                PsiFile psiFile = psiManager.findFile(file);
-                if (psiFile != null) {
-                    nodes.add(new PsiFileNode(project, psiFile, getSettings()));
+        if (nodes.isEmpty()) {
+            PsiDirectory psiDirectory = psiManager.findDirectory(baseDir);
+            if (psiDirectory != null) {
+                nodes.add(new PsiDirectoryNode(project, psiDirectory, getSettings()));
+            }
+        }
+        else {
+            for (VirtualFile file : baseDir.getRequiredChildren()) {
+                if (ModuleContentUtil.findModuleForFile(file, project) == null && !file.isDirectory()) {
+                    PsiFile psiFile = psiManager.findFile(file);
+                    if (psiFile != null) {
+                        nodes.add(new PsiFileNode(project, psiFile, getSettings()));
+                    }
                 }
             }
         }

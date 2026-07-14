@@ -92,10 +92,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    public void save() {
-    }
-
-    @Override
     public boolean isDisposed() {
         return false;
     }

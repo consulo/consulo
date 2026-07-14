@@ -25,12 +25,14 @@ import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.virtualFileSystem.event.VFileEvent;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -175,7 +177,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     }
   }
 
-  protected abstract class XmlElementStorageSaveSession implements SaveSession, ExternalizationSession {
+  protected abstract class XmlElementStorageSaveSession implements VfsEventCollectingSaveSession, ExternalizationSession {
     private final StorageData myOriginalStorageData;
     private StorageData myCopiedStorageData;
 
@@ -217,17 +219,19 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     }
 
     @Override
-    public final void save(boolean force) {
+    public final void save(boolean force, @Nullable List<VFileEvent> events) {
       if (myBlockSavingTheContent) {
         return;
       }
 
       try {
-        if(force) {
-          doSave(getElement(myOriginalStorageData, isCollapsePathsOnSave(), Map.of()));
-        }
-        else {
-          doSave(getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates));
+        Element element = force
+          ? getElement(myOriginalStorageData, isCollapsePathsOnSave(), Map.of())
+          : getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates);
+
+        doSave(element, events);
+
+        if (!force) {
           myLoadedData = myCopiedStorageData;
         }
       }
@@ -241,7 +245,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       return true;
     }
 
-    protected abstract void doSave(@Nullable Element element) throws IOException;
+    protected abstract void doSave(@Nullable Element element, @Nullable List<VFileEvent> events) throws IOException;
 
     protected void saveForProvider(@Nullable byte[] content, @Nullable Element element) throws IOException {
       if (!myStreamProvider.isApplicable(myFileSpec, myRoamingType)) {

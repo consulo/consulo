@@ -24,7 +24,6 @@ import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.DirectoryStorageData;
-import consulo.component.store.impl.internal.storage.StateStorageFacade;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.component.store.internal.*;
 import consulo.container.boot.ContainerPathManager;
@@ -64,7 +63,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
         application,
         () -> null,
         () -> pathMacrosService,
-        StateStorageFacade.JAVA_IO
+        false
       ) {
       
       @Override

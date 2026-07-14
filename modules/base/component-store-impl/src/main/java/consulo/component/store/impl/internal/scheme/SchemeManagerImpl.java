@@ -17,12 +17,11 @@ package consulo.component.store.impl.internal.scheme;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.WriteAction;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.scheme.*;
 import consulo.component.store.impl.internal.storage.DirectoryStorageData;
 import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.component.store.impl.internal.storage.vfs.VfsDirectoryBasedStorage;
+import consulo.component.store.impl.internal.storage.nio.PathStorageUtil;
 import consulo.component.store.internal.StreamProvider;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.localize.LocalizeValue;
@@ -30,6 +29,7 @@ import consulo.logging.Logger;
 import consulo.ui.Alerts;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
+import consulo.util.io.FileAttributes;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
@@ -40,7 +40,13 @@ import consulo.util.lang.function.ThrowableFunction;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.event.VFileCreateEvent;
+import consulo.virtualFileSystem.event.VFileDeleteEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.internal.VirtualFileTracker;
@@ -54,11 +60,10 @@ import org.jdom.Parent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.*;
 
-public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends AbstractSchemeManager<T, E> {
+public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends AbstractSchemeManager<T, E> implements SavingRequestor {
   private static final Logger LOG = Logger.getInstance(SchemeManagerImpl.class);
 
   private final String myFileSpec;
@@ -451,17 +456,28 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       }
     }
 
+    // Collect VFS events from the lock-free NIO writes and apply them once, synchronously, after all writes - so the VFS
+    // record stays in sync with disk and a later filesystem refresh observes no diff. The events are tagged with this
+    // manager as the requestor, so its own change tracker ignores them.
+    List<VFileEvent> events = new ArrayList<>();
+
     if (!hasSchemes) {
       myFilesToDelete.clear();
       if (myIoDir.exists()) {
+        VirtualFile dir = getVirtualDir();
         FileUtil.delete(myIoDir);
+        if (dir != null && dir.isValid()) {
+          myDir = null;
+          events.add(new VFileDeleteEvent(this, dir, false));
+        }
       }
+      applyVfsEvents(events);
       return;
     }
 
     for (E scheme : schemesToSave) {
       try {
-        saveScheme(scheme, nameGenerator);
+        saveScheme(scheme, nameGenerator, events);
       }
       catch (Exception e) {
         LOG.error("Cannot write scheme " + scheme.getName() + " in '" + myFileSpec + "': " + e.getLocalizedMessage(), e);
@@ -473,10 +489,18 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       }
     }
 
-    deleteFiles();
+    deleteFiles(events);
+
+    applyVfsEvents(events);
   }
 
-  private void saveScheme(E scheme, UniqueNameGenerator nameGenerator) throws WriteExternalException, IOException {
+  private static void applyVfsEvents(List<VFileEvent> events) {
+    if (!events.isEmpty()) {
+      RefreshQueue.getInstance().processEvents(events);
+    }
+  }
+
+  private void saveScheme(E scheme, UniqueNameGenerator nameGenerator, List<VFileEvent> events) throws WriteExternalException, IOException {
     ExternalInfo externalInfo = scheme.getExternalInfo();
     String currentFileNameWithoutExtension = externalInfo.getCurrentFileName();
     Parent parent = myProcessor.writeScheme(scheme);
@@ -506,28 +530,33 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     // if another new scheme uses old name of this scheme, so, we must not delete it (as part of rename operation)
     boolean renamed = currentFileNameWithoutExtension != null && fileNameWithoutExtension != currentFileNameWithoutExtension && nameGenerator.test(currentFileNameWithoutExtension);
     if (!externalInfo.isRemote()) {
-      VirtualFile file = null;
+      // on rename we write the new file and schedule the old one for deletion instead of renaming through the VFS
       if (renamed) {
-        file = myDir.findChild(currentFileNameWithoutExtension + mySchemeExtension);
-        if (file != null) {
-          VirtualFile finalFile = file;
-          WriteAction.run(() -> finalFile.rename(this, fileName));
-        }
+        myFilesToDelete.add(currentFileNameWithoutExtension);
       }
 
-      if (file == null) {
-        if (myDir == null || !myDir.isValid()) {
-          myDir = VfsDirectoryBasedStorage.createDir(myIoDir, this);
-        }
-        file = VfsDirectoryBasedStorage.getFile(fileName, myDir, this);
+      if (!myIoDir.exists()) {
+        //noinspection ResultOfMethodCallIgnored
+        myIoDir.mkdirs();
       }
 
-      VirtualFile finalFile1 = file;
-      WriteAction.run(() -> {
-        try (OutputStream out = finalFile1.getOutputStream(this)) {
-          out.write(byteOut);
+      File ioFile = new File(myIoDir, fileName);
+      PathStorageUtil.writeFile(ioFile.toPath(), byteOut, null);
+
+      VirtualFile dir = getVirtualDir();
+      if (dir == null) {
+        myDir = dir = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(myIoDir);
+      }
+      if (dir != null && dir.isValid()) {
+        VirtualFile file = dir.findChild(fileName);
+        if (file != null && file.isValid()) {
+          events.add(new VFileContentChangeEvent(this, file, file.getModificationStamp(), -1, file.getTimeStamp(), ioFile.lastModified(), file.getLength(), ioFile.length(), false));
         }
-      });
+        else {
+          FileAttributes attributes = new FileAttributes(false, false, false, false, ioFile.length(), ioFile.lastModified(), true);
+          events.add(new VFileCreateEvent(this, dir, fileName, false, attributes, null, false, null));
+        }
+      }
     }
     else if (renamed) {
       myFilesToDelete.add(currentFileNameWithoutExtension);
@@ -549,7 +578,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     return !scheme.getName().equals(scheme.getExternalInfo().getPreviouslySavedName());
   }
 
-  private void deleteFiles() {
+  private void deleteFiles(List<VFileEvent> events) {
     if (myFilesToDelete.isEmpty()) {
       return;
     }
@@ -564,16 +593,19 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     }
 
     VirtualFile dir = getVirtualDir();
-    if (dir != null) {
-      WriteAction.run(() -> {
-        for (VirtualFile file : dir.getRequiredChildren()) {
-          if (myFilesToDelete.contains(file.getNameWithoutExtension())) {
-            VfsDirectoryBasedStorage.deleteFile(file, this);
+    File[] children = myIoDir.listFiles();
+    if (children != null) {
+      for (File child : children) {
+        if (myFilesToDelete.contains(FileUtil.getNameWithoutExtension(child))) {
+          VirtualFile file = dir == null ? null : dir.findChild(child.getName());
+          FileUtil.delete(child);
+          if (file != null && file.isValid()) {
+            events.add(new VFileDeleteEvent(this, file, false));
           }
         }
-        myFilesToDelete.clear();
-      });
+      }
     }
+    myFilesToDelete.clear();
   }
 
   private @Nullable VirtualFile getVirtualDir() {

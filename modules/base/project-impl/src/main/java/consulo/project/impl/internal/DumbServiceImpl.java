@@ -23,8 +23,6 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
-import consulo.module.ModuleManager;
-import consulo.module.internal.ModuleManagerInternal;
 import consulo.project.DumbModeTask;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -272,11 +270,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
         if (myProject.isDefault()) {
             LOG.error("No indexing tasks should be created for default project: " + task);
-        }
-
-        ModuleManagerInternal moduleManager = (ModuleManagerInternal) ModuleManager.getInstance(myProject);
-        if (!moduleManager.isReady()) {
-            LOG.error("Queue task for not ready project: " + task);
         }
 
         if (myApplication.isUnitTestMode() || myApplication.isHeadlessEnvironment() || myApplication.isUnifiedApplication()) {

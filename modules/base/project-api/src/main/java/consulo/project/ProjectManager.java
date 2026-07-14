@@ -23,11 +23,8 @@ import consulo.disposer.Disposable;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 
 import java.util.concurrent.CompletableFuture;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -45,28 +42,11 @@ public interface ProjectManager {
         return Application.get().getInstance(ProjectManager.class);
     }
 
-    
-    AsyncResult<Project> openProjectAsync(VirtualFile file, UIAccess uiAccess, ProjectOpenContext context);
-
-    
-    default AsyncResult<Project> openProjectAsync(VirtualFile file, UIAccess uiAccess) {
-        return openProjectAsync(file, uiAccess, new ProjectOpenContext());
-    }
-
-    
-    AsyncResult<Project> openProjectAsync(Project project, UIAccess uiAccess, ProjectOpenContext context);
-
-    default AsyncResult<Project> openProjectAsync(Project project, UIAccess uiAccess) {
-        return openProjectAsync(project, uiAccess, new ProjectOpenContext());
-    }
-
-    
     default CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
         return closeAndDisposeAsync(project, uiAccess, true, true, true);
     }
 
     boolean isProjectOpened(Project project);
-
 
     CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
@@ -103,15 +83,6 @@ public interface ProjectManager {
     default Project getDefaultProject() {
         return DefaultProjectFactory.getInstance().getDefaultProject();
     }
-
-    /**
-     * Closes the specified project.
-     *
-     * @param project the project to close.
-     * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
-     */
-    @RequiredUIAccess
-    boolean closeProject(Project project);
 
     /**
      * Asynchronously reloads the specified project.

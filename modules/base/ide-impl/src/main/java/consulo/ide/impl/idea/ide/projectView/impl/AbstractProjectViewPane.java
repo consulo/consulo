@@ -770,7 +770,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     protected void saveExpandedPaths() {
         myTreeStateRestored.set(false);
         if (myTree != null) {
-            TreeState treeState = TreeState.createOn(myTree);
+            TreeState treeState = TreeState.createOn(myTree, true, true);
             if (!treeState.isEmpty()) {
                 myReadTreeState.put(getSubId(), treeState);
             }
@@ -791,6 +791,11 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         else if (myTree.isSelectionEmpty()) {
             TreeUtil.promiseSelectFirst(myTree);
         }
+    }
+
+    public final void reRestoreExpandedPaths() {
+        myTreeStateRestored.set(false);
+        restoreExpandedPaths();
     }
 
     protected Comparator<NodeDescriptor> createComparator() {

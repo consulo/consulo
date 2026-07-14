@@ -110,10 +110,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   
   String getLocationHash();
 
-  void save();
-
-  
-  default Coroutine<?, ?> saveAsync(UIAccess uiAccess) {
+  default Coroutine<Object, Object> saveAsync(UIAccess uiAccess) {
     return Coroutine.empty();
   }
 
@@ -121,6 +118,7 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
 
   boolean isInitialized();
 
+  @Deprecated
   default boolean isModulesReady() {
     return true;
   }
@@ -137,7 +135,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
     return null;
   }
 
-  
   default UIAccess getUIAccess() {
     return getApplication().getLastUIAccess();
   }

@@ -34,10 +34,6 @@ public interface ProjectManagerEx extends ProjectManager {
      */
     @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings);
 
-    // returns true on success
-    @RequiredUIAccess
-    boolean closeAndDispose(Project project);
-
     @Override
     default @Nullable Project createProject(String name, String path) {
         return newProject(name, path, true);
@@ -45,13 +41,7 @@ public interface ProjectManagerEx extends ProjectManager {
 
     boolean canClose(Project project);
 
-    @RequiredUIAccess
-    boolean closeProject(Project project, boolean save, boolean dispose, boolean checkCanClose);
-
-    
     Disposable registerCloseProjectVeto(Predicate<Project> projectVeto);
 
-    
-        //@ApiStatus.Internal
     String[] getAllExcludedUrls();
 }

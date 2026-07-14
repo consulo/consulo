@@ -25,6 +25,7 @@ import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
 import java.util.concurrent.atomic.AtomicBoolean;
 import consulo.localize.LocalizeValue;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
@@ -116,6 +117,14 @@ public interface ApplicationEx extends Application {
     void doNotSave(boolean value);
 
     boolean isDoNotSave();
+
+    /**
+     * Saves the application settings as a coroutine so it can be composed as a subroutine into a
+     * larger coroutine chain (e.g. the exit sequence), instead of the blocking {@link #saveSettings()}.
+     *
+     * @return the settings-save coroutine, or an empty coroutine if saving is disabled
+     */
+    Coroutine<Object, Object> saveSettingsAsync();
 
     /**
      * @param force         if true, no additional confirmations will be shown. The application is guaranteed to exit

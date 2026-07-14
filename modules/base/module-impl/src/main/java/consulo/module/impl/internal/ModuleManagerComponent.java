@@ -72,13 +72,8 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 cleanCachedStuff();
             }
         });
-
-        if (project.isDefault()) {
-            myReady = true;
-        }
     }
 
-    
     @Override
     protected ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
@@ -99,7 +94,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
                 }
             });
 
-            myReady = true;
             stat.dump("ModulesManager", LOG::info);
         });
     }
@@ -117,7 +111,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
             }
         });
 
-        myReady = true;
         stat.dump("ModulesManager", LOG::info);
     }
 

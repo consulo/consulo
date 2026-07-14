@@ -40,7 +40,6 @@ import consulo.module.content.internal.ModuleIconService;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
-import consulo.module.internal.DebugStackTrace;
 import consulo.module.internal.ModuleManagerInternal;
 import consulo.module.localize.ModuleLocalize;
 import consulo.module.macro.ModulePathMacroManager;
@@ -155,8 +154,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private boolean myFirstLoad = true;
 
-    protected boolean myReady = false;
-
     public static final String ELEMENT_MODULES = "modules";
     public static final String ELEMENT_MODULE = "module";
 
@@ -177,15 +174,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     public ModuleManagerImpl(Project project) {
         myProject = project;
         myMessageBus = project.getMessageBus();
-    }
-
-    public void setReady(boolean ready) {
-        myReady = ready;
-    }
-
-    @Override
-    public boolean isReady() {
-        return myReady;
     }
 
     @Override
@@ -484,17 +472,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     
     @Override
     public Module[] getModules() {
-        if (!myReady) {
-            Exception trace = DebugStackTrace.getTrace();
-            if (trace != null) {
-                LOG.error("Modules not initialized at current moment", trace);
-            }
-            else {
-                LOG.error("Modules not initialized at current moment");
-            }
-            return Module.EMPTY_ARRAY;
-        }
-
         if (myModuleModel.myIsWritable) {
             myProject.getApplication().assertReadAccessAllowed();
         }
@@ -507,11 +484,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module[] getSortedModules() {
-        if (!myReady) {
-            LOG.error("Modules not initialized at current moment");
-            return Module.EMPTY_ARRAY;
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         deliverPendingEvents();
         if (myCachedSortedModules == null) {
@@ -523,10 +495,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     @Override
     @RequiredReadAction
     public Module findModuleByName(String name) {
-        if (!myReady) {
-            throw new IllegalArgumentException("Modules not initialized at current moment");
-        }
-
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.findModuleByName(name);
     }

@@ -15,8 +15,9 @@
  */
 package consulo.externalSystem.importing;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -128,13 +129,13 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
     }
 
     @Override
-    @RequiredReadAction
-    public void process(
+    public Coroutine<Object, Object> process(
         ExternalModuleImportContext<C> context,
         Project project,
         ModifiableModuleModel model,
         Consumer<Module> newModuleConsumer
     ) {
+        return Coroutine.<Object, Object>first(ReadLock.apply(input -> {
         project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
         DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
         if (externalProjectNode != null) {
@@ -201,6 +202,8 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
                 UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
             }
         });
+            return input;
+        }));
     }
 
     public @Nullable DataNode<ProjectData> getExternalProjectNode() {

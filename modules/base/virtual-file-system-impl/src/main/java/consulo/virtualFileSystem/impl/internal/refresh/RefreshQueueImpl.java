@@ -225,6 +225,14 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   }
 
   @Override
+  public void processEvents(List<? extends VFileEvent> events) {
+    if (events.isEmpty()) {
+      return;
+    }
+    new RefreshSessionImpl(events).launch();
+  }
+
+  @Override
   public boolean isRefreshInProgress() {
     synchronized (mySessions) {
       return !mySessions.isEmpty();

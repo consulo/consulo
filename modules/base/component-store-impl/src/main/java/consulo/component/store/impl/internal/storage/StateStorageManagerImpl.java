@@ -22,8 +22,9 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.component.store.impl.internal.storage.nio.PathDirectoryBasedStorage;
+import consulo.component.store.impl.internal.storage.nio.PathFileBasedStorage;
 import consulo.component.store.internal.PathMacrosService;
-import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
 import consulo.component.store.internal.StateStorage;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.StreamProvider;
@@ -59,7 +60,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Map<String, StateStorage> myStorages = new HashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
  
-  private final StateStorageFacade myStateStorageFacade;
+  private final boolean myCollectVfsEvents;
   private final String myRootTagName;
   protected final Supplier<MessageBus> myMessageBusSupplier;
   protected final Supplier<PathMacrosService> myPathMacrosServiceSupplier;
@@ -71,12 +72,12 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
                                  @Nullable Disposable parentDisposable,
                                  Supplier<MessageBus> messageBusSupplier,
                                  Supplier<PathMacrosService> pathMacrosServiceSupplier,
-                                 StateStorageFacade stateStorageFacade) {
+                                 boolean collectVfsEvents) {
     myMessageBusSupplier = messageBusSupplier;
     myRootTagName = rootTagName;
     myPathMacrosServiceSupplier = pathMacrosServiceSupplier;
     myPathMacroSubstitutor = pathMacroSubstitutor;
-    myStateStorageFacade = stateStorageFacade;
+    myCollectVfsEvents = collectVfsEvents;
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, this);
     }
@@ -112,8 +113,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createStateStorage(Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = createSplitter(storageSpec.stateSplitter());
-      return myStateStorageFacade
-              .createDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myPathMacrosServiceSupplier.get());
+      return new PathDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
     }
     else {
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
@@ -174,26 +174,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
- 
-  private Collection<VfsFileBasedStorage> getCachedFileStorages(Collection<String> fileSpecs) {
-    if (fileSpecs.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    List<VfsFileBasedStorage> result = null;
-    for (String fileSpec : fileSpecs) {
-      StateStorage storage = myStorages.get(fileSpec);
-      if (storage instanceof VfsFileBasedStorage) {
-        if (result == null) {
-          result = new ArrayList<>();
-        }
-        result.add((VfsFileBasedStorage)storage);
-      }
-    }
-    return result == null ? Collections.<VfsFileBasedStorage>emptyList() : result;
-  }
-
- 
   @Override
   public Collection<String> getStorageFileNames() {
     myStorageLock.lock();
@@ -228,9 +208,8 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       roamingType = RoamingType.DISABLED;
     }
 
-    return myStateStorageFacade
-            .createFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
-                                    isUseXmlProlog(), myPathMacrosServiceSupplier.get());
+    return new PathFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
+                                    isUseXmlProlog(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
   }
 
   protected @Nullable StateStorageListener createStorageTopicListener() {

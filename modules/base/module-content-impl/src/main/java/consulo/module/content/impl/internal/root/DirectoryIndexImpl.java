@@ -139,10 +139,6 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable {
 
     
     private RootIndex getRootIndex() {
-        if (!myProject.isModulesReady()) {
-            return StubRootIndex.INSTANCE;
-        }
-
         RootIndexImpl rootIndex = myRootIndex;
         if (rootIndex == null) {
             myRootIndex = rootIndex = new RootIndexImpl(myProject, createRootInfoCache());

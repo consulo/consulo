@@ -19,13 +19,16 @@ import consulo.application.util.concurrent.PooledAsyncResult;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.application.Application;
 import consulo.project.ProjectOpenContext;
+import consulo.project.internal.ProjectOpenService;
+
+import java.nio.file.Path;
 import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
 import java.util.concurrent.CompletableFuture;
@@ -70,15 +73,6 @@ public class ProjectImplUtil {
         RecentProjectsManager.getInstance().setLastProjectCreationLocation(path.replace(File.separatorChar, '/'));
     }
 
-    /**
-     * @param project cannot be null
-     */
-    @RequiredUIAccess
-    public static boolean closeAndDispose(Project project) {
-        return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
-    }
-
-    
     private static AsyncResult<Integer> confirmOpenNewProjectAsync(Project projectToClose, UIAccess uiAccess, boolean isNewProject) {
         ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
         int confirmOpenNewProject = settings.getConfirmOpenNewProject();
@@ -126,57 +120,29 @@ public class ProjectImplUtil {
                                                  boolean forceOpenInNewFrame,
                                                  UIAccess uiAccess,
                                                  ProjectOpenContext context) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-
-        if (virtualFile == null) {
-            return AsyncResult.rejected("file path not find");
+        if (projectToCloseFinal != null) {
+            context.putUserData(ProjectOpenContext.ACTIVE_PROJECT, projectToCloseFinal);
+        }
+        if (forceOpenInNewFrame) {
+            context.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, Boolean.TRUE);
         }
 
-        return PooledAsyncResult.create((result) -> {
-            ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
-            if (provider != null) {
-                result.doWhenRejected(() -> WelcomeFrameManager.getInstance().showIfNoProjectOpened());
+        AsyncResult<Project> result = AsyncResult.undefined();
+        result.doWhenRejected(() -> WelcomeFrameManager.getInstance().showIfNoProjectOpened());
 
-                AsyncResult<Void> reopenAsync = AsyncResult.undefined();
-
-                Project projectToClose = projectToCloseFinal;
-                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                if (!forceOpenInNewFrame && openProjects.length > 0) {
-                    if (projectToClose == null) {
-                        projectToClose = openProjects[openProjects.length - 1];
-                    }
-
-                    Project finalProjectToClose = projectToClose;
-                    confirmOpenNewProjectAsync(finalProjectToClose, uiAccess, false).doWhenDone(exitCode -> {
-                        if (exitCode == ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW) {
-                            CompletableFuture<?> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
-                            closeResult.whenComplete((closed, throwable) -> {
-                                if (throwable == null && Boolean.TRUE.equals(closed)) {
-                                    reopenAsync.setDone();
-                                }
-                                else {
-                                    result.reject("not closed project");
-                                }
-                            });
-                        }
-                        else if (exitCode != ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
-                            result.reject("not open in new window");
-                        }
-                        else {
-                            reopenAsync.setDone();
-                        }
-                    });
-                }
-                else {
-                    reopenAsync.setDone();
-                }
-
-                // we need reexecute it due after dialog - it will be executed in ui thread
-                reopenAsync.doWhenDone(() -> PooledAsyncResult.create(() -> provider.doOpenProjectAsync(virtualFile, uiAccess, context)).notify(result));
+        ProjectOpenService service = Application.get().getInstance(ProjectOpenService.class);
+        service.openProjectAsync(Path.of(path), uiAccess, context).whenComplete((project, throwable) -> {
+            if (throwable != null) {
+                result.rejectWithThrowable(throwable);
+            }
+            else if (project != null) {
+                result.setDone(project);
             }
             else {
-                result.reject("provider for file path is not find");
+                result.setRejected();
             }
         });
+
+        return result;
     }
 }

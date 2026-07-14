@@ -27,10 +27,7 @@ import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StorableComponent;
-import consulo.component.store.internal.StoreUtil;
 import consulo.logging.Logger;
-import consulo.module.ModuleManager;
-import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.store.IProjectStore;
@@ -45,7 +42,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
-import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
@@ -59,7 +55,6 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx, StorableComponent {
@@ -71,8 +66,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     
     private final String myDirPath;
 
-    private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
-
     private boolean myFullyInitialized;
 
     private String myName;
@@ -81,7 +74,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
     private Supplier<StartupManager> myStartupManagerProvider = LazyValue.notNull(() -> getInstance(StartupManager.class));
-    private Supplier<ModuleManager> myModuleManagerProvider = LazyValue.notNull(() -> getInstance(ModuleManager.class));
     private Supplier<CoroutineContext> myCoroutineContext = LazyValue.notNull(() -> {
         Application application = getApplication();
         CoroutineContext context = application.coroutineContext().copy();
@@ -181,7 +173,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return (IProjectStore) super.getStateStore();
     }
 
-    
     @Override
     public IComponentStore getStateStoreImpl() {
         return getInstance(IProjectStore.class);
@@ -214,11 +205,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             return false;
         }
         return isOpen() && ((StartupManagerEx) myStartupManagerProvider.get()).startupActivityPassed();
-    }
-
-    @Override
-    public boolean isModulesReady() {
-        return ((ModuleManagerImpl) myModuleManagerProvider.get()).isReady();
     }
 
     @Override
@@ -284,37 +270,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    public void save() {
-        if (!isModulesReady()) {
-            LOG.warn(new Exception("Calling Project#save() but modules not initialized"));
-            return;
-        }
-
-        ApplicationEx application = (ApplicationEx) getApplication();
-        if (application.isDoNotSave()) {
-            return;
-        }
-
-        if (!mySavingInProgress.compareAndSet(false, true)) {
-            return;
-        }
-
-        UIAccess uiAccess = getApplication().getLastUIAccess();
-        try {
-            CoroutineScope scope = CoroutineScope.of(coroutineContext());
-            createSaveChain().runBlocking(scope, null);
-        }
-        catch (Throwable e) {
-            StoreUtil.handleSaveError(uiAccess, this, e);
-        }
-        finally {
-            mySavingInProgress.set(false);
-            application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
-        }
-    }
-
-    @Override
-    public Coroutine<?, ?> saveAsync(UIAccess uiAccess) {
+    public Coroutine<Object, Object> saveAsync(UIAccess uiAccess) {
         ApplicationEx application = (ApplicationEx) getApplication();
         if (application.isDoNotSave()) {
             return Coroutine.empty();
@@ -364,7 +320,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
         assert application.isWriteAccessAllowed();  // dispose must be under write action
 
-        // can call dispose only via consulo.ide.impl.idea.ide.impl.ProjectUtil.closeAndDispose()
+        // can call dispose only via ProjectManager#closeAndDisposeAsync
         LOG.assertTrue(application.isUnitTestMode() || !myManager.isProjectOpened(this));
 
         LOG.assertTrue(!isDisposed());

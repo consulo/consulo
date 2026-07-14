@@ -171,6 +171,13 @@ public class BaseProjectViewDirectoryHelper {
                 topLevelContentRoots.add(root);
             }
         }
+
+        if (topLevelContentRoots.isEmpty()) {
+            VirtualFile baseDir = project.getBaseDir();
+            if (baseDir != null) {
+                topLevelContentRoots.add(baseDir);
+            }
+        }
         return topLevelContentRoots;
     }
 

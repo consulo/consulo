@@ -42,7 +42,6 @@ public class DefaultPluginAdvertiserExtension implements PluginAdvertiserExtensi
         myUnknownFeaturesCollector.getUnknownExtensions().forEach(consumer);
     }
 
-    
     @Override
     public Set<Class<?>> acceptExtensionAPIs() {
         return Set.of();

@@ -153,7 +153,12 @@ public class TreeState implements JDOMExternalizable {
     return new TreeState(createPaths(tree, TreeUtil.collectExpandedPaths(tree)), new ArrayList<>());
   }
 
-  
+  public static TreeState createOn(JTree tree, boolean persistExpand, boolean persistSelect) {
+    List<TreePath> expanded = persistExpand ? TreeUtil.collectExpandedPaths(tree) : new ArrayList<>();
+    List<TreePath> selected = persistSelect ? TreeUtil.collectSelectedPaths(tree) : new ArrayList<>();
+    return new TreeState(createPaths(tree, expanded), createPaths(tree, selected));
+  }
+
   public static TreeState createFrom(@Nullable Element element) {
     TreeState state = new TreeState(new ArrayList<>(), new ArrayList<>());
     try {
@@ -479,7 +484,6 @@ public class TreeState implements JDOMExternalizable {
       this.elements = elements;
     }
 
-    
     @Override
     public Action visit(TreePath path) {
       int count = path.getPathCount();

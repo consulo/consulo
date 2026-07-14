@@ -15,7 +15,6 @@
  */
 package consulo.module.creation.importing;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
@@ -26,6 +25,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -57,8 +57,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
     boolean canImport(File fileOrDirectory);
 
-    @RequiredReadAction
-    void process(
+    Coroutine<Object, Object> process(
         C context,
         Project project,
         ModifiableModuleModel model,

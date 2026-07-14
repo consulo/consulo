@@ -15,7 +15,6 @@
  */
 package consulo.sandboxPlugin.lang.moduleImport;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.WriteAction;
@@ -28,6 +27,8 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
@@ -61,17 +62,19 @@ public class SandModuleImportProvider implements ModuleImportProvider<ModuleImpo
     return false;
   }
 
-  @RequiredReadAction
   @Override
-  public void process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
+  public Coroutine<Object, Object> process(ModuleImportContext context, Project project, ModifiableModuleModel model, Consumer<Module> newModuleConsumer) {
     String path = context.getPath();
 
-    Module module = model.newModule(context.getName(), path);
+    return Coroutine.<Object, Object>first(CodeExecution.<Object, Object>apply(input -> {
+      Module module = model.newModule(context.getName(), path);
 
-    ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-    modifiableModel.addContentEntry(VirtualFileUtil.pathToUrl(path));
-    WriteAction.runAndWait(modifiableModel::commit);
+      ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+      modifiableModel.addContentEntry(VirtualFileUtil.pathToUrl(path));
+      WriteAction.runAndWait(modifiableModel::commit);
 
-    newModuleConsumer.accept(module);
+      newModuleConsumer.accept(module);
+      return input;
+    }));
   }
 }

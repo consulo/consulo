@@ -20,49 +20,32 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.concurrent.coroutine.WriteLock;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.internal.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.progress.Task;
-import consulo.component.ProcessCanceledException;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.module.ModuleManager;
-import consulo.module.impl.internal.ModuleManagerComponent;
-import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectCloseHandler;
-import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationsManager;
-import consulo.project.ui.wm.WindowManager;
-import consulo.project.util.ProjectUtil;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
-import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineStep;
@@ -73,7 +56,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -224,9 +206,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             }
             project.initNotLazyServices();
 
-            ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(project);
-            moduleManager.setReady(true);
-
             succeed = true;
         }
         finally {
@@ -272,15 +251,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    private void logStart(Project project) {
-        long currentTime = System.nanoTime();
-        Long startTime = project.getUserData(ProjectImpl.CREATION_TIME);
-        if (startTime != null) {
-            LOG.info("Project opening took " + (currentTime - startTime) / 1000000 + " ms");
-        }
-    }
-
-    private boolean addToOpened(Project project) {
+    boolean addToOpened(Project project) {
         assert !project.isDisposed() : "Must not open already disposed project";
         synchronized (lock) {
             if (isProjectOpened(project)) {
@@ -299,11 +270,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
             return Arrays.asList(myOpenProjects);
         }
-    }
-
-    private static boolean canCancelProjectLoading() {
-        ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
-        return !(indicator instanceof NonCancelableSection);
     }
 
     @Override
@@ -325,63 +291,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 ProjectImplUtil.openAsync(basePath, null, true, uiAccess);
             }
         });
-    }
-
-    @Override
-    @RequiredUIAccess
-    public boolean closeProject(Project project) {
-        return closeProject(project, true, false, true);
-    }
-
-    @Override
-    @RequiredUIAccess
-    public boolean closeProject(Project project, boolean save, boolean dispose, boolean checkCanClose) {
-        if (!isProjectOpened(project)) {
-            return true;
-        }
-
-        if (checkCanClose && !canClose(project)) {
-            return false;
-        }
-        ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
-        shutDownTracker.registerStopperThread(Thread.currentThread());
-        try {
-            if (save) {
-                FileDocumentManager.getInstance().saveAllDocuments();
-                project.save();
-            }
-
-            if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
-                return false;
-            }
-
-            myApplication.getMessageBus()
-                .syncPublisher(ProjectManagerListener.class)
-                .projectClosing(project); // somebody can start progress here, do not wrap in write action
-
-            UIAccess uiAccess = UIAccess.current();
-
-            myApplication.runWriteAction(() -> {
-                removeFromOpened(project);
-
-                myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosed(project, uiAccess);
-
-                if (dispose) {
-                    Disposer.dispose(project);
-                }
-            });
-        }
-        finally {
-            shutDownTracker.unregisterStopperThread(Thread.currentThread());
-        }
-
-        return true;
-    }
-
-    @RequiredUIAccess
-    @Override
-    public boolean closeAndDispose(Project project) {
-        return closeProject(project, true, true, true);
     }
 
     @Override
@@ -465,38 +374,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         ) == 0;
     }
 
-    
-    @Override
-    public AsyncResult<Project> openProjectAsync(
-        VirtualFile file,
-        UIAccess uiAccess,
-        ProjectOpenContext context
-    ) {
-        for (Project project : getOpenProjects()) {
-            if (ProjectUtil.isSameProject(file.getPath(), project)) {
-                uiAccess.give(() -> ProjectWindowFocuser.getInstance().focusProjectWindow(project, false));
-                return AsyncResult.rejected("Already Opened Project");
-            }
-        }
 
-        AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        initAndLoadProjectAsync(projectAsyncResult, file, uiAccess, context);
-        return projectAsyncResult;
-    }
-
-    
-    @Override
-    public AsyncResult<Project> openProjectAsync(
-        Project project,
-        UIAccess uiAccess,
-        ProjectOpenContext context
-    ) {
-        AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        loadProjectAsync((ProjectImpl) project, projectAsyncResult, false, uiAccess, context);
-        return projectAsyncResult;
-    }
-
-    
     @Override
     public String[] getAllExcludedUrls() {
         return myExcludeRootsCache.getExcludedUrls();
@@ -541,8 +419,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 return input;
             }));
 
-            chain = chain.then(CodeExecution.<Object, Object>apply(input -> null))
-                .then(callSubroutine(project.saveAsync(uiAccess)));
+            chain = chain.then(callSubroutine(project.saveAsync(uiAccess)));
         }
 
         chain = appendHandlers(chain, project, ProjectCloseHandler::beforeProjectClose);
@@ -576,9 +453,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         SimpleReference<Coroutine<Void, Object>> ref = SimpleReference.create(chain);
         project.getExtensionPoint(ProjectCloseHandler.class).forEach(handler -> {
             Coroutine<?, ?> handlerCoroutine = phase.apply(handler);
-            ref.set(ref.get()
-                .then(CodeExecution.<Object, Object>apply(input -> null))
-                .then(callSubroutine(handlerCoroutine)));
+            ref.set(ref.get().then(callSubroutine(handlerCoroutine)));
         });
         return ref.get();
     }
@@ -586,135 +461,5 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static CoroutineStep<Object, Object> callSubroutine(Coroutine<?, ?> coroutine) {
         return CallSubroutine.call((Coroutine) coroutine);
-    }
-
-
-    private void initAndLoadProjectAsync(
-        AsyncResult<Project> projectAsyncResult,
-        VirtualFile path,
-        UIAccess uiAccess,
-        ProjectOpenContext context
-    ) {
-        ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), true);
-
-        loadProjectAsync(project, projectAsyncResult, true, uiAccess, context);
-    }
-
-    private void loadProjectAsync(
-        ProjectImpl project,
-        AsyncResult<Project> projectAsyncResult,
-        boolean init,
-        UIAccess uiAccess,
-        ProjectOpenContext context
-    ) {
-        Task.Modal.queue(
-            project,
-            ProjectLocalize.projectLoadProgress(),
-            canCancelProjectLoading(),
-            indicator -> {
-                indicator.setIndeterminate(true);
-
-                try {
-                    if (!addToOpened(project)) {
-                        closeAndDisposeAsync(project, uiAccess)
-                            .whenComplete((closed, throwable) -> projectAsyncResult.reject("Can't add project to opened"));
-                        return;
-                    }
-
-                    ProjectFrameAllocator projectFrameAllocator = project.getInstance(ProjectFrameAllocator.class);
-
-                    uiAccess.giveAndWait(() -> projectFrameAllocator.allocateFrame(context));
-
-                    if (init) {
-                        initProjectAsync(project, null, indicator);
-                    }
-
-                    indicator.setText(ProjectLocalize.progressTitleLoadingModules());
-                    indicator.setText2(LocalizeValue.empty());
-
-                    ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
-
-                    moduleManager.loadModules(indicator).get();
-
-                    indicator.setText(ProjectLocalize.progressTitlePreparingWorkspace());
-                    indicator.setText2(LocalizeValue.empty());
-
-                    openProjectRequireBackgroundTask(project, uiAccess);
-
-                    projectAsyncResult.setDone(project);
-                }
-                catch (ProcessCanceledException e) {
-                    throw e;
-                }
-                catch (Throwable e) {
-                    LOG.error(e);
-
-                    projectAsyncResult.rejectWithThrowable(e);
-                }
-            }
-        );
-    }
-
-    private void openProjectRequireBackgroundTask(Project project, UIAccess uiAccess) {
-        myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess);
-
-        StartupManagerImpl startupManager = (StartupManagerImpl) StartupManager.getInstance(project);
-        startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
-
-        if (!project.isDisposed()) {
-            startupManager.runPostStartupActivities(uiAccess);
-
-            if (!myApplication.isHeadlessEnvironment() && !myApplication.isUnitTestMode()) {
-                TrackingPathMacroSubstitutor macroSubstitutor =
-                    project.getInstance(IProjectStore.class).getStateStorageManager().getMacroSubstitutor();
-                if (macroSubstitutor != null) {
-                    StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-                }
-            }
-
-            if (myApplication.isActive()) {
-                Window projectFrame = WindowManager.getInstance().getWindow(project);
-                if (projectFrame != null) {
-                    uiAccess.giveAndWaitIfNeed(() -> ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
-                }
-            }
-
-            myApplication.invokeLater(
-                () -> {
-                    if (!project.isDisposedOrDisposeInProgress()) {
-                        startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
-
-                        logStart(project);
-                    }
-                },
-                IdeaModalityState.nonModal(),
-                project::isDisposedOrDisposeInProgress
-            );
-        }
-    }
-
-    private void initProjectAsync(ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator)
-        throws IOException {
-        progressIndicator.setText(ProjectLocalize.loadingComponentsFor(project.getName()));
-
-        boolean succeed = false;
-        try {
-            if (template != null) {
-                project.getStateStore().loadProjectFromTemplate(template);
-            }
-            else {
-                project.getStateStore().load();
-            }
-            project.initNotLazyServices();
-            succeed = true;
-        }
-        catch (Throwable e) {
-            LOG.error(e);
-        }
-        finally {
-            if (!succeed && !project.isDefault()) {
-                project.getUIAccess().give(() -> WriteAction.run(() -> Disposer.dispose(project)));
-            }
-        }
     }
 }

@@ -60,7 +60,6 @@ import consulo.logging.internal.LogEventException;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
@@ -72,7 +71,12 @@ import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.EDT;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
@@ -84,6 +88,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
@@ -174,39 +179,21 @@ public class DesktopApplicationImpl extends BaseApplication {
         super.bootstrapInjectingContainer(builder);
     }
 
-    @RequiredUIAccess
-    private boolean disposeSelf(boolean checkCanCloseProject) {
-        ProjectManagerEx manager = ProjectManagerEx.getInstanceEx();
-        boolean[] canClose = {true};
-        boolean wantSaveSettingsAgain = false;
-        for (Project project : manager.getOpenProjects()) {
-            try {
-                CommandProcessor.getInstance().newCommand()
-                    .project(project)
-                    .name(ApplicationLocalize.commandExit())
-                    .run(() -> {
-                        if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
-                            canClose[0] = false;
-                        }
-                    });
-                wantSaveSettingsAgain = true;
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-            }
-            if (!canClose[0]) {
-                return false;
-            }
+    private CompletableFuture<Boolean> disposeAllProjectsAsync(boolean checkCanClose, UIAccess uiAccess) {
+        ProjectManager manager = ProjectManager.getInstance();
+        Project[] projects = manager.getOpenProjects();
+
+        // Close projects sequentially - if any vetoes, stop
+        CompletableFuture<Boolean> chain = CompletableFuture.completedFuture(Boolean.TRUE);
+        for (Project project : projects) {
+            chain = chain.thenCompose(allClosed -> {
+                if (!allClosed) {
+                    return CompletableFuture.completedFuture(Boolean.FALSE);
+                }
+                return manager.closeAndDisposeAsync(project, uiAccess, checkCanClose, true, true);
+            });
         }
-
-        if (wantSaveSettingsAgain) {
-            saveSettings();
-        }
-
-        runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
-
-        Disposer.assertIsEmpty();
-        return true;
+        return chain;
     }
 
     @Override
@@ -320,7 +307,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public void exit(boolean force, boolean exitConfirmed) {
-        exit(false, exitConfirmed, true, false);
+        exit(force, exitConfirmed, true, false);
     }
 
     @Override
@@ -339,74 +326,82 @@ public class DesktopApplicationImpl extends BaseApplication {
      */
     private static volatile boolean exiting = false;
 
-    public void exit(
-        final boolean force,
-        final boolean exitConfirmed,
-        final boolean allowListenersToCancel,
-        final boolean restart
-    ) {
-        if (!force && exiting) {
+    public void exit(boolean force, boolean exitConfirmed, boolean allowListenersToCancel, boolean restart) {
+        // Re-entrancy + modality guard: skip if another exit is already running, or if the exit is not confirmed
+        // while a modal dialog is active. Unlike a plain try/finally, the flag stays set across the asynchronous
+        // exit sequence and is cleared only on the abort/terminal paths in doExit().
+        if (!force && (exiting || (!exitConfirmed && getDefaultModalityState() != IdeaModalityState.nonModal()))) {
             return;
         }
 
         exiting = true;
-        try {
-            if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.nonModal()) {
-                return;
-            }
 
-            Runnable runnable = new Runnable() {
-                @Override
-                @RequiredUIAccess
-                public void run() {
-                    if (!force && !confirmExitIfNeeded(exitConfirmed)) {
-                        saveAll();
-                        return;
-                    }
-
-                    getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
-                    myDisposeInProgress = true;
-                    doExit(allowListenersToCancel, restart);
-                    myDisposeInProgress = false;
-                }
-            };
-
-            if (isDispatchThread()) {
-                runnable.run();
-            }
-            else {
-                invokeLater(runnable, Application.get().getNoneModalityState());
-            }
+        if (isDispatchThread()) {
+            doExit(force, exitConfirmed, allowListenersToCancel, restart);
         }
-        finally {
-            exiting = false;
+        else {
+            invokeLater(() -> doExit(force, exitConfirmed, allowListenersToCancel, restart), Application.get().getNoneModalityState());
         }
     }
 
     @RequiredUIAccess
-    private boolean doExit(boolean allowListenersToCancel, boolean restart) {
-        saveSettings();
+    private void doExit(boolean force, boolean exitConfirmed, boolean allowListenersToCancel, boolean restart) {
+        // Exit confirmation dialog — cancelling keeps the application running
+        if (!force && !confirmExitIfNeeded(exitConfirmed)) {
+            saveAll();
+            exiting = false;
+            return;
+        }
 
+        getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
+        myDisposeInProgress = true;
+
+        // canExit veto (on EDT - may show dialogs)
         if (allowListenersToCancel && !canExit()) {
-            return false;
+            myDisposeInProgress = false;
+            exiting = false;
+            return;
         }
 
-        boolean success = disposeSelf(allowListenersToCancel);
-        if (!success || isUnitTestMode()) {
-            return false;
-        }
+        UIAccess uiAccess = UIAccess.current();
 
-        int exitCode = 0;
-        if (restart && Restarter.isSupported()) {
-            try {
-                exitCode = Restarter.scheduleRestart();
+        // Close all open projects asynchronously (sequentially, honoring per-project veto)
+        disposeAllProjectsAsync(allowListenersToCancel, uiAccess).whenComplete((allClosed, throwable) -> {
+            if (throwable != null || !Boolean.TRUE.equals(allClosed) || isUnitTestMode()) {
+                myDisposeInProgress = false;
+                exiting = false;
+                return;
             }
-            catch (IOException e) {
-                LOG.warn("Cannot restart", e);
-            }
-        }
-        System.exit(exitCode);
-        return true;
+
+            // Final teardown - save settings, dispose application under write lock (off EDT), then exit
+            CoroutineContext context = coroutineContext().copy();
+            context.putCopyableUserData(UIAccess.KEY, uiAccess);
+            CoroutineScope scope = CoroutineScope.of(context);
+
+            // Save the application settings as a subroutine (the store save is itself a coroutine)
+            Coroutine.<Void, Object>first(CodeExecution.<Void, Object>apply(input -> null))
+                .then(CallSubroutine.call(saveSettingsAsync()))
+                .then(WriteLock.<Object, Object>apply(input -> {
+                    Disposer.dispose(DesktopApplicationImpl.this);
+                    return input;
+                }))
+                .then(CodeExecution.<Object, Object>apply(input -> {
+                    Disposer.assertIsEmpty();
+
+                    int exitCode = 0;
+                    if (restart && Restarter.isSupported()) {
+                        try {
+                            exitCode = Restarter.scheduleRestart();
+                        }
+                        catch (IOException e) {
+                            LOG.warn("Cannot restart", e);
+                        }
+                    }
+                    System.exit(exitCode);
+                    return input;
+                }))
+                .runAsync(scope, null);
+        });
     }
 
     private static boolean confirmExitIfNeeded(boolean exitConfirmed) {

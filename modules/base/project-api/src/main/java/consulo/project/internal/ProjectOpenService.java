@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.ui.UIAccess;
 
-/**
- * @author VISTALL
- * @since 2024-08-04
- */
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
+
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface ProjectFrameAllocator {
-    <I, O extends Project> Coroutine<I, O> allocateFrame(ProjectOpenContext context, Coroutine<I, O> in);
-
-    <I, O> Coroutine<I, O> initializeSteps(Project project, Coroutine<I, O> in);
-
-    <I, O> Coroutine<I, O> postSteps(Project project, Coroutine<I, O> in);
+public interface ProjectOpenService {
+    CompletableFuture<Project> openProjectAsync(
+        Path filePath,
+        UIAccess uiAccess,
+        ProjectOpenContext context
+    );
 }

@@ -27,8 +27,10 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 
 import java.io.File;
 import java.util.*;
@@ -50,7 +52,9 @@ public class ProjectStorageUtil {
                         notification.expire();
 
                         if (_project != null && !_project.isDisposed()) {
-                            _project.save();
+                            UIAccess uiAccess = UIAccess.current();
+                            CoroutineScope scope = CoroutineScope.of(_project.coroutineContext());
+                            _project.saveAsync(uiAccess).runAsync(scope, null);
                         }
                     })
             );

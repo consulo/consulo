@@ -15,8 +15,6 @@
  */
 package consulo.component.store.impl.internal;
 
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.ComponentManager;
@@ -25,8 +23,11 @@ import consulo.component.macro.PathMacroSubstitutor;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
 import consulo.component.store.impl.internal.storage.StorageUtil;
+import consulo.component.store.impl.internal.storage.VfsEventCollectingSaveSession;
 import consulo.component.store.internal.*;
 import consulo.logging.Logger;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartHashSet;
@@ -174,16 +175,31 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   protected abstract CoroutineContext createCoroutineContext();
 
   protected void doSave(boolean force, @Nullable List<StateStorage.SaveSession> saveSessions, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
-    if (saveSessions != null) {
-      for (StateStorage.SaveSession session : saveSessions) {
-        executeSave(session, force, readonlyFiles);
-      }
+    if (saveSessions == null) {
+      return;
+    }
+
+    // Collect the VFS content-change events from all storages and apply them once, synchronously, after every write.
+    // This keeps the VFS record in sync with the lock-free NIO writes before any later filesystem refresh can observe a
+    // diff (and thus report a bogus external change / project reload).
+    List<VFileEvent> events = new ArrayList<>();
+    for (StateStorage.SaveSession session : saveSessions) {
+      executeSave(session, force, readonlyFiles, events);
+    }
+
+    if (!events.isEmpty()) {
+      RefreshQueue.getInstance().processEvents(events);
     }
   }
 
-  protected static void executeSave(StateStorage.SaveSession session, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  protected static void executeSave(StateStorage.SaveSession session, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles, @Nullable List<VFileEvent> events) {
     try {
-      session.save(force);
+      if (session instanceof VfsEventCollectingSaveSession collecting) {
+        collecting.save(force, events);
+      }
+      else {
+        session.save(force);
+      }
     }
     catch (ReadOnlyModificationException e) {
       readonlyFiles.add(Pair.create(session, e.getFile()));

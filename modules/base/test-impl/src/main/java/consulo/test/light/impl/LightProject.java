@@ -130,11 +130,6 @@ public class LightProject extends BaseComponentManager implements Project {
     }
 
     @Override
-    public void save() {
-
-    }
-
-    @Override
     public boolean isOpen() {
         return true;
     }

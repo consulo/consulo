@@ -130,6 +130,29 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
             return CompletableFuture.completedFuture(false);
         }
 
+        // Re-read the changed storages and diff them against the in-memory (last-saved) state. A storage that we just
+        // wrote ourselves has identical on-disk content, so no component actually changed - in that case a filesystem
+        // refresh that merely observed our own write must not trigger a reload prompt.
+        Set<String> changedComponentNames = new HashSet<>();
+        for (StateStorage storage : causes) {
+            try {
+                storage.analyzeExternalChangesAndUpdateIfNeed(changedComponentNames);
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+            }
+        }
+        if (changedComponentNames.isEmpty()) {
+            // Our own write was observed by a refresh: nothing actually changed. Re-enable saving that
+            // registerProjectToReload disabled, otherwise the storage would stay read-only after a self-write.
+            for (StateStorage cause : causes) {
+                if (cause instanceof StateStorageBase stateStorageBase) {
+                    stateStorageBase.enableSaving();
+                }
+            }
+            return CompletableFuture.completedFuture(false);
+        }
+
         return askToRestart(project, causes);
     }
 

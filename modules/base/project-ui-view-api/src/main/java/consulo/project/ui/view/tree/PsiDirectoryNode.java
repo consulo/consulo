@@ -120,9 +120,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
             }
         }
 
-        String name = parentValue instanceof Project
-            ? psiDirectory.getVirtualFile().getPresentableUrl()
-            : BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
+        String name = BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
 
         data.setPresentableText(name);
         if (ProjectRootsUtil.isLibraryRoot(directoryFile, project)) {

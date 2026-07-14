@@ -17,12 +17,8 @@ package consulo.project.impl.internal;
 
 import consulo.application.Application;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenProcessor;
-import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
@@ -43,14 +39,7 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     @Override
-    
     public Image getIcon(VirtualFile file) {
         return Application.get().getIcon();
-    }
-
-    
-    @Override
-    public AsyncResult<Project> doOpenProjectAsync(VirtualFile baseDir, UIAccess uiAccess, ProjectOpenContext context) {
-        return ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess, context);
     }
 }

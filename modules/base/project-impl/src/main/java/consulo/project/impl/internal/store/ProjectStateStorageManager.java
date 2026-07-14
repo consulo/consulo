@@ -20,7 +20,6 @@ import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.internal.PathMacrosService;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
-import consulo.component.store.impl.internal.storage.StateStorageFacade;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.project.Project;
 
@@ -30,7 +29,7 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
   private final Application myApplication;
 
   public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor, PathMacrosService pathMacroManager) {
-    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager, StateStorageFacade.CONSULO_VFS);
+    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager, true);
     myApplication = project.getApplication();
   }
 

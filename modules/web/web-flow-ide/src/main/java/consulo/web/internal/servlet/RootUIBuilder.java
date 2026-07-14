@@ -15,7 +15,6 @@
  */
 package consulo.web.internal.servlet;
 
-import consulo.application.WriteAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -43,15 +42,12 @@ public class RootUIBuilder implements UIBuilder {
         return;
       }
 
-      WriteAction.run(() -> {
-        ProjectManager projectManager = ProjectManager.getInstance();
+      UIAccess uiAccess = application.getLastUIAccess();
+      ProjectManager projectManager = ProjectManager.getInstance();
 
-        Project[] openProjects = projectManager.getOpenProjects();
-
-        for (Project openProject : openProjects) {
-          projectManager.closeProject(openProject);
-        }
-      });
+      for (Project openProject : projectManager.getOpenProjects()) {
+        projectManager.closeAndDisposeAsync(openProject, uiAccess);
+      }
     });
 
     // TODO window.setContent(new WebLoadingPanelImpl());

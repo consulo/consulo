@@ -634,6 +634,15 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentA
     }
 
     @RequiredUIAccess
+    public void reRestoreExpandedPaths() {
+        AbstractProjectViewPane pane = getCurrentProjectViewPane();
+        if (pane == null) {
+            return;
+        }
+        pane.updateFromRoot(false).doWhenDone(() -> pane.reRestoreExpandedPaths());
+    }
+
+    @RequiredUIAccess
     private boolean viewSelectionChanged() {
         Content content = getContentManager().getSelectedContent();
         if (content == null) {

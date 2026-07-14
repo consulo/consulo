@@ -19,6 +19,7 @@ package consulo.util.concurrent.coroutine.test;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.dataholder.Key;
 import org.junit.jupiter.api.Test;
 
 import static consulo.util.concurrent.coroutine.Coroutine.first;
@@ -105,6 +106,70 @@ public class SubroutineTest {
 
             assertEquals("TRUE", ca.getResult());
             assertEquals("TRUE", cb.getResult());
+            assertTrue(ca.isFinished());
+            assertTrue(cb.isFinished());
+        });
+    }
+
+    /**
+     * Test of invoking a lazily supplied coroutine as a subroutine. The supplier must be
+     * evaluated only when the step runs, so it can capture values produced by earlier steps.
+     */
+    @Test
+    public void testLazySubroutine() {
+        CoroutineContext context = TestCoroutineContext.newSilent();
+
+        String[] holder = new String[1];
+
+        Coroutine<String, String> cr =
+            first(apply((String s) -> {
+                holder[0] = s.toUpperCase();
+                return s;
+            }))
+                .then(call(() -> {
+                    // captured when the supplier runs; would be null if evaluated before the first step
+                    String captured = holder[0];
+                    return first(apply((String s) -> s + ":" + captured));
+                }));
+
+        launch(context, scope -> {
+            Continuation<String> ca = cr.runAsync(scope, "abc");
+            Continuation<String> cb = cr.runBlocking(scope, "abc");
+
+            assertEquals("abc:ABC", ca.getResult());
+            assertEquals("abc:ABC", cb.getResult());
+            assertTrue(ca.isFinished());
+            assertTrue(cb.isFinished());
+        });
+    }
+
+    /**
+     * Test of invoking a subroutine produced from the continuation user data, which was
+     * populated by an earlier step.
+     */
+    @Test
+    public void testContinuationSubroutine() {
+        CoroutineContext context = TestCoroutineContext.newSilent();
+
+        Key<String> key = Key.create("test.subroutine.value");
+
+        Coroutine<String, String> cr =
+            first(apply((String s, Continuation<?> c) -> {
+                c.putUserData(key, s.toUpperCase());
+                return s;
+            }))
+                .then(call(c -> {
+                    // read from the continuation when the factory runs; would be null if evaluated too early
+                    String captured = c.getUserData(key);
+                    return first(apply((String s) -> s + ":" + captured));
+                }));
+
+        launch(context, scope -> {
+            Continuation<String> ca = cr.runAsync(scope, "abc");
+            Continuation<String> cb = cr.runBlocking(scope, "abc");
+
+            assertEquals("abc:ABC", ca.getResult());
+            assertEquals("abc:ABC", cb.getResult());
             assertTrue(ca.isFinished());
             assertTrue(cb.isFinished());
         });
