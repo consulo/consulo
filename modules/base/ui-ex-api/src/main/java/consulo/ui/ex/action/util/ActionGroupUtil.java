@@ -16,136 +16,65 @@
 
 package consulo.ui.ex.action.util;
 
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.ActionUpdateInvoker;
-import consulo.util.concurrent.coroutine.Continuation;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionUpdateSession;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 
-import org.jspecify.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class ActionGroupUtil {
-  private static Presentation getPresentation(AnAction action, Map<AnAction, Presentation> action2presentation) {
-    return action2presentation.computeIfAbsent(action, k -> action.getTemplatePresentation().clone());
-  }
-
-  public static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e) {
-    return isGroupEmpty(actionGroup, e, new HashMap<>());
-  }
-
-  /**
-   * Asynchronously validates the group and produces {@code true} if it has no enabled and visible action.
-   * Each child is updated through its own update coroutine, and the walk short-circuits as soon as the first
-   * enabled action is visited. The resulting boolean is passed to the next coroutine step.
-   */
-  public static Coroutine<?, Boolean> isGroupEmptyAsync(ActionGroup actionGroup, AnActionEvent e) {
-    return Coroutine.first(CodeExecution.<Object, Boolean>apply(
-      (input, continuation) -> isGroupEmptyAsync(actionGroup, e, continuation, new HashMap<>())));
-  }
-
-  private static boolean isGroupEmptyAsync(
-    ActionGroup actionGroup,
-    AnActionEvent e,
-    Continuation<?> continuation,
-    Map<AnAction, Presentation> action2presentation
-  ) {
-    for (AnAction action : actionGroup.getChildren(e)) {
-      if (action instanceof AnSeparator) continue;
-      if (isActionEnabledAndVisibleAsync(e, action2presentation, action, continuation)) {
-        if (action instanceof ActionGroup group) {
-          if (!isGroupEmptyAsync(group, e, continuation, action2presentation)) {
-            return false;
-          }
-          // else continue for-loop
-        }
-        else {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  private static boolean isActionEnabledAndVisibleAsync(
-    AnActionEvent e,
-    Map<AnAction, Presentation> action2presentation,
-    AnAction action,
-    Continuation<?> continuation
-  ) {
-    Presentation presentation = getPresentation(action, action2presentation);
-    AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(), ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), e.getModifiers());
-    event.setInjectedContext(action.isInInjectedContext());
-
-    Coroutine<?, ?> update = ActionUpdateInvoker.createUpdateCoroutine(action, event);
-    if (update != null) {
-      update.runBlocking(continuation.scope(), null);
+    /**
+     * Asynchronously validates the group and produces {@code true} if it has no enabled and visible action.
+     * <p>
+     * The walk uses the {@link ActionUpdateSession} of the current expansion: every child's presentation is taken
+     * from the session cache (computed once, at the real place and with the real data context) instead of being
+     * re-updated through a synthetic event. It short-circuits as soon as the first enabled and visible action is
+     * visited. Requires a proper update session ({@link AnActionEvent#getUpdateSession()}).
+     */
+    public static Coroutine<?, Boolean> isGroupEmptyAsync(ActionGroup actionGroup, AnActionEvent e) {
+        return Coroutine.first(CompletableFutureStep.<Object, Boolean>await(input -> isGroupEmptyAsync(actionGroup, e.getUpdateSession())));
     }
 
-    return presentation.isEnabled() && presentation.isVisible();
-  }
-
-  @Deprecated
-  public static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e, boolean unused) {
-    return isGroupEmpty(actionGroup, e, new HashMap<>());
-  }
-
-  private static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e, Map<AnAction, Presentation> action2presentation) {
-    AnAction[] actions = actionGroup.getChildren(e);
-    for (AnAction action : actions) {
-      if (action instanceof AnSeparator) continue;
-      if (isActionEnabledAndVisible(e, action2presentation, action)) {
-        if (action instanceof ActionGroup) {
-          if (!isGroupEmpty((ActionGroup)action, e, action2presentation)) {
-            return false;
-          }
-          // else continue for-loop
-        }
-        else {
-          return false;
-        }
-      }
+    /**
+     * The {@link CompletableFuture} form of {@link #isGroupEmptyAsync(ActionGroup, AnActionEvent)}, for callers that
+     * already compose futures with the {@link ActionUpdateSession} of the current expansion.
+     */
+    public static CompletableFuture<Boolean> isGroupEmptyAsync(ActionGroup group, ActionUpdateSession session) {
+        return session.children(group).thenCompose(children -> isEmptyFrom(children, 0, session));
     }
-    return true;
-  }
 
-  public static @Nullable AnAction getSingleActiveAction(ActionGroup actionGroup, AnActionEvent e, boolean isInModalContext) {
-    List<AnAction> children = getEnabledChildren(actionGroup, e, new HashMap<>());
-    if (children.size() == 1) {
-      return children.get(0);
-    }
-    return null;
-  }
-
-  private static List<AnAction> getEnabledChildren(ActionGroup actionGroup, AnActionEvent e, Map<AnAction, Presentation> action2presentation) {
-    List<AnAction> result = new ArrayList<>();
-    AnAction[] actions = actionGroup.getChildren(e);
-    for (AnAction action : actions) {
-      if (action instanceof ActionGroup) {
-        if (isActionEnabledAndVisible(e, action2presentation, action)) {
-          result.addAll(getEnabledChildren((ActionGroup)action, e, action2presentation));
+    private static CompletableFuture<Boolean> isEmptyFrom(List<AnAction> children, int index, ActionUpdateSession session) {
+        if (index >= children.size()) {
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
-      }
-      else if (!(action instanceof AnSeparator)) {
-        if (isActionEnabledAndVisible(e, action2presentation, action)) {
-          result.add(action);
+
+        AnAction action = children.get(index);
+        if (action instanceof AnSeparator) {
+            return isEmptyFrom(children, index + 1, session);
         }
-      }
+
+        return session.presentation(action).thenCompose(presentation -> {
+            boolean enabledAndVisible = presentation != null && presentation.isEnabled() && presentation.isVisible();
+            if (!enabledAndVisible) {
+                return isEmptyFrom(children, index + 1, session);
+            }
+
+            if (action instanceof ActionGroup childGroup) {
+                return isGroupEmptyAsync(childGroup, session).thenCompose(childEmpty -> {
+                    // a visible non-empty subgroup makes the whole group non-empty; an empty one is skipped
+                    return Boolean.TRUE.equals(childEmpty)
+                        ? isEmptyFrom(children, index + 1, session)
+                        : CompletableFuture.completedFuture(Boolean.FALSE);
+                });
+            }
+
+            // a visible enabled leaf makes the group non-empty
+            return CompletableFuture.completedFuture(Boolean.FALSE);
+        });
     }
-    return result;
-  }
-
-  private static boolean isActionEnabledAndVisible(AnActionEvent e, Map<AnAction, Presentation> action2presentation, AnAction action) {
-    Presentation presentation = getPresentation(action, action2presentation);
-    AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(), ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), e.getModifiers());
-    event.setInjectedContext(action.isInInjectedContext());
-
-    ((ActionManagerEx)ActionManager.getInstance()).performDumbAwareUpdate(action, event);
-
-    return presentation.isEnabled() && presentation.isVisible();
-  }
 }

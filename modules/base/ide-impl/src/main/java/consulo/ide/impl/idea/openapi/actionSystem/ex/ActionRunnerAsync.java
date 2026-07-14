@@ -124,6 +124,10 @@ public final class ActionRunnerAsync {
     }
 
     private static CompletableFuture<?> launchUpdateAsync(AnAction action, AnActionEvent e) {
+        // a single-action update outside an expansion still needs an update session so group actions can resolve
+        // their children/presentations
+        ActionImplUtil.ensureUpdateSession(e);
+
         Coroutine<?, ?> coroutine = ActionUpdateInvoker.createUpdateCoroutine(action, e);
         if (coroutine == null) {
             return CompletableFuture.completedFuture(null);

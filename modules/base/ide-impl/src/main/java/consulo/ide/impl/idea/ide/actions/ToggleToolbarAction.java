@@ -31,6 +31,8 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -120,7 +122,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         return UIUtil.uiTraverser().withRoot(root).preOrderDfsTraversal().filter(ActionToolbar.class);
     }
 
-    private static class OptionsGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
+    private static class OptionsGroup extends ActionGroup implements DumbAware, AnActionWithAsyncUpdate {
         private final ToolWindow myToolWindow;
 
         public OptionsGroup(ToolWindow toolWindow) {
@@ -129,8 +131,9 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         }
 
         @Override
-        public void update(AnActionEvent e) {
-            e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
+        public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+            return ActionGroupUtil.isGroupEmptyAsync(this, e)
+                .then(CodeExecution.consume(empty -> e.getPresentation().setVisible(!Boolean.TRUE.equals(empty))));
         }
 
         

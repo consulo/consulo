@@ -30,6 +30,8 @@ import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
@@ -39,7 +41,7 @@ import java.util.function.Predicate;
  * @author Konstantin Bulenkov
  */
 @ActionImpl(id = "NewElement")
-public class NewElementAction extends LegacyDumbAwareAction implements PopupAction {
+public class NewElementAction extends LegacyDumbAwareAction implements PopupAction, AnActionWithAsyncUpdate {
     private final ActionManager myActionManager;
 
     @Inject
@@ -113,18 +115,18 @@ public class NewElementAction extends LegacyDumbAwareAction implements PopupActi
     }
 
     @Override
-    @RequiredUIAccess
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         IdeView ideView = e.getData(IdeView.KEY);
 
         if (project == null || ideView == null || !isEnabled(e, ideView) || Boolean.TRUE.equals(e.getData(LangDataKeys.NO_NEW_ACTION))) {
             presentation.setEnabled(false);
-            return;
+            return Coroutine.empty();
         }
 
-        presentation.setEnabled(!ActionGroupUtil.isGroupEmpty(getGroup(e.getDataContext()), e));
+        return ActionGroupUtil.isGroupEmptyAsync(getGroup(e.getDataContext()), e)
+            .then(CodeExecution.consume(empty -> presentation.setEnabled(!Boolean.TRUE.equals(empty))));
     }
 
     protected boolean isEnabled(AnActionEvent e, IdeView ideView) {

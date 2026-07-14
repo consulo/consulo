@@ -2,23 +2,25 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.application.util.NotNullLazyValue;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.util.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
 import consulo.language.Language;
 import consulo.language.scratch.ScratchFileCreationHelper;
-import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 
 import java.util.function.Consumer;
 
@@ -26,30 +28,33 @@ import static consulo.ide.impl.idea.ide.scratch.ScratchFileActions.createContext
 import static consulo.ide.impl.idea.ide.scratch.ScratchFileActions.doCreateNewScratch;
 
 @ActionImpl(id = "NewScratchFile")
-public class NewScratchFileAction extends LegacyDumbAwareAction {
+public class NewScratchFileAction extends LegacyDumbAwareAction implements AnActionWithAsyncUpdate {
     private static final Image ICON = ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsScratch());
-
-    private final NotNullLazyValue<LocalizeValue> myActionText = NotNullLazyValue.createValue(
-        () -> NewActionGroup.isActionInNewPopupMenu(this)
-            ? ActionLocalize.actionNewscratchfileText()
-            : ActionLocalize.actionNewscratchfileTextWithNew()
-    );
 
     public NewScratchFileAction() {
         getTemplatePresentation().setIcon(ICON);
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        getTemplatePresentation().setText(myActionText.getValue());
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return Coroutine.first(CompletableFutureStep.<Object, Boolean>await(input -> NewActionGroup.isActionInNewPopupMenuAsync(e, this)))
+            .then(CodeExecution.consume(inNewPopupMenu -> applyPresentation(e, Boolean.TRUE.equals(inNewPopupMenu))));
+    }
+
+    private void applyPresentation(AnActionEvent e, boolean inNewPopupMenu) {
+        Presentation presentation = e.getPresentation();
+        presentation.setText(inNewPopupMenu ? ActionLocalize.actionNewscratchfileText() : ActionLocalize.actionNewscratchfileTextWithNew());
 
         Project project = e.getData(Project.KEY);
         String place = e.getPlace();
         boolean enabled = project != null && (e.isFromActionToolbar() || ActionPlaces.isMainMenuOrActionSearch(place)
             || ActionPlaces.isPopupPlace(place) && e.getData(IdeView.KEY) != null);
+        presentation.setEnabledAndVisible(enabled);
 
-        e.getPresentation().setEnabledAndVisible(enabled);
-        updatePresentationTextAndIcon(e, e.getPresentation());
+        presentation.setIcon(ICON);
+        if (ActionPlaces.MAIN_MENU.equals(place) && !inNewPopupMenu) {
+            presentation.setIcon(null);
+        }
     }
 
     @Override
@@ -72,14 +77,6 @@ public class NewScratchFileAction extends LegacyDumbAwareAction {
         else {
             LRUPopupBuilder.forFileLanguages(project, ActionLocalize.actionNewscratchfileTextWithNew().get(), null, consumer)
                 .showCenteredInCurrentWindow(project);
-        }
-    }
-
-    private void updatePresentationTextAndIcon(AnActionEvent e, Presentation presentation) {
-        presentation.setText(myActionText.getValue());
-        presentation.setIcon(ICON);
-        if (ActionPlaces.MAIN_MENU.equals(e.getPlace()) && !NewActionGroup.isActionInNewPopupMenu(this)) {
-            presentation.setIcon(null);
         }
     }
 }

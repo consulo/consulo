@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
@@ -63,26 +64,44 @@ public class ActionImplUtil {
     private ActionImplUtil() {
     }
 
-    public static boolean recursiveContainsAction(ActionGroup group, AnAction action) {
-        return anyActionFromGroupMatches(group, true, Predicate.isEqual(action));
-    }
-
-    public static boolean anyActionFromGroupMatches(
+    /**
+     * Asynchronously checks whether any action in the group (recursively) matches the condition. Children are
+     * expanded through the {@link ActionUpdateSession} of the current expansion ({@code getChildrenAsync}), so
+     * dynamic groups report their real children instead of the incomplete result of {@code getChildren(null)}.
+     */
+    public static CompletableFuture<Boolean> anyActionFromGroupMatchesAsync(
         ActionGroup group,
+        ActionUpdateSession session,
         boolean processPopupSubGroups,
         Predicate<? super AnAction> condition
     ) {
-        for (AnAction child : group.getChildren(null)) {
-            if (condition.test(child)) {
-                return true;
-            }
-            if (child instanceof ActionGroup childGroup
-                && (processPopupSubGroups || !childGroup.isPopup())
-                && anyActionFromGroupMatches(childGroup, processPopupSubGroups, condition)) {
-                return true;
-            }
+        return session.children(group).thenCompose(children -> anyMatchFrom(children, 0, session, processPopupSubGroups, condition));
+    }
+
+    private static CompletableFuture<Boolean> anyMatchFrom(
+        List<AnAction> children,
+        int index,
+        ActionUpdateSession session,
+        boolean processPopupSubGroups,
+        Predicate<? super AnAction> condition
+    ) {
+        if (index >= children.size()) {
+            return CompletableFuture.completedFuture(Boolean.FALSE);
         }
-        return false;
+
+        AnAction child = children.get(index);
+        if (condition.test(child)) {
+            return CompletableFuture.completedFuture(Boolean.TRUE);
+        }
+
+        if (child instanceof ActionGroup childGroup && (processPopupSubGroups || !childGroup.isPopup())) {
+            return anyActionFromGroupMatchesAsync(childGroup, session, processPopupSubGroups, condition).thenCompose(match ->
+                Boolean.TRUE.equals(match)
+                    ? CompletableFuture.completedFuture(Boolean.TRUE)
+                    : anyMatchFrom(children, index + 1, session, processPopupSubGroups, condition));
+        }
+
+        return anyMatchFrom(children, index + 1, session, processPopupSubGroups, condition);
     }
 
     public static void recursiveRegisterShortcutSet(ActionGroup group, JComponent component, @Nullable Disposable parentDisposable) {
@@ -146,6 +165,8 @@ public class ActionImplUtil {
         AnAction action,
         AnActionEvent e
     ) {
+        ensureUpdateSession(e);
+
         Presentation presentation = e.getPresentation();
         presentation.setEnabledAndVisible(true);
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
@@ -183,10 +204,33 @@ public class ActionImplUtil {
         return false;
     }
 
+    /**
+     * A single-action update outside an expansion (e.g. the enabled-check before performing, or a keyboard update)
+     * still needs an update session, so group actions can resolve their children/presentations. When the event has no
+     * session, attach a self-contained one built from the event's data context and place.
+     */
+    public static void ensureUpdateSession(AnActionEvent e) {
+        if (e.getUpdateSession() != ActionUpdateSession.EMPTY) {
+            return;
+        }
+        ActionUpdater updater = new ActionUpdater(
+            ActionManager.getInstance(),
+            new BasePresentationFactory(),
+            DataManager.getInstance().createAsyncDataContext(e.getDataContext()),
+            e.getPlace(),
+            e.isFromContextMenu(),
+            e.isFromActionToolbar(),
+            Application.get().getLastUIAccess()
+        );
+        e.setUpdateSession(updater.asUpdateSession());
+    }
+
     public static CompletableFuture<Boolean> performDumbAwareUpdateAsync(
         AnAction action,
         AnActionEvent e
     ) {
+        ensureUpdateSession(e);
+
         Presentation presentation = e.getPresentation();
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
         boolean dumbMode = isDumbMode(e.getData(Project.KEY));

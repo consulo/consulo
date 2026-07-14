@@ -40,6 +40,6 @@ public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAwa
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionGroupUtil.isGroupEmptyAsync(this, e)
-            .then(CodeExecution.consume(empty -> e.getPresentation().setVisible(Boolean.TRUE.equals(empty))));
+            .then(CodeExecution.consume(empty -> e.getPresentation().setVisible(!Boolean.TRUE.equals(empty))));
     }
 }

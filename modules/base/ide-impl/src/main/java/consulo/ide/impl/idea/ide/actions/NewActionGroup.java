@@ -25,6 +25,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -58,20 +59,29 @@ public class NewActionGroup extends ActionGroup {
         return actions;
     }
 
-    public static boolean isActionInNewPopupMenu(AnAction action) {
+    public static CompletableFuture<Boolean> isActionInNewPopupMenuAsync(AnActionEvent e, AnAction action) {
         ActionManager actionManager = ActionManager.getInstance();
+        ActionUpdateSession session = e.getUpdateSession();
+
         ActionGroup fileGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
-        if (!ActionImplUtil.anyActionFromGroupMatches(fileGroup, false, child -> child instanceof NewActionGroup)) {
-            return false;
-        }
+        return ActionImplUtil.anyActionFromGroupMatchesAsync(fileGroup, session, false, child -> child instanceof NewActionGroup)
+            .thenCompose(inFileMenu -> {
+                if (!Boolean.TRUE.equals(inFileMenu)) {
+                    return CompletableFuture.completedFuture(Boolean.FALSE);
+                }
 
-        AnAction newProjectOrModuleGroup = ActionManager.getInstance().getAction(PROJECT_OR_MODULE_GROUP_ID);
-        if (newProjectOrModuleGroup instanceof ActionGroup actionGroup
-            && ActionImplUtil.anyActionFromGroupMatches(actionGroup, false, Predicate.isEqual(action))) {
-            return true;
-        }
+                AnAction newProjectOrModuleGroup = actionManager.getAction(PROJECT_OR_MODULE_GROUP_ID);
+                CompletableFuture<Boolean> inProjectOrModule = newProjectOrModuleGroup instanceof ActionGroup actionGroup
+                    ? ActionImplUtil.anyActionFromGroupMatchesAsync(actionGroup, session, false, Predicate.isEqual(action))
+                    : CompletableFuture.completedFuture(Boolean.FALSE);
 
-        ActionGroup newGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_NEW);
-        return ActionImplUtil.anyActionFromGroupMatches(newGroup, false, Predicate.isEqual(action));
+                return inProjectOrModule.thenCompose(match -> {
+                    if (Boolean.TRUE.equals(match)) {
+                        return CompletableFuture.completedFuture(Boolean.TRUE);
+                    }
+                    ActionGroup newGroup = (ActionGroup)actionManager.getAction(IdeActions.GROUP_NEW);
+                    return ActionImplUtil.anyActionFromGroupMatchesAsync(newGroup, session, false, Predicate.isEqual(action));
+                });
+            });
     }
 }
