@@ -70,6 +70,14 @@ public interface Continuation<T> extends UserDataHolderEx, CopyableUserDataHolde
     void cancel();
 
     /**
+     * Finishes this continuation early with the given result, skipping any remaining steps in the coroutine chain.
+     * Subsequent steps will be no-ops. The result will be available via {@link #getResult()} and {@link #toFuture()}.
+     *
+     * @param result The result value to finish with
+     */
+    void finishEarly(@Nullable T result);
+
+    /**
      * Returns the context of the executed coroutine.
      *
      * @return The coroutine context

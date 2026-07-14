@@ -166,6 +166,11 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
         }
     }
 
+    @Override
+    public void finishEarly(@Nullable T result) {
+        finish(result);
+    }
+
     /**
      * Returns the context of the executed coroutine.
      *
@@ -188,7 +193,11 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
     public final <V extends @Nullable Object> void continueAccept(
         CompletableFuture<V> rPreviousExecution, Consumer<V> fNext) {
         if (!cancelled) {
-            currentExecution = rPreviousExecution.thenAcceptAsync(fNext, this)
+            currentExecution = rPreviousExecution.thenAcceptAsync(v -> {
+                    if (!finished) {
+                        fNext.accept(v);
+                    }
+                }, this)
                 .exceptionally(this::fail);
         }
         else if (currentExecution != null) {
@@ -214,7 +223,12 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
     ) {
         if (!cancelled) {
             CompletableFuture<O> rNextExecution =
-                previousExecution.thenApplyAsync(next, this);
+                previousExecution.thenApplyAsync(i -> {
+                    if (finished) {
+                        return null;
+                    }
+                    return next.apply(i);
+                }, this);
 
             currentExecution = rNextExecution;
 
@@ -254,7 +268,12 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
     ) {
         if (!cancelled) {
             CompletableFuture<O> rNextExecution =
-                previousExecution.thenComposeAsync(next, this);
+                previousExecution.thenComposeAsync(i -> {
+                    if (finished) {
+                        return CompletableFuture.<O>completedFuture(null);
+                    }
+                    return next.apply(i);
+                }, this);
 
             currentExecution = rNextExecution;
 
@@ -686,8 +705,9 @@ public class ContinuationImpl<T> extends UserDataHolderBase implements Continuat
      * @param result The result of the coroutine execution
      */
     void finish(@Nullable T result) {
-        assert !finished;
-        assert coroutineStack.size() == 1;
+        if (finished) {
+            return;
+        }
 
         try {
             this.result = result;

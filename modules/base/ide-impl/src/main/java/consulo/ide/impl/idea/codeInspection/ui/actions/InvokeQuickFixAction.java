@@ -42,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
  * @author anna
  * @since 2006-01-11
  */
-public class InvokeQuickFixAction extends LegacyAnAction implements AnActionWithAsyncUpdate {
+public class InvokeQuickFixAction extends AnAction implements AnActionWithAsyncUpdate {
     private final InspectionResultsView myView;
 
     public InvokeQuickFixAction(InspectionResultsView view) {
@@ -61,10 +61,11 @@ public class InvokeQuickFixAction extends LegacyAnAction implements AnActionWith
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         // the view/tree checks touch Swing, so run them on the UI thread; produce the fixes group to validate, or
-        // null when the presentation was already decided (or the content is not loaded and must be left untouched)
-        return Coroutine.<Object, ActionGroup>first(UIAction.apply(input -> {
+        // finish early when the presentation is already decided (or the content is not loaded and must be left as is)
+        return Coroutine.<Object, ActionGroup>first(UIAction.apply((input, continuation) -> {
                 if (!myView.isSingleToolInSelection()) {
                     e.getPresentation().setEnabled(false);
+                    continuation.finishEarly(null);
                     return null;
                 }
 
@@ -72,23 +73,21 @@ public class InvokeQuickFixAction extends LegacyAnAction implements AnActionWith
                 InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
                 InspectionRVContentProvider provider = myView.getProvider();
                 if (!provider.isContentLoaded()) {
+                    continuation.finishEarly(null);
                     return null;
                 }
 
                 QuickFixAction[] quickFixes = ReadAction.compute(() -> provider.getQuickFixes(toolWrapper, myView.getTree()));
                 if (quickFixes == null || quickFixes.length == 0) {
                     e.getPresentation().setEnabled(false);
+                    continuation.finishEarly(null);
                     return null;
                 }
                 return getFixes(quickFixes);
             }))
-            .then(CompletableFutureStep.<ActionGroup, Void>await(group -> {
-                if (group == null) {
-                    return CompletableFuture.completedFuture(null);
-                }
-                return ActionGroupUtil.isGroupEmptyAsync(group, e.getUpdateSession())
-                    .thenAccept(empty -> e.getPresentation().setEnabled(!Boolean.TRUE.equals(empty)));
-            }));
+            .then(CompletableFutureStep.<ActionGroup, Void>await(group ->
+                ActionGroupUtil.isGroupEmptyAsync(group, e.getUpdateSession())
+                    .thenAccept(empty -> e.getPresentation().setEnabled(!Boolean.TRUE.equals(empty)))));
     }
 
     private static ActionGroup getFixes(final QuickFixAction[] quickFixes) {
