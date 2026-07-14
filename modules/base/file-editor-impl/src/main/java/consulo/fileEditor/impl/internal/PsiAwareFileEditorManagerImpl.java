@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.concurrent.ApplicationConcurrency;
@@ -134,10 +135,9 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
    */
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
-    @RequiredUIAccess
+    @RequiredWriteAction
     public void propertyChanged(PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
-        UIAccess.assertIsUIThread();
         VirtualFile[] openFiles = getOpenFiles();
         for (int i = openFiles.length - 1; i >= 0; i--) {
           VirtualFile file = openFiles[i];

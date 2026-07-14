@@ -1802,14 +1802,14 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         private boolean myScheduled;
 
         @Override
-        @RequiredUIAccess
+        @RequiredWriteAction
         public void rootsChanged(ModuleRootEvent event) {
             if (myScheduled) {
                 return;
             }
             myScheduled = true;
 
-            UIAccess uiAccess = UIAccess.current();
+            UIAccess uiAccess = myProject.getUIAccess();
             DumbService.getInstance(myProject).runWhenSmart(() -> {
                 myScheduled = false;
                 handleRootChange(uiAccess);

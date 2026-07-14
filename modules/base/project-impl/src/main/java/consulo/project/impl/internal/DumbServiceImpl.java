@@ -123,9 +123,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     @Override
     public void cancelTask(DumbModeTask task) {
-        if (myApplication.isInternal()) {
-            LOG.info("cancel " + task);
-        }
         ProgressIndicatorEx indicator = myProgresses.get(task);
         if (indicator != null) {
             indicator.cancel();
