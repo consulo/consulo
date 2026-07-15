@@ -20,10 +20,12 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.UniqueNameBuilder;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.ui.ex.awt.ListWithFilter;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -41,6 +43,7 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
@@ -223,6 +226,10 @@ public class RecentProjectPanel {
         });
 
         myRootPanel.add(myTargetComponent, BorderLayout.CENTER);
+
+        ClientProperty.put(myList, UiDataProvider.KEY, sink -> {
+            sink.set(RecentProjectsWelcomeScreenActionBase.RECENT_PROJECTS_LIST, myList);
+        });
     }
 
     public JPanel getRootPanel() {

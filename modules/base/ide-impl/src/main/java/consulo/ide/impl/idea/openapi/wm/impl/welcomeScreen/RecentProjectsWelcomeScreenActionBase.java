@@ -25,6 +25,7 @@ import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -36,6 +37,8 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAwareAction {
+    public static final Key<JList> RECENT_PROJECTS_LIST = Key.create("recent-projects-list");
+
     protected RecentProjectsWelcomeScreenActionBase() {
     }
 
@@ -57,7 +60,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAw
             && nameFilteringListModel.getOriginalModel() instanceof DefaultListModel defaultListModel ? defaultListModel : null;
     }
 
-    
+
     public static List<AnAction> getSelectedElements(AnActionEvent e) {
         JList list = getList(e);
         List<AnAction> actions = new ArrayList<>();
@@ -72,8 +75,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAw
     }
 
     public static @Nullable JList getList(AnActionEvent e) {
-        Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-        return component instanceof JList jList ? jList : null;
+        return e.getData(RECENT_PROJECTS_LIST);
     }
 
     public static boolean hasGroupSelected(AnActionEvent e) {
