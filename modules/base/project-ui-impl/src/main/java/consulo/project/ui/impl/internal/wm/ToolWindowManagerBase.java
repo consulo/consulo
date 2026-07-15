@@ -309,7 +309,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         return AsyncResult.merge(results);
     }
 
-    @RequiredUIAccess
     public void connectModuleExtensionListener() {
         myProject.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
@@ -317,12 +316,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                 myProject.getUIAccess().give(() -> revalidateToolWindows());
             }
         });
-
-        revalidateToolWindows();
     }
 
     @RequiredUIAccess
-    private void revalidateToolWindows() {
+    public void revalidateToolWindows() {
         myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
             boolean value = factory.validate(myProject);
 

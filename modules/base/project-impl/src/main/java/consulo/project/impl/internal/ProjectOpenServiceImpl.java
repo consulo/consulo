@@ -17,6 +17,7 @@ package consulo.project.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.internal.ComponentBinding;
@@ -227,18 +228,17 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
 
                 init = myProjectFrameAllocator.initializeSteps(project, init);
 
-                ProgressIndicator[] moduleIndicator = new ProgressIndicator[1];
                 init = init
                     .then(CodeExecution.apply((o, c) -> {
                         ProgressIndicator indicator = ProgressIndicator.from(c);
                         indicator.setText(ProjectLocalize.progressTitleLoadingModules());
                         indicator.setText2(LocalizeValue.empty());
-                        moduleIndicator[0] = indicator;
                         return o;
                     }))
-                    .then(CompletableFutureStep.await((o) -> {
+                    .then(WriteLock.apply((o, c) -> {
                         ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
-                        return moduleManager.loadModules(moduleIndicator[0]).thenApply(x -> o);
+                        moduleManager.loadModulesNew(ProgressIndicator.from(c));
+                        return o;
                     }));
 
                 init = init.then(CodeExecution.supply((o) -> {

@@ -433,7 +433,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
     }
 
-    @RequiredReadAction
     private void markPathRecent(String path, @Nullable Project project) {
         synchronized (myStateLock) {
             if (path.endsWith(File.separator)) {
@@ -447,10 +446,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                 List<String> projects = group.getProjects();
                 projects.add(0, path);
                 group.save(projects);
-            }
-            myState.additionalInfo.remove(path);
-            if (project != null) {
-                myState.additionalInfo.put(path, RecentProjectMetaInfo.create(project));
             }
         }
     }

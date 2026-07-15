@@ -26,6 +26,7 @@ import consulo.component.internal.ComponentBinding;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StateComponentInfo;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
@@ -61,7 +62,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
       if (stateStore != null) {
         StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
         if (info != null) {
-          if (Application.get().isWriteAccessAllowed()) {
+          if (Application.get().isWriteAccessAllowed() && UIAccess.isUIThread()) {
             LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component
               .getClass()
               .getName()));

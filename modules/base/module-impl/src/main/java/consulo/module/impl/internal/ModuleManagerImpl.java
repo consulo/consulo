@@ -710,7 +710,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return toRemove;
         }
 
-        
         @RequiredUIAccess
         private Module loadModuleInternal(ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
@@ -735,9 +734,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
             String dirUrl = item.getDirUrl();
             if (dirUrl != null) {
-                SimpleReference<VirtualFile> ref = SimpleReference.create();
-                myProject.getApplication().invokeAndWait(() -> ref.set(VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl)));
-                VirtualFile moduleDir = ref.get();
+                VirtualFile moduleDir = VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl);
 
                 if (moduleDir == null || !moduleDir.exists() || !moduleDir.isDirectory()) {
                     throw new ModuleDirIsNotExistsException(ProjectLocalize.moduleDirDoesNotExistError(
@@ -755,7 +752,8 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 collapseOrExpandMacros(oldModule, item.getElement(), false);
 
                 ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(oldModule);
-                myProject.getApplication().runReadAction(() -> moduleRootManager.loadState(item.getElement(), progressIndicator));
+
+                moduleRootManager.loadState(item.getElement(), progressIndicator);
             }
             return oldModule;
         }

@@ -79,25 +79,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
     }
 
-    
-    public CompletableFuture<?> loadModules(ProgressIndicator indicator) {
-        StatCollector stat = new StatCollector();
-
-        stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
-
-        indicator.setIndeterminate(true);
-
-        return AccessRule.writeAsync(() -> {
-            stat.markWith("fire modules add", () -> {
-                for (Module module : myModuleModel.myModules) {
-                    fireModuleAdded(module);
-                }
-            });
-
-            stat.dump("ModulesManager", LOG::info);
-        });
-    }
-
     public void loadModulesNew(ProgressIndicator indicator) {
         StatCollector stat = new StatCollector();
 

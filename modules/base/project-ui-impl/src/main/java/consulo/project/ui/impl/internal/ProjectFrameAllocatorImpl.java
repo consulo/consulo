@@ -24,7 +24,6 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
@@ -85,13 +84,13 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
             .then(UIAction.apply((o, c) -> {
                 ToolWindowManagerBase manager = (ToolWindowManagerBase) ToolWindowManager.getInstance(project);
                 manager.initializeUI();
+                manager.connectModuleExtensionListener();
 
                 c.putCopyableUserData(TOOL_WINDOW_MANAGER, manager);
                 return o;
             }))
             .then(UIAction.apply((o, c) -> {
                 ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
-
                 manager.initializeEditorComponent();
                 return o;
             }))
@@ -111,11 +110,6 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
             }))
             .then(UIAction.apply((o, c) -> {
                 ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
-                manager.connectModuleExtensionListener();
-                return o;
-            }))
-            .then(UIAction.apply((o, c) -> {
-                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
                 manager.activateOnProjectOpening();
                 return o;
             }));
@@ -124,12 +118,17 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
     @Override
     public <I, O> Coroutine<I, O> postSteps(Project project, Coroutine<I, O> in) {
         return in.then(UIAction.apply((o, c) -> {
-            UIAccess uiAccess = c.getConfiguration(UIAccess.KEY);
+                UIAccess uiAccess = c.getConfiguration(UIAccess.KEY);
 
-            // we need update widgets again
-            StatusBarWidgetsManager statusBarWidgetsManager = project.getInstance(StatusBarWidgetsManager.class);
-            statusBarWidgetsManager.updateAllWidgets(uiAccess);
-            return o;
-        }));
+                // we need update widgets again
+                StatusBarWidgetsManager statusBarWidgetsManager = project.getInstance(StatusBarWidgetsManager.class);
+                statusBarWidgetsManager.updateAllWidgets(uiAccess);
+                return o;
+            }))
+            .then(UIAction.apply((o, c) -> {
+                ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
+                manager.revalidateToolWindows();
+                return o;
+            }));
     }
 }
