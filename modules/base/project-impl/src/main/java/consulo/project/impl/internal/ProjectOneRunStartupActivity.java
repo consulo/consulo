@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.json;
+package consulo.project.impl.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
+import consulo.project.ProjectRunOneService;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
 
 /**
  * @author VISTALL
- * @since 13-Sep-22
+ * @since 2026-07-15
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface JsonService {
-  public static JsonService getInstance() {
-    return Application.get().getInstance(JsonService.class);
-  }
-
-  String toJson(Object value);
-
-  <T> T fromJson(String json, Class<T> clazz);
+@ExtensionImpl
+public class ProjectOneRunStartupActivity implements PostStartupActivity {
+    @Override
+    public void runActivity(Project project, UIAccess uiAccess) {
+        project.getInstance(ProjectRunOneService.class).runDelayed();
+    }
 }

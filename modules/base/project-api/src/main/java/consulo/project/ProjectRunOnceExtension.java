@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.json;
+package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointCacheKey;
+
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 13-Sep-22
+ * @since 2026-07-15
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface JsonService {
-  public static JsonService getInstance() {
-    return Application.get().getInstance(JsonService.class);
-  }
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface ProjectRunOnceExtension<T extends Record> {
+    ExtensionPointCacheKey<ProjectRunOnceExtension, Map<String, ProjectRunOnceExtension>> CACHE_KEY =
+        ExtensionPointCacheKey.groupBy("ProjectOnceRunExtension", ProjectRunOnceExtension::getId);
 
-  String toJson(Object value);
+    String getId();
 
-  <T> T fromJson(String json, Class<T> clazz);
+    Class<T> getInputClass();
+
+    void run(T input);
 }
