@@ -94,7 +94,8 @@ public class ActionUpdater {
 
     private void applyPresentationChanges() {
         for (Map.Entry<AnAction, CompletableFuture<Presentation>> entry : myUpdatedPresentations.entrySet()) {
-            Presentation cloned = entry.getValue().getNow(null);
+            CompletableFuture<Presentation> future = entry.getValue();
+            Presentation cloned = future.getNow(null);
             if (cloned == null) {
                 continue;
             }

@@ -233,12 +233,14 @@ public class ActionToolbarButtonEngine {
         if (myPresentationListener == null) {
             myPresentation.addPropertyChangeListener(myPresentationListener = this::presentationPropertyChanded);
         }
-        AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, myGetDataContext.get(), false, true, null);
-        UIAccess uiAccess = UIAccess.current();
-        ActionRunnerAsync.performDumbAwareUpdateAsync(myIdeAction, e).whenCompleteAsync((r, t) -> {
-            updateToolTipText();
-            updateIcon();
-        }, uiAccess);
+        // the presentation instance is shared with, and kept up to date by, the toolbar's action update loop.
+        // running a second action update here would mutate that shared presentation in place from a background
+        // thread (resetting it to enabled/visible as a baseline first), racing the toolbar loop and leaving the
+        // button stuck in a stale enabled state. just refresh the visuals from the already-current presentation.
+        updateTextAndMnemonic(myPresentation.getTextValue());
+        updateToolTipText();
+        updateIcon();
+        updateEnabled();
     }
 
     public void setNoIconsInPopup(boolean noIconsInPopup) {
