@@ -24,6 +24,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.UIAccess;
 
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 
@@ -41,6 +42,12 @@ public interface ProjectManager {
     public static ProjectManager getInstance() {
         return Application.get().getInstance(ProjectManager.class);
     }
+
+    CompletableFuture<Project> openProjectAsync(
+        Path filePath,
+        UIAccess uiAccess,
+        ProjectOpenContext context
+    );
 
     default CompletableFuture<Boolean> closeAndDisposeAsync(Project project, UIAccess uiAccess) {
         return closeAndDisposeAsync(project, uiAccess, true, true, true);

@@ -47,6 +47,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -84,7 +85,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
     private final Application myApplication;
     private final ProgressBuilderFactory myProgressBuilderFactory;
     private final ComponentBinding myComponentBinding;
-    private final ProjectManager myProjectManager;
+    private final Provider<ProjectManager> myProjectManager;
     private final ProjectFrameAllocator myProjectFrameAllocator;
     private final ProjectOpenProcessors myProjectOpenProcessors;
 
@@ -92,7 +93,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
     public ProjectOpenServiceImpl(Application application,
                                   ProgressBuilderFactory progressBuilderFactory,
                                   ComponentBinding componentBinding,
-                                  ProjectManager projectManager,
+                                  Provider<ProjectManager> projectManager,
                                   ProjectFrameAllocator projectFrameAllocator,
                                   ProjectOpenProcessors projectOpenProcessors) {
         myApplication = application;
@@ -122,8 +123,8 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
 
         CompletableFuture<Project> resultFuture = new CompletableFuture<>();
 
-        final VirtualFile finalVirtualFile = virtualFile;
-        final ProjectOpenProcessor finalProcessor = processor;
+        VirtualFile finalVirtualFile = virtualFile;
+        ProjectOpenProcessor finalProcessor = processor;
 
         // Phase 1: Resolve project, show dialog if needed, allocate frame
         // Use null project for progress scope — activeProject may be closed during this phase
@@ -135,7 +136,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                     .first(CodeExecution.<Void, OpenContext>apply((input, continuation) -> {
                         Project projectToClose = null;
                         if (!Boolean.TRUE.equals(forceNewFrame)) {
-                            Project[] openProjects = myProjectManager.getOpenProjects();
+                            Project[] openProjects = myProjectManager.get().getOpenProjects();
                             if (openProjects.length > 0) {
                                 projectToClose = activeProject != null ? activeProject : openProjects[openProjects.length - 1];
                             }
@@ -175,7 +176,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                             continuation.cancel();
                             return null;
                         }
-                        return new ProjectImpl(myApplication, myProjectManager, projectDir.getPath(), null, true, myComponentBinding);
+                        return new ProjectImpl(myApplication, myProjectManager.get(), projectDir.getPath(), null, true, myComponentBinding);
                     }));
 
                 // Allocate frame
@@ -373,7 +374,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             return result;
         }
 
-        myProjectManager.closeAndDisposeAsync(openContext.projectToClose(), uiAccess)
+        myProjectManager.get().closeAndDisposeAsync(openContext.projectToClose(), uiAccess)
             .whenComplete((closed, error) -> {
                 if (error != null) {
                     result.completeExceptionally(error);

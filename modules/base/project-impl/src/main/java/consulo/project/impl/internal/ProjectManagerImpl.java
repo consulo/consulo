@@ -33,6 +33,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectCloseHandler;
+import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
@@ -62,6 +63,7 @@ import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -84,7 +86,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     
     private final Application myApplication;
-    
+
+    private final ProjectOpenService myProjectOpenService;
     private final ComponentBinding myComponentBinding;
     
     private final ProgressIndicatorProvider myProgressManager;
@@ -104,8 +107,9 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private ExcludeRootsCache myExcludeRootsCache;
 
     @Inject
-    public ProjectManagerImpl(Application application, ComponentBinding componentBinding) {
+    public ProjectManagerImpl(Application application, ProjectOpenService projectOpenService, ComponentBinding componentBinding) {
         myApplication = application;
+        myProjectOpenService = projectOpenService;
         myComponentBinding = componentBinding;
         myProgressManager = application.getProgressManager();
 
@@ -237,7 +241,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    
     public Project[] getOpenProjects() {
         synchronized (lock) {
             return myOpenProjects.clone();
@@ -249,6 +252,11 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         synchronized (lock) {
             return ArrayUtil.contains(project, myOpenProjects);
         }
+    }
+
+    @Override
+    public CompletableFuture<Project> openProjectAsync(Path filePath, UIAccess uiAccess, ProjectOpenContext context) {
+        return myProjectOpenService.openProjectAsync(filePath, uiAccess, context);
     }
 
     boolean addToOpened(Project project) {
