@@ -121,7 +121,7 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
             // Save again as a subroutine
             .then(CallSubroutine.<Object, Object>call(c -> c.getCopyableUserData(PROJECT).saveAsync(uiAccess)))
             // Cleanup, return original VirtualFile
-            .then(CodeExecution.<Object, VirtualFile>apply((o, c) -> {
+            .then(WriteLock.<Object, VirtualFile>apply((o, c) -> {
                 Disposer.dispose(c.getCopyableUserData(PROJECT));
                 return c.getCopyableUserData(VIRTUAL_FILE);
             }));
