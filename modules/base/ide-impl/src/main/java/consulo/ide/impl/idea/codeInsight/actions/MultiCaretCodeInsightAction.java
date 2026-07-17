@@ -84,7 +84,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction implements An
         Editor hostEditor = e.getData(Editor.KEY);
         if (project == null || hostEditor == null) {
             e.getPresentation().setEnabled(false);
-            return null;
+            return Coroutine.empty();
         }
 
         return UIAction.apply((i, continuation) -> {
