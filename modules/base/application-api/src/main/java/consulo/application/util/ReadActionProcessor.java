@@ -18,6 +18,7 @@ package consulo.application.util;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.util.function.Processor;
 
 import java.util.function.Predicate;
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
 public abstract class ReadActionProcessor<T> implements Processor<T> {
     @Override
     public boolean process(T t) {
-        return Application.get().runReadAction((Supplier<Boolean>)() -> processInReadAction(t));
+        return ReadAction.compute(() -> processInReadAction(t));
     }
 
     @RequiredReadAction
@@ -37,6 +38,6 @@ public abstract class ReadActionProcessor<T> implements Processor<T> {
 
     
     public static <T> Processor<T> wrapInReadAction(Predicate<T> processor) {
-        return t -> Application.get().runReadAction((Supplier<Boolean>)() -> processor.test(t));
+        return t -> ReadAction.compute(() -> processor.test(t));
     }
 }
