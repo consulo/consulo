@@ -575,7 +575,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   }
 
   private static boolean isRenamed(ExternalizableScheme scheme) {
-    return !scheme.getName().equals(scheme.getExternalInfo().getPreviouslySavedName());
+    return !Comparing.equal(scheme.getName(), scheme.getExternalInfo().getPreviouslySavedName());
   }
 
   private void deleteFiles(List<VFileEvent> events) {
