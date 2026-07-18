@@ -1,17 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.refresh;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.impl.internal.AsyncEventSupport;
+import consulo.virtualFileSystem.impl.internal.VfsThreadingUtil;
 import consulo.virtualFileSystem.impl.internal.local.LocalFileSystemImpl;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
@@ -176,22 +179,48 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
+  boolean hasFinishRunnable() {
+    return myFinishRunnable != null;
+  }
+
+  void terminate() {
+    mySemaphore.up();
+  }
+
+  @RequiredUIAccess
   public void fireEvents(List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
     try {
-      if ((myFinishRunnable != null || !events.isEmpty()) && !ApplicationManager.getApplication().isDisposed()) {
+      if (shouldFireEvents(events)) {
         if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + events);
         WriteAction.run(() -> fireEventsInWriteAction(events, appliers));
       }
     }
     finally {
-      mySemaphore.up();
+      terminate();
     }
+  }
+
+  @RequiredWriteAction
+  public void fireEventsInBackgroundWriteAction(List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
+    try {
+      if (shouldFireEvents(events)) {
+        if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + events);
+        fireEventsInWriteAction(events, appliers);
+      }
+    }
+    finally {
+      terminate();
+    }
+  }
+
+  private boolean shouldFireEvents(List<? extends VFileEvent> events) {
+    return (myFinishRunnable != null || !events.isEmpty()) && !ApplicationManager.getApplication().isDisposed();
   }
 
   private void fireEventsInWriteAction(List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
     VirtualFileManagerEx manager = (VirtualFileManagerEx)VirtualFileManager.getInstance();
 
-    manager.fireBeforeRefreshStart(myIsAsync);
+    VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> manager.fireBeforeRefreshStart(myIsAsync));
     try {
       AsyncEventSupport.processEvents(events, appliers);
     }
@@ -202,14 +231,16 @@ public class RefreshSessionImpl extends RefreshSession {
       throw e;
     }
     finally {
-      try {
-        manager.fireAfterRefreshFinish(myIsAsync);
-      }
-      finally {
-        if (myFinishRunnable != null) {
-          myFinishRunnable.run();
+      VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> {
+        try {
+          manager.fireAfterRefreshFinish(myIsAsync);
         }
-      }
+        finally {
+          if (myFinishRunnable != null) {
+            myFinishRunnable.run();
+          }
+        }
+      });
     }
   }
 

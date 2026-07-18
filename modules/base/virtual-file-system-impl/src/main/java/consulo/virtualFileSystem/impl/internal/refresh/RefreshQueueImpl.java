@@ -2,23 +2,23 @@
 package consulo.virtualFileSystem.impl.internal.refresh;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
-import consulo.application.event.ApplicationListener;
+import consulo.application.ReadAction;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.FrequentEventDetector;
-import consulo.application.internal.ProgressIndicatorUtils;
-import consulo.application.internal.SensitiveProgressWrapper;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressBuilderFactory;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,6 +26,7 @@ import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.impl.internal.AsyncEventSupport;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -36,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author max
@@ -61,20 +61,14 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   private final Map<Long, RefreshSession> mySessions = new HashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
-  private final AtomicLong myWriteActionCounter = new AtomicLong();
 
-  
   private final Application myApplication;
+  private final ProgressBuilderFactory myProgressBuilderFactory;
 
   @Inject
-  public RefreshQueueImpl(Application application) {
+  public RefreshQueueImpl(Application application, ProgressBuilderFactory progressBuilderFactory) {
     myApplication = application;
-    application.addApplicationListener(new ApplicationListener() {
-      @Override
-      public void writeActionStarted(Object action) {
-        myWriteActionCounter.incrementAndGet();
-      }
-    }, this);
+    myProgressBuilderFactory = progressBuilderFactory;
   }
 
   public void execute(RefreshSessionImpl session) {
@@ -99,7 +93,6 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   private void queueSession(RefreshSessionImpl session, ModalityState modality) {
     myQueue.execute(() -> {
-      startRefreshActivity();
       try {
         HeavyProcessLatch.INSTANCE.performOperation(
           HeavyProcessLatch.Type.Syncing,
@@ -108,74 +101,67 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
         );
       }
       finally {
-        finishRefreshActivity();
-        if (Registry.is("vfs.async.event.processing")) {
-          scheduleAsynchronousPreprocessing(session, modality);
-        }
-        else {
-          AppUIExecutor.onUiThread(modality).later().submit(() -> session.fireEvents(session.getEvents(), null));
-        }
+        scheduleAsynchronousPreprocessing(session, modality);
       }
     });
     myEventCounter.eventHappened(session);
   }
 
   protected void scheduleAsynchronousPreprocessing(RefreshSessionImpl session, ModalityState modality) {
-    try {
-      myEventProcessingQueue.execute(() -> {
-        startRefreshActivity();
-        try {
-          HeavyProcessLatch.INSTANCE.performOperation(
-            HeavyProcessLatch.Type.Syncing,
-            "Processing VFS events. " + session,
-            () -> processAndFireEvents(session, modality)
-          );
-        }
-        finally {
-          finishRefreshActivity();
+    if (modality == ModalityState.nonModal()) {
+      fireEventsInBackgroundWriteAction(session);
+    }
+    else {
+      fireEventsOnUiThread(session, modality);
+    }
+  }
+
+  private void fireEventsInBackgroundWriteAction(RefreshSessionImpl session) {
+    UIAccess uiAccess = myApplication.getLastUIAccess();
+    myProgressBuilderFactory.newProgressBuilder(null, VirtualFileSystemLocalize.fileSynchronizeProgress())
+      .execute(uiAccess, () -> Coroutine.<Void, Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>>first(
+          ReadLock.<Void, Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>>apply((input, continuation) -> {
+            List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
+              VirtualFile file = e instanceof VFileCreateEvent ce ? ce.getParent() : e.getFile();
+              return file == null || file.isValid();
+            });
+            if (events.isEmpty() && !session.hasFinishRunnable()) {
+              session.terminate();
+              continuation.finishEarly(null);
+              return null;
+            }
+            List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
+            return Pair.<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>create(events, appliers);
+          }))
+        .then(WriteLock.<Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>, Void>apply(pair -> {
+          session.fireEventsInBackgroundWriteAction(pair.getFirst(), pair.getSecond());
+          return null;
+        })))
+      .whenComplete((result, throwable) -> {
+        if (throwable != null) {
+          session.terminate();
+          LOG.error(throwable);
         }
       });
+  }
+
+  private void fireEventsOnUiThread(RefreshSessionImpl session, ModalityState modality) {
+    try {
+      ReadAction.nonBlocking(() -> {
+          List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
+            VirtualFile file = e instanceof VFileCreateEvent ce ? ce.getParent() : e.getFile();
+            return file == null || file.isValid();
+          });
+          List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
+          return Pair.<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>create(events, appliers);
+        })
+        .expireWith(this)
+        .finishOnUiThread(app -> modality, pair -> session.fireEvents(pair.getFirst(), pair.getSecond()))
+        .submit(myEventProcessingQueue);
     }
     catch (RejectedExecutionException e) {
       LOG.debug(e);
     }
-  }
-
-  private synchronized void startRefreshActivity() {
-  }
-
-  private synchronized void finishRefreshActivity() {
-  }
-
-  private void processAndFireEvents(RefreshSessionImpl session, ModalityState modality) {
-    while (true) {
-      ProgressIndicator progress = new SensitiveProgressWrapper(new EmptyProgressIndicator());
-      boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> tryProcessingEvents(session, modality), progress);
-      if (success) {
-        break;
-      }
-
-      ProgressIndicatorUtils.yieldToPendingWriteActions();
-    }
-  }
-
-  protected void tryProcessingEvents(RefreshSessionImpl session, ModalityState modality) {
-    List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
-      VirtualFile file = e instanceof VFileCreateEvent ce ? ce.getParent() : e.getFile();
-      return file == null || file.isValid();
-    });
-
-    List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
-
-    long stamp = myWriteActionCounter.get();
-    AppUIExecutor.onUiThread(modality).later().submit(() -> {
-      if (stamp == myWriteActionCounter.get()) {
-        session.fireEvents(events, appliers);
-      }
-      else {
-        scheduleAsynchronousPreprocessing(session, modality);
-      }
-    });
   }
 
   private void doScan(RefreshSessionImpl session) {

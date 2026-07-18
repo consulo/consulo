@@ -7,6 +7,7 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 
@@ -63,7 +64,7 @@ public interface NonBlockingReadAction<T> {
      * The read actions are still executed on background thread, but the callbacks on their completion
      * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
      */
-    NonBlockingReadAction<T> finishOnUiThread(Function<Application, ModalityState> modalityGetter, Consumer<? super T> uiThreadAction);
+    NonBlockingReadAction<T> finishOnUiThread(Function<Application, ModalityState> modalityGetter, @RequiredUIAccess Consumer<? super T> uiThreadAction);
 
     /**
      * Merges together similar computations by cancelling the previous ones when a new one is submitted.
