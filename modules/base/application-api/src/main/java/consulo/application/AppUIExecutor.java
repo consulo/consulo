@@ -30,24 +30,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   }
 
   /**
-   * Creates a Write-thread-based executor working with the given modality state.
-   *
-   * @see ModalityState
-   */
-  static AppUIExecutor onWriteThread(ModalityState modality) {
-    return AsyncExecutionService.getService().createWriteThreadExecutor(modality);
-  }
-
-  /**
-   * Creates a Write-thread-based executor working with the default modality state.
-   *
-   * @see Application#getDefaultModalityState()
-   */
-  static AppUIExecutor onWriteThread() {
-    return onWriteThread(Application.get().getDefaultModalityState());
-  }
-
-  /**
    * @return an executor that should always invoke the given runnable later. Otherwise, if {@link #execute} is called
    * on dispatch thread already, and all others constraints are met, the runnable would be executed immediately.
    */

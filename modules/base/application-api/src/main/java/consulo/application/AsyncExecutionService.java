@@ -17,8 +17,6 @@ public abstract class AsyncExecutionService {
 
   protected abstract AppUIExecutor createUIExecutor(ModalityState modalityState);
 
-  protected abstract AppUIExecutor createWriteThreadExecutor(ModalityState modalityState);
-
   protected abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation);
 
   static AsyncExecutionService getService() {

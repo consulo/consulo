@@ -232,8 +232,8 @@ public class ExternalStorageManager {
 
             LOG.info("Reloading components: " + reloadComponentNames);
 
-            AppUIExecutor.onWriteThread(ModalityState.nonModal()).later().execute(() -> {
-                myApplicationStore.reinitComponents(reloadComponentNames, true);
+            AppUIExecutor.onUiThread(ModalityState.nonModal()).later().execute(() -> {
+                myApplication.runWriteAction(() -> myApplicationStore.reinitComponents(reloadComponentNames, true));
 
                 myApplication.invokeLater(() -> {
                     Project project = null;

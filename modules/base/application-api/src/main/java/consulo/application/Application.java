@@ -73,40 +73,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     }
 
     /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * with {@link ModalityState#defaultModalityState()} modality state.
-     *
-     * @param action the runnable to execute.
-     */
-    default void invokeLaterOnWriteThread(Runnable action) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open).
-     *
-     * @param action the runnable to execute.
-     * @param modal  the state in which action will be executed
-     */
-    default void invokeLaterOnWriteThread(Runnable action, ModalityState modal) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-     * when IDE is in the specified modality state (or a state with less modal dialogs open)
-     * - unless the expiration condition is fulfilled.
-     *
-     * @param action  the runnable to execute.
-     * @param modal   the state in which action will be executed
-     * @param expired condition to check before execution.
-     */
-    default void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
-        throw new AbstractMethodError();
-    }
-
-    /**
      * Runs the specified read action. Can be called from any thread. The action is executed immediately
      * if no write action is currently running, or blocked until the currently running write action completes.
      *
@@ -209,14 +175,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
     void assertIsDispatchThread();
 
     /**
-     * Asserts whether the method is being called from the write thread.
-     */
-    @Deprecated
-    default void assertIsWriteThread() {
-        assertIsDispatchThread();
-    }
-
-    /**
      * Adds an {@link ApplicationListener}.
      *
      * @param listener the listener to add
@@ -288,14 +246,6 @@ public interface Application extends ComponentManager, CoroutineContextOwner {
      * @return true if the current thread is the Swing dispatch thread, false otherwise.
      */
     boolean isDispatchThread();
-
-    /**
-     * Checks if the current thread is "write thread".
-     *
-     * @return true if the current thread is the "write thread", false otherwise.
-     */
-    @Deprecated
-    boolean isWriteThread();
 
     /**
      * Causes {@code runnable.run()} to be executed asynchronously on the

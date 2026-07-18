@@ -544,35 +544,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         );
     }
 
-    @RequiredUIAccess
-    @Override
-    public void assertIsWriteThread() {
-        if (isWriteThread()) {
-            return;
-        }
-        if (ShutDownTracker.isShutdownHookRunning()) {
-            return;
-        }
-        assertIsIsWriteThread("Access is allowed from write thread only.");
-    }
-
-    private void assertIsIsWriteThread(String message) {
-        if (isWriteThread()) {
-            return;
-        }
-        Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
-        throw new LogEventException(
-            message,
-            " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +
-                " isDispatchThread()=" + isDispatchThread() +
-                " Toolkit.getEventQueue()=" + Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                " Write Thread=" + ((ReadMostlyRWLock) myLock).writeThread +
-                " Current thread: " + describe(Thread.currentThread()) +
-                " SystemEventQueueThread: " + describe(getEventQueueThread()),
-            dump
-        );
-    }
-
     @Override
     public void assertTimeConsuming() {
         if (myHeadlessMode || ShutDownTracker.isShutdownHookRunning()) {

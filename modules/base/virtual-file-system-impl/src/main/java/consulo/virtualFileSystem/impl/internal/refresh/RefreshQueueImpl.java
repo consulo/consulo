@@ -113,7 +113,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
           scheduleAsynchronousPreprocessing(session, modality);
         }
         else {
-          AppUIExecutor.onWriteThread(modality).later().submit(() -> session.fireEvents(session.getEvents(), null));
+          AppUIExecutor.onUiThread(modality).later().submit(() -> session.fireEvents(session.getEvents(), null));
         }
       }
     });
@@ -168,7 +168,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
 
     long stamp = myWriteActionCounter.get();
-    AppUIExecutor.onWriteThread(modality).later().submit(() -> {
+    AppUIExecutor.onUiThread(modality).later().submit(() -> {
       if (stamp == myWriteActionCounter.get()) {
         session.fireEvents(events, appliers);
       }

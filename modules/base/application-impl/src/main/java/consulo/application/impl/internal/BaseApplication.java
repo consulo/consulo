@@ -88,7 +88,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -650,7 +649,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @RequiredUIAccess
     @Override
     public void executeSuspendingWriteAction(@Nullable ComponentManager project, String title, Runnable runnable) {
-        assertIsWriteThread();
+        if (!myLock.isWriteThread()) {
+            throw new IllegalStateException("Access is allowed from write thread only");
+        }
         if (!myLock.isWriteLocked()) {
             runModalProgress(project, title, runnable);
             return;
@@ -677,7 +678,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public boolean isReadAccessAllowed() {
-        return isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
     }
 
     @Override
@@ -822,7 +823,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     protected void startWrite(Class clazz) {
-        assertIsWriteThread();
+        if (!myLock.isWriteThread()) {
+            throw new IllegalStateException("Access is allowed from write thread only");
+        }
         boolean writeActionPending = myWriteActionPending;
         myWriteActionPending = true;
         try {
@@ -912,11 +915,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return false;
     }
 
-    @Override
-    public boolean isWriteThread() {
-        return myLock.isWriteThread();
-    }
-
     protected <T, E extends Throwable> T runWriteActionWithClass(
         Class<?> clazz,
         ThrowableSupplier<T, E> computable
@@ -958,39 +956,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void invokeLaterOnWriteThread(Runnable action, ModalityState modal) {
-        invokeLaterOnWriteThread(action, modal, getDisposed());
-    }
-
-    @Override
-    public void invokeLaterOnWriteThread(
-        Runnable action,
-        ModalityState modal,
-        BooleanSupplier expired
-    ) {
-        Runnable r = wrapLaterInvocation(action, modal);
-        // EDT == Write Thread in legacy mode
-        LaterInvocator.invokeLaterWithCallback(
-            () -> runIntendedWriteActionOnCurrentThread(r),
-            modal,
-            expired,
-            null
-        );
-    }
-
-    
-    protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
-        return action;
-    }
-
-    @Override
     public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
         return action.compute();
     }
 
     @Override
     public void runIntendedWriteActionOnCurrentThread(Runnable action) {
-        if (isWriteThread()) {
+        if (myLock.isWriteThread()) {
             action.run();
         }
         else {
@@ -1004,13 +976,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @Override
-    public void invokeLaterOnWriteThread(Runnable action) {
-        invokeLaterOnWriteThread(action, getDefaultModalityState());
-    }
-
     protected <T> T wrapWithWriteIntent(Supplier<T> action) {
-        if (isWriteThread()) {
+        if (myLock.isWriteThread()) {
             return action.get();
         }
         acquireWriteIntentLock(action.getClass().getName());
@@ -1024,7 +991,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public boolean isWriteAccessAllowed() {
-        return isWriteThread() && myLock.isWriteLocked();
+        return myLock.isWriteThread() && myLock.isWriteLocked();
     }
 
     @Override

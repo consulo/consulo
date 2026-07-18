@@ -221,11 +221,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     }
 
     @Override
-    public boolean isWriteThread() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void invokeLater(Runnable runnable) {
         throw new UnsupportedOperationException();
     }

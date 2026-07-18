@@ -52,58 +52,25 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     }
   }
 
-  private static class MyWtExecutor implements Executor {
-    private final ModalityState modality;
-
-    private MyWtExecutor(ModalityState modalityState) {
-      modality = modalityState;
-    }
-
-    @Override
-    public void execute(Runnable command) {
-      Application application = Application.get();
-      if (application.isWriteThread() && !application.getCurrentModalityState().dominates(modality)) {
-        command.run();
-      }
-      else {
-        application.invokeLaterOnWriteThread(command, modality);
-      }
-    }
-  }
-
-  private static Executor getExecutorForThread(ExecutionThread thread, ModalityState modality) {
-    switch (thread) {
-      case EDT:
-        return new MyEdtExecutor(modality);
-      case WT:
-        return new MyWtExecutor(modality);
-      default:
-        throw new UnsupportedOperationException(thread.name());
-    }
-  }
-
   private final ModalityState modality;
-  private final ExecutionThread thread;
 
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread) {
-    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), getExecutorForThread(thread, modalityState));
+  public AppUIExecutorImpl(ModalityState modalityState) {
+    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), new MyEdtExecutor(modalityState));
     modality = modalityState;
-    this.thread = thread;
   }
 
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
-    super(constraints, cancellationConditions, expirableHandles, getExecutorForThread(thread, modalityState));
-    this.thread = thread;
+  public AppUIExecutorImpl(ModalityState modalityState, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
+    super(constraints, cancellationConditions, expirableHandles, new MyEdtExecutor(modalityState));
     this.modality = modalityState;
   }
 
-  
+
   @Override
   protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
-    return new AppUIExecutorImpl(modality, thread, constraints, cancellationConditions, expirationSet);
+    return new AppUIExecutorImpl(modality, constraints, cancellationConditions, expirationSet);
   }
 
-  
+
   @Override
   public AppUIExecutor later() {
     int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
@@ -112,17 +79,10 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
       @Override
       public boolean isCorrectContext() {
-        switch (thread) {
-          case EDT:
-            if (edtEventCount == -1) {
-              return UIAccess.isUIThread();
-            }
-            return usedOnce || edtEventCount != UIAccess.current().getEventCount();
-          case WT:
-            return usedOnce;
-          default:
-            throw new UnsupportedOperationException();
+        if (edtEventCount == -1) {
+          return UIAccess.isUIThread();
         }
+        return usedOnce || edtEventCount != UIAccess.current().getEventCount();
       }
 
       @Override
@@ -140,13 +100,13 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     });
   }
 
-  
+
   @Override
   public AppUIExecutor withDocumentsCommitted(ComponentManager project) {
     return withConstraint(new WithDocumentsCommitted((Project)project, modality), project);
   }
 
-  
+
   @Override
   public AppUIExecutor inSmartMode(ComponentManager project) {
     return withConstraint(new InSmartMode((Project)project), project);
@@ -154,13 +114,6 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
   @Override
   public void dispatchLaterUnconstrained(Runnable runnable) {
-    switch (thread) {
-      case EDT:
-        ApplicationManager.getApplication().invokeLater(runnable, modality);
-        break;
-      case WT:
-        ApplicationManager.getApplication().invokeLaterOnWriteThread(runnable, modality);
-        break;
-    }
+    ApplicationManager.getApplication().invokeLater(runnable, modality);
   }
 }

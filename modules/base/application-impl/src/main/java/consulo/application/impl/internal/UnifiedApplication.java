@@ -57,12 +57,6 @@ public abstract class UnifiedApplication extends BaseApplication {
     }
 
     @Override
-    public void invokeLaterOnWriteThread(Runnable action, ModalityState modal, BooleanSupplier expired) {
-        UIAccess uiAccess = getLastUIAccess();
-        uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
-    }
-
-    @Override
     public void exit(boolean force, boolean exitConfirmed) {
 
     }
@@ -145,10 +139,9 @@ public abstract class UnifiedApplication extends BaseApplication {
 
     @Override
     public boolean isReadAccessAllowed() {
-        return isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
     }
 
-    
     @Override
     public ModalityState getCurrentModalityState() {
         return ModalityState.nonModal();

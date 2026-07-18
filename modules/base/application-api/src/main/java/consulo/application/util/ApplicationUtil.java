@@ -93,7 +93,7 @@ public class ApplicationUtil {
   }
 
   public static void invokeAndWaitSomewhere(Application application, Runnable r) {
-    if (!UIAccess.isUIThread() && application.isWriteThread()) {
+    if (!UIAccess.isUIThread() && application.isDispatchThread()) {
       Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
     }
 
