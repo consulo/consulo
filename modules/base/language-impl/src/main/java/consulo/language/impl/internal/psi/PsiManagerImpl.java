@@ -80,11 +80,14 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
         beforeChange(true);
     }
 
-    @RequiredUIAccess
+    @RequiredWriteAction
     @Override
     public void dropPsiCaches() {
+        myProject.getApplication().assertWriteAccessAllowed();
+
         dropResolveCaches();
-        WriteAction.run(myFileManager::firePropertyChangedForUnloadedPsi);
+
+        myFileManager.firePropertyChangedForUnloadedPsi();
     }
 
     @RequiredReadAction
@@ -510,7 +513,6 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     }
 
     @Override
-    
     public PsiModificationTracker getModificationTracker() {
         return myModificationTracker;
     }
@@ -536,6 +538,6 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     public void cleanupForNextTest() {
         assert myProject.getApplication().isUnitTestMode();
         myFileManager.cleanupForNextTest();
-        dropPsiCaches();
+        WriteAction.run(this::dropPsiCaches);
     }
 }

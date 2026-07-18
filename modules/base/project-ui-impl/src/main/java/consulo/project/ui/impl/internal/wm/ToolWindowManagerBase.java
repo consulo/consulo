@@ -20,7 +20,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentAsync;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

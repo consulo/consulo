@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.project.Project;
 import consulo.project.ProjectCloseHandler;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.inject.Inject;
 

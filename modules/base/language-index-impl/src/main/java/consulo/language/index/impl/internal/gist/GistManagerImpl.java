@@ -4,6 +4,9 @@ package consulo.language.index.impl.internal.gist;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.application.util.MergingProcessingQueue;
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -13,13 +16,15 @@ import consulo.language.psi.stub.gist.VirtualFileGist;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -30,9 +35,30 @@ public final class GistManagerImpl extends GistManager {
     private static final Logger LOG = Logger.getInstance(GistManagerImpl.class);
     private static final Set<String> ourKnownIds = ConcurrentHashMap.newKeySet();
     private static final String ourPropertyName = "file.gist.reindex.count";
+    private static final Object DROP_CACHES_KEY = new Object();
     private final AtomicInteger myReindexCount = new AtomicInteger(ApplicationPropertiesComponent.getInstance().getInt(ourPropertyName, 0));
+    private final AtomicBoolean myDropCachesQueued = new AtomicBoolean();
+    private final MergingProcessingQueue<Object> myDropCachesQueue;
 
-    
+    @Inject
+    public GistManagerImpl(Application application, ApplicationConcurrency applicationConcurrency) {
+        myDropCachesQueue = new MergingProcessingQueue<>(applicationConcurrency, 500) {
+            @Override
+            protected void process(Object key) {
+                myDropCachesQueued.set(false);
+
+                WriteLock.apply((o, continuation) -> {
+                        for (Project openProject : ProjectManager.getInstance().getOpenProjects()) {
+                            PsiManager.getInstance(openProject).dropPsiCaches();
+                        }
+                        return null;
+                    })
+                    .toCoroutine()
+                    .runAsync(CoroutineScope.of(application.coroutineContext()), null);
+            }
+        };
+    }
+
     @Override
     public <Data> VirtualFileGist<Data> newVirtualFileGist(String id, int version, DataExternalizer<Data> externalizer, BiFunction<Project, VirtualFile, Data> calcData) {
         if (!ourKnownIds.add(id)) {
@@ -42,7 +68,6 @@ public final class GistManagerImpl extends GistManager {
         return new VirtualFileGistImpl<>(id, version, externalizer, calcData);
     }
 
-    
     @Override
     public <Data> PsiFileGist<Data> newPsiFileGist(String id, int version, DataExternalizer<Data> externalizer, Function<PsiFile, Data> calculator) {
         return new PsiFileGistImpl<>(id, version, externalizer, calculator);
@@ -67,14 +92,10 @@ public final class GistManagerImpl extends GistManager {
         ApplicationPropertiesComponent.getInstance().setValue(ourPropertyName, myReindexCount.incrementAndGet(), 0);
     }
 
-    private static void invalidateDependentCaches() {
-        UIAccess uiAccess = Application.get().getLastUIAccess();
-
-        uiAccess.give(() -> {
-            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-                PsiManager.getInstance(project).dropPsiCaches();
-            }
-        });
+    private void invalidateDependentCaches() {
+        if (myDropCachesQueued.compareAndSet(false, true)) {
+            myDropCachesQueue.queueAdd(DROP_CACHES_KEY);
+        }
     }
 
     @TestOnly

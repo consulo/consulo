@@ -9,6 +9,7 @@ module consulo.ui.api {
     requires consulo.util.lang;
     requires consulo.util.collection;
     requires consulo.util.concurrent;
+    requires consulo.util.concurrent.coroutine;
     requires consulo.util.dataholder;
     requires consulo.localize.api;
     requires consulo.disposer.api;

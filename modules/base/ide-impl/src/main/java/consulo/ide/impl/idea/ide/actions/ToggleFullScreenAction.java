@@ -28,7 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 

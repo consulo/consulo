@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.hint.HintManager;
 import consulo.project.Project;
 import consulo.project.ProjectCloseHandler;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import jakarta.inject.Inject;
 

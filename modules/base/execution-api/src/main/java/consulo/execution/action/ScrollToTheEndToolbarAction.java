@@ -26,8 +26,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AsyncToggleAction;
-import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 
 /**

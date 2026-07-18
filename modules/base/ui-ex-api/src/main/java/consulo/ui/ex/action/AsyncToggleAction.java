@@ -18,7 +18,7 @@ package consulo.ui.ex.action;
 import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.step.CodeExecution;

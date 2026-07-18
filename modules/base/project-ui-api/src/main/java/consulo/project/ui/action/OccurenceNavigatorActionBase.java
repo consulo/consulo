@@ -31,7 +31,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;

@@ -61,7 +61,7 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
 import consulo.util.concurrent.coroutine.*;

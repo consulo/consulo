@@ -5,6 +5,8 @@ package consulo.language.impl.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
+import consulo.application.WriteAction;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.Queryable;
 import consulo.content.scope.SearchScope;
@@ -40,9 +42,11 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.CharArrayUtil;
@@ -774,7 +778,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase
         return !getViewProvider().isEventSystemEnabled();
     }
 
-    
+
     private Supplier<FileElement> createTreeElementPointer(FileElement treeElement) {
         if (isKeepTreeElementByHardReference()) {
             return treeElement;
@@ -964,7 +968,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     @Override
-    
+
     public SearchScope getUseScope() {
         return ResolveScopeManager.getElementUseScope(this);
     }
@@ -1090,13 +1094,14 @@ public abstract class PsiFileImpl extends UserDataHolderBase
     }
 
     final void rebuildStub() {
-        Application application = getApplication();
-        application.invokeLater(
-            () -> {
-                if (!myManager.isDisposed()) {
-                    myManager.dropPsiCaches();
-                }
+        Project project = myManager.getProject();
 
+        WriteLock.apply((o, continuation) -> {
+                myManager.dropPsiCaches();
+                return null;
+            })
+            .toCoroutine()
+            .then(UIAction.apply((o, continuation) -> {
                 VirtualFile vFile = getVirtualFile();
                 if (vFile != null && vFile.isValid()) {
                     Document doc = FileDocumentManager.getInstance().getCachedDocument(vFile);
@@ -1107,9 +1112,10 @@ public abstract class PsiFileImpl extends UserDataHolderBase
                     FileContentUtilCore.reparseFiles(vFile);
                     StubTreeLoader.getInstance().rebuildStubTree(vFile);
                 }
-            },
-            application.getNoneModalityState()
-        );
+
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(project.coroutineContext()), null);
     }
 
     @Override

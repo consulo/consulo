@@ -99,7 +99,12 @@ public class CallSubroutine<I, O> extends CoroutineStep<I, O> {
 				continuation.continueApply(previousExecution, in -> null, nextStep);
 				return;
 			}
-			runSubroutine(coroutineFactory.apply(continuation), previousExecution, nextStep, continuation);
+			try {
+				runSubroutine(coroutineFactory.apply(continuation), previousExecution, nextStep, continuation);
+			}
+			catch (Throwable t) {
+				continuation.fail(t);
+			}
 		});
 	}
 

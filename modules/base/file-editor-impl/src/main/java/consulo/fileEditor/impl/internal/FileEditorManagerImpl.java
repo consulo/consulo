@@ -36,7 +36,7 @@ import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;

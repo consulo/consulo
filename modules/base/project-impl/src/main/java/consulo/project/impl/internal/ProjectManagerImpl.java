@@ -37,14 +37,13 @@ import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.*;
 import consulo.project.localize.ProjectLocalize;
-import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -401,21 +400,28 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             return CompletableFuture.completedFuture(Boolean.TRUE);
         }
 
-        CoroutineScope scope = CoroutineScope.of(myApplication.coroutineContext().copy());
-        scope.putCopyableUserData(UIAccess.KEY, uiAccess);
+        try {
+            CoroutineScope scope = CoroutineScope.of(myApplication.coroutineContext().copy());
+            scope.putCopyableUserData(UIAccess.KEY, uiAccess);
 
-        Coroutine<Void, Boolean> teardown = buildCloseCoroutine(project, uiAccess, save, dispose);
+            Coroutine<Void, Boolean> teardown = buildCloseCoroutine(project, uiAccess, save, dispose);
 
-        if (!checkCanClose) {
-            return teardown.runAsync(scope, null).toFuture();
+            if (!checkCanClose) {
+                return teardown.runAsync(scope, null).toFuture();
+            }
+
+            return UIAction.<Void, Boolean>apply(input -> canClose(project))
+                .toCoroutine()
+                .runAsync(scope, null)
+                .toFuture()
+                .thenCompose(canClose -> Boolean.TRUE.equals(canClose)
+                    ? teardown.runAsync(scope, null).toFuture()
+                    : CompletableFuture.completedFuture(Boolean.FALSE));
         }
-
-        return Coroutine.<Void, Boolean>first(UIAction.apply(input -> canClose(project)))
-            .runAsync(scope, null)
-            .toFuture()
-            .thenCompose(canClose -> Boolean.TRUE.equals(canClose)
-                ? teardown.runAsync(scope, null).toFuture()
-                : CompletableFuture.completedFuture(Boolean.FALSE));
+        catch (Throwable t) {
+            LOG.error("Failed to build project close coroutine for '" + project.getName() + "'", t);
+            return CompletableFuture.failedFuture(t);
+        }
     }
 
     private Coroutine<Void, Boolean> buildCloseCoroutine(Project project, UIAccess uiAccess, boolean save, boolean dispose) {
@@ -427,7 +433,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
                 return input;
             }));
 
-            chain = chain.then(callSubroutine(project.saveAsync(uiAccess)));
+            Coroutine<?, ?> saveChain = project.saveAsync(uiAccess);
+            chain = chain.then(callSubroutine(saveChain));
         }
 
         chain = appendHandlers(chain, project, ProjectCloseHandler::beforeProjectClose);

@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.impl.internal;
 
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -25,7 +24,7 @@ import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;

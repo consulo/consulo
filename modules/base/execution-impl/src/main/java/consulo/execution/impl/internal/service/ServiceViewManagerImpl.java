@@ -23,7 +23,7 @@ import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.coroutine.UIAction;
+import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.ui.ex.awt.Messages;

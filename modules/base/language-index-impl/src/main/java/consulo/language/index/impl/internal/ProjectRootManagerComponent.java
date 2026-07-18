@@ -20,6 +20,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
+import consulo.application.WriteAction;
 import consulo.application.event.ApplicationListener;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.internal.BatchUpdateListener;
@@ -287,7 +288,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     protected void clearScopesCaches() {
         super.clearScopesCaches();
 
-        PsiManager.getInstance(myProject).dropPsiCaches();
+        WriteAction.run(() -> PsiManager.getInstance(myProject).dropPsiCaches());
         LibraryScopeCache.getInstance(myProject).clear();
     }
 
