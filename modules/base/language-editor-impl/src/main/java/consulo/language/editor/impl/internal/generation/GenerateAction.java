@@ -32,6 +32,9 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ActionImpl(id = "Generate")
 public class GenerateAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     public GenerateAction() {
@@ -46,7 +49,7 @@ public class GenerateAction extends DumbAwareAction implements AnActionWithAsync
         Project project = e.getRequiredData(Project.KEY);
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
             CodeInsightLocalize.generateListPopupTitle().get(),
-            wrapGroup(getGroup(), dataContext, project),
+            new GenerateWrapperGroup(getGroup()),
             dataContext,
             JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
             false
@@ -83,29 +86,45 @@ public class GenerateAction extends DumbAwareAction implements AnActionWithAsync
         return (DefaultActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_GENERATE);
     }
 
-    private static ActionGroup wrapGroup(ActionGroup actionGroup, DataContext dataContext, Project project) {
-        boolean dumbMode = DumbService.isDumb(project);
-        ActionGroup.Builder copy = ActionGroup.newImmutableBuilder();
-        for (AnAction action : actionGroup.getChildren(null)) {
-            if (dumbMode && !action.isDumbAware()) {
-                continue;
-            }
+    private static class GenerateWrapperGroup extends ActionGroup {
+        private final ActionGroup myOriginal;
 
-            if (action instanceof GenerateActionPopupTemplateInjector templateInjector) {
-                AnAction editTemplateAction = templateInjector.createEditTemplateAction(dataContext);
-                if (editTemplateAction != null) {
-                    copy.add(new GenerateWrappingGroup(action, editTemplateAction));
+        GenerateWrapperGroup(ActionGroup original) {
+            myOriginal = original;
+        }
+
+        @Override
+        public AnAction[] getChildren(@Nullable AnActionEvent e) {
+            return myOriginal.getChildren(e);
+        }
+
+        @Override
+        public Coroutine<?, List<AnAction>> getChildrenAsync(@Nullable AnActionEvent e) {
+            Project project = e == null ? null : e.getData(Project.KEY);
+            DataContext dataContext = e == null ? null : e.getDataContext();
+            boolean dumbMode = project != null && DumbService.isDumb(project);
+            return myOriginal.getChildrenAsync(e)
+                .then(CodeExecution.<List<AnAction>, List<AnAction>>apply(children -> wrapChildren(children, dumbMode, dataContext)));
+        }
+
+        private static List<AnAction> wrapChildren(List<AnAction> children, boolean dumbMode, @Nullable DataContext dataContext) {
+            List<AnAction> result = new ArrayList<>(children.size());
+            for (AnAction action : children) {
+                if (dumbMode && !action.isDumbAware()) {
                     continue;
                 }
+                if (action instanceof GenerateActionPopupTemplateInjector templateInjector) {
+                    AnAction editTemplateAction =
+                        dataContext == null ? null : templateInjector.createEditTemplateAction(dataContext);
+                    if (editTemplateAction != null) {
+                        result.add(new GenerateWrappingGroup(action, editTemplateAction));
+                        continue;
+                    }
+                }
+                result.add(action instanceof ActionGroup g ? new GenerateWrapperGroup(g) : action);
             }
-            if (action instanceof ActionGroup g) {
-                copy.add(wrapGroup(g, dataContext, project));
-            }
-            else {
-                copy.add(action);
-            }
+            return result;
         }
-        return copy.build();
     }
 
     private static class GenerateWrappingGroup extends ActionGroup {
