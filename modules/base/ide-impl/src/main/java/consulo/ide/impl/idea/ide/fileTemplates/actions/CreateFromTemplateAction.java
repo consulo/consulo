@@ -18,13 +18,16 @@ package consulo.ide.impl.idea.ide.fileTemplates.actions;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateUtil;
 import consulo.ide.action.CreateFromTemplateActionBase;
-import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
+import consulo.util.concurrent.coroutine.Coroutine;
 
-public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
+public class CreateFromTemplateAction extends CreateFromTemplateActionBase implements AnActionWithAsyncUpdate {
     private final FileTemplate myTemplate;
 
     public CreateFromTemplateAction(FileTemplate template) {
@@ -38,10 +41,11 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        Presentation presentation = e.getPresentation();
-        boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
-        presentation.setEnabledAndVisible(isEnabled);
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
+            presentation.setEnabledAndVisible(isEnabled);
+        }).toCoroutine();
     }
 
     public FileTemplate getTemplate() {

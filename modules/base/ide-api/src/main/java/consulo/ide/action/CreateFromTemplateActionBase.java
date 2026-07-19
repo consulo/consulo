@@ -40,7 +40,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
-public abstract class CreateFromTemplateActionBase extends LegacyAnAction {
+public abstract class CreateFromTemplateActionBase extends AnAction {
     public CreateFromTemplateActionBase(LocalizeValue title, LocalizeValue description, Image icon) {
         super(title, description, icon);
     }
