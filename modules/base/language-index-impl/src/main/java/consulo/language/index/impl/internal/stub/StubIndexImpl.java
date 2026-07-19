@@ -422,25 +422,12 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                     continue;
                 }
 
-                StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(new CompositeKey(key, id), __ -> {
-                    try {
-                        Map<Integer, SerializedStubTree> data = stubUpdatingIndex.getIndexedFileData(id);
-                        LOG.assertTrue(data.size() == 1);
-                        SerializedStubTree tree = data.values().iterator().next();
-                        return tree.restoreIndexedStubs(
-                            StubForwardIndexExternalizer.IdeStubForwardIndexesExternalizer.INSTANCE,
-                            indexKey,
-                            key
-                        );
-                    }
-                    catch (StorageException | IOException e) {
-                        forceRebuild(e);
-                        return null;
-                    }
-                });
+                StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(
+                    new CompositeKey(key, id),
+                    __ -> myStubProcessingHelper.retrieveStubIdList(indexKey, key, file, stubUpdatingIndex, true)
+                );
                 if (list == null) {
-                    LOG.error("StubUpdatingIndex & " + indexKey + " stub index mismatch. No stub index key is present");
-                    return true;
+                    continue;
                 }
                 if (!myStubProcessingHelper.processStubsInFile(project, file, list, processor, scope, requiredClass)) {
                     return false;
