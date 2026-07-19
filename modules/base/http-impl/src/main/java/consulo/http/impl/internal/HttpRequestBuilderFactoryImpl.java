@@ -96,19 +96,6 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
                 connection = HttpProxyManager.getInstance().openConnection(url);
             }
 
-            if (builder.myBody != null) {
-                connection.setDoOutput(true);
-
-                if (connection instanceof HttpURLConnection httpURLConnection) {
-                    httpURLConnection.setFixedLengthStreamingMode(builder.myBody.length);
-                }
-                
-                try (OutputStream os = connection.getOutputStream()) {
-                    os.write(builder.myBody);
-                    os.flush();
-                }
-            }
-
             if (connection instanceof HttpURLConnection httpURLConnection) {
                 // we will control redirection by code lower
                 httpURLConnection.setInstanceFollowRedirects(false);
@@ -137,6 +124,19 @@ public class HttpRequestBuilderFactoryImpl implements HttpRequestBuilderFactory 
             }
 
             connection.setUseCaches(false);
+
+            if (builder.myBody != null) {
+                connection.setDoOutput(true);
+
+                if (connection instanceof HttpURLConnection httpURLConnection) {
+                    httpURLConnection.setFixedLengthStreamingMode(builder.myBody.length);
+                }
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    os.write(builder.myBody);
+                    os.flush();
+                }
+            }
 
             if (connection instanceof HttpURLConnection httpURLConnection) {
                 int responseCode = httpURLConnection.getResponseCode();

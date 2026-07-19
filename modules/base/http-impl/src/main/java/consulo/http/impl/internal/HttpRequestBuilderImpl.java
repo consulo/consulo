@@ -121,7 +121,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
 
     @Override
     public HttpRequestBuilder header(String headerName, @Nullable String headerValue) {
-        if (headerValue != null) {
+        if (headerValue == null) {
             myHeaders.remove(headerName);
         } else {
             myHeaders.put(headerName, headerValue);

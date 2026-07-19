@@ -24,7 +24,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.CountingGZIPInputStream;
-import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -32,6 +31,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -174,13 +175,15 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
     }
 
     @Override
-    
-    public File saveToFile(File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException {
-        FileUtil.createParentDirs(file);
+    public Path saveToFile(Path file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException {
+        Path parent = file.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
 
         boolean deleteFile = true;
         try {
-            try (OutputStream out = new FileOutputStream(file)) {
+            try (OutputStream out = Files.newOutputStream(file)) {
                 ProgressStreamUtil.copyStreamContent(indicator, digest, getInputStream(), out, getConnection().getContentLength());
                 deleteFile = false;
             }
@@ -190,7 +193,7 @@ class HttpRequestImpl implements HttpRequest, AutoCloseable {
         }
         finally {
             if (deleteFile) {
-                FileUtil.delete(file);
+                Files.deleteIfExists(file);
             }
         }
 
