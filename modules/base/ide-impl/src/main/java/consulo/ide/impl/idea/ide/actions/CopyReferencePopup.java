@@ -27,6 +27,7 @@ import consulo.util.collection.ArrayUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 
@@ -155,9 +156,13 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
             protected boolean isResizable() {
                 return true;
             }
-        };
 
-        updatePopupSize(popup);
+            @Override
+            protected void onItemsSet(List<ActionPopupItem> items) {
+                super.onItemsSet(items);
+                updatePopupSize(this);
+            }
+        };
 
         popup.showInBestPositionFor(e.getDataContext());
     }
