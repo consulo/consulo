@@ -46,7 +46,6 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -55,6 +54,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Records PSI/document changes and defers the daemon-dirty-scope computation off the write/commit path.
@@ -65,11 +65,10 @@ import java.util.Map;
  * so no write lock is required on the commit finalization path (which runs outside the write action).
  */
 final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable, Runnable {
-    private static final ExtensionPointName<ChangeLocalityDetector> EP_NAME = ExtensionPointName.create(ChangeLocalityDetector.class);
     private /*NOT STATIC!!!*/ final Key<Boolean> UPDATE_ON_COMMIT_ENGAGED = Key.create("UPDATE_ON_COMMIT_ENGAGED");
 
     private final Project myProject;
-    private final Map<Document, List<Change>> changedElements = ContainerUtil.createWeakMap(); // guarded by changedElements
+    private final Map<Document, List<Change>> changedElements = new WeakHashMap<>(); // guarded by changedElements
     private final FileStatusMap myFileStatusMap;
     private final Alarm myUpdateFileStatusAlarm;
 
