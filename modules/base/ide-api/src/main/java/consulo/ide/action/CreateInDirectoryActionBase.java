@@ -15,22 +15,25 @@
  */
 package consulo.ide.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.util.IdeView;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 /**
  * The base abstract class for actions which create new file elements in IDE view
- *
- * @since 15.1
- */
-public abstract class CreateInDirectoryActionBase extends LegacyAnAction {
+ * */
+public abstract class CreateInDirectoryActionBase extends AnAction implements AnActionWithAsyncUpdate {
     protected CreateInDirectoryActionBase() {
     }
 
@@ -52,12 +55,10 @@ public abstract class CreateInDirectoryActionBase extends LegacyAnAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
-        if (!e.getPresentation().isVisible()) {
-            return;
-        }
-
-        e.getPresentation().setEnabledAndVisible(isAvailable(e.getDataContext()));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(isAvailable(e.getDataContext()));
+        }).toCoroutine();
     }
 
     @Override
@@ -65,6 +66,7 @@ public abstract class CreateInDirectoryActionBase extends LegacyAnAction {
         return false;
     }
 
+    @RequiredReadAction
     protected boolean isAvailable(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {
