@@ -24,6 +24,7 @@ import consulo.localHistory.impl.internal.ui.view.HistoryDialog;
 import consulo.localHistory.localize.LocalHistoryLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -39,6 +40,7 @@ public class ShowHistoryAction extends LocalHistoryActionWithDialog {
         super(text);
     }
 
+    @RequiredUIAccess
     @Override
     protected void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
         HistoryDialog frame = f.isDirectory() ? new DirectoryHistoryDialog(p, gw, f) : new FileHistoryDialog(p, gw, f);
