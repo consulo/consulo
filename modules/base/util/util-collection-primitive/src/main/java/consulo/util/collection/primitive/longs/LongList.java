@@ -18,7 +18,9 @@ package consulo.util.collection.primitive.longs;
 /**
  * @author VISTALL
  * @since 10/06/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.longs.LongList} directly
  */
+@Deprecated
 public interface LongList extends LongCollection {
   void add(int index, long element);
 

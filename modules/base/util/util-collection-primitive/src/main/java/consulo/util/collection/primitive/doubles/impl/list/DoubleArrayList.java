@@ -17,6 +17,7 @@ package consulo.util.collection.primitive.doubles.impl.list;
 
 import consulo.util.collection.primitive.doubles.DoubleList;
 
+@Deprecated
 public class DoubleArrayList implements Cloneable, DoubleList {
   private double[] myData;
   private int mySize;

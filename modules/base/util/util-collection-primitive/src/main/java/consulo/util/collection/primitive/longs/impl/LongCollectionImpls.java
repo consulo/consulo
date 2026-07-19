@@ -23,6 +23,7 @@ import java.util.PrimitiveIterator;
  * @author VISTALL
  * @since 30/06/2021
  */
+@Deprecated
 public class LongCollectionImpls {
   // see Arrays.hashCode
   public static int hashCode(LongCollection collection) {

@@ -15,21 +15,24 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import consulo.util.collection.impl.CollectionFactory;
-import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
+import consulo.annotation.DeprecationInfo;
+import consulo.util.collection.primitive.impl.FastUtilLongSet;
 
 /**
  * @author VISTALL
  * @since 17/05/2021
  */
+@SuppressWarnings("deprecation")
+@Deprecated
+@DeprecationInfo("Use fast utils")
 public final class LongSets {
-  private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+  private static final int UNKNOWN_CAPACITY = -1;
 
   public static LongSet newHashSet() {
-    return ourFactory.newLongHashSet(CollectionFactory.UNKNOWN_CAPACITY);
+    return new FastUtilLongSet(UNKNOWN_CAPACITY);
   }
 
   public static LongSet newHashSet(int capacity) {
-    return ourFactory.newLongHashSet(capacity);
+    return new FastUtilLongSet(capacity);
   }
 }

@@ -10,7 +10,6 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import org.jspecify.annotations.Nullable;
 

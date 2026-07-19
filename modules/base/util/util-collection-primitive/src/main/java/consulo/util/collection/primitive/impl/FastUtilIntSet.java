@@ -1,0 +1,64 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.util.collection.primitive.impl;
+
+import consulo.util.collection.primitive.ints.IntSet;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * {@link IntSet} backed by a fastutil int set.
+ *
+ * @author VISTALL
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntSet} directly
+ */
+@Deprecated
+public class FastUtilIntSet extends FastUtilIntCollection implements IntSet {
+    FastUtilIntSet(it.unimi.dsi.fastutil.ints.IntSet delegate) {
+        super(delegate);
+    }
+
+    public static FastUtilIntSet create(int capacity) {
+        return new FastUtilIntSet(capacity == UNKNOWN_CAPACITY ? new IntOpenHashSet() : new IntOpenHashSet(capacity));
+    }
+
+    public static FastUtilIntSet create(int[] array) {
+        return new FastUtilIntSet(new IntOpenHashSet(array));
+    }
+
+    private static final int UNKNOWN_CAPACITY = -1;
+
+    @Deprecated
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof FastUtilIntSet other) {
+            return myDelegate.equals(other.myDelegate);
+        }
+        return super.equals(obj);
+    }
+
+    @Deprecated
+    @Override
+    public int hashCode() {
+        return myDelegate.hashCode();
+    }
+
+    @Deprecated
+    @Override
+    public String toString() {
+        return myDelegate.toString();
+    }
+}

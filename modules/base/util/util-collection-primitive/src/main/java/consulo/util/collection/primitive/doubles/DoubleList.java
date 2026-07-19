@@ -18,7 +18,9 @@ package consulo.util.collection.primitive.doubles;
 /**
  * @author VISTALL
  * @since 08/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.doubles.DoubleList} directly
  */
+@Deprecated
 public interface DoubleList extends DoubleCollection {
   double removeByIndex(int index);
 }

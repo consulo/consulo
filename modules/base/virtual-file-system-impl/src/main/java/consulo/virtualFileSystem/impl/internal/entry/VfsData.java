@@ -70,7 +70,7 @@ public class VfsData {
   private IntSet myDyingIds = IntSets.newHashSet();
 
   private boolean myHasChangedParents; // synchronized by read-write lock; clients outside read-action deserve to get outdated result
-  private final IntObjectMap<VirtualDirectoryImpl> myChangedParents = IntMaps.newConcurrentIntObjectHashMap();
+  private final ConcurrentIntObjectMap<VirtualDirectoryImpl> myChangedParents = IntMaps.newConcurrentIntObjectHashMap();
 
   public VfsData() {
     ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {

@@ -33,6 +33,7 @@ import java.util.function.IntPredicate;
  * @author Eric D. Friedman
  * @version $Id: TIntArrayList.java,v 1.5 2004/09/24 09:11:15 cdr Exp $
  */
+@Deprecated
 public class ByteArrayList implements ByteList, Cloneable {
 
   /**

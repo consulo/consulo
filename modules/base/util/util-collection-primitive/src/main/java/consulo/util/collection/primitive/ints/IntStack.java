@@ -20,7 +20,9 @@ import java.util.PrimitiveIterator;
 
 /**
  * @author max
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntStack} directly
  */
+@Deprecated
 public class IntStack implements IntCollection {
   private int[] data;
   private int size;

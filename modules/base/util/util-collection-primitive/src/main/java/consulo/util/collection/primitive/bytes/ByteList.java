@@ -18,7 +18,9 @@ package consulo.util.collection.primitive.bytes;
 /**
  * @author VISTALL
  * @since 09/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.bytes.ByteList} directly
  */
+@Deprecated
 public interface ByteList {
   boolean add(byte value);
 

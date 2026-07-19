@@ -20,7 +20,9 @@ import consulo.util.collection.primitive.PrimitiveListIterator;
 /**
  * @author VISTALL
  * @since 07/02/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.ints.IntList} directly
  */
+@Deprecated
 public interface IntList extends IntCollection {
   void add(int index, int value);
 

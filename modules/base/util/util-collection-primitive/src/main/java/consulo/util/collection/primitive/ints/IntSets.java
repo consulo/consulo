@@ -15,25 +15,26 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import consulo.util.collection.impl.CollectionFactory;
-import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
+import consulo.util.collection.primitive.impl.FastUtilIntSet;
 
 /**
  * @author VISTALL
  * @since 08/05/2021
  */
+@SuppressWarnings("deprecation")
+@Deprecated
 public class IntSets {
-  private static final PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+  private static final int UNKNOWN_CAPACITY = -1;
 
   public static IntSet newHashSet() {
-    return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY);
+    return FastUtilIntSet.create(UNKNOWN_CAPACITY);
   }
 
   public static IntSet newHashSet(int capacity) {
-    return ourFactory.newIntHashSet(capacity);
+    return FastUtilIntSet.create(capacity);
   }
 
   public static IntSet newHashSet(int[] array) {
-    return ourFactory.newIntHashSet(CollectionFactory.UNKNOWN_CAPACITY, array);
+    return FastUtilIntSet.create(array);
   }
 }

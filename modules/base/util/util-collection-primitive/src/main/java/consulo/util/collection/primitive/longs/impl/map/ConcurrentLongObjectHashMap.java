@@ -6,9 +6,15 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.impl.ThreadLocalRandom;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
-import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
+import it.unimi.dsi.fastutil.longs.AbstractLong2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.objects.AbstractObjectSet;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import org.jspecify.annotations.Nullable;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.*;
 import java.util.concurrent.locks.LockSupport;
 
@@ -23,7 +29,7 @@ import java.util.concurrent.locks.LockSupport;
  *            Use {@link ContainerUtil#createConcurrentLongObjectMap()} to create this map
  * @author Doug Lea
  */
-public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V> {
+public class ConcurrentLongObjectHashMap<V> extends AbstractLong2ObjectMap<V> implements ConcurrentLongObjectMap<V> {
 
   /* ---------------- Constants -------------- */
 
@@ -122,7 +128,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * are special, and contain null keys and values (but are never
    * exported).  Otherwise, keys and vals are never null.
    */
-  static class Node<V> implements LongEntry<V> {
+  static class Node<V> {
     final int hash;
     final long key;
     volatile @Nullable V val;
@@ -135,12 +141,10 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       this.next = next;
     }
 
-    @Override
     public final long getKey() {
       return key;
     }
 
-    @Override
     public final @Nullable V getValue() {
       return val;
     }
@@ -159,8 +163,8 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     public final boolean equals(Object o) {
       Object v;
       Object u;
-      LongEntry<?> e;
-      return ((o instanceof LongEntry) && (e = (LongEntry<?>)o).getKey() == key && (v = e.getValue()) != null && (v == (u = val) || v.equals(u)));
+      Long2ObjectMap.Entry<?> e;
+      return ((o instanceof Long2ObjectMap.Entry) && (e = (Long2ObjectMap.Entry<?>)o).getLongKey() == key && (v = e.getValue()) != null && (v == (u = val) || v.equals(u)));
     }
 
     /**
@@ -234,15 +238,15 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
 
   @SuppressWarnings("unchecked")
   static <V> Node<V> tabAt(Node<V>[] tab, int i) {
-    return (Node<V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
+    return (Node<V>)AT.getAcquire(tab, i);
   }
 
   static <V> boolean casTabAt(Node<V>[] tab, int i, @Nullable Node<V> c, Node<V> v) {
-    return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
+    return AT.compareAndSet(tab, i, c, v);
   }
 
   static <V> void setTabAt(Node<V>[] tab, int i, @Nullable Node<V> v) {
-    U.putObjectVolatile(tab, ((long)i << ASHIFT) + ABASE, v);
+    AT.setRelease(tab, i, v);
   }
 
   /* ---------------- Fields -------------- */
@@ -292,8 +296,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   private transient volatile ConcurrentIntObjectHashMap.CounterCell @Nullable [] counterCells = null;
 
   // views
-  private transient @Nullable ValuesView<V> values = null;
-  private transient @Nullable EntrySetView<V> entrySet = null;
+  private transient @Nullable ObjectSet<Long2ObjectMap.Entry<V>> entrySet = null;
 
   /* ---------------- Public operations -------------- */
 
@@ -688,29 +691,18 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    *
    * @return the collection view
    */
-  @Override
-  public Collection<V> values() {
-    ValuesView<V> vs;
-    return (vs = values) != null ? vs : (values = new ValuesView<>(this));
-  }
-
   /**
-   * Returns a {@link Set} view of the mappings contained in this map.
+   * Returns an {@link ObjectSet} view of the mappings contained in this map.
    * The set is backed by the map, so changes to the map are
-   * reflected in the set, and vice-versa.  The set supports element
-   * removal, which removes the corresponding mapping from the map,
-   * via the {@code Iterator.remove}, {@code Set.remove},
-   * {@code removeAll}, {@code retainAll}, and {@code clear}
-   * operations.
-   * <p/>
-   * <p>The view's iterators and spliterators are
+   * reflected in the set, and vice-versa.
+   * <p>The view's iterators are
    * <a href="package-summary.html#Weakly"><i>weakly consistent</i></a>.
-   * <p/>
    *
    * @return the set view
    */
-  public Set<LongEntry<V>> entrySet() {
-    EntrySetView<V> es;
+  @Override
+  public ObjectSet<Long2ObjectMap.Entry<V>> long2ObjectEntrySet() {
+    ObjectSet<Long2ObjectMap.Entry<V>> es;
     return (es = entrySet) != null ? es : (entrySet = new EntrySetView<>(this));
   }
 
@@ -779,35 +771,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
    * @param o object to be compared for equality with this map
    * @return {@code true} if the specified object is equal to this map
    */
-  @Override
-  public boolean equals(Object o) {
-    if (o != this) {
-      if (!(o instanceof ConcurrentLongObjectMap)) {
-        return false;
-      }
-      ConcurrentLongObjectMap<?> m = (ConcurrentLongObjectMap)o;
-      Node<V>[] t;
-      int f = (t = table) == null ? 0 : t.length;
-      Traverser<V> it = new Traverser<>(t, f, 0, f);
-      for (Node<V> p; (p = it.advance()) != null; ) {
-        V val = p.val;
-        Object v = m.get(p.key);
-        if (v == null || (v != val && !v.equals(val))) {
-          return false;
-        }
-      }
-      for (LongEntry e : m.entries()) {
-        long mk = e.getKey();
-        Object mv;
-        Object v;
-        if ((mv = e.getValue()) == null || (v = get(mk)) == null || (mv != v && !mv.equals(v))) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
   // ConcurrentMap methods
 
   /**
@@ -886,32 +849,12 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   }
 
   /**
-   * Returns an enumeration of the keys in this table.
+   * Returns an array of the keys in this table.
    *
-   * @return an enumeration of the keys in this table
+   * @return an array of the keys in this table
    */
-  @Override
   public long[] keys() {
-    Object[] entries = new EntrySetView<>(this).toArray();
-    long[] result = new long[entries.length];
-    for (int i = 0; i < entries.length; i++) {
-      LongEntry<V> entry = (LongEntry<V>)entries[i];
-      result[i] = entry.getKey();
-    }
-    return result;
-  }
-
-  /**
-   * Returns an enumeration of the values in this table.
-   *
-   * @return an enumeration of the values in this table
-   * @see #values()
-   */
-  @Override
-  public Enumeration<V> elements() {
-    Node<V>[] t;
-    int f = (t = table) == null ? 0 : t.length;
-    return new ValueIterator<>(t, f, 0, f, this);
+    return keySet().toLongArray();
   }
 
   // ConcurrentHashMap-only methods
@@ -994,7 +937,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       if ((sc = sizeCtl) < 0) {
         Thread.yield(); // lost initialization race; just spin
       }
-      else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
+      else if (SIZECTL.compareAndSet(this, sc, -1)) {
         try {
           if ((tab = table) == null || tab.length == 0) {
             int n = (sc > 0) ? sc : DEFAULT_CAPACITY;
@@ -1025,12 +968,12 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
   private void addCount(long x, int check) {
     ConcurrentIntObjectHashMap.CounterCell[] as;
     long b, s;
-    if ((as = counterCells) != null || !U.compareAndSwapLong(this, BASECOUNT, b = baseCount, s = b + x)) {
+    if ((as = counterCells) != null || !BASECOUNT.compareAndSet(this, b = baseCount, s = b + x)) {
       ConcurrentIntObjectHashMap.CounterCell a;
       long v;
       int m;
       boolean uncontended = true;
-      if (as == null || (m = as.length - 1) < 0 || (a = as[ThreadLocalRandom.getProbe() & m]) == null || !(uncontended = U.compareAndSwapLong(a, CELLVALUE, v = a.value, v + x))) {
+      if (as == null || (m = as.length - 1) < 0 || (a = as[ThreadLocalRandom.getProbe() & m]) == null || !(uncontended = CELLVALUE.compareAndSet(a, v = a.value, v + x))) {
         fullAddCount(x, uncontended);
         return;
       }
@@ -1048,11 +991,11 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 || sc == rs + MAX_RESIZERS || (nt = nextTable) == null || transferIndex <= 0) {
             break;
           }
-          if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {
+          if (SIZECTL.compareAndSet(this, sc, sc + 1)) {
             transfer(tab, nt);
           }
         }
-        else if (U.compareAndSwapInt(this, SIZECTL, sc, (rs << RESIZE_STAMP_SHIFT) + 2)) {
+        else if (SIZECTL.compareAndSet(this, sc, (rs << RESIZE_STAMP_SHIFT) + 2)) {
           transfer(tab, null);
         }
         s = sumCount();
@@ -1072,7 +1015,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 || sc == rs + MAX_RESIZERS || transferIndex <= 0) {
           break;
         }
-        if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {
+        if (SIZECTL.compareAndSet(this, sc, sc + 1)) {
           transfer(tab, nextTab);
           break;
         }
@@ -1095,7 +1038,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       int n;
       if (tab == null || (n = tab.length) == 0) {
         n = (sc > c) ? sc : c;
-        if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
+        if (SIZECTL.compareAndSet(this, sc, -1)) {
           try {
             if (table == tab) {
               @SuppressWarnings("unchecked") Node<V>[] nt = (Node<V>[])new Node<?>[n];
@@ -1118,11 +1061,11 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 || sc == rs + MAX_RESIZERS || (nt = nextTable) == null || transferIndex <= 0) {
             break;
           }
-          if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) {
+          if (SIZECTL.compareAndSet(this, sc, sc + 1)) {
             transfer(tab, nt);
           }
         }
-        else if (U.compareAndSwapInt(this, SIZECTL, sc, (rs << RESIZE_STAMP_SHIFT) + 2)) {
+        else if (SIZECTL.compareAndSet(this, sc, (rs << RESIZE_STAMP_SHIFT) + 2)) {
           transfer(tab, null);
         }
       }
@@ -1166,7 +1109,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           i = -1;
           advance = false;
         }
-        else if (U.compareAndSwapInt(this, TRANSFERINDEX, nextIndex, nextBound = (nextIndex > stride ? nextIndex - stride : 0))) {
+        else if (TRANSFERINDEX.compareAndSet(this, nextIndex, nextBound = (nextIndex > stride ? nextIndex - stride : 0))) {
           bound = nextBound;
           i = nextIndex - 1;
           advance = false;
@@ -1180,7 +1123,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           sizeCtl = (n << 1) - (n >>> 1);
           return;
         }
-        if (U.compareAndSwapInt(this, SIZECTL, sc = sizeCtl, sc - 1)) {
+        if (SIZECTL.compareAndSet(this, sc = sizeCtl, sc - 1)) {
           if ((sc - 2) != resizeStamp(n) << RESIZE_STAMP_SHIFT) {
             return;
           }
@@ -1311,7 +1254,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         if ((a = as[(n - 1) & h]) == null) {
           if (cellsBusy == 0) {            // Try to attach new Cell
             ConcurrentIntObjectHashMap.CounterCell r = new ConcurrentIntObjectHashMap.CounterCell(x); // Optimistic create
-            if (cellsBusy == 0 && U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
+            if (cellsBusy == 0 && CELLSBUSY.compareAndSet(this, 0, 1)) {
               boolean created = false;
               try {               // Recheck under lock
                 ConcurrentIntObjectHashMap.CounterCell[] rs;
@@ -1336,7 +1279,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         {
           wasUncontended = true;      // Continue after rehash
         }
-        else if (U.compareAndSwapLong(a, CELLVALUE, v = a.value, v + x)) {
+        else if (CELLVALUE.compareAndSet(a, v = a.value, v + x)) {
           break;
         }
         else if (counterCells != as || n >= NCPU) {
@@ -1345,7 +1288,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         else if (!collide) {
           collide = true;
         }
-        else if (cellsBusy == 0 && U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
+        else if (cellsBusy == 0 && CELLSBUSY.compareAndSet(this, 0, 1)) {
           try {
             if (counterCells == as) {// Expand table unless stale
               ConcurrentIntObjectHashMap.CounterCell[] rs = new ConcurrentIntObjectHashMap.CounterCell[n << 1];
@@ -1363,7 +1306,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         }
         h = ThreadLocalRandom.advanceProbe(h);
       }
-      else if (cellsBusy == 0 && counterCells == as && U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
+      else if (cellsBusy == 0 && counterCells == as && CELLSBUSY.compareAndSet(this, 0, 1)) {
         boolean init = false;
         try {                           // Initialize table
           if (counterCells == as) {
@@ -1380,7 +1323,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           break;
         }
       }
-      else if (U.compareAndSwapLong(this, BASECOUNT, v = baseCount, v + x)) {
+      else if (BASECOUNT.compareAndSet(this, v = baseCount, v + x)) {
         break;                          // Fall back on using base
       }
     }
@@ -1569,7 +1512,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
      * Acquires write lock for tree restructuring.
      */
     private void lockRoot() {
-      if (!U.compareAndSwapInt(this, LOCKSTATE, 0, WRITER)) {
+      if (!LOCKSTATE.compareAndSet(this, 0, WRITER)) {
         contendedLock(); // offload to separate method
       }
     }
@@ -1588,7 +1531,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       boolean waiting = false;
       for (int s; ; ) {
         if (((s = lockState) & ~WAITER) == 0) {
-          if (U.compareAndSwapInt(this, LOCKSTATE, s, WRITER)) {
+          if (LOCKSTATE.compareAndSet(this, s, WRITER)) {
             if (waiting) {
               waiter = null;
             }
@@ -1596,7 +1539,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           }
         }
         else if ((s & WAITER) == 0) {
-          if (U.compareAndSwapInt(this, LOCKSTATE, s, s | WAITER)) {
+          if (LOCKSTATE.compareAndSet(this, s, s | WAITER)) {
             waiting = true;
             waiter = Thread.currentThread();
           }
@@ -1622,7 +1565,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           }
           e = e.next;
         }
-        else if (U.compareAndSwapInt(this, LOCKSTATE, s, s + READER)) {
+        else if (LOCKSTATE.compareAndSet(this, s, s + READER)) {
           TreeNode<V> r;
           TreeNode<V> p;
           try {
@@ -1630,7 +1573,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
           }
           finally {
             Thread w;
-            if (getAndAddInt(this, LOCKSTATE, -READER) == (READER | WAITER) && (w = waiter) != null) {
+            if ((int)LOCKSTATE.getAndAdd(this, -READER) == (READER | WAITER) && (w = waiter) != null) {
               LockSupport.unpark(w);
             }
           }
@@ -1638,16 +1581,6 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
         }
       }
       return null;
-    }
-
-    private int getAndAddInt(Object var1, long var2, int var4) {
-      int var5;
-      do {
-        var5 = U.getIntVolatile(var1, var2);
-      }
-      while (!U.compareAndSwapInt(var1, var2, var5, var5 + var4));
-
-      return var5;
     }
 
     /**
@@ -2079,16 +2012,14 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       return true;
     }
 
-    private static final UnsafeDelegate U;
-    private static final long LOCKSTATE;
+    private static final VarHandle LOCKSTATE;
 
     static {
       try {
-        U = getUnsafe();
-        Class<?> k = TreeBin.class;
-        LOCKSTATE = U.objectFieldOffset(k.getDeclaredField("lockState"));
+        MethodHandles.Lookup l = MethodHandles.lookup();
+        LOCKSTATE = l.findVarHandle(TreeBin.class, "lockState", int.class);
       }
-      catch (Exception e) {
+      catch (ReflectiveOperationException e) {
         throw new Error(e);
       }
     }
@@ -2264,36 +2195,13 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
     }
   }
 
-  static final class ValueIterator<V> extends BaseIterator<V> implements Iterator<V>, Enumeration<V> {
-    ValueIterator(Node<V> @Nullable [] tab, int index, int size, int limit, ConcurrentLongObjectHashMap<V> map) {
-      super(tab, index, size, limit, map);
-    }
-
-    @Override
-    public final V next() {
-      Node<V> p = next;
-      if (p == null) {
-        throw new NoSuchElementException();
-      }
-      V v = Objects.requireNonNull(p.val);
-      lastReturned = p;
-      advance();
-      return v;
-    }
-
-    @Override
-    public final V nextElement() {
-      return next();
-    }
-  }
-
-  static final class EntryIterator<V> extends BaseIterator<V> implements Iterator<LongEntry<V>> {
+  static final class EntryIterator<V> extends BaseIterator<V> implements ObjectIterator<Long2ObjectMap.Entry<V>> {
     EntryIterator(Node<V> @Nullable [] tab, int index, int size, int limit, ConcurrentLongObjectHashMap<V> map) {
       super(tab, index, size, limit, map);
     }
 
     @Override
-    public final LongEntry<V> next() {
+    public final Long2ObjectMap.Entry<V> next() {
       Node<V> p = next;
       if (p == null) {
         throw new NoSuchElementException();
@@ -2302,17 +2210,7 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
       V v = Objects.requireNonNull(p.val);
       lastReturned = p;
       advance();
-      return new LongEntry<V>() {
-        @Override
-        public long getKey() {
-          return k;
-        }
-
-        @Override
-        public @Nullable V getValue() {
-          return v;
-        }
-      };
+      return new AbstractLong2ObjectMap.BasicEntry<>(k, v);
     }
   }
 
@@ -2320,363 +2218,71 @@ public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V
 
   /* ----------------Views -------------- */
 
-  /**
-   * Base class for views.
-   */
-  abstract static class CollectionView<V, E> implements Collection<E> {
+  static final class EntrySetView<V> extends AbstractObjectSet<Long2ObjectMap.Entry<V>> {
     final ConcurrentLongObjectHashMap<V> map;
 
-    CollectionView(ConcurrentLongObjectHashMap<V> map) {
+    EntrySetView(ConcurrentLongObjectHashMap<V> map) {
       this.map = map;
     }
 
-    /**
-     * Returns the map backing this view.
-     *
-     * @return the map backing this view
-     */
-    public ConcurrentLongObjectHashMap<V> getMap() {
-      return map;
-    }
-
-    /**
-     * Removes all of the elements from this view, by removing all
-     * the mappings from the map backing this view.
-     */
     @Override
-    public final void clear() {
-      map.clear();
-    }
-
-    @Override
-    public final int size() {
+    public int size() {
       return map.size();
     }
 
     @Override
-    public final boolean isEmpty() {
-      return map.isEmpty();
-    }
-
-    // implementations below rely on concrete classes supplying these
-    // abstract methods
-
-    /**
-     * Returns an iterator over the elements in this collection.
-     * <p/>
-     * <p>The returned iterator is
-     * <a href="package-summary.html#Weakly"><i>weakly consistent</i></a>.
-     *
-     * @return an iterator over the elements in this collection
-     */
-    @Override
-    public abstract Iterator<E> iterator();
-
-    @Override
-    public abstract boolean contains(Object o);
-
-    @Override
-    public abstract boolean remove(Object o);
-
-    private static final String oomeMsg = "Required array size too large";
-
-    @Override
-    public final Object[] toArray() {
-      long sz = map.mappingCount();
-      if (sz > MAX_ARRAY_SIZE) {
-        throw new OutOfMemoryError(oomeMsg);
-      }
-      int n = (int)sz;
-      Object[] r = new Object[n];
-      int i = 0;
-      for (E e : this) {
-        if (i == n) {
-          if (n >= MAX_ARRAY_SIZE) {
-            throw new OutOfMemoryError(oomeMsg);
-          }
-          if (n >= MAX_ARRAY_SIZE - (MAX_ARRAY_SIZE >>> 1) - 1) {
-            n = MAX_ARRAY_SIZE;
-          }
-          else {
-            n += (n >>> 1) + 1;
-          }
-          r = Arrays.copyOf(r, n);
-        }
-        r[i++] = e;
-      }
-      return (i == n) ? r : Arrays.copyOf(r, i);
-    }
-
-    @Override
-    @SuppressWarnings({"NullAway", "unchecked"})
-    public final <T> T[] toArray(T[] a) {
-      long sz = map.mappingCount();
-      if (sz > MAX_ARRAY_SIZE) {
-        throw new OutOfMemoryError(oomeMsg);
-      }
-      int m = (int)sz;
-      @Nullable T[] r = (a.length >= m) ? a : (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), m);
-      int n = r.length;
-      int i = 0;
-      for (E e : this) {
-        if (i == n) {
-          if (n >= MAX_ARRAY_SIZE) {
-            throw new OutOfMemoryError(oomeMsg);
-          }
-          if (n >= MAX_ARRAY_SIZE - (MAX_ARRAY_SIZE >>> 1) - 1) {
-            n = MAX_ARRAY_SIZE;
-          }
-          else {
-            n += (n >>> 1) + 1;
-          }
-          r = Arrays.copyOf(r, n);
-        }
-        r[i++] = (T)e;
-      }
-      if (a == r && i < n) {
-        // NullAway problem: technical usage of null for filling elements not used for user data storage.
-        // Static validator doesn't understand this. So we're suppressing NullAway validation here.
-        r[i] = null; // null-terminate
-        return r;
-      }
-      return (i == n) ? r : Arrays.copyOf(r, i);
-    }
-
-    /**
-     * Returns a string representation of this collection.
-     * The string representation consists of the string representations
-     * of the collection's elements in the order they are returned by
-     * its iterator, enclosed in square brackets ({@code "[]"}).
-     * Adjacent elements are separated by the characters {@code ", "}
-     * (comma and space).  Elements are converted to strings as by
-     * {@link String#valueOf(Object)}.
-     *
-     * @return a string representation of this collection
-     */
-    @Override
-    public final String toString() {
-      StringBuilder sb = new StringBuilder();
-      sb.append('[');
-      Iterator<E> it = iterator();
-      if (it.hasNext()) {
-        for (; ; ) {
-          Object e = it.next();
-          sb.append(e == this ? "(this Collection)" : e);
-          if (!it.hasNext()) {
-            break;
-          }
-          sb.append(',').append(' ');
-        }
-      }
-      return sb.append(']').toString();
-    }
-
-    @Override
-    public final boolean containsAll(Collection<?> c) {
-      if (c != this) {
-        for (Object e : c) {
-          if (e == null || !contains(e)) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public final boolean removeAll(Collection<?> c) {
-      boolean modified = false;
-      for (Iterator<E> it = iterator(); it.hasNext(); ) {
-        if (c.contains(it.next())) {
-          it.remove();
-          modified = true;
-        }
-      }
-      return modified;
-    }
-
-    @Override
-    public final boolean retainAll(Collection<?> c) {
-      boolean modified = false;
-      for (Iterator<E> it = iterator(); it.hasNext(); ) {
-        if (!c.contains(it.next())) {
-          it.remove();
-          modified = true;
-        }
-      }
-      return modified;
-    }
-  }
-
-  /**
-   * A view of a ConcurrentHashMap as a {@link Collection} of
-   * values, in which additions are disabled. This class cannot be
-   * directly instantiated. See {@link #values()}.
-   */
-  static final class ValuesView<V> extends CollectionView<V, V> implements Collection<V> {
-    ValuesView(ConcurrentLongObjectHashMap<V> map) {
-      super(map);
-    }
-
-    @Override
-    public final boolean contains(Object o) {
-      return map.containsValue(o);
-    }
-
-    @Override
-    public final boolean remove(Object o) {
-      if (o != null) {
-        for (Iterator<V> it = iterator(); it.hasNext(); ) {
-          if (o.equals(it.next())) {
-            it.remove();
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
-    @Override
-    public final Iterator<V> iterator() {
-      ConcurrentLongObjectHashMap<V> m = map;
-      Node<V>[] t;
-      int f = (t = m.table) == null ? 0 : t.length;
-      return new ValueIterator<>(t, f, 0, f, m);
-    }
-
-    @Override
-    public final boolean add(V e) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final boolean addAll(Collection<? extends V> c) {
-      throw new UnsupportedOperationException();
-    }
-  }
-
-  @Override
-  public Iterable<LongEntry<V>> entries() {
-    return new EntrySetView<>(this);
-  }
-
-  /**
-   * A view of a ConcurrentHashMap as a {@link Set} of (key, value)
-   * entries.  This class cannot be directly instantiated. See
-   * {@link #entrySet()}.
-   */
-  static final class EntrySetView<V> extends CollectionView<V, LongEntry<V>> implements Set<LongEntry<V>> {
-
-    EntrySetView(ConcurrentLongObjectHashMap<V> map) {
-      super(map);
-    }
-
-    @Override
     public boolean contains(Object o) {
-      Object v;
-      Object r;
-      LongEntry<?> e;
-      return ((o instanceof LongEntry) && (r = map.get((e = (LongEntry)o).getKey())) != null && (v = e.getValue()) != null && (v == r || v.equals(r)));
+      if (!(o instanceof Long2ObjectMap.Entry)) {
+        return false;
+      }
+      Long2ObjectMap.Entry<?> e = (Long2ObjectMap.Entry<?>)o;
+      Object r = map.get(e.getLongKey());
+      Object v = e.getValue();
+      return r != null && v != null && (v == r || v.equals(r));
     }
 
     @Override
     public boolean remove(Object o) {
-      Object v;
-      LongEntry<?> e;
-      return ((o instanceof Map.Entry) && (e = (LongEntry<?>)o) != null && (v = e.getValue()) != null && map.remove(e.getKey(), v));
+      if (!(o instanceof Long2ObjectMap.Entry)) {
+        return false;
+      }
+      Long2ObjectMap.Entry<?> e = (Long2ObjectMap.Entry<?>)o;
+      Object v = e.getValue();
+      return v != null && map.remove(e.getLongKey(), v);
     }
 
-    /**
-     * @return an iterator over the entries of the backing map
-     */
     @Override
-    public Iterator<LongEntry<V>> iterator() {
+    public ObjectIterator<Long2ObjectMap.Entry<V>> iterator() {
       ConcurrentLongObjectHashMap<V> m = map;
       Node<V>[] t = m.table;
       int f = t == null ? 0 : t.length;
       return new EntryIterator<>(t, f, 0, f, m);
     }
-
-    @Override
-    public boolean add(LongEntry<V> e) {
-      return map.putVal(e.getKey(), e.getValue(), false) == null;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends LongEntry<V>> c) {
-      boolean added = false;
-      for (LongEntry<V> e : c) {
-        if (add(e)) {
-          added = true;
-        }
-      }
-      return added;
-    }
-
-    @Override
-    public final int hashCode() {
-      int h = 0;
-      Node<V>[] t;
-      if ((t = map.table) != null) {
-        Traverser<V> it = new Traverser<>(t, t.length, 0, t.length);
-        for (Node<V> p; (p = it.advance()) != null; ) {
-          h += p.hashCode();
-        }
-      }
-      return h;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-      Set<?> c;
-      return ((o instanceof Set) && ((c = (Set<?>)o) == this || (containsAll(c) && c.containsAll(this))));
-    }
   }
 
   // -------------------------------------------------------
 
-  // Unsafe mechanics
-  private static final UnsafeDelegate U;
-  private static final long SIZECTL;
-  private static final long TRANSFERINDEX;
-  private static final long BASECOUNT;
-  private static final long CELLSBUSY;
-  private static final long CELLVALUE;
-  private static final long ABASE;
-  private static final int ASHIFT;
+  // VarHandle mechanics
+  private static final VarHandle SIZECTL;
+  private static final VarHandle TRANSFERINDEX;
+  private static final VarHandle BASECOUNT;
+  private static final VarHandle CELLSBUSY;
+  private static final VarHandle CELLVALUE;
+  private static final VarHandle AT;
 
   static {
     try {
-      U = getUnsafe();
-      Class<?> k = ConcurrentLongObjectHashMap.class;
-      SIZECTL = U.objectFieldOffset(k.getDeclaredField("sizeCtl"));
-      TRANSFERINDEX = U.objectFieldOffset(k.getDeclaredField("transferIndex"));
-      BASECOUNT = U.objectFieldOffset(k.getDeclaredField("baseCount"));
-      CELLSBUSY = U.objectFieldOffset(k.getDeclaredField("cellsBusy"));
-      Class<?> ck = ConcurrentIntObjectHashMap.CounterCell.class;
-      CELLVALUE = U.objectFieldOffset(ck.getDeclaredField("value"));
-      Class<?> ak = Node[].class;
-      ABASE = U.arrayBaseOffset(ak);
-      int scale = U.arrayIndexScale(ak);
-      if ((scale & (scale - 1)) != 0) {
-        throw new Error("data type scale not a power of two");
-      }
-      ASHIFT = 31 - Integer.numberOfLeadingZeros(scale);
+      MethodHandles.Lookup l = MethodHandles.lookup();
+      SIZECTL = l.findVarHandle(ConcurrentLongObjectHashMap.class, "sizeCtl", int.class);
+      TRANSFERINDEX = l.findVarHandle(ConcurrentLongObjectHashMap.class, "transferIndex", int.class);
+      BASECOUNT = l.findVarHandle(ConcurrentLongObjectHashMap.class, "baseCount", long.class);
+      CELLSBUSY = l.findVarHandle(ConcurrentLongObjectHashMap.class, "cellsBusy", int.class);
+      CELLVALUE = l.findVarHandle(ConcurrentIntObjectHashMap.CounterCell.class, "value", long.class);
+      AT = MethodHandles.arrayElementVarHandle(Node[].class);
     }
-    catch (Exception e) {
+    catch (ReflectiveOperationException e) {
       throw new Error(e);
     }
-  }
-
-  /**
-   * Returns a sun.misc.Unsafe.  Suitable for use in a 3rd party package.
-   * Replace with a simple call to Unsafe.getUnsafe when integrating
-   * into a jdk.
-   *
-   * @return a sun.misc.Unsafe
-   */
-  private static UnsafeDelegate getUnsafe() {
-    return UnsafeDelegate.get();
   }
 
   ////////////////////// IJ specific

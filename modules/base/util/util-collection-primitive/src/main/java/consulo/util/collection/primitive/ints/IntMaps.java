@@ -15,8 +15,8 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import consulo.util.collection.impl.CollectionFactory;
-import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
+import consulo.util.collection.primitive.impl.FastUtilIntIntMap;
+import consulo.util.collection.primitive.impl.FastUtilIntObjectMap;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeySoftValueHashMap;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeyWeakValueHashMap;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
@@ -25,15 +25,16 @@ import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMa
  * @author VISTALL
  * @since 2021-02-07
  */
+@SuppressWarnings("deprecation")
 public final class IntMaps {
-  private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+  private static final int UNKNOWN_CAPACITY = -1;
 
   public static <V> IntObjectMap<V> newIntObjectHashMap() {
-    return newIntObjectHashMap(CollectionFactory.UNKNOWN_CAPACITY);
+    return newIntObjectHashMap(UNKNOWN_CAPACITY);
   }
 
   public static <V> IntObjectMap<V> newIntObjectHashMap(int capacity) {
-    return ourFactory.newIntObjectHashMap(capacity);
+    return new FastUtilIntObjectMap<>(capacity);
   }
 
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectWeakValueHashMap() {
@@ -53,14 +54,16 @@ public final class IntMaps {
   }
 
   public static IntIntMap newIntIntHashMap() {
-    return ourFactory.newIntIntHashMap(CollectionFactory.UNKNOWN_CAPACITY);
+    return newIntIntHashMap(UNKNOWN_CAPACITY);
   }
 
   public static IntIntMap newIntIntHashMap(int capacity) {
-    return ourFactory.newIntIntHashMap(capacity);
+    return new FastUtilIntIntMap(capacity);
   }
 
   public static void trimToSize(IntIntMap map) {
-    ourFactory.trimToSize(map);
+    if (map instanceof FastUtilIntIntMap fastUtilMap) {
+      fastUtilMap.trimToSize();
+    }
   }
 }

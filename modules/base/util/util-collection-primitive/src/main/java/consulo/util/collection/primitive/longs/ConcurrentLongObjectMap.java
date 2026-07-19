@@ -15,68 +15,19 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import org.jspecify.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Enumeration;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 
 /**
- * Base interface for concurrent int key -> value:V map
+ * Base interface for concurrent long key -> value:V map
  * Null values are NOT allowed
  * <p>
  * Methods are adapted from {@link java.util.concurrent.ConcurrentMap} to long keys
  *
  * @see java.util.concurrent.ConcurrentMap
  */
-public interface ConcurrentLongObjectMap<V> {
+public interface ConcurrentLongObjectMap<V> extends Long2ObjectMap<V> {
   /**
    * @return written value
    */
   V cacheOrGet(long key, V value);
-
-  boolean remove(long key, V value);
-
-  boolean replace(long key, V oldValue, V newValue);
-
-  @Nullable V replace(long key, V value);
-
-  // regular Map methods
-  @Nullable V put(long key, V value);
-
-  @Nullable V get(long key);
-
-  @Nullable V remove(long key);
-
-  boolean containsKey(long key);
-
-  void clear();
-
-  Iterable<LongEntry<V>> entries();
-
-  long[] keys();
-
-  /**
-   * @return Approximate number of elements in the map.
-   * The usage is discouraged since
-   * First, in concurrent context it doesn't have much sense
-   * and Second, for weak- or soft- keyed maps it returns the total number of references
-   * rather than alive values because otherwise it would be too expensive
-   */
-  int size();
-
-  boolean isEmpty();
-
-  public Enumeration<V> elements();
-
-  Collection<V> values();
-
-  boolean containsValue(V value);
-
-  @Nullable V putIfAbsent(long key, V value);
-
-  interface LongEntry<V> {
-    long getKey();
-
-    @Nullable V getValue();
-  }
 }

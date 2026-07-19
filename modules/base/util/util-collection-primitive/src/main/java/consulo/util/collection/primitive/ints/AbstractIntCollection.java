@@ -23,6 +23,7 @@ import java.util.PrimitiveIterator;
  * @author VISTALL
  * @since 05/06/2021
  */
+@Deprecated
 public abstract class AbstractIntCollection implements IntCollection {
   @Override
   public boolean add(int value) {

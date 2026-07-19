@@ -23,7 +23,9 @@ import java.util.stream.StreamSupport;
 /**
  * @author VISTALL
  * @since 17/05/2021
+ * @deprecated use {@link it.unimi.dsi.fastutil.longs.LongCollection} directly
  */
+@Deprecated
 public interface LongCollection extends LongIterable {
   boolean add(long value);
 

@@ -36,7 +36,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncFileListener;
@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @ExtensionImpl
 final class ChangedFilesCollector extends IndexedFilesListener {
-  final IntObjectMap<VirtualFile> myFilesToUpdate = IntMaps.newConcurrentIntObjectHashMap();
+  final ConcurrentIntObjectMap<VirtualFile> myFilesToUpdate = IntMaps.newConcurrentIntObjectHashMap();
   private final AtomicInteger myProcessedEventIndex = new AtomicInteger();
   private final Phaser myWorkersFinishedSync = new Phaser() {
     @Override

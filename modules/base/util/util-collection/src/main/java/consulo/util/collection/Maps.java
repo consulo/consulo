@@ -15,8 +15,9 @@
  */
 package consulo.util.collection;
 
-import consulo.util.collection.impl.CollectionFactory;
+import consulo.util.collection.impl.FastUtilHashingStrategies;
 import consulo.util.collection.impl.map.*;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
@@ -30,7 +31,23 @@ import java.util.function.Predicate;
  * @since 2019-12-01
  */
 public final class Maps {
-    private static CollectionFactory ourFactory = CollectionFactory.get();
+    private static final int UNKNOWN_CAPACITY = -1;
+
+    private static <K, V> Map<K, V> newHashMapWithStrategy(
+        int capacity,
+        float loadFactor,
+        @Nullable Map<? extends K, ? extends V> inner,
+        HashingStrategy<K> hashingStrategy
+    ) {
+        if (capacity != UNKNOWN_CAPACITY) {
+            float lf = FastUtilHashingStrategies.loadFactor(loadFactor);
+            return new Object2ObjectOpenCustomHashMap<>(capacity, lf, FastUtilHashingStrategies.of(hashingStrategy));
+        }
+        if (inner != null) {
+            return new Object2ObjectOpenCustomHashMap<>(inner, FastUtilHashingStrategies.of(hashingStrategy));
+        }
+        return new Object2ObjectOpenCustomHashMap<>(FastUtilHashingStrategies.of(hashingStrategy));
+    }
 
     /**
      * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
@@ -60,19 +77,19 @@ public final class Maps {
     }
 
     public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map, HashingStrategy<K> hashingStrategy) {
-        return ourFactory.newHashMapWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, 1f, map, hashingStrategy);
+        return newHashMapWithStrategy(UNKNOWN_CAPACITY, 1f, map, hashingStrategy);
     }
 
     public static <K, V> Map<K, V> newHashMap(int initialCapacity, HashingStrategy<K> hashingStrategy) {
-        return ourFactory.newHashMapWithStrategy(initialCapacity, 1f, null, hashingStrategy);
+        return newHashMapWithStrategy(initialCapacity, 1f, null, hashingStrategy);
     }
 
     public static <K, V> Map<K, V> newHashMap(int initialCapacity, float loadFactor, HashingStrategy<K> hashingStrategy) {
-        return ourFactory.newHashMapWithStrategy(initialCapacity, loadFactor, null, hashingStrategy);
+        return newHashMapWithStrategy(initialCapacity, loadFactor, null, hashingStrategy);
     }
 
     public static <K, V> Map<K, V> newHashMap(HashingStrategy<K> hashingStrategy) {
-        return ourFactory.newHashMapWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, 1f, null, hashingStrategy);
+        return newHashMapWithStrategy(UNKNOWN_CAPACITY, 1f, null, hashingStrategy);
     }
 
     public static <K, V> Map<K, V> newLinkedHashMap(HashingStrategy<K> hashingStrategy) {
@@ -118,7 +135,7 @@ public final class Maps {
     }
 
     public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy) {
-        return ourFactory.<K, V>newWeakHashMap(initialCapacity, loadFactor, strategy);
+        return new FastUtilWeakHashMap<>(initialCapacity, loadFactor, strategy);
     }
 
     public static <K, V> Map<K, V> newWeakKeyWeakValueHashMap() {
@@ -243,11 +260,13 @@ public final class Maps {
     }
 
     public static <K, V> Map<K, V> newSoftHashMap(HashingStrategy<? super K> strategy) {
-        return ourFactory.<K, V>newSoftHashMap(strategy);
+        return new FastUtilSoftHashMap<>(strategy);
     }
 
     public static void trimToSize(Map<?, ?> map) {
-        ourFactory.trimToSize(map);
+        if (map instanceof Object2ObjectOpenCustomHashMap<?, ?> fastUtilMap) {
+            fastUtilMap.trim();
+        }
     }
 
     public static <K, V> Map<K, V> newLinkedHashMap(Predicate<Map<K, V>> removeEldestEntryFunc) {

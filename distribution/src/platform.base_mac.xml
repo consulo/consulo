@@ -196,7 +196,6 @@
                 <include>consulo:consulo-util-lang</include>
                 <include>consulo:consulo-util-collection</include>
                 <include>consulo:consulo-util-collection-primitive</include>
-                <include>consulo:consulo-util-collection-via-trove</include>
                 <include>consulo:consulo-util-concurrent</include>
                 <include>consulo:consulo-util-concurrent-coroutine</include>
                 <include>consulo:consulo-util-rmi</include>

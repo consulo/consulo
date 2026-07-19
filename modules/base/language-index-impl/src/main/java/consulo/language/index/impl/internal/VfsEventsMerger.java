@@ -81,7 +81,7 @@ class VfsEventsMerger {
   // (without PCE)
   boolean processChanges(VfsEventProcessor eventProcessor) {
     if (!myChangeInfos.isEmpty()) {
-      int[] fileIds = myChangeInfos.keys(); // snapshot of the keys
+      int[] fileIds = myChangeInfos.keySet().toIntArray(); // snapshot of the keys
       for (int fileId : fileIds) {
         ProgressManager.checkCanceled();
         ChangeInfo info = myChangeInfos.remove(fileId);

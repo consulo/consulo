@@ -17,8 +17,8 @@
 package consulo.index.io;
 
 import consulo.container.boot.ContainerPathManager;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
@@ -29,7 +29,7 @@ import java.io.*;
  * @author Eugene Zhuravlev
  */
 public class ID<K, V> extends IndexId<K, V> {
-  private static final IntObjectMap<ID> ourRegistry = IntMaps.newConcurrentIntObjectHashMap();
+  private static final ConcurrentIntObjectMap<ID> ourRegistry = IntMaps.newConcurrentIntObjectHashMap();
   private static final ObjectIntMap<String> ourNameToIdRegistry = ObjectMaps.newObjectIntHashMap();
   public static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
 

@@ -79,7 +79,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-util-collection-via-trove</artifactId>
+            <artifactId>consulo-util-collection-primitive</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -20,6 +20,7 @@ import consulo.util.collection.primitive.longs.impl.LongCollectionImpls;
 
 import java.util.PrimitiveIterator;
 
+@Deprecated
 public class LongArrayList implements Cloneable, LongList {
   private long[] myData;
   private int mySize;

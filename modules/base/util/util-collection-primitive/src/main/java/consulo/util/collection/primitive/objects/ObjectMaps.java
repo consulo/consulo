@@ -16,18 +16,19 @@
 package consulo.util.collection.primitive.objects;
 
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.impl.CollectionFactory;
-import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
+import consulo.util.collection.primitive.impl.FastUtilObjectIntMap;
 
 /**
  * @author VISTALL
  * @since 10/02/2021
  */
+@SuppressWarnings("deprecation")
+@Deprecated
 public final class ObjectMaps {
-  private static PrimitiveCollectionFactory ourFactory = (PrimitiveCollectionFactory)CollectionFactory.get();
+  private static final int UNKNOWN_CAPACITY = -1;
 
   public static <K> ObjectIntMap<K> newObjectIntHashMap() {
-    return newObjectIntHashMap(CollectionFactory.UNKNOWN_CAPACITY, HashingStrategy.canonical());
+    return newObjectIntHashMap(UNKNOWN_CAPACITY, HashingStrategy.canonical());
   }
 
   public static <K> ObjectIntMap<K> newObjectIntHashMap(int capacity) {
@@ -35,11 +36,11 @@ public final class ObjectMaps {
   }
 
   public static <K> ObjectIntMap<K> newObjectIntHashMap(HashingStrategy<K> strategy) {
-    return newObjectIntHashMap(CollectionFactory.UNKNOWN_CAPACITY, strategy);
+    return newObjectIntHashMap(UNKNOWN_CAPACITY, strategy);
   }
 
   public static <K> ObjectIntMap<K> newObjectIntHashMap(int capacity, HashingStrategy<K> strategy) {
-    return ourFactory.newObjectIntHashMap(capacity, strategy);
+    return new FastUtilObjectIntMap<>(capacity, strategy);
   }
 
   public static <K> ObjectIntMap<K> unmodified(ObjectIntMap<K> map) {
