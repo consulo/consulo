@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.ui.console;
 
-import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.codeEditor.*;
@@ -47,7 +47,7 @@ public class ConsoleViewUtil {
   }
 
   public static void setupConsoleEditor(EditorEx editor, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
-    Application.get().runReadAction(() -> {
+    ReadAction.run(() -> {
       EditorSettings editorSettings = editor.getSettings();
       editorSettings.setLineMarkerAreaShown(lineMarkerAreaShown);
       editorSettings.setIndentGuidesShown(false);
