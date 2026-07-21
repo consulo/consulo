@@ -15,13 +15,10 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,15 +26,9 @@ import java.lang.annotation.Annotation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
 
 public class StateStorageManagerMacroTest {
     private StateStorageManagerImpl myManager;
-
-    @BeforeAll
-    public static void setUpApplication() {
-        ApplicationManager.setApplication(mock(Application.class));
-    }
 
     @BeforeEach
     public void setUp() {
