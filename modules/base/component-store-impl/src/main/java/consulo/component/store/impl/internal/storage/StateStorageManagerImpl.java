@@ -103,7 +103,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       return StoragePathMacros.DEFAULT_FILE;
     }
 
-    if (value.equals(StoragePathMacros.WORKSPACE_FILE)) {
+    if (value.equals(StoragePathMacros.WORKSPACE_FILE)
+        || value.equals(StoragePathMacros.DEFAULT_FILE)
+        || value.equals(StoragePathMacros.PROJECT_FILE)) {
       return value;
     }
     return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
@@ -233,7 +235,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private static final Pattern MACRO_PATTERN = Pattern.compile("(\\$[^\\$]*\\$)");
 
   @Override
- 
   public synchronized String expandMacros(String file) {
     Matcher matcher = MACRO_PATTERN.matcher(file);
     while (matcher.find()) {
@@ -243,11 +244,21 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       }
     }
 
-    String expanded = file;
-    for (String macro : myMacros.keySet()) {
-      expanded = StringUtil.replace(expanded, macro, myMacros.get(macro));
+    for (Map.Entry<String, String> entry : myMacros.entrySet()) {
+      String macro = entry.getKey();
+      if (file.equals(macro)) {
+        return entry.getValue();
+      }
+      if (file.length() > macro.length() && file.charAt(macro.length()) == '/' && file.startsWith(macro)) {
+        String remainder = file.substring(macro.length() + 1);
+        if (MACRO_PATTERN.matcher(remainder).find()) {
+          throw new IllegalArgumentException("Nested macro in storage file spec: " + file);
+        }
+        return entry.getValue() + "/" + remainder;
+      }
     }
-    return expanded;
+
+    return file;
   }
 
  
