@@ -44,6 +44,11 @@ public final class ComponentProfiles {
      */
     public static final int SANDBOX = 1 << 5;
 
+    /**
+     * Marker for integration-test instance
+     */
+    public static final int INTEGRATION_TEST = 1 << 6;
+
     private ComponentProfiles() {
     }
 }

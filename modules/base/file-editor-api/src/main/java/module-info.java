@@ -39,7 +39,8 @@ module consulo.file.editor.api {
         consulo.language.editor.impl,
         consulo.configuration.editor.api,
         consulo.version.control.system.impl,
-        consulo.execution.coverage.impl;
+        consulo.execution.coverage.impl,
+        consulo.it;
 
     exports consulo.fileEditor.internal.largeFileEditor to consulo.file.editor.impl, consulo.ide.impl;
 }

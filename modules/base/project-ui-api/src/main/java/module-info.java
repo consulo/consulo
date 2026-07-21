@@ -38,5 +38,6 @@ module consulo.project.ui.api {
         consulo.file.editor.impl,
         consulo.execution.impl,
         consulo.project.impl,
-        consulo.project.ui.impl;
+        consulo.project.ui.impl,
+        consulo.it;
 }

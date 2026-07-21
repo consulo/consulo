@@ -39,7 +39,8 @@ module consulo.language.impl {
         consulo.language.editor.impl,
         consulo.language.inject.impl,
         consulo.util.xml.serializer,
-        consulo.language.code.style.impl;
+        consulo.language.code.style.impl,
+        consulo.it;
 
     exports consulo.language.impl.internal.psi.diff to
         consulo.ide.impl,

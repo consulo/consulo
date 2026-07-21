@@ -19,5 +19,6 @@ module consulo.platform.api {
   exports consulo.platform.internal to
     consulo.desktop.awt.ide.impl,
     consulo.test.impl,
-    consulo.desktop.swt.ide.impl;
+    consulo.desktop.swt.ide.impl,
+    consulo.it;
 }

@@ -19,5 +19,6 @@ module consulo.platform.impl {
     consulo.desktop.ide.impl,
     consulo.desktop.awt.ide.impl,
     consulo.test.impl,
-    consulo.desktop.swt.ide.impl;
+    consulo.desktop.swt.ide.impl,
+    consulo.it;
 }

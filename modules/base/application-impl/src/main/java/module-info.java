@@ -40,7 +40,8 @@ module consulo.application.impl {
         consulo.language.impl,
         consulo.language.index.impl,
         consulo.language.editor.api,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.it;
 
     exports consulo.application.impl.internal.macro to consulo.ide.impl, consulo.module.impl, consulo.project.impl;
 
@@ -54,7 +55,8 @@ module consulo.application.impl {
         consulo.project.impl,
         consulo.desktop.ide.impl,
         consulo.virtual.file.system.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.swt.ide.impl,
+        consulo.it;
 
     exports consulo.application.impl.internal.performance to
         consulo.ide.impl,

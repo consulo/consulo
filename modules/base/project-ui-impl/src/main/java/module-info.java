@@ -12,11 +12,13 @@ module consulo.project.ui.impl {
     
     exports consulo.project.ui.impl.internal to
         consulo.version.control.system.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.it;
 
     exports consulo.project.ui.impl.internal.wm to
         consulo.desktop.swt.ide.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl,
+        consulo.it;
 
     exports consulo.project.ui.impl.internal.wm.statusBar to
         consulo.ide.impl;

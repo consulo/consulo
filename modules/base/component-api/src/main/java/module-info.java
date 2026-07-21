@@ -56,7 +56,8 @@ module consulo.component.api {
         consulo.component.store.api,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
-        consulo.test.impl;
+        consulo.test.impl,
+        consulo.it;
 
     exports consulo.component.internal.inject to consulo.component.impl,
         consulo.application.impl,
@@ -66,7 +67,8 @@ module consulo.component.api {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
         consulo.test.impl,
-        consulo.language.editor.api;
+        consulo.language.editor.api,
+        consulo.it;
 
     uses consulo.component.bind.InjectingBinding;
     uses consulo.component.bind.TopicBinding;

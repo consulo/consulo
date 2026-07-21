@@ -61,6 +61,7 @@ module consulo.application.api {
         consulo.language.index.impl,
         consulo.application.impl,
         consulo.test.impl,
+        consulo.it,
         consulo.ui.ex.api,
         consulo.project.impl,
         consulo.language.editor.api,

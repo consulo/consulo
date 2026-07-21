@@ -36,13 +36,15 @@ module consulo.container.api {
         consulo.language.api,
         consulo.test.impl,
         consulo.logging.logback.impl,
-        consulo.ide.impl;
+        consulo.ide.impl,
+        consulo.it;
 
     exports consulo.container.internal.plugin to
         consulo.application.api,
         consulo.ide.impl,
         consulo.proxy,
-        consulo.external.service.impl;
+        consulo.external.service.impl,
+        consulo.it;
 
     exports consulo.container.internal.plugin.classloader to
         consulo.application.api,
