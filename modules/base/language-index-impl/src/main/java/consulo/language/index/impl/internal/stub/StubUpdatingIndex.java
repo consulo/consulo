@@ -48,6 +48,7 @@ import jakarta.inject.Inject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -265,6 +266,22 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     @Override
     public int getVersion() {
         return VERSION;
+    }
+
+    /**
+     * Stubs implicitly depend on every registered module-aware option provider — any of them
+     * may produce options that affect parse-time decisions for files of its input type.
+     * The platform filters by file type at record / revalidation time, so this broad set
+     * only costs work for files actually claimed by some provider.
+     */
+    @Override
+    public List<String> getOptionProviderIds() {
+        List<ModuleAwareIndexOptionProvider> providers = ModuleAwareIndexOptionProvider.EP_NAME.getExtensionList();
+        List<String> ids = new ArrayList<>(providers.size());
+        for (ModuleAwareIndexOptionProvider provider : providers) {
+            ids.add(provider.getId());
+        }
+        return ids;
     }
 
     
