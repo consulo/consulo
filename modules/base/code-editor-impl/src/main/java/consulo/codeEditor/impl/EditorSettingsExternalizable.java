@@ -21,6 +21,7 @@ import consulo.codeEditor.BidiTextDirection;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.TabCharacterPaintMode;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -75,10 +76,14 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SMART_HOME = true;
 
         public boolean IS_BLOCK_CURSOR = false;
+        public boolean IS_FULL_LINE_HEIGHT_CURSOR = false;
+        public boolean SHOWING_SPECIAL_CHARS = false;
+        public TabCharacterPaintMode TAB_CHARACTER_PAINT_MODE = TabCharacterPaintMode.HORIZONTAL_LINE;
         public boolean IS_WHITESPACES_SHOWN = false;
         public boolean IS_LEADING_WHITESPACES_SHOWN = true;
         public boolean IS_INNER_WHITESPACES_SHOWN = true;
         public boolean IS_TRAILING_WHITESPACES_SHOWN = true;
+        public boolean IS_SELECTION_WHITESPACES_SHOWN = true;
         @SuppressWarnings("SpellCheckingInspection")
         public boolean IS_ALL_SOFTWRAPS_SHOWN = false;
         public boolean IS_INDENT_GUIDES_SHOWN = true;
@@ -622,6 +627,46 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setTrailingWhitespacesShown(boolean val) {
         myOptions.IS_TRAILING_WHITESPACES_SHOWN = val;
+    }
+
+    @Override
+    public boolean isSelectionWhitespacesShown() {
+        return myOptions.IS_SELECTION_WHITESPACES_SHOWN;
+    }
+
+    @Override
+    public void setSelectionWhitespacesShown(boolean val) {
+        myOptions.IS_SELECTION_WHITESPACES_SHOWN = val;
+    }
+
+    @Override
+    public boolean isFullLineHeightCursor() {
+        return myOptions.IS_FULL_LINE_HEIGHT_CURSOR;
+    }
+
+    @Override
+    public void setFullLineHeightCursor(boolean val) {
+        myOptions.IS_FULL_LINE_HEIGHT_CURSOR = val;
+    }
+
+    @Override
+    public boolean isShowingSpecialChars() {
+        return myOptions.SHOWING_SPECIAL_CHARS;
+    }
+
+    @Override
+    public void setShowingSpecialChars(boolean val) {
+        myOptions.SHOWING_SPECIAL_CHARS = val;
+    }
+
+    @Override
+    public TabCharacterPaintMode getTabCharacterPaintMode() {
+        return myOptions.TAB_CHARACTER_PAINT_MODE;
+    }
+
+    @Override
+    public void setTabCharacterPaintMode(TabCharacterPaintMode mode) {
+        myOptions.TAB_CHARACTER_PAINT_MODE = mode;
     }
 
     @Override

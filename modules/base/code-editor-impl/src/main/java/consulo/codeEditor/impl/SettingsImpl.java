@@ -20,6 +20,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.TabCharacterPaintMode;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
@@ -77,6 +78,10 @@ public class SettingsImpl implements EditorSettings {
     private Boolean myIsLeadingWhitespacesShown = null;
     private Boolean myIsInnerWhitespacesShown = null;
     private Boolean myIsTrailingWhitespacesShown = null;
+    private Boolean myIsSelectionWhitespacesShown = null;
+    private Boolean myIsFullLineHeightCursor = null;
+    private Boolean myIsShowingSpecialChars = null;
+    private TabCharacterPaintMode myTabCharacterPaintMode = null;
     private Boolean myIndentGuidesShown = null;
     private Boolean myIsAnimatedScrolling = null;
     private Boolean myIsAdditionalPageAtBottom = null;
@@ -642,6 +647,65 @@ public class SettingsImpl implements EditorSettings {
             return;
         }
         myCaretEasing = easing;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isSelectionWhitespaceShown() {
+        return myIsSelectionWhitespacesShown != null ? myIsSelectionWhitespacesShown : myPersistentEditorSettings.isSelectionWhitespacesShown();
+    }
+
+    @Override
+    public void setSelectionWhitespaceShown(boolean val) {
+        Boolean newValue = val;
+        if (newValue.equals(myIsSelectionWhitespacesShown)) {
+            return;
+        }
+        myIsSelectionWhitespacesShown = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isFullLineHeightCursor() {
+        return myIsFullLineHeightCursor != null ? myIsFullLineHeightCursor : myPersistentEditorSettings.isFullLineHeightCursor();
+    }
+
+    @Override
+    public void setFullLineHeightCursor(boolean val) {
+        Boolean newValue = val;
+        if (newValue.equals(myIsFullLineHeightCursor)) {
+            return;
+        }
+        myIsFullLineHeightCursor = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isShowingSpecialChars() {
+        return myIsShowingSpecialChars != null ? myIsShowingSpecialChars : myPersistentEditorSettings.isShowingSpecialChars();
+    }
+
+    @Override
+    public void setShowingSpecialChars(boolean val) {
+        Boolean newValue = val;
+        if (newValue.equals(myIsShowingSpecialChars)) {
+            return;
+        }
+        myIsShowingSpecialChars = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public TabCharacterPaintMode getTabCharacterPaintMode() {
+        return myTabCharacterPaintMode != null ? myTabCharacterPaintMode : myPersistentEditorSettings.getTabCharacterPaintMode();
+    }
+
+    @Override
+    public void setTabCharacterPaintMode(TabCharacterPaintMode mode) {
+        if (mode.equals(myTabCharacterPaintMode)) {
+            return;
+        }
+        myTabCharacterPaintMode = mode;
         fireEditorRefresh();
     }
 

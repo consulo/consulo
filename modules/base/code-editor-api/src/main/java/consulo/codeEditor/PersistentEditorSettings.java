@@ -210,6 +210,22 @@ public interface PersistentEditorSettings {
 
     void setTrailingWhitespacesShown(boolean val);
 
+    boolean isSelectionWhitespacesShown();
+
+    void setSelectionWhitespacesShown(boolean val);
+
+    boolean isFullLineHeightCursor();
+
+    void setFullLineHeightCursor(boolean val);
+
+    boolean isShowingSpecialChars();
+
+    void setShowingSpecialChars(boolean val);
+
+    TabCharacterPaintMode getTabCharacterPaintMode();
+
+    void setTabCharacterPaintMode(TabCharacterPaintMode mode);
+
     boolean isAllSoftWrapsShown();
 
     void setAllSoftwrapsShown(boolean val);

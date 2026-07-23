@@ -22,6 +22,7 @@ import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.PersistentEditorSettings;
+import consulo.codeEditor.TabCharacterPaintMode;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurationException;
@@ -33,6 +34,7 @@ import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
@@ -108,6 +110,10 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         propertyBuilder.add(useBlockCaret, editorSettings::isBlockCursor, editorSettings::setBlockCursor);
         root.add(useBlockCaret);
 
+        CheckBox fullLineHeightCaret = CheckBox.create(LocalizeValue.localizeTODO("Use full line height caret"));
+        propertyBuilder.add(fullLineHeightCaret, editorSettings::isFullLineHeightCursor, editorSettings::setFullLineHeightCursor);
+        root.add(fullLineHeightCaret);
+
         CheckBox showRightMargin = CheckBox.create(ApplicationLocalize.checkboxRightMargin());
         propertyBuilder.add(showRightMargin, editorSettings::isRightMarginShown, editorSettings::setRightMarginShown);
         root.add(showRightMargin);
@@ -132,6 +138,21 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         CheckBox showWhitespaces = CheckBox.create(ApplicationLocalize.checkboxShowWhitespaces());
         propertyBuilder.add(showWhitespaces, editorSettings::isWhitespacesShown, editorSettings::setWhitespacesShown);
         root.add(showWhitespaces);
+
+        CheckBox showSelectionWhitespaces = CheckBox.create(LocalizeValue.localizeTODO("Show whitespaces in selection"));
+        propertyBuilder.add(showSelectionWhitespaces, editorSettings::isSelectionWhitespacesShown, editorSettings::setSelectionWhitespacesShown);
+        showSelectionWhitespaces.setEnabled(editorSettings.isWhitespacesShown());
+        showWhitespaces.addValueListener(event -> showSelectionWhitespaces.setEnabled(event.getValue()));
+        root.add(showSelectionWhitespaces);
+
+        CheckBox showSpecialChars = CheckBox.create(LocalizeValue.localizeTODO("Show special characters"));
+        propertyBuilder.add(showSpecialChars, editorSettings::isShowingSpecialChars, editorSettings::setShowingSpecialChars);
+        root.add(showSpecialChars);
+
+        ComboBox<TabCharacterPaintMode> tabPaintModeBox = ComboBox.create(Arrays.asList(TabCharacterPaintMode.values()));
+        tabPaintModeBox.setTextRenderer(value -> value == null ? LocalizeValue.empty() : value.getText());
+        propertyBuilder.add(tabPaintModeBox, editorSettings::getTabCharacterPaintMode, editorSettings::setTabCharacterPaintMode);
+        root.add(DockLayout.create().left(Label.create(LocalizeValue.localizeTODO("Tab character:"))).right(tabPaintModeBox));
 
         CheckBox showVerticalIndents = CheckBox.create(ApplicationLocalize.labelAppearanceShowVerticalIndentGuides());
         propertyBuilder.add(showVerticalIndents, editorSettings::isIndentGuidesShown, editorSettings::setIndentGuidesShown);

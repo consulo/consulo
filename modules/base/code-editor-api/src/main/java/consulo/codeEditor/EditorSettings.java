@@ -41,9 +41,9 @@ public interface EditorSettings {
 
     void setTrailingWhitespaceShown(boolean val);
 
-    default boolean isSelectionWhitespaceShown() {
-        return false; // TODO unsupported
-    }
+    boolean isSelectionWhitespaceShown();
+
+    void setSelectionWhitespaceShown(boolean val);
 
     /**
      * Retrieves a list of soft margins (visual indent guides) to be used in the editor. If soft margins haven't been explicitly set
@@ -240,18 +240,17 @@ public interface EditorSettings {
         return null;
     }
 
-    default boolean isFullLineHeightCursor() {
-        return false; // TODO
-    }
+    boolean isFullLineHeightCursor();
 
-    
-    default TabCharacterPaintMode getTabCharacterPaintMode() {
-        return TabCharacterPaintMode.HORIZONTAL_LINE; // TODO !
-    }
+    void setFullLineHeightCursor(boolean fullLineHeightCursor);
 
-    default boolean isShowingSpecialChars() {
-        return false;  // TODO !
-    }
+    TabCharacterPaintMode getTabCharacterPaintMode();
+
+    void setTabCharacterPaintMode(TabCharacterPaintMode mode);
+
+    boolean isShowingSpecialChars();
+
+    void setShowingSpecialChars(boolean showingSpecialChars);
 
     enum CaretEasing {
         NINJA,
