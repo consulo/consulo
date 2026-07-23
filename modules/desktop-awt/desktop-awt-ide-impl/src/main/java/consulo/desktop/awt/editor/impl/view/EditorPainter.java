@@ -1564,6 +1564,10 @@ public final class EditorPainter implements TextDrawingCallback {
             return attributes;
         }
 
+        private static Color withOpacity(Color color, float opacity) {
+            return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (color.getAlpha() * opacity));
+        }
+
         private void paintCaret() {
             if (myEditor.isPurePaintingMode()) {
                 return;
@@ -1590,7 +1594,8 @@ public final class EditorPainter implements TextDrawingCallback {
                 int y = (int) location.myPoint.getY() - topOverhang + myYShift;
                 Caret caret = location.myCaret;
                 CaretVisualAttributes attr = caret == null ? CaretVisualAttributes.getDefault() : caret.getVisualAttributes();
-                g.setColor(TargetAWT.to(attr.getColor() != null ? attr.getColor() : caretColor));
+                float opacity = myEditor.getCaretBlinkOpacity();
+                g.setColor(withOpacity(TargetAWT.to(attr.getColor() != null ? attr.getColor() : caretColor), opacity));
                 boolean isRtl = location.myIsRtl;
                 float width = location.myWidth;
                 float startX = Math.max(minX, isRtl ? x - width : x);

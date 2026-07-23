@@ -126,6 +126,18 @@ public interface EditorSettings {
 
     void setCaretBlinkPeriod(int blinkPeriod);
 
+    boolean isAnimatedCaret();
+
+    void setAnimatedCaret(boolean animatedCaret);
+
+    boolean isSmoothCaretBlinking();
+
+    void setSmoothCaretBlinking(boolean smoothCaretBlinking);
+
+    CaretEasing getCaretEasing();
+
+    void setCaretEasing(CaretEasing easing);
+
     boolean isBlockCursor();
 
     void setBlockCursor(boolean blockCursor);
@@ -239,5 +251,10 @@ public interface EditorSettings {
 
     default boolean isShowingSpecialChars() {
         return false;  // TODO !
+    }
+
+    enum CaretEasing {
+        NINJA,
+        EASE
     }
 }

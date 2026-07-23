@@ -18,6 +18,7 @@ package consulo.codeEditor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.BidiTextDirection;
+import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.component.persist.PersistentStateComponent;
@@ -58,6 +59,9 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SHOW_INTENTION_BULB = true;
         public boolean IS_CARET_BLINKING = true;
         public int CARET_BLINKING_PERIOD = BLINKING_RANGE.initial;
+        public boolean IS_ANIMATED_CARET = true;
+        public boolean IS_SMOOTH_CARET_BLINKING = true;
+        public EditorSettings.CaretEasing CARET_EASING = EditorSettings.CaretEasing.NINJA;
         public boolean IS_RIGHT_MARGIN_SHOWN = true;
         public boolean ARE_LINE_NUMBERS_SHOWN = true;
         public boolean ARE_GUTTER_ICONS_SHOWN = true;
@@ -472,6 +476,36 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setBlinkPeriod(int blinkInterval) {
         myOptions.CARET_BLINKING_PERIOD = BLINKING_RANGE.fit(blinkInterval);
+    }
+
+    @Override
+    public boolean isAnimatedCaret() {
+        return myOptions.IS_ANIMATED_CARET;
+    }
+
+    @Override
+    public void setAnimatedCaret(boolean val) {
+        myOptions.IS_ANIMATED_CARET = val;
+    }
+
+    @Override
+    public boolean isSmoothCaretBlinking() {
+        return myOptions.IS_SMOOTH_CARET_BLINKING;
+    }
+
+    @Override
+    public void setSmoothCaretBlinking(boolean val) {
+        myOptions.IS_SMOOTH_CARET_BLINKING = val;
+    }
+
+    @Override
+    public EditorSettings.CaretEasing getCaretEasing() {
+        return myOptions.CARET_EASING;
+    }
+
+    @Override
+    public void setCaretEasing(EditorSettings.CaretEasing val) {
+        myOptions.CARET_EASING = val;
     }
 
     @Override

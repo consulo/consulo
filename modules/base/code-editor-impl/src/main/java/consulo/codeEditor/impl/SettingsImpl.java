@@ -62,6 +62,9 @@ public class SettingsImpl implements EditorSettings {
     private Boolean myIsCaretInsideTabs = null;
     private Boolean myIsCaretBlinking = null;
     private Integer myCaretBlinkingPeriod = null;
+    private Boolean myIsAnimatedCaret = null;
+    private Boolean myIsSmoothCaretBlinking = null;
+    private EditorSettings.CaretEasing myCaretEasing = null;
     private Boolean myIsRightMarginShown = null;
     private Integer myRightMargin = null;
     private Boolean myAreLineNumbersShown = null;
@@ -595,6 +598,50 @@ public class SettingsImpl implements EditorSettings {
             return;
         }
         myCaretBlinkingPeriod = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isAnimatedCaret() {
+        return myIsAnimatedCaret != null ? myIsAnimatedCaret : myPersistentEditorSettings.isAnimatedCaret();
+    }
+
+    @Override
+    public void setAnimatedCaret(boolean val) {
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        if (newValue.equals(myIsAnimatedCaret)) {
+            return;
+        }
+        myIsAnimatedCaret = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public boolean isSmoothCaretBlinking() {
+        return myIsSmoothCaretBlinking != null ? myIsSmoothCaretBlinking : myPersistentEditorSettings.isSmoothCaretBlinking();
+    }
+
+    @Override
+    public void setSmoothCaretBlinking(boolean val) {
+        Boolean newValue = val ? Boolean.TRUE : Boolean.FALSE;
+        if (newValue.equals(myIsSmoothCaretBlinking)) {
+            return;
+        }
+        myIsSmoothCaretBlinking = newValue;
+        fireEditorRefresh();
+    }
+
+    @Override
+    public EditorSettings.CaretEasing getCaretEasing() {
+        return myCaretEasing != null ? myCaretEasing : myPersistentEditorSettings.getCaretEasing();
+    }
+
+    @Override
+    public void setCaretEasing(EditorSettings.CaretEasing easing) {
+        if (easing.equals(myCaretEasing)) {
+            return;
+        }
+        myCaretEasing = easing;
         fireEditorRefresh();
     }
 

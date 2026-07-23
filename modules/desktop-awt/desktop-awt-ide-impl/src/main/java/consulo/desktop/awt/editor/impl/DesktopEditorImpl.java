@@ -135,6 +135,8 @@ import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -211,7 +213,10 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private int mySavedSelectionStart = -1;
     private int mySavedSelectionEnd = -1;
 
-    private static final RepaintCursorCommand ourCaretBlinkingCommand = new RepaintCursorCommand();
+    private static final EditorCaretRepaintService ourCaretBlinkingCommand = new EditorCaretRepaintService();
+
+    final Map<Caret, Pair<Point2D, LogicalPosition>> lastPosMap = new ConcurrentHashMap<>();
+    @Nullable ScheduledFuture<?> caretAnimationHandle = null;
 
     @MouseSelectionState
     private int myMouseSelectionState;
@@ -2343,7 +2348,16 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     private void setCursorPosition() {
-        List<CaretRectangle> caretPoints = new ArrayList<>();
+        if (mySettings.isAnimatedCaret()) {
+            EditorCaretMoveService.getInstance().setCursorPosition(this);
+        }
+        else {
+            EditorCaretMoveService.getInstance().setCursorPositionImmediately(this);
+        }
+    }
+
+    List<CaretUpdate> calculateCaretUpdates() {
+        List<CaretUpdate> updates = new ArrayList<>();
         for (Caret caret : getCaretModel().getAllCarets()) {
             boolean isRtl = caret.isAtRtlLocation();
             VisualPosition caretPosition = caret.getVisualPosition();
@@ -2357,9 +2371,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
             if (!isRtl && myInlayModel.hasInlineElementAt(caretPosition)) {
                 width = Math.min(width, (float) Math.ceil(myView.getPlainSpaceWidth()));
             }
-            caretPoints.add(new CaretRectangle(pos1, width, caret, isRtl));
+            updates.add(new CaretUpdate(pos1, caret.getLogicalPosition(), width, caret, isRtl));
         }
-        myCaretCursor.setPositions(caretPoints.toArray(new CaretRectangle[0]));
+        return updates;
     }
 
     @Override
@@ -2403,12 +2417,16 @@ public final class DesktopEditorImpl extends CodeEditorBase
         public final Caret myCaret;
         public final boolean myIsRtl;
 
-        private CaretRectangle(Point2D point, float width, Caret caret, boolean isRtl) {
+        CaretRectangle(Point2D point, float width, Caret caret, boolean isRtl) {
             myPoint = point;
             myWidth = Math.max(width, 2);
             myCaret = caret;
             myIsRtl = isRtl;
         }
+    }
+
+    public float getCaretBlinkOpacity() {
+        return myCaretCursor.getBlinkOpacity();
     }
 
     class CaretCursor {
@@ -2418,6 +2436,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
         protected boolean myIsShown;
         protected long myStartTime;
+        protected float myBlinkOpacity = 1.0f;
 
         private CaretCursor() {
             myLocations = new CaretRectangle[]{new CaretRectangle(new Point(0, 0), 0, null, false)};
@@ -2440,6 +2459,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 ourCaretBlinkingCommand.setBlinkCaret(blink);
                 ourCaretBlinkingCommand.setBlinkPeriod(blinkPeriod);
                 myIsShown = true;
+                myBlinkOpacity = 1.0f;
             }
         }
 
@@ -2449,13 +2469,50 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
         }
 
+        void setActive(boolean active) {
+            synchronized (ourCaretBlinkingCommand) {
+                myIsShown = active;
+            }
+        }
+
+        void setFullOpacity() {
+            synchronized (ourCaretBlinkingCommand) {
+                myIsShown = true;
+                myBlinkOpacity = 1.0f;
+            }
+        }
+
+        float getBlinkOpacity() {
+            synchronized (ourCaretBlinkingCommand) {
+                return myBlinkOpacity;
+            }
+        }
+
+        void setBlinkOpacity(float opacity) {
+            synchronized (ourCaretBlinkingCommand) {
+                myBlinkOpacity = opacity;
+            }
+        }
+
+        long getStartTime() {
+            synchronized (ourCaretBlinkingCommand) {
+                return myStartTime;
+            }
+        }
+
+        void setStartTime(long startTime) {
+            synchronized (ourCaretBlinkingCommand) {
+                myStartTime = startTime;
+            }
+        }
+
         private void passivate() {
             synchronized (ourCaretBlinkingCommand) {
                 myIsShown = false;
             }
         }
 
-        private void setPositions(CaretRectangle[] locations) {
+        void setPositions(CaretRectangle[] locations) {
             myStartTime = System.currentTimeMillis();
             myLocations = locations;
         }
