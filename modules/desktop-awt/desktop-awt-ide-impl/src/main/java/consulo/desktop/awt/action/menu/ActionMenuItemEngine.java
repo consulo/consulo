@@ -145,13 +145,13 @@ public class ActionMenuItemEngine {
                 }
                 else if (Presentation.PROP_ENABLED.equals(name)) {
                     myButton.setEnabled(myPresentation.isEnabled());
-                    updateIcon(myAction.getAction());
+                    updateIcon();
                 }
                 else if (Presentation.PROP_TEXT.equals(name)) {
                     updateTextAndMnemonic(myPresentation.getTextValue(), myPresentation.isDisabledMnemonic());
                 }
                 else if (Presentation.PROP_ICON.equals(name) || Presentation.PROP_DISABLED_ICON.equals(name) || SELECTED.equals(name)) {
-                    updateIcon(myAction.getAction());
+                    updateIcon();
                 }
             }
             finally {
@@ -175,7 +175,6 @@ public class ActionMenuItemEngine {
     private final boolean myInsideCheckedGroup;
     private final AbstractButton myButton;
     private DataContext myContext;
-    private AnActionEvent myEvent;
     private MenuItemSynchronizer myMenuItemSynchronizer;
     private final boolean myEnableMnemonics;
     private final boolean myEnableIcons;
@@ -199,8 +198,6 @@ public class ActionMenuItemEngine {
         myContext = context;
         myEnableMnemonics = enableMnemonics;
         myInsideCheckedGroup = insideCheckedGroup;
-
-        myEvent = new AnActionEvent(null, context, place, myPresentation, ActionManager.getInstance(), 0, true, false);
 
         button.addActionListener(new ActionTransmitter());
 
@@ -233,7 +230,7 @@ public class ActionMenuItemEngine {
         updateTextAndMnemonic(myPresentation.getTextValue(), myPresentation.isDisabledMnemonic());
 
         AnAction action = myAction.getAction();
-        updateIcon(action);
+        updateIcon();
         String id = ActionManager.getInstance().getId(action);
         if (id != null) {
             Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(id);
@@ -292,12 +289,9 @@ public class ActionMenuItemEngine {
     }
 
     @RequiredUIAccess
-    private void updateIcon(AnAction action) {
+    private void updateIcon() {
         if (isToggleable() && (myPresentation.getIcon() == null || myInsideCheckedGroup)) {
-            UIAccess uiAccess = UIAccess.current();
-            ActionRunnerAsync.performDumbAwareUpdateAsync(action, myEvent).whenCompleteAsync((ignored, throwable) -> {
-                ((JCheckBoxMenuItem) myButton).setState(Toggleable.isSelected(myEvent.getPresentation()));
-            }, uiAccess);
+            ((JCheckBoxMenuItem) myButton).setState(Toggleable.isSelected(myPresentation));
         }
         else {
             if (UISettings.getInstance().SHOW_ICONS_IN_MENUS && myEnableIcons) {
