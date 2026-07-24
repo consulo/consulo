@@ -31,20 +31,11 @@ public final class ReadAction<T> {
     }
 
     public static <T, E extends Throwable> T computeNotNull(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
-        Application application = Application.get();
-        if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed()) {
-            return action.get();
-        }
-
         return Application.get().runReadAction(action);
     }
 
     public static <T extends @Nullable Object, E extends Throwable> T compute(@RequiredReadAction ThrowableSupplier<T, E> action) throws E {
         Application application = Application.get();
-        if (application.isReadAccessAllowed() && !application.isWriteAccessAllowed()) {
-            return action.get();
-        }
-
         return application.runReadAction(action);
     }
 

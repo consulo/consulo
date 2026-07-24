@@ -571,6 +571,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public void runReadAction(Runnable action) {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            action.run();
+            return;
+        }
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             action.run();
@@ -584,6 +589,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T> T runReadAction(Supplier<T> computation) {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            return computation.get();
+        }
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
@@ -597,6 +606,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T, E extends Throwable> T runReadAction(ThrowableSupplier<T, E> computation) throws E {
+        if (isReadAccessAllowed() && !isWriteAccessAllowed()) {
+            return computation.get();
+        }
+
         RWLock.ReadToken status = myLock.startRead();
         try {
             return computation.get();
