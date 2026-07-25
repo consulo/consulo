@@ -109,6 +109,7 @@ public class IdeEventQueue extends EventQueue {
 
     private int myAsyncInputDispatchCount;
     private final java.util.ArrayDeque<KeyEvent> myHeldKeyEvents = new java.util.ArrayDeque<>();
+    private int myReplayInProgressCount;
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private boolean myIsInInputEvent;
@@ -874,11 +875,27 @@ public class IdeEventQueue extends EventQueue {
     }
 
     private void flushHeldKeyEvents() {
+        if (myHeldKeyEvents.isEmpty()) {
+            return;
+        }
+
         // repost instead of dispatching inline: keeps the chronological order relative to the action
         // which has just been performed, and lets a modal event pump started by that action deliver them
         while (myAsyncInputDispatchCount == 0 && !myHeldKeyEvents.isEmpty()) {
             postEvent(myHeldKeyEvents.poll());
         }
+
+        // the reposted events are still ahead of us in the queue, and until they are dispatched the key
+        // dispatcher must keep STATE_PROCESSED so that inProcessedState() can swallow them. The sentinel
+        // is posted after them, so it marks the point where the replay is really over.
+        myReplayInProgressCount++;
+        //noinspection SSBasedInspection
+        SwingUtilities.invokeLater(() -> {
+            if (--myReplayInProgressCount <= 0) {
+                myReplayInProgressCount = 0;
+                maybeReady();
+            }
+        });
     }
 
     public void flushQueue() {
@@ -977,7 +994,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     private boolean isReady() {
-        return !myKeyboardBusy && myKeyEventDispatcher.isReady();
+        return !myKeyboardBusy && myReplayInProgressCount == 0 && myKeyEventDispatcher.isReady();
     }
 
     public void maybeReady() {

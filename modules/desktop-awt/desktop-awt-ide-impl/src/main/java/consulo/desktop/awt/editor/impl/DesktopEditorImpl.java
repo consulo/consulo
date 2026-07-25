@@ -5,7 +5,6 @@ import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
@@ -1993,9 +1992,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     private void requestFocus() {
-        IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-        if (focusManager.getFocusOwner() != myEditorComponent) { //IDEA-64501
-            focusManager.requestFocus(myEditorComponent, true);
+        if (!myEditorComponent.hasFocus()) { //IDEA-64501
+            ProjectIdeFocusManager.getInstance(myProject).requestFocus(myEditorComponent, true);
         }
     }
 

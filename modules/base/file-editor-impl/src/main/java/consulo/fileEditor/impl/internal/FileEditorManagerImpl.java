@@ -937,7 +937,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             // Transfer focus into editor
             if (!myProject.getApplication().isUnitTestMode() && focusEditor) {
                 //myFirstIsActive = myTabbedContainer1.equals(tabbedContainer);
-                window.setAsCurrentWindow(true);
                 ToolWindowManager.getInstance(myProject).activateEditorComponent();
 
                 window.getOwner().toFront();

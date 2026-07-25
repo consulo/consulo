@@ -32,7 +32,9 @@ import consulo.ide.impl.idea.ui.tabs.impl.table.TableLayout;
 import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
 import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.os.UnixOperationSystem;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Button;
@@ -51,6 +53,7 @@ import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
@@ -834,15 +837,17 @@ public abstract class JBTabsImpl extends JComponent
             if (!requestFocus) {
                 return AsyncResult.done(null);
             }
+
+            Component owner = myFocusManager.getFocusOwner();
+            JComponent c = info.getComponent();
+            if (owner != null && c != null && (c == owner || SwingUtilities.isDescendingFrom(owner, c))) {
+                // This might look like a no-op, but in some cases it's not. In particular, it's required when a focus transfer has just been
+                // requested to another component. E.g., this happens on 'unsplit' operation when we remove an editor component from UI hierarchy and
+                // re-add it at once in a different layout, and want that editor component to preserve focus afterward.
+                return requestFocusLaterOn(owner);
+            }
             else {
-                Component owner = myFocusManager.getFocusOwner();
-                JComponent c = info.getComponent();
-                if (c != null && owner != null) {
-                    if (c == owner || SwingUtilities.isDescendingFrom(owner, c)) {
-                        return AsyncResult.done(null);
-                    }
-                }
-                return requestFocus(getToFocus());
+                return requestFocusLater();
             }
         }
 
@@ -862,26 +867,24 @@ public abstract class JBTabsImpl extends JComponent
 
         fireSelectionChanged(oldInfo, newInfo);
 
-        if (requestFocus) {
-            JComponent toFocus = getToFocus();
-            if (myProject != null && toFocus != null) {
-                AsyncResult<Void> result = new AsyncResult<Void>();
-                requestFocus(toFocus).doWhenProcessed(() -> {
-                    if (myDisposed) {
-                        result.setRejected();
-                    }
-                    else {
-                        removeDeferred().notifyWhenDone(result);
-                    }
-                });
-                return result;
-            }
-            else {
-                requestFocus();
-                return removeDeferred();
-            }
+        if (!requestFocus) {
+            return removeDeferred();
+        }
+
+        if (myProject != null && getToFocus() != null) {
+            AsyncResult<Void> result = AsyncResult.undefined();
+            requestFocusLater().doWhenProcessed(() -> {
+                if (myDisposed) {
+                    result.setRejected();
+                }
+                else {
+                    removeDeferred().notifyWhenDone(result);
+                }
+            });
+            return result;
         }
         else {
+            requestFocusLaterOn(this);
             return removeDeferred();
         }
     }
@@ -940,17 +943,47 @@ public abstract class JBTabsImpl extends JComponent
         }
     }
 
-    private AsyncResult<Void> requestFocus(JComponent toFocus) {
+    /**
+     * Do not pass {@link #getToFocus()} inside, use {@link #requestFocusLater()}, as its value might change.
+     */
+    private AsyncResult<Void> requestFocusLaterOn(@Nullable Component toFocus) {
         if (toFocus == null) {
             return AsyncResult.resolved();
         }
-
-        if (isShowing()) {
-            return myFocusManager.requestFocus(toFocus, true);
-        }
-        else {
+        if (!isShowing()) {
             return AsyncResult.rejected();
         }
+
+        AsyncResult<Void> result = AsyncResult.undefined();
+        Application.get().invokeLater(() -> myFocusManager.requestFocus(toFocus, true).notifyWhenDone(result));
+        return result;
+    }
+
+    private AsyncResult<Void> requestFocusLater() {
+        if (!isShowing()) {
+            return AsyncResult.rejected();
+        }
+        // On Wayland, requestFocusInWindow() will steal the focus from the popup,
+        // leading to an uncomfortable state when the popup is still showing,
+        // but the editor is focused (and receives input!).
+        // Especially annoying with the Recent Files popup, when the active editor is closed from the popup (Del / Backspace)
+        // and the focus is transferred to the next editor.
+        if (Platform.current().os() instanceof UnixOperationSystem os && os.isWayland()
+            && StackingPopupDispatcher.getInstance().isPopupFocused()) {
+            return AsyncResult.rejected();
+        }
+
+        AsyncResult<Void> result = AsyncResult.undefined();
+        Application.get().invokeLater(() -> {
+            JComponent toFocus = getToFocus();
+            if (toFocus == null) {
+                result.setDone();
+            }
+            else {
+                myFocusManager.requestFocus(toFocus, true).notifyWhenDone(result);
+            }
+        });
+        return result;
     }
 
     private AsyncResult<Void> removeDeferred() {

@@ -19,10 +19,12 @@ import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.*;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
@@ -69,6 +71,7 @@ public class SingleRowLayout extends TabLayout {
     return getStrategy().isDragOut(tabLabel, deltaX, deltaY);
   }
 
+  @RequiredUIAccess
   public SingleRowLayout(JBTabsImpl tabs) {
     myTabs = tabs;
     myTop = new SingleRowLayoutStrategy.Top(this);
@@ -80,9 +83,11 @@ public class SingleRowLayout extends TabLayout {
     moreBtn.setIcon(AllIcons.Actions.FindAndShowNextMatchesSmall);
     moreBtn.addStyle(ButtonStyle.TOOLBAR);
     moreBtn.addClickListener(event -> myTabs.showMorePopup(null));
+    moreBtn.setFocusable(false);
+    moreBtn.setVisible(false);
+
     myMoreButton = (JComponent) TargetAWT.to(moreBtn);
     myMoreButton.setOpaque(false);
-    myMoreButton.setVisible(false);
   }
 
   SingleRowLayoutStrategy getStrategy() {

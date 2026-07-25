@@ -20,6 +20,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.util.lang.StringUtil;
 
@@ -56,9 +57,12 @@ public class ActionPanel extends NonOpaquePanel {
             topPadding = 4;
         }
 
+        setFocusable(false);
+
         myComponent = myActionToolbar.getComponent();
         myComponent.setBorder(JBUI.Borders.empty(topPadding, leftPadding, 0, 0));
         myComponent.setOpaque(false);
+        myComponent.setFocusable(false);
 
         add(myComponent);
 
@@ -79,7 +83,6 @@ public class ActionPanel extends NonOpaquePanel {
         // myPaintPanel = visibility;
     }
 
-    
     public CompletableFuture<Boolean> updateAsync(UIAccess uiAccess) {
         List<? extends AnAction> oldVisibleActions = myVisibleActions;
 
@@ -91,6 +94,8 @@ public class ActionPanel extends NonOpaquePanel {
             myVisibleActions = actions;
 
             boolean changed = !Objects.equals(oldVisibleActions, myVisibleActions);
+
+            UIUtil.uiTraverser(myComponent).forEach(c -> c.setFocusable(false));
 
             if (changed) {
                 uiAccess.give((Runnable) this::update);

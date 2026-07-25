@@ -444,6 +444,12 @@ public class DefaultIdeMenuBar extends JMenuBar implements IdeMenuBar, Predicate
   }
 
   @Override
+  public JMenu add(JMenu menu) {
+    menu.setFocusable(false);
+    return super.add(menu);
+  }
+
+  @Override
   public int getMenuCount() {
     int menuCount = super.getMenuCount();
     return myClockPanel != null ? menuCount - 2 : menuCount;

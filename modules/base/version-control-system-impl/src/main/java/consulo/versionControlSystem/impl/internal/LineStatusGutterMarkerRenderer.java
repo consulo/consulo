@@ -153,7 +153,6 @@ public class LineStatusGutterMarkerRenderer {
             @Override
             public void run() {
                 if (myDisposed) return;
-                revalidateAllEditors();
                 repaintGutter();
                 ApplicationManager.getApplication().runReadAction(() -> updateErrorStripeHighlighters());
             }
