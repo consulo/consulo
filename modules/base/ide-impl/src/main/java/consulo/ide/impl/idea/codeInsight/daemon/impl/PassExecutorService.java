@@ -101,7 +101,9 @@ final class PassExecutorService implements Disposable {
         mySubmittedPasses.clear();
     }
 
-    void submitPasses(Map<FileEditor, HighlightingPass[]> passesMap, DaemonProgressIndicator updateProgress) {
+    void submitPasses(Map<FileEditor, HighlightingPass[]> passesMap,
+                      Map<FileEditor, Document> editorDocuments,
+                      DaemonProgressIndicator updateProgress) {
         if (isDisposed()) {
             return;
         }
@@ -123,8 +125,7 @@ final class PassExecutorService implements Disposable {
                 document = editor.getDocument();
             }
             else {
-                VirtualFile virtualFile = FileEditorManager.getInstance(myProject).getFile(fileEditor);
-                document = virtualFile == null ? null : FileDocumentManager.getInstance().getDocument(virtualFile);
+                document = editorDocuments.get(fileEditor);
             }
             if (document != null) {
                 vFiles.add(FileDocumentManager.getInstance().getFile(document));

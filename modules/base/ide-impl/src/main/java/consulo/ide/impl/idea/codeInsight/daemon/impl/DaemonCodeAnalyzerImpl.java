@@ -27,6 +27,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
+import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
@@ -409,7 +410,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         myUpdateRunnableFuture.cancel(false);
 
         DaemonProgressIndicator progress = createUpdateProgress(map.keySet());
-        myPassExecutorService.submitPasses(map, progress);
+        myPassExecutorService.submitPasses(map, Map.of(), progress);
         try {
             fileStatusMap.allowDirt(canChangeDocument);
             long start = System.currentTimeMillis();
@@ -993,6 +994,13 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
                         editorUIContexts.put(fileEditor, contexts);
                     }
                 }
+                else {
+                    VirtualFile virtualFile = FileEditorManager.getInstance(dca.myProject).getFile(fileEditor);
+                    Document document = virtualFile == null ? null : FileDocumentManager.getInstance().getDocument(virtualFile);
+                    if (document != null) {
+                        editorDocuments.put(fileEditor, document);
+                    }
+                }
             }
 
             JobLauncher.getInstance().submitToJobThread(
@@ -1093,7 +1101,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             }
         }
 
-        myPassExecutorService.submitPasses(passes, progress);
+        myPassExecutorService.submitPasses(passes, editorDocuments, progress);
     }
 
     
