@@ -240,7 +240,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-                SwingUtilities.invokeLater(windowManager::showFrame);
+                // frames will be showed, so not need show default frame
             }
             else {
                 SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
