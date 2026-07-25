@@ -120,17 +120,17 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
                 try (InputStream stream = Files.newInputStream(indexFile)) {
                     LocalizeProto.LocalizeIndex from = LocalizeProto.LocalizeIndex.parseFrom(stream);
 
-                    from.getLocalizesList().parallelStream().forEach(localize -> {
+                    from.getLocalizesList().forEach(localize -> {
                         String localizeId = localize.getId();
                         String localeStr = localize.getLocale();
 
                         Locale locale = buildLocale(localeStr);
 
-                        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
+                        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new ConcurrentHashMap<>());
 
                         Map<String, LocalizeKeyText> map = localize.getTextsList()
                             .stream()
-                            .collect(Collectors.toMap(LocalizeProto.Text::getId, text -> new LocalizeKeyText(text.getText())));
+                            .collect(Collectors.toMap(LocalizeProto.Text::getId, text -> new LocalizeKeyText(text.getText()), (a, b) -> a));
 
                         mapByLocalizeId.put(localizeId, new IndexLocalizeLoader(localizeId, pluginDescriptor, map));
                     });
@@ -261,7 +261,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         // -5 - its '.yaml' prefix
         String localizeId = fullFilePath.substring(localeStr.length() + 1, fullFilePath.length() - YAML_EXTENSION.length());
 
-        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
+        Map<String, LocalizeLoader<?>> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new ConcurrentHashMap<>());
 
         LocalizeFileState state = new LocalizeFileState(localizeId, fileInfo.descriptor(), zipEntryName);
 
@@ -388,9 +388,11 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
             return Map.entry(locale, value);
         }
 
-        value = getValue(key, ourDefaultLocale);
-        if (value != null) {
-            return Map.entry(ourDefaultLocale, value);
+        if (!ourDefaultLocale.equals(locale)) {
+            value = getValue(key, ourDefaultLocale);
+            if (value != null) {
+                return Map.entry(ourDefaultLocale, value);
+            }
         }
 
         LOG.warn("Can't find localize value: " + key + ", current locale: " + locale);
