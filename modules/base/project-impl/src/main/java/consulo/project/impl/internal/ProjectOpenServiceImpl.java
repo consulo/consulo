@@ -37,6 +37,7 @@ import consulo.project.internal.ProjectOpenSetting;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
@@ -374,8 +375,17 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             return result;
         }
 
+        AutoCloseable frameReuse = WindowManagerEx.getInstanceEx().withFrameReuseEnabled();
+
         myProjectManager.get().closeAndDisposeAsync(openContext.projectToClose(), uiAccess)
             .whenComplete((closed, error) -> {
+                try {
+                    frameReuse.close();
+                }
+                catch (Exception e) {
+                    LOG.error(e);
+                }
+
                 if (error != null) {
                     result.completeExceptionally(error);
                 }

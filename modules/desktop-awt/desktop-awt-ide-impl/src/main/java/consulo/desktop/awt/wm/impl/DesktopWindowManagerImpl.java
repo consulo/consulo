@@ -72,6 +72,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     private Boolean myAlphaModeSupported = null;
 
+    private boolean myFrameReuseEnabled = false;
+
     private final EventDispatcher<WindowManagerListener> myEventDispatcher = EventDispatcher.create(WindowManagerListener.class);
 
     private final DesktopWindowWatcher myWindowWatcher;
@@ -627,13 +629,20 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         implFrame.setFileTitle(null, null);
 
         myProject2Frame.remove(project);
-        if (myProject2Frame.isEmpty()) {
+        if (myFrameReuseEnabled && myProject2Frame.isEmpty()) {
             myProject2Frame.put(null, implFrame);
         }
         else {
             Disposer.dispose(implFrame.getStatusBar());
             jFrame.dispose();
         }
+    }
+
+    @Override
+    public AutoCloseable withFrameReuseEnabled() {
+        boolean oldValue = myFrameReuseEnabled;
+        myFrameReuseEnabled = true;
+        return () -> myFrameReuseEnabled = oldValue;
     }
 
     @Override

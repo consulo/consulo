@@ -59,6 +59,11 @@ public abstract class WindowManagerEx extends WindowManager {
 
   public abstract void releaseFrame(IdeFrameEx frame);
 
+  public AutoCloseable withFrameReuseEnabled() {
+    return () -> {
+    };
+  }
+
   /**
    * @return focus owner of the specified window.
    * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.

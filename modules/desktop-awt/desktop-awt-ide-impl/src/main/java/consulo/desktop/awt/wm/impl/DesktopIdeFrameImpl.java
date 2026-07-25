@@ -160,6 +160,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                 super.dispose();
                 return;
             }
+            // must be called in addition to the `dispose`, otherwise not removed from `Window.allWindows` list.
+            setVisible(false);
+
             MouseGestureManager.getInstance().remove(DesktopIdeFrameImpl.this);
 
             if (myBalloonLayout != null) {
