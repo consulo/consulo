@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.diff.internal.DiffImplUtil;
-import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.logging.Logger;
 
 import org.jspecify.annotations.Nullable;
@@ -40,7 +39,6 @@ public class VcsRange {
 
   private final @Nullable List<InnerRange> myInnerRanges;
 
-  private @Nullable RangeHighlighter myRangeHighlighter;
   private boolean myValid = true;
 
   public VcsRange(VcsRange range) {
@@ -129,18 +127,6 @@ public class VcsRange {
 
   public int getVcsLine2() {
     return myVcsLine2;
-  }
-
-  public boolean hasHighlighter() {
-    return myRangeHighlighter != null;
-  }
-
-  public void setHighlighter(@Nullable RangeHighlighter highlighter) {
-    myRangeHighlighter = highlighter;
-  }
-
-  public @Nullable RangeHighlighter getHighlighter() {
-    return myRangeHighlighter;
   }
 
   public boolean isValid() {

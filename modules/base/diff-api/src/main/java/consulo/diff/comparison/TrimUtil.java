@@ -20,6 +20,7 @@ import consulo.diff.util.MergeRange;
 import consulo.diff.util.Range;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import static consulo.util.lang.StringUtil.isWhiteSpace;
 
@@ -218,6 +219,50 @@ public class TrimUtil {
       Object c1 = text1.get(end1 - 1);
       Object c2 = text2.get(end2 - 1);
       if (!c1.equals(c2)) break;
+      end1--;
+      end2--;
+    }
+
+    return oldEnd1 - end1;
+  }
+
+  public static <T> Range expand(List<? extends T> text1, List<? extends T> text2,
+                                 int start1, int start2, int end1, int end2,
+                                 BiPredicate<T, T> equals) {
+    int count1 = expandForward(text1, text2, start1, start2, end1, end2, equals);
+    start1 += count1;
+    start2 += count1;
+
+    int count2 = expandBackward(text1, text2, start1, start2, end1, end2, equals);
+    end1 -= count2;
+    end2 -= count2;
+
+    return new Range(start1, end1, start2, end2);
+  }
+
+  public static <T> int expandForward(List<? extends T> text1, List<? extends T> text2,
+                                      int start1, int start2, int end1, int end2,
+                                      BiPredicate<T, T> equals) {
+    int oldStart1 = start1;
+    while (start1 < end1 && start2 < end2) {
+      T c1 = text1.get(start1);
+      T c2 = text2.get(start2);
+      if (!equals.test(c1, c2)) break;
+      start1++;
+      start2++;
+    }
+
+    return start1 - oldStart1;
+  }
+
+  public static <T> int expandBackward(List<? extends T> text1, List<? extends T> text2,
+                                       int start1, int start2, int end1, int end2,
+                                       BiPredicate<T, T> equals) {
+    int oldEnd1 = end1;
+    while (start1 < end1 && start2 < end2) {
+      T c1 = text1.get(end1 - 1);
+      T c2 = text2.get(end2 - 1);
+      if (!equals.test(c1, c2)) break;
       end1--;
       end2--;
     }

@@ -15,32 +15,19 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
-import consulo.application.Application;
-import consulo.codeEditor.DocumentMarkupModel;
-import consulo.codeEditor.markup.MarkupModel;
-import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
-import consulo.document.util.TextRange;
-import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.internal.EditorNotificationBuilderEx;
-import consulo.fileEditor.internal.EditorNotificationBuilderFactory;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
-import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 /**
  * @author irengrig
@@ -54,7 +41,6 @@ public class LineStatusTracker extends LineStatusTrackerBase {
         SILENT
     }
 
-    private static final Key<JComponent> PANEL_KEY = Key.create("LineStatusTracker.CanNotCalculateDiffPanel");
 
 
     private final VirtualFile myVirtualFile;
@@ -144,6 +130,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
             }
         }
 
+        resetInnerRanges();
         reinstallRanges();
     }
 
@@ -151,67 +138,6 @@ public class LineStatusTracker extends LineStatusTrackerBase {
     @RequiredUIAccess
     protected boolean isDetectWhitespaceChangedLines() {
         return myMode == Mode.SMART;
-    }
-
-    @Override
-    @RequiredUIAccess
-    protected void installNotification(String text) {
-        FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
-        for (FileEditor editor : editors) {
-            JComponent panel = editor.getUserData(PANEL_KEY);
-            if (panel == null) {
-                EditorNotificationBuilderFactory factory = Application.get().getInstance(EditorNotificationBuilderFactory.class);
-
-                EditorNotificationBuilderEx builder = (EditorNotificationBuilderEx) factory.newBuilder();
-                builder.withText(LocalizeValue.ofNullable(text));
-
-                JComponent newPanel = builder.getComponent();
-                editor.putUserData(PANEL_KEY, newPanel);
-                myFileEditorManager.addTopComponent(editor, newPanel);
-            }
-        }
-    }
-
-    @Override
-    @RequiredUIAccess
-    protected void destroyNotification() {
-        FileEditor[] editors = myFileEditorManager.getEditors(myVirtualFile);
-        for (FileEditor editor : editors) {
-            JComponent panel = editor.getUserData(PANEL_KEY);
-            if (panel != null) {
-                myFileEditorManager.removeTopComponent(editor, panel);
-                editor.putUserData(PANEL_KEY, null);
-            }
-        }
-    }
-
-    @Override
-    @RequiredUIAccess
-    protected void createHighlighter(VcsRange range) {
-        UIAccess.assertIsUIThread();
-
-        if (range.getHighlighter() != null) {
-            LineStatusTrackerBase.LOG.error("Multiple highlighters registered for the same Range");
-            return;
-        }
-
-        if (myMode == Mode.SILENT) {
-            return;
-        }
-
-        int first =
-            range.getLine1() >= getLineCount(myDocument) ? myDocument.getTextLength() : myDocument.getLineStartOffset(range.getLine1());
-        int second =
-            range.getLine2() >= getLineCount(myDocument) ? myDocument.getTextLength() : myDocument.getLineStartOffset(range.getLine2());
-
-        MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, true);
-
-        // Create a range highlighter for the error stripe (scrollbar colored dots) only.
-        // Gutter painting is delegated to the document-level LineStatusGutterMarkerRenderer,
-        // so no LineMarkerRenderer is attached here.
-        RangeHighlighter highlighter = LineStatusMarkerRenderer.createRangeHighlighter(range, new TextRange(first, second), markupModel);
-
-        range.setHighlighter(highlighter);
     }
 
     @Override

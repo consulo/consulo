@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.containers;
+package consulo.util.collection;
 
-import consulo.util.collection.PeekableIterator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class PeekableIteratorWrapper<T> implements PeekableIterator<T> {
-  
   private final Iterator<? extends T> myIterator;
-  private T myValue = null;
+  private @Nullable T myValue = null;
   private boolean myValidValue = false;
 
   public PeekableIteratorWrapper(Iterator<? extends T> iterator) {
@@ -39,7 +39,7 @@ public class PeekableIteratorWrapper<T> implements PeekableIterator<T> {
   @Override
   public T next() {
     if (myValidValue) {
-      T save = myValue;
+      T save = Objects.requireNonNull(myValue);
       advance();
       return save;
     }
@@ -49,7 +49,7 @@ public class PeekableIteratorWrapper<T> implements PeekableIterator<T> {
   @Override
   public T peek() {
     if (myValidValue) {
-      return myValue;
+      return Objects.requireNonNull(myValue);
     }
     throw new NoSuchElementException();
   }

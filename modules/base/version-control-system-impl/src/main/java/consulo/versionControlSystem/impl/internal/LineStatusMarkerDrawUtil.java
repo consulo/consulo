@@ -104,11 +104,12 @@ public final class LineStatusMarkerDrawUtil {
         }
         else {                                           // Mode.SMART – inner ranges
             List<VcsRange.InnerRange> innerRanges = range.getInnerRanges();
+            int line1 = range.getLine1();
 
             for (VcsRange.InnerRange inner : innerRanges) {
                 if (inner.getType() == VcsRange.DELETED) continue;
-                int start = DiffImplUtil.lineToY(editor, inner.getLine1());
-                int end = DiffImplUtil.lineToY(editor, inner.getLine2());
+                int start = DiffImplUtil.lineToY(editor, line1 + inner.getLine1());
+                int end = DiffImplUtil.lineToY(editor, line1 + inner.getLine2());
                 paintRect(g2, getGutterColor(inner, editor), null, xPaint, start, endX, end);
             }
 
@@ -116,7 +117,7 @@ public final class LineStatusMarkerDrawUtil {
 
             for (VcsRange.InnerRange inner : innerRanges) {
                 if (inner.getType() != VcsRange.DELETED) continue;
-                int start = DiffImplUtil.lineToY(editor, inner.getLine1());
+                int start = DiffImplUtil.lineToY(editor, line1 + inner.getLine1());
                 paintTriangle(g2, editor, getGutterColor(inner, editor), borderColor, xPaint, endX, start);
             }
         }

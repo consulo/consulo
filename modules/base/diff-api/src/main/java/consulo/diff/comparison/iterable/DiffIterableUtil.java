@@ -137,6 +137,19 @@ public class DiffIterableUtil {
     return new SubiterableDiffIterable(iterable, start1, end1, start2, end2);
   }
 
+  public static DiffIterable expandedIterable(DiffIterable iterable, int offset1, int offset2, int length1, int length2) {
+    if (!(offset1 + iterable.getLength1() <= length1 && offset2 + iterable.getLength2() <= length2)) {
+      throw new IllegalStateException();
+    }
+    return new ExpandedDiffIterable(iterable, offset1, offset2, length1, length2);
+  }
+
+  public static int getRangeDelta(Range range) {
+    int deleted = range.end1 - range.start1;
+    int inserted = range.end2 - range.start2;
+    return inserted - deleted;
+  }
+
   //
   // Misc
   //

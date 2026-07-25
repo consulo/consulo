@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
+import consulo.application.ApplicationManager;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -25,6 +26,7 @@ import consulo.codeEditor.markup.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -37,7 +39,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
+
+import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
 /**
  * Manages a single document-level gutter highlighter that paints all VCS changed-line
@@ -64,6 +69,9 @@ public class LineStatusGutterMarkerRenderer {
 
     /** Single document-wide gutter highlighter. Repainted on demand, never recreated. */
     private @Nullable RangeHighlighter myGutterHighlighter;
+
+    /** Error stripe markers, one per range. Owned here, rebuilt on the update queue. */
+    private final List<RangeHighlighter> myErrorStripeHighlighters = new ArrayList<>();
 
     private volatile boolean myDisposed = false;
 
@@ -137,17 +145,51 @@ public class LineStatusGutterMarkerRenderer {
     }
 
     /**
-     * Schedules a gutter repaint via the merge queue (100 ms debounce).
-     * Can be called from any thread; the actual repaint runs on EDT.
+     * Schedules a gutter repaint and an error stripe marker rebuild via the merge queue
+     * (100 ms debounce). Can be called from any thread; the actual work runs on EDT.
      */
     public void scheduleUpdate() {
         myUpdateQueue.queue(new Update("update") {
             @Override
             public void run() {
                 if (myDisposed) return;
+                revalidateAllEditors();
                 repaintGutter();
+                ApplicationManager.getApplication().runReadAction(() -> updateErrorStripeHighlighters());
             }
         });
+    }
+
+    @RequiredUIAccess
+    private void updateErrorStripeHighlighters() {
+        for (RangeHighlighter highlighter : myErrorStripeHighlighters) {
+            disposeHighlighter(highlighter);
+        }
+        myErrorStripeHighlighters.clear();
+
+        if (myTracker.isSilentMode()) return;
+
+        List<VcsRange> ranges = myTracker.getRanges();
+        if (ranges == null || ranges.isEmpty()) return;
+
+        MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, true);
+        int lineCount = getLineCount(myDocument);
+        for (VcsRange range : ranges) {
+            int first = range.getLine1() >= lineCount ? myDocument.getTextLength() : myDocument.getLineStartOffset(range.getLine1());
+            int second = range.getLine2() >= lineCount ? myDocument.getTextLength() : myDocument.getLineStartOffset(range.getLine2());
+
+            myErrorStripeHighlighters.add(
+                LineStatusMarkerRenderer.createRangeHighlighter(range, new TextRange(first, second), markupModel));
+        }
+    }
+
+    private void disposeHighlighter(RangeHighlighter highlighter) {
+        try {
+            highlighter.dispose();
+        }
+        catch (Exception e) {
+            LOG.error(e);
+        }
     }
 
     @RequiredUIAccess
@@ -162,6 +204,10 @@ public class LineStatusGutterMarkerRenderer {
     public void dispose() {
         myDisposed = true;
         Disposer.dispose(myEditorListenerDisposable);
+        for (RangeHighlighter highlighter : myErrorStripeHighlighters) {
+            disposeHighlighter(highlighter);
+        }
+        myErrorStripeHighlighters.clear();
         RangeHighlighter h = myGutterHighlighter;
         myGutterHighlighter = null;
         if (h != null) {
