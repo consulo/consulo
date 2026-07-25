@@ -18,6 +18,7 @@ package consulo.ui.ex.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -32,7 +33,8 @@ public interface KeyMapSetting {
             return shortcuts;
         }
 
-        return Platform.current().os().isMac();
+        PlatformOperatingSystem os = Platform.current().os();
+        return os.isMac() || os.isHaiku();
     }
 
     Boolean isUseUnicodeShortcuts();
