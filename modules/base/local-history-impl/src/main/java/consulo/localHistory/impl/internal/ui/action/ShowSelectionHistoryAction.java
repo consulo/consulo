@@ -26,6 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.history.VcsSelection;
 import consulo.versionControlSystem.history.VcsSelectionUtil;
@@ -59,12 +60,13 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         if (!e.hasData(EditorKeys.EDITOR_SNAPSHOT)) {
             e.getPresentation().setVisible(false);
+            return Coroutine.empty();
         }
         else {
-            super.update(e);
+            return super.updateAsync(e);
         }
     }
 
