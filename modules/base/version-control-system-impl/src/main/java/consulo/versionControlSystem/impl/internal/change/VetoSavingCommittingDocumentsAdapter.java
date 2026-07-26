@@ -18,16 +18,17 @@ package consulo.versionControlSystem.impl.internal.change;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.annotation.component.TopicImpl;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.versionControlSystem.impl.internal.change.ui.awt.CommitHelper;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.io.FileUtil;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.CommitHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -39,72 +40,68 @@ import java.util.Map;
  * @author yole
  * @since 2006-09-05
  */
-@Singleton
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
-@ServiceImpl
-public class VetoSavingCommittingDocumentsAdapter {
-  static final Object SAVE_DENIED = new Object();
+@TopicImpl(ComponentScope.APPLICATION)
+public class VetoSavingCommittingDocumentsAdapter implements FileDocumentManagerListener {
+    static final Object SAVE_DENIED = new Object();
 
-  private final FileDocumentManager myFileDocumentManager;
+    private final FileDocumentManager myFileDocumentManager;
 
-  @Inject
-  public VetoSavingCommittingDocumentsAdapter(FileDocumentManager fileDocumentManager) {
-    myFileDocumentManager = fileDocumentManager;
+    @Inject
+    public VetoSavingCommittingDocumentsAdapter(FileDocumentManager fileDocumentManager) {
+        myFileDocumentManager = fileDocumentManager;
+    }
 
-    Application.get().getMessageBus().connect().subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
-      @Override
-      @RequiredUIAccess
-      public void beforeAllDocumentsSaving() {
+    @Override
+    @RequiredUIAccess
+    public void beforeAllDocumentsSaving() {
         Map<Document, Project> documentsToWarn = getDocumentsBeingCommitted();
         if (!documentsToWarn.isEmpty()) {
-          boolean allowSave = showAllowSaveDialog(documentsToWarn);
-          updateSaveability(documentsToWarn, allowSave);
+            boolean allowSave = showAllowSaveDialog(documentsToWarn);
+            updateSaveability(documentsToWarn, allowSave);
         }
-      }
-    });
-  }
-
-  private Map<Document, Project> getDocumentsBeingCommitted() {
-    Map<Document, Project> documentsToWarn = new HashMap<>();
-    for (Document unsavedDocument : myFileDocumentManager.getUnsavedDocuments()) {
-      Object data = unsavedDocument.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
-      if (data instanceof Project project) {
-        documentsToWarn.put(unsavedDocument, project);
-      }
     }
-    return documentsToWarn;
-  }
 
-  private static void updateSaveability(Map<Document, Project> documentsToWarn, boolean allowSave) {
-    Object newValue = allowSave ? null : SAVE_DENIED;
-    for (Document document : documentsToWarn.keySet()) {
-      Project oldData = documentsToWarn.get(document);
-      //the committing thread could have finished already and file is not being committed anymore
-      document.replace(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY, oldData, newValue);
+    private Map<Document, Project> getDocumentsBeingCommitted() {
+        Map<Document, Project> documentsToWarn = new HashMap<>();
+        for (Document unsavedDocument : myFileDocumentManager.getUnsavedDocuments()) {
+            Object data = unsavedDocument.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
+            if (data instanceof Project project) {
+                documentsToWarn.put(unsavedDocument, project);
+            }
+        }
+        return documentsToWarn;
     }
-  }
 
-  @RequiredUIAccess
-  boolean showAllowSaveDialog(Map<Document, Project> documentsToWarn) {
-    StringBuilder messageBuilder = new StringBuilder(
-      "The following " + (documentsToWarn.size() == 1 ? "file is" : "files are") + " currently being committed to the VCS. " +
-      "Saving now could cause inconsistent data to be committed.\n"
-    );
-    for (Document document : documentsToWarn.keySet()) {
-      VirtualFile file = myFileDocumentManager.getFile(document);
-      messageBuilder.append(FileUtil.toSystemDependentName(file.getPath())).append("\n");
+    private static void updateSaveability(Map<Document, Project> documentsToWarn, boolean allowSave) {
+        Object newValue = allowSave ? null : SAVE_DENIED;
+        for (Document document : documentsToWarn.keySet()) {
+            Project oldData = documentsToWarn.get(document);
+            //the committing thread could have finished already and file is not being committed anymore
+            document.replace(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY, oldData, newValue);
+        }
     }
-    messageBuilder.append("Save the ").append(documentsToWarn.size() == 1 ? "file" : "files").append(" now?");
 
-    Project project = documentsToWarn.values().iterator().next();
-    int rc = Messages.showOkCancelDialog(
-      project,
-      messageBuilder.toString(),
-      "Save Files During Commit",
-      "Save Now",
-      "Postpone Save",
-      UIUtil.getQuestionIcon()
-    );
-    return rc == 0;
-  }
+    @RequiredUIAccess
+    boolean showAllowSaveDialog(Map<Document, Project> documentsToWarn) {
+        StringBuilder messageBuilder = new StringBuilder(
+            "The following " + (documentsToWarn.size() == 1 ? "file is" : "files are") + " currently being committed to the VCS. " +
+                "Saving now could cause inconsistent data to be committed.\n"
+        );
+        for (Document document : documentsToWarn.keySet()) {
+            VirtualFile file = myFileDocumentManager.getFile(document);
+            messageBuilder.append(FileUtil.toSystemDependentName(file.getPath())).append("\n");
+        }
+        messageBuilder.append("Save the ").append(documentsToWarn.size() == 1 ? "file" : "files").append(" now?");
+
+        Project project = documentsToWarn.values().iterator().next();
+        int rc = Messages.showOkCancelDialog(
+            project,
+            messageBuilder.toString(),
+            "Save Files During Commit",
+            "Save Now",
+            "Postpone Save",
+            UIUtil.getQuestionIcon()
+        );
+        return rc == 0;
+    }
 }
