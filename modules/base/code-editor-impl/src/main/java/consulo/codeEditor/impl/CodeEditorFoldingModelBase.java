@@ -26,6 +26,8 @@ import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.IntPair;
+import consulo.util.lang.MathUtil;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
@@ -69,6 +71,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     protected boolean myGutterRendererChanged;
     protected boolean myIsRepaintRequested;
     protected boolean myIsComplexDocumentChange;
+    private final Set<CustomFoldRegionImpl> myAffectedCustomRegions = new HashSet<>();
 
     protected CodeEditorFoldingModelBase(CodeEditorBase editor) {
         myEditor = editor;
@@ -570,6 +573,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     public void onBulkDocumentUpdateFinished() {
+        validateAffectedCustomRegions();
         myFoldTree.rebuild();
     }
 
@@ -592,10 +596,45 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
             else {
                 updateCachedOffsets();
             }
+            validateAffectedCustomRegions();
         }
         finally {
             myDocumentChangeProcessed = true;
         }
+    }
+
+    void addAffectedCustomRegions(CustomFoldRegionImpl customFoldRegion) {
+        myAffectedCustomRegions.add(customFoldRegion);
+    }
+
+    private void validateAffectedCustomRegions() {
+        if (myIsComplexDocumentChange) {
+            // validate all custom fold regions
+            myRegionTree.processAll(r -> {
+                if (r instanceof CustomFoldRegionImpl custom) {
+                    addAffectedCustomRegions(custom);
+                }
+                return true;
+            });
+            setComplexDocumentChange(false);
+        }
+        for (CustomFoldRegionImpl region : myAffectedCustomRegions) {
+            if (region.isValid() && !myFoldTree.checkIfValidToCreate(region.getStartOffset(), region.getEndOffset(), true, region)) {
+                myRegionTree.removeInterval(region);
+            }
+        }
+        myAffectedCustomRegions.clear();
+    }
+
+    void onCustomFoldRegionPropertiesChange(CustomFoldRegion foldRegion,
+                                            @MagicConstant(flagsFromClass = FoldingListener.ChangeFlags.class) int flags) {
+        for (FoldingListener listener : myListeners) {
+            listener.onCustomFoldRegionPropertiesChange(foldRegion, flags);
+        }
+    }
+
+    void setRepaintRequested(boolean value) {
+        myIsRepaintRequested = value;
     }
 
     @Override
@@ -622,7 +661,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
             startOffset >= endOffset ||
             DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), startOffset) ||
             DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), endOffset) ||
-            !myFoldTree.checkIfValidToCreate(startOffset, endOffset)) {
+            !myFoldTree.checkIfValidToCreate(startOffset, endOffset, false, null)) {
             return null;
         }
 
@@ -634,6 +673,40 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
             myGroups.putValue(group, region);
         }
         notifyListenersOnFoldRegionStateChange(region);
+        LOG.assertTrue(region.isValid());
+        return region;
+    }
+
+    @Override
+    public @Nullable CustomFoldRegion addCustomLinesFolding(int startLine, int endLine, CustomFoldRegionRenderer renderer) {
+        assertIsDispatchThreadForEditor();
+        if (!myIsBatchFoldingProcessing) {
+            LOG.error("Fold regions must be added or removed inside batchFoldProcessing() only.");
+            return null;
+        }
+        Document document = myEditor.getDocument();
+        int maxLineNumber = Math.max(0, document.getLineCount() - 1);
+        startLine = MathUtil.clamp(startLine, 0, maxLineNumber);
+        endLine = MathUtil.clamp(endLine, startLine, maxLineNumber);
+        int startOffset = document.getLineStartOffset(startLine);
+        int endOffset = document.getLineEndOffset(endLine);
+
+        if (!isFoldingEnabled() || startOffset >= endOffset || !myFoldTree.checkIfValidToCreate(startOffset, endOffset, true, null)) {
+            return null;
+        }
+
+        CustomFoldRegionImpl region = new CustomFoldRegionImpl(myEditor, startOffset, endOffset, renderer);
+        myRegionTree.addInterval(region, startOffset, endOffset, false, false, false, 0);
+        LOG.assertTrue(region.isValid());
+
+        collapseFoldRegion(region, false);
+        if (region.isExpanded()) { // caret inside region and 'do not collapse caret' flag is active
+            region.putUserData(DO_NOT_NOTIFY, Boolean.TRUE);
+            myRegionTree.removeInterval(region);
+            return null;
+        }
+        notifyListenersOnFoldRegionStateChange(region);
+
         LOG.assertTrue(region.isValid());
         return region;
     }

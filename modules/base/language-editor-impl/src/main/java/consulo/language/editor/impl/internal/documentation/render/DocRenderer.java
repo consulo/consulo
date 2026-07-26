@@ -1,0 +1,283 @@
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+package consulo.language.editor.impl.internal.documentation.render;
+
+import consulo.codeEditor.CustomFoldRegion;
+import consulo.codeEditor.CustomFoldRegionRenderer;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.ui.color.ColorValue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.JBHtmlEditorKit;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.CharArrayUtil;
+import consulo.util.lang.MathUtil;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
+
+/**
+ * Paints a documentation comment as rendered HTML inside a {@link CustomFoldRegion}.
+ * <p>
+ * Unlike the JetBrains implementation, which renders through {@code JBHtmlPane}, this uses Consulo's
+ * {@link JBHtmlEditorKit} - the same editor kit the documentation popup uses - so rendered docs match
+ * the rest of the documentation UI.
+ */
+public class DocRenderer implements CustomFoldRegionRenderer {
+    private static final int MIN_WIDTH = 350;
+    private static final int MAX_WIDTH = 680;
+
+    private static final int LEFT_INSET = 14;
+    private static final int RIGHT_INSET = 12;
+    private static final int TOP_BOTTOM_INSETS = 2;
+    private static final int TOP_BOTTOM_MARGINS = 4;
+    private static final int LINE_WIDTH = 2;
+    private static final int ARC_RADIUS = 5;
+
+    private final DocRenderItem myItem;
+
+    private JEditorPane myPane;
+    private int myCachedWidth = -1;
+    private int myCachedHeight = -1;
+    private boolean myContentUpdateNeeded;
+
+    public DocRenderer(DocRenderItem item) {
+        myItem = item;
+    }
+
+    public DocRenderItem getItem() {
+        return myItem;
+    }
+
+    void update(boolean updateSize, boolean updateContent, @Nullable List<Runnable> foldingTasks) {
+        CustomFoldRegion foldRegion = myItem.getFoldRegion();
+        if (foldRegion != null) {
+            if (updateSize) {
+                myCachedWidth = -1;
+                myCachedHeight = -1;
+            }
+            myContentUpdateNeeded = updateContent;
+            Runnable task = foldRegion::update;
+            if (foldingTasks == null) {
+                task.run();
+            }
+            else {
+                foldingTasks.add(task);
+            }
+        }
+    }
+
+    @Override
+    public int calcWidthInPixels(CustomFoldRegion region) {
+        if (myCachedWidth < 0) {
+            return myCachedWidth = calcWidth(region.getEditor());
+        }
+        return myCachedWidth;
+    }
+
+    @Override
+    public int calcHeightInPixels(CustomFoldRegion region) {
+        if (myCachedHeight < 0) {
+            Editor editor = region.getEditor();
+            int indent = 0;
+            // optimize editor opening: skip 'proper' width calculation for 'Loading...' inlays
+            if (myItem.getTextToRender() != null) {
+                indent = calcInlayStartX() - editor.getInsets().left;
+            }
+            int width = Math.max(0, calcWidth(editor) - indent - scale(LEFT_INSET) - scale(RIGHT_INSET));
+            JComponent component = getRendererComponent(editor, width, null);
+            return myCachedHeight = Math.max(editor.getLineHeight(),
+                component.getPreferredSize().height + scale(TOP_BOTTOM_INSETS) * 2 + scale(TOP_BOTTOM_MARGINS) * 2);
+        }
+        return myCachedHeight;
+    }
+
+    @Override
+    public void paint(CustomFoldRegion region, Graphics2D g, Rectangle2D r, TextAttributes textAttributes) {
+        int startX = calcInlayStartX();
+        int endX = (int) r.getX() + (int) r.getWidth();
+        if (startX >= endX) {
+            return;
+        }
+        int margin = scale(TOP_BOTTOM_MARGINS);
+        int filledHeight = (int) r.getHeight() - margin * 2;
+        if (filledHeight <= 0) {
+            return;
+        }
+        int filledStartY = (int) r.getY() + margin;
+
+        Editor editor = region.getEditor();
+        Color defaultBgColor = TargetAWT.to(editor.getColorsScheme().getDefaultBackground());
+        Color currentBgColor = TargetAWT.to(textAttributes.getBackgroundColor());
+        Color bgColor = currentBgColor == null ? defaultBgColor : ColorUtil.mix(defaultBgColor, currentBgColor, .5);
+        if (myPane != null) {
+            Color selectionColor = TargetAWT.to(editor.getSelectionModel().getTextAttributes().getBackgroundColor());
+            if (selectionColor != null) {
+                myPane.setSelectionColor(selectionColor);
+            }
+        }
+        if (currentBgColor != null) {
+            g.setColor(bgColor);
+            int arcDiameter = ARC_RADIUS * 2;
+            if (endX - startX >= arcDiameter) {
+                g.fillRect(startX, filledStartY, endX - startX - ARC_RADIUS, filledHeight);
+                Object savedHint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g.fillRoundRect(endX - arcDiameter, filledStartY, arcDiameter, filledHeight, arcDiameter, arcDiameter);
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, savedHint);
+            }
+            else {
+                g.fillRect(startX, filledStartY, endX - startX, filledHeight);
+            }
+        }
+        Color guideColor = TargetAWT.to(editor.getColorsScheme().getColor(DefaultLanguageHighlighterColors.DOC_COMMENT_GUIDE));
+        g.setColor(guideColor == null ? bgColor : guideColor);
+        g.fillRect(startX, filledStartY, scale(LINE_WIDTH), filledHeight);
+
+        int topBottomInset = scale(TOP_BOTTOM_INSETS);
+        int componentWidth = endX - startX - scale(LEFT_INSET) - scale(RIGHT_INSET);
+        int componentHeight = filledHeight - topBottomInset * 2;
+        if (componentWidth > 0 && componentHeight > 0) {
+            JEditorPane component = getRendererComponent(editor, componentWidth, bgColor);
+            Graphics dg = g.create(startX + scale(LEFT_INSET), filledStartY + topBottomInset, componentWidth, componentHeight);
+            UISettingsUtil.setupAntialiasing(dg);
+            component.paint(dg);
+            dg.dispose();
+        }
+    }
+
+    @Override
+    public @Nullable GutterIconRenderer calcGutterIconRenderer(CustomFoldRegion region) {
+        assert myItem.getFoldRegion() == region || myItem.getFoldRegion() == null;
+        return myItem.calcFoldingGutterIconRenderer();
+    }
+
+    @Override
+    public ActionGroup getContextMenuGroup(CustomFoldRegion region) {
+        ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+        group.add(new ToggleRenderingAction(myItem));
+        AnAction toggleRenderAllAction = ActionManager.getInstance().getAction("ToggleRenderedDocPresentationForAll");
+        if (toggleRenderAllAction != null) {
+            group.add(toggleRenderAllAction);
+        }
+        return group.build();
+    }
+
+    private static int scale(int value) {
+        return (int) (value * UISettingsUtil.getDefFontScale());
+    }
+
+    static int calcWidth(Editor editor) {
+        int availableWidth = editor.getScrollingModel().getVisibleArea().width;
+        if (availableWidth <= 0) {
+            // if editor is not shown yet, we create the inlay with maximum possible width,
+            // assuming that there's a higher probability that editor will be shown with larger width than with smaller width
+            return MAX_WIDTH;
+        }
+        return MathUtil.clamp(availableWidth, scale(MIN_WIDTH), scale(MAX_WIDTH));
+    }
+
+    private int calcInlayStartX() {
+        Editor editor = myItem.getEditor();
+        RangeHighlighter highlighter = myItem.getHighlighter();
+        if (highlighter.isValid()) {
+            Document document = editor.getDocument();
+            int nextLineNumber = document.getLineNumber(highlighter.getEndOffset()) + 1;
+            if (nextLineNumber < document.getLineCount()) {
+                int lineStartOffset = document.getLineStartOffset(nextLineNumber);
+                int contentStartOffset = CharArrayUtil.shiftForward(document.getImmutableCharSequence(), lineStartOffset, " \t\n");
+                return editor.offsetToXY(contentStartOffset, false, true).x;
+            }
+        }
+        return editor.getInsets().left;
+    }
+
+    private JEditorPane getRendererComponent(Editor editor, int width, @Nullable Color backgroundColor) {
+        JEditorPane pane = myPane;
+        if (pane == null || myContentUpdateNeeded) {
+            myContentUpdateNeeded = false;
+            myPane = pane = createEditorPane(editor, myItem.getTextToRender(), backgroundColor);
+        }
+        pane.setSize(width, 10_000_000 /* Arbitrary large value, that doesn't lead to overflows and precision loss */);
+        if (backgroundColor != null && pane.getBackground().getRGB() != backgroundColor.getRGB()) {
+            pane.setBackground(backgroundColor);
+            // trigger CSS styles update
+            pane.getPreferredSize();
+        }
+        return pane;
+    }
+
+    private static JEditorPane createEditorPane(Editor editor, @Nullable String text, @Nullable Color backgroundColor) {
+        JEditorPane pane = new JEditorPane();
+        pane.setEditable(false);
+        pane.setOpaque(false);
+        pane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        HTMLEditorKit editorKit = JBHtmlEditorKit.create(true);
+        applyStyleSheet(editorKit, editor);
+        pane.setEditorKit(editorKit);
+        pane.setContentType(UIUtil.HTML_MIME);
+        EditorColorsScheme scheme = editor.getColorsScheme();
+        Color textColor = getTextColor(scheme);
+        pane.setForeground(textColor);
+        pane.setSelectedTextColor(textColor);
+        pane.setBackground(backgroundColor != null ? backgroundColor : TargetAWT.to(scheme.getDefaultBackground()));
+        pane.setText(text == null ? "" : text);
+        return pane;
+    }
+
+    private static Color getTextColor(EditorColorsScheme scheme) {
+        TextAttributes attributes = scheme.getAttributes(DefaultLanguageHighlighterColors.DOC_COMMENT);
+        ColorValue color = attributes == null ? null : attributes.getForegroundColor();
+        return TargetAWT.to(color == null ? scheme.getDefaultForeground() : color);
+    }
+
+    private static void applyStyleSheet(HTMLEditorKit editorKit, Editor editor) {
+        EditorColorsScheme colorsScheme = editor.getColorsScheme();
+        Color textColor = getTextColor(colorsScheme);
+        ColorValue linkColorValue = colorsScheme.getColor(DefaultLanguageHighlighterColors.DOC_COMMENT_LINK);
+        Color linkColor = linkColorValue == null ? textColor : TargetAWT.to(linkColorValue);
+        StyleSheet styleSheet = editorKit.getStyleSheet();
+        styleSheet.addRule("body {overflow-wrap: anywhere; padding-top: " + scale(2) + "px; color: #"
+            + ColorUtil.toHex(textColor) + "}");
+        styleSheet.addRule("pre {white-space: pre-wrap}");
+        styleSheet.addRule("a {color: #" + ColorUtil.toHex(linkColor) + "; text-decoration: none}");
+        styleSheet.addRule(".sections {border-spacing: 0}");
+        styleSheet.addRule(".section {padding-right: " + scale(5) + "; white-space: nowrap}");
+    }
+
+    void clearCachedComponent() {
+        myPane = null;
+    }
+
+    static final class ToggleRenderingAction extends DumbAwareAction {
+        private final DocRenderItem item;
+
+        ToggleRenderingAction(DocRenderItem i) {
+            copyFrom(ActionManager.getInstance().getAction("ToggleRenderedDocPresentation"));
+            item = i;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            item.toggle();
+        }
+    }
+}

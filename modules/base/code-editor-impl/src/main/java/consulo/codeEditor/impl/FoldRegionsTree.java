@@ -166,30 +166,36 @@ public abstract class FoldRegionsTree {
         return data;
     }
 
-    public boolean checkIfValidToCreate(int start, int end) {
-        // check that range doesn't strictly overlaps other regions and is distinct from everything else
+    public boolean checkIfValidToCreate(int start, int end, boolean custom, FoldRegion toIgnore) {
+        // check that range doesn't strictly overlap other regions and is distinct from everything else
+        // notes specific to 'custom' fold regions:
+        // * we do allow two otherwise identical regions one of which is 'custom' and the other is not - the custom one always takes preference
+        //   over 'normal' one in terms of visibility
+        // * regions 'touching' on one of the boundaries are allowed only if both regions are 'normal', or 'custom' region fully contains
+        //   the 'normal' one - otherwise, fold region marker would need to be displayed in 'custom' region's area of the gutter, and that's not
+        //   currently supported
+        int length = end - start;
         return myMarkerTree.processOverlappingWith(start, end, region -> {
+            if (region == toIgnore || !region.isValid()) {
+                return true;
+            }
+
             int rStart = region.getStartOffset();
             int rEnd = region.getEndOffset();
-            if (rStart < start) {
-                if (region.isValid() && start < rEnd && rEnd < end) {
-                    return false;
-                }
+            int rLength = rEnd - rStart;
+            boolean rCustom = region instanceof CustomFoldRegion;
+
+            int overlapLength = Math.min(end, rEnd) - Math.max(start, rStart);
+            if (overlapLength == 0) {
+                return !(custom || rCustom);
             }
-            else if (rStart == start) {
-                if (rEnd == end) {
-                    return false;
-                }
+            if (overlapLength < length && overlapLength < rLength) {
+                return false;
             }
-            else {
-                if (rStart > end) {
-                    return true;
-                }
-                if (region.isValid() && rStart < end && end < rEnd) {
-                    return false;
-                }
+            if (length == rLength) {
+                return custom != rCustom;
             }
-            return true;
+            return start != rStart && end != rEnd || (length < rLength ? (!custom || rCustom) : (!rCustom || custom));
         });
     }
 

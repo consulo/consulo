@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor;
 
+import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 
 /**
@@ -79,4 +80,7 @@ public interface DefaultLanguageHighlighterColors {
     TextAttributesKey INLAY_BUTTON_FOCUSED = TextAttributesKey.of("INLAY_BUTTON_FOCUSED");
     TextAttributesKey INLAY_BUTTON_HOVERED = TextAttributesKey.of("INLAY_BUTTON_HOVERED");
     TextAttributesKey INLAY_TEXT_WITHOUT_BACKGROUND = TextAttributesKey.of("INLAY_TEXT_WITHOUT_BACKGROUND");
+
+    EditorColorKey DOC_COMMENT_GUIDE = EditorColorKey.createColorKey("DOC_COMMENT_GUIDE");
+    EditorColorKey DOC_COMMENT_LINK = EditorColorKey.createColorKey("DOC_COMMENT_LINK");
 }

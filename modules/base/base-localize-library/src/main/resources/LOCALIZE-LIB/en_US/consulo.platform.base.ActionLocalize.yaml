@@ -1780,6 +1780,14 @@ action.ToggleReadOnlyAttribute.files:
     text: Make {1,choice,1#File|2#Files} {0,choice,0#Read-Only|1#Writable}
 action.ToggleReadOnlyAttribute.text:
     text: Toggle Read-Only Attribute
+action.ToggleRenderedDocPresentation.description:
+    text: Switch between viewing source code and rendered representation of documentation comments
+action.ToggleRenderedDocPresentation.text:
+    text: Toggle Rendered View
+action.ToggleRenderedDocPresentationForAll.description:
+    text: Switch to rendered view for all documentation comments
+action.ToggleRenderedDocPresentationForAll.text:
+    text: Render All Doc Comments
 action.ToggleSideMode.description:
     text: Tool windows split mode on/off
 action.ToggleSideMode.text:

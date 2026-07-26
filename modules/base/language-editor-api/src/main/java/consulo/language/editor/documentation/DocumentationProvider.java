@@ -1,12 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.documentation;
 
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 
 import org.jspecify.annotations.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Provides documentation for PSI elements.
@@ -84,6 +89,40 @@ public interface DocumentationProvider {
    */
   default @Nullable String generateHoverDoc(PsiElement element, @Nullable PsiElement originalElement) {
     return generateDoc(element, originalElement);
+  }
+
+  /**
+   * This is used to display rendered documentation in editor, in place of corresponding documentation comment's text.
+   *
+   * @see #collectDocComments(PsiFile, Consumer)
+   */
+  default @Nullable String generateRenderedDoc(PsiDocCommentBase comment) {
+    return null;
+  }
+
+  /**
+   * This defines documentation comments in file, which can be rendered in place. HTML content to be displayed will be obtained using
+   * {@link #generateRenderedDoc(PsiDocCommentBase)} method.
+   * <p>
+   * To support cases, when rendered fragment doesn't have representing {@code PsiDocCommentBase} element (e.g. for the sequence of line
+   * comments in languages not having a block comment concept), fake elements (not existing in the {@code file}) might be returned. In such
+   * a case, {@link #findDocComment(PsiFile, TextRange)} should also be implemented by the documentation provider, for the rendered
+   * documentation view to work correctly.
+   */
+  default void collectDocComments(PsiFile file, Consumer<? super PsiDocCommentBase> sink) {
+  }
+
+  /**
+   * This method is needed to support rendered representation of documentation comments in editor. It should return doc comment located at
+   * the provided text range in a file. Overriding the default implementation only makes sense for languages which use fake
+   * {@code PsiDocCommentBase} implementations (e.g. in cases when rendered view is provided for a set of adjacent line comments, and
+   * there's no real {@code PsiDocCommentBase} element in a file representing the range to render).
+   *
+   * @see #collectDocComments(PsiFile, Consumer)
+   */
+  default @Nullable PsiDocCommentBase findDocComment(PsiFile file, TextRange range) {
+    PsiDocCommentBase comment = PsiTreeUtil.getParentOfType(file.findElementAt(range.getStartOffset()), PsiDocCommentBase.class, false);
+    return comment == null || !range.equals(comment.getTextRange()) ? null : comment;
   }
 
   default @Nullable PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {

@@ -1011,6 +1011,22 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             renderers.add(renderer);
         });
 
+        FoldRegion[] topLevelRegions = myEditor.getFoldingModel().fetchTopLevel();
+        if (topLevelRegions != null) {
+            for (FoldRegion region : topLevelRegions) {
+                if (region instanceof CustomFoldRegion customFoldRegion) {
+                    GutterIconRenderer renderer = customFoldRegion.getGutterIconRenderer();
+                    int line = myEditor.offsetToVisualLine(region.getStartOffset());
+                    if (shouldBeShown(renderer)) {
+                        myLineToGutterRenderers.put(line, List.of(renderer));
+                    }
+                    else {
+                        myLineToGutterRenderers.remove(line);
+                    }
+                }
+            }
+        }
+
         for (IntObjectMap.IntObjectEntry<List<GutterMark>> entry : new ArrayList<>(myLineToGutterRenderers.entrySet())) {
             int key = entry.getKey();
             List<GutterMark> value = entry.getValue();

@@ -196,6 +196,18 @@ disable.intention.action:
     text: Disable ''{0}''
 display.coverage.prompt:
     text: Do you want to display coverage data for ''{0}''?
+doc.render.copy.action.text:
+    text: Copy Selection
+doc.render.dumb.mode.text:
+    text: <i>Cannot render documentation during the project analysis</i>
+doc.render.gutter.icon.setting:
+    text: Documentation comments in-place rendering
+doc.render.icon.accessible.name:
+    text: In-place comment rendering
+doc.render.loading.text:
+    text: Loading…
+doc.render.not.available.text:
+    text: <i>Not available</i>
 documentation.message.documentation.is.not.available:
     text: Documentation is not available until indexes are built.
 enable.intention.action:

@@ -45,6 +45,8 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public static final UINumericRange BLINKING_RANGE = new UINumericRange(500, 10, 1500);
     public static final UINumericRange TOOLTIPS_DELAY_RANGE = new UINumericRange(500, 1, 5000);
 
+    public static final String PROP_ENABLE_RENDERED_DOC = "docCommentRenderingEnabled";
+
     //Q: make it interface?
     public static final class OptionSet {
         public String LINE_SEPARATOR;
@@ -58,6 +60,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
         public boolean SHOW_QUICK_DOC_ON_MOUSE_OVER_ELEMENT = true;
         public int TOOLTIPS_DELAY_MS = TOOLTIPS_DELAY_RANGE.initial;
         public boolean SHOW_INTENTION_BULB = true;
+        public boolean ENABLE_RENDERED_DOC = false;
         public boolean IS_CARET_BLINKING = true;
         public int CARET_BLINKING_PERIOD = BLINKING_RANGE.initial;
         public boolean IS_ANIMATED_CARET = true;
@@ -577,6 +580,18 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @Override
     public void setShowIntentionBulb(boolean show) {
         myOptions.SHOW_INTENTION_BULB = show;
+    }
+
+    public boolean isDocCommentRenderingEnabled() {
+        return myOptions.ENABLE_RENDERED_DOC;
+    }
+
+    public void setDocCommentRenderingEnabled(boolean value) {
+        boolean oldValue = myOptions.ENABLE_RENDERED_DOC;
+        myOptions.ENABLE_RENDERED_DOC = value;
+        if (oldValue != value) {
+            myPropertyChangeSupport.firePropertyChange(PROP_ENABLE_RENDERED_DOC, oldValue, value);
+        }
     }
 
     @Override
