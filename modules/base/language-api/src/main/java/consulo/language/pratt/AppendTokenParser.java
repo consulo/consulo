@@ -25,20 +25,20 @@ import java.util.Objects;
  * @author peter
  */
 public abstract class AppendTokenParser extends TokenParser {
-  public static final AppendTokenParser JUST_APPEND = new AppendTokenParser() {
+    public static final AppendTokenParser JUST_APPEND = new AppendTokenParser() {
+        @Override
+        protected @Nullable IElementType parseAppend(PrattBuilder builder) {
+            return null;
+        }
+    };
+
     @Override
-    protected @Nullable IElementType parseAppend(PrattBuilder builder) {
-      return null;
+    public boolean parseToken(PrattBuilder builder) {
+        MutableMarker marker = builder.mark();
+        builder.advance();
+        marker.finish(Objects.requireNonNull(parseAppend(builder)));
+        return true;
     }
-  };
 
-  @Override
-  public boolean parseToken(PrattBuilder builder) {
-    MutableMarker marker = builder.mark();
-    builder.advance();
-    marker.finish(Objects.requireNonNull(parseAppend(builder)));
-    return true;
-  }
-
-  protected abstract @Nullable IElementType parseAppend(PrattBuilder builder);
+    protected abstract @Nullable IElementType parseAppend(PrattBuilder builder);
 }

@@ -20,23 +20,24 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.Trinity;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 
 /**
  * @author peter
  */
 public class PrattRegistry {
-  private final MultiMap<IElementType, Trinity<Integer, PathPattern, TokenParser>> myMap = new MultiMap<>();
+    private final MultiMap<IElementType, Trinity<Integer, PathPattern, TokenParser>> myMap = new MultiMap<>();
 
-  public void registerParser(IElementType type, int priority, TokenParser parser) {
-    registerParser(type, priority, PathPattern.path(), parser);
-  }
+    public void registerParser(IElementType type, int priority, TokenParser parser) {
+        registerParser(type, priority, PathPattern.path(), parser);
+    }
 
-  public void registerParser(IElementType type, int priority, PathPattern pattern, TokenParser parser) {
-    myMap.putValue(type, new Trinity<Integer, PathPattern, TokenParser>(priority, pattern, parser));
-  }
+    public void registerParser(IElementType type, int priority, PathPattern pattern, TokenParser parser) {
+        myMap.putValue(type, new Trinity<>(priority, pattern, parser));
+    }
 
-  public @Nullable Collection<Trinity<Integer, PathPattern, TokenParser>> getParsers(@Nullable IElementType type) {
-    return type != null ? myMap.get(type) : null;
-  }
+    public @Nullable Collection<Trinity<Integer, PathPattern, TokenParser>> getParsers(@Nullable IElementType type) {
+        return type != null ? myMap.get(type) : null;
+    }
 }
