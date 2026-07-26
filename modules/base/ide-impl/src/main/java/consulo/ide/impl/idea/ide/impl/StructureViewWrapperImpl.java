@@ -40,7 +40,9 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.action.TimerListener;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -106,8 +108,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
         checkUpdate();
       }
     };
-    ActionManager.getInstance().addTimerListener(500, timerListener);
-    Disposer.register(this, () -> ActionManager.getInstance().removeTimerListener(timerListener));
+    Disposer.register(this, ActionTicker.getInstance().addListener(UIAccess.current(), timerListener));
 
     myToolWindow.getComponent().addHierarchyListener(e -> {
       if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.DISPLAYABILITY_CHANGED)) {

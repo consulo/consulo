@@ -32,7 +32,8 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -68,7 +69,7 @@ public final class MacScreenIdeMenuBar implements IdeMenuBar {
         myDataManager = dataManager;
         myPeer = new MenuBar("MainMenu", frame);
 
-        myActionManager.addTimerListener(1000, new WeakTimerListener(new MyTimerListener()));
+        Disposer.register(myDisposable, ActionTicker.getInstance().addListener(UIAccess.current(), new MyTimerListener()));
 
         UISettingsListener uiSettingsListener = source -> {
             myPresentationFactory.reset();

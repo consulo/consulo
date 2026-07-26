@@ -24,7 +24,6 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.util.concurrent.ActionCallback;
 import jakarta.inject.Singleton;
@@ -114,22 +113,6 @@ public class HeadlessActionManager extends ActionManager {
     @Override
     public AnAction getActionOrStub(String id) {
         return myId2Action.get(id);
-    }
-
-    @Override
-    public void addTimerListener(int delay, TimerListener listener) {
-    }
-
-    @Override
-    public void removeTimerListener(TimerListener listener) {
-    }
-
-    @Override
-    public void addTransparentTimerListener(int delay, TimerListener listener) {
-    }
-
-    @Override
-    public void removeTransparentTimerListener(TimerListener listener) {
     }
 
     @Override

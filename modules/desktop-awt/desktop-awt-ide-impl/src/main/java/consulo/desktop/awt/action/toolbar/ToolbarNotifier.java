@@ -5,13 +5,16 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.TimerListener;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -37,18 +40,14 @@ public class ToolbarNotifier implements Activatable {
     private final JComponent myComponent;
 
     private final KeymapManagerListener myKeymapManagerListener = new MyKeymapManagerListener();
-    private final WeakTimerListener myWeakTimerListener;
 
-    
     private final Application myApplication;
 
-    
     private final ActionUpdateProxy myUpdateActionsNotifier;
 
-    @SuppressWarnings("FieldCanBeLocal") // do not inline creating - it will removed from memory due WeakTimerListener
-    private MyTimerListener myTimerListener = new MyTimerListener();
+    private final MyTimerListener myTimerListener = new MyTimerListener();
 
-    private boolean myListenersArmed;
+    private Disposable myTickerRegistration;
 
     public ToolbarNotifier(Application application,
                            KeymapManager keymapManager,
@@ -60,31 +59,27 @@ public class ToolbarNotifier implements Activatable {
         myActionManager = (ActionManagerEx) actionManager;
         myKeymapManager = keymapManager;
         myComponent = component;
-        myWeakTimerListener = new WeakTimerListener(myTimerListener);
 
         new UiNotifyConnector(component, this);
     }
 
     @Override
     public void showNotify() {
-        if (myListenersArmed) {
+        if (myTickerRegistration != null) {
             return;
         }
-        myListenersArmed = true;
-        myActionManager.addTimerListener(500, myWeakTimerListener);
-        myActionManager.addTransparentTimerListener(500, myWeakTimerListener);
+        myTickerRegistration = ActionTicker.getInstance().addListener(UIAccess.current(), myTimerListener);
         myKeymapManager.addKeymapManagerListener(myKeymapManagerListener);
         updateActionTooltips();
     }
 
     @Override
     public void hideNotify() {
-        if (!myListenersArmed) {
+        if (myTickerRegistration == null) {
             return;
         }
-        myListenersArmed = false;
-        myActionManager.removeTimerListener(myWeakTimerListener);
-        myActionManager.removeTransparentTimerListener(myWeakTimerListener);
+        Disposer.dispose(myTickerRegistration);
+        myTickerRegistration = null;
         myKeymapManager.removeKeymapManagerListener(myKeymapManagerListener);
     }
 

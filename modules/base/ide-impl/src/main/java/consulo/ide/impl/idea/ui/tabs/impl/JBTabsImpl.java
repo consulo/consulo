@@ -55,6 +55,8 @@ import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.collection.Lists;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -147,7 +149,7 @@ public abstract class JBTabsImpl extends JComponent
     private @Nullable Project myProject;
 
     private boolean myRequestFocusOnLastFocusedComponent = false;
-    private boolean myListenerAdded;
+    private @Nullable Disposable myTickerRegistration;
     final Set<TabInfo> myAttractions = new HashSet<>();
     private final Animator myAnimator;
     private List<TabInfo> myAllTabs;
@@ -482,16 +484,15 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     private void addTimerUpdate() {
-        if (myActionManager != null && !myListenerAdded) {
-            myActionManager.addTimerListener(500, this);
-            myListenerAdded = true;
+        if (myActionManager != null && myTickerRegistration == null) {
+            myTickerRegistration = ActionTicker.getInstance().addListener(UIAccess.current(), this);
         }
     }
 
     private void removeTimerUpdate() {
-        if (myActionManager != null && myListenerAdded) {
-            myActionManager.removeTimerListener(this);
-            myListenerAdded = false;
+        if (myTickerRegistration != null) {
+            Disposer.dispose(myTickerRegistration);
+            myTickerRegistration = null;
         }
     }
 

@@ -15,6 +15,8 @@
  */
 package consulo.application.impl.internal.performance;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author max
  */
@@ -28,13 +30,13 @@ public class ActivityTracker {
   private ActivityTracker() {
   }
 
-  private int ourCount = 0;
+  private final AtomicInteger ourCount = new AtomicInteger();
 
   public int getCount() {
-    return ourCount;
+    return ourCount.get();
   }
 
   public void inc() {
-    ourCount++;
+    ourCount.incrementAndGet();
   }
 }

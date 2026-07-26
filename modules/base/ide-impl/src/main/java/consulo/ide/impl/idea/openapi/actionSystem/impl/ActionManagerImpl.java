@@ -7,12 +7,10 @@ import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.internal.LastActionTracker;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Semaphore;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.internal.ComponentBinding;
@@ -41,8 +39,6 @@ import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -71,11 +67,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -122,9 +115,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private static final String KEEP_CONTENT_ATTR_NAME = "keep-content";
 
     private static final Logger LOG = Logger.getInstance(ActionManagerImpl.class);
-    private static final int DEACTIVATED_TIMER_DELAY = 5000;
-    private static final int TIMER_DELAY = 500;
-    private static final int UPDATE_DELAY_AFTER_TYPING = 500;
 
     private final Object myLock = new Object();
     private final Map<String, AnAction> myId2Action = new HashMap<>();
@@ -136,12 +126,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     private final List<AnActionListener> myActionListeners = Lists.newLockFreeCopyOnWriteList();
     private final List<ActionPopupMenuListener> myActionPopupMenuListeners = Lists.newLockFreeCopyOnWriteList();
     private final List<Object/*ActionPopupMenuImpl|JBPopup*/> myPopups = new ArrayList<>();
-    private MyTimer myTimer;
     private int myRegisteredActionsCount;
     private String myLastPreformedActionId;
     private String myPrevPerformedActionId;
-    private long myLastTimeEditorWasTypedIn;
-    private boolean myTransparentOnlyUpdate;
     private int myAnonymousGroupIdCounter;
 
     private final Application myApplication;
@@ -527,48 +514,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Override
     public void dispose() {
-        if (myTimer != null) {
-            myTimer.stop();
-            myTimer = null;
-        }
-    }
-
-    @Override
-    public void addTimerListener(int delay, TimerListener listener) {
-        _addTimerListener(listener, false);
-    }
-
-    @Override
-    public void removeTimerListener(TimerListener listener) {
-        _removeTimerListener(listener, false);
-    }
-
-    @Override
-    public void addTransparentTimerListener(int delay, TimerListener listener) {
-        _addTimerListener(listener, true);
-    }
-
-    @Override
-    public void removeTransparentTimerListener(TimerListener listener) {
-        _removeTimerListener(listener, true);
-    }
-
-    private void _addTimerListener(TimerListener listener, boolean transparent) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
-            return;
-        }
-        if (myTimer == null) {
-            myTimer = new MyTimer();
-            myTimer.start();
-        }
-
-        myTimer.addTimerListener(listener, transparent);
-    }
-
-    private void _removeTimerListener(TimerListener listener, boolean transparent) {
-        if (LOG.assertTrue(myTimer != null)) {
-            myTimer.removeTimerListener(listener, transparent);
-        }
     }
 
     @Override
@@ -1316,11 +1261,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
-    public boolean isTransparentOnlyActionsUpdateNow() {
-        return myTransparentOnlyUpdate;
-    }
-
-    @Override
     public boolean performDumbAwareUpdate(AnAction action, AnActionEvent e) {
         return ActionImplUtil.performDumbAwareUpdate(action, e);
     }
@@ -1425,7 +1365,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Override
     public void fireBeforeEditorTyping(char c, DataContext dataContext) {
-        myLastTimeEditorWasTypedIn = System.currentTimeMillis();
+        ActionTicker.getInstance().notifyEditorTyping();
         for (AnActionListener listener : myActionListeners) {
             listener.beforeEditorTyping(c, dataContext);
         }
@@ -1556,99 +1496,4 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         );
     }
 
-    private class MyTimer extends Timer implements ActionListener {
-        private final List<TimerListener> myTimerListeners = Lists.newLockFreeCopyOnWriteList();
-        private final List<TimerListener> myTransparentTimerListeners = Lists.newLockFreeCopyOnWriteList();
-        private int myLastTimePerformed;
-
-        private MyTimer() {
-            super(TIMER_DELAY, null);
-            addActionListener(this);
-            setRepeats(true);
-            MessageBusConnection connection = Application.get().getMessageBus().connect();
-            connection.subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
-                @Override
-                public void applicationActivated(IdeFrame ideFrame) {
-                    setDelay(TIMER_DELAY);
-                    restart();
-                }
-
-                @Override
-                public void applicationDeactivated(IdeFrame ideFrame) {
-                    setDelay(DEACTIVATED_TIMER_DELAY);
-                }
-            });
-        }
-
-        @Override
-        public String toString() {
-            return "Action manager timer";
-        }
-
-        void addTimerListener(TimerListener listener, boolean transparent) {
-            (transparent ? myTransparentTimerListeners : myTimerListeners).add(listener);
-        }
-
-        void removeTimerListener(TimerListener listener, boolean transparent) {
-            (transparent ? myTransparentTimerListeners : myTimerListeners).remove(listener);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (myLastTimeEditorWasTypedIn + UPDATE_DELAY_AFTER_TYPING > System.currentTimeMillis()) {
-                return;
-            }
-
-            int lastEventCount = myLastTimePerformed;
-            myLastTimePerformed = ActivityTracker.getInstance().getCount();
-
-            if (myLastTimePerformed == lastEventCount && !Registry.is("actionSystem.always.update.toolbar.actions")) {
-                return;
-            }
-
-            boolean transparentOnly = myLastTimePerformed == lastEventCount;
-
-            try {
-                myTransparentOnlyUpdate = transparentOnly;
-                Set<TimerListener> notified = new HashSet<>();
-                notifyListeners(myTransparentTimerListeners, notified);
-
-                if (transparentOnly) {
-                    return;
-                }
-
-                notifyListeners(myTimerListeners, notified);
-            }
-            finally {
-                myTransparentOnlyUpdate = false;
-            }
-        }
-
-        private void notifyListeners(List<? extends TimerListener> timerListeners, Set<? super TimerListener> notified) {
-            for (TimerListener listener : timerListeners) {
-                if (notified.add(listener)) {
-                    runListenerAction(listener);
-                }
-            }
-        }
-
-        private void runListenerAction(TimerListener listener) {
-            IdeaModalityState modalityState = (IdeaModalityState) listener.getModalityState();
-            if (modalityState == null) {
-                return;
-            }
-            LOG.debug("notify ", listener);
-            if (!IdeaModalityState.current().dominates(modalityState)) {
-                try {
-                    listener.run();
-                }
-                catch (ProcessCanceledException ex) {
-                    // ignore
-                }
-                catch (Throwable e) {
-                    LOG.error(e);
-                }
-            }
-        }
-    }
 }

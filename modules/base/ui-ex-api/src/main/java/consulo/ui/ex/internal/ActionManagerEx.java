@@ -89,8 +89,6 @@ public abstract class ActionManagerEx extends ActionManager {
 
     public abstract boolean isActionPopupStackEmpty();
 
-    public abstract boolean isTransparentOnlyActionsUpdateNow();
-
     public abstract boolean performDumbAwareUpdate(AnAction action, AnActionEvent e);
 
     public void fireBeforeActionPerformed(String actionId, InputEvent event) {

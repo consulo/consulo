@@ -28,7 +28,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -281,7 +282,7 @@ public class DefaultIdeMenuBar extends JMenuBar implements IdeMenuBar, Predicate
     }
 
     // Add updater for menus
-    myActionManager.addTimerListener(1000, new WeakTimerListener(myTimerListener));
+    Disposer.register(myDisposable, ActionTicker.getInstance().addListener(UIAccess.current(), myTimerListener));
     UISettingsListener UISettingsListener = source -> {
       updateMnemonicsVisibility();
       myPresentationFactory.reset();

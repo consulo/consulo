@@ -140,14 +140,6 @@ public abstract class ActionManager {
 
     public abstract AnAction getActionOrStub(String id);
 
-    public abstract void addTimerListener(int delay, TimerListener listener);
-
-    public abstract void removeTimerListener(TimerListener listener);
-
-    public abstract void addTransparentTimerListener(int delay, TimerListener listener);
-
-    public abstract void removeTransparentTimerListener(TimerListener listener);
-
     public abstract ActionCallback tryToExecute(
         AnAction action, InputEvent inputEvent, @Nullable Component contextComponent,
         @Nullable String place, boolean now
