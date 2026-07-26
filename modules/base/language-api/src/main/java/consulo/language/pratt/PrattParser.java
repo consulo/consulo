@@ -23,22 +23,21 @@ import consulo.language.version.LanguageVersion;
 
 /**
  * @author peter
-*/
+ */
 public abstract class PrattParser implements PsiParser {
-  protected abstract PrattRegistry getRegistry();
+    protected abstract PrattRegistry getRegistry();
 
-  @Override
-  
-  public final ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
-    PrattBuilder prattBuilder = PrattBuilderImpl.createBuilder(builder, getRegistry());
-    MutableMarker marker = prattBuilder.mark();
-    parse(prattBuilder);
-    marker.finish(root);
-    return builder.getTreeBuilt();
-  }
+    @Override
+    public final ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
+        PrattBuilder prattBuilder = PrattBuilderImpl.createBuilder(builder, getRegistry());
+        MutableMarker marker = prattBuilder.mark();
+        parse(prattBuilder);
+        marker.finish(root);
+        return builder.getTreeBuilt();
+    }
 
-  protected void parse(PrattBuilder builder) {
-    builder.parse();
-    while (!builder.isEof()) builder.advance();
-  }
+    protected void parse(PrattBuilder builder) {
+        builder.parse();
+        while (!builder.isEof()) builder.advance();
+    }
 }

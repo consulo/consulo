@@ -18,8 +18,8 @@ package consulo.language.pratt;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.localize.LanguageLocalize;
-import consulo.language.psi.PsiBundle;
 
+import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,7 +30,7 @@ public class PrattTokenType extends IElementType {
     super(debugName, language);
   }
 
-  public String getExpectedText(PrattBuilder builder) {
-    return LanguageLocalize.zeroExpected(toString()).get();
+  public LocalizeValue getExpectedText(PrattBuilder builder) {
+    return LanguageLocalize.zeroExpected(toString());
   }
 }

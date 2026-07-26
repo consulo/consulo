@@ -28,58 +28,66 @@ import java.util.ListIterator;
  * @author peter
  */
 public class PathPattern {
-  private final List<ElementPattern> myPath = new SmartList<ElementPattern>();
+    private final List<ElementPattern> myPath = new SmartList<>();
 
-  private PathPattern() {
-  }
-
-  public static PathPattern path() {
-    return new PathPattern();
-  }
-
-  public PathPattern up() {
-    myPath.add(null);
-    return this;
-  }
-
-  public PathPattern left() {
-    return left(PlatformPatterns.elementType());
-  }
-
-  public PathPattern left(IElementType pattern) {
-    return left(PlatformPatterns.elementType().equalTo(pattern));
-  }
-
-  public PathPattern left(ElementPattern pattern) {
-    myPath.add(pattern);
-    return this;
-  }
-
-  
-  public String toString() {
-    return Arrays.toString(myPath.toArray()).replaceAll("null", "UP");
-  }
-
-  public boolean accepts(PrattBuilder builder) {
-    ListIterator<IElementType> iterator = null;
-    for (ElementPattern pattern : myPath) {
-      if (builder == null) return false;
-
-      if (iterator == null) {
-        iterator = builder.getBackResultIterator();
-      }
-
-      if (pattern == null) {
-        if (iterator.hasPrevious()) return false;
-        builder = builder.getParent();
-        iterator = null;
-      } else {
-        if (!iterator.hasPrevious()) return false;
-        if (!pattern.accepts(iterator.previous())) return false;
-      }
+    private PathPattern() {
     }
 
-    return true;
-  }
+    public static PathPattern path() {
+        return new PathPattern();
+    }
 
+    public PathPattern up() {
+        myPath.add(null);
+        return this;
+    }
+
+    public PathPattern left() {
+        return left(PlatformPatterns.elementType());
+    }
+
+    public PathPattern left(IElementType pattern) {
+        return left(PlatformPatterns.elementType().equalTo(pattern));
+    }
+
+    public PathPattern left(ElementPattern pattern) {
+        myPath.add(pattern);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(myPath.toArray()).replaceAll("null", "UP");
+    }
+
+    public boolean accepts(PrattBuilder builder) {
+        ListIterator<IElementType> iterator = null;
+        for (ElementPattern pattern : myPath) {
+            if (builder == null) {
+                return false;
+            }
+
+            if (iterator == null) {
+                iterator = builder.getBackResultIterator();
+            }
+
+            if (pattern == null) {
+                if (iterator.hasPrevious()) {
+                    return false;
+                }
+                builder = builder.getParent();
+                iterator = null;
+            }
+            else {
+                if (!iterator.hasPrevious()) {
+                    return false;
+                }
+                if (!pattern.accepts(iterator.previous())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

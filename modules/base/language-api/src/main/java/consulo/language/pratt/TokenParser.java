@@ -23,30 +23,28 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public abstract class TokenParser {
+    public abstract boolean parseToken(PrattBuilder builder);
 
-  public abstract boolean parseToken(PrattBuilder builder);
+    public static TokenParser infix(int rightPriority, IElementType compositeType) {
+        return infix(rightPriority, compositeType, null);
+    }
 
-  public static TokenParser infix(int rightPriority, IElementType compositeType) {
-    return infix(rightPriority, compositeType, null);
-  }
+    public static TokenParser infix(final int rightPriority, final IElementType compositeType, final @Nullable String errorMessage) {
+        return new ReducingParser() {
+            @Override
+            public @Nullable IElementType parseFurther(PrattBuilder builder) {
+                builder.createChildBuilder(rightPriority, errorMessage).parse();
+                return compositeType;
+            }
+        };
+    }
 
-  public static TokenParser infix(final int rightPriority, final IElementType compositeType, final @Nullable String errorMessage) {
-    return new ReducingParser() {
-      @Override
-      public @Nullable IElementType parseFurther(PrattBuilder builder) {
-        builder.createChildBuilder(rightPriority, errorMessage).parse();
-        return compositeType;
-      }
-    };
-  }
-
-  public static TokenParser postfix(final IElementType compositeType) {
-    return new ReducingParser() {
-      @Override
-      public @Nullable IElementType parseFurther(PrattBuilder builder) {
-        return compositeType;
-      }
-    };
-  }
-
+    public static TokenParser postfix(final IElementType compositeType) {
+        return new ReducingParser() {
+            @Override
+            public @Nullable IElementType parseFurther(PrattBuilder builder) {
+                return compositeType;
+            }
+        };
+    }
 }
