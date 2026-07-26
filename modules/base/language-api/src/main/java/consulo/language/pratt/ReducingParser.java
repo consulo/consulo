@@ -23,15 +23,17 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public abstract class ReducingParser extends TokenParser {
-  @Override
-  public final boolean parseToken(PrattBuilder builder) {
-    builder.advance();
-    IElementType type = parseFurther(builder);
-    if (type == null) return false;
+    @Override
+    public final boolean parseToken(PrattBuilder builder) {
+        builder.advance();
+        IElementType type = parseFurther(builder);
+        if (type == null) {
+            return false;
+        }
 
-    builder.reduce(type);
-    return true;
-  }
+        builder.reduce(type);
+        return true;
+    }
 
-  public abstract @Nullable IElementType parseFurther(PrattBuilder builder);
+    public abstract @Nullable IElementType parseFurther(PrattBuilder builder);
 }
