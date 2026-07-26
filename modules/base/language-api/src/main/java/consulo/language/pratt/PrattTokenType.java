@@ -26,11 +26,11 @@ import org.jspecify.annotations.Nullable;
  * @author peter
  */
 public class PrattTokenType extends IElementType {
-  public PrattTokenType(String debugName, @Nullable Language language) {
-    super(debugName, language);
-  }
+    public PrattTokenType(String debugName, @Nullable Language language) {
+        super(debugName, language);
+    }
 
-  public LocalizeValue getExpectedText(PrattBuilder builder) {
-    return LanguageLocalize.zeroExpected(toString());
-  }
+    public LocalizeValue getExpectedText(PrattBuilder builder) {
+        return LanguageLocalize.zeroExpected(toString());
+    }
 }

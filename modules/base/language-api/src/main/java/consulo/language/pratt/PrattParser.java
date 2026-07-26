@@ -38,6 +38,8 @@ public abstract class PrattParser implements PsiParser {
 
     protected void parse(PrattBuilder builder) {
         builder.parse();
-        while (!builder.isEof()) builder.advance();
+        while (!builder.isEof()) {
+            builder.advance();
+        }
     }
 }
