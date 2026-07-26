@@ -30,7 +30,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
-import consulo.project.event.DumbModeListener;
+import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.concurrent.ConcurrencyUtil;
@@ -81,7 +81,7 @@ public final class FileManagerImpl implements FileManager {
         Disposer.register(manager, this);
         LowMemoryWatcher.register(this::processQueue, this);
 
-        myConnection.subscribe(DumbModeListener.class, new DumbModeListener() {
+        myConnection.subscribe(DumbModeListenerBackgroundable.class, new DumbModeListenerBackgroundable() {
             @Override
             public void enteredDumbMode() {
                 processFileTypesChanged(false);

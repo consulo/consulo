@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.project.impl.internal;
 
+import consulo.annotation.InheritCallerContext;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
@@ -23,6 +24,7 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.DumbModeTask;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.project.event.DumbModeListenerBackgroundable;
 import consulo.project.internal.DumbServiceInternal;
 import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
@@ -67,6 +69,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private volatile Throwable myDumbEnterTrace;
     private volatile Throwable myDumbStart;
     private final DumbModeListener myPublisher;
+    private final DumbModeListenerBackgroundable myPublisherBackgroundable;
     private final AtomicReference<DumbState> myDumbState = new AtomicReference<>(new DumbState(0, 0));
     private final Set<Object> myQueuedEquivalences = new HashSet<>();
     private final Queue<DumbModeTask> myUpdatesQueue = new Queue<>(5);
@@ -91,6 +94,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         myApplication = application;
         myProject = project;
         myPublisher = project.getMessageBus().syncPublisher(DumbModeListener.class);
+        myPublisherBackgroundable = project.getMessageBus().syncPublisher(DumbModeListenerBackgroundable.class);
 
         application.getMessageBus().connect(project).subscribe(BatchFileChangeListener.class, new BatchFileChangeListener() {
             @SuppressWarnings("UnnecessaryFullyQualifiedName")
@@ -240,10 +244,13 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     @TestOnly
     public void setDumb(boolean dumb) {
         if (dumb) {
-            if (myDumbState.get().isSmart()) {
-                myDumbState.updateAndGet(DumbState::incrementDumbCounter);
-            }
-            myState.set(State.RUNNING_DUMB_TASKS);
+            WriteAction.run(() -> {
+                if (myDumbState.get().isSmart()) {
+                    myDumbState.updateAndGet(DumbState::incrementDumbCounter);
+                }
+                myState.set(State.RUNNING_DUMB_TASKS);
+                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+            });
             myPublisher.enteredDumbMode();
         }
         else {
@@ -345,6 +352,9 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         myDumbStart = trace;
         myDumbEnterTrace = new Throwable();
         myDumbState.updateAndGet(wasSmart ? DumbState::incrementDumbCounter : DumbState::touch);
+        if (wasSmart) {
+            runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+        }
         DumbTaskLauncher launcher = new DumbTaskLauncher(trace);
         myDumbTaskLaunchers.add(launcher);
         myApplication.invokeLater(launcher::launch, myProject.getDisposed());
@@ -378,6 +388,9 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             myDumbStart = trace;
             myDumbEnterTrace = new Throwable();
             myDumbState.updateAndGet(wasSmart ? DumbState::incrementDumbCounter : DumbState::touch);
+            if (wasSmart) {
+                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+            }
         });
         if (wasSmart) {
             runCatchingIgnorePCE(myPublisher::enteredDumbMode);
@@ -407,6 +420,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         myDumbEnterTrace = null;
         myDumbStart = null;
         myDumbState.updateAndGet(DumbState::decrementDumbCounter);
+        runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
         return !myProject.isDisposed();
     }
 
@@ -448,7 +462,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private static void runCatchingIgnorePCE(Runnable runnable) {
+    private static void runCatchingIgnorePCE(@InheritCallerContext Runnable runnable) {
         try {
             runnable.run();
         }
