@@ -15,6 +15,7 @@
  */
 package consulo.language.pratt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.ast.IElementType;
 
 import consulo.localize.LocalizeValue;
@@ -40,6 +41,8 @@ public abstract class TokenParser {
         };
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public static TokenParser infix(int rightPriority, IElementType compositeType, @Nullable String errorMessage) {
         return infix(rightPriority, compositeType, LocalizeValue.ofNullable(errorMessage));
     }
