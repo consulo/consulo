@@ -21,4 +21,6 @@ module consulo.ui.ex.impl {
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl;
+
+    opens consulo.ui.ex.impl.internal.keymap to consulo.util.xml.serializer;
 }
