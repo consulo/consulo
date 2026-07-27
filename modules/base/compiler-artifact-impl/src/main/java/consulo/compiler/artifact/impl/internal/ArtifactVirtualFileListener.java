@@ -15,6 +15,7 @@
  */
 package consulo.compiler.artifact.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
@@ -38,21 +39,21 @@ public class ArtifactVirtualFileListener implements VirtualFileListener {
   private final CachedValue<MultiValuesMap<String, Artifact>> myParentPathsToArtifacts;
   private final ArtifactManagerImpl myArtifactManager;
 
-  public ArtifactVirtualFileListener(Project project, final ArtifactManagerImpl artifactManager) {
+  public ArtifactVirtualFileListener(Project project, ArtifactManagerImpl artifactManager) {
     myArtifactManager = artifactManager;
-    myParentPathsToArtifacts =
-      CachedValuesManager.getManager(project).createCachedValue(new CachedValueProvider<MultiValuesMap<String, Artifact>>() {
-        public Result<MultiValuesMap<String, Artifact>> compute() {
-          MultiValuesMap<String, Artifact> result = computeParentPathToArtifactMap();
-          return Result.createSingleDependency(result, artifactManager.getModificationTracker());
-        }
-      }, false);
+    myParentPathsToArtifacts = CachedValuesManager.getManager(project).createCachedValue(
+      () -> {
+        MultiValuesMap<String, Artifact> result = computeParentPathToArtifactMap();
+        return CachedValueProvider.Result.createSingleDependency(result, artifactManager.getModificationTracker());
+      },
+      false
+    );
   }
 
   private MultiValuesMap<String, Artifact> computeParentPathToArtifactMap() {
-    final MultiValuesMap<String, Artifact> result = new MultiValuesMap<String, Artifact>();
+    final MultiValuesMap<String, Artifact> result = new MultiValuesMap<>();
     for (final Artifact artifact : myArtifactManager.getArtifacts()) {
-      ArtifactUtil.processFileOrDirectoryCopyElements(artifact, new PackagingElementProcessor<FileOrDirectoryCopyPackagingElement<?>>() {
+      ArtifactUtil.processFileOrDirectoryCopyElements(artifact, new PackagingElementProcessor<>() {
         @Override
         public boolean process(FileOrDirectoryCopyPackagingElement<?> element, PackagingElementPath pathToElement) {
           String path = element.getFilePath();
@@ -68,18 +69,20 @@ public class ArtifactVirtualFileListener implements VirtualFileListener {
   }
 
   @Override
+  @RequiredWriteAction
   public void fileMoved(VirtualFileMoveEvent event) {
     String oldPath = event.getRequiredOldParent().getPath() + "/" + event.getFileName();
     filePathChanged(oldPath, event.getRequiredNewParent().getPath() + "/" + event.getFileName());
   }
 
+  @RequiredWriteAction
   private void filePathChanged(final String oldPath, final String newPath) {
     Collection<Artifact> artifacts = myParentPathsToArtifacts.getValue().get(oldPath);
     if (artifacts != null) {
       ModifiableArtifactModel model = myArtifactManager.createModifiableModel();
       for (Artifact artifact : artifacts) {
         Artifact copy = model.getOrCreateModifiableArtifact(artifact);
-        ArtifactUtil.processFileOrDirectoryCopyElements(copy, new PackagingElementProcessor<FileOrDirectoryCopyPackagingElement<?>>() {
+        ArtifactUtil.processFileOrDirectoryCopyElements(copy, new PackagingElementProcessor<>() {
           @Override
           public boolean process(FileOrDirectoryCopyPackagingElement<?> element, PackagingElementPath pathToElement) {
             String path = element.getFilePath();
@@ -95,6 +98,7 @@ public class ArtifactVirtualFileListener implements VirtualFileListener {
   }
 
   @Override
+  @RequiredWriteAction
   public void propertyChanged(VirtualFilePropertyEvent event) {
     if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
       VirtualFile parent = event.getParent();

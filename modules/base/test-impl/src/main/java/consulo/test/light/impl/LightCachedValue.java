@@ -18,6 +18,7 @@ package consulo.test.light.impl;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.util.lang.ref.SimpleReference;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2023-11-05
  */
-public class LightCachedValue<T> implements CachedValue<T> {
+public class LightCachedValue<T extends @Nullable Object> implements CachedValue<T> {
     private final CachedValueProvider<T> myProvider;
 
     private SimpleReference<T> myCacheValueRef;

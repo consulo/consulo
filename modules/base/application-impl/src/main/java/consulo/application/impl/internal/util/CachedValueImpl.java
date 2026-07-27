@@ -18,8 +18,9 @@ package consulo.application.impl.internal.util;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.project.Project;
+import org.jspecify.annotations.Nullable;
 
-public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValue<T> {
+public class CachedValueImpl<T extends @Nullable Object> extends CachedValueBase<T> implements CachedValue<T> {
     private final CachedValueProvider<T> myProvider;
 
     public CachedValueImpl(CachedValueProvider<T> provider, CachedValuesFactory factory) {

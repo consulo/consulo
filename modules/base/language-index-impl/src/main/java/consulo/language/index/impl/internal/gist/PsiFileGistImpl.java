@@ -15,7 +15,8 @@
  */
 package consulo.language.index.impl.internal.gist;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
@@ -36,7 +37,6 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.FileType;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -60,14 +60,20 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   }
 
   @Override
+  @RequiredReadAction
   public Data getFileData(PsiFile file) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    Application.get().assertReadAccessAllowed();
 
     if (shouldUseMemoryStorage(file)) {
-      return CachedValuesManager.getManager(file.getProject()).getCachedValue(file, myCacheKey, () -> {
-        Data data = myCalculator.apply(file.getProject(), file.getViewProvider().getVirtualFile());
-        return CachedValueProvider.Result.create(data, file, ourReindexTracker);
-      }, false);
+      return CachedValuesManager.getManager(file.getProject()).getCachedValue(
+        file,
+        myCacheKey,
+        () -> {
+          Data data = myCalculator.apply(file.getProject(), file.getViewProvider().getVirtualFile());
+          return CachedValueProvider.Result.create(data, file, ourReindexTracker);
+        },
+        false
+      );
     }
 
     file.putUserData(myCacheKey, null);
@@ -82,16 +88,15 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
     return document != null && (pdm.isUncommited(document) || FileDocumentManager.getInstance().isDocumentUnsaved(document));
   }
 
+  @RequiredReadAction
   private static PsiFile getPsiFile(Project project, VirtualFile file) {
     PsiFile psi = PsiManager.getInstance(project).findFile(file);
     if (!(psi instanceof PsiFileImpl) || ((PsiFileImpl)psi).isContentsLoaded()) {
       return psi;
     }
 
-    FileType fileType = file.getFileType();
-    if (!(fileType instanceof LanguageFileType)) return null;
+    if (!(file.getFileType() instanceof LanguageFileType languageFileType)) return null;
 
-    return FileContentImpl.createFileFromText(project, psi.getViewProvider().getContents(), (LanguageFileType)fileType, file, file.getName());
+    return FileContentImpl.createFileFromText(project, psi.getViewProvider().getContents(), languageFileType, file, file.getName());
   }
-
 }

@@ -78,11 +78,7 @@ public class LanguageCachedValueUtil {
      *
      * @return The cached value
      */
-    public static <T> T getCachedValue(
-        final PsiElement context,
-        Key<CachedValue<T>> key,
-        final CachedValueProvider<T> provider
-    ) {
+    public static <T> T getCachedValue(final PsiElement context, Key<CachedValue<T>> key, final CachedValueProvider<T> provider) {
         CachedValue<T> value = context.getUserData(key);
         if (value != null) {
             Supplier<T> data = value.getUpToDateOrNull();
