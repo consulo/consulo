@@ -34,6 +34,7 @@ public abstract class AbstractRepositoryManager<T extends Repository> implements
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForRoot(root));
     }
 
+    @Override
     public @Nullable T getRepositoryForRootQuick(@Nullable VirtualFile root) {
         return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForRootQuick(root));
     }
