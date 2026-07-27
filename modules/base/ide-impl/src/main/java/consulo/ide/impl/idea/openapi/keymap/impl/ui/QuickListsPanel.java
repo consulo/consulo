@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.ui.ex.impl.internal.action.QuickListImpl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.configurable.ApplicationConfigurable;
@@ -22,8 +23,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
+import consulo.ui.ex.impl.internal.action.QuickListsManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbarPosition;
@@ -66,7 +66,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
     @RequiredUIAccess
     public void reset() {
         myQuickListsModel.removeAllElements();
-        for (QuickList list : QuickListsManager.getInstance().getAllQuickLists()) {
+        for (QuickListImpl list : QuickListsManager.getInstance().getAllQuickLists()) {
             myQuickListsModel.addElement(list);
         }
 
@@ -80,8 +80,8 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
     @Override
     @RequiredUIAccess
     public boolean isModified() {
-        QuickList[] storedLists = QuickListsManager.getInstance().getAllQuickLists();
-        QuickList[] modelLists = getCurrentQuickListIds();
+        QuickListImpl[] storedLists = QuickListsManager.getInstance().getAllQuickLists();
+        QuickListImpl[] modelLists = getCurrentQuickListIds();
         return !Arrays.equals(storedLists, modelLists);
     }
 
@@ -100,7 +100,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         myQuickListsList.addListSelectionListener(e -> {
             myRightPanel.removeAll();
             Object selectedValue = myQuickListsList.getSelectedValue();
-            if (selectedValue instanceof QuickList quickList) {
+            if (selectedValue instanceof QuickListImpl quickList) {
                 updateRightPanel(quickList);
                 myQuickListsList.repaint();
             }
@@ -114,7 +114,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
 
         return ToolbarDecorator.createDecorator(myQuickListsList)
             .setAddAction(button -> {
-                QuickList quickList = new QuickList(createUniqueName(), "", ArrayUtil.EMPTY_STRING_ARRAY, false);
+                QuickListImpl quickList = new QuickListImpl(createUniqueName(), "", ArrayUtil.EMPTY_STRING_ARRAY, false);
                 myQuickListsModel.addElement(quickList);
                 myQuickListsList.clearSelection();
                 ScrollingUtil.selectItem(myQuickListsList, quickList);
@@ -142,7 +142,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         String str = KeyMapLocalize.unnamedListDisplayName().get();
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < myQuickListsModel.getSize(); i++) {
-            names.add(((QuickList) myQuickListsModel.getElementAt(i)).getName());
+            names.add(((QuickListImpl) myQuickListsModel.getElementAt(i)).getName());
         }
         if (!names.contains(str)) {
             return str;
@@ -156,7 +156,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         }
     }
 
-    private void updateRightPanel(QuickList quickList) {
+    private void updateRightPanel(QuickListImpl quickList) {
         final int index = myQuickListsList.getSelectedIndex();
         if (myQuickListPanel != null && myCurrentIndex > -1 && myCurrentIndex < myQuickListsModel.getSize()) {
             updateList(myCurrentIndex);
@@ -179,9 +179,9 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         if (myQuickListPanel == null) {
             return;
         }
-        QuickList oldQuickList = (QuickList) myQuickListsModel.getElementAt(index);
+        QuickListImpl oldQuickList = (QuickListImpl) myQuickListsModel.getElementAt(index);
 
-        QuickList newQuickList = createNewQuickListAt();
+        QuickListImpl newQuickList = createNewQuickListAt();
 
         if (oldQuickList != null) {
             newQuickList.getExternalInfo().copy(oldQuickList.getExternalInfo());
@@ -194,25 +194,25 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         }
     }
 
-    private QuickList createNewQuickListAt() {
+    private QuickListImpl createNewQuickListAt() {
         ListModel model = myQuickListPanel.getActionsList().getModel();
         int size = model.getSize();
         String[] ids = new String[size];
         for (int i = 0; i < size; i++) {
             ids[i] = (String) model.getElementAt(i);
         }
-        return new QuickList(myQuickListPanel.getDisplayName(), myQuickListPanel.getDescription(), ids, false);
+        return new QuickListImpl(myQuickListPanel.getDisplayName(), myQuickListPanel.getDescription(), ids, false);
     }
 
     
-    private QuickList[] getCurrentQuickListIds() {
+    private QuickListImpl[] getCurrentQuickListIds() {
         if (myCurrentIndex > -1 && myQuickListsModel.getSize() > myCurrentIndex) {
             updateList(myCurrentIndex);
         }
         int size = myQuickListsModel.size();
-        QuickList[] lists = new QuickList[size];
+        QuickListImpl[] lists = new QuickListImpl[size];
         for (int i = 0; i < lists.length; i++) {
-            lists[i] = (QuickList) myQuickListsModel.getElementAt(i);
+            lists[i] = (QuickListImpl) myQuickListsModel.getElementAt(i);
         }
         return lists;
     }
@@ -227,7 +227,7 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
         @Override
         protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
             setBackground(UIUtil.getListBackground(selected));
-            QuickList quickList = (QuickList) value;
+            QuickListImpl quickList = (QuickListImpl) value;
             append(quickList.getName());
         }
     }

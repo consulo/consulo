@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.keymap.impl.ui;
+package consulo.ui.ex.action;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
-import consulo.ui.ex.action.QuickList;
+public interface QuickList {
+    String QUICK_LIST_PREFIX = "QuickList.";
+    String SEPARATOR_ID = QUICK_LIST_PREFIX + "$Separator$";
 
-/**
- * @author Dmitry Avdeev
- * @since 2012-09-20
- */
-@TopicAPI(ComponentScope.APPLICATION)
-public interface KeymapListener {
-  void quickListRenamed(QuickList oldQuickList, QuickList newQuickList);
+    String getDisplayName();
 
-  void processCurrentKeymapChanged(QuickList[] ids);
+    String getDescription();
+
+    String[] getActionIds();
+
+    boolean isReadonly();
+
+    String getActionId();
 }

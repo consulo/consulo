@@ -22,7 +22,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.action.QuickList;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.ui.ex.impl.internal.keymap.KeymapImpl;
 import consulo.logging.Logger;

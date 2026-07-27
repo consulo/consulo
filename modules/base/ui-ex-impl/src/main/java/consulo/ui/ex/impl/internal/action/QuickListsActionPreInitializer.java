@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.impl.internal.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.ActionManager;

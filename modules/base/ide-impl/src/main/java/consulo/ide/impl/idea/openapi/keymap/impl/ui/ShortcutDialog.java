@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.action.QuickList;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
 import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;

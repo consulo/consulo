@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.impl.internal.action;
 
 import consulo.component.persist.scheme.ExternalInfo;
+import consulo.ui.ex.action.QuickList;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
@@ -24,9 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class QuickList implements ExternalizableScheme {
-    public static final String QUICK_LIST_PREFIX = "QuickList.";
-    public static final String SEPARATOR_ID = QUICK_LIST_PREFIX + "$Separator$";
+public class QuickListImpl implements QuickList, ExternalizableScheme {
     private static final String ID_TAG = "id";
     private static final String READONLY_TAG = "readonly";
     private static final String ACTION_TAG = "action";
@@ -43,10 +42,10 @@ public class QuickList implements ExternalizableScheme {
     /**
      * With read external to be called immediately after in mind
      */
-    QuickList() {
+    public QuickListImpl() {
     }
 
-    public QuickList(String displayName, String description, String[] actionIds, boolean isReadonly) {
+    public QuickListImpl(String displayName, String description, String[] actionIds, boolean isReadonly) {
         myDisplayName = displayName == null ? "" : displayName;
         myDescription = description == null ? "" : description;
         myActionIds = actionIds;
@@ -78,7 +77,7 @@ public class QuickList implements ExternalizableScheme {
     @Override
     public boolean equals(Object o) {
       return this == o
-          || o instanceof QuickList that
+          || o instanceof QuickListImpl that
           && Arrays.equals(myActionIds, that.myActionIds)
           && myDescription.equals(that.myDescription)
           && myDisplayName.equals(that.myDisplayName);

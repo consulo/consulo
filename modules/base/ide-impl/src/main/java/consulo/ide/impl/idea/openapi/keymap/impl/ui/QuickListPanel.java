@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.ui.ex.impl.internal.action.QuickListImpl;
 import consulo.application.AllIcons;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
 import consulo.ui.ex.awt.ToolbarDecorator;
@@ -45,9 +45,9 @@ public class QuickListPanel {
     private JTextField myDisplayName;
     private JTextField myDescription;
     private JPanel myListPanel;
-    private final QuickList[] myAllQuickLists;
+    private final QuickListImpl[] myAllQuickLists;
 
-    public QuickListPanel(QuickList origin, QuickList[] allQuickLists) {
+    public QuickListPanel(QuickListImpl origin, QuickListImpl[] allQuickLists) {
         myAllQuickLists = allQuickLists;
 
         myActionsList = new JBList(new DefaultListModel());
@@ -130,7 +130,7 @@ public class QuickListPanel {
     }
 
     private void addSeparator() {
-        ((DefaultListModel) myActionsList.getModel()).addElement(QuickList.SEPARATOR_ID);
+        ((DefaultListModel) myActionsList.getModel()).addElement(QuickListImpl.SEPARATOR_ID);
     }
 
     public JList getActionsList() {
@@ -147,7 +147,7 @@ public class QuickListPanel {
 
     private void includeActionId(String id) {
         DefaultListModel model = (DefaultListModel) myActionsList.getModel();
-        if (!QuickList.SEPARATOR_ID.equals(id) && model.contains(id)) {
+        if (!QuickListImpl.SEPARATOR_ID.equals(id) && model.contains(id)) {
             return;
         }
         model.addElement(id);
@@ -170,7 +170,7 @@ public class QuickListPanel {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             Image icon = null;
             String actionId = (String) value;
-            if (QuickList.SEPARATOR_ID.equals(actionId)) {
+            if (QuickListImpl.SEPARATOR_ID.equals(actionId)) {
                 // TODO[vova,anton]: beautify
                 setText("-------------");
             }
@@ -183,7 +183,7 @@ public class QuickListPanel {
                         icon = actionIcon;
                     }
                 }
-                if (actionId.startsWith(QuickList.QUICK_LIST_PREFIX)) {
+                if (actionId.startsWith(QuickListImpl.QUICK_LIST_PREFIX)) {
                     icon = AllIcons.Actions.QuickList;
                 }
                 setIcon(TargetAWT.to(ActionsTree.getEvenIcon(icon)));

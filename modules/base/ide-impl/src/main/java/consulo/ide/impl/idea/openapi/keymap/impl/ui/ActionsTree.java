@@ -20,7 +20,7 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ui.ex.action.QuickList;
 import consulo.ui.ex.impl.internal.keymap.KeymapImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

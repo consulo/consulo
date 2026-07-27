@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.impl.internal.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -53,25 +53,25 @@ public class QuickListsManager {
     private static final String LIST_TAG = "list";
 
     private final ActionManager myActionManager;
-    private final SchemeManager<QuickList, QuickList> mySchemeManager;
+    private final SchemeManager<QuickListImpl, QuickListImpl> mySchemeManager;
 
     @Inject
     public QuickListsManager(Application application, ActionManager actionManager, SchemeManagerFactory schemeManagerFactory) {
         myActionManager = actionManager;
-        mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<QuickList, QuickList>() {
+        mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<QuickListImpl, QuickListImpl>() {
             
             @Override
-            public QuickList readScheme(Element element) {
+            public QuickListImpl readScheme(Element element) {
                 return createItem(element);
             }
 
             @Override
-            public String getName(QuickList immutableElement) {
+            public String getName(QuickListImpl immutableElement) {
                 return immutableElement.getName();
             }
 
             @Override
-            public Element writeScheme(QuickList scheme) {
+            public Element writeScheme(QuickListImpl scheme) {
                 Element element = new Element(LIST_TAG);
                 scheme.writeExternal(element);
                 return element;
@@ -86,7 +86,7 @@ public class QuickListsManager {
                 }
 
                 mySchemeManager.loadBundledScheme(resource, element -> {
-                    QuickList item = createItem(element);
+                    QuickListImpl item = createItem(element);
                     item.getExternalInfo().setHash(JDOMUtil.getTreeHash(element, true));
                     item.getExternalInfo().setPreviouslySavedName(item.getName());
                     item.getExternalInfo().setCurrentFileName(PathUtil.getFileName(path));
@@ -98,22 +98,22 @@ public class QuickListsManager {
     }
 
     
-    private static QuickList createItem(Element element) {
-        QuickList item = new QuickList();
+    private static QuickListImpl createItem(Element element) {
+        QuickListImpl item = new QuickListImpl();
         item.readExternal(element);
         return item;
     }
 
     
-    public QuickList[] getAllQuickLists() {
-        Collection<QuickList> lists = mySchemeManager.getAllSchemes();
-        return lists.toArray(new QuickList[lists.size()]);
+    public QuickListImpl[] getAllQuickLists() {
+        Collection<QuickListImpl> lists = mySchemeManager.getAllSchemes();
+        return lists.toArray(new QuickListImpl[lists.size()]);
     }
 
     void registerActions() {
         // to prevent exception if 2 or more targets have the same name
         Set<String> registeredIds = new HashSet<String>();
-        for (QuickList list : mySchemeManager.getAllSchemes()) {
+        for (QuickListImpl list : mySchemeManager.getAllSchemes()) {
             String actionId = list.getActionId();
             if (registeredIds.add(actionId)) {
                 myActionManager.registerAction(actionId, new InvokeQuickListAction(list));
@@ -122,24 +122,24 @@ public class QuickListsManager {
     }
 
     private void unregisterActions() {
-        for (String oldId : myActionManager.getActionIds(QuickList.QUICK_LIST_PREFIX)) {
+        for (String oldId : myActionManager.getActionIds(QuickListImpl.QUICK_LIST_PREFIX)) {
             myActionManager.unregisterAction(oldId);
         }
     }
 
-    public void setQuickLists(QuickList[] quickLists) {
+    public void setQuickLists(QuickListImpl[] quickLists) {
         mySchemeManager.clearAllSchemes();
         unregisterActions();
-        for (QuickList quickList : quickLists) {
+        for (QuickListImpl quickList : quickLists) {
             mySchemeManager.addNewScheme(quickList, true);
         }
         registerActions();
     }
 
     private static class InvokeQuickListAction extends QuickSwitchSchemeAction {
-        private final QuickList myQuickList;
+        private final QuickListImpl myQuickList;
 
-        public InvokeQuickListAction(QuickList quickList) {
+        public InvokeQuickListAction(QuickListImpl quickList) {
             myQuickList = quickList;
             myActionPlace = ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION;
             getTemplatePresentation().setDescription(myQuickList.getDescription());
@@ -152,7 +152,7 @@ public class QuickListsManager {
                                    DataContext dataContext) {
             ActionManager actionManager = ActionManager.getInstance();
             for (String actionId : myQuickList.getActionIds()) {
-                if (QuickList.SEPARATOR_ID.equals(actionId)) {
+                if (QuickListImpl.SEPARATOR_ID.equals(actionId)) {
                     group.addSeparator();
                 }
                 else {
