@@ -104,15 +104,15 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
         return provider == null ? null : provider.getIcon();
     }
 
-    @RequiredReadAction
     private void checkInit() {
         if (myExtensions == null) {
-            myExtensions = MultiMap.createConcurrentSet();
+            MultiMap<Class<? extends ModuleExtension>, ModuleExtension> map = MultiMap.createConcurrentSet();
             for (Module o : ModuleManager.getInstance(myProject).getModules()) {
                 for (ModuleExtension moduleExtension : ModuleRootManager.getInstance(o).getExtensions()) {
-                    myExtensions.putValue(moduleExtension.getClass(), moduleExtension);
+                    map.putValue(moduleExtension.getClass(), moduleExtension);
                 }
             }
+            myExtensions = map;
         }
     }
 
