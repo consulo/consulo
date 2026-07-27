@@ -8,7 +8,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
-import consulo.application.WriteAction;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.internal.*;
 import consulo.application.progress.*;
@@ -50,7 +49,6 @@ import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -241,24 +239,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return myState.get() != State.SMART;
     }
 
-    @TestOnly
-    public void setDumb(boolean dumb) {
-        if (dumb) {
-            WriteAction.run(() -> {
-                if (myDumbState.get().isSmart()) {
-                    myDumbState.updateAndGet(DumbState::incrementDumbCounter);
-                }
-                myState.set(State.RUNNING_DUMB_TASKS);
-                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
-            });
-            myPublisher.enteredDumbMode();
-        }
-        else {
-            myState.set(State.WAITING_FOR_FINISH);
-            updateFinished();
-        }
-    }
-
     @Override
     public void runWhenSmart(Runnable runnable) {
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
@@ -379,22 +359,40 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return true;
     }
 
-    private void enterDumbMode(Throwable trace) {
-        boolean wasSmart = !isDumb();
-        WriteAction.run(() -> {
-            synchronized (myRunWhenSmartQueue) {
-                myState.set(State.SCHEDULED_TASKS);
-            }
-            myDumbStart = trace;
-            myDumbEnterTrace = new Throwable();
-            myDumbState.updateAndGet(wasSmart ? DumbState::incrementDumbCounter : DumbState::touch);
-            if (wasSmart) {
-                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
-            }
-        });
-        if (wasSmart) {
-            runCatchingIgnorePCE(myPublisher::enteredDumbMode);
+    private boolean tryEnterDumbMode() {
+        return myDumbState.getAndUpdate(DumbState::tryEnterDumbMode).incrementWillChangeDumbState();
+    }
+
+    @RequiredWriteAction
+    private boolean doIncrementDumbCounter() {
+        boolean isStateChanged = myDumbState.getAndUpdate(DumbState::incrementDumbCounter).isSmart();
+        if (isStateChanged) {
+            runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
         }
+        return isStateChanged;
+    }
+
+    private void enterDumbMode(Throwable trace) {
+        synchronized (myRunWhenSmartQueue) {
+            myState.set(State.SCHEDULED_TASKS);
+        }
+        myDumbStart = trace;
+        myDumbEnterTrace = new Throwable();
+
+        // If already dumb - just increment the counter. We don't need a write action (to not interrupt NBRA), neither we need EDT.
+        // Otherwise, increment the counter under write action because this will change dumb state
+        if (!tryEnterDumbMode()) {
+            return;
+        }
+
+        Coroutine.<Void, Boolean>first(WriteLock.<Void, Boolean>apply(input -> doIncrementDumbCounter()))
+            .then(UIAction.<Boolean, Void>apply(enteredDumb -> {
+                if (enteredDumb) {
+                    runCatchingIgnorePCE(myPublisher::enteredDumbMode);
+                }
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
     }
 
     private void queueUpdateFinished() {
@@ -408,10 +406,23 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private boolean switchToSmartMode() {
+    private boolean tryDecrementDumbCounter() {
+        return myDumbState.getAndUpdate(DumbState::tryDecrementDumbCounter).decrementWillChangeDumbState();
+    }
+
+    @RequiredWriteAction
+    private boolean doDecrementDumbCounter() {
+        boolean isStateChanged = myDumbState.updateAndGet(DumbState::decrementDumbCounter).isSmart();
+        if (isStateChanged) {
+            runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
+        }
+        return isStateChanged;
+    }
+
+    private void updateFinished() {
         synchronized (myRunWhenSmartQueue) {
             if (!myState.compareAndSet(State.WAITING_FOR_FINISH, State.SMART)) {
-                return false;
+                return;
             }
         }
 
@@ -419,13 +430,28 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
         myDumbEnterTrace = null;
         myDumbStart = null;
-        myDumbState.updateAndGet(DumbState::decrementDumbCounter);
-        runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
-        return !myProject.isDisposed();
+
+        // If there are other dumb tasks - just decrement the counter. We don't need a write action (to not interrupt NBRA), neither we need EDT.
+        // Otherwise, decrement the counter under write action because this will change dumb state
+        if (!tryDecrementDumbCounter()) {
+            smartModeFinished();
+            return;
+        }
+
+        Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
+                doDecrementDumbCounter();
+                return null;
+            }))
+            .then(UIAction.<Void, Void>apply(input -> {
+                smartModeFinished();
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
     }
 
-    private void updateFinished() {
-        if (!WriteAction.compute(this::switchToSmartMode)) {
+    @RequiredUIAccess
+    private void smartModeFinished() {
+        if (myProject.isDisposed()) {
             return;
         }
 
@@ -813,6 +839,10 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         DumbState decrementDumbCounter() {
             assert dumbCounter > 0 : "Unbalanced dumb counter decrement";
             return new DumbState(dumbCounter - 1, modificationCounter + 1);
+        }
+
+        DumbState tryEnterDumbMode() {
+            return incrementWillChangeDumbState() ? this : touch();
         }
 
         DumbState tryIncrementDumbCounter() {
