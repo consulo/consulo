@@ -23,7 +23,7 @@ import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorKeys;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;

@@ -45,6 +45,7 @@ module consulo.component.api {
 
     exports consulo.component.internal to
         consulo.component.impl,
+        consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.application.api,
         consulo.application.impl,
@@ -60,6 +61,7 @@ module consulo.component.api {
         consulo.it;
 
     exports consulo.component.internal.inject to consulo.component.impl,
+        consulo.ui.ex.impl,
         consulo.application.impl,
         consulo.project.impl,
         consulo.module.impl,

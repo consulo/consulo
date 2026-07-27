@@ -32,7 +32,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.action.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;

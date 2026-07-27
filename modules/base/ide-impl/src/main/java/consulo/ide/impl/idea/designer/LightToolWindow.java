@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.designer;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.awt.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;

@@ -48,6 +48,7 @@ open module consulo.ide.impl {
     requires consulo.index.io;
     requires consulo.datacontext.api;
     requires consulo.ui.ex.api;
+    requires consulo.ui.ex.impl;
     requires consulo.project.ui.api;
     requires consulo.navigation.api;
     requires consulo.code.editor.api;
@@ -166,7 +167,6 @@ open module consulo.ide.impl {
     //opens consulo.ide.impl.presentationAssistant to consulo.util.xml.serializer;
 
     exports consulo.ide.impl.actionSystem.ex;
-    exports consulo.ide.impl.actionSystem.impl;
     exports consulo.ide.impl.actions;
     exports consulo.ide.impl.actions.impl;
     exports consulo.ide.impl.application;
@@ -341,7 +341,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.internal.encodings;
     exports consulo.ide.impl.idea.internal.psiView;
     exports consulo.ide.impl.idea.internal.psiView.formattingblocks;
-    exports consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence;
     exports consulo.ide.impl.idea.internal.tree;
     exports consulo.ide.impl.idea.internal.validation;
     exports consulo.ide.impl.idea.lang.customFolding;
@@ -351,7 +350,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.notification.impl;
     exports consulo.ide.impl.idea.notification.impl.actions;
     exports consulo.ide.impl.idea.notification.impl.ui;
-    exports consulo.ide.impl.idea.openapi.actionSystem;
     exports consulo.ide.impl.idea.openapi.actionSystem.ex;
     exports consulo.ide.impl.idea.openapi.actionSystem.impl;
     exports consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder;
@@ -384,7 +382,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.openapi.fileTypes.impl;
     exports consulo.ide.impl.idea.openapi.ide;
     exports consulo.ide.impl.idea.openapi.keymap;
-    exports consulo.ide.impl.idea.openapi.keymap.ex;
     exports consulo.ide.impl.idea.openapi.keymap.impl;
     exports consulo.ide.impl.idea.openapi.keymap.impl.ui;
     exports consulo.ide.impl.idea.openapi.module;

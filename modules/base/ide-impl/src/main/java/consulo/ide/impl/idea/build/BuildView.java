@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.application.Application;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.BuildViewSettingsProvider;
@@ -23,7 +24,6 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.ide.impl.idea.execution.actions.StopProcessAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
@@ -316,7 +316,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
         IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop(),
         myBuildDescriptor.getProcessHandler()
       );
-      ActionImplUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
+      ActionUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
       stopAction.registerCustomShortcutSet(stopAction.getShortcutSet(), this);
     }
 

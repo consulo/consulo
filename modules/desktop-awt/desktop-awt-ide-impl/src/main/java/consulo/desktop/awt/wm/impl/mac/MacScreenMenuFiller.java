@@ -22,7 +22,7 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.mac.screenmenu.Menu;
 import consulo.desktop.awt.ui.mac.screenmenu.MenuItem;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
+import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;

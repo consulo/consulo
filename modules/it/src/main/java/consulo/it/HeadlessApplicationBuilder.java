@@ -16,13 +16,18 @@
 package consulo.it;
 
 import consulo.application.Application;
+import consulo.application.impl.internal.store.IApplicationStore;
+import consulo.application.internal.PreloadingActivity;
 import consulo.application.internal.StartupProgress;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.NewBindingLoader;
 import consulo.component.internal.inject.NewInjectingBindingCollector;
 import consulo.component.internal.inject.NewTopicBindingCollector;
 import consulo.component.internal.inject.TopicBindingLoader;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.internal.PathManagerHolder;
 import consulo.container.internal.plugin.PluginHolderModificator;
 import consulo.container.plugin.PluginDescriptor;
@@ -101,7 +106,17 @@ public final class HeadlessApplicationBuilder {
 
         ComponentBinding componentBinding = new ComponentBinding(injectingBindingLoader, topicBindingLoader);
 
-        return new HeadlessApplicationImpl(componentBinding, SimpleReference.<StartupProgress>create());
+        HeadlessApplicationImpl application = new HeadlessApplicationImpl(componentBinding, SimpleReference.<StartupProgress>create());
+
+        ContainerPathManager pathManager = ContainerPathManager.get();
+        IApplicationStore store = application.getStateStore();
+        store.setConfigPath(pathManager.getConfigPath());
+        store.setOptionsPath(pathManager.getOptionsPath());
+
+        ProgressIndicator indicator = new EmptyProgressIndicator();
+        application.getExtensionPoint(PreloadingActivity.class).forEach(activity -> activity.preload(indicator));
+
+        return application;
     }
 
     private static void initSyntheticPlugin() {

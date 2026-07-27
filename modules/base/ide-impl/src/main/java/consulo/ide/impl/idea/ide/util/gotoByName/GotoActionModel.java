@@ -24,7 +24,7 @@ import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ui.ex.action.BooleanOptionDescription;
 import consulo.ui.ex.action.OptionDescription;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;

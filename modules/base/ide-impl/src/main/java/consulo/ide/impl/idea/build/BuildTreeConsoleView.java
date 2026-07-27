@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.ReadAction;
@@ -33,7 +34,6 @@ import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.localize.IdeLocalize;
@@ -196,7 +196,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
 
             DefaultActionGroup sourceActionGroup = new DefaultActionGroup();
             EditSourceAction edit = new EditSourceAction();
-            ActionImplUtil.copyFrom(edit, IdeActions.ACTION_EDIT_SOURCE);
+            ActionUtil.copyFrom(edit, IdeActions.ACTION_EDIT_SOURCE);
             sourceActionGroup.add(edit);
             DefaultActionGroup filteringActionsGroup = BuildTreeFilters.createFilteringActionsGroup(this);
             DefaultActionGroup navigationActionGroup = new DefaultActionGroup();

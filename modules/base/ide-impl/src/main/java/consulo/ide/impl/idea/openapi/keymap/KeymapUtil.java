@@ -141,46 +141,12 @@ public class KeymapUtil {
      * @throws InvalidDataException if <code>keystrokeString</code> doesn't represent valid <code>MouseShortcut</code>.
      */
     public static MouseShortcut parseMouseShortcut(String keystrokeString) throws InvalidDataException {
-        if (keystrokeString.startsWith("Force touch")) {
-            return new PressureShortcut(2);
+        try {
+            return consulo.ui.ex.keymap.util.KeymapUtil.parseMouseShortcut(keystrokeString);
         }
-
-        int button = -1;
-        int modifiers = 0;
-        int clickCount = 1;
-        for (StringTokenizer tokenizer = new StringTokenizer(keystrokeString); tokenizer.hasMoreTokens(); ) {
-            String token = tokenizer.nextToken();
-            if (SHIFT.equals(token)) {
-                modifiers |= InputEvent.SHIFT_DOWN_MASK;
-            }
-            else if (CONTROL.equals(token) || CTRL.equals(token)) {
-                modifiers |= InputEvent.CTRL_DOWN_MASK;
-            }
-            else if (META.equals(token)) {
-                modifiers |= InputEvent.META_DOWN_MASK;
-            }
-            else if (ALT.equals(token)) {
-                modifiers |= InputEvent.ALT_DOWN_MASK;
-            }
-            else if (ALT_GRAPH.equals(token)) {
-                modifiers |= InputEvent.ALT_GRAPH_DOWN_MASK;
-            }
-            else if (token.startsWith("button") && token.length() > 6) {
-                try {
-                    button = Integer.parseInt(token.substring(6));
-                }
-                catch (NumberFormatException e) {
-                    throw new InvalidDataException("unparseable token: " + token);
-                }
-            }
-            else if (DOUBLE_CLICK.equals(token)) {
-                clickCount = 2;
-            }
-            else {
-                throw new InvalidDataException("unknown token: " + token);
-            }
+        catch (IllegalArgumentException e) {
+            throw new InvalidDataException(e.getMessage());
         }
-        return new MouseShortcut(button, modifiers, clickCount);
     }
 
     public static String getKeyModifiersTextForMacOSLeopard(@JdkConstants.InputEventMask int modifiers) {

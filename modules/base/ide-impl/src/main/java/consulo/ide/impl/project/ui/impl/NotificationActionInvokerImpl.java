@@ -17,8 +17,8 @@ package consulo.ide.impl.project.ui.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.project.ui.internal.NotificationActionInvoker;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;

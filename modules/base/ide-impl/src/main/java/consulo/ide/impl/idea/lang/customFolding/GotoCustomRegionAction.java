@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.editor.PlatformDataKeys;

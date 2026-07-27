@@ -4,6 +4,7 @@
  */
 module consulo.desktop.swt.ide.impl {
   requires consulo.ide.impl;
+  requires consulo.ui.ex.impl;
   requires consulo.ui.impl;
   requires consulo.desktop.ide.impl;
   requires consulo.platform.impl;

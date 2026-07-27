@@ -46,7 +46,7 @@ import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.ModelDiff;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;

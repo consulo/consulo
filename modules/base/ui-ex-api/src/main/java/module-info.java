@@ -47,6 +47,7 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.localize;
 
     exports consulo.ui.ex.internal to
+        consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.external.system.api,
         consulo.language.editor.api,

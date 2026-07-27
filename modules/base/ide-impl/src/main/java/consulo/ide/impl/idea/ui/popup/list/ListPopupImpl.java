@@ -7,7 +7,7 @@ import consulo.application.util.ClientId;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.UiInterceptors;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;

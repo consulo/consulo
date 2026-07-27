@@ -11,7 +11,7 @@ import consulo.desktop.awt.action.menu.ActionMenuItem;
 import consulo.desktop.awt.action.menu.ActionMenuItemImpl;
 import consulo.desktop.awt.action.menu.ActionToggleMenuItemImpl;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
+import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ide.impl.idea.ui.popup.NothingHereAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

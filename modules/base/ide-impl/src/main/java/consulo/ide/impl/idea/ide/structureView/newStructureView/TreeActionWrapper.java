@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.application.dumb.DumbAware;
 
 public class TreeActionWrapper extends ToggleAction implements DumbAware {

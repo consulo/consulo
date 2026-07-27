@@ -16,7 +16,7 @@
 package consulo.desktop.awt.action;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
 import org.jspecify.annotations.Nullable;

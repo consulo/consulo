@@ -55,7 +55,7 @@ import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;

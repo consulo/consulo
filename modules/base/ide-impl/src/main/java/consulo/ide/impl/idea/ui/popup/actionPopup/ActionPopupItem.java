@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;

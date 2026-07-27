@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.action;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
@@ -24,7 +25,6 @@ import consulo.desktop.awt.internal.diff.util.SyncScrollSupport;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.util.HighlightingLevel;
 import consulo.diff.localize.DiffLocalize;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -185,7 +185,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
     private abstract class EditorSettingToggleAction extends ToggleAction implements DumbAware, EditorSettingAction {
         private EditorSettingToggleAction(String actionId) {
-            ActionImplUtil.copyFrom(this, actionId);
+            ActionUtil.copyFrom(this, actionId);
         }
 
         @Override

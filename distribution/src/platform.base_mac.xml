@@ -107,6 +107,7 @@
                 <include>consulo:consulo-compiler-artifact-impl</include>
                 <include>consulo:consulo-color-scheme-api</include>
                 <include>consulo:consulo-color-scheme-ui-api</include>
+                <include>consulo:consulo-ui-ex-impl</include>
                 <include>consulo:consulo-ui-ex-awt-api</include>
                 <include>consulo:consulo-virtual-file-system-impl</include>
                 <include>consulo:consulo-component-impl</include>

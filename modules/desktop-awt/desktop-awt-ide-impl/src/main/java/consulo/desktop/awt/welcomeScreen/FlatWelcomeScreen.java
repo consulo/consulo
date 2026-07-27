@@ -28,7 +28,7 @@ import consulo.ui.ButtonStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.details.InputDetails;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionRunnerAsync;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.touchBar.TouchBarController;

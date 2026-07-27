@@ -21,6 +21,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 

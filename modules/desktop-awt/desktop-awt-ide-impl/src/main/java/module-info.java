@@ -41,6 +41,7 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.platform.impl;
     requires consulo.project.ui.impl;
     requires consulo.ui.ex.awt.api;
+    requires consulo.ui.ex.impl;
     requires consulo.ui.impl;
     requires consulo.util.jna;
     requires consulo.version.control.system.impl;

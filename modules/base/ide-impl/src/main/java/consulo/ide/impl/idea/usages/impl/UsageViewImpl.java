@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.HelpManager;
@@ -24,7 +25,6 @@ import consulo.find.FindManager;
 import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.psi.*;
@@ -883,8 +883,8 @@ public class UsageViewImpl implements UsageViewEx {
         List<AnAction> list = new ArrayList<>();
         myProject.getApplication().getExtensionPoint(UsageGroupingRuleProvider.class)
             .forEach(provider -> ContainerUtil.addAll(list, provider.createGroupingActions(this)));
-        ActionImplUtil.sortAlphabetically(list);
-        ActionImplUtil.moveActionTo(list, "Module", "Flatten Modules", true);
+        ActionUtil.sortAlphabetically(list);
+        ActionUtil.moveActionTo(list, "Module", "Flatten Modules", true);
         return list.toArray(AnAction.EMPTY_ARRAY);
     }
 

@@ -350,6 +350,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-ui-ex-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-desktop-awt-eawt-wrapper</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>

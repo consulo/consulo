@@ -7,7 +7,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
+import consulo.ui.ex.action.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;

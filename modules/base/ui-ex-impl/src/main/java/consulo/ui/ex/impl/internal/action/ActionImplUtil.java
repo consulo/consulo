@@ -1,0 +1,427 @@
+/*
+ * Copyright 2000-2016 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ui.ex.impl.internal.action;
+
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
+import consulo.application.Application;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.ui.UISettings;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.internal.DumbInternalUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.util.TextWithMnemonic;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.function.Predicate;
+
+public class ActionImplUtil {
+    private static final Logger LOG = Logger.getInstance(ActionImplUtil.class);
+    public static final String WAS_ENABLED_BEFORE_DUMB = "WAS_ENABLED_BEFORE_DUMB";
+    public static final String WOULD_BE_ENABLED_IF_NOT_DUMB_MODE = "WOULD_BE_ENABLED_IF_NOT_DUMB_MODE";
+    public static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
+
+    private ActionImplUtil() {
+    }
+
+    /**
+     * Asynchronously checks whether any action in the group (recursively) matches the condition. Children are
+     * expanded through the {@link ActionUpdateSession} of the current expansion ({@code getChildrenAsync}), so
+     * dynamic groups report their real children instead of the incomplete result of {@code getChildren(null)}.
+     */
+    public static CompletableFuture<Boolean> anyActionFromGroupMatchesAsync(
+        ActionGroup group,
+        ActionUpdateSession session,
+        boolean processPopupSubGroups,
+        Predicate<? super AnAction> condition
+    ) {
+        return session.children(group).thenCompose(children -> anyMatchFrom(children, 0, session, processPopupSubGroups, condition));
+    }
+
+    private static CompletableFuture<Boolean> anyMatchFrom(
+        List<AnAction> children,
+        int index,
+        ActionUpdateSession session,
+        boolean processPopupSubGroups,
+        Predicate<? super AnAction> condition
+    ) {
+        if (index >= children.size()) {
+            return CompletableFuture.completedFuture(Boolean.FALSE);
+        }
+
+        AnAction child = children.get(index);
+        if (condition.test(child)) {
+            return CompletableFuture.completedFuture(Boolean.TRUE);
+        }
+
+        if (child instanceof ActionGroup childGroup && (processPopupSubGroups || !childGroup.isPopup())) {
+            return anyActionFromGroupMatchesAsync(childGroup, session, processPopupSubGroups, condition).thenCompose(match ->
+                Boolean.TRUE.equals(match)
+                    ? CompletableFuture.completedFuture(Boolean.TRUE)
+                    : anyMatchFrom(children, index + 1, session, processPopupSubGroups, condition));
+        }
+
+        return anyMatchFrom(children, index + 1, session, processPopupSubGroups, condition);
+    }
+
+    public static void recursiveRegisterShortcutSet(ActionGroup group, JComponent component, @Nullable Disposable parentDisposable) {
+        for (AnAction action : group.getChildren(null)) {
+            if (action instanceof ActionGroup childGroup) {
+                recursiveRegisterShortcutSet(childGroup, component, parentDisposable);
+            }
+            action.registerCustomShortcutSet(component, parentDisposable);
+        }
+    }
+
+    public static void showDumbModeWarning(AnActionEvent... events) {
+        Project project = null;
+        List<String> actionNames = new ArrayList<>();
+        for (AnActionEvent event : events) {
+            String s = event.getPresentation().getText();
+            if (StringUtil.isNotEmpty(s)) {
+                actionNames.add(s);
+            }
+
+            Project _project = event.getData(Project.KEY);
+            if (_project != null && project == null) {
+                project = _project;
+            }
+        }
+
+        if (project == null) {
+            return;
+        }
+
+        DumbService.getInstance(project).showDumbModeNotification(getActionUnavailableMessage(actionNames));
+    }
+
+    private static String getActionUnavailableMessage(List<String> actionNames) {
+        String message;
+        String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
+        if (actionNames.isEmpty()) {
+            message = "This action is not" + beAvailableUntil;
+        }
+        else if (actionNames.size() == 1) {
+            message = "'" + actionNames.get(0) + "' action is not" + beAvailableUntil;
+        }
+        else {
+            message = "None of the following actions are" + beAvailableUntil + ": " + StringUtil.join(actionNames, ", ");
+        }
+        return message;
+    }
+
+    public static String getUnavailableMessage(String action, boolean plural) {
+        return action + (plural ? " are" : " is") + " not available while " + Application.get().getName() + " is updating indices";
+    }
+
+    /**
+     * @param action                action
+     * @param e                     action event
+     * @return true if update tried to access indices in dumb mode
+     */
+    @Deprecated
+    @DeprecationInfo("We must use async impl!")
+    public static boolean performDumbAwareUpdate(
+        AnAction action,
+        AnActionEvent e
+    ) {
+        ensureUpdateSession(e);
+
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(true);
+        Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
+        boolean dumbMode = isDumbMode(e.getData(Project.KEY));
+        if (wasEnabledBefore != null && !dumbMode) {
+            presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
+            presentation.setEnabled(wasEnabledBefore);
+            presentation.setVisible(true);
+        }
+        boolean enabledBeforeUpdate = presentation.isEnabled();
+
+        boolean notAllowed = dumbMode && !action.isDumbAware();
+
+        try {
+            ActionUpdateInvoker.updateSync(action, e);
+
+            presentation.putClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE, notAllowed && presentation.isEnabled());
+            presentation.putClientProperty(WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE, notAllowed && presentation.isVisible());
+        }
+        catch (IndexNotReadyException e1) {
+            if (notAllowed) {
+                return true;
+            }
+            throw e1;
+        }
+        finally {
+            if (notAllowed) {
+                if (wasEnabledBefore == null) {
+                    presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, enabledBeforeUpdate);
+                }
+                presentation.setEnabled(false);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * A single-action update outside an expansion (e.g. the enabled-check before performing, or a keyboard update)
+     * still needs an update session, so group actions can resolve their children/presentations. When the event has no
+     * session, attach a self-contained one built from the event's data context and place.
+     */
+    public static void ensureUpdateSession(AnActionEvent e) {
+        if (e.getUpdateSession() != ActionUpdateSession.EMPTY) {
+            return;
+        }
+        ActionUpdater updater = new ActionUpdater(
+            ActionManager.getInstance(),
+            new BasePresentationFactory(),
+            DataManager.getInstance().createAsyncDataContext(e.getDataContext()),
+            e.getPlace(),
+            e.isFromContextMenu(),
+            e.isFromActionToolbar(),
+            Application.get().getLastUIAccess()
+        );
+        e.setUpdateSession(updater.asUpdateSession());
+    }
+
+    public static CompletableFuture<Boolean> performDumbAwareUpdateAsync(
+        AnAction action,
+        AnActionEvent e
+    ) {
+        ensureUpdateSession(e);
+
+        Presentation presentation = e.getPresentation();
+        Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
+        boolean dumbMode = isDumbMode(e.getData(Project.KEY));
+        if (wasEnabledBefore != null && !dumbMode) {
+            presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
+            presentation.setEnabled(wasEnabledBefore);
+            presentation.setVisible(true);
+        }
+        boolean enabledBeforeUpdate = presentation.isEnabled();
+        boolean notAllowed = dumbMode && !action.isDumbAware();
+
+        return ActionUpdateInvoker.updateAsync(action, e).handle((ignored, throwable) -> {
+            try {
+                if (throwable != null) {
+                    Throwable cause = throwable instanceof CompletionException ? throwable.getCause() : throwable;
+                    if (cause instanceof IndexNotReadyException indexNotReady) {
+                        if (notAllowed) {
+                            return true;
+                        }
+                        throw indexNotReady;
+                    }
+                    if (cause instanceof RuntimeException runtimeException) {
+                        throw runtimeException;
+                    }
+                    if (cause instanceof Error error) {
+                        throw error;
+                    }
+                    throw new RuntimeException(cause);
+                }
+
+                presentation.putClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE, notAllowed && presentation.isEnabled());
+                presentation.putClientProperty(WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE, notAllowed && presentation.isVisible());
+                return false;
+            }
+            finally {
+                if (notAllowed) {
+                    if (wasEnabledBefore == null) {
+                        presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, enabledBeforeUpdate);
+                    }
+                    presentation.setEnabled(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * @return whether a dumb mode is in progress for the passed project or, if the argument is null, for any open project.
+     * @see DumbService
+     */
+    public static boolean isDumbMode(@Nullable Project project) {
+        return DumbInternalUtil.isDumbMode(project);
+    }
+
+    @Deprecated
+    public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
+        performDumbAwareUpdate(action, e);
+
+        Project project = e.getData(Project.KEY);
+        if (project != null && DumbService.getInstance(project).isDumb() && !action.isDumbAware()) {
+            if (Boolean.FALSE.equals(e.getPresentation().getClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
+                return false;
+            }
+            if (visibilityMatters && Boolean.FALSE.equals(e.getPresentation().getClientProperty(WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE))) {
+                return false;
+            }
+
+            showDumbModeWarning(e);
+            return false;
+        }
+
+        if (!e.getPresentation().isEnabled()) {
+            return false;
+        }
+        if (visibilityMatters && !e.getPresentation().isVisible()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @RequiredUIAccess
+    public static void performActionDumbAwareWithCallbacks(AnAction action, AnActionEvent e, DataContext context) {
+        ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+        manager.fireBeforeActionPerformed(action, context, e);
+        performActionDumbAware(action, e);
+        manager.fireAfterActionPerformed(action, context, e);
+    }
+
+    @RequiredUIAccess
+    public static void performActionDumbAware(AnAction action, AnActionEvent e) {
+        try {
+            action.actionPerformed(e);
+        }
+        catch (IndexNotReadyException e1) {
+            showDumbModeWarning(e);
+        }
+    }
+
+    public static boolean isKeepPopupOpen(KeepPopupOnPerform mode, InputEvent event) {
+        return switch (mode) {
+            case NEVER -> false;
+            case ALWAYS -> true;
+            case IF_REQUESTED -> event instanceof MouseEvent me && UIUtil.isControlKeyDown(me);
+            case IF_PREFERRED -> UISettings.getInstance().getKeepPopupsForToggles()
+                || (event instanceof MouseEvent me && UIUtil.isControlKeyDown(me));
+            default -> false;
+        };
+    }
+
+    public static List<AnAction> getActions(JComponent component) {
+        return ObjectUtil.notNull(UIUtil.getClientProperty(component, AnAction.ACTIONS_KEY), Collections.emptyList());
+    }
+
+    public static void clearActions(JComponent component) {
+        UIUtil.putClientProperty(component, AnAction.ACTIONS_KEY, null);
+    }
+
+    @RequiredUIAccess
+    public static void invokeAction(
+        AnAction action,
+        DataContext dataContext,
+        String place,
+        @Nullable InputEvent inputEvent,
+        @Nullable Runnable onDone
+    ) {
+        Presentation presentation = action.getTemplatePresentation().clone();
+        AnActionEvent event = new AnActionEvent(inputEvent, dataContext, place, presentation, ActionManager.getInstance(), 0);
+        performDumbAwareUpdate(action, event);
+        ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+        if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
+            manager.fireBeforeActionPerformed(action, dataContext, event);
+            performActionDumbAware(action, event);
+            if (onDone != null) {
+                onDone.run();
+            }
+            manager.fireAfterActionPerformed(action, dataContext, event);
+        }
+    }
+
+    @RequiredUIAccess
+    public static void invokeAction(
+        AnAction action,
+        Component component,
+        String place,
+        @Nullable InputEvent inputEvent,
+        @Nullable Runnable onDone
+    ) {
+        invokeAction(action, DataManager.getInstance().getDataContext(component), place, inputEvent, onDone);
+    }
+
+    public static ActionListener createActionListener(String actionId, Component component, String place) {
+        return e -> {
+            AnAction action = ActionManager.getInstance().getAction(actionId);
+            if (action == null) {
+                LOG.warn("Can not find action by id " + actionId);
+                return;
+            }
+            invokeAction(action, component, place, null, null);
+        };
+    }
+
+    public static AnActionEvent createEmptyEvent() {
+        return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, DataContext.EMPTY_CONTEXT);
+    }
+
+    public static @Nullable ShortcutSet getMnemonicAsShortcut(AnAction action) {
+        int mnemonic = KeyEvent.getExtendedKeyCodeForChar(
+            TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().get()).getMnemonic()
+        );
+        if (mnemonic != KeyEvent.VK_UNDEFINED) {
+            KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(
+                KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK),
+                null
+            );
+            KeyboardShortcut altShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), null);
+            CustomShortcutSet shortcutSet;
+            if (Platform.current().os().isMac()) {
+                if (Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {
+                    shortcutSet = new CustomShortcutSet(ctrlAltShortcut, altShortcut);
+                }
+                else {
+                    shortcutSet = new CustomShortcutSet(ctrlAltShortcut);
+                }
+            }
+            else {
+                shortcutSet = new CustomShortcutSet(altShortcut);
+            }
+            return shortcutSet;
+        }
+        return null;
+    }
+
+    public static ActionListener createActionListener(AnAction action, Component component, String place) {
+        return e -> invokeAction(action, component, place, null, null);
+    }
+}

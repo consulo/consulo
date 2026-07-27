@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;

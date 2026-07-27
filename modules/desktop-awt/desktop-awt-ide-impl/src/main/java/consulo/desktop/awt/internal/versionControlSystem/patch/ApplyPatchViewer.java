@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem.patch;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.VisibleAreaListener;
@@ -44,7 +45,6 @@ import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.CompositeShortcutSet;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
@@ -644,7 +644,7 @@ class ApplyPatchViewer implements UiDataProvider, Disposable {
 
     private class ApplyNonConflictsAction extends LegacyDumbAwareAction {
         public ApplyNonConflictsAction() {
-            ActionImplUtil.copyFrom(this, "Diff.ApplyNonConflicts");
+            ActionUtil.copyFrom(this, "Diff.ApplyNonConflicts");
         }
 
         @Override

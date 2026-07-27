@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemReplaceAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.FocusedOnlyChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.ide.impl.idea.util.CollectConsumer;

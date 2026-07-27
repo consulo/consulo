@@ -5,7 +5,7 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.dataContext.DataContext;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.popup.NothingHereAction;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;

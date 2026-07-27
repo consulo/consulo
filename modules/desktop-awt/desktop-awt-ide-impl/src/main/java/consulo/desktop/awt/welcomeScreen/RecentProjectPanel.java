@@ -24,7 +24,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.ui.ex.awt.ListWithFilter;
 import consulo.logging.Logger;

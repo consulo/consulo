@@ -16,7 +16,7 @@
 package consulo.desktop.swt.wm.impl;
 
 import consulo.dataContext.UiDataProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.project.Project;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;

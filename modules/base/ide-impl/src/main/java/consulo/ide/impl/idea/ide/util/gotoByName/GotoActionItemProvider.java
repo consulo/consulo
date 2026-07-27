@@ -14,7 +14,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrarImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
+import consulo.ui.ex.action.AbbreviationManager;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.logging.Logger;
 import consulo.project.Project;

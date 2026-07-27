@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.util;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.DiffDialogHints;
@@ -29,7 +30,6 @@ import consulo.disposer.Disposer;
 import consulo.desktop.awt.internal.diff.EditorHolder;
 import consulo.desktop.awt.internal.diff.EditorHolderFactory;
 import consulo.desktop.awt.internal.diff.util.side.ThreesideContentPanel;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.dataContext.DataSink;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -205,7 +205,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
         default:
           throw new IllegalArgumentException();
       }
-      ActionImplUtil.copyFrom(this, id);
+      ActionUtil.copyFrom(this, id);
     }
 
     @Override

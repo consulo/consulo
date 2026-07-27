@@ -24,6 +24,9 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
+import consulo.util.lang.Comparing;
+import consulo.ui.ex.action.AnAction;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -92,6 +95,39 @@ public class ActionUtil {
                 if (second == null) {
                     component.registerKeyboardAction(action, first, JComponent.WHEN_IN_FOCUSED_WINDOW);
                 }
+            }
+        }
+    }
+
+    public static void sortAlphabetically(List<? extends AnAction> list) {
+        list.sort((o1, o2) -> Comparing.compare(o1.getTemplateText(), o2.getTemplateText()));
+    }
+
+    /**
+     * Tries to find an 'action' and 'target action' by text and put the 'action' just before of after the 'target action'
+     */
+    public static void moveActionTo(List<AnAction> list, String actionText, String targetActionText, boolean before) {
+        if (Comparing.equal(actionText, targetActionText)) {
+            return;
+        }
+
+        int actionIndex = -1;
+        int targetIndex = -1;
+        for (int i = 0; i < list.size(); i++) {
+            AnAction action = list.get(i);
+            if (actionIndex == -1 && Objects.equals(actionText, action.getTemplateText())) {
+                actionIndex = i;
+            }
+            if (targetIndex == -1 && Objects.equals(targetActionText, action.getTemplateText())) {
+                targetIndex = i;
+            }
+            if (actionIndex != -1 && targetIndex != -1) {
+                if (actionIndex < targetIndex) {
+                    targetIndex--;
+                }
+                AnAction anAction = list.remove(actionIndex);
+                list.add(before ? Math.max(0, targetIndex) : targetIndex + 1, anAction);
+                return;
             }
         }
     }

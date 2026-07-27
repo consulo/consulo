@@ -17,7 +17,7 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

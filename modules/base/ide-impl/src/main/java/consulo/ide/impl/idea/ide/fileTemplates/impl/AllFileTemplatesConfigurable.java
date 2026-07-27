@@ -23,7 +23,7 @@ import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.fileTemplate.*;
 import consulo.fileTemplate.impl.internal.*;
-import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
+import consulo.ui.ex.action.DefaultCompactActionGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.localize.LanguageLocalize;

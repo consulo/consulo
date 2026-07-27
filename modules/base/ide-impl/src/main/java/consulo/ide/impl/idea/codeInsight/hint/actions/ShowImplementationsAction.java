@@ -32,7 +32,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;

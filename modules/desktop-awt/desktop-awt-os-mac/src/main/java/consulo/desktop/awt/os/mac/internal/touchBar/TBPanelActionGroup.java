@@ -7,7 +7,7 @@ import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
 import consulo.logging.Logger;
 import consulo.disposer.Disposable;

@@ -23,7 +23,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;

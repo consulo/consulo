@@ -28,7 +28,7 @@ import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.reference.SoftReference;

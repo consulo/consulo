@@ -27,7 +27,9 @@ module consulo.application.impl {
     requires args4j;
     requires org.slf4j;
 
-    exports consulo.application.impl.internal to consulo.ide.impl,
+    exports consulo.application.impl.internal to
+        consulo.ui.ex.impl,
+        consulo.ide.impl,
         consulo.logging.logback.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.os.mac,
@@ -59,6 +61,7 @@ module consulo.application.impl {
         consulo.it;
 
     exports consulo.application.impl.internal.performance to
+        consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.language.index.impl,
         consulo.project.impl,
@@ -76,7 +79,7 @@ module consulo.application.impl {
         consulo.desktop.swt.ide.impl,
         consulo.builtin.web.server.impl;
 
-    exports consulo.application.impl.internal.store to consulo.ide.impl;
+    exports consulo.application.impl.internal.store to consulo.ide.impl, consulo.it;
     exports consulo.application.impl.internal.util to consulo.language.impl, consulo.ide.impl;
     exports consulo.application.impl.internal.concurent to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 

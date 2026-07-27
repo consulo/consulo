@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.navigationBar.internal.EmbeddedNavService;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;

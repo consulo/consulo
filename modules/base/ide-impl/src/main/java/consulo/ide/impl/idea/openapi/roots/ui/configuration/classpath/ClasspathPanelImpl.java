@@ -21,7 +21,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.dataContext.DataManager;
 import consulo.find.localize.FindLocalize;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryScope;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;

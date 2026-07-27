@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem;
 
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.internal.BackgroundTaskUtil;
@@ -36,7 +37,6 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionImplUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -94,7 +94,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     };
 
     public AnnotateDiffViewerAction() {
-        ActionImplUtil.copyFrom(this, "Annotate");
+        ActionUtil.copyFrom(this, "Annotate");
         setEnabledInModalContext(true);
     }
 
