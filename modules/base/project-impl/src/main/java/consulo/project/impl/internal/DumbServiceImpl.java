@@ -321,17 +321,19 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         if (kind == EnterKind.NONE) {
             return EnterKind.NONE;
         }
-        State state = myState.get();
-        if (state != State.SMART && state != State.WAITING_FOR_FINISH) {
-            return EnterKind.NONE;
-        }
-        boolean wasSmart = state == State.SMART;
+        boolean wasSmart;
+        // the state and the dumb counter must be advanced together, see enterDumbMode
         synchronized (myRunWhenSmartQueue) {
+            State state = myState.get();
+            if (state != State.SMART && state != State.WAITING_FOR_FINISH) {
+                return EnterKind.NONE;
+            }
+            wasSmart = state == State.SMART;
             myState.set(State.SCHEDULED_TASKS);
+            myDumbState.updateAndGet(DumbState::enterDumbMode);
         }
         myDumbStart = trace;
         myDumbEnterTrace = new Throwable();
-        myDumbState.updateAndGet(wasSmart ? DumbState::incrementDumbCounter : DumbState::touch);
         if (wasSmart) {
             runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
         }
@@ -359,37 +361,28 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return true;
     }
 
-    private boolean tryEnterDumbMode() {
-        return myDumbState.getAndUpdate(DumbState::tryEnterDumbMode).incrementWillChangeDumbState();
-    }
-
-    @RequiredWriteAction
-    private boolean doIncrementDumbCounter() {
-        boolean isStateChanged = myDumbState.getAndUpdate(DumbState::incrementDumbCounter).isSmart();
-        if (isStateChanged) {
-            runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
-        }
-        return isStateChanged;
-    }
-
+    @RequiredUIAccess
     private void enterDumbMode(Throwable trace) {
+        boolean wasSmart;
+        // the state and the dumb counter must be advanced together, otherwise updateFinished may observe a smart counter while the state
+        // machine is already dumb, and decrement it below zero
         synchronized (myRunWhenSmartQueue) {
             myState.set(State.SCHEDULED_TASKS);
+            wasSmart = myDumbState.getAndUpdate(DumbState::enterDumbMode).isSmart();
         }
         myDumbStart = trace;
         myDumbEnterTrace = new Throwable();
 
-        // If already dumb - just increment the counter. We don't need a write action (to not interrupt NBRA), neither we need EDT.
-        // Otherwise, increment the counter under write action because this will change dumb state
-        if (!tryEnterDumbMode()) {
+        if (!wasSmart) {
             return;
         }
 
-        Coroutine.<Void, Boolean>first(WriteLock.<Void, Boolean>apply(input -> doIncrementDumbCounter()))
-            .then(UIAction.<Boolean, Void>apply(enteredDumb -> {
-                if (enteredDumb) {
-                    runCatchingIgnorePCE(myPublisher::enteredDumbMode);
-                }
+        Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
+                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+                return null;
+            }))
+            .then(UIAction.<Void, Void>apply(input -> {
+                runCatchingIgnorePCE(myPublisher::enteredDumbMode);
                 return null;
             }))
             .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
@@ -406,24 +399,14 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private boolean tryDecrementDumbCounter() {
-        return myDumbState.getAndUpdate(DumbState::tryDecrementDumbCounter).decrementWillChangeDumbState();
-    }
-
-    @RequiredWriteAction
-    private boolean doDecrementDumbCounter() {
-        boolean isStateChanged = myDumbState.updateAndGet(DumbState::decrementDumbCounter).isSmart();
-        if (isStateChanged) {
-            runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
-        }
-        return isStateChanged;
-    }
-
     private void updateFinished() {
+        boolean nowSmart;
+        // the state and the dumb counter must be advanced together, see enterDumbMode
         synchronized (myRunWhenSmartQueue) {
             if (!myState.compareAndSet(State.WAITING_FOR_FINISH, State.SMART)) {
                 return;
             }
+            nowSmart = myDumbState.updateAndGet(DumbState::decrementDumbCounter).isSmart();
         }
 
         //StartUpMeasurer.compareAndSetCurrentState(LoadingState.PROJECT_OPENED, LoadingState.INDEXING_FINISHED);
@@ -431,15 +414,13 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         myDumbEnterTrace = null;
         myDumbStart = null;
 
-        // If there are other dumb tasks - just decrement the counter. We don't need a write action (to not interrupt NBRA), neither we need EDT.
-        // Otherwise, decrement the counter under write action because this will change dumb state
-        if (!tryDecrementDumbCounter()) {
+        if (!nowSmart) {
             smartModeFinished();
             return;
         }
 
         Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
-                doDecrementDumbCounter();
+                runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
                 return null;
             }))
             .then(UIAction.<Void, Void>apply(input -> {
@@ -841,8 +822,8 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             return new DumbState(dumbCounter - 1, modificationCounter + 1);
         }
 
-        DumbState tryEnterDumbMode() {
-            return incrementWillChangeDumbState() ? this : touch();
+        DumbState enterDumbMode() {
+            return isSmart() ? incrementDumbCounter() : touch();
         }
 
         DumbState tryIncrementDumbCounter() {
