@@ -359,6 +359,20 @@ public class DvcsUtil {
         ));
     }
 
+    public static @Nullable <T extends Repository> T guessWidgetRepository(
+        Project project,
+        AbstractRepositoryManager<T> manager,
+        @Nullable String recentRootPath,
+        @Nullable VirtualFile selectedFile
+    ) {
+        T repository = manager.getRepositoryForRootQuick(guessVcsRoot(project, selectedFile));
+        if (repository != null) {
+            return repository;
+        }
+
+        return manager.getRepositoryForRootQuick(guessRootForVcs(project, manager.getVcs(), recentRootPath));
+    }
+
     public static @Nullable <T extends Repository> T guessCurrentRepositoryQuick(
         Project project,
         AbstractRepositoryManager<T> manager,

@@ -19,10 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
@@ -50,6 +53,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class VcsRepositoryManager implements Disposable {
+  private static final Logger LOG = Logger.getInstance(VcsRepositoryManager.class);
 
   
   public static VcsRepositoryManager getInstance(Project project) {
@@ -150,6 +154,12 @@ public class VcsRepositoryManager implements Disposable {
 
   private @Nullable Repository getRepositoryForRoot(@Nullable VirtualFile root, boolean updateIfNeeded) {
     if (root == null) return null;
+
+    if (updateIfNeeded && UIAccess.isUIThread()) {
+      updateIfNeeded = false;
+      LOG.error("Do not call synchronous repository update in EDT");
+    }
+
     Repository result;
     try {
       REPO_LOCK.readLock().lock();
@@ -233,6 +243,11 @@ public class VcsRepositoryManager implements Disposable {
 
   // note: we are not calling this method during the project startup - it is called anyway by f.e the GitRootTracker
   protected void checkAndUpdateRepositoriesCollection(@Nullable VirtualFile checkedRoot) {
+    if (MODIFY_LOCK.isHeldByCurrentThread()) {
+      LOG.error(new Throwable("Recursive Repository initialization"));
+      return;
+    }
+
     Map<VirtualFile, Repository> repositories;
     try {
       MODIFY_LOCK.lock();

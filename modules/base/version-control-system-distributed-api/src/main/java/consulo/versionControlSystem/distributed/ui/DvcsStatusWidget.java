@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.versionControlSystem.distributed.ui;
 
+import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.component.ProcessCanceledException;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
@@ -12,9 +14,12 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.Repository;
@@ -32,10 +37,12 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
     private final String myVcsName;
 
-    private @Nullable String myText;
-    
-    private LocalizeValue myTooltip = LocalizeValue.empty();
-    private @Nullable Image myIcon;
+    private volatile @Nullable String myText;
+
+    private volatile LocalizeValue myTooltip = LocalizeValue.empty();
+    private volatile @Nullable Image myIcon;
+    private volatile @Nullable T myRepository;
+    private final Alarm myUpdateBackgroundAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
     protected DvcsStatusWidget(Project project, StatusBarWidgetFactory factory, String vcsName) {
         super(project, factory);
@@ -47,7 +54,10 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         });
     }
 
-    protected abstract @Nullable T guessCurrentRepository(Project project);
+    /**
+     * @see DvcsUtil#guessWidgetRepository
+     */
+    protected abstract @Nullable T guessCurrentRepository(Project project, @Nullable VirtualFile selectedFile);
 
     protected abstract String getFullBranchName(T repository);
 
@@ -86,19 +96,19 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     @Override
     public void selectionChanged(FileEditorManagerEvent event) {
         LOG.debug("selection changed");
-        update();
+        updateLater();
     }
 
     @Override
     public void fileOpened(FileEditorManager source, VirtualFile file) {
         LOG.debug("file opened");
-        update();
+        updateLater();
     }
 
     @Override
     public void fileClosed(FileEditorManager source, VirtualFile file) {
         LOG.debug("file closed");
-        update();
+        updateLater();
     }
 
     @Override
@@ -122,13 +132,13 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         if (isDisposed()) {
             return null;
         }
-        Project project = getProject();
-        T repository = guessCurrentRepository(project);
+
+        T repository = myRepository;
         if (repository == null) {
             return null;
         }
 
-        return getPopup(project, repository);
+        return getPopup(getProject(), repository);
     }
 
     @Override
@@ -137,39 +147,66 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
         return null;
     }
 
-    protected void updateLater() {
-        Project project = getProject();
-        if (isDisposed()) {
-            return;
-        }
-        project.getApplication().invokeLater(
-            () -> {
-                LOG.debug("update after repository change");
-                update();
-            },
-            project.getDisposed()
-        );
-    }
-
-    private void update() {
+    private void clearStatus() {
         myText = null;
         myTooltip = LocalizeValue.empty();
         myIcon = null;
+        myRepository = null;
+    }
 
-        if (isDisposed()) {
+    protected void updateLater() {
+        UIUtil.invokeLaterIfNeeded(() -> {
+            if (isDisposed()) {
+                return;
+            }
+
+            VirtualFile selectedFile = DvcsUtil.getSelectedFile(getProject());
+            myUpdateBackgroundAlarm.cancelAllRequests();
+            myUpdateBackgroundAlarm.addRequest(
+                () -> {
+                    if (isDisposed()) {
+                        clearStatus();
+                        return;
+                    }
+
+                    if (!ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> updateOnBackground(selectedFile))) {
+                        updateLater();
+                    }
+                },
+                10
+            );
+        });
+    }
+
+    private void updateOnBackground(@Nullable VirtualFile selectedFile) {
+        T repository;
+        try {
+            Project project = getProject();
+            repository = guessCurrentRepository(project, selectedFile);
+            if (repository == null) {
+                clearStatus();
+                return;
+            }
+        }
+        catch (ProcessCanceledException e) {
+            // do nothing - a new update task is scheduled, or widget is disposed
             return;
         }
-        Project project = getProject();
-        T repository = guessCurrentRepository(project);
-        if (repository == null) {
+        catch (Throwable t) {
+            LOG.error(t);
+            clearStatus();
             return;
         }
+
         myText = DvcsBranchUtil.shortenBranchName(getFullBranchName(repository));
         myTooltip = getToolTip(repository);
         myIcon = getIcon(repository);
+        myRepository = repository;
+
         if (myStatusBar != null) {
             myStatusBar.updateWidget(getId());
         }
+
         rememberRecentRoot(repository.getRoot().getPath());
     }
 
