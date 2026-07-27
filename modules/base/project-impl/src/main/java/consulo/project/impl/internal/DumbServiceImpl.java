@@ -8,6 +8,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.internal.*;
 import consulo.application.progress.*;
@@ -41,6 +42,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Queue;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
@@ -54,6 +56,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
@@ -69,6 +72,8 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private final DumbModeListener myPublisher;
     private final DumbModeListenerBackgroundable myPublisherBackgroundable;
     private final AtomicReference<DumbState> myDumbState = new AtomicReference<>(new DumbState(0, 0));
+    private final AtomicReference<DumbModeEventListenerState> myListenerBackgroundableState =
+        new AtomicReference<>(DumbModeEventListenerState.EXITED);
     private final Set<Object> myQueuedEquivalences = new HashSet<>();
     private final Queue<DumbModeTask> myUpdatesQueue = new Queue<>(5);
 
@@ -83,16 +88,30 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     private final Application myApplication;
     private final Project myProject;
+    /**
+     * Dumb mode transitions are published from here, one at a time. Every publish is a separately launched coroutine, and
+     * two of them have no happens-before between each other, so a dumb mode short enough for the exit to be launched before
+     * the enter has run delivers {@code exitDumbMode} first. Serializing the executor restores the order, since the enter is
+     * always launched before the task which triggers the exit.
+     */
+    private final ExecutorService myTransitionExecutor;
+    private final CoroutineContext myTransitionContext;
     private final ThreadLocal<Integer> myAlternativeResolution = new ThreadLocal<>();
     private volatile ProgressSuspender myCurrentSuspender;
     private final List<LocalizeValue> myRequestedSuspensions = Lists.newLockFreeCopyOnWriteList();
 
     @Inject
-    public DumbServiceImpl(Application application, Project project) {
+    public DumbServiceImpl(Application application, Project project, ApplicationConcurrency concurrency) {
         myApplication = application;
         myProject = project;
         myPublisher = project.getMessageBus().syncPublisher(DumbModeListener.class);
         myPublisherBackgroundable = project.getMessageBus().syncPublisher(DumbModeListenerBackgroundable.class);
+
+        myTransitionExecutor = concurrency.createSequentialApplicationPoolExecutor("DumbService Transitions");
+
+        CoroutineContext projectContext = project.coroutineContext();
+        myTransitionContext = CoroutineContext.of(myTransitionExecutor, projectContext.getScheduler());
+        projectContext.copyCopyableDataTo(myTransitionContext);
 
         application.getMessageBus().connect(project).subscribe(BatchFileChangeListener.class, new BatchFileChangeListener() {
             @SuppressWarnings("UnnecessaryFullyQualifiedName")
@@ -149,6 +168,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             cancelTask(task);
             Disposer.dispose(task);
         }
+        myTransitionExecutor.shutdownNow();
     }
 
     @Override
@@ -290,7 +310,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     private void queueTaskOnBackground(DumbModeTask task, Exception trace) {
-        CoroutineScope scope = CoroutineScope.of(myProject.coroutineContext());
+        CoroutineScope scope = CoroutineScope.of(myTransitionContext);
         Coroutine.<Void, EnterKind>first(UIAction.<Void, EnterKind>apply((input, continuation) -> {
                 if (!addTaskToQueue(task)) {
                     continuation.finishEarly(null);
@@ -335,7 +355,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         myDumbStart = trace;
         myDumbEnterTrace = new Throwable();
         if (wasSmart) {
-            runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+            publishEnteredDumbModeBackgroundable();
         }
         DumbTaskLauncher launcher = new DumbTaskLauncher(trace);
         myDumbTaskLaunchers.add(launcher);
@@ -378,14 +398,35 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
 
         Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
-                runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+                publishEnteredDumbModeBackgroundable();
                 return null;
             }))
             .then(UIAction.<Void, Void>apply(input -> {
                 runCatchingIgnorePCE(myPublisher::enteredDumbMode);
                 return null;
             }))
-            .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
+            .runAsync(CoroutineScope.of(myTransitionContext), null);
+    }
+
+    @RequiredWriteAction
+    private void publishEnteredDumbModeBackgroundable() {
+        if (!myListenerBackgroundableState.compareAndSet(DumbModeEventListenerState.EXITED, DumbModeEventListenerState.ENTERED)) {
+            LOG.error("Unexpected listener state: dumb mode is going to be entered without exiting");
+        }
+        runCatchingIgnorePCE(myPublisherBackgroundable::enteredDumbMode);
+    }
+
+    @RequiredWriteAction
+    private void publishExitDumbModeBackgroundable() {
+        if (!myListenerBackgroundableState.compareAndSet(DumbModeEventListenerState.ENTERED, DumbModeEventListenerState.EXITED)) {
+            LOG.error("Unexpected listener state: dumb mode is going to be exited without entering");
+        }
+        runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
+    }
+
+    private enum DumbModeEventListenerState {
+        ENTERED,
+        EXITED
     }
 
     private void queueUpdateFinished() {
@@ -420,14 +461,14 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
 
         Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
-                runCatchingIgnorePCE(myPublisherBackgroundable::exitDumbMode);
+                publishExitDumbModeBackgroundable();
                 return null;
             }))
             .then(UIAction.<Void, Void>apply(input -> {
                 smartModeFinished();
                 return null;
             }))
-            .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
+            .runAsync(CoroutineScope.of(myTransitionContext), null);
     }
 
     @RequiredUIAccess
