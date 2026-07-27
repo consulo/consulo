@@ -18,11 +18,17 @@ package consulo.it;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.it.internal.HeadlessApplicationImpl;
+import consulo.util.concurrent.ThreadIssueException;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.util.List;
 
 /**
  * JUnit 5 extension that boots the real headless {@link Application} once per JVM and injects it
@@ -31,15 +37,43 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * Mirrors {@code consulo.test.junit.impl.extension.ConsuloApplicationLoader}, but stands up the
  * real {@link consulo.it.internal.HeadlessApplicationImpl} instead of the light stub, and keeps a
  * single application alive for the whole test run (the application is a JVM-wide singleton).
+ * <p>
+ * A write action started on the UI thread throws, unless the test opts out with
+ * {@link AllowWriteLockUnderUIThread}. It is recorded as well as thrown, so that a violation swallowed by a
+ * catch-all still fails the test.
  *
  * @author VISTALL
  */
-public class HeadlessApplicationExtension implements BeforeAllCallback, ParameterResolver {
+public class HeadlessApplicationExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
     private static volatile Application ourApplication;
 
     @Override
     public void beforeAll(ExtensionContext context) {
         ensureBooted();
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        HeadlessApplicationImpl.takeThreadIssues();
+        HeadlessApplicationImpl.setAllowWriteLockUnderUIThread(isAllowWriteLockUnderUIThread(context));
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) {
+        HeadlessApplicationImpl.setAllowWriteLockUnderUIThread(false);
+
+        List<ThreadIssueException> issues = HeadlessApplicationImpl.takeThreadIssues();
+
+        if (!issues.isEmpty()) {
+            AssertionError error = new AssertionError(issues.size() + " thread issue(s) reported during the test");
+            issues.forEach(error::addSuppressed);
+            throw error;
+        }
+    }
+
+    private static boolean isAllowWriteLockUnderUIThread(ExtensionContext context) {
+        return context.getTestMethod().map(method -> method.isAnnotationPresent(AllowWriteLockUnderUIThread.class)).orElse(false)
+            || context.getTestClass().map(type -> type.isAnnotationPresent(AllowWriteLockUnderUIThread.class)).orElse(false);
     }
 
     protected static Application ensureBooted() {
