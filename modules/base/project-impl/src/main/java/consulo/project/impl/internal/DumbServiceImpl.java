@@ -74,11 +74,12 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private final AtomicReference<DumbState> myDumbState = new AtomicReference<>(new DumbState(0, 0));
     private final AtomicReference<DumbModeEventListenerState> myListenerBackgroundableState =
         new AtomicReference<>(DumbModeEventListenerState.EXITED);
+    private final Object myTaskQueueLock = new Object();
     private final Set<Object> myQueuedEquivalences = new HashSet<>();
     private final Queue<DumbModeTask> myUpdatesQueue = new Queue<>(5);
 
     /**
-     * Per-task progress indicators. Modified from EDT only.
+     * Per-task progress indicators. Removed from EDT only.
      * The task is removed from this map after it's finished or when the project is disposed.
      */
     private final Map<DumbModeTask, ProgressIndicatorEx> myProgresses = new ConcurrentHashMap<>();
@@ -156,8 +157,10 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     public void dispose() {
         myApplication.assertWriteAccessAllowed();
 
-        myUpdatesQueue.clear();
-        myQueuedEquivalences.clear();
+        synchronized (myTaskQueueLock) {
+            myUpdatesQueue.clear();
+            myQueuedEquivalences.clear();
+        }
         synchronized (myRunWhenSmartQueue) {
             myRunWhenSmartQueue.clear();
         }
@@ -288,112 +291,21 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     void queueAsynchronousTask(DumbModeTask task) {
         Exception trace = new Exception(); // please report exceptions here to peter
-        if (myApplication.isDispatchThread()) {
-            queueTaskOnEdt(task, trace);
-        }
-        else {
-            queueTaskOnBackground(task, trace);
-        }
-    }
-
-    private void queueTaskOnEdt(DumbModeTask task, Exception trace) {
         if (!addTaskToQueue(task)) {
             return;
         }
 
-        if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
-            enterDumbMode(trace);
-            DumbTaskLauncher launcher = new DumbTaskLauncher(trace);
-            myDumbTaskLaunchers.add(launcher);
-            myApplication.invokeLater(launcher::launch, myProject.getDisposed());
+        boolean publishInline = myApplication.isWriteAccessAllowed();
+        if (!enterDumbMode(trace, publishInline)) {
+            return;
         }
-    }
 
-    private void queueTaskOnBackground(DumbModeTask task, Exception trace) {
-        CoroutineScope scope = CoroutineScope.of(myTransitionContext);
-        Coroutine.<Void, EnterKind>first(UIAction.<Void, EnterKind>apply((input, continuation) -> {
-                if (!addTaskToQueue(task)) {
-                    continuation.finishEarly(null);
-                    return EnterKind.NONE;
-                }
-                State state = myState.get();
-                if (state == State.SMART) {
-                    return EnterKind.FROM_SMART;
-                }
-                if (state == State.WAITING_FOR_FINISH) {
-                    return EnterKind.FROM_WAITING;
-                }
-                continuation.finishEarly(null);
-                return EnterKind.NONE;
-            }))
-            .then(WriteLock.<EnterKind, EnterKind>apply(kind -> enterDumbModeUnderWriteLock(kind, trace)))
-            .then(UIAction.<EnterKind, Void>apply(kind -> {
-                if (kind == EnterKind.FROM_SMART) {
+        if (publishInline) {
+            Coroutine.<Void, Void>first(UIAction.<Void, Void>apply(input -> {
                     runCatchingIgnorePCE(myPublisher::enteredDumbMode);
-                }
-                return null;
-            }))
-            .runAsync(scope, null);
-    }
-
-    @RequiredWriteAction
-    private EnterKind enterDumbModeUnderWriteLock(EnterKind kind, Exception trace) {
-        if (kind == EnterKind.NONE) {
-            return EnterKind.NONE;
-        }
-        boolean wasSmart;
-        // the state and the dumb counter must be advanced together, see enterDumbMode
-        synchronized (myRunWhenSmartQueue) {
-            State state = myState.get();
-            if (state != State.SMART && state != State.WAITING_FOR_FINISH) {
-                return EnterKind.NONE;
-            }
-            wasSmart = state == State.SMART;
-            myState.set(State.SCHEDULED_TASKS);
-            myDumbState.updateAndGet(DumbState::enterDumbMode);
-        }
-        myDumbStart = trace;
-        myDumbEnterTrace = new Throwable();
-        if (wasSmart) {
-            publishEnteredDumbModeBackgroundable();
-        }
-        DumbTaskLauncher launcher = new DumbTaskLauncher(trace);
-        myDumbTaskLaunchers.add(launcher);
-        myApplication.invokeLater(launcher::launch, myProject.getDisposed());
-        return wasSmart ? EnterKind.FROM_SMART : EnterKind.FROM_WAITING;
-    }
-
-    private boolean addTaskToQueue(DumbModeTask task) {
-        if (!myQueuedEquivalences.add(task.getEquivalenceObject())) {
-            Disposer.dispose(task);
-            return false;
-        }
-
-        myProgresses.put(task, new ProgressIndicatorBase());
-        Disposer.register(
-            task,
-            () -> {
-                UIAccess.assertIsUIThread();
-                myProgresses.remove(task);
-            }
-        );
-        myUpdatesQueue.addLast(task);
-        return true;
-    }
-
-    @RequiredUIAccess
-    private void enterDumbMode(Throwable trace) {
-        boolean wasSmart;
-        // the state and the dumb counter must be advanced together, otherwise updateFinished may observe a smart counter while the state
-        // machine is already dumb, and decrement it below zero
-        synchronized (myRunWhenSmartQueue) {
-            myState.set(State.SCHEDULED_TASKS);
-            wasSmart = myDumbState.getAndUpdate(DumbState::enterDumbMode).isSmart();
-        }
-        myDumbStart = trace;
-        myDumbEnterTrace = new Throwable();
-
-        if (!wasSmart) {
+                    return null;
+                }))
+                .runAsync(CoroutineScope.of(myTransitionContext), null);
             return;
         }
 
@@ -406,6 +318,56 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                 return null;
             }))
             .runAsync(CoroutineScope.of(myTransitionContext), null);
+    }
+
+    private void launchDumbTask(Exception trace) {
+        DumbTaskLauncher launcher = new DumbTaskLauncher(trace);
+        myDumbTaskLaunchers.add(launcher);
+        myApplication.invokeLater(launcher::launch, myProject.getDisposed());
+    }
+
+    private boolean addTaskToQueue(DumbModeTask task) {
+        synchronized (myTaskQueueLock) {
+            if (myQueuedEquivalences.add(task.getEquivalenceObject())) {
+                myProgresses.put(task, new ProgressIndicatorBase());
+                Disposer.register(
+                    task,
+                    () -> {
+                        UIAccess.assertIsUIThread();
+                        myProgresses.remove(task);
+                    }
+                );
+                myUpdatesQueue.addLast(task);
+                return true;
+            }
+        }
+
+        Disposer.dispose(task);
+        return false;
+    }
+
+    private boolean enterDumbMode(Exception trace, boolean publishInline) {
+        boolean wasSmart;
+        synchronized (myRunWhenSmartQueue) {
+            State state = myState.get();
+            if (state != State.SMART && state != State.WAITING_FOR_FINISH) {
+                return false;
+            }
+
+            myState.set(State.SCHEDULED_TASKS);
+            wasSmart = myDumbState.getAndUpdate(DumbState::enterDumbMode).isSmart();
+
+            myDumbStart = trace;
+            myDumbEnterTrace = new Throwable();
+
+            if (wasSmart && publishInline) {
+                //noinspection RequiredXAction
+                publishEnteredDumbModeBackgroundable();
+            }
+        }
+
+        launchDumbTask(trace);
+        return wasSmart;
     }
 
     @RequiredWriteAction
@@ -441,31 +403,26 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     private void updateFinished() {
-        boolean nowSmart;
-        // the state and the dumb counter must be advanced together, see enterDumbMode
-        synchronized (myRunWhenSmartQueue) {
-            if (!myState.compareAndSet(State.WAITING_FOR_FINISH, State.SMART)) {
-                return;
-            }
-            nowSmart = myDumbState.updateAndGet(DumbState::decrementDumbCounter).isSmart();
-        }
-
         //StartUpMeasurer.compareAndSetCurrentState(LoadingState.PROJECT_OPENED, LoadingState.INDEXING_FINISHED);
 
-        myDumbEnterTrace = null;
-        myDumbStart = null;
+        Coroutine.<Void, Boolean>first(WriteLock.<Void, Boolean>apply(input -> {
+                synchronized (myRunWhenSmartQueue) {
+                    if (!myState.compareAndSet(State.WAITING_FOR_FINISH, State.SMART)) {
+                        return false;
+                    }
+                    myDumbState.updateAndGet(DumbState::decrementDumbCounter);
 
-        if (!nowSmart) {
-            smartModeFinished();
-            return;
-        }
+                    myDumbEnterTrace = null;
+                    myDumbStart = null;
 
-        Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
-                publishExitDumbModeBackgroundable();
-                return null;
+                    publishExitDumbModeBackgroundable();
+                    return true;
+                }
             }))
-            .then(UIAction.<Void, Void>apply(input -> {
-                smartModeFinished();
+            .then(UIAction.<Boolean, Void>apply(exited -> {
+                if (exited) {
+                    smartModeFinished();
+                }
                 return null;
             }))
             .runAsync(CoroutineScope.of(myTransitionContext), null);
@@ -724,13 +681,22 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     private @Nullable Pair<DumbModeTask, ProgressIndicatorEx> pollTaskQueue() {
         while (true) {
-            if (myUpdatesQueue.isEmpty()) {
+            DumbModeTask queuedTask;
+            synchronized (myTaskQueueLock) {
+                if (myUpdatesQueue.isEmpty()) {
+                    queuedTask = null;
+                }
+                else {
+                    queuedTask = myUpdatesQueue.pullFirst();
+                    myQueuedEquivalences.remove(queuedTask.getEquivalenceObject());
+                }
+            }
+
+            if (queuedTask == null) {
                 queueUpdateFinished();
                 return null;
             }
 
-            DumbModeTask queuedTask = myUpdatesQueue.pullFirst();
-            myQueuedEquivalences.remove(queuedTask.getEquivalenceObject());
             ProgressIndicatorEx indicator = myProgresses.get(queuedTask);
             if (indicator.isCanceled()) {
                 Disposer.dispose(queuedTask);
@@ -821,16 +787,12 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             }
             myLaunched = true;
             myDumbTaskLaunchers.remove(this);
-            if (myState.compareAndSet(State.SCHEDULED_TASKS, State.SMART)) {
-                myDumbState.updateAndGet(DumbState::decrementDumbCounter);
+            synchronized (myRunWhenSmartQueue) {
+                if (myState.compareAndSet(State.SCHEDULED_TASKS, State.SMART)) {
+                    myDumbState.updateAndGet(DumbState::decrementDumbCounter);
+                }
             }
         }
-    }
-
-    private enum EnterKind {
-        NONE,
-        FROM_SMART,
-        FROM_WAITING
     }
 
     private record DumbState(int dumbCounter, long modificationCounter) {
@@ -883,7 +845,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         SMART,
 
         /**
-         * A state between entering dumb mode ({@link #queueTaskOnEdt}) and actually starting the background progress later ({@link #runBackgroundProcess}).
+         * A state between entering dumb mode ({@link #enterDumbMode}) and actually starting the background progress later ({@link #runBackgroundProcess}).
          * In this state, it's possible to call {@link #completeJustSubmittedTasks()} and perform all submitted the tasks modality.
          * This state can happen after {@link #SMART} or {@link #WAITING_FOR_FINISH}. Followed by {@link #RUNNING_DUMB_TASKS}.
          */

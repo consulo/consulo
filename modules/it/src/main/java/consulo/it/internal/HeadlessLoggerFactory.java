@@ -15,19 +15,51 @@
  */
 package consulo.it.internal;
 
+import consulo.it.LoggedError;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
- * Headless {@link LoggerFactory}: logs to stderr but, unlike {@code DefaultLogger}, does not throw
- * {@link AssertionError} on {@code error(...)}. This keeps recoverable {@code LOG.error} calls
- * (e.g. the native file watcher failing in a temp-dir project) non-fatal so they do not mask the
- * real flow under test.
+ * Headless {@link LoggerFactory}: logs to stderr and records every {@code error(...)} so that the test it was
+ * logged in can be failed once it returns.
+ * <p>
+ * The call itself does not throw. A {@code LOG.error} is a report, not a control flow branch - the caller keeps
+ * running after it, and throwing instead would take a path production never takes, so the test would no longer be
+ * exercising the code it is there to cover.
  *
  * @author VISTALL
  */
 public class HeadlessLoggerFactory implements LoggerFactory {
+    private static final List<LoggedError> ourLoggedErrors = new CopyOnWriteArrayList<>();
+
+    private static volatile List<String> ourAllowedCategories = null;
+
+    /**
+     * Opt-out, rejected by default. A null list rejects every category, an empty one allows every category, and
+     * otherwise a category is allowed when it starts with one of the entries.
+     */
+    public static void setAllowedErrorCategories(@Nullable List<String> categories) {
+        ourAllowedCategories = categories;
+    }
+
+    public static List<LoggedError> takeLoggedErrors() {
+        List<LoggedError> errors = List.copyOf(ourLoggedErrors);
+        ourLoggedErrors.clear();
+        return errors;
+    }
+
+    private static void record(String category, String message, @Nullable Throwable t) {
+        List<String> allowed = ourAllowedCategories;
+        if (allowed != null && (allowed.isEmpty() || allowed.stream().anyMatch(category::startsWith))) {
+            return;
+        }
+        ourLoggedErrors.add(new LoggedError(category, message, t));
+    }
+
     @Override
     public Logger getLoggerInstance(String category) {
         return new HeadlessLogger(category);
@@ -82,6 +114,8 @@ public class HeadlessLoggerFactory implements LoggerFactory {
         @Override
         @SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
         public void error(String message, @Nullable Throwable t, String... details) {
+            record(myCategory, message, t);
+
             System.err.println("ERROR [" + myCategory + "]: " + message);
             if (t != null) {
                 t.printStackTrace();

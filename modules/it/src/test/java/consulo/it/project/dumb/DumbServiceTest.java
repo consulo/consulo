@@ -16,6 +16,7 @@
 package consulo.it.project.dumb;
 
 import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.project.DumbModeTask;
@@ -34,6 +35,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -113,6 +115,35 @@ public class DumbServiceTest {
             awaitTask(performed, cycle);
             take(events, EXITED, cycle);
         }
+
+        assertThat(events).as("no unpaired dumb mode events left").isEmpty();
+    }
+
+    @Test
+    public void queueTaskInsideWriteActionPublishesBeforeItReturns(Application application, ProjectManager projectManager)
+        throws Exception {
+        Project project = openProject(application, projectManager);
+        DumbService dumbService = DumbService.getInstance(project);
+        BlockingQueue<Event> events = subscribe(application, project, dumbService);
+
+        CountDownLatch performed = new CountDownLatch(1);
+        AtomicBoolean dumbOnReturn = new AtomicBoolean();
+        AtomicBoolean publishedOnReturn = new AtomicBoolean();
+
+        WriteAction.run(() -> {
+            dumbService.queueTask(task(performed));
+            dumbOnReturn.set(dumbService.isDumb());
+            publishedOnReturn.set(!events.isEmpty());
+        });
+
+        assertThat(dumbOnReturn.get()).as("queueTask must enter dumb mode before it returns").isTrue();
+        assertThat(publishedOnReturn.get())
+            .as("entering dumb mode must be published before queueTask returns, or isDumb and the listeners disagree")
+            .isTrue();
+
+        take(events, ENTERED, 0);
+        awaitTask(performed, 0);
+        take(events, EXITED, 0);
 
         assertThat(events).as("no unpaired dumb mode events left").isEmpty();
     }
