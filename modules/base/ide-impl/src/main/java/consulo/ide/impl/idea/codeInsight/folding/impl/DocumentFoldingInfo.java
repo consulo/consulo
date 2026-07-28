@@ -63,7 +63,7 @@ class DocumentFoldingInfo implements CodeFoldingState {
 
         FoldRegion[] foldRegions = editor.getFoldingModel().getAllFoldRegions();
         for (FoldRegion region : foldRegions) {
-            if (!region.isValid()) {
+            if (!region.isValid() || region.shouldNeverExpand()) {
                 continue;
             }
             boolean expanded = region.isExpanded();

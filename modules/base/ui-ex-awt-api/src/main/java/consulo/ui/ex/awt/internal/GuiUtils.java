@@ -395,6 +395,10 @@ public class GuiUtils {
     AWTAccessorHacking.setGraphicsConfiguration(comp, gc);
   }
 
+  public static void processEvent(Component comp, AWTEvent event) {
+    AWTAccessorHacking.processEvent(comp, event);
+  }
+
   /**
    * removes all children and parent references, listeners from {@code container} to avoid possible memory leaks
    */

@@ -18,6 +18,7 @@
         <option name="CARET_ROW_COLOR" value="26282e"/>
         <option name="CONSOLE_BACKGROUND_KEY" value="2B2B2B"/>
         <option name="DELETED_LINES_COLOR" value="868a91"/>
+        <option name="DOC_COMMENT_GUIDE" value="3b4b38"/>
 
         <option name="GUTTER_BACKGROUND" value="313335"/>
         <option name="INDENT_GUIDE" value="313438"/>

@@ -224,6 +224,16 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         return spacing <= 0 ? 1.0f : spacing;
     }
 
+    @Override
+    public boolean isUseLigatures() {
+        return getFontPreferences().useLigatures();
+    }
+
+    @Override
+    public void setUseLigatures(boolean useLigatures) {
+        myFontPreferences.setUseLigatures(useLigatures);
+    }
+
     protected void initFonts() {
         String editorFontName = getEditorFontName();
         int editorFontSize = getEditorFontSizeInternal();

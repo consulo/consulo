@@ -57,6 +57,7 @@ module consulo.language.editor.api {
     exports consulo.language.editor.parameterInfo;
     exports consulo.language.editor.postfixTemplate;
     exports consulo.language.editor.rawHighlight;
+    exports consulo.language.editor.readerMode;
     exports consulo.language.editor.scope;
     exports consulo.language.editor.scope.localize;
     exports consulo.language.editor.scratch;

@@ -1301,7 +1301,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private void doRepaint(int startVisualLine, int endVisualLine) {
         Rectangle visibleArea = getScrollingModel().getVisibleArea();
         int yStart = visualLineToY(startVisualLine);
-        int height = visualLineToY(endVisualLine) + getLineHeight() + 2 - yStart;
+        int height = visualLineToYRange(endVisualLine)[1] + 2 - yStart;
         myEditorComponent.repaintEditorComponent(visibleArea.x, yStart, visibleArea.x + visibleArea.width, height);
         myGutterComponent.repaint(0, yStart, myGutterComponent.getWidth(), height);
 
@@ -1434,6 +1434,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
             myDefaultCursor = EMPTY_CURSOR;
             updateEditorCursor();
         }
+    }
+
+    @Override
+    public boolean isCursorHidden() {
+        return myDefaultCursor == EMPTY_CURSOR;
     }
 
     private static int countLineFeeds(CharSequence c) {
@@ -3736,17 +3741,22 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 return; // on Mac we receive events even if drag-n-drop is in progress
             }
             validateMousePointer(e, null);
-            runMouseDraggedCommand(e);
             EditorMouseEvent event = createEditorMouseEvent(e);
-            if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
-                myGutterComponent.mouseDragged(e);
-            }
 
             for (EditorMouseMotionListener listener : myMouseMotionListeners) {
                 listener.mouseDragged(event);
                 if (isReleased) {
                     return;
                 }
+            }
+
+            if (event.isConsumed()) {
+                return;
+            }
+
+            runMouseDraggedCommand(e);
+            if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
+                myGutterComponent.mouseDragged(e);
             }
         }
 

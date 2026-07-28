@@ -59,7 +59,6 @@ final class EditorCoordinateMapper {
 
     int yToVisualLine(int y) {
         int lineHeight = myView.getLineHeight();
-        y = Math.max(0, y - myView.getInsets().top);
         if (y < lineHeight) {
             return 0;
         }

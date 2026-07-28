@@ -25,6 +25,7 @@ import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.codeEditor.markup.InspectionWidgetActionProvider;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
@@ -33,6 +34,8 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.UIAccess;
@@ -41,6 +44,7 @@ import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -64,6 +68,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
@@ -72,6 +77,8 @@ import kava.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -222,12 +229,132 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                         g2.dispose();
                     }
                 }
+
+                @Override
+                public void setUI(LabelUI ui) {
+                    super.setUI(ui);
+
+                    if (!Platform.current().os().isWindows()) {
+                        // allow resetting the font by UI
+                        Font font = getFont();
+                        setFont(new FontUIResource(font.deriveFont(font.getStyle(), font.getSize() - JBUIScale.scale(2f))));
+                    }
+                }
             };
 
             label.setForeground(new JBColor(() -> ObjectUtil.notNull(TargetAWT.to(colorsScheme.getColor(ICON_TEXT_COLOR)), TargetAWT.to(ICON_TEXT_COLOR.getDefaultColorValue()))));
             label.setIconTextGap(JBUIScale.scale(1));
 
             return label;
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            if (getComponentCount() == 0) {
+                return JBUI.emptySize();
+            }
+
+            Dimension size = super.getPreferredSize();
+            Insets i = getInsets();
+            size.height = Math.max(getStatusIconSize() + i.top + i.bottom, size.height);
+            size.width = Math.max(getStatusIconSize() + i.left + i.right, size.width);
+            return size;
+        }
+    }
+
+    public static class StatusComponentLayout implements LayoutManager {
+        private final List<Pair<Component, String>> actionButtons = new ArrayList<>();
+
+        @Override
+        public void addLayoutComponent(String s, Component component) {
+            actionButtons.add(Pair.create(component, s));
+        }
+
+        @Override
+        public void removeLayoutComponent(Component component) {
+            for (int i = 0; i < actionButtons.size(); i++) {
+                if (component == actionButtons.get(i).getFirst()) {
+                    actionButtons.remove(i);
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container container) {
+            Dimension size = JBUI.emptySize();
+
+            for (Pair<Component, String> c : actionButtons) {
+                if (c.getFirst().isVisible()) {
+                    Dimension prefSize = c.getFirst().getPreferredSize();
+                    size.height = Math.max(size.height, prefSize.height);
+                }
+            }
+
+            for (Pair<Component, String> c : actionButtons) {
+                if (c.getFirst().isVisible()) {
+                    Dimension prefSize = c.getFirst().getPreferredSize();
+                    Insets i = ((JComponent) c.getFirst()).getInsets();
+                    JBInsets.removeFrom(prefSize, i);
+
+                    if (ActionToolbar.SEPARATOR_CONSTRAINT.equals(c.getSecond())) {
+                        size.width += prefSize.width + i.left + i.right;
+                    }
+                    else {
+                        int maxBareHeight = size.height - i.top - i.bottom;
+                        size.width += Math.max(prefSize.width, maxBareHeight) + i.left + i.right;
+                    }
+                }
+            }
+
+            if (size.width > 0 && size.height > 0) {
+                JBInsets.addTo(size, container.getInsets());
+            }
+            return size;
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container container) {
+            return preferredLayoutSize(container);
+        }
+
+        @Override
+        public void layoutContainer(Container container) {
+            Dimension prefSize = preferredLayoutSize(container);
+
+            if (prefSize.width <= 0 || prefSize.height <= 0) {
+                return;
+            }
+
+            Insets i = container.getInsets();
+            JBInsets.removeFrom(prefSize, i);
+            int offset = i.left;
+
+            for (Pair<Component, String> c : actionButtons) {
+                if (c.getFirst().isVisible()) {
+                    Dimension cPrefSize = c.getFirst().getPreferredSize();
+
+                    if (c.getFirst() instanceof StatusButton) {
+                        c.getFirst().setBounds(offset, i.top, cPrefSize.width, prefSize.height);
+                        offset += cPrefSize.width;
+                    }
+                    else {
+                        Insets jcInsets = ((JComponent) c.getFirst()).getInsets();
+                        JBInsets.removeFrom(cPrefSize, jcInsets);
+
+                        if (ActionToolbar.SEPARATOR_CONSTRAINT.equals(c.getSecond())) {
+                            c.getFirst().setBounds(offset, i.top, cPrefSize.width, prefSize.height);
+                            offset += cPrefSize.width;
+                        }
+                        else {
+                            int maxBareHeight = prefSize.height - jcInsets.top - jcInsets.bottom;
+                            int width = Math.max(cPrefSize.width, maxBareHeight) + jcInsets.left + jcInsets.right;
+                            c.getFirst().setBounds(offset, i.top, width, prefSize.height);
+                            offset += width;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -604,13 +731,17 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
     private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 
+    private static int getStatusIconSize() {
+        return JBUIScale.scale(Image.DEFAULT_ICON_SIZE);
+    }
+
     private final DesktopEditorMarkupModelImpl myModel;
 
     private final DesktopEditorImpl myEditor;
 
     private final ActionToolbar statusToolbar;
-    private boolean showToolbar;
-    private boolean trafficLightVisible;
+    private boolean showToolbar = EditorSettingsExternalizable.getInstance().isShowInspectionWidget();
+    private boolean trafficLightVisible = true;
     private final ComponentListener toolbarComponentListener;
     private Rectangle cachedToolbarBounds = new Rectangle();
     private AnalyzerStatus analyzerStatus;
@@ -643,8 +774,16 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         DefaultActionGroup navigateGroup = new NavigateActionGroup();
 
         AnAction statusAction = new StatusAction();
-        ActionGroup actions = new DefaultActionGroup(statusAction, navigateGroup);
-        statusToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, actions, true);
+        DefaultActionGroup actions = new DefaultActionGroup();
+        Application.get().getExtensionPoint(InspectionWidgetActionProvider.class).forEach(provider -> {
+            AnAction action = provider.createAction(myEditor);
+            if (action != null) {
+                actions.add(action);
+            }
+        });
+        actions.add(statusAction);
+        actions.add(navigateGroup);
+        statusToolbar = new EditorInspectionsActionToolbar(actions, myEditor);
 
         MessageBusConnection connection = Application.get().getMessageBus().connect(this);
         connection.subscribe(AnActionListener.class, new AnActionListener() {
@@ -654,6 +793,17 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                     return;
                 }
                 myPopupManager.hidePopup();
+            }
+        });
+        connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
+            @Override
+            public void selectionChanged(FileEditorManagerEvent event) {
+                if (myModel.isErrorStripeVisible()) {
+                    showToolbar = EditorSettingsExternalizable.getInstance().isShowInspectionWidget()
+                        && (analyzerStatus == null || analyzerStatus.getController().enableToolbar());
+
+                    updateTrafficLightVisibility();
+                }
             }
         });
 
@@ -673,18 +823,27 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     public void updateUI() {
         JComponent toolbarComponent = statusToolbar.getComponent();
         toolbarComponent.addComponentListener(toolbarComponentListener);
+        toolbarComponent.setBorder(JBUI.Borders.empty(2));
 
+        // Placeholder to prevent the top of scroll bar from jumping while an analysis is running
         DesktopEditorFloatPanel statusPanel = new DesktopEditorFloatPanel() {
             @Override
             public Color getBackground() {
                 return TargetAWT.to(myEditor.getBackgroundColor());
             }
+
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                if (trafficLightVisible) {
+                    size.height = Math.max(size.height, getStatusIconSize());
+                }
+                return size;
+            }
         };
         statusPanel.setVisible(!myEditor.isOneLineMode());
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
         statusPanel.add(toolbarComponent);
-
-        statusToolbar.setTargetComponent(statusPanel);
 
         myEditor.setStatusComponent(statusPanel);
     }
@@ -724,6 +883,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
     private void doUpdateTrafficLightVisibility() {
         if (trafficLightVisible) {
+            statusToolbar.updateActionsAsync();
+
             if (showToolbar && myEditor.myView != null) {
                 VisualPosition pos = myEditor.getCaretModel().getPrimaryCaret().getVisualPosition();
                 Point point = myEditor.visualPositionToXY(pos);

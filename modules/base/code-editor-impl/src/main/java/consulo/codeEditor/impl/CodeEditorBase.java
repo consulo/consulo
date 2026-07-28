@@ -75,6 +75,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         private int myConsoleFontSize = -1;
         private String myFaceName;
         private Float myLineSpacing;
+        private Boolean myUseLigatures;
 
         private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme) {
             super(globalScheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : globalScheme);
@@ -86,13 +87,20 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             EditorColorsScheme delegate = getDelegate();
             String editorFontName = getEditorFontName();
             int editorFontSize = getEditorFontSize();
-            updatePreferences(myFontPreferences, editorFontName, editorFontSize, delegate == null ? null : delegate.getFontPreferences());
+            updatePreferences(
+                myFontPreferences,
+                editorFontName,
+                editorFontSize,
+                myUseLigatures,
+                delegate == null ? null : delegate.getFontPreferences()
+            );
             String consoleFontName = getConsoleFontName();
             int consoleFontSize = getConsoleFontSize();
             updatePreferences(
                 myConsoleFontPreferences,
                 consoleFontName,
                 consoleFontSize,
+                myUseLigatures,
                 delegate == null ? null : delegate.getConsoleFontPreferences()
             );
 
@@ -111,6 +119,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             FontPreferencesImpl preferences,
             String fontName,
             int fontSize,
+            @Nullable Boolean useLigatures,
             @Nullable FontPreferences delegatePreferences
         ) {
             preferences.clear();
@@ -124,7 +133,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
                     first = false;
                 }
             }
-            preferences.setUseLigatures(delegatePreferences != null && delegatePreferences.useLigatures());
+            preferences.setUseLigatures(
+                useLigatures != null ? useLigatures : delegatePreferences != null && delegatePreferences.useLigatures()
+            );
         }
 
         private void reinitFontsAndSettings() {
@@ -293,6 +304,17 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         public void setLineSpacing(float lineSpacing) {
             myLineSpacing = EditorFontsConstants.checkAndFixEditorLineSpacing(lineSpacing);
             reinitSettings();
+        }
+
+        @Override
+        public boolean isUseLigatures() {
+            return myUseLigatures == null ? super.isUseLigatures() : myUseLigatures;
+        }
+
+        @Override
+        public void setUseLigatures(boolean useLigatures) {
+            myUseLigatures = useLigatures;
+            reinitFontsAndSettings();
         }
     }
 

@@ -7,6 +7,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.editor.documentation.InlineDocumentation;
 import consulo.language.editor.documentation.InlineDocumentationProvider;
@@ -72,7 +73,8 @@ public class DocRenderPassFactory implements TextEditorHighlightingPassFactory, 
 
         @Override
         public void doApplyInformationToEditor() {
-            boolean resetToDefault = myEditor.getUserData(RESET_TO_DEFAULT) != null;
+            boolean resetToDefault =
+                myEditor.getUserData(MODIFICATION_STAMP) == null || myEditor.getUserData(RESET_TO_DEFAULT) != null;
             myEditor.putUserData(RESET_TO_DEFAULT, null);
             applyItemsToRender(myEditor, myProject, myItems, resetToDefault && DocRenderManager.isDocRenderingEnabled(myEditor));
         }
@@ -146,6 +148,11 @@ public class DocRenderPassFactory implements TextEditorHighlightingPassFactory, 
 
         private void addItem(Item item) {
             myItems.put(item.textRange, item);
+        }
+
+        @Nullable
+        Item removeItem(Segment textRange) {
+            return myItems.remove(TextRange.create(textRange));
         }
 
         @Override

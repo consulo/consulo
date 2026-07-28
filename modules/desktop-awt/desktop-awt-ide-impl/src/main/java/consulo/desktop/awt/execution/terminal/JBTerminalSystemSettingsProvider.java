@@ -416,6 +416,16 @@ public class JBTerminalSystemSettingsProvider extends DefaultSettingsProvider {
         }
 
         @Override
+        public boolean isUseLigatures() {
+            return getGlobal().isUseLigatures();
+        }
+
+        @Override
+        public void setUseLigatures(boolean useLigatures) {
+            getGlobal().setUseLigatures(useLigatures);
+        }
+
+        @Override
         public @Nullable MyColorSchemeDelegate clone() {
             return null;
         }

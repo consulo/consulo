@@ -24,6 +24,8 @@ import consulo.component.util.pointer.Named;
 public interface CodeStyleScheme extends Named {
     String DEFAULT_SCHEME_NAME = "Default";
 
+    String PROJECT_SCHEME_NAME = "Project";
+
     boolean isDefault();
 
     CodeStyleSettings getCodeStyleSettings();

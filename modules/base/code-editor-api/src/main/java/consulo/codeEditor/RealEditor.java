@@ -99,6 +99,10 @@ public interface RealEditor extends EditorEx {
     default void hideCursor() {
     }
 
+    default boolean isCursorHidden() {
+        return false;
+    }
+
     default int getDescent() {
         return 0;
     }

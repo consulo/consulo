@@ -186,6 +186,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
         private HeavyProcessLatch.Type heavyProcessType;
 
+        // by default, full inspect mode is expected
+        FileHighlightingSetting minimumLevel = FileHighlightingSetting.FORCE_HIGHLIGHTING;
+
         public DaemonCodeAnalyzerStatus() {
         }
 
@@ -250,6 +253,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             PsiFile root = provider.getPsi(language);
             FileHighlightingSetting level = levelSettings.getHighlightingSettingForRoot(root);
             shouldHighlight |= level != FileHighlightingSetting.SKIP_HIGHLIGHTING;
+            status.minimumLevel = status.minimumLevel.compareTo(level) < 0 ? status.minimumLevel : level;
         }
         if (!shouldHighlight) {
             status.reasonWhyDisabled = DaemonLocalize.processTitleHighlightingLevelIsNone().get();
@@ -504,6 +508,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 );
             }
             if (status.errorAnalyzingFinished) {
+                Image inspectionsCompletedIcon = status.minimumLevel == FileHighlightingSetting.FORCE_HIGHLIGHTING
+                    ? PlatformIconGroup.generalInspectionsok()
+                    : PlatformIconGroup.generalInspectionsokempty();
                 return isDumb
                     ? new AnalyzerStatus(
                     PlatformIconGroup.generalInspectionspause(),
@@ -512,7 +519,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     () -> createUIController(editor)
                 ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
                     : new AnalyzerStatus(
-                    PlatformIconGroup.generalInspectionsok(),
+                    inspectionsCompletedIcon,
                     DaemonLocalize.noErrorsOrWarningsFound().get(),
                     details,
                     () -> createUIController(editor)

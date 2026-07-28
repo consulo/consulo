@@ -24,6 +24,24 @@ public class DesktopFoldingModelImpl extends CodeEditorFoldingModelBase {
   }
 
   @Override
+  protected void onCustomFoldRegionPropertiesChangeToEditor(boolean widthChanged,
+                                                            boolean heightChanged,
+                                                            boolean gutterMarkChanged,
+                                                            boolean repaintRequested) {
+    DesktopEditorImpl editor = (DesktopEditorImpl)myEditor;
+
+    if (widthChanged || heightChanged) {
+      editor.recalculateSizeAndRepaint();
+    }
+    else if (repaintRequested) {
+      editor.getContentComponent().repaint();
+    }
+    if (gutterMarkChanged) {
+      editor.getGutterComponentEx().updateSize();
+    }
+  }
+
+  @Override
   protected void notifyBatchFoldingProcessingDoneToEditor() {
     DesktopEditorImpl editor = (DesktopEditorImpl)myEditor;
 

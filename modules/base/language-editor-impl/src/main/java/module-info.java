@@ -45,6 +45,7 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.inlay.setting to consulo.ide.impl;
 
   opens consulo.language.editor.impl.internal.inlay.setting to consulo.util.xml.serializer;
+  opens consulo.language.editor.impl.internal.readerMode to consulo.util.xml.serializer;
   opens consulo.language.editor.impl.internal.template to consulo.util.xml.serializer, consulo.application.impl;
   opens consulo.language.editor.impl.internal.inspection.scheme to consulo.util.xml.serializer, consulo.component.impl;
   // listener calls via messagebus

@@ -141,6 +141,16 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     }
 
     @Override
+    public boolean isUseLigatures() {
+        return myDelegate.isUseLigatures();
+    }
+
+    @Override
+    public void setUseLigatures(boolean useLigatures) {
+        myDelegate.setUseLigatures(useLigatures);
+    }
+
+    @Override
     public void readExternal(Element element) {
     }
 

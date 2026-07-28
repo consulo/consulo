@@ -81,6 +81,10 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
     void setLineSpacing(float lineSpacing);
 
+    boolean isUseLigatures();
+
+    void setUseLigatures(boolean useLigatures);
+
     EditorColorsScheme clone();
 
     /**

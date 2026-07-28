@@ -246,6 +246,13 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
                     notifyBatchFoldingProcessingDone(moveCaret);
                     myFoldRegionsProcessed = false;
                 }
+                else {
+                    update(myRegionWidthChanged, myRegionHeightChanged, myGutterRendererChanged, myIsRepaintRequested);
+                }
+                myRegionWidthChanged = false;
+                myRegionHeightChanged = false;
+                myGutterRendererChanged = false;
+                setRepaintRequested(false);
             }
             myDoNotCollapseCaret = oldDontCollapseCaret;
         }
@@ -631,6 +638,31 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         for (FoldingListener listener : myListeners) {
             listener.onCustomFoldRegionPropertiesChange(foldRegion, flags);
         }
+        boolean widthChanged = (flags & FoldingListener.ChangeFlags.WIDTH_CHANGED) != 0;
+        boolean heightChanged = (flags & FoldingListener.ChangeFlags.HEIGHT_CHANGED) != 0;
+        boolean gutterMarkChanged = (flags & FoldingListener.ChangeFlags.GUTTER_ICON_PROVIDER_CHANGED) != 0;
+        if (myIsBatchFoldingProcessing) {
+            myRegionWidthChanged |= widthChanged;
+            myRegionHeightChanged |= heightChanged;
+            myGutterRendererChanged |= gutterMarkChanged;
+        }
+        else {
+            update(widthChanged, heightChanged, gutterMarkChanged, false);
+        }
+    }
+
+    private void update(boolean widthChanged, boolean heightChanged, boolean gutterMarkChanged, boolean repaintRequested) {
+        if (heightChanged) {
+            updateCachedOffsets();
+            myEditor.getCaretModel().updateVisualPosition();
+        }
+        onCustomFoldRegionPropertiesChangeToEditor(widthChanged, heightChanged, gutterMarkChanged, repaintRequested);
+    }
+
+    protected void onCustomFoldRegionPropertiesChangeToEditor(boolean widthChanged,
+                                                              boolean heightChanged,
+                                                              boolean gutterMarkChanged,
+                                                              boolean repaintRequested) {
     }
 
     void setRepaintRequested(boolean value) {

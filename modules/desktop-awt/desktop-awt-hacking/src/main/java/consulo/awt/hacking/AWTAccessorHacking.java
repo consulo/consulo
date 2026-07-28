@@ -42,6 +42,10 @@ public class AWTAccessorHacking {
     AWTAccessor.getComponentAccessor().setGraphicsConfiguration(component, gc);
   }
 
+  public static void processEvent(Component comp, AWTEvent event) {
+    AWTAccessor.getComponentAccessor().processEvent(comp, event);
+  }
+
   public static Object getPeer(Component component) {
     return AWTAccessor.getComponentAccessor().getPeer(component);
   }

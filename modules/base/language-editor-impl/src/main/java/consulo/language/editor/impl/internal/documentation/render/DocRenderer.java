@@ -10,28 +10,36 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.MathUtil;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.geom.Rectangle2D;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Paints a documentation comment as rendered HTML inside a {@link CustomFoldRegion}.
@@ -41,6 +49,9 @@ import java.util.List;
  * the rest of the documentation UI.
  */
 public class DocRenderer implements CustomFoldRegionRenderer {
+    private static final Logger LOG = Logger.getInstance(DocRenderer.class);
+    private static final Key<EditorInlineHtmlPane> CACHED_LOADING_PANE = Key.create("cached.loading.pane");
+
     private static final int MIN_WIDTH = 350;
     private static final int MAX_WIDTH = 680;
 
@@ -53,7 +64,7 @@ public class DocRenderer implements CustomFoldRegionRenderer {
 
     private final DocRenderItem myItem;
 
-    private JEditorPane myPane;
+    private EditorInlineHtmlPane myPane;
     private int myCachedWidth = -1;
     private int myCachedHeight = -1;
     private boolean myContentUpdateNeeded;
@@ -155,7 +166,7 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         int componentWidth = endX - startX - scale(LEFT_INSET) - scale(RIGHT_INSET);
         int componentHeight = filledHeight - topBottomInset * 2;
         if (componentWidth > 0 && componentHeight > 0) {
-            JEditorPane component = getRendererComponent(editor, componentWidth, bgColor);
+            EditorInlineHtmlPane component = getRendererComponent(editor, componentWidth, bgColor);
             Graphics dg = g.create(startX + scale(LEFT_INSET), filledStartY + topBottomInset, componentWidth, componentHeight);
             UISettingsUtil.setupAntialiasing(dg);
             component.paint(dg);
@@ -172,6 +183,8 @@ public class DocRenderer implements CustomFoldRegionRenderer {
     @Override
     public ActionGroup getContextMenuGroup(CustomFoldRegion region) {
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
+        group.add(new CopySelection());
+        group.addSeparator();
         group.add(new ToggleRenderingAction(myItem));
         AnAction toggleRenderAllAction = ActionManager.getInstance().getAction("ToggleRenderedDocPresentationForAll");
         if (toggleRenderAllAction != null) {
@@ -209,14 +222,34 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         return editor.getInsets().left;
     }
 
-    private JEditorPane getRendererComponent(Editor editor, int width, @Nullable Color backgroundColor) {
-        JEditorPane pane = myPane;
+    Rectangle getEditorPaneBoundsWithinRenderer(int width, int height) {
+        int relativeX = calcInlayStartX() - myItem.getEditor().getInsets().left + scale(LEFT_INSET);
+        int relativeY = scale(TOP_BOTTOM_MARGINS) + scale(TOP_BOTTOM_INSETS);
+        return new Rectangle(relativeX, relativeY, width - relativeX - scale(RIGHT_INSET), height - relativeY * 2);
+    }
+
+    EditorInlineHtmlPane getRendererComponent(Editor editor, int width, @Nullable Color backgroundColor) {
+        boolean newInstance = false;
+        EditorInlineHtmlPane pane = myPane;
         if (pane == null || myContentUpdateNeeded) {
             myContentUpdateNeeded = false;
-            myPane = pane = createEditorPane(editor, myItem.getTextToRender(), backgroundColor);
+            clearCachedComponent();
+            if (myItem.getTextToRender() == null) {
+                pane = getLoadingPane(editor);
+            }
+            else {
+                myPane = pane = createEditorPane(editor, myItem.getTextToRender(), backgroundColor, false);
+                newInstance = true;
+            }
         }
+        GuiUtils.targetToDevice(pane, editor.getContentComponent());
         pane.setSize(width, 10_000_000 /* Arbitrary large value, that doesn't lead to overflows and precision loss */);
-        if (backgroundColor != null && pane.getBackground().getRGB() != backgroundColor.getRGB()) {
+        if (newInstance) {
+            // trigger internal layout, so that image elements are created
+            // this is done after 'targetToDevice' call to take correct graphics context into account
+            pane.getPreferredSize();
+        }
+        else if (backgroundColor != null && pane.getBackground().getRGB() != backgroundColor.getRGB()) {
             pane.setBackground(backgroundColor);
             // trigger CSS styles update
             pane.getPreferredSize();
@@ -224,8 +257,25 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         return pane;
     }
 
-    private static JEditorPane createEditorPane(Editor editor, @Nullable String text, @Nullable Color backgroundColor) {
-        JEditorPane pane = new JEditorPane();
+    private EditorInlineHtmlPane getLoadingPane(Editor editor) {
+        EditorInlineHtmlPane pane = editor.getUserData(CACHED_LOADING_PANE);
+        if (pane == null) {
+            editor.putUserData(CACHED_LOADING_PANE, pane = createEditorPane(
+                editor, CodeInsightLocalize.docRenderLoadingText().get(), null, true));
+        }
+        return pane;
+    }
+
+    static void clearCachedLoadingPane(Editor editor) {
+        editor.putUserData(CACHED_LOADING_PANE, null);
+    }
+
+    private EditorInlineHtmlPane createEditorPane(Editor editor,
+                                                  @Nullable String text,
+                                                  @Nullable Color backgroundColor,
+                                                  boolean reusable) {
+        EditorInlineHtmlPane pane = new EditorInlineHtmlPane();
+        pane.getCaret().setSelectionVisible(!reusable);
         pane.setEditable(false);
         pane.setOpaque(false);
         pane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
@@ -238,6 +288,7 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         pane.setForeground(textColor);
         pane.setSelectedTextColor(textColor);
         pane.setBackground(backgroundColor != null ? backgroundColor : TargetAWT.to(scheme.getDefaultBackground()));
+        UIUtil.enableEagerSoftWrapping(pane);
         pane.setText(text == null ? "" : text);
         return pane;
     }
@@ -264,6 +315,134 @@ public class DocRenderer implements CustomFoldRegionRenderer {
 
     void clearCachedComponent() {
         myPane = null;
+    }
+
+    public void dispose() {
+        clearCachedComponent();
+    }
+
+    final class EditorInlineHtmlPane extends JEditorPane {
+        private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
+        private final AtomicBoolean myRepaintScheduled = new AtomicBoolean();
+
+        private boolean myRepaintRequested;
+
+        @Override
+        public void repaint(long tm, int x, int y, int width, int height) {
+            myRepaintRequested = true;
+        }
+
+        void doWithRepaintTracking(Runnable task) {
+            myRepaintRequested = false;
+            task.run();
+            if (myRepaintRequested) {
+                repaintRenderer();
+            }
+        }
+
+        private void repaintRenderer() {
+            CustomFoldRegion foldRegion = myItem.getFoldRegion();
+            if (foldRegion != null) {
+                foldRegion.repaint();
+            }
+        }
+
+        Editor getEditor() {
+            return myItem.getEditor();
+        }
+
+        void removeSelection() {
+            doWithRepaintTracking(() -> select(0, 0));
+        }
+
+        boolean hasSelection() {
+            return getSelectionStart() != getSelectionEnd();
+        }
+
+        @Nullable
+        Point getSelectionPositionInEditor() {
+            if (myPane != this) {
+                return null;
+            }
+            CustomFoldRegion foldRegion = myItem.getFoldRegion();
+            if (foldRegion == null || foldRegion.getRenderer() != DocRenderer.this) {
+                return null;
+            }
+            Point rendererLocation = foldRegion.getLocation();
+            if (rendererLocation == null) {
+                return null;
+            }
+            Rectangle boundsWithinRenderer =
+                getEditorPaneBoundsWithinRenderer(foldRegion.getWidthInPixels(), foldRegion.getHeightInPixels());
+            Rectangle2D locationInPane;
+            try {
+                locationInPane = modelToView2D(getSelectionStart());
+            }
+            catch (BadLocationException e) {
+                LOG.error(e);
+                locationInPane = new Rectangle();
+            }
+            return new Point(rendererLocation.x + boundsWithinRenderer.x + (int) locationInPane.getX(),
+                rendererLocation.y + boundsWithinRenderer.y + (int) locationInPane.getY());
+        }
+
+        @Override
+        public void revalidate() {
+            super.revalidate();
+            myCachedHeight = -1;
+            myCachedWidth = -1;
+            scheduleUpdate();
+        }
+
+        private void scheduleUpdate() {
+            if (myUpdateScheduled != null && myUpdateScheduled.compareAndSet(false, true)) {
+                SwingUtilities.invokeLater(() -> {
+                    myRepaintScheduled.set(false);
+                    myUpdateScheduled.set(false);
+                    if (this == myPane) {
+                        CustomFoldRegion foldRegion = myItem.getFoldRegion();
+                        if (foldRegion != null) {
+                            DocRenderItemUpdater.getInstance().updateFoldRegions(Collections.singleton(foldRegion), false);
+                        }
+                    }
+                });
+            }
+        }
+
+        private void scheduleRepaint() {
+            if (!myUpdateScheduled.get() && myRepaintScheduled.compareAndSet(false, true)) {
+                SwingUtilities.invokeLater(() -> {
+                    myRepaintScheduled.set(false);
+                    if (this == myPane) {
+                        repaintRenderer();
+                    }
+                });
+            }
+        }
+    }
+
+    private final class CopySelection extends DumbAwareAction implements AnActionWithSyncUpdate {
+        CopySelection() {
+            super(CodeInsightLocalize.docRenderCopyActionText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy());
+            AnAction copyAction = ActionManager.getInstance().getAction(IdeActions.ACTION_COPY);
+            if (copyAction != null) {
+                copyShortcutFrom(copyAction);
+            }
+        }
+
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setVisible(myPane != null && myPane.hasSelection());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(AnActionEvent e) {
+            String text = myPane == null ? null : myPane.getSelectedText();
+            if (!StringUtil.isEmpty(text)) {
+                CopyPasteManager.getInstance().setContents(new StringSelection(text));
+            }
+        }
     }
 
     static final class ToggleRenderingAction extends DumbAwareAction {

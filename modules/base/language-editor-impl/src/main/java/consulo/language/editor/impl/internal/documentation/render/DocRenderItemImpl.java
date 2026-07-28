@@ -127,10 +127,20 @@ public class DocRenderItemImpl implements DocRenderItem {
         if (region == null) {
             return true;
         }
-        Document document = myHighlighter.getDocument();
-        return region.isValid()
-            && document.getLineNumber(myHighlighter.getStartOffset()) == document.getLineNumber(region.getStartOffset())
-            && document.getLineNumber(myHighlighter.getEndOffset()) == document.getLineNumber(region.getEndOffset());
+        if (!region.isValid()) {
+            return false;
+        }
+        Document document = region.getEditor().getDocument();
+        return region.getStartOffset() == document.getLineStartOffset(calcFoldStartLine())
+            && region.getEndOffset() == document.getLineEndOffset(calcFoldEndLine());
+    }
+
+    private int calcFoldStartLine() {
+        return myHighlighter.getDocument().getLineNumber(myHighlighter.getStartOffset());
+    }
+
+    private int calcFoldEndLine() {
+        return myHighlighter.getDocument().getLineNumber(myHighlighter.getEndOffset());
     }
 
     boolean remove(Collection<Runnable> foldingTasks) {
@@ -195,13 +205,9 @@ public class DocRenderItemImpl implements DocRenderItem {
                 generateHtmlInBackgroundAndToggle();
                 return false;
             }
-            if (myTextToRender == null) {
-                return false;
-            }
-            Document document = myHighlighter.getDocument();
-            int foldStartLine = document.getLineNumber(myHighlighter.getStartOffset());
-            int foldEndLine = document.getLineNumber(myHighlighter.getEndOffset());
-            Runnable foldingTask = () -> myFoldRegion = foldingModel.addCustomLinesFolding(foldStartLine, foldEndLine, new DocRenderer(this));
+            Runnable foldingTask =
+                () -> myFoldRegion =
+                    foldingModel.addCustomLinesFolding(calcFoldStartLine(), calcFoldEndLine(), new DocRenderer(this));
             if (foldingTasks == null) {
                 foldingModel.runBatchFoldingOperation(foldingTask, true, false);
             }

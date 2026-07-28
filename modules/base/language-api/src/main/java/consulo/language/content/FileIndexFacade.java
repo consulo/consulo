@@ -52,6 +52,13 @@ public abstract class FileIndexFacade {
 
   public abstract boolean isInLibrarySource(VirtualFile file);
 
+  /**
+   * Returns {@code true} if {@code file} is located under library classes or library sources.
+   */
+  public boolean isInLibrary(VirtualFile file) {
+    return isInLibraryClasses(file) || isInLibrarySource(file);
+  }
+
   public abstract boolean isExcludedFile(VirtualFile file);
 
   public abstract boolean isUnderIgnored(VirtualFile file);

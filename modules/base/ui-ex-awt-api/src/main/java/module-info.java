@@ -55,6 +55,7 @@ module consulo.ui.ex.awt.api {
         consulo.version.control.system.log.impl,
         consulo.external.system.api,
         consulo.language.editor.ui.api,
+        consulo.language.editor.impl,
         consulo.task.impl,
         consulo.ide.api,
         consulo.execution.debug.impl;
