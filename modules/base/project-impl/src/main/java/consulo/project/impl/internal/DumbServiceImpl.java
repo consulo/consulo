@@ -295,29 +295,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             return;
         }
 
-        boolean publishInline = myApplication.isWriteAccessAllowed();
-        if (!enterDumbMode(trace, publishInline)) {
-            return;
-        }
-
-        if (publishInline) {
-            Coroutine.<Void, Void>first(UIAction.<Void, Void>apply(input -> {
-                    runCatchingIgnorePCE(myPublisher::enteredDumbMode);
-                    return null;
-                }))
-                .runAsync(CoroutineScope.of(myTransitionContext), null);
-            return;
-        }
-
-        Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
-                publishEnteredDumbModeBackgroundable();
-                return null;
-            }))
-            .then(UIAction.<Void, Void>apply(input -> {
-                runCatchingIgnorePCE(myPublisher::enteredDumbMode);
-                return null;
-            }))
-            .runAsync(CoroutineScope.of(myTransitionContext), null);
+        enterDumbMode(trace);
     }
 
     private void launchDumbTask(Exception trace) {
@@ -346,28 +324,49 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return false;
     }
 
-    private boolean enterDumbMode(Exception trace, boolean publishInline) {
-        boolean wasSmart;
+    private void enterDumbMode(Exception trace) {
         synchronized (myRunWhenSmartQueue) {
             State state = myState.get();
             if (state != State.SMART && state != State.WAITING_FOR_FINISH) {
-                return false;
+                return;
             }
 
             myState.set(State.SCHEDULED_TASKS);
-            wasSmart = myDumbState.getAndUpdate(DumbState::enterDumbMode).isSmart();
+            boolean wasSmart = myDumbState.getAndUpdate(DumbState::enterDumbMode).isSmart();
 
             myDumbStart = trace;
             myDumbEnterTrace = new Throwable();
 
-            if (wasSmart && publishInline) {
-                //noinspection RequiredXAction
-                publishEnteredDumbModeBackgroundable();
+            if (wasSmart) {
+                publishEnterDumbMode();
             }
         }
 
         launchDumbTask(trace);
-        return wasSmart;
+    }
+
+    private void publishEnterDumbMode() {
+        if (myApplication.isWriteAccessAllowed()) {
+            //noinspection RequiredXAction
+            publishEnteredDumbModeBackgroundable();
+
+            Coroutine.<Void, Void>first(UIAction.<Void, Void>apply(input -> {
+                    runCatchingIgnorePCE(myPublisher::enteredDumbMode);
+                    return null;
+                }))
+                .runAsync(CoroutineScope.of(myTransitionContext), null);
+            return;
+        }
+
+        Coroutine.<Void, Void>first(WriteLock.<Void, Void>apply(input -> {
+                publishEnteredDumbModeBackgroundable();
+                return null;
+            }))
+            .then(UIAction.<Void, Void>apply(input -> {
+                runCatchingIgnorePCE(myPublisher::enteredDumbMode);
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(myTransitionContext), null);
     }
 
     @RequiredWriteAction
