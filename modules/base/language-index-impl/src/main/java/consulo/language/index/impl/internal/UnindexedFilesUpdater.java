@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Eugene Zhuravlev
@@ -93,9 +94,15 @@ public class UnindexedFilesUpdater extends DumbModeTask {
         indicator.setIndeterminate(false);
         indicator.setText(IndexingLocalize.progressIndexingUpdating());
 
+        long startedAt = System.nanoTime();
         indexFiles(indicator, files);
+        long elapsedMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt);
 
         if (trackResponsiveness) {
+            LOG.info("Unindexed files update finished: " + files.size() + " files in " + elapsedMillis + " ms on "
+                + CacheUpdateRunner.indexingThreadCount() + " threads ("
+                + (elapsedMillis == 0 ? files.size() : files.size() * 1000L / elapsedMillis) + " files/s)");
+
             snapshot.logResponsivenessSinceCreation("Unindexed files update");
         }
     }

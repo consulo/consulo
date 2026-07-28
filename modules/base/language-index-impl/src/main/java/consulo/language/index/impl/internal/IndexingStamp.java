@@ -354,7 +354,8 @@ public class IndexingStamp {
     }
 
     private static final ConcurrentIntObjectMap<Timestamps> myTimestampsCache = IntMaps.newConcurrentIntObjectHashMap();
-    private static final BlockingQueue<Integer> ourFinishedFiles = new ArrayBlockingQueue<>(100);
+    private static final BlockingQueue<Integer> ourFinishedFiles =
+        new ArrayBlockingQueue<>(Math.max(100, Runtime.getRuntime().availableProcessors() * 64));
 
     public static long getIndexStamp(int fileId, ID<?, ?> indexName) {
         Lock readLock = getStripedLock(fileId).readLock();
@@ -480,7 +481,8 @@ public class IndexingStamp {
         }
     }
 
-    private static final ReadWriteLock[] ourLocks = new ReadWriteLock[16];
+    private static final ReadWriteLock[] ourLocks =
+        new ReadWriteLock[Math.max(16, Math.min(256, Runtime.getRuntime().availableProcessors() * 4))];
 
     static {
         for (int i = 0; i < ourLocks.length; ++i) ourLocks[i] = new ReentrantReadWriteLock();

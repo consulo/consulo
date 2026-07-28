@@ -139,6 +139,10 @@ public class IndexInfrastructure {
       myNestedInitializationTasks.add(nestedInitializationTask);
     }
 
+    private static int initializationThreadCount() {
+      return Math.max(1, Math.min(Runtime.getRuntime().availableProcessors() - 1, 4));
+    }
+
     private void runParallelNestedInitializationTasks() throws InterruptedException {
       int numberOfTasksToExecute = myNestedInitializationTasks.size();
       if (numberOfTasksToExecute == 0) return;
@@ -148,7 +152,7 @@ public class IndexInfrastructure {
       if (ourDoParallelIndicesInitialization) {
         ExecutorService taskExecutor = AppExecutorUtil
           .createBoundedApplicationPoolExecutor("IndexInfrastructure.DataInitialization.RunParallelNestedInitializationTasks",
-                                                PooledThreadExecutor.getInstance(), CacheUpdateRunner.indexingThreadCount());
+                                                PooledThreadExecutor.getInstance(), initializationThreadCount());
 
         for (ThrowableRunnable<?> callable : myNestedInitializationTasks) {
           taskExecutor.execute(() -> executeNestedInitializationTask(callable, proceedLatch));

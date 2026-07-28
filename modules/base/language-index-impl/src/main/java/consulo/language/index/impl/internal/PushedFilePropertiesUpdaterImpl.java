@@ -314,7 +314,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         ConcurrentLinkedQueue<Runnable> tasksQueue = new ConcurrentLinkedQueue<>(tasks);
         List<Future<?>> results = new ArrayList<>();
         if (tasks.size() > 1) {
-            int numThreads = Math.max(Math.min(CacheUpdateRunner.indexingThreadCount() - 1, tasks.size() - 1), 1);
+            int numThreads = Math.max(Math.min(CacheUpdateRunner.scanningThreadCount() - 1, tasks.size() - 1), 1);
 
             for (int i = 0; i < numThreads; ++i) {
                 results.add(application.executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(
