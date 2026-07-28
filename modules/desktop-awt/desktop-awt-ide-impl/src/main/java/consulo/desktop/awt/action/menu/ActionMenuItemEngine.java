@@ -100,7 +100,7 @@ public class ActionMenuItemEngine {
                 if (throwable == null && Boolean.TRUE.equals(enabled)) {
                     fm.runOnOwnContext(myContext, () -> {
                         actionManager.fireBeforeActionPerformed(menuItemAction, myContext, event);
-                        ActionImplUtil.performActionDumbAware(menuItemAction, event);
+                        actionManager.performActionDumbAware(menuItemAction, event);
                         actionManager.queueActionPerformedEvent(menuItemAction, myContext, event);
                     });
                 }

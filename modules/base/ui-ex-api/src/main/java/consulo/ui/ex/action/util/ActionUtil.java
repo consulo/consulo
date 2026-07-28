@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.action.util;
 
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;

@@ -16,6 +16,7 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;

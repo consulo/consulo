@@ -21,6 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.util.concurrent.ActionCallback;
 import org.jspecify.annotations.Nullable;
@@ -163,4 +164,7 @@ public abstract class ActionManager {
     }
 
     public abstract @Nullable KeyboardShortcut getKeyboardShortcut(String actionId);
+
+    @RequiredUIAccess
+    public abstract void performActionDumbAware(AnAction action, AnActionEvent e);
 }

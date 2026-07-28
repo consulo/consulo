@@ -1340,6 +1340,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     @Override
+    @RequiredUIAccess
+    public void performActionDumbAware(AnAction action, AnActionEvent e) {
+        ActionImplUtil.performActionDumbAware(action, e);
+    }
+
+    @Override
     public void fireBeforeEditorTyping(char c, DataContext dataContext) {
         ActionTicker.getInstance().notifyEditorTyping();
         for (AnActionListener listener : myActionListeners) {

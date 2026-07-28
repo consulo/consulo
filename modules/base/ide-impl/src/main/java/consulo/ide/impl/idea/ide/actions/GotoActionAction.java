@@ -351,7 +351,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
                 else {
                     ActionManagerEx manager = ActionManagerEx.getInstanceEx();
                     manager.fireBeforeActionPerformed(action, context, finalEvent);
-                    ActionImplUtil.performActionDumbAware(action, finalEvent);
+                    manager.performActionDumbAware(action, finalEvent);
                     if (callback != null) {
                         callback.run();
                     }
