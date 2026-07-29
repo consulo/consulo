@@ -18,6 +18,7 @@ package consulo.application.internal;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ApplicationProperties;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
@@ -73,9 +74,6 @@ public final class SlowOperations {
     public static final String FORCE_THROW = "  force throw  ";
     /** Do not use. For Action System only. It resets the section stack in modal dialogs */
     public static final String RESET = "  reset  ";
-
-    /** VM property, set to {@code true} if running in plugin development sandbox. */
-    public static final String PLUGIN_SANDBOX_MODE = "consulo.plugin.in.sandbox.mode";
 
     private static int ourAlwaysAllow = -1;
     private static FList<String> ourStack = FList.emptyList();
@@ -220,9 +218,8 @@ public final class SlowOperations {
             return true;
         }
 
-        boolean result = application.isUnitTestMode()
-            || application.isCommandLine()
-            || !application.isInternal() && !SystemProperties.getBooleanProperty(PLUGIN_SANDBOX_MODE, false);
+        boolean result = application.isCommandLine()
+            || !ApplicationProperties.isInternal() && !ApplicationProperties.isInSandbox();
         ourAlwaysAllow = result ? 1 : 0;
         return result;
     }

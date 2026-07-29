@@ -49,6 +49,7 @@ module consulo.virtual.file.system.api {
         consulo.language.editor.impl,
         consulo.language.index.impl,
         consulo.test.junit.impl,
+        consulo.it,
         consulo.desktop.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.local.history.impl,
