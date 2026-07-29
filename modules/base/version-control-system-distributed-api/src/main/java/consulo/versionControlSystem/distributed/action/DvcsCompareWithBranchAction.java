@@ -60,7 +60,10 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
         VirtualFile file = getAffectedFile(event);
-        T repository = ObjectUtil.assertNotNull(getRepositoryManager(project).getRepositoryForFile(file));
+        T repository = getRepositoryManager(project).getRepositoryForFileQuick(file);
+        if (repository == null) {
+            return;
+        }
         assert !repository.isFresh();
         String currentBranchName = repository.getCurrentBranchName();
         String presentableRevisionName = currentBranchName;
@@ -94,7 +97,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         VirtualFile file = ArrayUtil.getFirstElement(e.getData(VirtualFile.KEY_OF_ARRAY));
 
         presentation.setVisible(project != null);
-        presentation.setEnabled(project != null && file != null && isEnabled(getRepositoryManager(project).getRepositoryForFile(file)));
+        presentation.setEnabled(project != null && file != null && isEnabled(getRepositoryManager(project).getRepositoryForFileQuick(file)));
     }
 
     private boolean isEnabled(@Nullable T repository) {
