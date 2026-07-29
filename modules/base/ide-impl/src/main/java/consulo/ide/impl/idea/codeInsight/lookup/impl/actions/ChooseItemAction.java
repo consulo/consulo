@@ -12,7 +12,7 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
-import consulo.ide.impl.idea.util.SlowOperations;
+import consulo.application.internal.SlowOperations;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.CompletionService;
 import consulo.language.editor.completion.lookup.Lookup;

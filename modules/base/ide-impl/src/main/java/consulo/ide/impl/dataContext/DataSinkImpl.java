@@ -16,7 +16,10 @@
 package consulo.ide.impl.dataContext;
 
 import consulo.application.Application;
+import consulo.application.util.registry.Registry;
 import consulo.component.extension.ExtensionPoint;
+import consulo.logging.Logger;
+import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.DataSnapshot;
 import consulo.dataContext.UiDataProvider;
@@ -34,14 +37,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Internal implementation of {@link DataSink} and {@link DataSnapshot}.
+ * Internal implementation of {@link DataSink}.
  * <p>
  * Collects immediate data via {@link #set}, lazy suppliers via {@link #lazy},
  * and lazy functions via {@link #lazyValue}. Resolves lazy data under
  * {@code tryRunReadAction} when {@link #resolve} is called.
  */
-public class DataSinkImpl implements DataSink, DataSnapshot {
+public class DataSinkImpl implements DataSink {
+    private static final Logger LOG = Logger.getInstance(DataSinkImpl.class);
+
     private final Map<Key, Object> myImmediateData = new HashMap<>();
+    private final Map<Key, Object> myComputedData = new HashMap<>();
     private final Map<Key, Supplier<?>> myLazyData = new HashMap<>();
     private final Map<Key, Function<DataSnapshot, ?>> myLazyValueData = new HashMap<>();
     // Cycle guard is per-thread: the same sink is shared by the async context and resolved
@@ -50,8 +56,35 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     private final ThreadLocal<Set<Key>> myResolving = ThreadLocal.withInitial(HashSet::new);
 
     private boolean mySnapshotCollected;
+    private boolean myCollectingRules;
 
     private final Application myApplication;
+
+    /**
+     * Snapshot view handed to {@link UiDataRule}s while the snapshot is being collected on EDT.
+     * It exposes immediate data only and never runs a lazy supplier, so rules cannot pull
+     * slow data (PSI, VFS) onto EDT. Rules are therefore non-recursive: a value contributed
+     * lazily by another rule reads as {@code null} here and is computed later in background
+     * through {@link #resolve}.
+     */
+    private final DataSnapshot myImmediateSnapshot = new DataSnapshot() {
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> @Nullable T get(Key<T> key) {
+            return (T) myImmediateData.get(key);
+        }
+    };
+
+    /**
+     * Snapshot view handed to {@link #lazyValue} functions. Those run in background, so reading
+     * a dependency may resolve other lazy data.
+     */
+    private final DataSnapshot myResolvingSnapshot = new DataSnapshot() {
+        @Override
+        public <T> @Nullable T get(Key<T> key) {
+            return resolve(key);
+        }
+    };
 
     public DataSinkImpl(Application application) {
         myApplication = application;
@@ -59,23 +92,36 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
 
     @Override
     public <T> void set(Key<T> key, @Nullable T data) {
-        if (data != null) {
-            myImmediateData.putIfAbsent(key, data);
+        if (data == null) {
+            return;
         }
+        if (myCollectingRules) {
+            // rules must not override other rules or snapshot values
+            if (myImmediateData.containsKey(key) || myComputedData.containsKey(key)) {
+                return;
+            }
+            myComputedData.put(key, data);
+            return;
+        }
+        myImmediateData.putIfAbsent(key, data);
     }
 
     @Override
     public <T> void lazy(Key<T> key, Supplier<T> dataSupplier) {
-        if (!myImmediateData.containsKey(key) && !myLazyData.containsKey(key)) {
+        if (!isKnown(key) && !myLazyData.containsKey(key)) {
             myLazyData.put(key, dataSupplier);
         }
     }
 
     @Override
     public <T> void lazyValue(Key<T> key, Function<DataSnapshot, T> dataFunction) {
-        if (!myImmediateData.containsKey(key) && !myLazyValueData.containsKey(key)) {
+        if (!isKnown(key) && !myLazyValueData.containsKey(key)) {
             myLazyValueData.put(key, dataFunction);
         }
+    }
+
+    private boolean isKnown(Key<?> key) {
+        return myImmediateData.containsKey(key) || myComputedData.containsKey(key);
     }
 
     @Override
@@ -89,7 +135,13 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     public void collectFromProvider(UiDataProvider provider, Iterable<UiDataRule> rules) {
         if (!mySnapshotCollected) {
             provider.uiDataSnapshot(this);
-            rules.forEach(rule -> rule.uiDataSnapshot(this, this));
+            myCollectingRules = true;
+            try {
+                rules.forEach(rule -> rule.uiDataSnapshot(this, myImmediateSnapshot));
+            }
+            finally {
+                myCollectingRules = false;
+            }
             mySnapshotCollected = true;
         }
     }
@@ -99,19 +151,27 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
      * <ol>
      *   <li>Check immediate data — return if found</li>
      *   <li>Check lazy supplier — execute under {@code tryRunReadAction} — return if found</li>
-     *   <li>Check lazyValue function — execute under {@code tryRunReadAction} with this as snapshot — return if found</li>
+     *   <li>Check lazyValue function — execute under {@code tryRunReadAction} with the resolving snapshot — return if found</li>
      *   <li>Return null</li>
      * </ol>
-     * A {@link UiDataRule} computing a derived value (e.g. {@code VIRTUAL_FILE} from
-     * {@code PSI_ELEMENT}) reads dependencies back through {@link #get}, which must therefore
-     * resolve lazy data too — otherwise lazily-provided keys would always read as {@code null}.
+     * A lazy supplier may perform slow PSI or VFS work, so on the UI thread steps 2 and 3 are skipped
+     * while an action updates itself there, or when {@code actionSystem.update.actions.suppress.dataRules.on.edt}
+     * is on. Immediate data stays available in both cases.
      */
     @SuppressWarnings("unchecked")
     public <T> @Nullable T resolve(Key<T> key) {
-        // 1. Immediate data
+        // 1. Immediate data — the UI snapshot wins over what rules computed from it
         Object immediate = myImmediateData.get(key);
+        if (immediate == null) {
+            immediate = myComputedData.get(key);
+        }
         if (immediate != null) {
             return (T) immediate;
+        }
+
+        if (myApplication.isDispatchThread() && !areLazyValuesAllowedOnUiThread()) {
+            reportLazyValueRequestedOnUiThread(key);
+            return null;
         }
 
         // Guard against cyclic lazy dependencies (e.g. a rule for A reading B whose rule reads A)
@@ -132,7 +192,7 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
             // 3. Lazy value function
             Function<DataSnapshot, ?> function = myLazyValueData.get(key);
             if (function != null) {
-                T result = resolveUnderReadAction(() -> (T) function.apply(this));
+                T result = resolveUnderReadAction(() -> (T) function.apply(myResolvingSnapshot));
                 if (result != null) {
                     return result;
                 }
@@ -145,9 +205,22 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
         }
     }
 
-    @Override
-    public @Nullable <T> T get(Key<T> key) {
-        return resolve(key);
+    private static boolean areLazyValuesAllowedOnUiThread() {
+        return !ActionUpdateInvoker.isNoRulesInUiThreadSection()
+            && !Registry.is("actionSystem.update.actions.suppress.dataRules.on.edt", false);
+    }
+
+    private void reportLazyValueRequestedOnUiThread(Key<?> key) {
+        if (!Registry.is("actionSystem.update.actions.warn.dataRules.on.edt", true)) {
+            return;
+        }
+        if (!myLazyData.containsKey(key) && !myLazyValueData.containsKey(key)) {
+            return;
+        }
+        Throwable throwable = new Throwable();
+        myApplication.executeOnPooledThread(() -> LOG.warn(
+            key + " is not available on UI thread. Code that depends on data rules and slow data providers "
+                + "must be run in background. For example, an action must use ActionUpdateThread.BGT.", throwable));
     }
 
     private @Nullable <T> T resolveUnderReadAction(Supplier<T> computation) {

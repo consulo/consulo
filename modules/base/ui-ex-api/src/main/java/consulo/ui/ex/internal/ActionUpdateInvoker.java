@@ -52,6 +52,29 @@ public final class ActionUpdateInvoker {
         return coroutine;
     }
 
+    private static boolean ourNoRulesInUiThreadSection;
+
+    /**
+     * {@code true} while an action updates itself on the UI thread. Data rules and slow data providers
+     * must not run then — such an action may only read what the UI snapshot already holds, otherwise it
+     * blocks the UI thread on PSI/VFS. An action that needs derived data must update on a background
+     * thread instead.
+     */
+    public static boolean isNoRulesInUiThreadSection() {
+        return ourNoRulesInUiThreadSection;
+    }
+
+    private static void runNoRulesSection(Runnable runnable) {
+        boolean prev = ourNoRulesInUiThreadSection;
+        ourNoRulesInUiThreadSection = true;
+        try {
+            runnable.run();
+        }
+        finally {
+            ourNoRulesInUiThreadSection = prev;
+        }
+    }
+
     @SuppressWarnings("deprecation")
     public static @Nullable Coroutine<?, ?> createUpdateCoroutine(AnAction action, AnActionEvent e) {
         if (action instanceof AnActionWithAsyncUpdate async) {
@@ -60,7 +83,7 @@ public final class ActionUpdateInvoker {
 
         if (action instanceof AnActionWithUIUpdate atUI) {
             return Coroutine.first(UIAction.<Object, Object>apply(input -> {
-                atUI.updateAtUI(e);
+                runNoRulesSection(() -> atUI.updateAtUI(e));
                 return input;
             }));
         }
@@ -68,7 +91,7 @@ public final class ActionUpdateInvoker {
         if (action instanceof AnActionWithSyncUpdate sync) {
             if (sync.getActionUpdateThread() == ActionUpdateThread.EDT) {
                 return Coroutine.first(UIAction.<Object, Object>apply(input -> {
-                    sync.update(e);
+                    runNoRulesSection(() -> sync.update(e));
                     return input;
                 }));
             }

@@ -16,6 +16,8 @@
 package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessToken;
+import consulo.application.internal.SlowOperations;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.ProcessCanceledException;
@@ -334,7 +336,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
     Element state = element.clone();
     StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
       for (Element e : state.getChildren(HistoryEntry.TAG)) {
-        try {
+        try (AccessToken ignore = SlowOperations.knownIssue("IDEA-333919, EA-831462")) {
           addEntry(HistoryEntry.createHeavy(myProject, e));
         }
         catch (InvalidDataException | ProcessCanceledException e1) {

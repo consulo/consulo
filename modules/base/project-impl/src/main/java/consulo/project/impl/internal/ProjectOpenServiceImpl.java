@@ -111,21 +111,10 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         UIAccess uiAccess,
         ProjectOpenContext context) {
 
-        // Pre-resolve VirtualFile and processor before chain construction
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
-        if (virtualFile == null) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        ProjectOpenProcessor processor = myProjectOpenProcessors.findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
-
         Boolean forceNewFrame = context.getUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME);
         Project activeProject = context.getUserData(ProjectOpenContext.ACTIVE_PROJECT);
 
         CompletableFuture<Project> resultFuture = new CompletableFuture<>();
-
-        VirtualFile finalVirtualFile = virtualFile;
-        ProjectOpenProcessor finalProcessor = processor;
 
         // Phase 1: Resolve project, show dialog if needed, allocate frame
         // Use null project for progress scope — activeProject may be closed during this phase
@@ -133,8 +122,19 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             .newProgressBuilder(null, ProjectLocalize.projectLoadProgress())
             .cancelable()
             .execute(uiAccess, () -> {
+                // the supplier runs on the progress thread, so the VFS refresh stays off the UI thread
+                VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
+                ProjectOpenProcessor processor = virtualFile == null
+                    ? null
+                    : myProjectOpenProcessors.findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
+
                 Coroutine<?, OpenContext> baseChain = Coroutine
                     .first(CodeExecution.<Void, OpenContext>apply((input, continuation) -> {
+                        if (virtualFile == null) {
+                            continuation.cancel();
+                            return null;
+                        }
+
                         Project projectToClose = null;
                         if (!Boolean.TRUE.equals(forceNewFrame)) {
                             Project[] openProjects = myProjectManager.get().getOpenProjects();
@@ -142,7 +142,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                                 projectToClose = activeProject != null ? activeProject : openProjects[openProjects.length - 1];
                             }
                         }
-                        return new OpenContext(projectToClose, finalVirtualFile);
+                        return new OpenContext(projectToClose, virtualFile);
                     }))
                     // Handle "same window / new window" dialog and close if needed
                     .then(CompletableFutureStep.<OpenContext, OpenContext>await(openContext -> {
@@ -166,8 +166,8 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                     .then(CodeExecution.apply(OpenContext::virtualFile));
 
                 // Let processor extend chain with preparation steps (default: no-op)
-                Coroutine<?, VirtualFile> withProcessor = finalProcessor != null
-                    ? finalProcessor.prepareSteps(uiAccess, context, preProcessor)
+                Coroutine<?, VirtualFile> withProcessor = processor != null
+                    ? processor.prepareSteps(uiAccess, context, preProcessor)
                     : preProcessor;
 
                 // Create ProjectImpl from VirtualFile

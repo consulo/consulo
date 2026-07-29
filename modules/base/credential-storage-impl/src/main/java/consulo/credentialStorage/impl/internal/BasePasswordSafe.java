@@ -1,5 +1,6 @@
 package consulo.credentialStorage.impl.internal;
 
+import consulo.application.internal.SlowOperations;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.SynchronizedClearableLazy;
@@ -142,7 +143,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     @Override
     public Credentials get(CredentialAttributes attributes) {
-        //SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
+        SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
         Credentials value = getCurrentProvider().get(attributes);
         if ((value == null || StringUtil.isEmptyOrSpaces(value.getPassword()))
             && isMemoryHelperProviderInitialized()) {
@@ -156,7 +157,7 @@ public abstract class BasePasswordSafe implements PasswordSafe {
 
     @Override
     public void set(CredentialAttributes attributes, Credentials credentials) {
-        //SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
+        SlowOperations.assertNonCancelableSlowOperationsAreAllowed();
         getCurrentProvider().set(attributes, credentials);
         if (attributes.isPasswordMemoryOnly() && credentials != null && !StringUtil.isEmptyOrSpaces(credentials.getPassword())) {
             // If password is stored as memory-only, use simplified attributes.

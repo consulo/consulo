@@ -24,9 +24,13 @@ import consulo.dataContext.UiDataRule;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtensionImpl
 public class BasicUiDataRule implements UiDataRule {
@@ -47,19 +51,20 @@ public class BasicUiDataRule implements UiDataRule {
         // NavigatableArray from selected items or single Navigatable
         Object[] items = snapshot.get(PlatformDataKeys.SELECTED_ITEMS);
         if (items != null) {
-            java.util.List<Navigatable> navigatables = new java.util.ArrayList<>();
+            List<Navigatable> navigatables = new ArrayList<>();
             for (Object item : items) {
                 if (item instanceof Navigatable nav) {
                     navigatables.add(nav);
                 }
             }
-            if (!navigatables.isEmpty()) {
+            // do not provide PSI in EDT, errors are already logged
+            if (!navigatables.isEmpty() && !(navigatables.get(0) instanceof PsiElement)) {
                 sink.set(Navigatable.KEY_OF_ARRAY, navigatables.toArray(new Navigatable[0]));
             }
         }
         else {
             Navigatable navigatable = snapshot.get(Navigatable.KEY);
-            if (navigatable != null) {
+            if (navigatable != null && !(navigatable instanceof PsiElement)) {
                 sink.set(Navigatable.KEY_OF_ARRAY, new Navigatable[]{navigatable});
             }
         }

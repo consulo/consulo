@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.entry;
 
+import consulo.application.internal.SlowOperations;
 import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -115,6 +116,9 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   private @Nullable VirtualFileSystemEntry findInPersistence(String name, boolean ensureCanonicalName, NewVirtualFileSystem delegate, boolean caseSensitive) {
+    // children are not cached yet, so this goes down to the persistence and possibly to the disk
+    SlowOperations.assertSlowOperationsAreAllowed();
+
     VirtualFileSystemEntry child;
     synchronized (myData) {
       // maybe another doFindChild() sneaked in the middle

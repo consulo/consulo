@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.dataContext;
 
+import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.internal.SlowOperations;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
@@ -42,6 +44,8 @@ import java.util.Map;
 public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
     private static final Logger LOG = Logger.getInstance(PreCachedDataContext.class);
 
+    private static boolean ourIsCapturingSnapshot;
+
     private final BaseDataManager myDataManager;
     private final List<DataProvider> myProviders;
     private Map<Key, Object> myUserData;
@@ -60,6 +64,12 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
 
     @Override
     public <T> @Nullable T getData(Key<T> dataId) {
+        // the flag is only ever set on the UI thread, so a background reader must not consult it
+        if (ourIsCapturingSnapshot && Application.get().isDispatchThread()) {
+            LOG.error("DataContext must not be queried during another DataContext creation");
+        }
+
+
         for (DataProvider provider : myProviders) {
             T data = myDataManager.getDataFromProvider(provider, dataId, null);
             if (data != null) {
@@ -103,7 +113,13 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
         // but for async context we want to pre-collect the sink on EDT
         if (provider instanceof UiDataProviderAdapter uiAdapter) {
             DataSinkImpl sink = new DataSinkImpl(application);
-            sink.collectFromProvider(uiAdapter.getProvider(), application.getExtensionPoint(UiDataRule.class));
+            ourIsCapturingSnapshot = true;
+            try (AccessToken ignore = SlowOperations.startSection(SlowOperations.FORCE_ASSERT)) {
+                sink.collectFromProvider(uiAdapter.getProvider(), application.getExtensionPoint(UiDataRule.class));
+            }
+            finally {
+                ourIsCapturingSnapshot = false;
+            }
             return sink::resolve;
         }
 
