@@ -312,7 +312,14 @@ public class IdeEventQueue extends EventQueue {
     }
 
     public AWTEvent getTrueCurrentEvent() {
-        return myCurrentEvent;
+        AWTEvent currentEvent = myCurrentEvent;
+        if (currentEvent instanceof InputEvent) {
+            return currentEvent;
+        }
+        // events retargeted by LightweightDispatcher straight to a component never pass through dispatchEvent(), so
+        // myCurrentEvent can still hold an unrelated event while a mouse click is being delivered - AWT knows the real one
+        AWTEvent awtCurrentEvent = getCurrentEvent();
+        return awtCurrentEvent == null ? currentEvent : awtCurrentEvent;
     }
 
     private static boolean ourAppIsLoaded;

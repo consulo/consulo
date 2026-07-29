@@ -10,12 +10,25 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
+import consulo.language.Language;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.documentation.DocumentationManagerProtocol;
+import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigatable;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
@@ -23,6 +36,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.CharArrayUtil;
@@ -31,11 +46,14 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.List;
@@ -43,10 +61,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Paints a documentation comment as rendered HTML inside a {@link CustomFoldRegion}.
- * <p>
- * Unlike the JetBrains implementation, which renders through {@code JBHtmlPane}, this uses Consulo's
- * {@link JBHtmlEditorKit} - the same editor kit the documentation popup uses - so rendered docs match
- * the rest of the documentation UI.
  */
 public class DocRenderer implements CustomFoldRegionRenderer {
     private static final Logger LOG = Logger.getInstance(DocRenderer.class);
@@ -61,6 +75,8 @@ public class DocRenderer implements CustomFoldRegionRenderer {
     private static final int TOP_BOTTOM_MARGINS = 4;
     private static final int LINE_WIDTH = 2;
     private static final int ARC_RADIUS = 5;
+
+    private static final Color INLINE_CODE_FALLBACK_BACKGROUND = new Color(0x5A5D6B);
 
     private final DocRenderItem myItem;
 
@@ -289,8 +305,125 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         pane.setSelectedTextColor(textColor);
         pane.setBackground(backgroundColor != null ? backgroundColor : TargetAWT.to(scheme.getDefaultBackground()));
         UIUtil.enableEagerSoftWrapping(pane);
+        pane.putClientProperty(JBHtmlEditorKit.InlineCodeStyle.class, new JBHtmlEditorKit.InlineCodeStyle(
+            inlineCodeBackground(scheme), scale(4), scale(1), scale(10)));
         pane.setText(text == null ? "" : text);
+        pane.addHyperlinkListener(e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                activateLink(editor, e.getDescription(), linkAnchor(e));
+            }
+        });
         return pane;
+    }
+
+    /**
+     * Position of the activated link, in editor content component coordinates, so the popup can be anchored under it
+     * instead of under the caret.
+     */
+    private @Nullable RelativePoint linkAnchor(HyperlinkEvent event) {
+        CustomFoldRegion foldRegion = myItem.getFoldRegion();
+        Element sourceElement = event.getSourceElement();
+        if (foldRegion == null || sourceElement == null || !(event.getSource() instanceof JEditorPane pane)) {
+            return null;
+        }
+        Point rendererLocation = foldRegion.getLocation();
+        if (rendererLocation == null) {
+            return null;
+        }
+        Rectangle2D locationInPane;
+        try {
+            locationInPane = pane.modelToView2D(sourceElement.getStartOffset());
+        }
+        catch (BadLocationException e) {
+            return null;
+        }
+        if (locationInPane == null) {
+            return null;
+        }
+        Rectangle relativeBounds = getEditorPaneBoundsWithinRenderer(foldRegion.getWidthInPixels(), foldRegion.getHeightInPixels());
+        Point point = new Point(
+            rendererLocation.x + relativeBounds.x + (int) locationInPane.getX(),
+            rendererLocation.y + relativeBounds.y + (int) Math.ceil(locationInPane.getMaxY())
+        );
+        return new RelativePoint(myItem.getEditor().getContentComponent(), point);
+    }
+
+    @RequiredUIAccess
+    private void activateLink(Editor editor, @Nullable String url, @Nullable RelativePoint popupAnchor) {
+        Project project = editor.getProject();
+        if (project == null || url == null || !url.startsWith(DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL)) {
+            return;
+        }
+
+        RangeHighlighter highlighter = myItem.getHighlighter();
+        if (!highlighter.isValid()) {
+            return;
+        }
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        PsiElement context = file == null ? null : file.findElementAt(highlighter.getStartOffset());
+        if (context == null) {
+            return;
+        }
+
+        String refText = url.substring(DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL.length());
+        int separatorPos = refText.lastIndexOf(DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL_REF_SEPARATOR);
+        if (separatorPos >= 0) {
+            refText = refText.substring(0, separatorPos);
+        }
+
+        PsiElement target = resolveLink(context, refText);
+        if (target == null) {
+            return;
+        }
+
+        if (isGotoDeclarationEvent() && target instanceof Navigatable navigatable && navigatable.canNavigate()) {
+            navigatable.navigate(true);
+        }
+        else {
+            DocumentationManager.getInstance(project).showJavaDocInfo(editor, target, context, popupAnchor);
+        }
+    }
+
+    private static boolean isGotoDeclarationEvent() {
+        KeymapManager keymapManager = KeymapManager.getInstance();
+        if (keymapManager == null || !(IdeEventQueueProxy.getInstance().getTrueCurrentEvent() instanceof MouseEvent mouseEvent)) {
+            return false;
+        }
+        int clickCount = mouseEvent.getClickCount();
+        if (clickCount < 1) {
+            // the queue can hand back a move/drag event, which MouseShortcut rejects
+            return false;
+        }
+        int button = MouseShortcut.getButton(mouseEvent);
+        int modifiers = button == MouseShortcut.BUTTON_WHEEL_UP || button == MouseShortcut.BUTTON_WHEEL_DOWN
+            ? mouseEvent.getModifiers()
+            : mouseEvent.getModifiersEx();
+        MouseShortcut shortcut = new MouseShortcut(button, modifiers, clickCount);
+        for (String actionId : keymapManager.getActiveKeymap().getActionIds(shortcut)) {
+            if (IdeActions.ACTION_GOTO_DECLARATION.equals(actionId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static @Nullable PsiElement resolveLink(PsiElement context, String refText) {
+        PsiManager manager = context.getManager();
+        PsiElement target =
+            DocumentationManagerHelper.getProviderFromElement(context).getDocumentationElementForLink(manager, refText, context);
+        if (target != null) {
+            return target;
+        }
+        for (Language language : Language.getRegisteredLanguages()) {
+            DocumentationProvider provider = LanguageDocumentationProvider.forLanguageComposite(language);
+            if (provider != null) {
+                target = provider.getDocumentationElementForLink(manager, refText, context);
+                if (target != null) {
+                    return target;
+                }
+            }
+        }
+        return null;
     }
 
     private static Color getTextColor(EditorColorsScheme scheme) {
@@ -311,6 +444,28 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         styleSheet.addRule("a {color: #" + ColorUtil.toHex(linkColor) + "; text-decoration: none}");
         styleSheet.addRule(".sections {border-spacing: 0}");
         styleSheet.addRule(".section {padding-right: " + scale(5) + "; white-space: nowrap}");
+        styleSheet.addRule(inlineCodeRule(colorsScheme, textColor));
+    }
+
+    private static Color inlineCodeBackground(EditorColorsScheme colorsScheme) {
+        TextAttributes attributes = colorsScheme.getAttributes(DefaultLanguageHighlighterColors.DOC_CODE_INLINE);
+        ColorValue background = attributes == null ? null : attributes.getBackgroundColor();
+        return background == null
+            ? ColorUtil.mix(TargetAWT.to(colorsScheme.getDefaultBackground()), INLINE_CODE_FALLBACK_BACKGROUND, .1)
+            : TargetAWT.to(background);
+    }
+
+    private static String inlineCodeRule(EditorColorsScheme colorsScheme, Color textColor) {
+        TextAttributes attributes = colorsScheme.getAttributes(DefaultLanguageHighlighterColors.DOC_CODE_INLINE);
+        ColorValue background = attributes == null ? null : attributes.getBackgroundColor();
+        ColorValue foreground = attributes == null ? null : attributes.getForegroundColor();
+
+        Color backgroundColor = background == null
+            ? ColorUtil.mix(TargetAWT.to(colorsScheme.getDefaultBackground()), INLINE_CODE_FALLBACK_BACKGROUND, .1)
+            : TargetAWT.to(background);
+        Color foregroundColor = foreground == null ? textColor : TargetAWT.to(foreground);
+
+        return "code {color: #" + ColorUtil.toHex(foregroundColor) + "}";
     }
 
     void clearCachedComponent() {

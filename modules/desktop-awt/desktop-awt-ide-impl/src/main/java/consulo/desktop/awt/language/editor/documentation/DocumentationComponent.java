@@ -131,6 +131,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
     private final ExternalDocAction myExternalDocAction;
 
     private DocumentationManagerImpl myManager;
+    private RelativePoint myPopupAnchor;
     private SmartPsiElementPointer<PsiElement> myElement;
     private long myModificationCount;
 
@@ -683,6 +684,7 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
     public void setHint(JBPopup hint) {
         myHint = (AbstractPopup) hint;
+        myPopupAnchor = null;
     }
 
     public JBPopup getHint() {
@@ -813,14 +815,30 @@ public class DocumentationComponent extends JPanel implements Disposable, UiData
 
         setHintSize();
 
-        DataContext dataContext = getDataContext();
-        PopupPositionManager.positionPopupInBestPosition(
-            myHint,
-            myManager.getEditor(),
-            dataContext,
-            PopupPositionManager.Position.RIGHT,
-            PopupPositionManager.Position.LEFT
-        );
+        RelativePoint requestedAnchor = myManager == null ? null : myManager.consumePopupAnchor();
+        if (requestedAnchor != null) {
+            // showHint() runs again for every content update ('fetching...' then the real doc), so the anchor has to
+            // survive the first call - otherwise the later ones would fall back to the caret and move the popup
+            myPopupAnchor = requestedAnchor;
+        }
+        if (myPopupAnchor != null) {
+            if (myHint.canShow()) {
+                myHint.show(myPopupAnchor);
+            }
+            else {
+                myHint.setLocation(myPopupAnchor.getScreenPoint());
+            }
+        }
+        else {
+            DataContext dataContext = getDataContext();
+            PopupPositionManager.positionPopupInBestPosition(
+                myHint,
+                myManager.getEditor(),
+                dataContext,
+                PopupPositionManager.Position.RIGHT,
+                PopupPositionManager.Position.LEFT
+            );
+        }
 
         Window window = myHint.getPopupWindow();
         if (window != null) {

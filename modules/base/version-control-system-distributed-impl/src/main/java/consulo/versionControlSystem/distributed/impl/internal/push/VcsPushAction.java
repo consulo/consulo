@@ -49,7 +49,7 @@ public class VcsPushAction extends LegacyDumbAwareAction {
         }
         Collection<Repository> repositories = new HashSet<>();
         for (VirtualFile file : files) {
-            Repository repo = vcsRepositoryManager.getRepositoryForFile(file);
+            Repository repo = vcsRepositoryManager.getRepositoryForFileQuick(file);
             if (repo != null) {
                 repositories.add(repo);
             }
@@ -69,7 +69,7 @@ public class VcsPushAction extends LegacyDumbAwareAction {
         new VcsPushDialog(
             project,
             DvcsUtil.sortRepositories(repositories),
-            selectedFile != null ? manager.getRepositoryForFile(selectedFile) : null
+            selectedFile != null ? manager.getRepositoryForFileQuick(selectedFile) : null
         ).show();
     }
 
