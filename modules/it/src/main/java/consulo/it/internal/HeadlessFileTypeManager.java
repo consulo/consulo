@@ -18,6 +18,7 @@ package consulo.it.internal;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.file.FileTypeManager;
+import consulo.language.internal.FileTypeManagerEx;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
@@ -39,7 +40,21 @@ import java.util.List;
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
-public class HeadlessFileTypeManager extends FileTypeManager {
+public class HeadlessFileTypeManager extends FileTypeManagerEx {
+    @Override
+    public String getExtension(String fileName) {
+        int index = fileName.lastIndexOf('.');
+        return index < 0 ? "" : fileName.substring(index + 1);
+    }
+
+    @Override
+    public void fireFileTypesChanged() {
+    }
+
+    @Override
+    public void fireBeforeFileTypesChanged() {
+    }
+
     @Override
     public boolean isFileIgnored(String name) {
         return false;

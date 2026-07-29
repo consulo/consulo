@@ -26,6 +26,7 @@ module consulo.module.content.api {
     exports consulo.module.content.layer.orderEntry;
 
     exports consulo.module.content.internal to
+        consulo.it,
         consulo.ide.api,
         consulo.ide.impl,
         consulo.module.impl,

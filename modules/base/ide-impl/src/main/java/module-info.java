@@ -483,7 +483,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.usages;
     exports consulo.ide.impl.idea.usages.impl;
     exports consulo.ide.impl.idea.util;
-    exports consulo.ide.impl.idea.util.concurrency;
     exports consulo.ide.impl.idea.util.containers;
     exports consulo.ide.impl.idea.util.indexing;
     exports consulo.ide.impl.idea.util.io;
@@ -538,7 +537,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.ui.app.impl.settings;
     exports consulo.ide.impl.ui.dialog.impl;
     exports consulo.ide.impl.ui.docking.impl;
-    exports consulo.ide.impl.ui.ex.impl.util;
     exports consulo.ide.impl.ui.impl;
     exports consulo.ide.impl.ui.laf;
     exports consulo.ide.impl.ui.popup;

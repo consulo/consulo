@@ -21,9 +21,10 @@ import consulo.fileChooser.node.FileElement;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.Entry;
 import consulo.ide.impl.idea.ui.tree.MapBasedTree.UpdateResult;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.ui.ex.awt.tree.Identifiable;
+import consulo.ui.ex.util.Invoker;
+import consulo.ui.ex.util.InvokerFactory;
 import consulo.ui.ex.util.InvokerSupplier;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -54,7 +55,7 @@ import static java.util.stream.Collectors.toList;
  * @author Sergey.Malenkov
  */
 public final class FileTreeModel extends AbstractTreeModel implements Identifiable, InvokerSupplier {
-    private final InvokerImpl invoker = InvokerImpl.forBackgroundThreadWithReadAction(this);
+    private final Invoker invoker = InvokerFactory.getInstance().forBackgroundThreadWithReadAction(this);
     private final State state;
     private volatile List<Root> roots;
 
@@ -106,7 +107,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
 
     
     @Override
-    public InvokerImpl getInvoker() {
+    public Invoker getInvoker() {
         return invoker;
     }
 

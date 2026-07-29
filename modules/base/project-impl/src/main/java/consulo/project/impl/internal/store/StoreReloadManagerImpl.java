@@ -17,7 +17,7 @@ package consulo.project.impl.internal.store;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
-import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.store.impl.internal.storage.StateStorageBase;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.component.store.internal.StateStorage;
@@ -26,8 +26,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.StoreReloadManager;
-import consulo.project.localize.ProjectLocalize;
-import consulo.ui.Alerts;
+
 import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -61,12 +60,12 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     private final Set<StateStorage> myChangedProjectFiles = Sets.newConcurrentHashSet();
     private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
     private final Project myProject;
-    private final ProjectManager myProjectManager;
-    private final AtomicBoolean myDialogShow = new AtomicBoolean();
+    private final ApplicationConcurrency myConcurrency;
+    private final AtomicBoolean myReloadInProgress = new AtomicBoolean();
 
-    private final Callable<Void> restartApplicationOrReloadProjectTask = () -> {
+    private final Callable<Void> reloadChangedStoragesTask = () -> {
         if (isReloadUnblocked()) {
-            askToReloadProjectIfConfigFilesChangedExternally();
+            reloadChangedStorages();
         }
         return null;
     };
@@ -75,10 +74,10 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     public StoreReloadManagerImpl(
         Project project,
         VirtualFileManager virtualFileManager,
-        ProjectManager projectManager
+        ApplicationConcurrency concurrency
     ) {
         myProject = project;
-        myProjectManager = projectManager;
+        myConcurrency = concurrency;
 
         virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerListener() {
             @Override
@@ -92,7 +91,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
             }
         }, this);
 
-        AppExecutorUtil.getAppScheduledExecutorService().schedule(restartApplicationOrReloadProjectTask, 1, TimeUnit.SECONDS);
+        myConcurrency.getScheduledExecutorService().schedule(reloadChangedStoragesTask, 1, TimeUnit.SECONDS);
     }
 
     public void projectStorageFileChanged(VirtualFileEvent event, StateStorage storage, Project project) {
@@ -103,36 +102,27 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         }
     }
 
-    private void askToReloadProjectIfConfigFilesChangedExternally() {
-        if (myChangedProjectFiles.isEmpty()) {
+    /**
+     * Reloads the components backed by the storages that changed on disk. Nothing is asked of the user and the
+     * project is never reloaded as a whole - each component takes the new state through its own
+     * {@code loadState}, and schemes (code style, keymaps, colors, inspection profiles) are refreshed
+     * independently by the file tracker in {@code SchemeManagerImpl}.
+     */
+    private void reloadChangedStorages() {
+        if (myProject.isDisposed() || myChangedProjectFiles.isEmpty()) {
             return;
         }
 
-        if (myDialogShow.compareAndSet(false, true)) {
-            shouldReloadProject(myProject).thenAccept(restart -> {
-                myDialogShow.set(false);
-
-                if (restart) {
-                    myProjectManager.reloadProject(myProject, myProject.getUIAccess());
-                }
-            });
-        }
-    }
-
-    private CompletableFuture<Boolean> shouldReloadProject(Project project) {
-        if (project.isDisposed() || myChangedProjectFiles.isEmpty()) {
-            return CompletableFuture.completedFuture(false);
+        if (!myReloadInProgress.compareAndSet(false, true)) {
+            return;
         }
 
         Set<StateStorage> causes = new HashSet<>(myChangedProjectFiles);
         myChangedProjectFiles.clear();
-        if (causes.isEmpty()) {
-            return CompletableFuture.completedFuture(false);
-        }
 
         // Re-read the changed storages and diff them against the in-memory (last-saved) state. A storage that we just
         // wrote ourselves has identical on-disk content, so no component actually changed - in that case a filesystem
-        // refresh that merely observed our own write must not trigger a reload prompt.
+        // refresh that merely observed our own write must not reload anything.
         Set<String> changedComponentNames = new HashSet<>();
         for (StateStorage storage : causes) {
             try {
@@ -142,46 +132,43 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
                 LOG.error(e);
             }
         }
+
         if (changedComponentNames.isEmpty()) {
-            // Our own write was observed by a refresh: nothing actually changed. Re-enable saving that
-            // registerProjectToReload disabled, otherwise the storage would stay read-only after a self-write.
-            for (StateStorage cause : causes) {
-                if (cause instanceof StateStorageBase stateStorageBase) {
-                    stateStorageBase.enableSaving();
-                }
-            }
-            return CompletableFuture.completedFuture(false);
+            finishReload(causes);
+            return;
         }
 
-        return askToRestart(project, causes);
+        LOG.info("Reloading components changed on disk: " + changedComponentNames);
+
+        try {
+            myProject.getInstance(IProjectStore.class)
+                .reinitComponents(changedComponentNames)
+                .onFinish(continuation -> finishReload(causes))
+                .onCancel(continuation -> finishReload(causes));
+        }
+        catch (Throwable e) {
+            LOG.error(e);
+            finishReload(causes);
+        }
     }
 
-    private static CompletableFuture<Boolean> askToRestart(
-        Project project,
-        @Nullable Collection<? extends StateStorage> changedStorages
-    ) {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
+    /**
+     * Re-enables the saving that {@link #registerProjectToReload} disabled, otherwise the storage would stay
+     * read-only once it has been reloaded.
+     */
+    private void finishReload(Collection<? extends StateStorage> causes) {
+        for (StateStorage cause : causes) {
+            if (cause instanceof StateStorageBase stateStorageBase) {
+                stateStorageBase.enableSaving();
+            }
+        }
 
-        project.getUIAccess().give(
-            () -> Alerts.yesNo()
-                .title(ProjectLocalize.projectReloadExternalChangeTitle())
-                .text(ProjectLocalize.projectReloadExternalChangeMessage())
-                .showAsync(project)
-                .doWhenDone((it) -> {
-                    if (it) {
-                        if (changedStorages != null) {
-                            for (StateStorage storage : changedStorages) {
-                                if (storage instanceof StateStorageBase stateStorageBase) {
-                                    stateStorageBase.disableSaving();
-                                }
-                            }
-                        }
-                    }
-                    future.complete(it);
-                })
-        );
+        myReloadInProgress.set(false);
 
-        return future;
+        // changes that arrived while this reload was running
+        if (!myChangedProjectFiles.isEmpty() && isReloadUnblocked()) {
+            start();
+        }
     }
 
     private void registerProjectToReload(VirtualFile file, StateStorage storage) {
@@ -207,8 +194,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
 
     private void start() {
         if (myChangedFilesFuture.isDone() || myChangedFilesFuture.isCancelled()) {
-            myChangedFilesFuture =
-                AppExecutorUtil.getAppScheduledExecutorService().schedule(restartApplicationOrReloadProjectTask, 1, TimeUnit.SECONDS);
+            myChangedFilesFuture = myConcurrency.getScheduledExecutorService().schedule(reloadChangedStoragesTask, 1, TimeUnit.SECONDS);
         }
     }
 

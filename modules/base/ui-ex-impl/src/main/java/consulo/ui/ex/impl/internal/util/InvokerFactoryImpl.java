@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.ui.ex.impl.util;
+package consulo.ui.ex.impl.internal.util;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;

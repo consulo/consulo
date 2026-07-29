@@ -16,6 +16,7 @@ module consulo.it {
     requires consulo.project.ui.api;
     requires consulo.project.ui.impl;
     requires consulo.module.api;
+    requires consulo.module.content.api;
     requires consulo.document.api;
     requires consulo.code.editor.api;
     requires consulo.language.api;
@@ -31,7 +32,9 @@ module consulo.it {
     requires consulo.ui.ex.impl;
     requires consulo.util.collection;
     requires consulo.util.concurrent;
+    requires consulo.util.jdom;
     requires consulo.util.lang;
+    requires org.jdom;
     requires consulo.logging.api;
     requires consulo.disposer.api;
 

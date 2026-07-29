@@ -35,7 +35,6 @@ import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
@@ -60,6 +59,7 @@ import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.util.InvokerFactory;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.concurrent.Promise;
@@ -151,7 +151,7 @@ public class BuildTreeConsoleView implements ConsoleView, UiDataProvider, BuildC
         myTreeModel = new StructureTreeModel<>(
             treeStructure,
             null,
-            InvokerImpl.forBackgroundThreadWithoutReadAction(this),
+            InvokerFactory.getInstance().forBackgroundThreadWithoutReadAction(this),
             this
         );
         AsyncTreeModel asyncTreeModel = new AsyncTreeModel(myTreeModel, this);
