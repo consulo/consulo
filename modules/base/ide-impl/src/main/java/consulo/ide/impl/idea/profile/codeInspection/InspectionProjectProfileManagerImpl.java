@@ -100,7 +100,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   }
 
   @Override
-  public void afterLoadState() {
+  public void afterLoad(boolean first) {
     Set<Profile> profiles = new HashSet<>();
     profiles.add(getProjectProfileImpl());
     profiles.addAll(getProfiles());

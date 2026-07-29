@@ -9,6 +9,8 @@ package consulo.component.impl.internal.inject;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * A component adapter is responsible for providing a specific component instance. An instance of an implementation of
  * this interface is used inside a {@link PicoContainer} for every registered component or instance.  Each
@@ -45,5 +47,20 @@ interface ComponentAdapter<T> {
 
   default @Nullable T getComponentInstanceOfCreated(InstanceContainer container) {
     return getComponentInstance(container);
+  }
+
+  /**
+   * Non-blocking counterpart of {@link #getComponentInstance}. Adapters that cannot create asynchronously fall
+   * back to the synchronous path, which is safe because they do no thread bound work.
+   */
+  default CompletableFuture<T> getComponentInstanceAsync(InstanceContainer container) {
+    return CompletableFuture.completedFuture(getComponentInstance(container));
+  }
+
+  /**
+   * @return the implementation class when it is known without creating the instance, null otherwise
+   */
+  default @Nullable Class<?> getComponentImplClassIfCheap() {
+    return null;
   }
 }

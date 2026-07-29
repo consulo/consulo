@@ -144,7 +144,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
 
     @Override
     @RequiredUIAccess
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         myInitialLoadState = false;
 
         DesktopStyleImpl style = myCurrentStyle;
@@ -210,7 +210,7 @@ public final class LafManagerImpl implements LafManager, Disposable, PersistentS
             setCurrentStyle(styleFromXml, false, fire, iconId);
 
             if (fire) {
-                // will be called #afterLoadState()
+                // will be called #afterLoad(boolean)
                 updateUI();
             }
         }

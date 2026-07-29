@@ -15,23 +15,50 @@
  */
 package consulo.component.persist;
 
+import consulo.component.internal.StateComponent;
 import consulo.util.concurrent.coroutine.Coroutine;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A {@link PersistentStateComponent} whose state must be computed on a specific thread (typically the UI thread).
- * Instead of the synchronous {@link #getState()} the store fetches the state through {@link #getStateAsync()},
- * a coroutine that can hop to the UI thread (via a {@code UIAction} step) for UI-bound reads while the rest of
- * the save runs off the EDT.
+ * A state component whose state is both read and written asynchronously. Every step is a {@link Coroutine},
+ * so a component may hop to the UI thread (via a {@code UIAction} step) for UI-bound work while the rest of
+ * the save or load runs off the EDT.
+ * <p>
+ * Loading such a component requires running a coroutine, which cannot be done on the UI thread. A service
+ * implementing this interface therefore must not be injected as a plain constructor parameter - inject
+ * {@link jakarta.inject.Provider} or {@link consulo.component.ProviderAsync} instead.
  *
  * @author VISTALL
- * @since 2026-03-02
+ * @since 2026-07-29
  */
-public interface PersistentStateComponentAsync<T> extends PersistentStateComponent<T> {
-    Coroutine<?, T> getStateAsync();
+public non-sealed interface PersistentStateComponentAsync<T> extends StateComponent {
+    /**
+     * Returned by {@link #getStateModificationCount()} when the component does not track modifications,
+     * in which case its state is serialized on every save.
+     */
+    long UNTRACKED = -1;
 
-    @Override
-    default @Nullable T getState() {
-        throw new IllegalStateException("Use getStateAsync() instead");
+    /**
+     * @return a coroutine producing the component state, or producing {@code null} when nothing should be stored
+     */
+    Coroutine<?, @Nullable T> getState();
+
+    Coroutine<?, ?> loadState(T state);
+
+    /**
+     * Runs after {@link #loadState(Object)}, even when no state existed. Also runs on every reload, when the
+     * state changed on disk or was synchronized from external storage.
+     *
+     * @param first true on the initial load right after the component was created, false on a reload
+     */
+    default Coroutine<?, ?> afterLoad(boolean first) {
+        return Coroutine.empty();
+    }
+
+    /**
+     * Implement to let the store skip serializing this component while it is unchanged.
+     */
+    default long getStateModificationCount() {
+        return UNTRACKED;
     }
 }

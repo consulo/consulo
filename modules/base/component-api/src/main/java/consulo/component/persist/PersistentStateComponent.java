@@ -16,6 +16,7 @@
 
 package consulo.component.persist;
 
+import consulo.component.internal.StateComponent;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
@@ -28,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * See <a href="http://confluence.jetbrains.net/display/IDEADEV/Persisting+State+of+Components">JetBrains WIKI</a>
  * for detailed description.
  */
-public interface PersistentStateComponent<T> {
+public non-sealed interface PersistentStateComponent<T> extends StateComponent {
   /**
    * @return a component state. All properties and public fields are serialized. Only values, which differ
    * from default (i.e. the value of newly instantiated class) are serialized. <code>null</code> value indicates
@@ -48,8 +49,11 @@ public interface PersistentStateComponent<T> {
   void loadState(T state);
 
   /**
-   * This method will be called after call #loadState method (even if no state exists)
+   * Called after {@link #loadState}, even when no state existed. Also called on every reload, when the state
+   * changed on disk or was synchronized from external storage.
+   *
+   * @param first true on the initial load right after the component was created, false on a reload
    */
-  default void afterLoadState() {
+  default void afterLoad(boolean first) {
   }
 }

@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.internal.ComponentBinding;
-import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.disposer.Disposable;
@@ -45,7 +45,7 @@ import java.io.IOException;
 @State(name = "ProjectManager", storages = @Storage("project.default.xml"))
 @Singleton
 @ServiceImpl
-public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements PersistentStateComponentAsync<Element>, Disposable {
+public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements PersistentStateComponentWithAsyncGet<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DefaultProjectFactoryImpl.class);
 
   private DefaultProjectImpl myDefaultProject;
@@ -100,7 +100,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   }
 
   @Override
-  public void afterLoadState() {
+  public void afterLoad(boolean first) {
     try {
       myDefaultProject.getStateStore().load();
     }

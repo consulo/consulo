@@ -165,7 +165,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         myOptionsAndConfirmations.init(mySerialization::getInitOptionValue);
     }
 

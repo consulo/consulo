@@ -23,10 +23,15 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.internal.ComponentBinding;
+import consulo.component.persist.PersistentStateComponentAsync;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StateComponentInfo;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
@@ -60,7 +65,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     if (!(component instanceof IComponentStore)) {
       IComponentStore stateStore = getStateStore();
       if (stateStore != null) {
-        StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
+        StateComponentInfo info = stateStore.loadStateIfStorable(component);
         if (info != null) {
           if (Application.get().isWriteAccessAllowed() && UIAccess.isUIThread()) {
             LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component
@@ -68,7 +73,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
               .getName()));
           }
 
-          executeNonCancelableSection(() -> info.getComponent().afterLoadState());
+          executeNonCancelableSection(() -> info.afterLoad(true));
 
           result = true;
         }
@@ -80,6 +85,42 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     }
 
     return result;
+  }
+
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public Coroutine<?, ?> initializeIfStorableComponentAsync(Object component, boolean service, boolean lazy) {
+    if (!(component instanceof PersistentStateComponentAsync)) {
+      return super.initializeIfStorableComponentAsync(component, service, lazy);
+    }
+
+    UIAccess.assetIsNotUIThread();
+
+    if (!lazy) {
+      myCreatedNotLazyServicesCount.incrementAndGet();
+    }
+
+    IComponentStore stateStore = getStateStore();
+    if (stateStore == null) {
+      return Coroutine.empty();
+    }
+
+    Coroutine<Object, Object> loadChain = (Coroutine)stateStore.loadStateIfStorableAsync(component);
+
+    return Coroutine.<Object, Object>first(CallSubroutine.call(loadChain))
+      .then(CallSubroutine.call(() -> (Coroutine<Object, Object>)((PersistentStateComponentAsync<?>)component).afterLoad(true)))
+      .then(CodeExecution.apply(input -> {
+        if (!lazy) {
+          notifyAboutInitialization(getPercentageOfComponentsLoaded(), component);
+        }
+        return null;
+      }));
+  }
+
+  @Override
+  protected CoroutineContext createCoroutineContext() {
+    IComponentStore stateStore = getStateStore();
+    return stateStore == null ? null : stateStore.createCoroutineContext();
   }
 
   public void executeNonCancelableSection(Runnable runnable) {

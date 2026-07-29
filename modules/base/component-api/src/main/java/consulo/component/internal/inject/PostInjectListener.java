@@ -15,10 +15,22 @@
  */
 package consulo.component.internal.inject;
 
+import consulo.util.concurrent.coroutine.Coroutine;
+
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
 public interface PostInjectListener<T> {
   void afterInject(long time, T object);
+
+  /**
+   * Asynchronous form, used when the container creates the instance through
+   * {@code InstanceContainer#getComponentInstanceAsync}. The returned coroutine becomes a step of the creating
+   * chain, so a listener needing to hop threads returns them as steps rather than blocking here.
+   */
+  default Coroutine<?, ?> afterInjectAsync(long time, T object) {
+    afterInject(time, object);
+    return Coroutine.empty();
+  }
 }

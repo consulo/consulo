@@ -22,7 +22,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -61,7 +61,7 @@ import java.util.List;
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl
-public final class EditorHistoryManagerImpl implements PersistentStateComponentAsync<Element>, Disposable, EditorHistoryManager {
+public final class EditorHistoryManagerImpl implements PersistentStateComponentWithAsyncGet<Element>, Disposable, EditorHistoryManager {
   private static final Logger LOG = Logger.getInstance(EditorHistoryManagerImpl.class);
 
   private final Project myProject;

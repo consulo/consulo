@@ -619,7 +619,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         // ensure that FileBasedIndex task "FileIndexDataInitialization" submitted first
         FileBasedIndex.getInstance();
         myStateFuture = IndexInfrastructure.submitGenesisTask(new StubIndexInitialization());

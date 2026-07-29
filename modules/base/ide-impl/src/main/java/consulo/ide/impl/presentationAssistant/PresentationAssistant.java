@@ -59,7 +59,7 @@ public class PresentationAssistant implements Disposable, PersistentStateCompone
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         if (myConfiguration.myShowActionDescriptions) {
             myPresenter = new ShortcutPresenter();
         }

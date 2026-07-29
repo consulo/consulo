@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.disposer.Disposable;
@@ -63,7 +63,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2017-09-25
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
+public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithAsyncGet<Element>, Disposable {
     public static final String ID = "ToolWindowManager";
 
     /**

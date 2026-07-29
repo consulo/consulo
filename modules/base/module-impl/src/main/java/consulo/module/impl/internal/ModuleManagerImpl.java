@@ -152,8 +152,6 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private List<ModuleLoadItem> myModuleLoadItems = Collections.emptyList();
 
-    private boolean myFirstLoad = true;
-
     public static final String ELEMENT_MODULES = "modules";
     public static final String ELEMENT_MODULE = "module";
 
@@ -222,30 +220,25 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     @Override
     @RequiredUIAccess
-    public void afterLoadState() {
-        boolean firstLoad = myFirstLoad;
-        if (firstLoad) {
-            myFirstLoad = false;
+    public void afterLoad(boolean first) {
+        if (first) {
+            doFirstModulesLoad();
+            return;
         }
 
         // if file changed, load changes
-        if (!firstLoad) {
-            ModuleModelImpl model = new ModuleModelImpl(myModuleModel);
-            // dispose not exists module
-            for (Module module : model.getModules()) {
-                ModuleLoadItem item = findModuleByUrl(module.getName(), module.getModuleDirUrl());
-                if (item == null) {
-                    WriteAction.run(() -> model.disposeModule(module));
-                }
+        ModuleModelImpl model = new ModuleModelImpl(myModuleModel);
+        // dispose not exists module
+        for (Module module : model.getModules()) {
+            ModuleLoadItem item = findModuleByUrl(module.getName(), module.getModuleDirUrl());
+            if (item == null) {
+                WriteAction.run(() -> model.disposeModule(module));
             }
-
-            loadModules(model, null, false);
-
-            WriteAction.run(model::commit);
         }
-        else {
-            doFirstModulesLoad();
-        }
+
+        loadModules(model, null, false);
+
+        WriteAction.run(model::commit);
     }
 
     @RequiredUIAccess

@@ -23,7 +23,7 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -132,7 +132,7 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.AWT)
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentAsync<Element>, Disposable, QuickActionProvider, BusyObject {
+public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentWithAsyncGet<Element>, Disposable, QuickActionProvider, BusyObject {
     private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);
     private static final Key<String> ID_KEY = Key.create("pane-id");
     private static final Key<String> SUB_ID_KEY = Key.create("pane-sub-id");

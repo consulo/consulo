@@ -18,6 +18,7 @@ package consulo.component.store.internal;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
@@ -40,17 +41,35 @@ public interface IComponentStore {
   Continuation<?> saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   /**
-   * Return storable info about component
+   * Return storable info about component. Throws for a {@code PersistentStateComponentAsync}, which must be
+   * loaded through {@link #loadStateIfStorableAsync(Object)}.
    */
-  <T> @Nullable StateComponentInfo<T> loadStateIfStorable(T component);
+  @Nullable StateComponentInfo loadStateIfStorable(Object component);
 
-  void reinitComponents(Set<String> componentNames, boolean reloadData);
+  /**
+   * Asynchronous counterpart of {@link #loadStateIfStorable(Object)}. The returned coroutine produces
+   * {@code null} when the component is not storable.
+   */
+  Coroutine<?, StateComponentInfo> loadStateIfStorableAsync(Object component);
 
-  
+  /**
+   * Reloads the named components from their storages.
+   *
+   * @return a continuation of the running reload, so callers can sequence work after it
+   */
+  Continuation<?> reinitComponents(Set<String> componentNames);
+
+
   StateStorageManager getStateStorageManager();
 
   /**
-   * @return true is reloaded - false if not reloaded
+   * @return a continuation of the running reload, or null when nothing changed
    */
-  boolean reload(Collection<? extends StateStorage> changedStorages);
+  @Nullable Continuation<?> reload(Collection<? extends StateStorage> changedStorages);
+
+  /**
+   * The context asynchronous state work runs in. Carries the executor and {@code UIAccess.KEY}, so coroutine
+   * steps bound to the UI thread can hop to it.
+   */
+  CoroutineContext createCoroutineContext();
 }

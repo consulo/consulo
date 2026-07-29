@@ -513,7 +513,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         if (!myUnresolvedMappings.isEmpty()) {
             for (StandardFileType pair : myStandardFileTypes.values()) {
                 registerReDetectedMappings(pair);

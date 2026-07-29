@@ -17,17 +17,47 @@ package consulo.component.impl.internal.inject;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 class InstanceContainer {
   private final InstanceContainer myParent;
 
   private final Map<Class, ComponentAdapter> myInstanceAdapters = Maps.newHashMap(HashingStrategy.identity());
 
-  InstanceContainer(@Nullable InstanceContainer parent) {
+  private final @Nullable Supplier<CoroutineContext> myCoroutineContext;
+
+  InstanceContainer(@Nullable InstanceContainer parent, @Nullable Supplier<CoroutineContext> coroutineContext) {
     myParent = parent;
+    myCoroutineContext = coroutineContext;
+  }
+
+  /**
+   * @return the context asynchronous creation runs in, inherited from the parent when this container has none
+   */
+  public @Nullable CoroutineContext getCoroutineContext() {
+    if (myCoroutineContext != null) {
+      CoroutineContext context = myCoroutineContext.get();
+      if (context != null) {
+        return context;
+      }
+    }
+    return myParent == null ? null : myParent.getCoroutineContext();
+  }
+
+  public <T> CompletableFuture<T> getComponentInstanceAsync(Class componentKey) {
+    ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
+    if (adapter != null) {
+      return adapter.getComponentInstanceAsync(this);
+    }
+    if (myParent != null) {
+      return myParent.getComponentInstanceAsync(componentKey);
+    }
+    return CompletableFuture.completedFuture(null);
   }
 
   public final @Nullable <T> ComponentAdapter<T> getComponentAdapter(Class componentKey) {

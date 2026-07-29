@@ -55,6 +55,7 @@ module consulo.component.api {
         consulo.virtual.file.system.api,
         consulo.external.service.impl,
         consulo.component.store.api,
+        consulo.component.store.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
         consulo.test.impl,

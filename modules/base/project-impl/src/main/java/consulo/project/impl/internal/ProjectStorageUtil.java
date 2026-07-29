@@ -125,7 +125,8 @@ public class ProjectStorageUtil {
                         }
                     }
 
-                    Application.get().runWriteAction(() -> stateStore.reinitComponents(components, true));
+                    // the reload runs on the store's own scope and takes the write lock per component
+                    stateStore.reinitComponents(components);
                 }
             }
         }

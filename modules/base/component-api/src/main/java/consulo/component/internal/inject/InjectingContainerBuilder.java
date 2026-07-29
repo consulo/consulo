@@ -15,19 +15,30 @@
  */
 package consulo.component.internal.inject;
 
+import consulo.util.concurrent.coroutine.CoroutineContext;
+
+import java.util.function.Supplier;
+
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
 public interface InjectingContainerBuilder {
-  
+
   default <T> InjectingPoint<T> bind(Class<T> key) {
     return bind(InjectingKey.of(key));
   }
 
-  
+
   <T> InjectingPoint<T> bind(InjectingKey<T> key);
 
-  
+  /**
+   * Supplies the context asynchronous instance creation runs in. Lazy, because the container is built from the
+   * component manager's constructor, before the manager can produce one. A container without its own supplier
+   * inherits the parent's.
+   */
+  InjectingContainerBuilder coroutineContext(Supplier<CoroutineContext> supplier);
+
+
   InjectingContainer build();
 }

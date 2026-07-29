@@ -20,6 +20,7 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.internal.StateComponent;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
 import consulo.component.store.impl.internal.*;
@@ -31,7 +32,11 @@ import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.component.store.internal.StateStorageManager;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineStep;
+
+import java.util.function.Function;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
@@ -83,8 +88,13 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  protected CoroutineContext createCoroutineContext() {
+  public CoroutineContext createCoroutineContext() {
     return myProject.coroutineContext();
+  }
+
+  @Override
+  protected CoroutineStep<Object, Object> applyStateStep(Function<Object, Object> function) {
+    return WriteLock.apply(function);
   }
 
   @Override
@@ -259,7 +269,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   
   @Override
-  protected <T> Storage[] getComponentStorageSpecs(PersistentStateComponent<T> persistentStateComponent, State stateSpec, StateStorageOperation operation) {
+  protected Storage[] getComponentStorageSpecs(StateComponent persistentStateComponent, State stateSpec, StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;

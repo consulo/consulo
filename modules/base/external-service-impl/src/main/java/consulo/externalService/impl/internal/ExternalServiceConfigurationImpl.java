@@ -126,7 +126,7 @@ public class ExternalServiceConfigurationImpl
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(this);
     }
 

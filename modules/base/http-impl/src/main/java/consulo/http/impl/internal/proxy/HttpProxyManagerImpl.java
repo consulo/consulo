@@ -119,7 +119,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
 // all settings are defaults
         // trying user's proxy configuration entered while obtaining the license
         SharedProxyConfig.ProxyParameters cfg = SharedProxyConfig.load();

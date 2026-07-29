@@ -42,6 +42,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
 
@@ -127,7 +129,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
         bootstrapInjectingContainer(builder);
 
+        builder.coroutineContext(this::createCoroutineContext);
+
         myInjectingContainer = builder.build();
+    }
+
+    /**
+     * The context asynchronous instance creation runs in. Evaluated lazily, since this is reached from the
+     * constructor, before the state store exists. A manager without one inherits the parent container's.
+     */
+    protected @Nullable CoroutineContext createCoroutineContext() {
+        return null;
     }
 
     public abstract ComponentManager getApplication();
@@ -217,18 +229,31 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
                 point.constructorParameterTypes(injectingBinding.getParameterTypes());
                 point.constructorFactory(injectingBinding::create);
 
-                point.injectListener((time, instance) -> {
+                point.injectListener(new PostInjectListener<>() {
+                    @Override
+                    public void afterInject(long time, Object instance) {
+                        registerInstance(instance);
 
-                    if (myChecker.containsKey(key.getTargetClass())) {
-                        throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
-                    }
-                    myChecker.put(key.getTargetClass(), instance);
-
-                    if (instance instanceof Disposable) {
-                        Disposer.register(this, (Disposable) instance);
+                        initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
                     }
 
-                    initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
+                    @Override
+                    public Coroutine<?, ?> afterInjectAsync(long time, Object instance) {
+                        registerInstance(instance);
+
+                        return initializeIfStorableComponentAsync(instance, true, injectingBinding.isLazy());
+                    }
+
+                    private void registerInstance(Object instance) {
+                        if (myChecker.containsKey(key.getTargetClass())) {
+                            throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
+                        }
+                        myChecker.put(key.getTargetClass(), instance);
+
+                        if (instance instanceof Disposable) {
+                            Disposer.register(BaseComponentManager.this, (Disposable) instance);
+                        }
+                    }
                 });
 
                 if (!injectingBinding.isLazy()) {
@@ -260,6 +285,15 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     public boolean initializeIfStorableComponent(Object component, boolean service, boolean lazy) {
         return false;
+    }
+
+    /**
+     * Asynchronous form of {@link #initializeIfStorableComponent}, returned as a step of the creating chain so
+     * that a component loading its state through coroutines never blocks the creating thread.
+     */
+    public Coroutine<?, ?> initializeIfStorableComponentAsync(Object component, boolean service, boolean lazy) {
+        initializeIfStorableComponent(component, service, lazy);
+        return Coroutine.empty();
     }
 
     @Override

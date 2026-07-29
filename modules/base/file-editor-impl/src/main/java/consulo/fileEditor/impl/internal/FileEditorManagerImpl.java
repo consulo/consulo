@@ -32,7 +32,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -120,7 +120,7 @@ import java.util.function.Consumer;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentAsync<Element>, Disposable {
+public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithAsyncGet<Element>, Disposable {
     private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
     private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");

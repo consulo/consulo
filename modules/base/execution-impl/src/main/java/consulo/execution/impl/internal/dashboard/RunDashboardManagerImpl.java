@@ -870,7 +870,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
-    public void afterLoadState() {
+    public void afterLoad(boolean first) {
         if (myTypes.isEmpty()) {
             noStateLoaded();
         }

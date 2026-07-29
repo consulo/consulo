@@ -5,7 +5,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AppUIExecutor;
 import consulo.application.ApplicationManager;
-import consulo.component.persist.PersistentStateComponentAsync;
+import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -62,7 +62,7 @@ import java.util.function.Predicate;
 @Singleton
 @State(name = "ServiceViewManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
-public final class ServiceViewManagerImpl implements ServiceViewManager, PersistentStateComponentAsync<ServiceViewManagerImpl.State> {
+public final class ServiceViewManagerImpl implements ServiceViewManager, PersistentStateComponentWithAsyncGet<ServiceViewManagerImpl.State> {
     private static final String HELP_ID = "services.tool.window";
 
     
