@@ -18,6 +18,10 @@ package consulo.desktop.awt.internal.versionControlSystem.patch;
 import consulo.application.AllIcons;
 import consulo.application.progress.DumbProgressIndicator;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.markup.*;
+import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.InputDetails;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.*;
 import consulo.desktop.awt.internal.diff.merge.MergeModelBase;
@@ -42,16 +46,14 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.versionControlSystem.impl.internal.LineStatusMarkerRenderer;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch.HunkStatus;
 import consulo.versionControlSystem.impl.internal.patch.tool.PatchChangeBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.Set;
 
 class ApplyPatchChange {
     
@@ -171,16 +173,39 @@ class ApplyPatchChange {
             HighlighterTargetArea.LINES_IN_RANGE
         );
 
-        BiConsumer<Editor, MouseEvent> clickHandler = getResultRange() != null
-            ? (e, event) -> myViewer.scrollToChange(this, Side.RIGHT, false)
-            : null;
-        highlighter.setLineMarkerRenderer(LineStatusMarkerRenderer.createRenderer(
-            line1,
-            line2,
-            TargetAWT.from(color),
-            LocalizeValue.ofNullable(tooltip),
-            clickHandler
-        ));
+        boolean navigable = getResultRange() != null;
+        ColorValue markerColor = TargetAWT.from(color);
+        highlighter.setLineMarkerPresentationProvider(new LineMarkerPresentationProvider() {
+            @Override
+            public Set<EditorGutterArea> getUsedAreas() {
+                return Set.of(EditorGutterArea.RIGHT_FREE_PAINTERS);
+            }
+
+            @Override
+            public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+                return List.of(new PatchChangePresentation(
+                    line1,
+                    line2,
+                    markerColor,
+                    context.getColor(EditorColors.BORDER_LINES_COLOR)
+                ));
+            }
+
+            @Override
+            public LocalizeValue getTooltipValue(LineMarkerPresentation presentation) {
+                return LocalizeValue.ofNullable(tooltip);
+            }
+
+            @Override
+            public boolean canDoAction(LineMarkerPresentation presentation, InputDetails details) {
+                return navigable;
+            }
+
+            @Override
+            public void doAction(Editor editor, LineMarkerPresentation presentation, InputDetails details) {
+                myViewer.scrollToChange(ApplyPatchChange.this, Side.RIGHT, false);
+            }
+        });
 
         myHighlighters.add(highlighter);
     }

@@ -38,7 +38,8 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     private TextAttributes myForcedTextAttributes;
     private TextAttributesKey myTextAttributesKey;
 
-    private LineMarkerRenderer myLineMarkerRenderer;
+    private @Nullable LineMarkerRenderer myLineMarkerRenderer;
+    private @Nullable LineMarkerPresentationProvider myLineMarkerPresentationProvider;
     private ColorValue myErrorStripeColor;
     private Color myLineSeparatorColor;
     private SeparatorPlacement mySeparatorPlacement;
@@ -47,6 +48,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     private MarkupEditorFilter myFilter = MarkupEditorFilter.EMPTY;
     private @Nullable CustomHighlighterRenderer myCustomRenderer;
     private LineSeparatorRenderer myLineSeparatorRenderer;
+    private @Nullable LineSeparatorPresentationProvider myLineSeparatorPresentationProvider;
 
     @Mask
     private byte myFlags;
@@ -171,21 +173,21 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    public LineMarkerRenderer getLineMarkerRenderer() {
-        return myLineMarkerRenderer;
+    public @Nullable LineMarkerPresentationProvider getLineMarkerPresentationProvider() {
+        return myLineMarkerPresentationProvider;
     }
 
     @Override
-    public void setLineMarkerRenderer(LineMarkerRenderer renderer) {
+    public void setLineMarkerPresentationProvider(@Nullable LineMarkerPresentationProvider provider) {
         boolean oldRenderedInGutter = isRenderedInGutter();
-        LineMarkerRenderer old = myLineMarkerRenderer;
-        myLineMarkerRenderer = renderer;
+        LineMarkerPresentationProvider old = myLineMarkerPresentationProvider;
+        myLineMarkerPresentationProvider = provider;
 
         if (isRenderedInGutter() != oldRenderedInGutter) {
             myModel.treeFor(this).updateRenderedFlags(this);
         }
 
-        if (!Comparing.equal(old, renderer)) {
+        if (!Comparing.equal(old, provider)) {
             fireChanged(true, false, false);
         }
     }
@@ -426,17 +428,17 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     }
 
     @Override
-    public void setLineSeparatorRenderer(LineSeparatorRenderer renderer) {
-        LineSeparatorRenderer old = myLineSeparatorRenderer;
-        myLineSeparatorRenderer = renderer;
-        if (!Comparing.equal(old, renderer)) {
-            fireChanged(true, false, false);
-        }
+    public @Nullable LineSeparatorPresentationProvider getLineSeparatorPresentationProvider() {
+        return myLineSeparatorPresentationProvider;
     }
 
     @Override
-    public LineSeparatorRenderer getLineSeparatorRenderer() {
-        return myLineSeparatorRenderer;
+    public void setLineSeparatorPresentationProvider(@Nullable LineSeparatorPresentationProvider provider) {
+        LineSeparatorPresentationProvider old = myLineSeparatorPresentationProvider;
+        myLineSeparatorPresentationProvider = provider;
+        if (!Comparing.equal(old, provider)) {
+            fireChanged(true, false, false);
+        }
     }
 
     @Override
@@ -486,4 +488,43 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     public String toString() {
         return "RangeHighlighter: (" + getStartOffset() + "," + getEndOffset() + "); layer:" + getLayer() + "; tooltip: " + getErrorStripeTooltip();
     }
+
+    //region Deprecated stuff
+
+    @Deprecated
+    @Override
+    public @Nullable LineMarkerRenderer getLineMarkerRenderer() {
+        return myLineMarkerRenderer;
+    }
+    @Deprecated
+    @Override
+    public void setLineMarkerRenderer(@Nullable LineMarkerRenderer renderer) {
+        boolean oldRenderedInGutter = isRenderedInGutter();
+        LineMarkerRenderer old = myLineMarkerRenderer;
+        myLineMarkerRenderer = renderer;
+
+        if (isRenderedInGutter() != oldRenderedInGutter) {
+            myModel.treeFor(this).updateRenderedFlags(this);
+        }
+
+        if (!Comparing.equal(old, renderer)) {
+            fireChanged(true, false, false);
+        }
+    }
+    @Deprecated
+    @Override
+    public void setLineSeparatorRenderer(LineSeparatorRenderer renderer) {
+        LineSeparatorRenderer old = myLineSeparatorRenderer;
+        myLineSeparatorRenderer = renderer;
+        if (!Comparing.equal(old, renderer)) {
+            fireChanged(true, false, false);
+        }
+    }
+    @Deprecated
+    @Override
+    public LineSeparatorRenderer getLineSeparatorRenderer() {
+        return myLineSeparatorRenderer;
+    }
+
+    //endregion
 }

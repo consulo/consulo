@@ -16,6 +16,7 @@
 package consulo.diff.util;
 
 import consulo.codeEditor.Editor;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.diff.DiffColors;
 import consulo.diff.localize.DiffLocalize;
 import consulo.ui.color.ColorValue;
@@ -45,4 +46,10 @@ public interface TextDiffType {
   ColorValue getIgnoredColor(@Nullable Editor editor);
 
   @Nullable ColorValue getMarkerColor(@Nullable Editor editor);
+
+  /**
+   * Colour scheme key this type resolves through, so callers holding a colour scheme rather than an
+   * {@link Editor} can resolve the attributes themselves.
+   */
+  TextAttributesKey getKey();
 }

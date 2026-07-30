@@ -91,52 +91,6 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         return highlighter;
     }
 
-    /** Creates a simple colored-bar renderer for a line range (used by external callers). */
-    public static LineMarkerRenderer createRenderer(
-        int line1,
-        int line2,
-        ColorValue color,
-        LocalizeValue tooltip,
-        @Nullable BiConsumer<Editor, MouseEvent> action
-    ) {
-        return new ActiveGutterRenderer() {
-            @Override
-            public void paint(Editor editor, Graphics g, Rectangle r) {
-                Rectangle area = LineStatusMarkerDrawUtil.getMarkerArea(editor, r, line1, line2);
-                ColorValue borderColor = LineStatusMarkerDrawUtil.getGutterBorderColor(editor);
-                if (area.height != 0) {
-                    LineStatusMarkerDrawUtil.paintRect(
-                        (Graphics2D) g, color, borderColor,
-                        area.x, area.y, area.x + area.width, area.y + area.height
-                    );
-                }
-                else {
-                    LineStatusMarkerDrawUtil.paintTriangle(
-                        (Graphics2D) g, editor, color, borderColor,
-                        area.x, area.x + area.width, area.y
-                    );
-                }
-            }
-
-            @Override
-            public LocalizeValue getTooltipValue() {
-                return tooltip;
-            }
-
-            @Override
-            public boolean canDoAction(MouseEvent e) {
-                return LineStatusMarkerDrawUtil.isInsideMarkerArea(e);
-            }
-
-            @Override
-            public void doAction(Editor editor, MouseEvent e) {
-                if (action != null) {
-                    action.accept(editor, e);
-                }
-            }
-        };
-    }
-
     // -------------------------------------------------------------------------
     // Private helpers
     // -------------------------------------------------------------------------
@@ -162,15 +116,6 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         else {
             return VcsLocalize.tooltipTextLinesChanged(range.getLine1() + 1, range.getLine2());
         }
-    }
-
-    // -------------------------------------------------------------------------
-    // Gutter painting — delegates to LineStatusMarkerDrawUtil
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void paint(Editor editor, Graphics g, Rectangle r) {
-        LineStatusMarkerDrawUtil.paintRange(myRange, editor, g, r);
     }
 
     // -------------------------------------------------------------------------

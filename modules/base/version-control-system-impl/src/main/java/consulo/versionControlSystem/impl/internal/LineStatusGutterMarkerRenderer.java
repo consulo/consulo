@@ -44,12 +44,15 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Manages a single document-level gutter highlighter that paints all VCS changed-line
- * markers in one pass at repaint time. Equivalent to JetBrains'
- * {@code LineStatusMarkerRenderer} (outer highlighter lifecycle) combined with its inner
- * {@code LineStatusGutterMarkerRenderer} (the actual painter).
+ * Manages a single document-level gutter highlighter describing all VCS changed-line markers.
+ * Equivalent to JetBrains' {@code LineStatusMarkerRenderer} (outer highlighter lifecycle) combined
+ * with its inner {@code LineStatusGutterMarkerRenderer}.
+ *
+ * <p>Presentations are contributed declaratively through {@link LineMarkerPresentationProvider}: the change
+ * type and line range are stated here, and the look is decided per platform.
  *
  * <p>Error-stripe (scrollbar) markers are managed per-range here as well, and are reused across
  * updates whenever their offsets and change type still match.
@@ -133,6 +136,7 @@ public class LineStatusGutterMarkerRenderer {
         );
         h.setGreedyToLeft(true);
         h.setGreedyToRight(true);
+        h.setLineMarkerPresentationProvider(new MyLineMarkerPresentationProvider());
         h.setLineMarkerRenderer(new MyGutterMarkerRenderer());
         return h;
     }
@@ -289,8 +293,32 @@ public class LineStatusGutterMarkerRenderer {
     // -------------------------------------------------------------------------
 
     /**
-     * Single renderer instance that paints ALL changed-line ranges on each repaint.
-     * Equivalent to JB's inner {@code LineStatusGutterMarkerRenderer}.
+     * Describes every changed-line range as {@link VcsChangePresentation}s; the platform renders them.
+     */
+    private class MyLineMarkerPresentationProvider implements LineMarkerPresentationProvider {
+        @Override
+        public Set<EditorGutterArea> getUsedAreas() {
+            return Set.of(EditorGutterArea.RIGHT_FREE_PAINTERS);
+        }
+
+        @Override
+        public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+            if (myDisposed) {
+                return List.of();
+            }
+            List<VcsRange> ranges = myTracker.getRanges();
+            if (ranges == null) {
+                return List.of();
+            }
+            return VcsLineMarkerBuilder.buildPresentations(ranges, context);
+        }
+    }
+
+    /**
+     * Retained only for the click path — painting comes from
+     * {@link MyLineMarkerPresentationProvider}, so {@code paint} is deliberately not implemented.
+     * Showing the range popup still needs a platform mouse event, so this cannot move behind the
+     * declarative API until the action contract is designed.
      */
     private class MyGutterMarkerRenderer implements ActiveGutterRenderer {
 
@@ -299,16 +327,6 @@ public class LineStatusGutterMarkerRenderer {
         @Override
         public LocalizeValue getTooltipValue() {
             return LocalizeValue.empty();
-        }
-
-        @Override
-        public void paint(Editor editor, Graphics g, Rectangle r) {
-            if (myDisposed) return;
-            List<VcsRange> ranges = myTracker.getRanges();
-            if (ranges == null) return;
-            for (VcsRange range : ranges) {
-                LineStatusMarkerDrawUtil.paintRange(range, editor, g, r);
-            }
         }
 
         @Override

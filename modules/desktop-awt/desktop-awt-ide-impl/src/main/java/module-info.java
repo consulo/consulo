@@ -47,6 +47,7 @@ open module consulo.desktop.awt.ide.impl {
     requires consulo.version.control.system.impl;
     requires consulo.version.control.system.api;
     requires consulo.execution.api;
+    requires consulo.execution.coverage.api;
     requires consulo.find.api;
     requires consulo.application.impl;
     requires consulo.ide.api;

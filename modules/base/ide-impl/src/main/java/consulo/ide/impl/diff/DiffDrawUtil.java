@@ -26,6 +26,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.LineRange;
+import consulo.diff.util.DiffChunkBorderPresentation;
+import consulo.diff.util.DiffSeparatorLinePresentation;
 import consulo.diff.util.TextDiffType;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
@@ -42,6 +44,7 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 import static consulo.diff.internal.DiffImplUtil.getLineCount;
@@ -54,12 +57,11 @@ public class DiffDrawUtil {
 
     private static final double CTRL_PROXIMITY_X = 0.3;
 
-    public static final LineSeparatorRenderer BORDER_LINE_RENDERER = (g, x1, x2, y) -> {
-        Rectangle clip = g.getClipBounds();
-        x2 = clip.x + clip.width;
-        g.setColor(JBColor.border());
-        g.drawLine(x1, y, x2, y);
-    };
+    /**
+     * A plain rule in the theme's border colour, signalled by a null colour on the presentation.
+     */
+    public static final LineSeparatorPresentationProvider BORDER_LINE_RENDERER =
+        context -> new DiffSeparatorLinePresentation(null, false, false);
 
     private DiffDrawUtil() {
     }
@@ -241,52 +243,47 @@ public class DiffDrawUtil {
     }
 
     
-    private static LineSeparatorRenderer createDiffLineRenderer(
+    private static LineSeparatorPresentationProvider createDiffLineRenderer(
         Editor editor,
         TextDiffType type,
         SeparatorPlacement placement,
         boolean doubleLine,
         boolean resolved
     ) {
-        return (g, x1, x2, y) -> {
-            // TODO: change LineSeparatorRenderer interface ?
-            Rectangle clip = g.getClipBounds();
-            x2 = clip.x + clip.width;
-            if (placement == SeparatorPlacement.TOP) {
-                y++;
-            }
-            drawChunkBorderLine((Graphics2D) g, x1, x2, y, type.getColor(editor), doubleLine, resolved);
-        };
+        return context -> new DiffSeparatorLinePresentation(
+            context.getAttributes(type.getKey()).getBackgroundColor(),
+            doubleLine,
+            resolved
+        );
     }
 
     
-    private static LineMarkerRenderer createFoldingGutterLineRenderer(
-        final TextDiffType type,
-        final SeparatorPlacement placement,
-        final boolean doubleLine,
-        final boolean resolved
+    private static LineMarkerPresentationProvider createFoldingGutterLineRenderer(
+        TextDiffType type,
+        SeparatorPlacement placement,
+        boolean doubleLine,
+        boolean resolved
     ) {
-        return new LineMarkerRendererEx() {
+        return new LineMarkerPresentationProvider() {
             @Override
-            public void paint(Editor editor, Graphics g, Rectangle r) {
-                EditorGutterComponentEx gutter = ((EditorEx) editor).getGutterComponentEx();
-                Graphics2D g2 = (Graphics2D) g;
-
-                int x1 = gutter.getWhitespaceSeparatorOffset();
-                int x2 = gutter.getComponent().getWidth();
-
-                int y = r.y;
-                if (placement == SeparatorPlacement.BOTTOM) {
-                    y += editor.getLineHeight();
-                }
-
-                drawChunkBorderLine(g2, x1, x2, y - 1, type.getColor(editor), doubleLine, resolved);
+            public Set<EditorGutterArea> getUsedAreas() {
+                return Set.of(EditorGutterArea.FROM_WHITESPACE_SEPARATOR);
             }
 
-            
             @Override
-            public LineMarkerRenderer.Position getPosition() {
-                return LineMarkerRenderer.Position.CUSTOM;
+            public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+                // BOTTOM means the boundary below the line, which is the top of the next one
+                int line = placement == SeparatorPlacement.BOTTOM ? context.startLine() + 1 : context.startLine();
+                ColorValue color = context.getAttributes(type.getKey()).getBackgroundColor();
+
+                return List.of(new DiffChunkBorderPresentation(
+                    line,
+                    EditorGutterArea.FROM_WHITESPACE_SEPARATOR,
+                    color,
+                    doubleLine,
+                    resolved,
+                    type
+                ));
             }
         };
     }
@@ -418,10 +415,10 @@ public class DiffDrawUtil {
             HighlighterTargetArea.LINES_IN_RANGE
         );
 
-        DiffLineSeparatorRenderer renderer = new DiffLineSeparatorRenderer(editor, condition);
+        DiffLineSeparatorRenderer renderer = new DiffLineSeparatorRenderer(condition);
         marker.setLineSeparatorPlacement(SeparatorPlacement.TOP);
-        marker.setLineSeparatorRenderer(renderer);
-        marker.setLineMarkerRenderer(renderer);
+        marker.setLineSeparatorPresentationProvider(renderer);
+        marker.setLineMarkerPresentationProvider(renderer);
 
         return Collections.singletonList(marker);
     }
@@ -485,8 +482,7 @@ public class DiffDrawUtil {
             );
             highlighters.add(highlighter);
 
-            highlighter.setLineMarkerRenderer(new DiffLineMarkerRenderer(
-                highlighter,
+            highlighter.setLineMarkerPresentationProvider(new DiffLineMarkerRenderer(
                 type,
                 ignored,
                 resolved,
@@ -532,8 +528,8 @@ public class DiffDrawUtil {
 
         private boolean resolved = false;
         private @Nullable TextDiffType type;
-        private @Nullable LineSeparatorRenderer renderer;
-        private @Nullable LineMarkerRenderer gutterRenderer;
+        private @Nullable LineSeparatorPresentationProvider renderer;
+        private @Nullable LineMarkerPresentationProvider gutterRenderer;
 
         private LineMarkerBuilder(Editor editor, int line, SeparatorPlacement placement) {
             this.editor = editor;
@@ -554,7 +550,7 @@ public class DiffDrawUtil {
         }
 
         
-        public LineMarkerBuilder withRenderer(LineSeparatorRenderer renderer) {
+        public LineMarkerBuilder withRenderer(LineSeparatorPresentationProvider renderer) {
             this.renderer = renderer;
             return this;
         }
@@ -585,8 +581,8 @@ public class DiffDrawUtil {
                 );
 
             highlighter.setLineSeparatorPlacement(placement);
-            highlighter.setLineSeparatorRenderer(renderer);
-            highlighter.setLineMarkerRenderer(gutterRenderer);
+            highlighter.setLineSeparatorPresentationProvider(renderer);
+            highlighter.setLineMarkerPresentationProvider(gutterRenderer);
 
             if (type == null || resolved) {
                 return Collections.singletonList(highlighter);

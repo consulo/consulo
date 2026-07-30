@@ -502,6 +502,7 @@ public class SrcFileAnnotator implements Disposable {
             CoverageDataManager.getInstance(myProject).isSubCoverageActive()
         );
         highlighter.setLineMarkerRenderer(markerRenderer);
+        highlighter.setLineMarkerPresentationProvider(markerRenderer);
 
         LineData lineData = className != null ? (LineData) lines[line + 1] : null;
         if (lineData != null && lineData.getStatus() == LineCoverage.NONE) {

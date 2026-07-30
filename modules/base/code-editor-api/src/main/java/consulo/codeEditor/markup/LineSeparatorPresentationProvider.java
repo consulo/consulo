@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,21 @@
  */
 package consulo.codeEditor.markup;
 
-import consulo.annotation.DeprecationInfo;
-
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
- * @author irengrig
- * @since 2011-07-07
- * @deprecated Kept for source parity with IntelliJ. Draws through {@link Graphics}, so only the AWT
- * editor can dispatch it; use {@link LineSeparatorPresentationProvider}, which describes the
- * separator and lets each editor implementation render it.
+ * Declarative replacement for {@link LineSeparatorRenderer}.
+ * <p>
+ * A provider rather than a bare presentation so that colours are resolved when the separator is
+ * drawn, and therefore follow colour scheme changes.
+ *
+ * @author VISTALL
+ * @since 2026-07-30
  */
-@Deprecated
-@DeprecationInfo("Use LineSeparatorPresentationProvider")
-public interface LineSeparatorRenderer {
-  void drawLine(Graphics g, int x1, int x2, int y);
+public interface LineSeparatorPresentationProvider {
+    /**
+     * @return the separator to draw, or {@code null} to draw nothing this time
+     */
+    @Nullable
+    LineSeparatorPresentation buildPresentation(LineMarkerPresentationContext context);
 }

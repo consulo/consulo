@@ -237,13 +237,13 @@ class AccessibleGutterLine extends JPanel {
             int firstVisibleOffset = editor.visualLineStartOffset(myVisualLineNum);
             int lastVisibleOffset = editor.visualLineStartOffset(myVisualLineNum + 1);
             myGutter.processRangeHighlighters(firstVisibleOffset, lastVisibleOffset, highlighter -> {
-                LineMarkerRenderer renderer = highlighter.getLineMarkerRenderer();
-                if (renderer instanceof ActiveGutterRenderer) {
+                LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
+                if (lineMarkerRenderer instanceof ActiveGutterRenderer renderer) {
                     Rectangle rect = myGutter.getLineRendererRectangle(highlighter);
                     if (rect != null) {
-                        Rectangle bounds = ((ActiveGutterRenderer)renderer).calcBounds(editor, myVisualLineNum, rect);
+                        Rectangle bounds = renderer.calcBounds(editor, myVisualLineNum, rect);
                         if (bounds != null) {
-                            addNewElement((ActiveGutterRenderer)renderer, bounds.x, 0, bounds.width, bounds.height);
+                            addNewElement(renderer, bounds.x, 0, bounds.width, bounds.height);
                         }
                     }
                 }

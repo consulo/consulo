@@ -12,6 +12,9 @@ import consulo.codeEditor.impl.IterationState;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.internal.FoldingKeys;
 import consulo.codeEditor.markup.*;
+import consulo.desktop.awt.editor.impl.LineMarkerPresentationContextImpl;
+import consulo.desktop.awt.editor.impl.gutter.AwtLineSeparatorBounds;
+import consulo.desktop.awt.editor.impl.gutter.AwtLineSeparatorPresentationPainter;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
@@ -786,7 +789,8 @@ public final class EditorPainter implements TextDrawingCallback {
         private void paintLineMarkerSeparator(RangeHighlighter marker) {
             Color separatorColor = marker.getLineSeparatorColor();
             LineSeparatorRenderer lineSeparatorRenderer = marker.getLineSeparatorRenderer();
-            if (separatorColor == null && lineSeparatorRenderer == null) {
+            LineSeparatorPresentationProvider presentationProvider = marker.getLineSeparatorPresentationProvider();
+            if (separatorColor == null && lineSeparatorRenderer == null && presentationProvider == null) {
                 return;
             }
             boolean isTop = marker.getLineSeparatorPlacement() == SeparatorPlacement.TOP;
@@ -798,12 +802,46 @@ public final class EditorPainter implements TextDrawingCallback {
             int startX = myCorrector.lineSeparatorStart(myClip.x);
             int endX = myCorrector.lineSeparatorEnd(myClip.x + myClip.width);
             myGraphics.setColor(separatorColor);
-            if (lineSeparatorRenderer != null) {
+            if (presentationProvider != null) {
+                paintLineSeparatorPresentation(marker, presentationProvider, startX, endX, y);
+            }
+            else if (lineSeparatorRenderer != null) {
                 lineSeparatorRenderer.drawLine(myGraphics, startX, endX, y);
             }
             else {
                 LinePainter2D.paint(myGraphics, startX, y, endX, y);
             }
+        }
+
+        private void paintLineSeparatorPresentation(
+            RangeHighlighter marker,
+            LineSeparatorPresentationProvider provider,
+            int startX,
+            int endX,
+            int y
+        ) {
+            LineMarkerPresentationContext context = new LineMarkerPresentationContextImpl(
+                myEditor,
+                marker,
+                myStartVisualLine,
+                myEndVisualLine,
+                -1,
+                false
+            );
+
+            LineSeparatorPresentation presentation = provider.buildPresentation(context);
+            if (presentation == null) {
+                return;
+            }
+
+            AwtLineSeparatorPresentationPainter<LineSeparatorPresentation> painter =
+                AwtLineSeparatorPresentationPainter.findPainter(presentation);
+            if (painter == null) {
+                return;
+            }
+
+            AwtLineSeparatorBounds bounds = new AwtLineSeparatorBounds(startX, endX, y, marker.getLineSeparatorPlacement());
+            painter.paint(presentation, myEditor, myGraphics, bounds);
         }
 
         private int getVisualLineAreaStartY(int visualLine) {

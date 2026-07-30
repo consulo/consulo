@@ -25,6 +25,9 @@ import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
+import consulo.desktop.awt.editor.impl.gutter.AwtLineMarkerPresentationPainter;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.ui.event.details.InputDetails;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
@@ -1048,14 +1051,19 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         myRightFreePaintersAreaShown = myForceRightFreePaintersAreaShown;
 
         processRangeHighlighters(0, myEditor.getDocument().getTextLength(), highlighter -> {
+            if (!isLineMarkerVisible(highlighter)) {
+                return;
+            }
+
             LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
             if (lineMarkerRenderer != null) {
-                LineMarkerRendererEx.Position position = getLineMarkerPosition(lineMarkerRenderer);
-                if (position == LineMarkerRendererEx.Position.LEFT && isLineMarkerVisible(highlighter)) {
-                    myLeftFreePaintersAreaShown = true;
-                }
-                if (position == LineMarkerRendererEx.Position.RIGHT && isLineMarkerVisible(highlighter)) {
-                    myRightFreePaintersAreaShown = true;
+                markAreaShown(toArea(lineMarkerRenderer.getPosition()));
+            }
+
+            LineMarkerPresentationProvider lineMarkerPresentationProvider = highlighter.getLineMarkerPresentationProvider();
+            if (lineMarkerPresentationProvider != null) {
+                for (EditorGutterArea area : lineMarkerPresentationProvider.getUsedAreas()) {
+                    markAreaShown(area);
                 }
             }
         });
@@ -1159,8 +1167,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         try {
             List<RangeHighlighter> highlighters = new ArrayList<>();
             processRangeHighlighters(firstVisibleOffset, lastVisibleOffset, highlighter -> {
-                LineMarkerRenderer renderer = highlighter.getLineMarkerRenderer();
-                if (renderer != null) {
+                if (highlighter.getLineMarkerPresentationProvider() != null) {
                     highlighters.add(highlighter);
                 }
             });
@@ -1168,7 +1175,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             ContainerUtil.sort(highlighters, Comparator.comparingInt(RangeHighlighter::getLayer));
 
             for (RangeHighlighter highlighter : highlighters) {
-                paintLineMarkerRenderer(highlighter, g);
+                paintLineMarkerPresentations(highlighter, g, firstVisibleLine, lastVisibleLine);
             }
         }
         finally {
@@ -1283,16 +1290,6 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         });
     }
 
-    private void paintLineMarkerRenderer(RangeHighlighter highlighter, Graphics g) {
-        LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
-        if (lineMarkerRenderer != null) {
-            Rectangle rectangle = getLineRendererRectangle(highlighter);
-            if (rectangle != null) {
-                lineMarkerRenderer.paint(myEditor, g, rectangle);
-            }
-        }
-    }
-
     private boolean isLineMarkerVisible(RangeHighlighter highlighter) {
         int startOffset = highlighter.getStartOffset();
         int endOffset = highlighter.getEndOffset();
@@ -1302,7 +1299,57 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return startFoldRegion == null || !startFoldRegion.equals(endFoldRegion);
     }
 
-    @Nullable
+    /**
+     * Horizontal extent of a gutter band. Shared by presentation painting and by hit-testing, so the
+     * two cannot disagree about where a marker is.
+     */
+    private Rectangle getAreaRectangle(EditorGutterArea area) {
+        int x = switch (area) {
+            case LEFT_FREE_PAINTERS -> getLeftFreePaintersAreaOffset();
+            case RIGHT_FREE_PAINTERS -> getLineMarkerFreePaintersAreaOffset();
+            case ICONS -> getIconAreaOffset();
+            case ANNOTATIONS -> getAnnotationsAreaOffset();
+            case BEFORE_ANNOTATIONS, BEFORE_WHITESPACE_SEPARATOR, WHOLE_GUTTER -> 0;
+            case AFTER_ANNOTATIONS, AFTER_ANNOTATIONS_TO_SEPARATOR -> getAnnotationsAreaOffset() + getAnnotationsAreaWidth();
+            case FROM_WHITESPACE_SEPARATOR -> getWhitespaceSeparatorOffset();
+        };
+
+        int w = switch (area) {
+            case LEFT_FREE_PAINTERS -> getLeftFreePaintersAreaWidth();
+            case RIGHT_FREE_PAINTERS -> getRightFreePaintersAreaWidth();
+            case ICONS -> getIconsAreaWidth();
+            case ANNOTATIONS -> getAnnotationsAreaWidth();
+            case BEFORE_ANNOTATIONS -> getAnnotationsAreaOffset();
+            case BEFORE_WHITESPACE_SEPARATOR -> getWhitespaceSeparatorOffset();
+            case WHOLE_GUTTER -> getWidth();
+            case AFTER_ANNOTATIONS, FROM_WHITESPACE_SEPARATOR -> getWidth() - x;
+            case AFTER_ANNOTATIONS_TO_SEPARATOR -> getWhitespaceSeparatorOffset() - x;
+        };
+
+        return new Rectangle(x, 0, w, 0);
+    }
+
+    /**
+     * Legacy {@link LineMarkerRenderer.Position} in terms of the gutter bands presentations use, so
+     * both kinds of highlighter size and hit-test through one path.
+     */
+    static EditorGutterArea toArea(LineMarkerRenderer.Position position) {
+        return switch (position) {
+            case LEFT -> EditorGutterArea.LEFT_FREE_PAINTERS;
+            case RIGHT -> EditorGutterArea.RIGHT_FREE_PAINTERS;
+            case CUSTOM -> EditorGutterArea.WHOLE_GUTTER;
+        };
+    }
+
+    private void markAreaShown(EditorGutterArea area) {
+        if (area == EditorGutterArea.LEFT_FREE_PAINTERS) {
+            myLeftFreePaintersAreaShown = true;
+        }
+        else if (area == EditorGutterArea.RIGHT_FREE_PAINTERS) {
+            myRightFreePaintersAreaShown = true;
+        }
+    }
+
     Rectangle getLineRendererRectangle(RangeHighlighter highlighter) {
         if (!isLineMarkerVisible(highlighter)) {
             return null;
@@ -1319,29 +1366,72 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         endY += myEditor.getLineHeight();
 
         LineMarkerRenderer renderer = ObjectUtil.assertNotNull(highlighter.getLineMarkerRenderer());
-        LineMarkerRendererEx.Position position = getLineMarkerPosition(renderer);
-
-        int w;
-        int x;
-        switch (position) {
-            case LEFT:
-                w = getLeftFreePaintersAreaWidth();
-                x = getLeftFreePaintersAreaOffset();
-                break;
-            case RIGHT:
-                w = getRightFreePaintersAreaWidth();
-                x = getLineMarkerFreePaintersAreaOffset();
-                break;
-            case CUSTOM:
-                w = getWidth();
-                x = 0;
-                break;
-            default:
-                throw new IllegalArgumentException(position.name());
-        }
+        Rectangle area = getAreaRectangle(toArea(renderer.getPosition()));
+        int x = area.x;
+        int w = area.width;
 
         int height = endY - startY;
         return new Rectangle(x, startY, w, height);
+    }
+
+    private void paintLineMarkerPresentations(
+        RangeHighlighter highlighter,
+        Graphics2D g,
+        int firstVisibleVisualLine,
+        int lastVisibleVisualLine
+    ) {
+        LineMarkerPresentationProvider provider = highlighter.getLineMarkerPresentationProvider();
+        if (provider == null || !isLineMarkerVisible(highlighter)) {
+            return;
+        }
+
+        LineMarkerPresentationContext context = new LineMarkerPresentationContextImpl(
+            myEditor,
+            highlighter,
+            visualToLogicalLine(firstVisibleVisualLine),
+            visualToLogicalLine(lastVisibleVisualLine),
+            myHoveredFreeMarkersLine,
+            isMirrored()
+        );
+
+        for (LineMarkerPresentation presentation : provider.buildPresentations(context)) {
+            AwtLineMarkerPresentationPainter<LineMarkerPresentation> painter = AwtLineMarkerPresentationPainter.findPainter(presentation);
+            if (painter == null) {
+                // nothing renders this kind of presentation here; it must stay invisible to hit-testing too
+                continue;
+            }
+            painter.paint(presentation, myEditor, g, getPresentationRectangle(presentation));
+        }
+    }
+
+    private int visualToLogicalLine(int visualLine) {
+        return myEditor.visualToLogicalPosition(new VisualPosition(visualLine, 0)).line;
+    }
+
+    /**
+     * Resolves a presentation's line range and area into gutter pixels. The single place line-to-y happens
+     * for presentations, so painting and hit-testing cannot disagree.
+     */
+    private Rectangle getPresentationRectangle(LineMarkerPresentation presentation) {
+        int startY = presentationLineY(presentation.startLine());
+        int endY = presentation.startLine() == presentation.endLine() ? startY : presentationLineY(presentation.endLine());
+
+        Rectangle area = getAreaRectangle(presentation.area());
+
+        return new Rectangle(area.x, startY, area.width, endY - startY);
+    }
+
+    /**
+     * Top y of a logical line. Lines at or past the document end are extrapolated by line height,
+     * so a presentation may legally end at the line count.
+     */
+    private int presentationLineY(int logicalLine) {
+        int lineCount = myEditor.getDocument().getLineCount();
+        if (logicalLine >= lineCount) {
+            int lastLineY = myEditor.logicalPositionToXY(new LogicalPosition(Math.max(0, lineCount - 1), 0)).y;
+            return lastLineY + myEditor.getLineHeight() * (logicalLine - lineCount + 1);
+        }
+        return myEditor.logicalPositionToXY(new LogicalPosition(Math.max(0, logicalLine), 0)).y;
     }
 
     @FunctionalInterface
@@ -1853,9 +1943,15 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             TextAnnotationGutterProvider provider = getProviderAtPoint(e.getPoint());
             LocalizeValue toolTip = LocalizeValue.empty();
             if (provider == null) {
-                ActiveGutterRenderer lineRenderer = getActiveRendererByMouseEvent(e);
-                if (lineRenderer != null) {
-                    toolTip = lineRenderer.getTooltipValue();
+                PresentationHit hit = findPresentationAt(e, DesktopAWTInputDetails.convert(this, e));
+                if (hit != null) {
+                    toolTip = hit.provider().getTooltipValue(hit.presentation());
+                }
+                else {
+                    ActiveGutterRenderer lineRenderer = getActiveRendererByMouseEvent(e);
+                    if (lineRenderer != null) {
+                        toolTip = lineRenderer.getTooltipValue();
+                    }
                 }
             }
             else {
@@ -2143,6 +2239,14 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             e.consume();
         }
         else {
+            InputDetails details = DesktopAWTInputDetails.convert(this, e);
+            PresentationHit hit = findPresentationAt(e, details);
+            if (hit != null) {
+                hit.provider().doAction(myEditor, hit.presentation(), details);
+                e.consume();
+                return;
+            }
+
             ActiveGutterRenderer lineRenderer = getActiveRendererByMouseEvent(e);
             if (lineRenderer != null) {
                 lineRenderer.doAction(myEditor, e);
@@ -2185,6 +2289,66 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
                 repaint();
             }
         }, uiAccess);
+    }
+
+    /**
+     * A presentation under the pointer together with the provider that produced it, so the click can
+     * be handed back with the same object the provider described.
+     */
+    record PresentationHit(LineMarkerPresentationProvider provider, LineMarkerPresentation presentation) {
+    }
+
+    private @Nullable PresentationHit findPresentationAt(MouseEvent e, InputDetails details) {
+        if (findFoldingAnchorAt(e.getX(), e.getY()) != null) {
+            return null;
+        }
+        if (e.getX() > getWhitespaceSeparatorOffset()) {
+            return null;
+        }
+
+        Rectangle clip = myEditor.getScrollingModel().getVisibleArea();
+        int firstVisibleOffset = myEditor.logicalPositionToOffset(
+            myEditor.xyToLogicalPosition(new Point(0, clip.y - myEditor.getLineHeight())));
+        int lastVisibleOffset = myEditor.logicalPositionToOffset(
+            myEditor.xyToLogicalPosition(new Point(0, clip.y + clip.height + myEditor.getLineHeight())));
+        int firstVisibleLine = visualToLogicalLine(myEditor.yToVisualLine(clip.y));
+        int lastVisibleLine = visualToLogicalLine(myEditor.yToVisualLine(clip.y + clip.height));
+
+        PresentationHit[] hit = {null};
+        int[] layer = {-1};
+
+        processRangeHighlighters(firstVisibleOffset, lastVisibleOffset, highlighter -> {
+            LineMarkerPresentationProvider provider = highlighter.getLineMarkerPresentationProvider();
+            if (provider == null || !isLineMarkerVisible(highlighter)) {
+                return;
+            }
+            if (hit[0] != null && layer[0] >= highlighter.getLayer()) {
+                return;
+            }
+
+            LineMarkerPresentationContext context = new LineMarkerPresentationContextImpl(
+                myEditor, highlighter, firstVisibleLine, lastVisibleLine, myHoveredFreeMarkersLine, isMirrored()
+            );
+
+            for (LineMarkerPresentation presentation : provider.buildPresentations(context)) {
+                Rectangle bounds = getPresentationRectangle(presentation);
+                int startY = bounds.y;
+                int endY = startY + bounds.height;
+                if (startY == endY) {
+                    // a boundary marker has no height of its own, so give it the following line
+                    endY += myEditor.getLineHeight();
+                }
+
+                if (startY < e.getY() && e.getY() <= endY
+                    && bounds.x <= e.getX() && e.getX() <= bounds.x + bounds.width
+                    && provider.canDoAction(presentation, details)) {
+                    hit[0] = new PresentationHit(provider, presentation);
+                    layer[0] = highlighter.getLayer();
+                }
+            }
+        });
+
+        return hit[0];
     }
 
     private @Nullable ActiveGutterRenderer getActiveRendererByMouseEvent(MouseEvent e) {
@@ -2349,16 +2513,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
             return true;
         }
 
-        LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
-        if (lineMarkerRenderer == null) {
-            return false;
-        }
-
-// TODO unsupported
-//        LineMarkerRenderer.Position position = getLineMarkerPosition(lineMarkerRenderer);
-//        return position == LineMarkerRenderer.Position.LEFT && myLeftFreePaintersAreaState == EditorGutterFreePainterAreaState.ON_DEMAND ||
-//            position == LineMarkerRenderer.Position.RIGHT && myRightFreePaintersAreaState == EditorGutterFreePainterAreaState.ON_DEMAND;
-        return false;
+        return highlighter.getLineMarkerPresentationProvider() != null || highlighter.getLineMarkerRenderer() != null;
     }
 
     @RequiredUIAccess
@@ -2554,11 +2709,6 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         return isLineNumbersShown() &&
             renderer instanceof GutterIconRenderer &&
             ((GutterIconRenderer) renderer).getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS;
-    }
-
-
-    static LineMarkerRenderer.Position getLineMarkerPosition(LineMarkerRenderer renderer) {
-        return renderer.getPosition();
     }
 
     int convertX(int x) {

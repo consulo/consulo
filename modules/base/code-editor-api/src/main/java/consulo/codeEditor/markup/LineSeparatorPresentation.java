@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,15 @@
  */
 package consulo.codeEditor.markup;
 
-import consulo.annotation.DeprecationInfo;
-
-import java.awt.*;
-
 /**
- * @author irengrig
- * @since 2011-07-07
- * @deprecated Kept for source parity with IntelliJ. Draws through {@link Graphics}, so only the AWT
- * editor can dispatch it; use {@link LineSeparatorPresentationProvider}, which describes the
- * separator and lets each editor implementation render it.
+ * A semantic description of a line separator drawn across the editor content.
+ * <p>
+ * Counterpart of {@link LineMarkerPresentation} for the content area rather than the gutter.
+ * Carries no position: the platform already derives the separator's y from the highlighter's
+ * {@link SeparatorPlacement}, and its horizontal extent from the visible clip.
+ *
+ * @author VISTALL
+ * @since 2026-07-30
  */
-@Deprecated
-@DeprecationInfo("Use LineSeparatorPresentationProvider")
-public interface LineSeparatorRenderer {
-  void drawLine(Graphics g, int x1, int x2, int y);
+public interface LineSeparatorPresentation {
 }

@@ -597,6 +597,12 @@ public class BraceHighlightingHandler {
     }
 
     @RequiredUIAccess
+    /**
+     * Colour of the matched-brace indent guide. Carried on the highlighter rather than drawn here:
+     * the new UI renders it through the indent pass, not the gutter.
+     */
+    public static final Key<ColorValue> MATCHED_BRACE_INDENT_COLOR = Key.create("MatchedBraceIndentColor");
+
     private void lineMarkFragment(int startLine, int endLine, ColorValue color) {
         removeLineMarkers();
 
@@ -609,7 +615,7 @@ public class BraceHighlightingHandler {
 
         RangeHighlighter highlighter =
             myEditor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, 0, null, HighlighterTargetArea.LINES_IN_RANGE);
-        highlighter.setLineMarkerRenderer(new DefaultLineMarkerRenderer(color));
+        highlighter.putUserData(MATCHED_BRACE_INDENT_COLOR, color);
         myEditor.putUserData(LINE_MARKER_IN_EDITOR_KEY, highlighter);
     }
 

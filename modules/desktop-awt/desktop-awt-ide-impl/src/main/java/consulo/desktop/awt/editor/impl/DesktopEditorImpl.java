@@ -537,9 +537,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         if (lineMarkerRenderer == null) {
             return false;
         }
-        LineMarkerRendererEx.Position position = EditorGutterComponentImpl.getLineMarkerPosition(lineMarkerRenderer);
-        return position == LineMarkerRendererEx.Position.LEFT && !myGutterComponent.myForceLeftFreePaintersAreaShown
-            || position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
+        EditorGutterArea area = EditorGutterComponentImpl.toArea(lineMarkerRenderer.getPosition());
+        return area == EditorGutterArea.LEFT_FREE_PAINTERS && !myGutterComponent.myForceLeftFreePaintersAreaShown
+            || area == EditorGutterArea.RIGHT_FREE_PAINTERS && !myGutterComponent.myForceRightFreePaintersAreaShown;
     }
 
     @Override

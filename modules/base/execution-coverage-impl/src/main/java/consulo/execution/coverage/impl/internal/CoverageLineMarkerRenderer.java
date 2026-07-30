@@ -20,8 +20,7 @@ import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import consulo.application.Application;
 import consulo.codeEditor.*;
-import consulo.codeEditor.markup.ActiveGutterRenderer;
-import consulo.codeEditor.markup.LineMarkerRenderer;
+import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
@@ -38,7 +37,9 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.execution.coverage.CoveragePresentation;
 import consulo.ui.color.ColorValue;
+import consulo.ui.image.Image;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ColoredSideBorder;
 import consulo.ui.ex.awt.hint.HintHint;
@@ -54,12 +55,13 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 
 /**
  * @author ven
  */
-public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGutterRenderer {
+public class CoverageLineMarkerRenderer implements ActiveGutterRenderer, LineMarkerPresentationProvider {
     private static final int THICKNESS = 8;
     private final TextAttributesKey myKey;
     private final String myClassName;
@@ -91,25 +93,27 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     }
 
     @Override
-    public void paint(Editor editor, Graphics g, Rectangle r) {
-        TextAttributes color = editor.getColorsScheme().getAttributes(myKey);
-        ColorValue bgColor = color.getBackgroundColor();
-        if (bgColor == null) {
-            bgColor = color.getForegroundColor();
+    public Set<EditorGutterArea> getUsedAreas() {
+        return Set.of(EditorGutterArea.LEFT_FREE_PAINTERS);
+    }
+
+    @Override
+    public List<? extends LineMarkerPresentation> buildPresentations(LineMarkerPresentationContext context) {
+        TextAttributes attributes = context.getAttributes(myKey);
+        ColorValue color = attributes.getBackgroundColor();
+        if (color == null) {
+            color = attributes.getForegroundColor();
         }
-        if (editor.getSettings().isLineNumbersShown() || editor.getGutter().isAnnotationsShown()) {
-            if (bgColor != null) {
-                bgColor = bgColor.withAlpha(0.6f);
-            }
+        // line numbers and annotations compete for the same strip, so fade the status behind them
+        if (color != null && (context.isLineNumbersShown() || context.isAnnotationsShown())) {
+            color = color.withAlpha(0.6f);
         }
-        if (bgColor != null) {
-            g.setColor(TargetAWT.to(bgColor));
-        }
-        g.fillRect(r.x, r.y, r.width, r.height);
-        LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
-        if (lineData != null && lineData.isCoveredByOneTest()) {
-            TargetAWT.to(PlatformIconGroup.gutterUnique()).paintIcon(editor.getComponent(), g, r.x, r.y);
-        }
+
+        int line = context.startLine();
+        LineData lineData = getLineData(line);
+        Image icon = lineData != null && lineData.isCoveredByOneTest() ? PlatformIconGroup.gutterUnique() : null;
+
+        return List.of(new CoveragePresentation(line, context.endLine(), color, icon, line));
     }
 
     public static CoverageLineMarkerRenderer getRenderer(

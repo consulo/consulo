@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.markup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -88,26 +89,20 @@ public interface RangeHighlighter extends RangeMarker {
     @Nullable TextAttributes getTextAttributes(@Nullable EditorColorsScheme scheme);
 
     /**
-     * Returns the renderer used for drawing line markers in the area covered by the
-     * highlighter, and optionally for processing mouse events over the markers.
-     * Line markers are drawn over the folding area and are used, for example,
-     * to highlight modified lines in files under source control.
+     * Returns the provider of semantic line presentations for the area covered by the highlighter.
      *
-     * @return the renderer instance, or null if the highlighter does not add any line markers.
-     * @see ActiveGutterRenderer
+     * @return the provider instance, or null if the highlighter contributes no presentations.
      */
-    @Nullable LineMarkerRenderer getLineMarkerRenderer();
+    @Nullable LineMarkerPresentationProvider getLineMarkerPresentationProvider();
 
     /**
-     * Sets the renderer used for drawing line markers in the area covered by the
-     * highlighter, and optionally for processing mouse events over the markers.
-     * Line markers are drawn over the folding area and are used, for example,
-     * to highlight modified lines in files under source control.
+     * Sets the provider of semantic line presentations for the area covered by the highlighter.
+     * Declarative counterpart of {@link #setLineMarkerRenderer(LineMarkerRenderer)}: the provider
+     * states what is on which lines, and each platform decides how to render it.
      *
-     * @param renderer the renderer instance, or null if the highlighter does not add any line markers.
-     * @see ActiveGutterRenderer
+     * @param provider the provider instance, or null if the highlighter contributes no presentations.
      */
-    void setLineMarkerRenderer(@Nullable LineMarkerRenderer renderer);
+    void setLineMarkerPresentationProvider(@Nullable LineMarkerPresentationProvider provider);
 
     @Nullable CustomHighlighterRenderer getCustomRenderer();
 
@@ -191,16 +186,9 @@ public interface RangeHighlighter extends RangeMarker {
     @Nullable Color getLineSeparatorColor();
 
     /**
-     * Sets the color of the separator drawn above or below the range covered by
-     * the highlighter.
-     *
-     * @param color the separator color, or null if the highlighter does not add a line separator.
+     * Returns the provider of the semantic line separator drawn across the editor content.
      */
-    void setLineSeparatorColor(@Nullable Color color);
-
-    void setLineSeparatorRenderer(LineSeparatorRenderer renderer);
-
-    LineSeparatorRenderer getLineSeparatorRenderer();
+    @Nullable LineSeparatorPresentationProvider getLineSeparatorPresentationProvider();
 
     /**
      * Returns the placement of the separator drawn by the range highlighter
@@ -254,7 +242,60 @@ public interface RangeHighlighter extends RangeMarker {
      */
     boolean isVisibleIfFolded();
 
+    /**
+     * Sets the color of the separator drawn above or below the range covered by
+     * the highlighter.
+     *
+     * @param color the separator color, or null if the highlighter does not add a line separator.
+     */
+    void setLineSeparatorColor(@Nullable Color color);
+
+    /**
+     * Sets the provider of the semantic line separator drawn across the editor content.
+     * Declarative counterpart of {@link #setLineSeparatorRenderer(LineSeparatorRenderer)}.
+     */
+    void setLineSeparatorPresentationProvider(@Nullable LineSeparatorPresentationProvider provider);
+
+    @SuppressWarnings("deprecation")
     default boolean isRenderedInGutter() {
-        return getGutterIconRenderer() != null || getLineMarkerRenderer() != null;
+        return getGutterIconRenderer() != null || getLineMarkerRenderer() != null || getLineMarkerPresentationProvider() != null;
     }
+
+    //region Deprecated stuff
+
+    /**
+     * Returns the renderer used for drawing line markers in the area covered by the
+     * highlighter, and optionally for processing mouse events over the markers.
+     * Line markers are drawn over the folding area and are used, for example,
+     * to highlight modified lines in files under source control.
+     *
+     * @return the renderer instance, or null if the highlighter does not add any line markers.
+     * @see ActiveGutterRenderer
+     */
+    @Deprecated
+    @DeprecationInfo("Use getLineMarkerPresentationProvider()")
+    @Nullable LineMarkerRenderer getLineMarkerRenderer();
+
+    /**
+     * Sets the renderer used for drawing line markers in the area covered by the
+     * highlighter, and optionally for processing mouse events over the markers.
+     * Line markers are drawn over the folding area and are used, for example,
+     * to highlight modified lines in files under source control.
+     *
+     * @param renderer the renderer instance, or null if the highlighter does not add any line markers.
+     * @see ActiveGutterRenderer
+     */
+    @Deprecated
+    @DeprecationInfo("Use setLineMarkerPresentationProvider(LineMarkerPresentationProvider)")
+    void setLineMarkerRenderer(@Nullable LineMarkerRenderer renderer);
+
+    @Deprecated
+    @DeprecationInfo("Use setLineSeparatorPresentationProvider(LineSeparatorPresentationProvider)")
+    void setLineSeparatorRenderer(LineSeparatorRenderer renderer);
+
+    @Deprecated
+    @DeprecationInfo("Use getLineSeparatorPresentationProvider()")
+    LineSeparatorRenderer getLineSeparatorRenderer();
+
+    //endregion
 }
