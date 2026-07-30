@@ -38,6 +38,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -52,14 +53,14 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
-    private final ProjectManager myProjectManager;
+    private final Provider<ProjectManager> myProjectManager;
     private final RecentProjectsManager myRecentProjectsManager;
     private final DataManager myDataManager;
 
     @Inject
     public UnifiedWelcomeFrameManager(
         Application application,
-        ProjectManager projectManager,
+        Provider<ProjectManager> projectManager,
         RecentProjectsManager recentProjectsManager,
         DataManager dataManager
     ) {
@@ -174,7 +175,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
         welcomeFrame.setContent(layout);
 
-        return new UnifiedWelcomeIdeFrame(welcomeFrame, myProjectManager.getDefaultProject());
+        return new UnifiedWelcomeIdeFrame(welcomeFrame, myProjectManager.get().getDefaultProject());
     }
 
     public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
