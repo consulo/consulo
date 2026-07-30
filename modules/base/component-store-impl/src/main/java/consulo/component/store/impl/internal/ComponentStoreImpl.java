@@ -537,7 +537,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   private Continuation<?> runReinit(Set<String> componentNames, Collection<? extends StateStorage> changedStorages) {
     MessageBus messageBus = getMessageBus();
 
-    Coroutine<Object, Object> chain = Coroutine.first(CodeExecution.<Object, Object>apply(input -> {
+    Coroutine<Object, Object> chain = Coroutine.first(applyStateStep(input -> {
       messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateStarted();
       return null;
     }));
@@ -546,7 +546,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       chain = chain.then(CallSubroutine.call(() -> reinitComponent(componentName, changedStorages)));
     }
 
-    chain = chain.then(CodeExecution.<Object, Object>apply(input -> {
+    chain = chain.then(applyStateStep(input -> {
       messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateFinished();
       return null;
     }));
