@@ -21,6 +21,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
@@ -36,6 +37,19 @@ import java.util.function.BiConsumer;
  * and all drawing primitives are in {@link LineStatusMarkerDrawUtil}.
  */
 public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
+    public static final Key<MarkerData> TOOLTIP_KEY = Key.create("LineStatusMarkerRenderer.Tooltip.Id");
+
+    public static class MarkerData {
+        private final byte myType;
+
+        public MarkerData(byte type) {
+            myType = type;
+        }
+
+        public byte getType() {
+            return myType;
+        }
+    }
 
     protected final VcsRange myRange;
 
@@ -73,6 +87,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         highlighter.setGreedyToLeft(true);
         highlighter.setGreedyToRight(true);
         highlighter.setErrorStripeTooltip(getTooltipText(range));
+        highlighter.putUserData(TOOLTIP_KEY, new MarkerData(range.getType()));
         return highlighter;
     }
 

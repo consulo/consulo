@@ -135,15 +135,15 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
             recalcEditorDimensions();
         }
         int safeY = Math.max(0, y - myEditorScrollbarTop);
-        VisualPosition visual;
+        int editorY;
         if (myEditorSourceHeight < myEditorTargetHeight) {
-            visual = myEditor.xyToVisualPosition(new Point(0, safeY));
+            editorY = safeY;
         }
         else {
             float fraction = Math.max(0, Math.min(1, safeY / (float)myEditorTargetHeight));
-            int lineCount = myEditorSourceHeight / myEditor.getLineHeight();
-            visual = new VisualPosition((int)(fraction * lineCount), 0);
+            editorY = (int)(fraction * myEditorSourceHeight);
         }
+        VisualPosition visual = myEditor.xyToVisualPosition(new Point(0, editorY));
         int line = myEditor.visualToLogicalPosition(visual).line;
         Document document = myEditor.getDocument();
         if (line < 0) {

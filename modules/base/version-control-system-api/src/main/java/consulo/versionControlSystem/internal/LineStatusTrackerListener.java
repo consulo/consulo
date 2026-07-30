@@ -30,8 +30,8 @@ public interface LineStatusTrackerListener extends EventListener {
     default void onBecomingValid() {}
 
     /**
-     * Fired whenever the set of changed-line ranges is rebuilt.
-     * Called from EDT after every {@code reinstallRanges()} cycle.
+     * Fired whenever the set of changed-line ranges may have changed, including when the tracker
+     * stops being valid and no ranges are available at all.
      */
     default void onRangesChanged() {}
 }

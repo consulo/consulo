@@ -37,16 +37,28 @@ import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class EditorUtil {
     private static final Logger LOG = Logger.getInstance(EditorUtil.class);
 
     public static int calcRelativeCaretPosition(Editor editor) {
-        int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
-        int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
-        return caretY - viewAreaPosition;
+        return CodeEditorAssertion.compute(() -> {
+            int caretY = editor.visualLineToY(editor.getCaretModel().getVisualPosition().line);
+            int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
+            return caretY - viewAreaPosition;
+        });
+    }
+
+    public static void setRelativeCaretPosition(Editor editor, int position) {
+        CodeEditorAssertion.run(() -> {
+            int caretY = editor.visualLineToY(editor.getCaretModel().getVisualPosition().line);
+            editor.getScrollingModel().scrollVertically(caretY - position);
+        });
     }
 
     public static boolean isAtLineEnd(Editor editor, int offset) {
@@ -498,5 +510,61 @@ public class EditorUtil {
                 }
             }
         }, disposable);
+    }
+
+    @RequiredUIAccess
+    public static void runWhenViewportReady(EditorEx editor, Runnable scrollLambda) {
+        runWhenViewportReady(editor, scrollLambda, () -> {
+            Disposable disposable = Disposable.newDisposable();
+            disposeWithEditor(editor, disposable);
+            return disposable;
+        });
+    }
+
+    @RequiredUIAccess
+    private static void runWhenViewportReady(EditorEx editor, Runnable scrollLambda, Supplier<Disposable> lazyDisposable) {
+        UIAccess.assertIsUIThread();
+        JViewport viewport = editor.getScrollPane().getViewport();
+        if (isReady(viewport)) {
+            scrollLambda.run();
+        }
+        else {
+            Disposable disposable = lazyDisposable.get();
+            ViewportReadyAwaiter awaiter = new ViewportReadyAwaiter(editor.getComponent(), viewport, scrollLambda);
+            Disposer.register(disposable, awaiter);
+        }
+    }
+
+    private static boolean isReady(JViewport viewport) {
+        if (!viewport.isShowing()) {
+            return false;
+        }
+        Dimension extentSize = viewport.getExtentSize();
+        return extentSize.getWidth() != 0 && extentSize.getHeight() != 0;
+    }
+
+    private record ViewportReadyAwaiter(
+        JComponent editorComponent,
+        JViewport viewport,
+        Runnable onReady
+    ) implements ChangeListener, Disposable {
+
+        ViewportReadyAwaiter {
+            viewport.addChangeListener(this);
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (isReady(viewport)) {
+                Disposer.dispose(this);
+                editorComponent.validate(); // ensure scrollbar is ready. Otherwise, incorrect scrolling may occur
+                onReady.run();
+            }
+        }
+
+        @Override
+        public void dispose() {
+            viewport.removeChangeListener(this);
+        }
     }
 }

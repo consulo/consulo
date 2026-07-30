@@ -553,6 +553,11 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
     }
 
     @Override
+    public boolean isInBatchMode() {
+        return myInBatchMode;
+    }
+
+    @Override
     public void addListener(Listener listener, Disposable disposable) {
         myDispatcher.addListener(listener, disposable);
     }

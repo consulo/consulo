@@ -17,6 +17,7 @@ package consulo.fileEditor.impl.internal.text;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.*;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
@@ -123,7 +124,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
             if (!editor.isDisposed()) {
                 editor.getScrollingModel().disableAnimation();
                 if (relativeCaretPosition != Integer.MAX_VALUE) {
-                    setRelativeCaretPosition(editor, relativeCaretPosition);
+                    EditorUtil.setRelativeCaretPosition(editor, relativeCaretPosition);
                 }
                 editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
                 editor.getScrollingModel().enableAnimation();
@@ -133,14 +134,12 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         if (Boolean.TRUE.equals(editor.getUserData(TREAT_AS_SHOWN))) {
             scrollingRunnable.run();
         }
+        else if (editor instanceof EditorEx editorEx) {
+            EditorUtil.runWhenViewportReady(editorEx, scrollingRunnable);
+        }
         else {
             ShowNotifier.once(editor.getContentUIComponent(), scrollingRunnable);
         }
-    }
-
-    private static void setRelativeCaretPosition(Editor editor, int position) {
-        int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
-        editor.getScrollingModel().scrollVertically(caretY - position);
     }
 
     public class EditorWrapper extends UserDataHolderBase implements TextEditor {

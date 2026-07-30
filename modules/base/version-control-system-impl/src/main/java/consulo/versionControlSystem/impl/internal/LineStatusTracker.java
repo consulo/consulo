@@ -20,6 +20,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.internal.VcsRange;
@@ -131,7 +132,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
         }
 
         resetInnerRanges();
-        reinstallRanges();
+        updateHighlighters();
     }
 
     @Override
@@ -141,15 +142,20 @@ public class LineStatusTracker extends LineStatusTrackerBase {
     }
 
     @Override
-    @RequiredUIAccess
     protected void fireFileUnchanged() {
-        // later to avoid saving inside document change event processing.
-        FileDocumentManager.getInstance().saveDocument(myDocument);
-        List<VcsRange> ranges = getRanges();
-        if (ranges == null || ranges.isEmpty()) {
-            // file was modified, and now it's not -> dirty local change
-            myVcsDirtyScopeManager.fileDirty(myVirtualFile);
-        }
+        // Use 'invokeLater' to avoid saving inside document change event processing and deadlock with CLM.
+        myApplication.invokeLater(
+            () -> {
+                FileDocumentManager.getInstance().saveDocument(myDocument);
+                List<VcsRange> ranges = getRanges();
+                if (ranges == null || ranges.isEmpty()) {
+                    // file was modified, and now it's not -> dirty local change
+                    myVcsDirtyScopeManager.fileDirty(myVirtualFile);
+                }
+            },
+            ModalityState.nonModal(),
+            () -> myProject == null || myProject.isDisposed()
+        );
     }
 
     @Override

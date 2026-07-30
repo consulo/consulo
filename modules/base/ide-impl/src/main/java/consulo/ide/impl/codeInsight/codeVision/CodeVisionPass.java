@@ -7,6 +7,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayModel;
 import consulo.codeEditor.InlayProperties;
+import consulo.codeEditor.impl.EditorScrollingPositionKeeper;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.codeInsight.codeVision.ui.model.CodeVisionListData;
@@ -73,18 +74,6 @@ public class CodeVisionPass extends EditorBoundHighlightingPass {
     public void doApplyInformationToEditor() {
         InlayModel inlayModel = myEditor.getInlayModel();
 
-        // Remove all existing code vision block inlays
-        for (Inlay<?> inlay : inlayModel.getBlockElementsInRange(0,
-            myEditor.getDocument().getTextLength(), BlockCodeVisionInlayRenderer.class)) {
-            inlay.dispose();
-        }
-
-        // Remove all existing code vision after-line-end inlays
-        for (Inlay<?> inlay : inlayModel.getAfterLineEndElementsInRange(0,
-            myEditor.getDocument().getTextLength(), InlineCodeVisionInlayRenderer.class)) {
-            inlay.dispose();
-        }
-
         // Group entries by (startOffset, anchor)
         Map<OffsetAndAnchor, List<LensData>> byKey = new LinkedHashMap<>();
         for (LensData lens : myLenses) {
@@ -94,26 +83,45 @@ public class CodeVisionPass extends EditorBoundHighlightingPass {
 
         Document document = myEditor.getDocument();
 
-        for (Map.Entry<OffsetAndAnchor, List<LensData>> e : byKey.entrySet()) {
-            OffsetAndAnchor key = e.getKey();
-            List<LensData> group = e.getValue();
-            int offset = key.offset();
-            TextRange range = group.get(0).range();
-            List<CodeVisionEntry> entries = new ArrayList<>();
-            for (LensData ld : group) {
-                entries.add(ld.entry());
+        EditorScrollingPositionKeeper positionKeeper = new EditorScrollingPositionKeeper(myEditor);
+        positionKeeper.savePosition();
+
+        inlayModel.execute(true, () -> {
+            // Remove all existing code vision block inlays
+            for (Inlay<?> inlay : inlayModel.getBlockElementsInRange(0,
+                document.getTextLength(), BlockCodeVisionInlayRenderer.class)) {
+                inlay.dispose();
             }
 
-            if (key.anchor() == CodeVisionAnchorKind.Top) {
-                addBlockInlay(inlayModel, offset, range, entries);
+            // Remove all existing code vision after-line-end inlays
+            for (Inlay<?> inlay : inlayModel.getAfterLineEndElementsInRange(0,
+                document.getTextLength(), InlineCodeVisionInlayRenderer.class)) {
+                inlay.dispose();
             }
-            else {
-                // Right (or any other — default Right behaviour like JB)
-                int lineNumber = document.getLineNumber(offset);
-                int lineEndOffset = document.getLineEndOffset(lineNumber);
-                addAfterLineEndInlay(inlayModel, lineEndOffset, range, entries);
+
+            for (Map.Entry<OffsetAndAnchor, List<LensData>> e : byKey.entrySet()) {
+                OffsetAndAnchor key = e.getKey();
+                List<LensData> group = e.getValue();
+                int offset = key.offset();
+                TextRange range = group.get(0).range();
+                List<CodeVisionEntry> entries = new ArrayList<>();
+                for (LensData ld : group) {
+                    entries.add(ld.entry());
+                }
+
+                if (key.anchor() == CodeVisionAnchorKind.Top) {
+                    addBlockInlay(inlayModel, offset, range, entries);
+                }
+                else {
+                    // Right (or any other — default Right behaviour like JB)
+                    int lineNumber = document.getLineNumber(offset);
+                    int lineEndOffset = document.getLineEndOffset(lineNumber);
+                    addAfterLineEndInlay(inlayModel, lineEndOffset, range, entries);
+                }
             }
-        }
+        });
+
+        positionKeeper.restorePosition(false);
 
         CodeVisionPassFactory.updateModificationStamp(myEditor, myProject);
     }

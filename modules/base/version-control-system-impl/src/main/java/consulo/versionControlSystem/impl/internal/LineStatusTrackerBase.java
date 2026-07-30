@@ -33,17 +33,13 @@ import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import static consulo.versionControlSystem.UpToDateLineNumberProvider.ABSENT_LINE_NUMBER;
 
 /**
  * Base implementation of {@link LineStatusTrackerI}.
@@ -54,8 +50,10 @@ import static consulo.versionControlSystem.UpToDateLineNumberProvider.ABSENT_LIN
  * <ul>
  *   <li>{@link DocumentTracker} owns document listening, dirty tracking, freeze/unfreeze,
  *       and diff computation.</li>
- *   <li>This class owns the {@link VcsRange} lifecycle and fires {@link LineStatusTrackerListener}
- *       events. Highlighters are owned by the renderer, which reacts to those events on EDT.</li>
+ *   <li>{@link VcsRange}s are derived from the tracker blocks on demand by
+ *       {@link LineStatusTrackerBlockOperations} — there is no cached range list.</li>
+ *   <li>This class fires {@link LineStatusTrackerListener} events. Highlighters are owned by the
+ *       renderer, which reacts to those events on EDT.</li>
  * </ul>
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -74,11 +72,11 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
      */
     protected final DocumentTracker myDocumentTracker;
 
+    protected final LineStatusTrackerBlockOperations<DocumentTracker.Block> blockOperations;
+
     private boolean myInitialized;
     private boolean myDuringRollback;
     private boolean myReleased;
-
-    private List<VcsRange> myRanges = Collections.emptyList();
 
     /** Listeners notified when ranges are rebuilt or the tracker becomes valid. */
     private final List<LineStatusTrackerListener> myListeners = new CopyOnWriteArrayList<>();
@@ -97,6 +95,8 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         // LEFT = VCS/base, RIGHT = current working document
         myDocumentTracker = new DocumentTracker(myVcsDocument, myDocument);
         myDocumentTracker.addHandler(new MyDocumentTrackerHandler());
+
+        blockOperations = new MyBlockOperations(myDocumentTracker);
     }
 
     // -------------------------------------------------------------------------
@@ -108,7 +108,6 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         return false;
     }
 
-    @RequiredUIAccess
     protected void fireFileUnchanged() {
     }
 
@@ -129,7 +128,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
 
         if (!myInitialized) {
             myDocumentTracker.withWrite(() -> myInitialized = true);
-            reinstallRanges();
+            updateHighlighters();
         }
 
         if (isValid()) {
@@ -142,14 +141,14 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         UIAccess.assertIsUIThread();
         if (myReleased || !myInitialized) return;
 
-        myDocumentTracker.doFrozen(Side.LEFT, () -> {
+        myDocumentTracker.withWrite(() -> myInitialized = false);
+        updateHighlighters();
+
+        myDocumentTracker.doFrozen(() -> {
             myVcsDocument.setReadOnly(false);
             myVcsDocument.setText(myDocument.getImmutableCharSequence());
             myVcsDocument.setReadOnly(true);
-            myDocumentTracker.withWrite(() -> {
-                myInitialized = false;
-                destroyRanges();
-            });
+            myDocumentTracker.setFrozenState(Collections.emptyList());
         });
     }
 
@@ -161,7 +160,6 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
             myDocumentTracker.withWrite(() -> {
                 myReleased = true;
                 myDocumentTracker.dispose();
-                destroyRanges();
             });
             myListeners.clear();
         };
@@ -178,27 +176,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     // Range management
     // -------------------------------------------------------------------------
 
-    @RequiredUIAccess
-    protected void reinstallRanges() {
-        if (!myInitialized || myReleased || myDocumentTracker.isFrozen()) return;
-
-        boolean[] unchanged = new boolean[1];
-        myDocumentTracker.withWrite(() -> {
-            destroyRanges();
-
-            List<DocumentTracker.Block> blocks = myDocumentTracker.getBlocks();
-            myRanges = new ArrayList<>(blocks.size());
-            for (DocumentTracker.Block block : blocks) {
-                myRanges.add(toVcsRange(block));
-            }
-            unchanged[0] = myRanges.isEmpty();
-        });
-
-        if (unchanged[0]) {
-            fireFileUnchanged();
-        }
-
-        // Notify listeners that the range set has changed (outside the lock).
+    protected void updateHighlighters() {
         fireRangesChanged();
     }
 
@@ -239,11 +217,20 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
             LineOffsetsUtil.create(myVcsDocument), LineOffsetsUtil.create(myDocument));
     }
 
-    private void destroyRanges() {
-        for (VcsRange range : myRanges) {
-            range.invalidate();
+    private class MyBlockOperations extends LineStatusTrackerBlockOperations<DocumentTracker.Block> {
+        MyBlockOperations(DocumentTracker lock) {
+            super(lock);
         }
-        myRanges = Collections.emptyList();
+
+        @Override
+        protected @Nullable List<DocumentTracker.Block> getBlocks() {
+            return isValid() ? myDocumentTracker.getBlocks() : null;
+        }
+
+        @Override
+        protected VcsRange toRange(DocumentTracker.Block block) {
+            return toVcsRange(block);
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -254,14 +241,13 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     public void startBulkUpdate() {
         if (myReleased) return;
         myDocumentTracker.freeze(Side.RIGHT);
-        myDocumentTracker.withWrite(this::destroyRanges);
     }
 
     @RequiredUIAccess
     public void finishBulkUpdate() {
         if (myReleased) return;
         myDocumentTracker.unfreeze(Side.RIGHT);
-        // unfreeze triggers refreshDirty -> Handler.afterBulkRangeChange -> reinstallRanges
+        // unfreeze triggers refreshDirty -> Handler.afterBulkRangeChange -> updateHighlighters
     }
 
     // -------------------------------------------------------------------------
@@ -321,106 +307,47 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     // -------------------------------------------------------------------------
 
     /**
-     * Returns a snapshot copy of the current ranges, or {@code null} if not valid.
+     * Returns the current ranges, or {@code null} if not valid.
      * Calling this twice without holding a read-lock can return different results.
      */
     @Override
     public @Nullable List<VcsRange> getRanges() {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            List<VcsRange> result = new ArrayList<>(myRanges.size());
-            for (VcsRange range : myRanges) {
-                result.add(new VcsRange(range));
-            }
-            return result;
-        });
+        return blockOperations.getRanges();
     }
 
     @Override
     public @Nullable List<VcsRange> getRangesForLines(BitSet lines) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            List<VcsRange> result = new ArrayList<>();
-            for (VcsRange range : myRanges) {
-                if (DiffImplUtil.isSelectedByLine(lines, range.getLine1(), range.getLine2())) {
-                    result.add(new VcsRange(range));
-                }
-            }
-            return result;
-        });
+        return blockOperations.getRangesForLines(lines);
     }
 
     @Override
     public @Nullable VcsRange getRangeForLine(int line) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            for (VcsRange range : myRanges) {
-                if (range.isSelectedByLine(line)) return range;
-            }
-            return null;
-        });
+        return blockOperations.getRangeForLine(line);
     }
 
     @Override
     public @Nullable VcsRange findRange(VcsRange range) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            for (VcsRange r : myRanges) {
-                if (r.getLine1() == range.getLine1() && r.getLine2() == range.getLine2()
-                    && r.getVcsLine1() == range.getVcsLine1() && r.getVcsLine2() == range.getVcsLine2()) {
-                    return r;
-                }
-            }
-            return null;
-        });
-    }
-
-    @TestOnly
-    public List<VcsRange> getRangesInner() {
-        return myRanges;
+        return blockOperations.findRange(range);
     }
 
     @Override
     public @Nullable VcsRange getNextRange(VcsRange range) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            int index = myRanges.indexOf(range);
-            if (index == myRanges.size() - 1) return null;
-            return myRanges.get(index + 1);
-        });
+        return blockOperations.getNextRange(range);
     }
 
     @Override
     public @Nullable VcsRange getPrevRange(VcsRange range) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            int index = myRanges.indexOf(range);
-            if (index <= 0) return null;
-            return myRanges.get(index - 1);
-        });
+        return blockOperations.getPrevRange(range);
     }
 
     @Override
     public @Nullable VcsRange getNextRange(int line) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            for (VcsRange range : myRanges) {
-                if (line < range.getLine2() && !range.isSelectedByLine(line)) return range;
-            }
-            return null;
-        });
+        return blockOperations.getNextRange(line);
     }
 
     @Override
     public @Nullable VcsRange getPrevRange(int line) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return null;
-            for (int i = myRanges.size() - 1; i >= 0; i--) {
-                VcsRange range = myRanges.get(i);
-                if (line > range.getLine1() && !range.isSelectedByLine(line)) return range;
-            }
-            return null;
-        });
+        return blockOperations.getPrevRange(line);
     }
 
     // -------------------------------------------------------------------------
@@ -479,12 +406,8 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
 
     @RequiredWriteAction
     public void rollbackChanges(BitSet lines) {
-        List<VcsRange> toRollback = new ArrayList<>();
-        for (VcsRange range : myRanges) {
-            if (DiffImplUtil.isSelectedByLine(lines, range.getLine1(), range.getLine2())) {
-                toRollback.add(range);
-            }
-        }
+        List<VcsRange> toRollback = blockOperations.getRangesForLines(lines);
+        if (toRollback == null) return;
         rollbackChanges(toRollback);
     }
 
@@ -493,10 +416,6 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
         runBulkRollback(() -> {
             int shift = 0;
             for (VcsRange range : ranges) {
-                if (!range.isValid()) {
-                    LOG.warn("Rollback of invalid range");
-                    break;
-                }
                 VcsRange shiftedRange = new VcsRange(range);
                 shiftedRange.shift(shift);
                 doRollbackRange(shiftedRange);
@@ -517,7 +436,7 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
                 task.run();
             }
             catch (Error | RuntimeException e) {
-                reinstallRanges();
+                updateHighlighters();
                 throw e;
             }
             finally {
@@ -547,7 +466,6 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     public TextRange getCurrentTextRange(VcsRange range) {
         return myDocumentTracker.withRead(() -> {
             assert isValid();
-            if (!range.isValid()) LOG.warn("Current TextRange of invalid range");
             return DiffImplUtil.getLinesRange(myDocument, range.getLine1(), range.getLine2());
         });
     }
@@ -556,60 +474,28 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
     public TextRange getVcsTextRange(VcsRange range) {
         return myDocumentTracker.withRead(() -> {
             assert isValid();
-            if (!range.isValid()) LOG.warn("Vcs TextRange of invalid range");
             return DiffImplUtil.getLinesRange(myVcsDocument, range.getVcsLine1(), range.getVcsLine2());
         });
     }
 
     @Override
     public boolean isLineModified(int line) {
-        return isRangeModified(line, line + 1);
+        return blockOperations.isLineModified(line);
     }
 
     @Override
     public boolean isRangeModified(int line1, int line2) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return false;
-            if (line1 == line2) return false;
-            assert line1 < line2;
-            for (VcsRange range : myRanges) {
-                if (range.getLine1() >= line2) return false;
-                if (range.getLine2() > line1) return true;
-            }
-            return false;
-        });
+        return blockOperations.isRangeModified(line1, line2);
     }
 
     @Override
     public int transferLineToFromVcs(int line, boolean approximate) {
-        return transferLine(line, approximate, true);
+        return blockOperations.transferLineFromVcs(line, approximate);
     }
 
     @Override
     public int transferLineToVcs(int line, boolean approximate) {
-        return transferLine(line, approximate, false);
-    }
-
-    private int transferLine(int line, boolean approximate, boolean fromVcs) {
-        return myDocumentTracker.withRead(() -> {
-            if (!isValid()) return approximate ? line : ABSENT_LINE_NUMBER;
-            int result = line;
-            for (VcsRange range : myRanges) {
-                int startLine1 = fromVcs ? range.getVcsLine1() : range.getLine1();
-                int endLine1   = fromVcs ? range.getVcsLine2() : range.getLine2();
-                int startLine2 = fromVcs ? range.getLine1()    : range.getVcsLine1();
-
-                if (startLine1 <= line && endLine1 > line) {
-                    return approximate ? startLine2 : ABSENT_LINE_NUMBER;
-                }
-                if (endLine1 > line) return result;
-
-                int length1 = endLine1 - startLine1;
-                int length2 = (fromVcs ? range.getLine2() : range.getVcsLine2()) - startLine2;
-                result += length2 - length1;
-            }
-            return result;
-        });
+        return blockOperations.transferLineToVcs(line, approximate);
     }
 
     private class MyDocumentTrackerHandler implements DocumentTracker.Handler {
@@ -620,21 +506,23 @@ public abstract class LineStatusTrackerBase implements LineStatusTrackerI {
 
         @Override
         public void afterBulkRangeChange(boolean isDirty) {
-            // Called after DocumentTracker finishes a diff refresh.
-            // isDirty=false → blocks are up-to-date → re-install VcsRange highlighters.
-            // isDirty=true  → blocks are still dirty (e.g. called during freeze) → skip.
             if (!isDirty) {
                 updateMissingInnerRanges();
-                reinstallRanges();
             }
+
+            if (myDocumentTracker.getBlocks().isEmpty() && isOperational()) {
+                fireFileUnchanged();
+            }
+
+            updateHighlighters();
         }
 
         @Override
         public void onUnfreeze(Side side) {
             updateMissingInnerRanges();
 
-            // afterBulkRangeChange(false) will follow shortly via refreshDirty().
-            // Fire onBecomingValid here if the tracker is now valid (both sides unfrozen).
+            updateHighlighters();
+
             if (isValid()) {
                 fireBecomingValid();
             }

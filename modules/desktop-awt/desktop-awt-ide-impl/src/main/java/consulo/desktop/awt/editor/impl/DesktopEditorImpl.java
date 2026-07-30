@@ -431,6 +431,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
             public void onUpdated(Inlay inlay, int changeFlags) {
                 onInlayUpdated(inlay, changeFlags);
             }
+
+            @Override
+            public void onBatchModeFinish(Editor editor) {
+                onInlayBatchModeFinish();
+            }
         }, myCaretModel);
 
         if (UISettings.getInstance().getPresentationMode()) {
@@ -619,6 +624,18 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 EditorUtil.getTotalInlaysHeight(myInlayModel.getBlockElementsForVisualLine(visualLine, true));
             repaintToScreenBottomStartingFrom(y);
         }
+    }
+
+    private void onInlayBatchModeFinish() {
+        if (myDocument.isInBulkUpdate()) {
+            return;
+        }
+        validateSize();
+        updateGutterSize();
+        myEditorComponent.repaintEditorComponent();
+        myGutterComponent.repaint();
+        getMarkupModel().repaint(-1, -1);
+        updateCaretCursor();
     }
 
     private void moveCaretIntoViewIfCoveredByToolWindowBelow(VisibleAreaEvent e) {
@@ -1478,7 +1495,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         Dimension dim = getPreferredSize();
 
-        if (!dim.equals(myPreferredSize) && !myDocument.isInBulkUpdate()) {
+        if (!dim.equals(myPreferredSize) && !myDocument.isInBulkUpdate() && !myInlayModel.isInBatchMode()) {
             dim = mySizeAdjustmentStrategy.adjust(dim, myPreferredSize, this);
             if (!dim.equals(myPreferredSize)) {
                 myPreferredSize = dim;

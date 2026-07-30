@@ -216,6 +216,28 @@ public class DocumentTracker implements Disposable {
         }
     }
 
+    @RequiredUIAccess
+    public boolean setFrozenState(List<Range> lineRanges) {
+        if (myIsDisposed) return false;
+        assert myFreezeHelper.isFrozen(Side.LEFT) && myFreezeHelper.isFrozen(Side.RIGHT);
+
+        myLock.lock();
+        try {
+            CharSequence content1 = getContent(Side.LEFT);
+            CharSequence content2 = getContent(Side.RIGHT);
+            if (!RangesBuilder.isValidRanges(content1, content2,
+                LineOffsetsUtil.create(content1), LineOffsetsUtil.create(content2), lineRanges)) {
+                return false;
+            }
+
+            myTracker.setRanges(lineRanges, true);
+            return true;
+        }
+        finally {
+            myLock.unlock();
+        }
+    }
+
     public CharSequence getContent(Side side) {
         myLock.lock();
         try {
@@ -315,7 +337,7 @@ public class DocumentTracker implements Disposable {
         default void onUnfreeze() {}
     }
 
-    public static final class Block {
+    public static final class Block implements BlockI {
         private final Range myRange;
         private final boolean myIsDirty;
         private final boolean myIsTooBig;
@@ -333,18 +355,22 @@ public class DocumentTracker implements Disposable {
             return myRange;
         }
 
+        @Override
         public int getStart() {
             return myRange.start2;
         }
 
+        @Override
         public int getEnd() {
             return myRange.end2;
         }
 
+        @Override
         public int getVcsStart() {
             return myRange.start1;
         }
 
+        @Override
         public int getVcsEnd() {
             return myRange.end1;
         }
