@@ -23,6 +23,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.ui.impl.internal.wm.ToolWindowManagerBase;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
@@ -103,6 +104,9 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
         WebRootPaneImpl rootPanel = ((WebIdeFrameImpl) myFrame).getRootPanel();
 
         rootPanel.setCenterComponent(toolWindowPanel);
+
+        // the bottom stripe belongs to the status bar row, not to the tool window panel
+        ((UnifiedStatusBarImpl) myFrame.getStatusBar()).addToLeft(toolWindowPanel.getBottomStripe());
 
         ((WebIdeFrameImpl) myFrame).show();
     }

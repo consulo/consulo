@@ -17,6 +17,7 @@ package consulo.ide.impl.fileEditor;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
@@ -25,14 +26,16 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.FileEditorWindowBase;
 import consulo.fileEditor.impl.internal.FileEditorsSplittersBase;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.ide.impl.virtualFileSystem.VfsIconUtil;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
 import consulo.util.concurrent.ActionCallback;
@@ -92,6 +95,13 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         myProject = project;
         myManager = manager;
         myOwner = owner;
+
+        // the tab actions and the tab popup group work on the window the tab belongs to, and the tab has no data of
+        // its own - the layout above the editors is the only place the window can be published from
+        myTabbedLayout.putUserData(UiDataProvider.KEY, sink -> {
+            sink.set(Project.KEY, myProject);
+            sink.set(FileEditorWindow.DATA_KEY, this);
+        });
 
         myOwner.addWindow(this);
         if (myOwner.getCurrentWindow() == null) {
@@ -264,6 +274,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                     if (editor != null) {
                         TabInfo tab = myEditors.remove(editor);
                         if (tab != null) {
+                            // dropping the map entry alone left the tab and its editor on screen
+                            myTabbedLayout.removeTab(tab.myTab);
+
                             editorManager.disposeComposite(editor);
                         }
                     }
@@ -358,16 +371,10 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 tabInfo.myText = editor.getFile().getName();
                 tabInfo.myImage = VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject());
 
+                // the handler has to be known before the tab is rendered, the close affordance is part of the tab
+                tab.setCloseHandler((thisTab, component) -> performCloseTab(editor.getFile(), component));
+
                 myTabbedLayout.addTab(tab, editor.getUIComponent());
-                tab.setCloseHandler((thisTab, component) -> {
-                    DataContext dataContext = DataManager.getInstance().getDataContext();
-                    new CloseTab(myTabbedLayout, myProject, editor.getFile(), this).actionPerformed(AnActionEvent.createFromInputEvent(
-                        null,
-                        "Test",
-                        null,
-                        dataContext
-                    ));
-                });
                 myEditors.put(editor, tabInfo);
             }
             else {
@@ -376,6 +383,22 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 tab.select();
             }
         }
+    }
+
+    @RequiredUIAccess
+    private void performCloseTab(VirtualFile file, @Nullable Component component) {
+        DataContext dataContext = DataContext.builder()
+            .parent(component == null ? null : DataManager.getInstance().getDataContext(component))
+            .add(Project.KEY, myProject)
+            .add(VirtualFile.KEY, file)
+            .add(FileEditorWindow.DATA_KEY, this)
+            .build();
+
+        CloseTab closeTab = new CloseTab(component, myProject, file, this);
+
+        AnActionEvent event = AnActionEvent.createFromAnAction(closeTab, null, ActionPlaces.EDITOR_TAB, dataContext);
+
+        ActionImplUtil.performActionDumbAwareWithCallbacks(closeTab, event, dataContext);
     }
 
     @Override

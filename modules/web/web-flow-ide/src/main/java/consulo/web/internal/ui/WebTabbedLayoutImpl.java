@@ -15,7 +15,9 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabSheetVariant;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,6 +33,12 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
     public class Vaadin extends TabSheet implements FromVaadinComponentWrapper {
+        public Vaadin() {
+            // the default border is drawn inside the sheet, so the content no longer fits and scrolls,
+            // and the default padding keeps the editor from filling the panel
+            addThemeVariants(TabSheetVariant.AURA_NO_BORDER, TabSheetVariant.AURA_NO_PADDING);
+        }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebTabbedLayoutImpl.this;
@@ -53,9 +61,22 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         WebTabImpl webTab = (WebTabImpl) tab;
 
         com.vaadin.flow.component.tabs.Tab vaadinTab = new com.vaadin.flow.component.tabs.Tab();
+        // the tab is not a VaadinComponentDelegate, so it carries the small variant itself - TabVariant has no
+        // constant for it, the sheet only hands its own theme down to the tabs element and not to the tabs
+        vaadinTab.getElement().getThemeList().add("small");
         webTab.setVaadinTab(vaadinTab);
         webTab.update();
-        toVaadinComponent().add(vaadinTab, TargetVaadin.to(component));
+        com.vaadin.flow.component.Component vaadinContent = TargetVaadin.to(component);
+        // the sheet does not stretch its content, without this the editor keeps its intrinsic height
+        if (vaadinContent instanceof HasSize hasSize) {
+            hasSize.setSizeFull();
+        }
+
+        toVaadinComponent().add(vaadinTab, vaadinContent);
+
+        webTab.setContent(component);
+
+        webTab.select();
         return tab;
     }
 
@@ -69,6 +90,12 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
     @Override
     public void removeTab(Tab tab) {
-        // todo
+        WebTabImpl webTab = (WebTabImpl) tab;
+
+        com.vaadin.flow.component.tabs.Tab vaadinTab = webTab.getVaadinTab();
+        if (vaadinTab != null) {
+            // the sheet drops the content of the tab along with it
+            toVaadinComponent().remove(vaadinTab);
+        }
     }
 }

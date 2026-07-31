@@ -52,8 +52,7 @@ public class BorderLayoutEx extends VerticalLayout {
     myTopLayout.setWidthFull();
     myBottomLayout.setWidthFull();
 
-    myCenterLayout.setPadding(false);
-    myCenterLayout.setMargin(false);
+    noPaddingMargin(myCenterLayout);
 
     myCenterHolder.setSizeFull();
 
@@ -88,6 +87,8 @@ public class BorderLayoutEx extends VerticalLayout {
   private <T extends Component & HasSize & ThemableLayout> T noPaddingMargin(T component) {
     component.setMargin(false);
     component.setPadding(false);
+    // spacing renders as gap - without disabling it the ide frame gets 8px above and below its content
+    component.setSpacing(false);
     return component;
   }
 

@@ -25,7 +25,11 @@ import consulo.disposer.Disposer;
 import consulo.ui.style.StyleManager;
 import consulo.web.internal.ui.WebStyleImpl;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +50,43 @@ public class UIServlet extends VaadinServlet {
 
     public UIServlet(Supplier<UIBuilder> aBuilderSupplier, String urlPrefix) {
         myBuilderSupplier = aBuilderSupplier;
+    }
+
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!Boolean.getBoolean("consulo.in.sandbox")) {
+            super.service(request, response);
+            return;
+        }
+
+        // vaadin serves themes and other static files with max-age=3600, which makes every css/js edit
+        // invisible until a manual hard refresh - unusable while developing the web ui
+        super.service(request, new HttpServletResponseWrapper(response) {
+            @Override
+            public void setHeader(String name, String value) {
+                if ("Cache-Control".equalsIgnoreCase(name)) {
+                    super.setHeader(name, "no-store, must-revalidate");
+                    return;
+                }
+
+                if (isCacheValidator(name)) {
+                    return;
+                }
+
+                super.setHeader(name, value);
+            }
+
+            @Override
+            public void setDateHeader(String name, long date) {
+                if (!isCacheValidator(name)) {
+                    super.setDateHeader(name, date);
+                }
+            }
+
+            private boolean isCacheValidator(String name) {
+                return "Expires".equalsIgnoreCase(name) || "Last-Modified".equalsIgnoreCase(name) || "ETag".equalsIgnoreCase(name);
+            }
+        });
     }
 
     @Override

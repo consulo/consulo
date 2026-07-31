@@ -28,6 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -44,7 +45,7 @@ public class CloseTab extends LegacyDumbAwareAction {
         new ShadowAction(this, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE), c);
     }
 
-    public CloseTab(Component c, Project project, VirtualFile file, FileEditorWindow editorWindow) {
+    public CloseTab(@Nullable Component c, Project project, VirtualFile file, FileEditorWindow editorWindow) {
         myProject = project;
         myFile = file;
         myEditorWindow = editorWindow;

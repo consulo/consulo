@@ -49,7 +49,7 @@
         <flatlaf.version>3.7.2.1</flatlaf.version>
         <protobuf.version>4.33.4</protobuf.version>
 
-        <vaadin.flow.version>25.1.1</vaadin.flow.version>
+        <vaadin.flow.version>25.2.4</vaadin.flow.version>
 
         <jackson.version>2.21.2</jackson.version>
         
@@ -662,6 +662,11 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-menu-bar-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-breadcrumbs-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
             <dependency>

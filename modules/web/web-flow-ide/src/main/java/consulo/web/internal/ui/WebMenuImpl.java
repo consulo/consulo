@@ -15,16 +15,11 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaadin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.SimpleComponent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,48 +29,43 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
-    public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-        private LocalizeValue myText = LocalizeValue.empty();
-        private List<Component> myMenuItems = new ArrayList<>();
+public class WebMenuImpl extends WebMenuItemImpl implements Menu {
+    private final List<MenuItem> myChildren = new ArrayList<>();
 
-        public void add(MenuItem menuItem) {
-            Component vaadinComponent = TargetVaadin.to(menuItem);
-
-            myMenuItems.add(vaadinComponent);
-        }
-
-        @Override
-        public consulo.ui.@Nullable Component toUIComponent() {
-            return WebMenuImpl.this;
-        }
-    }
+    private @Nullable SubMenu myVaadinSubMenu;
 
     public WebMenuImpl(LocalizeValue text) {
-        getVaadinComponent().myText = text;
-    }
-
-    @Override
-    public Vaadin createVaadinComponent() {
-        return new Vaadin();
-    }
-
-    @Override
-    public void setIcon(@Nullable Image icon) {
-        Vaadin vaadinComponent = getVaadinComponent();
-        //vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
-        // vaadinComponent.markAsDirty();
+        super(text);
     }
 
     @Override
     @RequiredUIAccess
     public Menu add(MenuItem menuItem) {
-        getVaadinComponent().add(menuItem);
+        myChildren.add(menuItem);
+
+        SubMenu subMenu = myVaadinSubMenu;
+        if (subMenu != null && menuItem instanceof WebMenuItemImpl webMenuItem) {
+            webMenuItem.render(subMenu);
+        }
+
         return this;
     }
 
+    public List<MenuItem> getChildren() {
+        return myChildren;
+    }
+
     @Override
-    public LocalizeValue getText() {
-        return getVaadinComponent().myText;
+    @RequiredUIAccess
+    protected void renderChildren(com.vaadin.flow.component.contextmenu.MenuItem item) {
+        SubMenu subMenu = item.getSubMenu();
+
+        myVaadinSubMenu = subMenu;
+
+        for (MenuItem child : myChildren) {
+            if (child instanceof WebMenuItemImpl webMenuItem) {
+                webMenuItem.render(subMenu);
+            }
+        }
     }
 }

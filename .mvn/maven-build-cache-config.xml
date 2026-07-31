@@ -26,9 +26,11 @@
     </configuration>
     <input>
         <global>
-            <glob>{*.java,*.groovy,*.yaml,*.svcd,*.proto,*.trift,*assembly.xml,assembly*.xml,*logback.xml,*.vm,*.ini,*.jks,*.properties,*.sh,*.bat,*.svg,*.png,*.yaml,*.yml,*.xml,*.html}</glob>
+            <glob>{*.java,*.groovy,*.yaml,*.svcd,*.proto,*.trift,*assembly.xml,assembly*.xml,*logback.xml,*.vm,*.ini,*.jks,*.properties,*.sh,*.bat,*.svg,*.png,*.yaml,*.yml,*.xml,*.html,*.css,*.ts,*.js,*.json}</glob>
             <includes>
                 <include>src/</include>
+                <!-- vaadin themes and client assets live outside src/, without this they never invalidate the cache -->
+                <include>frontend/</include>
             </includes>
             <excludes>
                 <exclude>pom.xml</exclude>

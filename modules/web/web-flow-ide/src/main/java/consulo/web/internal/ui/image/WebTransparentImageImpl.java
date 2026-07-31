@@ -30,6 +30,14 @@ public class WebTransparentImageImpl implements Image, WebImageCanvasDraw {
     myAlpha = alpha;
   }
 
+  public Image getOriginal() {
+    return myOriginal;
+  }
+
+  public float getAlpha() {
+    return myAlpha;
+  }
+
   @Override
   public int getHeight() {
     return myOriginal.getHeight();

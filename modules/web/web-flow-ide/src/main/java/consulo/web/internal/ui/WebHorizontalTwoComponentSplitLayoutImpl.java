@@ -19,6 +19,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaadin;
@@ -40,6 +41,13 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
         public @Nullable Component toUIComponent() {
             return WebHorizontalTwoComponentSplitLayoutImpl.this;
         }
+    }
+
+    public WebHorizontalTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
+        // createVaadinComponent() already ran from the super constructor, so the orientation is applied here
+        toVaadinComponent().setOrientation(position == SplitLayoutPosition.VERTICAL
+            ? SplitLayout.Orientation.VERTICAL
+            : SplitLayout.Orientation.HORIZONTAL);
     }
 
     @Override

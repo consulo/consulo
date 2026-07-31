@@ -16,5 +16,8 @@ project.xcworkspace/
 xcschemes/
 target/
 
+.sandbox/
+.claude/
+
 .idea/
 *.iml

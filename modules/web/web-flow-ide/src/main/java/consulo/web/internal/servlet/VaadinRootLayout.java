@@ -20,6 +20,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.RouterLayout;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.web.application.WebApplication;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import org.jspecify.annotations.Nullable;
 
@@ -35,6 +36,11 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
 
     @RequiredUIAccess
     public VaadinRootLayout() {
+        setSizeFull();
+        setMargin(false);
+        setPadding(false);
+        setSpacing(false);
+
         UIServlet.RootUIInfo data = ComponentUtil.getData(UI.getCurrent(), UIServlet.RootUIInfo.class);
         if (data == null) {
             return;
@@ -45,6 +51,18 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
         UIBuilder uiBuilder = builder.get();
 
         uiBuilder.build(myUIWindow);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+
+        // @PreserveOnRefresh moves this layout into a freshly created UI and closes the old one without
+        // running the constructor again, so the session would keep pointing to a detached UIAccess
+        WebApplication application = WebApplication.getInstance();
+        if (application != null && application.getCurrentSession() != null) {
+            application.setCurrentSession(new VaadinWebSessionImpl());
+        }
     }
 
     public void update(Component newContent) {

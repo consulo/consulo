@@ -139,7 +139,9 @@ public abstract class UnifiedApplication extends BaseApplication {
 
     @Override
     public boolean isReadAccessAllowed() {
-        return myLock.isWriteThread() || myLock.isReadLockedByThisThread(); // no ui thread check
+        // hack: the ui thread is read allowed here like the awt event dispatch thread, otherwise every
+        // platform call reached from a vaadin request logs a read access error
+        return myLock.isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
     }
 
     @Override

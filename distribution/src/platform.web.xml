@@ -74,6 +74,7 @@
         <include>org.parttio:canvas-java</include>
         <include>com.vaadin:vaadin-menu-bar-flow</include>
         <include>com.vaadin:vaadin-tabs-flow</include>
+        <include>com.vaadin:vaadin-breadcrumbs-flow</include>
 
         <include>com.vaadin:vaadin-dev-server</include>
         <include>com.vaadin:vaadin-dev-bundle</include>

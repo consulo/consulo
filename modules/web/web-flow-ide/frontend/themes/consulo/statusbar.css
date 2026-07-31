@@ -1,0 +1,41 @@
+/* owned by a single area of the frontend, keeps the theme files from colliding */
+
+/* the widgets are empty until something fills them, the strip must keep its height anyway */
+.web-status-bar
+{
+  min-height: 24px;
+  justify-content: center;
+}
+
+/* the row lives in a 24px strip, an inner scrollbar would eat all of it */
+.web-status-bar-center
+{
+  overflow: hidden;
+}
+
+/* every item of the bar is a label, and the leftmost one - the tool windows switcher - holds an icon and
+   nothing else, so it would be squeezed out of the row it shares with the stripe buttons */
+.web-status-bar .web-label
+{
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.web-status-bar .web-label img,
+.web-status-bar .web-label canvas
+{
+  width: 16px;
+  height: 16px;
+}
+
+/* the bottom tool window stripe is merged into the bar - it became one item of the row instead of a
+   full width strip of its own, and the bar already draws the line above it */
+.web-status-bar .web-tool-window-stripe-bottom
+{
+  width: auto;
+  height: auto;
+
+  align-self: stretch;
+  border-top: none;
+}

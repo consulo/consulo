@@ -27,6 +27,7 @@ import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 /**
@@ -38,8 +39,19 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
 
     private final UI myUI;
 
+    /**
+     * Vaadin purges the session access queue on whichever thread calls {@link UI#access}, so calling it directly
+     * from a thread that holds the read lock lets a queued write action block against that very thread. Both
+     * give methods are asynchronous by contract, so the call is handed to a single background thread instead -
+     * single, because the queue order still has to be preserved.
+     */
+    private final ExecutorService myDispatcher;
+
     public WebUIAccessImpl(UI ui) {
         myUI = ui;
+        myDispatcher = Application.get()
+            .getInstance(ApplicationConcurrency.class)
+            .createSequentialApplicationPoolExecutor("WebUIAccess dispatcher");
     }
 
     @Override
@@ -51,7 +63,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
         CompletableFuture<T> result = new CompletableFuture<>();
         if (isValid()) {
-            myUI.access(() -> {
+            myDispatcher.execute(() -> myUI.access(() -> {
                 try {
                     result.complete(supplier.get());
                 }
@@ -59,7 +71,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
                     LOG.error(e);
                     result.completeExceptionally(e);
                 }
-            });
+            }));
         }
         else {
             result.completeExceptionally(new Exception("ui detached"));
@@ -71,7 +83,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public <T> AsyncResult<T> give(Supplier<T> supplier) {
         AsyncResult<T> result = AsyncResult.undefined();
         if (isValid()) {
-            myUI.access(() -> {
+            myDispatcher.execute(() -> myUI.access(() -> {
                 try {
                     result.setDone(supplier.get());
                 }
@@ -79,7 +91,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
                     LOG.error(e);
                     result.rejectWithThrowable(e);
                 }
-            });
+            }));
         }
         else {
             result.setDone();

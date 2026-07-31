@@ -41,9 +41,36 @@ public class WebImageConverter {
       // just empty span;
       webImage = new Span();
     }
+    else if (image instanceof WebResizeImageImpl resizeImage) {
+      webImage = getImage(resizeImage.getOriginal());
+    }
+    else if (image instanceof WebTransparentImageImpl transparentImage) {
+      webImage = getImage(transparentImage.getOriginal());
+      webImage.getElement().getStyle().set("opacity", String.valueOf(transparentImage.getAlpha()));
+    }
+    else if (image instanceof WebLayeredImageImpl layeredImage) {
+      // the platform layers a badge over a base icon and expects one image out of it. the awt side paints them
+      // onto a single graphics, here they are stacked in one box - a canvas would need the layers loaded before
+      // it can draw, and it has nothing to redraw itself on when they arrive
+      Span stack = new Span();
+      stack.getStyle().set("position", "relative").set("display", "inline-block");
+
+      for (Image layer : layeredImage.getImages()) {
+        Component layerComponent = getImage(layer);
+        layerComponent.getElement().getStyle()
+          .set("position", "absolute")
+          .set("inset", "0")
+          .set("width", "100%")
+          .set("height", "100%")
+          .set("object-fit", "contain");
+
+        stack.add(layerComponent);
+      }
+
+      webImage = stack;
+    }
     else {
-      // TODO !!
-      webImage = new com.vaadin.flow.component.html.Image();
+      webImage = new Span();
     }
 
     ((HasSize)webImage).setHeight(image.getHeight(), Unit.PIXELS);

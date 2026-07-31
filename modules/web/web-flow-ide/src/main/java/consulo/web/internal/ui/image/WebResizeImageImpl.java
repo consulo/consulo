@@ -32,6 +32,10 @@ public class WebResizeImageImpl implements Image, WebImageCanvasDraw {
     myWidth = width;
   }
 
+  public Image getOriginal() {
+    return myOriginal;
+  }
+
   @Override
   public int getHeight() {
     return myHeight;

@@ -3,21 +3,23 @@
 	
 }
 
+/* the app shell uses the aura theme - the lumo variables this file referenced do not exist there and resolved
+   to nothing, which left the thumb invisible while scrolling still worked */
 ::-webkit-scrollbar
 {
 	width: 0.6em;
 	height: 0.6em;
-	background-color: var(--lumo-base-color);
+	background-color: var(--aura-surface-color-solid);
 }
 
 ::-webkit-scrollbar-thumb
 {
-	background-color: var(--lumo-contrast-20pct);
+	background-color: var(--vaadin-border-color);
 	border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover
 {
-	background-color: var(--lumo-contrast-50pct);
+	background-color: var(--vaadin-border-color-secondary);
 	border-radius: 5px;
 }

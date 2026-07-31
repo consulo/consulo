@@ -33,4 +33,13 @@ public interface MenuItem extends Component {
     LocalizeValue getText();
 
     void setIcon(@Nullable Image icon);
+
+    /**
+     * @param checked null when the item is not checkable at all
+     */
+    default void setChecked(@Nullable Boolean checked) {
+    }
+
+    default void setShortcutText(LocalizeValue shortcutText) {
+    }
 }

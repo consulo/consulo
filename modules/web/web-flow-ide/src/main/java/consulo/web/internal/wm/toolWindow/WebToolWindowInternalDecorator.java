@@ -15,111 +15,37 @@
  */
 package consulo.web.internal.wm.toolWindow;
 
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowHeader;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowInternalDecorator;
 import consulo.project.Project;
+import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.project.ui.internal.WindowInfoImpl;
-import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
-import consulo.ui.ex.toolWindow.WindowInfo;
-import consulo.ui.layout.DockLayout;
+import consulo.web.internal.ui.base.TargetVaadin;
+import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
-public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorator {
-  private final WindowInfoImpl myWindowInfo;
-  private final UnifiedToolWindowImpl myToolWindow;
-  private final EventDispatcher<InternalDecoratorListener> myDispatcher = EventDispatcher.create(InternalDecoratorListener.class);
+public class WebToolWindowInternalDecorator extends UnifiedToolWindowInternalDecorator {
+    public static final String HEADER_CLASS_NAME = "web-tool-window-header";
 
-  private DockLayout myLayout;
+    @RequiredUIAccess
+    public WebToolWindowInternalDecorator(
+        Project project,
+        WindowInfoImpl windowInfo,
+        UnifiedToolWindowImpl toolWindow,
+        boolean canWorkInDumbMode
+    ) {
+        super(project, windowInfo, toolWindow);
 
-  private WebToolWindowHeader myHeader;
+        UnifiedToolWindowHeader header = getHeader();
 
-  @RequiredUIAccess
-  public WebToolWindowInternalDecorator(Project project, WindowInfoImpl windowInfo, UnifiedToolWindowImpl toolWindow, boolean canWorkInDumbMode) {
-    myWindowInfo = windowInfo;
-    myToolWindow = toolWindow;
-    myToolWindow.setDecorator(this);
+        // the north slot of the dock layout does not stretch its child, and the header has to reach the right
+        // edge for its action row to sit there
+        VaadinSizeUtil.setWidthFull(header.getComponent());
 
-    myHeader = new WebToolWindowHeader(toolWindow);
-
-    myLayout = DockLayout.create();
-    myLayout.top(myHeader.getComponent());
-    myLayout.center(toolWindow.getUIComponent());
-  }
-
-  
-  public Component getComponent() {
-    return myLayout;
-  }
-
-  
-  @Override
-  public WindowInfo getWindowInfo() {
-    return myWindowInfo;
-  }
-
-  @Override
-  public void apply(WindowInfo windowInfo) {
-
-  }
-
-  
-  @Override
-  public ToolWindow getToolWindow() {
-    return myToolWindow;
-  }
-
-  @Override
-  public void addInternalDecoratorListener(InternalDecoratorListener l) {
-    myDispatcher.addListener(l);
-  }
-
-  @Override
-  public void removeInternalDecoratorListener(InternalDecoratorListener l) {
-    myDispatcher.removeListener(l);
-  }
-
-  @Override
-  public void fireActivated() {
-    myDispatcher.getMulticaster().activated(this);
-  }
-
-  @Override
-  public void fireHidden() {
-    myDispatcher.getMulticaster().hidden(this);
-  }
-
-  @Override
-  public void fireHiddenSide() {
-    myDispatcher.getMulticaster().hiddenSide(this);
-  }
-
-  
-  @Override
-  public ActionGroup createPopupGroup() {
-    return new DefaultActionGroup();
-  }
-
-  @Override
-  public boolean isFocused() {
-    return false;
-  }
-
-  @Override
-  public boolean hasFocus() {
-    return false;
-  }
-
-  @Override
-  public void dispose() {
-
-  }
+        TargetVaadin.to(header.getComponent()).addClassName(HEADER_CLASS_NAME);
+    }
 }

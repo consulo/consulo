@@ -20,6 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.web.internal.ui.base.ToVaadinComponentWrapper;
 
 /**
  * @author VISTALL
@@ -28,7 +30,11 @@ import consulo.ui.layout.DockLayout;
 public class WebRootPaneImpl {
     private final DockLayout myDockLayout = DockLayout.create();
 
+    // the dock has a single top slot, the menu bar and the navigation bar are stacked inside it
+    private final VerticalLayout myTopLayout = VerticalLayout.create();
+
     public WebRootPaneImpl() {
+        myDockLayout.top(myTopLayout);
     }
 
     @RequiredUIAccess
@@ -38,12 +44,25 @@ public class WebRootPaneImpl {
 
     @RequiredUIAccess
     public void setMenuBar(MenuBar menuBar) {
-        myDockLayout.top(menuBar);
+        myTopLayout.add(menuBar);
+    }
+
+    @RequiredUIAccess
+    public void setNavigationBar(Component navigationBar) {
+        myTopLayout.add(navigationBar);
     }
 
     @RequiredUIAccess
     public void setStatusBar(UnifiedStatusBarImpl statusBar) {
-        myDockLayout.bottom(statusBar.getUIComponent());
+        Component component = statusBar.getUIComponent();
+
+        // the bar collapses to the border while every widget is still empty, and an ide frame without a status
+        // bar at all looks broken - the strip keeps its height like the awt one does
+        if (component instanceof ToVaadinComponentWrapper wrapper) {
+            wrapper.toVaadinComponent().addClassName("web-status-bar");
+        }
+
+        myDockLayout.bottom(component);
     }
 
     public Component getComponent() {

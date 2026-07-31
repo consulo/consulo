@@ -23,17 +23,28 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 2023-05-29
  */
 public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
+    public static final String CLASS_NAME = "web-menu-bar";
+
     public class Vaadin extends com.vaadin.flow.component.menubar.MenuBar implements FromVaadinComponentWrapper {
+        public Vaadin() {
+            addClassName(CLASS_NAME);
+        }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebMenuBarImpl.this;
         }
     }
+
+    private final List<MenuItem> myItems = new ArrayList<>();
 
     public WebMenuBarImpl() {
     }
@@ -44,12 +55,26 @@ public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadi
     }
 
     @Override
+    @RequiredUIAccess
     public void clear() {
+        myItems.clear();
+
+        getVaadinComponent().removeAll();
     }
 
     @Override
     @RequiredUIAccess
     public MenuBar add(MenuItem menuItem) {
+        myItems.add(menuItem);
+
+        if (menuItem instanceof WebMenuItemImpl webMenuItem) {
+            webMenuItem.render(getVaadinComponent());
+        }
+
         return this;
+    }
+
+    public List<MenuItem> getItems() {
+        return myItems;
     }
 }

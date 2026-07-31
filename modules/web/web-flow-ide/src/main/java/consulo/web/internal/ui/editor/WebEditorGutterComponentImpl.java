@@ -30,6 +30,21 @@ import java.util.List;
  * @since 07/08/2021
  */
 public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
+  private final WebEditorImpl myEditor;
+
+  public WebEditorGutterComponentImpl(WebEditorImpl editor) {
+    myEditor = editor;
+  }
+
+  /**
+   * The line status tracker asks every gutter of its document to repaint whenever its ranges change, and that
+   * is the only signal the tracker gives before an editor has looked it up.
+   */
+  @Override
+  public void repaint() {
+    myEditor.scheduleChangeBandsUpdate();
+  }
+
   @Override
   public @Nullable FoldRegion findFoldingAnchorAt(int x, int y) {
     return null;

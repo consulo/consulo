@@ -31,14 +31,25 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLayoutImpl.Vaadin> implements VerticalLayout {
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.VerticalLayout implements FromVaadinComponentWrapper {
+        public Vaadin() {
+            // a layout adds nothing on its own, only the gap the caller asked for
+            setMargin(false);
+            setPadding(false);
+            setSpacing(false);
+        }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebVerticalLayoutImpl.this;
         }
     }
 
-    public WebVerticalLayoutImpl() {
+    public WebVerticalLayoutImpl(int vGap) {
         VaadinSizeUtil.setWidthFull(this);
+
+        if (vGap > 0) {
+            toVaadinComponent().getStyle().set("gap", vGap + "px");
+        }
     }
 
     @Override

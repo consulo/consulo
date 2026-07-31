@@ -1,0 +1,82 @@
+/* owned by a single area of the frontend, keeps the theme files from colliding */
+
+/* the strip and the tab inside it are two independent metrics in awt - TabsUtil.getRealTabsHeight() is 30 for
+   the strip, TabsUtil.getTabsHeight() is 26 for the tab, the difference is TabsUtil.TAB_VERTICAL_PADDING on
+   each side. keeping them apart is what lets the tab change height without the strip following it */
+.web-tabbed-layout
+{
+  --web-tab-height: 26px;
+  --web-tab-strip-padding: 2px;
+  --web-tab-strip-height: calc(var(--web-tab-height) + var(--web-tab-strip-padding) * 2);
+}
+
+/* the part of the sheet that holds the tabs is named tabs-container, not tabs - tabs is the slot the
+   vaadin-tabs element sits in. a fixed height is what pins the strip, the tab inside is free to be shorter */
+.web-tabbed-layout::part(tabs-container)
+{
+  flex: 0 0 auto;
+  box-sizing: border-box;
+
+  height: var(--web-tab-strip-height);
+  padding: var(--web-tab-strip-padding) 0;
+  gap: 0;
+}
+
+/* aura paints vaadin-tabs as a sunken surface - a filled bar with a shadow like edge behind the whole row.
+   an editor tab row is flat, only the selected tab carries a fill */
+.web-tabbed-layout > vaadin-tabs
+{
+  --vaadin-tabs-background: transparent;
+  --vaadin-tabs-padding: 0px;
+  --vaadin-tabs-gap: 0;
+}
+
+/* aura insets the scroller by 3px and pulls it back out with a negative margin, so the tabs bleed over the
+   edges of the strip */
+.web-tabbed-layout vaadin-tabs::part(tabs)
+{
+  padding: 0;
+  margin: 0;
+}
+
+.web-tabbed-layout vaadin-tab
+{
+  box-sizing: border-box;
+  height: var(--web-tab-height);
+  min-height: 0;
+
+  padding: 0 8px;
+}
+
+/* the selected tab is raised by a drop shadow in aura, the fill alone marks it in awt */
+.web-tabbed-layout vaadin-tab[selected]
+{
+  box-shadow: none;
+}
+
+/* the label and the close cross are two separate children of the tab, without this they are laid out on the
+   text baseline and the cross sits below the label */
+vaadin-tab:has(> .web-tab-close)
+{
+  display: flex;
+  align-items: center;
+}
+
+.web-tab-close
+{
+  margin-inline-start: 6px;
+  padding: 0 2px;
+
+  /* the cross must not grow the tab when it appears, the glyph is narrower than the box it hovers in */
+  flex: 0 0 auto;
+  line-height: 1;
+
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.web-tab-close:hover
+{
+  opacity: 1;
+  background-color: gainsboro;
+}

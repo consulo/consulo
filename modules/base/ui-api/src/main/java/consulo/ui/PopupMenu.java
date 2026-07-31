@@ -27,4 +27,11 @@ public interface PopupMenu extends Menu {
     }
 
     void show(int relativeX, int relativeY);
+
+    /**
+     * Opens the menu on a plain click of the target rather than on {@link #show}, which is what a toolbar
+     * button holding a popup group needs. Off by default - a context menu belongs to the right button.
+     */
+    default void setOpenOnClick(boolean openOnClick) {
+    }
 }

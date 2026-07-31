@@ -27,6 +27,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Maps;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.AsyncResult;
@@ -248,6 +249,14 @@ public abstract class BaseDataManager implements DataManagerEx {
         if (component instanceof UiDataProvider uiProvider) {
             return new UiDataProviderAdapter(myApplication, uiProvider);
         }
+
+        // a component rarely implements the interface itself, it holds the provider - the awt data manager reads
+        // the very same key from the client properties
+        UiDataProvider uiProvider = component.getUserData(UiDataProvider.KEY);
+        if (uiProvider != null) {
+            return new UiDataProviderAdapter(myApplication, uiProvider);
+        }
+
         return component::getUserData;
     }
 
@@ -265,5 +274,20 @@ public abstract class BaseDataManager implements DataManagerEx {
     @Override
     public DataContext getDataContext(consulo.ui.@Nullable Component component) {
         return new MyUIDataContext(this, component);
+    }
+
+    /**
+     * Platform code that has not been migrated off swing asks for the context of a {@link Component} it was
+     * handed - the trailing spaces stripper does it with the focus owner. A frontend without an awt hierarchy
+     * answers those calls with a bridge, which unwraps back to the component the context can be built from.
+     */
+    @Override
+    public DataContext getDataContext(java.awt.@Nullable Component component) {
+        if (component == null) {
+            return DataContext.EMPTY_CONTEXT;
+        }
+
+        consulo.ui.Component uiComponent = TargetAWT.from(component);
+        return uiComponent == null ? DataContext.EMPTY_CONTEXT : getDataContext(uiComponent);
     }
 }

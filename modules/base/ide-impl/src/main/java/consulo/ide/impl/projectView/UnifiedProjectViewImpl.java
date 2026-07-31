@@ -23,17 +23,25 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
+import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
+import consulo.ide.impl.idea.ide.projectView.actions.ProjectViewToolbarGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
+import consulo.language.editor.util.EditorHelper;
+import consulo.language.editor.util.IdeView;
+import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
@@ -42,19 +50,25 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
-import consulo.project.ui.view.tree.AbstractPsiBasedNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
@@ -70,6 +84,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 
@@ -81,11 +96,27 @@ import java.util.*;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     private final class MyDataProvider implements UiDataProvider {
-        private @Nullable Object getSelectedNodeElement() {
+        /**
+         * The selection lives in the consulo.ui tree, and reading it means touching the ui component. Every
+         * {@code sink.lazy} value is computed later and off the ui thread, so it has to be captured here - the
+         * awt pane snapshots {@code selectedUserObjects} in the very same way.
+         */
+        private @Nullable AbstractTreeNode takeSelectedNode() {
+            TreeNode<AbstractTreeNode> selectedNode = myTree == null ? null : myTree.getSelectedNode();
+            return selectedNode == null ? null : selectedNode.getValue();
+        }
+
+        private @Nullable Object takeSelectedNodeElement() {
+            AbstractTreeNode selectedNode = takeSelectedNode();
+            if (selectedNode != null) {
+                return selectedNode.getValue();
+            }
+
             AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane == null) { // can happen if not initialized yet
                 return null;
             }
+
             DefaultMutableTreeNode node = currentProjectViewPane.getSelectedNode();
             if (node == null) {
                 return null;
@@ -95,56 +126,81 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 : userObject instanceof NodeDescriptor nodeDescriptor ? nodeDescriptor.getElement() : null;
         }
 
+        private @Nullable Module moduleContext(@Nullable Object selected) {
+            if (selected instanceof Module module) {
+                return !module.isDisposed() ? module : null;
+            }
+            if (selected instanceof PsiDirectory directory) {
+                return moduleBySingleContentRoot(directory.getVirtualFile());
+            }
+            if (selected instanceof VirtualFile virtualFile) {
+                return moduleBySingleContentRoot(virtualFile);
+            }
+            return null;
+        }
+
         @Override
         public void uiDataSnapshot(DataSink sink) {
-            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
-            if (currentProjectViewPane != null) {
-                currentProjectViewPane.uiDataSnapshot(sink);
-            }
-
+            sink.set(Project.KEY, myProject);
             sink.set(HelpManager.HELP_ID, HelpID.PROJECT_VIEWS);
 
-            sink.lazy(PsiElement.KEY, () -> {
-                AbstractProjectViewPane pane = getCurrentProjectViewPane();
-                if (pane == null) {
-                    return null;
-                }
-                TreeNode<AbstractTreeNode> selectedNode = myTree.getSelectedNode();
-                if (selectedNode != null) {
-                    AbstractTreeNode value = selectedNode.getValue();
-                    if (value instanceof AbstractPsiBasedNode) {
-                        return (PsiElement)value.getValue();
+            // without the view every action that creates something - the whole New group - has nowhere to put it
+            // and expands to nothing, and cut/copy/paste have no provider to run through
+            sink.set(IdeView.KEY, myIdeView);
+            sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+            if (myCopyPasteDelegator != null) {
+                sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
+                sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());
+                sink.set(PlatformDataKeys.PASTE_PROVIDER, myCopyPasteDelegator.getPasteProvider());
+            }
+
+            AbstractTreeNode selectedNode = takeSelectedNode();
+            Object selected = takeSelectedNodeElement();
+
+            // set, not lazy - the selection is already in hand, and a lazy supplier does not survive into the
+            // pre cached context the async action update and the navigation bar are built from
+            PsiElement selectedElement = selected instanceof PsiElement psiElement && psiElement.isValid() ? psiElement : null;
+
+            if (selectedNode != null) {
+                sink.set(PlatformDataKeys.SELECTED_ITEMS, new Object[]{selectedNode});
+            }
+
+            // the node itself is the navigatable the awt pane publishes, not its value - Jump to Source and the
+            // rest of the navigation actions read only the array key
+            Navigatable navigatable = selectedNode != null ? selectedNode
+                : selected instanceof Navigatable selectedNavigatable ? selectedNavigatable : null;
+            sink.set(Navigatable.KEY, navigatable);
+            if (navigatable != null) {
+                sink.set(Navigatable.KEY_OF_ARRAY, new Navigatable[]{navigatable});
+            }
+
+            VirtualFile selectedFile = selected instanceof VirtualFile virtualFile
+                ? virtualFile
+                : PsiUtilCore.getVirtualFile(selectedElement);
+            sink.set(VirtualFile.KEY, selectedFile);
+            if (selectedFile != null) {
+                sink.set(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{selectedFile});
+            }
+
+            sink.set(PsiFile.KEY, selectedElement instanceof PsiFile psiFile ? psiFile : null);
+
+            sink.set(PsiElement.KEY, selectedElement);
+            if (selectedElement != null) {
+                sink.set(PsiElement.KEY_OF_ARRAY, new PsiElement[]{selectedElement});
+            }
+            else {
+                sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
+                    AbstractProjectViewPane pane = getCurrentProjectViewPane();
+                    if (pane == null) {
+                        return null;
                     }
-                }
-                return null;
-            });
-            sink.lazy(PsiElement.KEY_OF_ARRAY, () -> {
-                AbstractProjectViewPane pane = getCurrentProjectViewPane();
-                if (pane == null) {
-                    return null;
-                }
-                PsiElement[] elements = pane.getSelectedPSIElements();
-                return elements.length == 0 ? null : elements;
-            });
-            sink.lazy(PlatformDataKeys.PROJECT_CONTEXT, () -> {
-                Object selected = getSelectedNodeElement();
-                return selected instanceof Project ? (Project)selected : null;
-            });
-            sink.lazy(LangDataKeys.MODULE_CONTEXT, () -> {
-                Object selected = getSelectedNodeElement();
-                if (selected instanceof Module module) {
-                    return !module.isDisposed() ? module : null;
-                }
-                else if (selected instanceof PsiDirectory directory) {
-                    return moduleBySingleContentRoot(directory.getVirtualFile());
-                }
-                else if (selected instanceof VirtualFile virtualFile) {
-                    return moduleBySingleContentRoot(virtualFile);
-                }
-                else {
-                    return null;
-                }
-            });
+                    PsiElement[] elements = pane.getSelectedPSIElements();
+                    return elements.length == 0 ? null : elements;
+                });
+            }
+
+            sink.set(PlatformDataKeys.PROJECT_CONTEXT, selected instanceof Project project ? project : null);
+            sink.set(LangDataKeys.MODULE_CONTEXT, moduleContext(selected));
             sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> getSelectedModules());
             sink.lazy(ModuleGroup.ARRAY_DATA_KEY, () -> {
                 List<ModuleGroup> selectedElements = getSelectedElements(ModuleGroup.class);
@@ -158,6 +214,13 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                 List<NamedLibraryElement> selectedElements = getSelectedElements(NamedLibraryElement.class);
                 return selectedElements.isEmpty() ? null : selectedElements.toArray(new NamedLibraryElement[selectedElements.size()]);
             });
+
+            // last, not first: the sink keeps the first value put under a key, and the swing pane has no tree of
+            // its own, so it would publish an empty selection that shadows everything derived from the ui tree
+            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
+            if (currentProjectViewPane != null) {
+                currentProjectViewPane.uiDataSnapshot(sink);
+            }
         }
 
         private @Nullable LibraryOrderEntry getSelectedLibrary() {
@@ -272,6 +335,95 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
     private Tree<AbstractTreeNode> myTree;
 
+    private final IdeView myIdeView = new MyIdeView();
+
+    private final TreeExpander myTreeExpander = new MyTreeExpander();
+
+    private @Nullable CopyPasteDelegator myCopyPasteDelegator;
+
+    /**
+     * Backs the expand all and collapse all title actions. A tree which cannot walk its own nodes hides them
+     * rather than showing them disabled, which is what the platform does for a view without an expander.
+     */
+    private final class MyTreeExpander implements TreeExpander {
+        @Override
+        public void expandAll() {
+            if (myTree != null) {
+                myTree.expandAll();
+            }
+        }
+
+        @Override
+        public boolean canExpand() {
+            return myTree != null && myTree.isExpandCollapseAllSupported();
+        }
+
+        @Override
+        public boolean isExpandAllVisible() {
+            return canExpand();
+        }
+
+        @Override
+        public void collapseAll() {
+            if (myTree != null) {
+                myTree.collapseAll();
+            }
+        }
+
+        @Override
+        public boolean canCollapse() {
+            return canExpand();
+        }
+
+        @Override
+        public boolean isCollapseAllVisible() {
+            return canExpand();
+        }
+    }
+
+    /**
+     * The selection of this view lives in the consulo.ui tree, so everything that needs it reads it from there
+     * and not from the swing pane, which never has one.
+     */
+    private @Nullable PsiElement getSelectedPsiElement() {
+        TreeNode<AbstractTreeNode> selectedNode = myTree == null ? null : myTree.getSelectedNode();
+        if (selectedNode == null) {
+            return null;
+        }
+
+        AbstractTreeNode value = selectedNode.getValue();
+        return value != null && value.getValue() instanceof PsiElement element && element.isValid() ? element : null;
+    }
+
+    private final class MyIdeView implements IdeView {
+        @Override
+        public void selectElement(PsiElement element) {
+            selectPsiElement(element, false);
+
+            if (element != null && !(element instanceof PsiDirectory)) {
+                EditorHelper.openInEditor(element, false);
+            }
+        }
+
+        @Override
+        public PsiDirectory[] getDirectories() {
+            PsiElement selected = getSelectedPsiElement();
+            if (selected instanceof PsiDirectory directory) {
+                return new PsiDirectory[]{directory};
+            }
+
+            // creating something next to the selected file means creating it in the folder that holds it
+            PsiFile containingFile = selected == null ? null : selected.getContainingFile();
+            PsiDirectory parent = containingFile == null ? null : containingFile.getContainingDirectory();
+            return parent == null ? PsiDirectory.EMPTY_ARRAY : new PsiDirectory[]{parent};
+        }
+
+        @Override
+        public PsiDirectory getOrChooseDirectory() {
+            return DirectoryChooserUtil.getOrChooseDirectory(this);
+        }
+    }
+
     @Inject
     public UnifiedProjectViewImpl(Project project) {
         myProject = project;
@@ -340,9 +492,35 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
         wrappedLayout.putUserData(UiDataProvider.KEY, new MyDataProvider());
 
+        if (TargetAWT.to(wrappedLayout) instanceof JComponent popupTarget) {
+            // the delegator only needs the component to route the copy and paste key strokes through
+            myCopyPasteDelegator = new CopyPasteDelegator(myProject, popupTarget) {
+                @Override
+                @RequiredUIAccess
+                protected PsiElement[] getSelectedElements() {
+                    PsiElement selected = getSelectedPsiElement();
+                    return selected == null ? PsiElement.EMPTY_ARRAY : new PsiElement[]{selected};
+                }
+            };
+
+            // the popup reads the same context as the actions do, so it is installed on the component that holds
+            // the provider rather than on the tree itself
+            CustomizationUtil.installPopupHandler(popupTarget, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
+        }
+
         Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
 
         toolWindow.getContentManager().addContent(content);
+
+        List<AnAction> titleActions = new ArrayList<>();
+        createTitleActions(titleActions);
+        if (!titleActions.isEmpty()) {
+            toolWindow.setTitleActions(titleActions.toArray(AnAction[]::new));
+        }
+    }
+
+    private void createTitleActions(List<? super AnAction> titleActions) {
+        titleActions.add(ActionManager.getInstance().getAction(ProjectViewToolbarGroup.class));
     }
 
     @SuppressWarnings("unchecked")

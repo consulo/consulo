@@ -15,39 +15,30 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
-import consulo.ui.image.Image;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.SimpleComponent;
-import org.jspecify.annotations.Nullable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
-    public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
-        @Override
-        public @Nullable Component toUIComponent() {
-            return WebMenuSeparatorImpl.this;
+public class WebMenuSeparatorImpl extends WebMenuItemImpl implements MenuSeparator {
+    public WebMenuSeparatorImpl() {
+        super(LocalizeValue.empty());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void render(HasMenuItems target) {
+        if (target instanceof SubMenu subMenu) {
+            subMenu.addSeparator();
         }
-    }
-
-    @Override
-    public Vaadin createVaadinComponent() {
-        return new Vaadin();
-    }
-
-    @Override
-    public LocalizeValue getText() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setIcon(@Nullable Image icon) {
-        throw new UnsupportedOperationException();
+        else if (target instanceof ContextMenu contextMenu) {
+            contextMenu.addSeparator();
+        }
     }
 }

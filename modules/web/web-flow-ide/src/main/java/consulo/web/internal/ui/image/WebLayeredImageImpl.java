@@ -28,6 +28,10 @@ public class WebLayeredImageImpl implements Image, WebImageCanvasDraw {
     myImages = images;
   }
 
+  public Image[] getImages() {
+    return myImages;
+  }
+
   @Override
   public int getHeight() {
     return myImages[0].getHeight();

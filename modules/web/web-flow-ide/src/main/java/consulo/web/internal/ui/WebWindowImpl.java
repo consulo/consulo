@@ -18,7 +18,7 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
@@ -74,8 +74,10 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     }
 
     private static void addCloseDialogButton(Dialog dialog) {
-        Button closeButton = new Button(new Icon("lumo", "cross"), (e) -> dialog.close());
-        closeButton.addThemeVariants(ButtonVariant.TERTIARY);
+        // the lumo iconset is not part of the aura theme used by the app shell
+        Button closeButton = new Button(VaadinIcon.CLOSE_SMALL.create(), (e) -> dialog.close());
+        // created outside a VaadinComponentDelegate, so the small variant has to be added by hand here
+        closeButton.addThemeVariants(ButtonVariant.TERTIARY, ButtonVariant.SMALL);
         dialog.getHeader().add(closeButton);
     }
 

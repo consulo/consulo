@@ -16,6 +16,8 @@
 package consulo.web.internal.startup;
 
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.breadcrumbs.Breadcrumbs;
+import com.vaadin.flow.component.breadcrumbs.BreadcrumbsItem;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -33,6 +35,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Inline;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -57,6 +60,10 @@ import org.vaadin.stefan.table.Table;
 @StyleSheet("./themes/consulo/aura-utility.css")
 @StyleSheet("./themes/consulo/styles.css")
 @StyleSheet("./themes/consulo/scrollbar.css")
+@StyleSheet("./themes/consulo/editor.css")
+@StyleSheet("./themes/consulo/tabs.css")
+@StyleSheet("./themes/consulo/statusbar.css")
+@StyleSheet("./themes/consulo/toolwindow.css")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(HorizontalLayout.class)
@@ -76,6 +83,8 @@ import org.vaadin.stefan.table.Table;
 @Uses(ContextMenu.class)
 @Uses(MenuItem.class)
 @Uses(MenuBar.class)
+@Uses(Breadcrumbs.class)
+@Uses(BreadcrumbsItem.class)
 @Uses(RadioButtonGroup.class)
 @Uses(Div.class)
 @Uses(TreeGrid.class)
@@ -86,5 +95,10 @@ import org.vaadin.stefan.table.Table;
 public class ConsuloAppShellConfigurator implements AppShellConfigurator {
   @Override
   public void configurePage(AppShellSettings settings) {
+    // the ide draws its own popup menus everywhere, the browser one must never appear over them
+    settings.addInlineWithContents(
+      "document.addEventListener('contextmenu', event => event.preventDefault());",
+      Inline.Wrapping.JAVASCRIPT
+    );
   }
 }

@@ -54,6 +54,21 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
         myRootView = new WebIdeRootView(project);
     }
 
+    /**
+     * The status bar is built here and not in {@link #show()} because the frame allocator instantiates
+     * {@code StatusBarWidgetsManager} right after this call, and every widget it creates is dropped for good
+     * when {@code WindowManager#getStatusBar} still answers null.
+     */
+    @RequiredUIAccess
+    @Override
+    public void initialize() {
+        myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
+        Disposer.register(this, myStatusBar);
+        myStatusBar.install(this);
+
+        myRootView.setStatusBar(myStatusBar);
+    }
+
     @RequiredUIAccess
     public void show() {
         UI ui = UI.getCurrent();
@@ -65,12 +80,6 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
         String projectTitle = FrameTitleBuilder.getInstance().getProjectTitle(myProject);
 
         ui.getPage().setTitle(projectTitle);
-
-        myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
-        Disposer.register(this, myStatusBar);
-        myStatusBar.install(this);
-
-        myRootView.setStatusBar(myStatusBar);
 
         myRootView.update();
 

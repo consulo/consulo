@@ -26,6 +26,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.image.WebImageConverter;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -41,6 +42,8 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     }
 
     private LocalizeValue myTextValue = LocalizeValue.empty();
+
+    private @Nullable Image myImage;
 
     public WebButtonImpl(LocalizeValue text) {
         Vaadin component = toVaadinComponent();
@@ -60,8 +63,10 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
                 toVaadinComponent().addThemeVariants(ButtonVariant.PRIMARY);
                 break;
             case BORDERLESS:
+                toVaadinComponent().addThemeVariants(ButtonVariant.TERTIARY);
                 break;
             case INPLACE:
+                toVaadinComponent().addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
                 break;
         }
     }
@@ -86,7 +91,9 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     @Override
     @RequiredUIAccess
     public void setIcon(@Nullable Image image) {
-        // TODO  toVaadinComponent().setIcon(image);
+        myImage = image;
+
+        toVaadinComponent().setIcon(image == null ? null : WebImageConverter.getImage(image));
     }
 
     @Override
@@ -95,8 +102,6 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
 
     @Override
     public @Nullable Image getIcon() {
-        // TODO
-        return null;
-        //return toVaadinComponent().myImage;
+        return myImage;
     }
 }

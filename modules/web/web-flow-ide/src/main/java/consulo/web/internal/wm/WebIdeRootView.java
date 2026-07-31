@@ -15,21 +15,12 @@
  */
 package consulo.web.internal.wm;
 
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
-import consulo.ui.ex.impl.internal.action.UnifiedActionUtil;
-import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.Project;
-import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.IdeActions;
 import consulo.web.internal.ui.WebRootPaneImpl;
+import consulo.web.internal.ui.base.WebFocusTracker;
 
 /**
  * @author VISTALL
@@ -37,24 +28,33 @@ import consulo.web.internal.ui.WebRootPaneImpl;
  */
 public class WebIdeRootView {
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
-    private final MenuItemPresentationFactory myPresentationFactory;
-    private Project myProject;
-
-    private MenuBar myMenuBar;
+    private final WebIdeMenuBar myMenuBar;
+    private final WebNavigationBar myNavigationBar;
+    private final Project myProject;
 
     @RequiredUIAccess
     public WebIdeRootView(Project project) {
         myProject = project;
-        myPresentationFactory = new MenuItemPresentationFactory();
+
+        // the frame provider is reached by walking up from whatever scope is focused, it must not become a scope
+        // itself - otherwise clicking the menu bar or the navigation bar would drop the editor context
+        WebFocusTracker.exclude(myRootPanel.getComponent());
 
         myRootPanel.getComponent().putUserData(UiDataProvider.KEY, sink -> {
-            if (myProject != null && myProject.isInitialized()) {
+            // isInitialized() also waits for the startup activities, and until they pass every action that needs a
+            // project - Close Project above all - saw an empty context and disabled itself
+            if (myProject != null && !myProject.isDisposed()) {
                 sink.set(Project.KEY, myProject);
             }
         });
 
-        myMenuBar = MenuBar.create();
-        myRootPanel.setMenuBar(myMenuBar);
+        WebFocusTracker.installRoot(myRootPanel.getComponent());
+
+        myMenuBar = new WebIdeMenuBar(myRootPanel.getComponent());
+        myRootPanel.setMenuBar(myMenuBar.getMenuBar());
+
+        myNavigationBar = new WebNavigationBar(project, myRootPanel.getComponent());
+        myRootPanel.setNavigationBar(myNavigationBar.getComponent());
     }
 
     @RequiredUIAccess
@@ -64,18 +64,9 @@ public class WebIdeRootView {
 
     @RequiredUIAccess
     public void update() {
-        DataContext dataContext = ((BaseDataManager) DataManager.getInstance()).getDataContextTest(myRootPanel.getComponent());
+        myMenuBar.updateMenuActions();
 
-        AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
-
-        // TODO explicit read action - remove in future
-        myProject.getApplication().runReadAction(() -> {
-            UnifiedActionUtil.expandActionGroup((ActionGroup) action,
-                dataContext,
-                ActionManager.getInstance(),
-                myPresentationFactory,
-                menuItem -> myMenuBar.add(menuItem));
-        });
+        myNavigationBar.update();
     }
 
     public WebRootPaneImpl getRootPanel() {

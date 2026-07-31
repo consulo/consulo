@@ -45,6 +45,8 @@ import java.util.*;
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
     private static final List CANCELED_RESULT = new ArrayList<>();
 
+    private static final int EXPAND_ALL_DEPTH = 3;
+
     @Tag("vaadin-grid-tree-toggle")
     public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component
         implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
@@ -95,6 +97,37 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 toggle.add(item.toComponent());
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
+
+            installSelectOnRightClick();
+        }
+
+        /**
+         * The awt trees move the selection to the row under the pointer before showing their popup - see
+         * {@code PopupHandler#installFollowingSelectionTreePopup} - and the popup is filled from the selection.
+         * The vaadin grid only selects on the left button, so a right click would answer for whatever row was
+         * selected before.
+         */
+        private void installSelectOnRightClick() {
+            // the rows live in the shadow dom of the grid while the cell contents are slotted light dom children,
+            // so closest() cannot reach the row - the composed path is the only way across the boundary
+            String rowIndex = "(event.composedPath().find(node => node.localName === 'tr') || {}).index";
+
+            getElement()
+                .addEventListener("mousedown", event -> {
+                    int index = event.getEventData().path(rowIndex).asInt(-1);
+                    if (index < 0) {
+                        return;
+                    }
+
+                    WebTreeNodeImpl<NODE> item = getDataCommunicator().getItem(index);
+                    if (item != null) {
+                        select(item);
+                    }
+                })
+                // header rows carry no index, and only the right button has to move the selection - the left one
+                // is the grid's own business
+                .addEventData(rowIndex)
+                .setFilter("event.button === 2");
         }
 
         public void init(NODE rootValue, TreeModel<NODE> model) {
@@ -285,5 +318,27 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     @Override
     public void expand(TreeNode<NODE> node) {
         toVaadinComponent().expand(node);
+    }
+
+    @Override
+    public boolean isExpandCollapseAllSupported() {
+        return true;
+    }
+
+    @Override
+    public void expandAll() {
+        Vaadin vaadin = toVaadinComponent();
+
+        // the children of a node are fetched when it is first opened, so the depth is unknown here and a
+        // recursion over the whole tree could open a project view down to every file. the awt expand all
+        // stops at the same place - it only walks what the tree already holds
+        vaadin.expandRecursively(vaadin.getTreeData().getRootItems(), EXPAND_ALL_DEPTH);
+    }
+
+    @Override
+    public void collapseAll() {
+        Vaadin vaadin = toVaadinComponent();
+
+        vaadin.collapseRecursively(vaadin.getTreeData().getRootItems(), Integer.MAX_VALUE);
     }
 }

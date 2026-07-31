@@ -49,7 +49,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     CENTER
   }
 
-  private final Map<String, WidgetBean> myWidgetMap = new HashMap<>();
+  private final Map<String, WidgetBean> myWidgetMap = new LinkedHashMap<>();
 
   private HorizontalLayout myLeftPanel;
   private HorizontalLayout myRightPanel;
@@ -79,14 +79,16 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   private static class WidgetBean {
     PseudoComponent component;
+    consulo.ui.Component uiComponent;
     Position position;
     StatusBarWidget widget;
 
-    static WidgetBean create(StatusBarWidget widget, Position position, PseudoComponent component) {
+    static WidgetBean create(StatusBarWidget widget, Position position, PseudoComponent component, consulo.ui.Component uiComponent) {
       WidgetBean bean = new WidgetBean();
       bean.widget = widget;
       bean.position = position;
       bean.component = component;
+      bean.uiComponent = uiComponent;
       return bean;
     }
   }
@@ -97,22 +99,19 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   private UnifiedInfoAndProgressPanel myInfoAndProgressPanel;
 
+  private final @Nullable StatusBar myMaster;
+
+  private UnifiedToolWindowsSwitcher mySwitcher;
+
   @RequiredUIAccess
   public UnifiedStatusBarImpl(Application application, @Nullable StatusBar master) {
     myApplication = application;
+    myMaster = master;
 
     myInfoAndProgressPanel = new UnifiedInfoAndProgressPanel();
     Disposer.register(this, myInfoAndProgressPanel);
 
     centerPanel().add(myInfoAndProgressPanel.getUIComponent());
-
-    if (master == null) {
-      UnifiedToolWindowsSwitcher switcher = new UnifiedToolWindowsSwitcher(this);
-      switcher.update();
-
-      Disposer.register(this, switcher);
-      leftPanel().add(switcher.getUIComponent());
-    }
 
     myComponent.putUserData(UiDataProvider.KEY, sink -> {
         sink.set(Project.KEY, getProject());
@@ -141,14 +140,19 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   private void addWidget(StatusBarWidget widget, Position position, List<String> order) {
     UIAccess.assertIsUIThread();
     PseudoComponent c = wrap(widget);
+    // the custom widget wrapper builds a new component on each call, it must be resolved exactly once
+    consulo.ui.Component uiComponent = c.getComponent();
     HorizontalLayout panel = getTargetPanel(position);
     //if (position == Position.LEFT && panel.getComponentCount() == 0) {
     //  c.setBorder(SystemInfo.isMac ? JBUI.Borders.empty(2, 0, 2, 4) : JBUI.Borders.empty());
     //}
-    panel.add(c/*, getPositionIndex(position, anchor)*/);
-    myWidgetMap.put(widget.getId(), WidgetBean.create(widget, position, c));
+    panel.add(uiComponent/*, getPositionIndex(position, anchor)*/);
+    myWidgetMap.put(widget.getId(), WidgetBean.create(widget, position, c, uiComponent));
     if (c instanceof StatusBarWidgetWrapper) {
       ((StatusBarWidgetWrapper)c).beforeUpdate();
+    }
+    else {
+      widget.beforeUpdate();
     }
     widget.install(this);
     //panel.revalidate();
@@ -244,7 +248,15 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void removeWidget(String id) {
-
+    // the widget manager drops widgets while the project closes, when the ui access may already be gone -
+    // invokeLater is the only entry point that tolerates it
+    myApplication.invokeLater(() -> {
+      WidgetBean bean = myWidgetMap.remove(id);
+      if (bean != null) {
+        getTargetPanel(bean.position).remove(bean.uiComponent);
+        Disposer.dispose(bean.widget);
+      }
+    });
   }
 
   @Override
@@ -286,6 +298,32 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   @Override
   public void install(IdeFrame frame) {
     myFrame = frame;
+
+    // the switcher hides itself while getProject() is null, and the project is only reachable through the frame
+    if (myMaster == null) {
+      myApplication.getLastUIAccess().giveIfNeed(this::installToolWindowsSwitcher);
+    }
+  }
+
+  /** The switcher is the leftmost item of the bar. */
+  @RequiredUIAccess
+  protected void installToolWindowsSwitcher() {
+    if (mySwitcher == null) {
+      mySwitcher = new UnifiedToolWindowsSwitcher(this);
+      Disposer.register(this, mySwitcher);
+      addToLeft(mySwitcher.getUIComponent());
+    }
+
+    mySwitcher.update();
+  }
+
+  /**
+   * Consulo renders the bottom tool window stripe and the status bar as one row, the stripe buttons taking
+   * the left side of the bar.
+   */
+  @RequiredUIAccess
+  public void addToLeft(consulo.ui.Component component) {
+    leftPanel().add(component);
   }
 
   @Override
@@ -331,13 +369,14 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   public void updateWidget(String id) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
     uiAccess.giveIfNeed(() -> {
-      PseudoComponent widgetComponent = getWidgetComponent(id);
-      if (widgetComponent != null) {
-        if (widgetComponent instanceof StatusBarWidgetWrapper) {
-          ((StatusBarWidgetWrapper)widgetComponent).beforeUpdate();
+      WidgetBean bean = myWidgetMap.get(id);
+      if (bean != null) {
+        if (bean.component instanceof StatusBarWidgetWrapper) {
+          ((StatusBarWidgetWrapper)bean.component).beforeUpdate();
         }
-
-        //widgetComponent.repaint();
+        else {
+          bean.widget.beforeUpdate();
+        }
       }
 
       //updateChildren(child -> child.updateWidget(id));
@@ -362,11 +401,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
       .stream()
       .filter(it -> widgetPredicate.test(it.getValue().widget))
       .forEach(it -> updateWidget(it.getKey()));
-  }
-
-  private PseudoComponent getWidgetComponent(String id) {
-    WidgetBean bean = myWidgetMap.get(id);
-    return bean == null ? null : bean.component;
   }
 
   @Override

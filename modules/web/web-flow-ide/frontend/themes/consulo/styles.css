@@ -9,41 +9,125 @@ html:not(div)
   user-select: none;
 }
 
+/* the IDE frame owns the viewport - the page itself must never scroll */
+html,
+body
+{
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* flow generates the route root as <flow-container-root-XXXX>, inline and auto height by default,
+   which breaks the height: 100% chain of everything below it */
+#outlet,
+#outlet > *
+{
+  display: block;
+  height: 100%;
+}
+
+/* top/bottom stripes must eat into the panel height instead of being added on top of a full height center */
 .web-tool-window-panel
 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  /* separates the navigation bar from the tool window / editor area, like the awt frame does */
+  box-sizing: border-box;
+  border-top: 1px solid lightgray;
+}
+
+.web-tool-window-panel-center
+{
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* the wrapper must not add anything on top of the stripe it holds - there is no bottom wrapper, the bottom
+   stripe lives in the status bar row */
+.web-tool-window-panel-top
+{
+  flex: 0 0 auto;
+}
+
+/* all four stripes share one thickness so the buttons render at the same size. the button inside is meant to
+   come out at the tab height the awt ide uses - TabsUtil.getTabsHeight() is 26 - so the stripe carries it plus
+   the margin that insets it on both sides */
+.web-tool-window-panel
+{
+  --web-tool-window-stripe-button-size: 26px;
+  --web-tool-window-stripe-button-margin: 4px;
+
+  --web-tool-window-stripe-size: calc(
+    var(--web-tool-window-stripe-button-size) + var(--web-tool-window-stripe-button-margin) * 2
+  );
+}
+
+.web-tool-window-stripe-top,
+.web-tool-window-stripe-bottom,
+.web-tool-window-stripe-left,
+.web-tool-window-stripe-right
+{
+  /* border-box keeps the 1px border inside the thickness, otherwise the bordered
+     axis renders thicker than the others */
+  box-sizing: border-box;
+  flex: 0 0 auto;
+
+  align-items: center;
+}
+
+.web-tool-window-stripe-top,
+.web-tool-window-stripe-bottom
+{
+  width: 100%;
+  height: var(--web-tool-window-stripe-size);
+}
+
+.web-tool-window-stripe-left,
+.web-tool-window-stripe-right
+{
+  height: 100%;
+  width: var(--web-tool-window-stripe-size);
+
+  text-orientation: mixed;
+  writing-mode: vertical-lr;
+}
+
+/* a stripe without buttons must not reserve its thickness */
+.web-tool-window-stripe-top:empty,
+.web-tool-window-stripe-bottom:empty
+{
+  height: 0;
+  border: none;
+}
+
+.web-tool-window-stripe-left:empty,
+.web-tool-window-stripe-right:empty
+{
+  width: 0;
+  border: none;
 }
 
 .web-tool-window-stripe-top
 {
-  height: 1.5em;
   border-bottom: 1px solid lightgray;
 }
 
 .web-tool-window-stripe-bottom
 {
-  height: 1.5em;
   border-top: 1px solid lightgray;
 }
 
 .web-tool-window-stripe-left
 {
-  height: 100%;
-  width: 1.5em;
-
-  text-orientation: mixed;
-  writing-mode: vertical-lr;
-
   border-right: 1px solid lightgray;
 }
 
 .web-tool-window-stripe-right
 {
-  height: 100%;
-  width: 1.5em;
-
-  text-orientation: mixed;
-  writing-mode: vertical-lr;
-
   border-left: 1px solid lightgray;
 }
 
@@ -51,8 +135,64 @@ html:not(div)
 {
 }
 
+/* the desktop ide draws a one pixel divider, vaadin ships a fat draggable one by default.
+   the part stays 5px so it can still be grabbed - like the awt divider mouse zone - but only the
+   middle pixel is painted */
+vaadin-split-layout::part(splitter)
+{
+  flex: 0 0 5px;
+
+  background-color: transparent;
+  background-image: linear-gradient(to right, transparent 2px, lightgray 2px, lightgray 3px, transparent 3px);
+}
+
+vaadin-split-layout[orientation="vertical"]::part(splitter)
+{
+  background-image: linear-gradient(to bottom, transparent 2px, lightgray 2px, lightgray 3px, transparent 3px);
+}
+
+vaadin-split-layout::part(handle)
+{
+  display: none;
+}
+
+/* no component on that side means no divider at all, same as the awt splitter */
+vaadin-split-layout.web-split-layout-no-divider::part(splitter)
+{
+  display: none;
+}
+
 .web-tool-window-stripe-button
 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+
+  gap: 0.25em;
+  padding: 0.25em;
+
+  /* the button must not reach the edges of the stripe - the highlight is a rounded pill inset in it, and
+     without the margin the hover rectangle runs into the stripe border */
+  margin: var(--web-tool-window-stripe-button-margin, 4px);
+  border-radius: 8px;
+
+  box-sizing: border-box;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* the awt ide turns the two side stripes in opposite directions: the right one reads top down, the left one
+   reads bottom up with the icon at the start of that direction. rotating the button rather than the stripe
+   keeps the buttons in the order the stripe added them - a transform does not move the box */
+.web-tool-window-stripe-left .web-tool-window-stripe-button
+{
+  transform: rotate(180deg);
+}
+
+.web-tool-window-stripe-button:hover
+{
+  background-color: gainsboro;
 }
 
 .web-tool-window-stripe-button-selected
@@ -84,31 +224,110 @@ html:not(div)
   margin-top: auto;
 }
 
-.web-tool-window-stripe-left .web-tool-window-stripe-button span
-{
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-.web-tool-window-stripe-right .web-tool-window-stripe-button span
-{
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-.web-tool-window-stripe-top .web-tool-window-stripe-button span
-{
-  margin-left: 1em;
-  margin-right: 1em;
-}
-
-.web-tool-window-stripe-bottom .web-tool-window-stripe-button span
-{
-  margin-left: 1em;
-  margin-right: 1em;
-}
-
 .web-icon > *
 {
   vertical-align: middle;
+}
+.web-menu-bar
+{
+  border-bottom: 1px solid lightgray;
+}
+
+.web-menu-bar vaadin-menu-bar-button
+{
+  border: none;
+  border-radius: 0;
+  background: transparent;
+
+  /* aura paints a button label in the accent colour, a main menu is plain text */
+  color: var(--vaadin-body-text-color, #000);
+}
+
+/* the suffix slot only holds the dropdown arrow, the ide menu bar does not show one */
+.web-menu-bar vaadin-menu-bar-button::part(suffix)
+{
+  display: none;
+}
+
+/* vaadin renders the checkmark slot on every item, checkable or not, which indents all the labels.
+   the leading column is drawn by the server instead, so that a toggle item and an item with an icon
+   line up on the same grid */
+vaadin-menu-bar-item::part(checkmark),
+vaadin-context-menu-item::part(checkmark)
+{
+  display: none;
+}
+
+/* the breadcrumb aligns the prefix slot on the text baseline, which leaves the icon hanging above the label */
+vaadin-breadcrumbs-item
+{
+  align-items: center;
+}
+
+/* the free space between the crumbs and the toolbar is a scrollable dock center, and the row rounds up two
+   pixels wider than it is - enough for a horizontal scrollbar to appear across the whole navigation bar */
+.web-navigation-bar > .web-dock-layout-center
+{
+  overflow: hidden;
+}
+
+/* the crumbs are the only part that gives way when the path does not fit, so the cell holding them has to be
+   allowed to shrink below its content. the basis has to be spelled out as max-content: a scroll container
+   contributes nothing to an auto basis, and the cell would then be narrower than the path even on an empty row */
+.web-navigation-bar > .web-dock-layout-center > *:first-child
+{
+  flex: 0 0 auto;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* the crumbs keep their natural width - the row has the whole frame to itself and the dock center takes
+   whatever is left over. a scroller here shrank the cell to a fraction of the path even on an empty row,
+   because the dock cell collapses the moment it is allowed to, and the head of the path was cut off */
+.web-navigation-bar-crumbs
+{
+  flex: 0 0 auto;
+
+  /* the crumbs are a flex row of their own and lay their items out on the text baseline, so centering the
+     dock row around them is not enough - the toolbar on the other side has no text and came out centered */
+  align-self: center;
+  align-items: center;
+
+  /* a bar in a row this tall reads as a stray line, the row is clipped instead */
+  overflow: hidden;
+  scrollbar-width: none;
+}
+
+.web-navigation-bar-crumbs::-webkit-scrollbar
+{
+  display: none;
+}
+
+/* a borderless vaadin button paints its label in the accent color, which is right for a link and wrong for
+   the text of a toolbar action - the awt toolbar draws it in the plain label color */
+.web-navigation-bar vaadin-button
+{
+  color: inherit;
+}
+
+/* the dock row is where the items actually sit, the alignment of the bar itself never reaches them */
+.web-navigation-bar-center
+{
+  align-items: center;
+}
+
+vaadin-breadcrumbs-item::part(link),
+vaadin-breadcrumbs-item::part(nolink)
+{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+vaadin-breadcrumbs-item img,
+vaadin-breadcrumbs-item svg
+{
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
 }

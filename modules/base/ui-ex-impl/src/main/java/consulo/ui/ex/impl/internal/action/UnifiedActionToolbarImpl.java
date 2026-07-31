@@ -16,61 +16,82 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.layout.HorizontalLayout;
-import consulo.ui.layout.Layout;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.ex.action.PresentationFactory;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
 public class UnifiedActionToolbarImpl implements ActionToolbar {
-    private final String myPlace;
-
     private final ActionGroup myGroup;
 
-    private int myLayoutPolicy;
+    private final PresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
 
-    private Layout myComponent;
+    private final UnifiedActionRow myRow;
 
-    private final Style myStyle;
+    private int myLayoutPolicy = NOWRAP_LAYOUT_POLICY;
+
+    private @Nullable Supplier<DataContext> myDataContextSupplier;
 
     public UnifiedActionToolbarImpl(String place, ActionGroup group, Style style) {
-        myPlace = place;
         myGroup = group;
-        myStyle = style;
 
-        rebuildUI();
+        myRow = new UnifiedActionRow(
+            () -> myGroup,
+            this::getToolbarDataContext,
+            place,
+            place,
+            myPresentationFactory,
+            style
+        );
     }
 
-    private void rebuildUI() {
-        myComponent = myStyle.isHorizontal() ? HorizontalLayout.create() : VerticalLayout.create();
+    /**
+     * Points the toolbar at the context it has to update against. Needed by the frontends where the data context
+     * cannot be derived from a component - the browser has no focus owner to walk up from, so the toolbar is given
+     * the same supplier its owner reads its own state from.
+     * <p/>
+     * The group is expanded off the ui thread, the supplier has to hand over a context whose providers are already
+     * snapshotted - see {@link consulo.dataContext.DataManager#createAsyncDataContext(DataContext)}.
+     */
+    public void setDataContextSupplier(Supplier<DataContext> dataContextSupplier) {
+        myDataContextSupplier = dataContextSupplier;
     }
 
+    @Override
     public void setTargetComponent(javax.swing.JComponent component) {
     }
 
-    
+    @Override
+    public void setTargetUIComponent(Component component) {
+        myDataContextSupplier = () -> {
+            DataManager dataManager = DataManager.getInstance();
+
+            return dataManager.createAsyncDataContext(dataManager.getDataContext(component));
+        };
+    }
+
     @Override
     public javax.swing.JComponent getComponent() {
         // FIXME [VISTALL] just stub - not throw on old ui
         return new JPanel();
     }
 
-    
     @Override
     public Component getUIComponent() {
-        return myComponent;
+        return myRow.getComponent();
     }
 
     @Override
@@ -86,24 +107,30 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     @RequiredUIAccess
     @Override
     public void updateActionsImmediately() {
-
+        myRow.updateAsync();
     }
 
     @RequiredUIAccess
-    
     @Override
     public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
-        return CompletableFuture.completedFuture(List.of());
+        return myRow.updateAsync();
     }
 
     @Override
     public DataContext getToolbarDataContext() {
-        return null;
+        Supplier<DataContext> supplier = myDataContextSupplier;
+        if (supplier != null) {
+            return supplier.get();
+        }
+
+        DataManager dataManager = DataManager.getInstance();
+
+        // the group is expanded off the ui thread, the providers have to be snapshotted before that
+        return dataManager.createAsyncDataContext(dataManager.getDataContext());
     }
 
-    
     @Override
     public List<AnAction> getActions() {
-        return Collections.emptyList();
+        return myRow.getActions();
     }
 }

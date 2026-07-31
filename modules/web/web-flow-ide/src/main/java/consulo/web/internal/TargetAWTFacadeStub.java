@@ -21,6 +21,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
+import consulo.web.internal.ui.base.WebAwtBridgeComponent;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -78,12 +79,16 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
 
   @Override
   public Component to(consulo.ui.@Nullable Component component) {
-    return null;
+    return component == null ? null : WebAwtBridgeComponent.of(component);
   }
 
   @Override
   public consulo.ui.Component from(@Nullable Component component) {
-    throw new UnsupportedOperationException();
+    if (component instanceof WebAwtBridgeComponent bridge) {
+      return bridge.getUIComponent();
+    }
+
+    throw new UnsupportedOperationException("Component " + component + " did not come from this frontend");
   }
 
   @Override

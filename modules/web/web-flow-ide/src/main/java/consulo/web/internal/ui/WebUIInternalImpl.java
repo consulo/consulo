@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.server.VaadinSession;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
@@ -69,7 +70,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public VerticalLayout _Layouts_vertical(int vGap) {
-        return new WebVerticalLayoutImpl();
+        return new WebVerticalLayoutImpl(vGap);
     }
 
     @Override
@@ -81,18 +82,12 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
-        if (position == SplitLayoutPosition.HORIZONTAL) {
-            return new WebHorizontalTwoComponentSplitLayoutImpl();
-        }
-        //else if (position == SplitLayoutPosition.VERTICAL) {
-        //    return new WebVerticalTwoComponentSplitLayoutImpl();
-        //}
-        throw notSupported();
+        return new WebHorizontalTwoComponentSplitLayoutImpl(position);
     }
 
     @Override
     public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
-        return new WebThreeComponentSplitLayoutImpl();
+        return new WebThreeComponentSplitLayoutImpl(position);
     }
 
     @Override
@@ -181,7 +176,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public HorizontalLayout _Layouts_horizontal(int gapInPixesl) {
-        return new WebHorizontalLayoutImpl();
+        return new WebHorizontalLayoutImpl(gapInPixesl);
     }
 
     @Override
@@ -352,7 +347,14 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public boolean _UIAccess_isUIThread() {
-        return UI.getCurrent() != null;
+        if (UI.getCurrent() != null) {
+            return true;
+        }
+
+        // vaadin sets the ui current instance only inside ui.access(), plain uidl request handling just
+        // holds the session lock - both are the single threaded ui state, like the awt event dispatch thread
+        VaadinSession session = VaadinSession.getCurrent();
+        return session != null && session.hasLock();
     }
 
     @Override
@@ -430,8 +432,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public PopupMenu _PopupMenu_create(Component target) {
-        throw notSupported();
-        //return new WebPopupMenuImpl(target);
+        return new WebPopupMenuImpl(target);
     }
 
     @Override

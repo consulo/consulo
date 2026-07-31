@@ -23,7 +23,16 @@ import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
  * @since 2018-05-10
  */
 public class WebFoldingModelImpl extends CodeEditorFoldingModelBase {
-  public WebFoldingModelImpl(CodeEditorBase editor) {
-    super(editor);
-  }
+    public WebFoldingModelImpl(CodeEditorBase editor) {
+        super(editor);
+    }
+
+    /**
+     * The end of a batch is the only point where the regions are consistent - the folding pass creates,
+     * removes and toggles them one by one inside it.
+     */
+    @Override
+    protected void notifyBatchFoldingProcessingDoneToEditor() {
+        ((WebEditorImpl)myEditor).scheduleFoldRegionsUpdate();
+    }
 }

@@ -39,6 +39,20 @@ public interface Tree<E> extends Component {
 
     void expand(TreeNode<E> node);
 
+    /**
+     * Counterpart of the expand all / collapse all actions of the platform, which need a
+     * {@code TreeExpander} to bind to. A tree which cannot walk its own nodes leaves them disabled.
+     */
+    default boolean isExpandCollapseAllSupported() {
+        return false;
+    }
+
+    default void expandAll() {
+    }
+
+    default void collapseAll() {
+    }
+
     @SuppressWarnings("unchecked")
     default Disposable addSelectListener(ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {
         return addListener((Class) TreeSelectEvent.class, listener);

@@ -1,0 +1,74 @@
+/* owned by a single area of the frontend, keeps the theme files from colliding */
+
+/* the header is the horizontal counterpart of a stripe and has to read as one row with it, so it takes the
+   same thickness - the variable is declared on the panel and reaches here through the decorator */
+.web-tool-window-header
+{
+  flex: 0 0 auto;
+  min-height: var(--web-tool-window-stripe-size, 2em);
+
+  /* the title sits on its text baseline and the action rows on theirs, so without this the row reads as two
+     different heights - the awt header centers everything on one line */
+  align-items: center;
+
+  padding: 0 4px;
+  box-sizing: border-box;
+
+  border-bottom: 1px solid var(--aura-color-contrast-10);
+}
+
+/* the west and the east slots of the header shrink to their content, a layout stretching to the full width
+   of a shrink to fit holder has nothing to measure itself against */
+.web-tool-window-header .web-horizontal-layout
+{
+  width: auto;
+}
+
+.web-tool-window-header .web-dock-layout-center
+{
+  overflow: visible;
+}
+
+/* the title of the tool window, left of the tabs */
+.web-tool-window-header .web-label
+{
+  flex: 0 0 auto;
+
+  font-size: var(--aura-font-size-s, 0.8125rem);
+  text-transform: uppercase;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* an action of the header carries an icon and nothing else, the default button metrics are far too big
+   for a 26px strip. a tab carries a name, so the width is only a floor */
+.web-tool-window-header vaadin-button
+{
+  min-width: 22px;
+  height: 22px;
+
+  margin: 0;
+  padding: 0 4px;
+
+  flex: 0 0 auto;
+}
+
+.web-tool-window-header vaadin-button img,
+.web-tool-window-header vaadin-button canvas
+{
+  width: 16px;
+  height: 16px;
+}
+
+/* the dock row is where the items actually sit, the alignment of the header itself never reaches them */
+.web-tool-window-header-center
+{
+  align-items: center;
+}
+
+/* a borderless vaadin button paints its label in the accent color, which is right for a link and wrong for a
+   header action - the awt header draws it in the plain label color */
+.web-tool-window-header vaadin-button
+{
+  color: inherit;
+}

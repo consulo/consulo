@@ -87,6 +87,12 @@ public abstract class PopupHandler extends MouseAdapter {
       return new MouseAdapter() {
       };
     }
+    // a frontend without an awt hierarchy hands over a stand in, and a swing popup cannot be shown over it
+    if (component instanceof ActionPopupMenuInstaller installer) {
+      installer.installActionPopupMenu(group, place);
+      return new MouseAdapter() {
+      };
+    }
     PopupHandler popupHandler = new PopupHandler() {
       @Override
       public void invokePopup(Component comp, int x, int y) {
@@ -125,6 +131,12 @@ public abstract class PopupHandler extends MouseAdapter {
 
   public static MouseListener installPopupHandlerFromCustomActions(JComponent component, final String groupId, final String place) {
     if (ApplicationManager.getApplication() == null) {
+      return new MouseAdapter() {
+      };
+    }
+    // a frontend without an awt hierarchy hands over a stand in, and a swing popup cannot be shown over it
+    if (component instanceof ActionPopupMenuInstaller installer) {
+      installer.installActionPopupMenu(groupId, place);
       return new MouseAdapter() {
       };
     }

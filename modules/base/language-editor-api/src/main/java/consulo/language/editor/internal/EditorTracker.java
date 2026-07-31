@@ -65,7 +65,8 @@ public abstract class EditorTracker implements Disposable {
     else {
       List<Editor> editors = new SmartList<>();
       for (Editor editor : list) {
-        if (editor.getContentComponent().isShowing()) {
+        // Editor#isShowing, not the swing content component - a non awt editor has no swing hierarchy to be shown in
+        if (editor.isShowing()) {
           editors.add(editor);
         }
       }

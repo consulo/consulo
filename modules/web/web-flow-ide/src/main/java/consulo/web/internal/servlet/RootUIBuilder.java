@@ -81,21 +81,22 @@ public class RootUIBuilder implements UIBuilder {
 
     WelcomeFrameManager welcomeFrameManager = WelcomeFrameManager.getInstance();
 
-    WebSession currentSession = application.getCurrentSession();
-    if (currentSession != null) {
-      WebSession newSession = currentSession;
+    UIAccess currentAccess = UIAccess.current();
 
-      currentSession.close();
+    WebSession previousSession = application.getCurrentSession();
+    if (previousSession != null) {
+      UIAccess previousAccess = previousSession.getAccess();
 
-      currentSession = newSession.copy();
+      if (previousAccess != currentAccess) {
+        if (previousAccess != null) {
+          previousSession.close();
+        }
 
-      welcomeFrameManager.closeFrame();
+        welcomeFrameManager.closeFrame();
+      }
     }
-    else {
-      currentSession = new VaadinWebSessionImpl();
-    }
 
-    application.setCurrentSession(currentSession);
+    application.setCurrentSession(new VaadinWebSessionImpl());
 
     welcomeFrameManager.showIfNoProjectOpened();
   }

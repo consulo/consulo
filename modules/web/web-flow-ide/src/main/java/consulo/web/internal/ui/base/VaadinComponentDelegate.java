@@ -18,6 +18,7 @@ package consulo.web.internal.ui.base;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.shared.Tooltip;
 import consulo.application.util.matcher.NameUtilCore;
+import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -66,6 +67,11 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         myClassNamePrefix = String.join("-", impls).toLowerCase(Locale.ROOT);
         myVaadinComponent.addClassName(myClassNamePrefix);
         myVaadinComponent.setId(getClass().getSimpleName() + "." + hashCode());
+
+        // every vaadin small variant - ButtonVariant.SMALL, MenuBarVariant.SMALL, TabsVariant.SMALL and the rest -
+        // is this one theme name. the default sizing is meant for touch and is far too big for an ide, and setting
+        // it here covers every component instead of every wrapper repeating addThemeVariants
+        myVaadinComponent.getElement().getThemeList().add("small");
 
         if (myVaadinComponent instanceof InitiableComponent initiableComponent) {
             initiableComponent.init(myClassNamePrefix);
@@ -160,6 +166,12 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public <T> void putUserData(Key<T> key, @Nullable T value) {
         dataObject().putUserData(key, value);
+
+        // a component that publishes data is exactly the granularity the data context is built at, so it is also
+        // the granularity the browser side focus is tracked at
+        if (key == UiDataProvider.KEY && value != null) {
+            WebFocusTracker.register(this);
+        }
     }
 
     @Override

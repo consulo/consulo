@@ -1,0 +1,220 @@
+/* owned by a single area of the frontend, keeps the theme files from colliding */
+
+/* the gutter overlay and the status panel are placed against the editor host, which has to be the containing
+   block for them - otherwise they anchor to whatever positioned ancestor happens to be above */
+.arquill-editor
+{
+  position: relative;
+
+  /* the column of the error stripe is reserved as right padding on the host. with the default box sizing that
+     padding is added to the width the layout already gave it, so the host ran past the frame and the stripe
+     was drawn underneath the right tool window stripe - invisible, whatever width it was given */
+  box-sizing: border-box;
+}
+
+/* overflow must be clipped - the marks are absolutely positioned across the whole document height and would
+   otherwise give the editor a second scrollbar */
+.arquill-gutter
+{
+  /* left and width follow the orion annotation ruler, they are set while rendering */
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* orion ships the annotation ruler at 16px and measures the left ruler width from the dom, so the column has to
+   be widened here rather than from script - the measurement is cached the moment the view is created, and two
+   markers on one line have to fit */
+.textviewLeftRuler .ruler.annotations
+{
+  min-width: 32px;
+}
+
+.arquill-gutter-mark
+{
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* the vcs change bars are drawn over the right edge of the folding ruler, which is the last of the left
+   rulers and so the only column that touches the text - the same place the awt gutter paints them. the
+   ruler ships at 14px and its anchors are left aligned inline blocks, so the extra width stays free */
+.textviewLeftRuler .ruler.folding
+{
+  width: 22px;
+}
+
+.arquill-change-bands
+{
+  /* left follows the folding ruler, it is set while rendering */
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arquill-change-band
+{
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+/* the error stripe, the counterpart of the awt error panel - it is not an overlay over the text, the editor host
+   reserves the column for it through its right padding, which the script sets together with the width here */
+.arquill-error-stripe
+{
+  /* width is set while rendering, it has to agree with the padding the host reserves */
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+
+  box-sizing: border-box;
+  border-left: 1px solid #eaeaea;
+  background-color: white;
+
+  /* the marks answer for themselves, the empty part of the column has nothing to say - the awt panel ignores a
+     click that lands nowhere near a highlighter too */
+  pointer-events: none;
+}
+
+.arquill-error-stripe-mark
+{
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* the column is a map of the file, not text - dragging across it must not leave anything highlighted */
+.arquill-error-stripe,
+.arquill-error-stripe *
+{
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* a marker is a stack of images - the platform layers a badge over a base icon and the awt gutter paints them
+   onto one graphics. the box is square and follows the line height, the icons are not, so contain keeps a non
+   square layer centered instead of stretched */
+.arquill-gutter-mark > img,
+.arquill-status-icon > img
+{
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.arquill-status-icon
+{
+  position: relative;
+  flex: 0 0 14px;
+
+  width: 14px;
+  height: 14px;
+}
+
+/* the counters of the whole file, sitting over the top right corner of the editor the way the awt inspection
+   widget does - it is a readout, not a control, so it carries no frame and no selection of its own.
+   it is right aligned with the error stripe and covers its top, which is where the awt panel paints the traffic
+   light icon - the strip keeps that much of itself free */
+.arquill-status
+{
+  position: absolute;
+  /* left of the error stripe and of the vertical scrollbar - the counters are a readout, covering either of
+     them costs more than the space it saves. the stripe publishes its own width from the script */
+  right: calc(var(--arquill-error-stripe-width, 40px) + 24px);
+  top: 2px;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 4px;
+
+  background-color: white;
+
+  font-size: 12px;
+  line-height: 16px;
+  cursor: default;
+}
+
+/* a readout is not text to work with - dragging over it must not leave the counters highlighted, and the
+   descendants have to be named too, the counters are elements of their own */
+.arquill-status,
+.arquill-status *
+{
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.arquill-status.arquill-status-analyzing
+{
+  opacity: 0.5;
+}
+
+/* a fixed slot per severity, otherwise the panel resizes under the pointer while the daemon is still counting */
+.arquill-status-item
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  min-width: 2em;
+}
+
+
+/* ctrl/cmd over a resolvable reference turns the editor into a link, like the awt one */
+.arquill-ctrl-hover,
+.arquill-ctrl-hover *
+{
+  cursor: pointer !important;
+}
+
+/* the daemon messages carry markup, so they are rendered in an element instead of a title attribute */
+.arquill-tooltip
+{
+  position: fixed;
+  z-index: 1000;
+
+  max-width: 40em;
+  padding: 4px 6px;
+
+  border: 1px solid lightgray;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+  font-size: 12px;
+  pointer-events: none;
+}
+
+/* the bundled arquill css leaves the 12px font on the default normal line height, which is cramped.
+   orion forces line-height: normal inline on the root and on the div it measures the metrics with, so the
+   rule has to sit on the line divs and it has to be important - otherwise the measured height and the
+   rendered height disagree and orion falls back to its variable line height path */
+.textviewContent > div
+{
+  line-height: 2 !important;
+}
+
+/* the zoom ruler renders the whole file at 1px per line, it must keep its own height */
+.textviewZoom .textviewContent > div
+{
+  line-height: normal !important;
+}

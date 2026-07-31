@@ -31,15 +31,26 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebHorizontalLayoutImpl extends WebLayoutImpl<WebHorizontalLayoutImpl.Vaadin, StaticPosition> implements HorizontalLayout {
     public class Vaadin extends com.vaadin.flow.component.orderedlayout.HorizontalLayout implements FromVaadinComponentWrapper {
+        public Vaadin() {
+            // a layout adds nothing on its own, only the gap the caller asked for
+            setMargin(false);
+            setPadding(false);
+            setSpacing(false);
+        }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebHorizontalLayoutImpl.this;
         }
     }
 
-    public WebHorizontalLayoutImpl() {
+    public WebHorizontalLayoutImpl(int gap) {
         VaadinSizeUtil.setWidthFull(this);
         toVaadinComponent().setAlignItems(FlexComponent.Alignment.CENTER);
+
+        if (gap > 0) {
+            toVaadinComponent().getStyle().set("gap", gap + "px");
+        }
     }
 
     @Override
