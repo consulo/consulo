@@ -17,6 +17,7 @@ package consulo.application.concurrent.coroutine;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.Continuation;
@@ -24,6 +25,7 @@ import consulo.util.concurrent.coroutine.CoroutineStep;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -51,16 +53,31 @@ public final class WriteLock<I, O> extends CoroutineStep<I, O> {
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess.assetIsNotUIThread();
 
-        ApplicationWithIntentWriteLock application =
-            (ApplicationWithIntentWriteLock) Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
+        ApplicationEx application = applicationOf(continuation);
+
+        // the coroutine context runs steps on virtual threads, and the write lock identifies its owner by thread
+        // identity - so the write action has to be taken on the application's write thread, never here
+        if (application.isWriteThread()) {
+            return doExecute(application, input, continuation);
+        }
+
+        return CompletableFuture.supplyAsync(() -> doExecute(application, input, continuation), application.getWriteExecutor()).join();
+    }
+
+    private static ApplicationEx applicationOf(Continuation<?> continuation) {
+        return (ApplicationEx) Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
+    }
+
+    private @Nullable O doExecute(ApplicationEx application, @Nullable I input, Continuation<?> continuation) {
+        ApplicationWithIntentWriteLock writeLockApplication = (ApplicationWithIntentWriteLock) application;
 
         try {
-            application.acquireWriteIntentLock(WriteLock.class.getName());
+            writeLockApplication.acquireWriteIntentLock(WriteLock.class.getName());
             //noinspection RequiredXAction
-            return application.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
+            return writeLockApplication.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
         }
         finally {
-            application.releaseWriteIntentLock();
+            writeLockApplication.releaseWriteIntentLock();
         }
     }
 }

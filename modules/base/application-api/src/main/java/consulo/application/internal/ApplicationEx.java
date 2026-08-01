@@ -18,6 +18,8 @@ package consulo.application.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
+
+import java.util.concurrent.Executor;
 import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -60,6 +62,21 @@ public interface ApplicationEx extends Application {
      * @see #runWriteAction(Runnable)
      */
     boolean isWriteActionInProgress();
+
+    /**
+     * @return true when the calling thread is the one owning write actions
+     */
+    boolean isWriteThread();
+
+    /**
+     * The executor write actions run on - a single platform thread.
+     * <p>
+     * The write lock identifies its owner by {@code Thread.currentThread()}, and a virtual thread can lose that
+     * identity across mount and unmount, so a write action must hold a stable platform thread for its whole
+     * duration. The application coroutine context runs on virtual threads, which is why a coroutine step taking
+     * the write lock has to move here first.
+     */
+    Executor getWriteExecutor();
 
     /**
      * @return true if the EDT started to acquire write action but has not acquired it yet.

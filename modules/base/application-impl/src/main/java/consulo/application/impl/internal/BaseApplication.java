@@ -84,6 +84,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -184,6 +187,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     private final long myStartTime;
 
     protected RWLock myLock;
+
+    /**
+     * Single platform thread, see {@link ApplicationEx#getWriteExecutor()} - write ownership is tracked by
+     * thread identity, so it has to stay on one thread that is never mounted or unmounted.
+     */
+    private final ExecutorService myWriteExecutor =
+        Executors.newSingleThreadExecutor(runnable -> new Thread(runnable, "Consulo Write Thread"));
 
     protected boolean myDoNotSave;
     private boolean myLoaded;
@@ -508,7 +518,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
+    public boolean isWriteThread() {
+        return myLock.isWriteThread();
+    }
+
+    @Override
+    public Executor getWriteExecutor() {
+        return myWriteExecutor;
+    }
+
+    @Override
     public void dispose() {
+        myWriteExecutor.shutdownNow();
+
         fireApplicationExiting();
 
         ShutDownTracker.getInstance().ensureStopperThreadsFinished();
