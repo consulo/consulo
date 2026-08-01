@@ -1,0 +1,35 @@
+/*
+ * The look of the ide trees over the vaadin grid. A plain resource rather than a file of the theme - the
+ * theme goes through the vite bundle, which skips rebuilding it on css only changes, while this is served
+ * straight from the jar and follows every build.
+ */
+
+/* a tree sits inside a tool window and has to show whatever is behind it - aura fills the rows and cells of a
+   grid with the surface colour, which reads as a white block against the panel it lives in. the selection and
+   the hover keep their own backgrounds, those are set on the same parts with a higher specificity */
+vaadin-grid.web-tree::part(row),
+vaadin-grid.web-tree::part(cell)
+{
+  background-color: transparent;
+}
+
+/* a tree is navigated, not read - dragging over it must not start marking the labels as text. the global
+   user-select of the app does not reach the cells, the grid re-enables selection on them itself */
+vaadin-grid.web-tree,
+vaadin-grid.web-tree vaadin-grid-cell-content
+{
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* opening a node is the chevron's alone now, so only the chevron may look clickable - the toggle carries a
+   pointer cursor of its own over the whole row content */
+vaadin-grid.web-tree vaadin-grid-tree-toggle
+{
+  cursor: default;
+}
+
+vaadin-grid.web-tree vaadin-grid-tree-toggle::part(toggle)
+{
+  cursor: pointer;
+}

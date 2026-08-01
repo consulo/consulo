@@ -17,9 +17,12 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.dom.Style;
 import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
+import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.image.WebImageConverter;
@@ -47,10 +50,42 @@ public class WebItemPresentationImpl implements TextItemPresentation {
     @Override
     public void append(LocalizeValue text, TextAttribute textAttribute) {
         Span span = new Span(text.get());
+
+        // the attribute is what tells a file apart in the project view - grayed out, red for an error, the vcs
+        // colour of a changed one. dropping it left every fragment looking the same
+        applyAttribute(span, textAttribute);
+
         myFragments.add(span);
 
         after();
     }
+
+    private static void applyAttribute(Span span, @Nullable TextAttribute textAttribute) {
+        if (textAttribute == null) {
+            return;
+        }
+
+        Style style = span.getStyle();
+
+        ColorValue foreground = textAttribute.getForegroundColor();
+        if (foreground != null) {
+            style.set("color", WebColors.toCssColor(foreground));
+        }
+
+        ColorValue background = textAttribute.getBackgroundColor();
+        if (background != null) {
+            style.set("background-color", WebColors.toCssColor(background));
+        }
+
+        int fontStyle = textAttribute.getStyle();
+        if ((fontStyle & Font.STYLE_BOLD) != 0) {
+            style.set("font-weight", "bold");
+        }
+        if ((fontStyle & Font.STYLE_ITALIC) != 0) {
+            style.set("font-style", "italic");
+        }
+    }
+
 
     @Override
     public void clearText() {

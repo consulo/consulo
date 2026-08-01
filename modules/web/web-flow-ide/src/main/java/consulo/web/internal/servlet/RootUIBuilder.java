@@ -37,21 +37,19 @@ public class RootUIBuilder implements UIBuilder {
   @RequiredUIAccess
   @Override
   public void build(Window window) {
-    // registered on the per ui disposable, which is disposed by the vaadin session destroy listener - the root
-    // window is disposed by any Window#close reaching it, and closing a window must not close every open project
-    Disposer.register(UIServlet.getDisposable(UI.getCurrent()), () -> {
-      WebApplication application = WebApplication.getInstance();
-      if (application == null || !((ApplicationEx)application).isLoaded()) {
-        return;
-      }
-
-      UIAccess uiAccess = application.getLastUIAccess();
-      ProjectManager projectManager = ProjectManager.getInstance();
-
-      for (Project openProject : projectManager.getOpenProjects()) {
-        projectManager.closeAndDisposeAsync(openProject, uiAccess);
-      }
-    });
+//    Disposer.register(UIServlet.getDisposable(UI.getCurrent()), () -> {
+//      WebApplication application = WebApplication.getInstance();
+//      if (application == null || !((ApplicationEx)application).isLoaded()) {
+//        return;
+//      }
+//
+//      UIAccess uiAccess = application.getLastUIAccess();
+//      ProjectManager projectManager = ProjectManager.getInstance();
+//
+//      for (Project openProject : projectManager.getOpenProjects()) {
+//        projectManager.closeAndDisposeAsync(openProject, uiAccess);
+//      }
+//    });
 
     // TODO window.setContent(new WebLoadingPanelImpl());
 

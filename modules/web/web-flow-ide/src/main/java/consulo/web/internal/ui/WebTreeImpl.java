@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
@@ -52,6 +53,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
     }
 
+    // served straight from META-INF/resources - the theme goes through the vite bundle, which skips
+    // rebuilding on css only changes, and the tree look was left one build behind
+    @StyleSheet("/tree/webTree.css")
     public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
         private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
 
@@ -82,9 +86,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     toggle.getElement().setAttribute("expanded", true);
                 }
 
-                toggle.addClickListener(event -> {
-                    select(node);
+                // a click anywhere on the toggle selects - the label is inside it - while opening a node is
+                // the chevron's alone. the filter keeps the label clicks off the wire entirely, and the
+                // client half of this is treeToggle.js, which stops the element flipping itself for them
+                toggle.addClickListener(event -> select(node));
 
+                toggle.getElement().addEventListener("click", event -> {
                     if (getDataCommunicator().hasChildren(node)) {
                         if (isExpanded(node)) {
                             collapse(List.of(node), true);
@@ -93,7 +100,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                             expand(List.of(node), true);
                         }
                     }
-                });
+                }).setFilter("event.composedPath().some(node => node.getAttribute && node.getAttribute('part') === 'toggle')");
                 toggle.add(item.toComponent());
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
@@ -115,7 +122,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             getElement()
                 .addEventListener("mousedown", event -> {
                     int index = event.getEventData().path(rowIndex).asInt(-1);
-                    if (index < 0) {
+                    // the rows of the shadow dom outlive a rebuild of the data, so an index read from one of
+                    // them can point past what the communicator now holds - and getItem throws rather than
+                    // answering null for that
+                    if (index < 0 || index >= getDataCommunicator().getItemCount()) {
                         return;
                     }
 
@@ -300,7 +310,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 return;
             }
 
-            model.onDoubleClick(this, selectedNode);
+            // the return value is the contract - true asks the tree to toggle the node, the way the awt trees
+            // do, and a model that answered with an action of its own - opening the file - says false
+            if (model.onDoubleClick(this, selectedNode) && selectedNode instanceof WebTreeNodeImpl<NODE> node) {
+                if (vaadin.isExpanded(node)) {
+                    vaadin.collapse(List.of(node));
+                }
+                else {
+                    vaadin.expand(List.of(node));
+                }
+            }
         });
     }
 

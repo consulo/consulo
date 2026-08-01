@@ -17,10 +17,17 @@ package consulo.ui.ex.tree;
 
 import consulo.application.ReadAction;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -59,7 +66,13 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
                 descriptor.update();
 
-                itemPresentation.append(descriptor.toString());
+                if (descriptor instanceof PresentableNodeDescriptor<?> presentable) {
+                    renderPresentation(itemPresentation, presentable, descriptor);
+                }
+                else {
+                    itemPresentation.append(descriptor.toString());
+                }
+
                 try {
                     ReadAction.compute(() -> itemPresentation.withIcon(descriptor.getIcon()));
                 }
@@ -68,5 +81,53 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
                 }
             });
         }
+    }
+
+    /**
+     * The descriptor carries everything the awt renderer paints - coloured fragments and the file status
+     * foreground - and flattening it to {@code toString()} lost all of it. The forced colour wins only where
+     * a fragment has no colour of its own, so the grey location text stays grey while the name takes the
+     * status colour.
+     */
+    private static void renderPresentation(
+        TextItemPresentation itemPresentation,
+        PresentableNodeDescriptor<?> presentable,
+        NodeDescriptor descriptor
+    ) {
+        PresentationData presentation = presentable.getPresentation();
+        ColorValue forced = presentation.getForcedTextForeground();
+
+        List<PresentableNodeDescriptor.ColoredFragment> fragments = presentation.getColoredText();
+        if (fragments.isEmpty()) {
+            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced));
+            return;
+        }
+
+        for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
+            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced));
+        }
+    }
+
+    private static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes, @Nullable ColorValue forced) {
+        int style = 0;
+        ColorValue foreground = null;
+
+        if (attributes != null) {
+            if ((attributes.getStyle() & SimpleTextAttributes.STYLE_BOLD) != 0) {
+                style |= TextAttribute.STYLE_BOLD;
+            }
+            if ((attributes.getStyle() & SimpleTextAttributes.STYLE_ITALIC) != 0) {
+                style |= TextAttribute.STYLE_ITALIC;
+            }
+            if (attributes.getFgColor() != null) {
+                foreground = TargetAWT.from(attributes.getFgColor());
+            }
+        }
+
+        if (foreground == null) {
+            foreground = forced;
+        }
+
+        return new TextAttribute(style, foreground);
     }
 }

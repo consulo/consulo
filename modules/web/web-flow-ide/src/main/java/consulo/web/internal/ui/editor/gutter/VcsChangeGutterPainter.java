@@ -17,6 +17,7 @@ package consulo.web.internal.ui.editor.gutter;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.web.internal.ui.WebColors;
 import consulo.versionControlSystem.internal.VcsChangePresentation;
 import org.jspecify.annotations.Nullable;
 
@@ -36,8 +37,8 @@ public class VcsChangeGutterPainter implements WebLineMarkerPresentationPainter<
 
     @Override
     public @Nullable GutterBand paint(VcsChangePresentation presentation, Editor editor) {
-        String color = WebGutterColors.toCss(presentation.color());
-        String borderColor = WebGutterColors.toCss(presentation.borderColor());
+        String color = WebColors.toCssColor(presentation.color());
+        String borderColor = WebColors.toCssColor(presentation.borderColor());
 
         if (color == null && borderColor == null) {
             return null;

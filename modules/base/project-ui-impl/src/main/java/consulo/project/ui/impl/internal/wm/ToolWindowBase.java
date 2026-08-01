@@ -433,6 +433,12 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         if (myContentFactory == null) {
             return;
         }
+        // a background caller (an action update probing getContentManager) must not take the one-shot
+        // factory - it dies on the ui assert inside removeAllContents after clearing it, and the ui thread
+        // then finds nothing left to initialize, leaving the placeholder label forever
+        if (!UIAccess.isUIThread()) {
+            return;
+        }
         ToolWindowFactory contentFactory = myContentFactory;
         // clear it first to avoid SOE
         myContentFactory = null;

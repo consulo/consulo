@@ -68,6 +68,7 @@ import org.vaadin.stefan.table.Table;
 @StyleSheet("./themes/consulo/toolwindow.css")
 @JsModule("./webImage.js")
 @JsModule("./shortcuts.js")
+@JsModule("./treeToggle.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(HorizontalLayout.class)

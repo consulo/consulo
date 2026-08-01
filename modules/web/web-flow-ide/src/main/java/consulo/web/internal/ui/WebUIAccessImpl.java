@@ -84,15 +84,25 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
         CompletableFuture<T> result = new CompletableFuture<>();
         if (isValid()) {
-            dispatcher().execute(() -> myUI.access(() -> {
+            dispatcher().execute(() -> {
                 try {
-                    result.complete(supplier.get());
+                    myUI.access(() -> {
+                        try {
+                            result.complete(supplier.get());
+                        }
+                        catch (Throwable e) {
+                            LOG.error(e);
+                            result.completeExceptionally(e);
+                        }
+                    });
                 }
                 catch (Throwable e) {
-                    LOG.error(e);
+                    // the ui can detach between the isValid check and the access call - the future must not be
+                    // left incomplete then, a caller waiting on it would park forever
+                    LOG.warn("giveAsync lost, ui detached mid-flight", e);
                     result.completeExceptionally(e);
                 }
-            }));
+            });
         }
         else {
             result.completeExceptionally(new Exception("ui detached"));
@@ -104,15 +114,25 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public <T> AsyncResult<T> give(Supplier<T> supplier) {
         AsyncResult<T> result = AsyncResult.undefined();
         if (isValid()) {
-            dispatcher().execute(() -> myUI.access(() -> {
+            dispatcher().execute(() -> {
                 try {
-                    result.setDone(supplier.get());
+                    myUI.access(() -> {
+                        try {
+                            result.setDone(supplier.get());
+                        }
+                        catch (Throwable e) {
+                            LOG.error(e);
+                            result.rejectWithThrowable(e);
+                        }
+                    });
                 }
                 catch (Throwable e) {
-                    LOG.error(e);
+                    // the ui can detach between the isValid check and the access call - the result must not be
+                    // left incomplete then, a caller waiting on it would park forever
+                    LOG.warn("give lost, ui detached mid-flight", e);
                     result.rejectWithThrowable(e);
                 }
-            }));
+            });
         }
         else {
             result.setDone();

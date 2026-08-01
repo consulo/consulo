@@ -17,6 +17,7 @@ package consulo.web.internal.ui.editor.gutter;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.web.internal.ui.WebColors;
 import consulo.diff.util.DiffChunkPresentation;
 import org.jspecify.annotations.Nullable;
 
@@ -37,8 +38,8 @@ public class DiffChunkGutterPainter implements WebLineMarkerPresentationPainter<
             presentation.area().name(),
             presentation.startLine(),
             presentation.endLine(),
-            WebGutterColors.toCss(presentation.fillColor()),
-            WebGutterColors.toCss(presentation.borderColor()),
+            WebColors.toCssColor(presentation.fillColor()),
+            WebColors.toCssColor(presentation.borderColor()),
             presentation.dotted()
         );
     }

@@ -22,6 +22,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.layout.DockLayout;
@@ -82,5 +83,11 @@ public class UnifiedContentManager extends ContentManagerBase {
 
         }
         return myComponent;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public javax.swing.JComponent getComponent() {
+        return (javax.swing.JComponent) TargetAWT.to(getUIComponent());
     }
 }

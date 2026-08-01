@@ -77,7 +77,13 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
     @Override
     public void update(AnActionEvent e) {
         super.update(e);
-        boolean hasToolbars = iterateToolbars(myToolWindow.getContentManager().getComponent()).iterator().hasNext();
+        // the selected content component is walked instead of ContentManager.getComponent() - the latter is a
+        // swing bridge that the unified content manager does not implement, and an action update may run before
+        // the content is initialized at all
+        ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
+        Content content = contentManager == null ? null : contentManager.getSelectedContent();
+        JComponent component = content == null ? null : content.getComponent();
+        boolean hasToolbars = component != null && iterateToolbars(component).iterator().hasNext();
         e.getPresentation().setVisible(hasToolbars);
     }
 
@@ -139,8 +145,8 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
         
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
-            ContentManager contentManager = myToolWindow.getContentManager();
-            Content selectedContent = contentManager.getSelectedContent();
+            ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
+            Content selectedContent = contentManager == null ? null : contentManager.getSelectedContent();
             JComponent contentComponent = selectedContent != null ? selectedContent.getComponent() : null;
             if (contentComponent == null) {
                 return EMPTY_ARRAY;

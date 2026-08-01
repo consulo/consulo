@@ -39,6 +39,8 @@ import java.util.function.Supplier;
 public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, FromVaadinComponentWrapper {
     private UIWindowOverRouterLayout myUIWindow = new UIWindowOverRouterLayout(this);
 
+    private boolean myAttachedOnce;
+
     @RequiredUIAccess
     public VaadinRootLayout() {
         setSizeFull();
@@ -62,8 +64,17 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
 
-        // @PreserveOnRefresh moves this layout into a freshly created UI and closes the old one without
-        // running the constructor again, so the session would keep pointing to a detached UIAccess
+        // only a re-attach, which is @PreserveOnRefresh moving this layout into a freshly created UI without
+        // running the constructor again - the session would keep pointing at a detached UIAccess then. the
+        // first attach right after the constructor must leave the session alone: the builder is what decides
+        // there, and it can only see that a previous tab held a stale session while that session is still
+        // the current one. taking it over here made the builder skip closing the stale welcome frame, and
+        // the manager then refused to show one for this ui at all - an empty page with nothing in the log
+        if (!myAttachedOnce) {
+            myAttachedOnce = true;
+            return;
+        }
+
         WebApplication application = WebApplication.getInstance();
         WebSession previousSession = application == null ? null : application.getCurrentSession();
         if (previousSession == null) {
