@@ -21,7 +21,7 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 2019-02-09
  */
-public class WebResizeImageImpl implements Image, WebImageCanvasDraw {
+public class WebResizeImageImpl implements Image {
   private final Image myOriginal;
   private final int myHeight;
   private final int myWidth;
@@ -44,10 +44,5 @@ public class WebResizeImageImpl implements Image, WebImageCanvasDraw {
   @Override
   public int getWidth() {
     return myWidth;
-  }
-
-  @Override
-  public void drawCanvas(WebCanvasRenderingContext2D context) {
-    WebImageConverter.processCanvas(myOriginal, context);
   }
 }

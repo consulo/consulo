@@ -21,9 +21,9 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 2018-05-08
  */
-public class WebTransparentImageImpl implements Image, WebImageCanvasDraw {
-  private Image myOriginal;
-  private float myAlpha;
+public class WebTransparentImageImpl implements Image {
+  private final Image myOriginal;
+  private final float myAlpha;
 
   public WebTransparentImageImpl(Image original, float alpha) {
     myOriginal = original;
@@ -46,13 +46,5 @@ public class WebTransparentImageImpl implements Image, WebImageCanvasDraw {
   @Override
   public int getWidth() {
     return myOriginal.getWidth();
-  }
-
-  @Override
-  public void drawCanvas(WebCanvasRenderingContext2D context) {
-    context.save();
-    context.setGlobalAlpha(myAlpha);
-    WebImageConverter.processCanvas(myOriginal, context);
-    context.restore();
   }
 }

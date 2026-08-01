@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2020-10-04
  */
-public class WebCanvasImageImpl implements Image, WebImageCanvasDraw {
+public class WebCanvasImageImpl implements Image {
   private final Consumer<Canvas2D> myConsumer;
   private final int myWidth;
   private final int myHeight;
@@ -35,6 +35,10 @@ public class WebCanvasImageImpl implements Image, WebImageCanvasDraw {
     myConsumer = consumer;
   }
 
+  public Consumer<Canvas2D> getConsumer() {
+    return myConsumer;
+  }
+
   @Override
   public int getHeight() {
     return myHeight;
@@ -43,10 +47,5 @@ public class WebCanvasImageImpl implements Image, WebImageCanvasDraw {
   @Override
   public int getWidth() {
     return myWidth;
-  }
-
-  @Override
-  public void drawCanvas(WebCanvasRenderingContext2D context) {
-    // TODO draw
   }
 }

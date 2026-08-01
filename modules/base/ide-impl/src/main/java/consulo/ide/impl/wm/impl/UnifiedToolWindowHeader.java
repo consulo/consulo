@@ -214,7 +214,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         private GearActionGroup() {
             super(LocalizeValue.localizeTODO("Options"), true);
 
-            getTemplatePresentation().setIcon(PlatformIconGroup.generalGearplain());
+            getTemplatePresentation().setIcon(PlatformIconGroup.actionsMorevertical());
         }
 
         @Override

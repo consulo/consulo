@@ -243,7 +243,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
-        return baseImage;
+        return new WebColorizeImageImpl(baseImage, colorValue);
     }
 
     @Override

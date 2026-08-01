@@ -21,7 +21,7 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class WebLayeredImageImpl implements Image, WebImageCanvasDraw {
+public class WebLayeredImageImpl implements Image {
   private final Image[] myImages;
 
   public WebLayeredImageImpl(Image[] images) {
@@ -40,12 +40,5 @@ public class WebLayeredImageImpl implements Image, WebImageCanvasDraw {
   @Override
   public int getWidth() {
     return myImages[0].getWidth();
-  }
-
-  @Override
-  public void drawCanvas(WebCanvasRenderingContext2D context) {
-    for (Image image : myImages) {
-      WebImageConverter.processCanvas(image, context);
-    }
   }
 }

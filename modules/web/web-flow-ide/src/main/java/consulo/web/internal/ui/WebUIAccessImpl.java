@@ -25,6 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -45,13 +46,33 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
      * give methods are asynchronous by contract, so the call is handed to a single background thread instead -
      * single, because the queue order still has to be preserved.
      */
-    private final ExecutorService myDispatcher;
+    private volatile @Nullable ExecutorService myDispatcher;
 
     public WebUIAccessImpl(UI ui) {
         myUI = ui;
-        myDispatcher = Application.get()
-            .getInstance(ApplicationConcurrency.class)
-            .createSequentialApplicationPoolExecutor("WebUIAccess dispatcher");
+    }
+
+    /**
+     * Resolved on first use rather than in the constructor - the root layout is built as soon as the browser
+     * asks for the page, which can be long before the platform has started, and reaching for the application
+     * that early failed the whole route with an internal server error instead of showing the frame loading.
+     */
+    private ExecutorService dispatcher() {
+        ExecutorService dispatcher = myDispatcher;
+        if (dispatcher != null) {
+            return dispatcher;
+        }
+
+        synchronized (this) {
+            dispatcher = myDispatcher;
+            if (dispatcher == null) {
+                myDispatcher = dispatcher = Application.get()
+                    .getInstance(ApplicationConcurrency.class)
+                    .createSequentialApplicationPoolExecutor("WebUIAccess dispatcher");
+            }
+        }
+
+        return dispatcher;
     }
 
     @Override
@@ -63,7 +84,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
         CompletableFuture<T> result = new CompletableFuture<>();
         if (isValid()) {
-            myDispatcher.execute(() -> myUI.access(() -> {
+            dispatcher().execute(() -> myUI.access(() -> {
                 try {
                     result.complete(supplier.get());
                 }
@@ -83,7 +104,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     public <T> AsyncResult<T> give(Supplier<T> supplier) {
         AsyncResult<T> result = AsyncResult.undefined();
         if (isValid()) {
-            myDispatcher.execute(() -> myUI.access(() -> {
+            dispatcher().execute(() -> myUI.access(() -> {
                 try {
                     result.setDone(supplier.get());
                 }

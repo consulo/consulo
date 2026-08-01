@@ -1269,10 +1269,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         return ProjectIdeFocusManager.getInstance(myProject);
     }
 
-    @RequiredUIAccess
     @Override
     public String getActiveToolWindowId() {
-        UIAccess.assertIsUIThread();
         return myLayout.getActiveId();
     }
 

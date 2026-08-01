@@ -29,7 +29,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WebImageImpl implements Image, WebImageWithURL {
+public class WebImageImpl implements Image {
   private int myHeight, myWidth;
 
   private URL myImageUrl;
@@ -92,9 +92,7 @@ public class WebImageImpl implements Image, WebImageWithURL {
     return myWidth;
   }
 
-  
-  @Override
-  public String getImageURL() {
-    return myImageUrl.toExternalForm();
+  public URL getURL() {
+    return myImageUrl;
   }
 }

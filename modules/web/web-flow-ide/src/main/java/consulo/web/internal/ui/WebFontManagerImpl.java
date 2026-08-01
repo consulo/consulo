@@ -18,7 +18,6 @@ package consulo.web.internal.ui;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -28,11 +27,11 @@ import java.util.Set;
 public class WebFontManagerImpl implements FontManager {
   public static final WebFontManagerImpl ourInstance = new WebFontManagerImpl();
 
-  private static final String DEFAULT_FONT = "Default";
-
   @Override
   public Set<String> getAvailableFontNames() {
-    return Collections.singleton(DEFAULT_FONT);
+    // the browser has no api to enumerate what it can render, so only the bundled faces are offered - they
+    // are the only ones the page ships a @font-face for
+    return WebFontRegistry.getFamilyNames();
   }
 
   @Override

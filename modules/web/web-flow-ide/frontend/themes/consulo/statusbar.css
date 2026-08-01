@@ -7,10 +7,12 @@
   justify-content: center;
 }
 
-/* the row lives in a 24px strip, an inner scrollbar would eat all of it */
+/* the row lives in a 24px strip, an inner scrollbar would eat all of it. the widgets sit in the dock row, not
+   on the bar itself, so centering the bar never reached them */
 .web-status-bar-center
 {
   overflow: hidden;
+  align-items: center;
 }
 
 /* every item of the bar is a label, and the leftmost one - the tool windows switcher - holds an icon and

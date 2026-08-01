@@ -23,6 +23,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -50,6 +51,7 @@ import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.aura.Aura;
+import consulo.web.internal.ui.WebFontRegistry;
 import org.vaadin.stefan.table.Table;
 
 /**
@@ -64,6 +66,7 @@ import org.vaadin.stefan.table.Table;
 @StyleSheet("./themes/consulo/tabs.css")
 @StyleSheet("./themes/consulo/statusbar.css")
 @StyleSheet("./themes/consulo/toolwindow.css")
+@JsModule("./webImage.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(HorizontalLayout.class)
@@ -100,5 +103,9 @@ public class ConsuloAppShellConfigurator implements AppShellConfigurator {
       "document.addEventListener('contextmenu', event => event.preventDefault());",
       Inline.Wrapping.JAVASCRIPT
     );
+
+    // built from the same list the font manager reports, a stylesheet of the theme would have to be kept in
+    // step with it by hand
+    settings.addInlineWithContents(WebFontRegistry.buildFontFaceCss(), Inline.Wrapping.STYLESHEET);
   }
 }

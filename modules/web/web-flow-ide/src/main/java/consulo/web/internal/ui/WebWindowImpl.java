@@ -25,6 +25,7 @@ import consulo.ui.MenuBar;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.WindowCloseEvent;
 import consulo.web.internal.ui.base.ComponentHolder;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaadin;
@@ -63,22 +64,27 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
         vaadinComponent.setCloseOnOutsideClick(false);
         vaadinComponent.setDraggable(true);
         if (options.isClosable()) {
-            addCloseDialogButton(vaadinComponent);
+            addCloseDialogButton();
         }
 
         VaadinSizeUtil.setSizeFull(myRootPanel.getComponent());
         vaadinComponent.add(TargetVaadin.to(myRootPanel.getComponent()));
-        // TODO vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
+
+        vaadinComponent.addOpenedChangeListener(event -> {
+            if (!event.isOpened()) {
+                closed();
+            }
+        });
 
         WebFocusManagerImpl.register(toVaadinComponent());
     }
 
-    private static void addCloseDialogButton(Dialog dialog) {
+    private void addCloseDialogButton() {
         // the lumo iconset is not part of the aura theme used by the app shell
-        Button closeButton = new Button(VaadinIcon.CLOSE_SMALL.create(), (e) -> dialog.close());
+        Button closeButton = new Button(VaadinIcon.CLOSE_SMALL.create(), e -> close());
         // created outside a VaadinComponentDelegate, so the small variant has to be added by hand here
         closeButton.addThemeVariants(ButtonVariant.TERTIARY, ButtonVariant.SMALL);
-        dialog.getHeader().add(closeButton);
+        getVaadinComponent().getHeader().add(closeButton);
     }
 
     @Override
@@ -99,9 +105,33 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     @Override
     @RequiredUIAccess
     public void close() {
+        if (myDisposed) {
+            return;
+        }
+
         getVaadinComponent().close();
 
+        closed();
+    }
+
+    /**
+     * Runs for both an api close and a close initiated from the browser, so anything registered through
+     * {@link #addCloseListener} sees every close.
+     */
+    @RequiredUIAccess
+    private void closed() {
+        if (myDisposed) {
+            return;
+        }
+
         myDisposed = true;
+
+        // vaadin detaches an auto added overlay only when the browser reports back the 'closed' dom event, and it
+        // nests an overlay opened on top of another modal inside that modal - so a window closed out of order stays
+        // attached and keeps the ui element inert. detaching here runs the modal stack cleanup right away
+        getVaadinComponent().getElement().removeFromParent();
+
+        getListenerDispatcher(WindowCloseEvent.class).onEvent(new WindowCloseEvent(this));
 
         Disposer.dispose(this);
     }

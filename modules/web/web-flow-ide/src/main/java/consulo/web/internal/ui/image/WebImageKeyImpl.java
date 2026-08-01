@@ -15,7 +15,6 @@
  */
 package consulo.web.internal.ui.image;
 
-import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
@@ -26,9 +25,8 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2020-10-03
  */
-public class WebImageKeyImpl implements ImageKey, WebImageWithURL {
+public class WebImageKeyImpl implements ImageKey {
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
-  private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
   private final String myGroupId;
   private final String myImageId;
@@ -46,12 +44,6 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithURL {
   @Override
   public String getGroupId() {
     return myGroupId;
-  }
-
-  
-  @Override
-  public String getImageURL() {
-    return "/image?groupId=" + myGroupId + "&imageId=" + myImageId;
   }
 
   public @Nullable ImageReference calcImage() {

@@ -63,7 +63,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         Span span = new Span();
         span.addClassName("web-icon");
         if (myIcon != null) {
-            Component image = WebImageConverter.getImageCanvas(myIcon);
+            Component image = WebImageConverter.getImage(myIcon);
             image.addClassName(AuraUtility.Margin.Right.SMALL);
             span.add(image);
         }

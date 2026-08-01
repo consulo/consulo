@@ -38,6 +38,7 @@ import consulo.web.internal.servlet.RootUIBuilder;
 import consulo.web.internal.servlet.UIIconServlet;
 import consulo.web.internal.servlet.UIServlet;
 import consulo.web.internal.servlet.VaadinRootLayout;
+import consulo.web.internal.servlet.WebFontServlet;
 import consulo.web.main.WebApplicationStarter;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletContextEvent;
@@ -157,7 +158,7 @@ public class WebContainerStartup implements ContainerStartup {
   }
 
   private void registerServlets(ServletContextHandler handler) {
-    List<Class<? extends Servlet>> classes = List.of(RootUIServlet.class, UIIconServlet.class);
+    List<Class<? extends Servlet>> classes = List.of(RootUIServlet.class, UIIconServlet.class, WebFontServlet.class);
 
     for (Class<? extends Servlet> servletClass : classes) {
       WebServlet declaredAnnotation = servletClass.getDeclaredAnnotation(WebServlet.class);

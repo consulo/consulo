@@ -26,10 +26,7 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
-import consulo.web.internal.ui.image.WebImageWithURL;
-import consulo.web.internal.ui.image.WebLayeredImageImpl;
-import consulo.web.internal.ui.image.WebResizeImageImpl;
-import consulo.web.internal.ui.image.WebTransparentImageImpl;
+import consulo.web.internal.ui.image.WebImageElement;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -72,7 +69,6 @@ import consulo.versionControlSystem.internal.VcsRange;
 import consulo.undoRedo.CommandProcessor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.document.DocCommandGroupId;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
@@ -193,6 +189,8 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.setText(myDocument.getText());
     vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
 
+    updateFont();
+
 //    vaadin.addMouseDownListener(this::runMousePressedCommand);
 
     vaadin.addCaretListener(event -> moveCaretFromClient(event.getOffset()));
@@ -202,8 +200,6 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.addCtrlClickListener(event -> navigateTo(event.getOffset()));
 
     vaadin.addGutterClickListener(event -> performGutterClick(event.getId()));
-
-    vaadin.addErrorStripeClickListener(event -> performErrorStripeClick(event.getOffset()));
 
     vaadin.addFoldListener(event -> setFoldRegionExpandedFromClient(event.getStart(), !event.isCollapsed()));
 
@@ -263,7 +259,13 @@ public class WebEditorImpl extends CodeEditorBase {
       setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(file, getColorsScheme(), project));
     }
 
-    vaadin.addAttachListener(attachEvent -> update());
+    // a reattach builds the browser side editor again, so everything that is not part of its input has to
+    // be pushed once more
+    vaadin.addAttachListener(attachEvent -> {
+      updateFont();
+
+      update();
+    });
 
     Disposer.register(myDisposable, () -> subscribeToLineStatusTracker(null));
   }
@@ -491,31 +493,6 @@ public class WebEditorImpl extends CodeEditorBase {
     }, uiAccess);
   }
 
-  /**
-   * Jumps to the mark the user clicked in the error stripe, the counterpart of
-   * {@code DesktopEditorMarkupModelImpl.doClick}.
-   */
-  @RequiredUIAccess
-  private void performErrorStripeClick(int offset) {
-    if (offset < 0 || offset > myDocument.getTextLength()) {
-      return;
-    }
-
-    CommandProcessor.getInstance().newCommand()
-      .project(myProject)
-      .document(myDocument)
-      .name(CodeEditorLocalize.moveCaretCommandName())
-      .groupId(DocCommandGroupId.noneGroupId(myDocument))
-      .run(() -> {
-        myCaretModel.removeSecondaryCarets();
-        myCaretModel.moveToOffset(offset);
-        mySelectionModel.removeSelection();
-      });
-
-    // the awt panel scrolls the caret to the center afterwards, the web scrolling model is a stub - the caret
-    // push is what reveals the line, orion scrolls to the offset it is given
-  }
-
   @Override
   protected void onHighlighterChanged(
     RangeHighlighterEx highlighter,
@@ -601,6 +578,19 @@ public class WebEditorImpl extends CodeEditorBase {
     }
   }
 
+  /**
+   * The editor font of the scheme. Nothing of the scheme is readable in the browser, so the font travels the
+   * same way the colors do - and the client has to relayout on it, orion caches the metrics it measured.
+   */
+  private void updateFont() {
+    EditorColorsScheme scheme = getColorsScheme();
+
+    String fontName = scheme.getEditorFontName();
+    int fontSize = scheme.getEditorFontSize();
+
+    giveUI(() -> myEditorComponent.toVaadinComponent().setFont(fontName, fontSize));
+  }
+
   public void update() {
     // the highlighter walk touches the document and the psi backed settings
     Application.get().runReadAction((Runnable)() -> {
@@ -660,8 +650,8 @@ public class WebEditorImpl extends CodeEditorBase {
    * stripe color, the same set the awt {@code DesktopEditorErrorPanel} paints.
    * <p>
    * The awt panel maps an offset onto the strip itself through {@code visualLineToY}, which the web editor has
-   * no implementation of - the layout lives in the browser. So the marks are pushed in document lines and the
-   * scaling onto the strip height is done on the client, where the line height and the strip height are known.
+   * no implementation of - the stripe is the orion overview ruler, which squeezes the document into its own
+   * height on its own. So the marks are pushed in document offsets and placed in the browser.
    */
   @RequiredReadAction
   private void updateErrorStripeMarks() {
@@ -683,7 +673,6 @@ public class WebEditorImpl extends CodeEditorBase {
     marks.append(']');
 
     String json = "{\"visible\":" + markupModel.isErrorStripeVisible()
-      + ",\"minMarkHeight\":" + markupModel.getMinMarkHeight()
       + ",\"marks\":" + marks + "}";
 
     myEditorComponent.toVaadinComponent().setErrorStripeMarks(json);
@@ -712,9 +701,9 @@ public class WebEditorImpl extends CodeEditorBase {
         marks.append(',');
       }
 
-      marks.append("{\"offset\":").append(start)
-        .append(",\"line1\":").append(myDocument.getLineNumber(start))
-        .append(",\"line2\":").append(myDocument.getLineNumber(end))
+      marks.append("{\"line\":").append(myDocument.getLineNumber(start))
+        .append(",\"start\":").append(start)
+        .append(",\"end\":").append(end)
         .append(",\"layer\":").append(highlighter.getLayer())
         .append(",\"thin\":").append(highlighter.isThinErrorStripeMark())
         .append(",\"color\":\"").append(toCssColor(color))
@@ -724,13 +713,16 @@ public class WebEditorImpl extends CodeEditorBase {
 
   /**
    * Pushes the regions the folding pass produced. The browser drives orion's own folding annotations from
-   * them, which is what owns the projection hiding the lines.
+   * them, which is what the folding ruler draws, and substitutes the placeholder for the collapsed text.
    */
   @RequiredReadAction
   private void updateFoldRegions() {
     if (isReleased) {
       return;
     }
+
+    // the awt editor paints the placeholder with these, the same scheme key rather than a look of its own
+    String placeholderStyle = toCssStyle(getColorsScheme().getAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES));
 
     StringBuilder regions = new StringBuilder("[");
 
@@ -742,12 +734,6 @@ public class WebEditorImpl extends CodeEditorBase {
       int start = region.getStartOffset();
       int end = region.getEndOffset();
 
-      // orion folds whole lines - it hides from the start of the line after the region to the end of the
-      // line the region ends on - so a region contained in a single line has nothing it could hide
-      if (myDocument.getLineNumber(start) >= myDocument.getLineNumber(end)) {
-        continue;
-      }
-
       if (regions.length() > 1) {
         regions.append(',');
       }
@@ -755,7 +741,14 @@ public class WebEditorImpl extends CodeEditorBase {
       regions.append("{\"start\":").append(start)
         .append(",\"end\":").append(end)
         .append(",\"collapsed\":").append(!region.isExpanded())
-        .append('}');
+        .append(",\"placeholder\":\"").append(escapeJson(region.getPlaceholderText())).append('"');
+
+      // the same shape the style ranges carry, the client feeds both to the LineStyle event of the bundle
+      if (placeholderStyle != null) {
+        regions.append(",\"style\":{\"style\":").append(placeholderStyle).append('}');
+      }
+
+      regions.append('}');
     }
 
     regions.append(']');
@@ -901,9 +894,9 @@ public class WebEditorImpl extends CodeEditorBase {
 
       json.append("{\"text\":\"").append(escapeJson(item.getText())).append('"');
 
-      String iconUrls = toIconUrlsJson(item.getIcon());
-      if (iconUrls != null) {
-        json.append(",\"iconUrls\":").append(iconUrls);
+      String iconHtml = toIconHtml(item.getIcon());
+      if (iconHtml != null) {
+        json.append(",\"iconHtml\":\"").append(escapeJson(iconHtml)).append('"');
       }
 
       json.append('}');
@@ -1054,8 +1047,8 @@ public class WebEditorImpl extends CodeEditorBase {
         continue;
       }
 
-      String iconUrls = toIconUrlsJson(renderer.getIcon());
-      if (iconUrls == null) {
+      String iconHtml = toIconHtml(renderer.getIcon());
+      if (iconHtml == null) {
         continue;
       }
 
@@ -1067,7 +1060,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
       marks.append("{\"id\":").append(myGutterMarks.size())
         .append(",\"line\":").append(line)
-        .append(",\"iconUrls\":").append(iconUrls)
+        .append(",\"iconHtml\":\"").append(escapeJson(iconHtml)).append('"')
         .append(",\"tooltip\":\"").append(escapeJson(toHtmlContent(renderer.getTooltipValue().get()))).append("\"}");
 
       myGutterMarks.add(renderer);
@@ -1079,46 +1072,11 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   /**
-   * The browser can only show an image it has a url for, and the platform builds most markers by layering,
-   * resizing and fading images together - run/debug line markers among them. Every leaf is emitted separately
-   * and the client stacks them, which is what the awt gutter paints on a single graphics anyway.
-   *
-   * @return json array of urls, or null when nothing in the image resolves to one
+   * The markup of the custom elements which apply the effects in the browser - the editor pushes its icons
+   * inside a json payload and never gets a component to attach, so it needs the tree as a string.
    */
-  private static @Nullable String toIconUrlsJson(consulo.ui.image.@Nullable Image icon) {
-    java.util.List<String> urls = new java.util.ArrayList<>();
-    collectIconUrls(icon, urls);
-
-    if (urls.isEmpty()) {
-      return null;
-    }
-
-    StringBuilder json = new StringBuilder("[");
-    for (String url : urls) {
-      if (json.length() > 1) {
-        json.append(',');
-      }
-      json.append('"').append(escapeJson(url)).append('"');
-    }
-    return json.append(']').toString();
-  }
-
-  private static void collectIconUrls(consulo.ui.image.@Nullable Image icon, java.util.List<String> urls) {
-    switch (icon) {
-      case null -> {
-      }
-      case WebImageWithURL withURL -> urls.add(withURL.getImageURL());
-      case WebLayeredImageImpl layered -> {
-        for (consulo.ui.image.Image layer : layered.getImages()) {
-          collectIconUrls(layer, urls);
-        }
-      }
-      // the browser scales the stacked images to the marker box, and a faded layer is close enough at gutter size
-      case WebResizeImageImpl resized -> collectIconUrls(resized.getOriginal(), urls);
-      case WebTransparentImageImpl transparent -> collectIconUrls(transparent.getOriginal(), urls);
-      default -> {
-      }
-    }
+  private static @Nullable String toIconHtml(consulo.ui.image.@Nullable Image icon) {
+    return icon == null ? null : WebImageElement.toHtml(icon);
   }
 
   private static String escapeJson(@Nullable String value) {
@@ -1203,11 +1161,13 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   private static @Nullable String toCssTextDecoration(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
-    if (effectType == null) {
+    // a scheme may name an effect and give it no colour of its own - the folded text of the default schemes
+    // does - and the awt painter draws nothing at all then, the type alone is not an effect
+    if (effectType == null || effectColor == null) {
       return null;
     }
 
-    String color = effectColor == null ? "" : " " + toCssColor(effectColor);
+    String color = " " + toCssColor(effectColor);
 
     return switch (effectType) {
       case WAVE_UNDERSCORE -> "underline wavy" + color;
@@ -1474,6 +1434,8 @@ public class WebEditorImpl extends CodeEditorBase {
   @Override
   public void reinitSettings() {
     myView.reset();
+
+    updateFont();
   }
 
   @Override

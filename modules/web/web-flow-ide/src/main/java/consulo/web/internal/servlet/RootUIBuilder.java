@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.servlet;
 
+import com.vaadin.flow.component.UI;
 import consulo.application.internal.ApplicationEx;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -36,7 +37,9 @@ public class RootUIBuilder implements UIBuilder {
   @RequiredUIAccess
   @Override
   public void build(Window window) {
-    Disposer.register(window, () -> {
+    // registered on the per ui disposable, which is disposed by the vaadin session destroy listener - the root
+    // window is disposed by any Window#close reaching it, and closing a window must not close every open project
+    Disposer.register(UIServlet.getDisposable(UI.getCurrent()), () -> {
       WebApplication application = WebApplication.getInstance();
       if (application == null || !((ApplicationEx)application).isLoaded()) {
         return;

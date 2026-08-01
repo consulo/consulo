@@ -6,10 +6,27 @@
 {
   position: relative;
 
-  /* the column of the error stripe is reserved as right padding on the host. with the default box sizing that
-     padding is added to the width the layout already gave it, so the host ran past the frame and the stripe
-     was drawn underneath the right tool window stripe - invisible, whatever width it was given */
-  box-sizing: border-box;
+  /* the error stripe is the orion overview ruler, which orion lays out itself - the width is published here
+     because the analyze counters are placed against the same edge and have to clear it. orion ships the ruler
+     at 14px, an ide stripe has to carry a readable dash per highlighter */
+  --arquill-overview-ruler-width: 28px;
+
+  /* the fallbacks are the ones the bundled arquill css hardcodes, they only apply until the color scheme
+     font arrives from the server */
+  --arquill-editor-font-size: 12px;
+  --arquill-editor-font-family: "Consolas", "Menlo", "Monaco", "Vera Mono", monospace;
+
+  /* every row of the view is this tall, rulers included - a length rather than a ratio, so that a row and the
+     ruler row beside it cannot end up measured against two different font sizes */
+  --arquill-editor-line-height: calc(var(--arquill-editor-font-size) * 2);
+}
+
+/* the font of the color scheme, published as custom properties by the client - the bundled .textview rule
+   carries the family and the size, and it outweighs an inline style put on the host rather than on the view */
+.arquill-editor .textview
+{
+  font-family: var(--arquill-editor-font-family);
+  font-size: var(--arquill-editor-font-size);
 }
 
 /* overflow must be clipped - the marks are absolutely positioned across the whole document height and would
@@ -39,6 +56,9 @@
   left: 0;
   cursor: pointer;
   pointer-events: auto;
+
+  --web-image-width: 100%;
+  --web-image-height: var(--arquill-gutter-icon-size, 12px);
 }
 
 /* the vcs change bars are drawn over the right edge of the folding ruler, which is the last of the left
@@ -47,6 +67,59 @@
 .textviewLeftRuler .ruler.folding
 {
   width: 22px;
+}
+
+/* the folding marker is an empty div the annotation of the row carries, so it only exists on a row a
+   region starts on. the bundle draws a plus and a minus circle into it out of its own images, which is
+   not what the ide gutter shows - the rule has to outweigh the bundled .annotationHTML.expanded, whose
+   stylesheet is added to the page after the theme */
+.textviewLeftRuler .ruler.folding .annotationHTML.expanded,
+.textviewLeftRuler .ruler.folding .annotationHTML.collapsed
+{
+  position: relative;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background-image: none;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.textviewLeftRuler .ruler.folding .annotationHTML.expanded:hover,
+.textviewLeftRuler .ruler.folding .annotationHTML.collapsed:hover
+{
+  opacity: 1;
+}
+
+/* the chevron the awt gutter draws - two strokes rather than a filled triangle - out of the inherited text
+   colour so it follows the scheme rather than a grey of its own */
+.textviewLeftRuler .ruler.folding .annotationHTML.expanded::after,
+.textviewLeftRuler .ruler.folding .annotationHTML.collapsed::after
+{
+  content: '';
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 5px;
+  height: 5px;
+
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+}
+
+/* the chevron points at what the click does, so an expanded region carries the one that collapses it */
+.textviewLeftRuler .ruler.folding .annotationHTML.expanded::after
+{
+  transform: translate(-50%, -70%) rotate(45deg);
+}
+
+.textviewLeftRuler .ruler.folding .annotationHTML.collapsed::after
+{
+  transform: translate(-70%, -50%) rotate(-45deg);
 }
 
 .arquill-change-bands
@@ -67,55 +140,61 @@
   width: 100%;
 }
 
-/* the error stripe, the counterpart of the awt error panel - it is not an overlay over the text, the editor host
-   reserves the column for it through its right padding, which the script sets together with the width here */
-.arquill-error-stripe
+/* the error stripe, the counterpart of the awt error panel - the orion overview ruler, which ships at 14px and
+   is measured from the dom the same way the left rulers are */
+.textviewRightRuler .ruler.overview
 {
-  /* width is set while rendering, it has to agree with the padding the host reserves */
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  overflow: hidden;
-  z-index: 1;
+  width: var(--arquill-overview-ruler-width);
 
-  box-sizing: border-box;
-  border-left: 1px solid #eaeaea;
-  background-color: white;
-
-  /* the marks answer for themselves, the empty part of the column has nothing to say - the awt panel ignores a
-     click that lands nowhere near a highlighter too */
-  pointer-events: none;
+  /* the stripe is a column of its own beside the text, so it carries the background of the editor rather
+     than of the application around it - the app one is a different grey and the seam shows */
+  background-color: var(--arquill-editor-background, #fff);
 }
 
-.arquill-error-stripe-mark
+/* orion draws a mark as a rounded 8px pill left aligned in the column, the awt panel paints a dash over the
+   whole width of it. the height is orion's own, it counts the lines the highlighter spans */
+.annotationOverview.arquillStripe
 {
-  position: absolute;
-  cursor: pointer;
-  pointer-events: auto;
+  left: 2px;
+  right: 2px;
+  width: auto;
+
+  border-radius: 0;
 }
 
-/* the column is a map of the file, not text - dragging across it must not leave anything highlighted */
-.arquill-error-stripe,
-.arquill-error-stripe *
+/* a thin mark keeps to the left half, so a wide one covering the same lines stays readable next to it - the
+   ruler has room for a single mark per row, which is why they cannot share it the way the awt panel does */
+.annotationOverview.arquillStripeThin
 {
-  -webkit-user-select: none;
-  user-select: none;
+  right: auto;
+  width: 40%;
 }
 
-/* a marker is a stack of images - the platform layers a badge over a base icon and the awt gutter paints them
-   onto one graphics. the box is square and follows the line height, the icons are not, so contain keeps a non
-   square layer centered instead of stretched */
-.arquill-gutter-mark > img,
-.arquill-status-icon > img
+/* orion marks the caret row in the overview ruler of its own accord, the awt panel has nothing of the kind */
+.annotationOverview.currentLine
+{
+  display: none;
+}
+
+/* an icon is a tree of web-image tags, and the size of every tag in it comes from the variables - setting a
+   width on the outermost one alone would leave the layers of a composition at the size the platform asked
+   for, overflowing the box they were fitted into */
+.arquill-status-icon > *
 {
   position: absolute;
   inset: 0;
+}
 
-  width: 100%;
-  height: 100%;
-
-  object-fit: contain;
+/* the box is as tall as the row so the mark cannot land between two lines, but the icon inside follows the
+   font - the row is twice the font height, and an icon that size towers over the text it belongs to. the
+   script publishes the measured size, the box has no other way of knowing it */
+.arquill-gutter-mark > *
+{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .arquill-status-icon
@@ -125,18 +204,19 @@
 
   width: 14px;
   height: 14px;
+
+  --web-image-width: 100%;
+  --web-image-height: 100%;
 }
 
 /* the counters of the whole file, sitting over the top right corner of the editor the way the awt inspection
-   widget does - it is a readout, not a control, so it carries no frame and no selection of its own.
-   it is right aligned with the error stripe and covers its top, which is where the awt panel paints the traffic
-   light icon - the strip keeps that much of itself free */
+   widget does - it is a readout, not a control, so it carries no frame and no selection of its own */
 .arquill-status
 {
   position: absolute;
   /* left of the error stripe and of the vertical scrollbar - the counters are a readout, covering either of
-     them costs more than the space it saves. the stripe publishes its own width from the script */
-  right: calc(var(--arquill-error-stripe-width, 40px) + 24px);
+     them costs more than the space it saves */
+  right: calc(var(--arquill-overview-ruler-width) + 24px);
   top: 2px;
   z-index: 2;
 
@@ -146,8 +226,6 @@
   gap: 8px;
 
   padding: 0 4px;
-
-  background-color: white;
 
   font-size: 12px;
   line-height: 16px;
@@ -175,6 +253,10 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
+
+  /* the count is laid out on its own line box, which is taller than the icon beside it - without this the two
+     sit on different centre lines even though the row is centered */
+  line-height: 1;
 
   min-width: 2em;
 }
@@ -204,13 +286,22 @@
   pointer-events: none;
 }
 
-/* the bundled arquill css leaves the 12px font on the default normal line height, which is cramped.
+/* the bundled arquill css leaves the font on the default normal line height, which is cramped.
    orion forces line-height: normal inline on the root and on the div it measures the metrics with, so the
    rule has to sit on the line divs and it has to be important - otherwise the measured height and the
    rendered height disagree and orion falls back to its variable line height path */
 .textviewContent > div
 {
-  line-height: 2 !important;
+  line-height: var(--arquill-editor-line-height) !important;
+}
+
+/* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is
+   drawn at the top of its row while the gutter marker beside it is centered in the same row - the two then
+   read as misaligned even though both are where they were put */
+.textviewLeftRuler .rulerLines,
+.textviewRightRuler .rulerLines
+{
+  line-height: var(--arquill-editor-line-height) !important;
 }
 
 /* the zoom ruler renders the whole file at 1px per line, it must keep its own height */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,23 @@
  */
 package consulo.web.internal.ui.image;
 
-import consulo.ui.image.Image;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * @author VISTALL
- * @since 29/05/2023
+ * @since 2026-08-01
  */
-public interface WebImageWithURL extends Image {
-  
-  String getImageURL();
+public record WebRenderedImage(byte[] data, boolean svg) {
+    public static WebRenderedImage svg(String text) {
+        return new WebRenderedImage(text.getBytes(StandardCharsets.UTF_8), true);
+    }
+
+    public String contentType() {
+        return svg ? "image/svg+xml" : "image/png";
+    }
+
+    public String toDataURI() {
+        return "data:" + contentType() + ";base64," + Base64.getEncoder().encodeToString(data);
+    }
 }

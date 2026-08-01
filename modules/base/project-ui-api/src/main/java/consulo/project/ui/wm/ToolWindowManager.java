@@ -105,8 +105,10 @@ public abstract class ToolWindowManager {
     /**
      * @return <code>ID</code> of currently active tool window or <code>null</code> if there is no active
      * tool window.
+     * <p>
+     * Readable from any thread: the toggle actions of a tool window ask for it from {@code update}, which the
+     * action updater runs off the ui thread, and a stale id there is harmless - the action is updated again.
      */
-    @RequiredUIAccess
     public abstract @Nullable String getActiveToolWindowId();
 
     /**

@@ -24,6 +24,7 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +35,11 @@ import java.util.function.Predicate;
  * @since 2020-05-11
  */
 public class UnifiedProgressDialog implements ProgressDialog {
-    private final Project myProject;
+    /**
+     * Null while a project is being opened - the progress of the open itself belongs to no project yet, and
+     * the field is only ever a way to reach the application.
+     */
+    private final @Nullable Project myProject;
     private ProgressWindow myProgressWindow;
 
     private Window myWindow;
@@ -43,7 +48,14 @@ public class UnifiedProgressDialog implements ProgressDialog {
     private Label myTextLabel2;
     private ProgressBar myProgressBar;
 
-    public UnifiedProgressDialog(Project project, ProgressWindow progressWindow) {
+    /**
+     * Every window access is scheduled on the ui thread, so a hide can be requested long before the scheduled show
+     * has run. Without this flag such a hide is a no-op and the window opens afterwards with nobody left to close
+     * it - on a modal ui backend that leaves the whole ui blocked.
+     */
+    private volatile boolean myHideRequested;
+
+    public UnifiedProgressDialog(@Nullable Project project, ProgressWindow progressWindow) {
         myProject = project;
         myProgressWindow = progressWindow;
     }
@@ -55,15 +67,19 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void hide() {
-        System.out.println("hide");
-        if (myWindow != null) {
-            myProject.getApplication().getLastUIAccess().give(() -> {
-                myWindow.close();
-                myWindow = null;
-                myTextLabel = null;
-                myTextLabel2 = null;
-            });
-        }
+        myHideRequested = true;
+
+        Application.get().getLastUIAccess().give(() -> {
+            if (myWindow == null) {
+                return;
+            }
+
+            myWindow.close();
+            myWindow = null;
+            myTextLabel = null;
+            myTextLabel2 = null;
+            myProgressBar = null;
+        });
     }
 
     @Override
@@ -73,27 +89,24 @@ public class UnifiedProgressDialog implements ProgressDialog {
 
     @Override
     public void update() {
-        System.out.println("update");
+        Application.get().getLastUIAccess().give(() -> {
+            if (myWindow == null) {
+                return;
+            }
 
-        if (myWindow != null) {
-            myProject.getApplication().getLastUIAccess().give(() -> {
-                System.out.println(
-                    "update " + myProgressWindow.getText() + " " +
-                        myProgressWindow.getText2() + " " + myProgressWindow.getFraction()
-                );
-                myTextLabel.setText(myProgressWindow.getText());
-                myTextLabel2.setText(myProgressWindow.getText2());
-                myProgressBar.setValue((int) (myProgressWindow.getFraction() * 100));
-            });
-        }
+            myTextLabel.setText(myProgressWindow.getText());
+            myTextLabel2.setText(myProgressWindow.getText2());
+            myProgressBar.setValue((int) (myProgressWindow.getFraction() * 100));
+        });
     }
 
     @Override
     public void show() {
-        System.out.println("show");
-            
+        Application.get().getLastUIAccess().give(() -> {
+            if (myHideRequested || myWindow != null) {
+                return;
+            }
 
-        myProject.getApplication().getLastUIAccess().give(() -> {
             VerticalLayout verticalLayout = VerticalLayout.create();
 
             verticalLayout.add(myTextLabel = Label.create());
