@@ -42,6 +42,7 @@ public class DefaultBundledKeymapProvider implements BundledKeymapProvider {
     "/keymap/Keymap_Netbeans.xml",
     "/keymap/Keymap_VSCode.xml",
     "/keymap/Keymap_VSCode_OSX.xml",
+    "/keymap/Keymap_Web.xml",
     };
   }
 }

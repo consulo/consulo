@@ -95,7 +95,12 @@ public class DefaultKeymap {
 
     
     public String getDefaultKeymapName() {
-        PlatformOperatingSystem os = Platform.current().os();
+        Platform platform = Platform.current();
+        if (platform.isInBrowser()) {
+            return KeymapManager.WEB_KEYMAP;
+        }
+
+        PlatformOperatingSystem os = platform.os();
 
         if (os.isMac()) {
             return KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP;

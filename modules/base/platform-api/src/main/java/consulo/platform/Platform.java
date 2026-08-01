@@ -61,6 +61,10 @@ public interface Platform extends UserDataHolder {
         }
     }
 
+    default boolean isInBrowser() {
+        return false;
+    }
+
     void openInBrowser(URL url);
 
     default String fileManagerName() {

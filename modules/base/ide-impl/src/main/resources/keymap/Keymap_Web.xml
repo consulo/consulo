@@ -1,0 +1,199 @@
+<!--
+  - Copyright 2013-2026 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<keymap name="Default for Web" version="1" parent="$default" disable-mnemonics="false">
+    <!--
+      Overlay over $default for the browser (Vaadin) UI backend.
+
+      Rule: Ctrl+X -> Alt+X, Ctrl+Shift+X -> Alt+Shift+X, letter preserved.
+      A different letter is used only where Alt+<letter> is taken by Chrome itself.
+
+      Every action listed here REPLACES the parent's shortcut list for that action
+      (KeymapImpl falls back to parent only when the id is absent).
+      An empty <action id="..."/> removes the parent binding entirely.
+    -->
+
+    <!-- ==== Ctrl -> Alt, letter kept ==== -->
+
+    <!-- Ctrl+W / Ctrl+Shift+W = close tab (hard-reserved) -->
+    <action id="EditorSelectWord">
+        <keyboard-shortcut first-keystroke="alt W"/>
+    </action>
+    <action id="EditorUnSelectWord">
+        <keyboard-shortcut first-keystroke="alt shift W"/>
+    </action>
+
+    <!-- Ctrl+Alt+L = KDE lock screen, never reaches the browser -->
+    <action id="ReformatCode">
+        <keyboard-shortcut first-keystroke="alt L"/>
+    </action>
+
+    <!-- Ctrl+K = omnibox search / Ctrl+Shift+K = devtools console -->
+    <action id="CheckinProject">
+        <keyboard-shortcut first-keystroke="alt K"/>
+    </action>
+    <action id="Vcs.Push">
+        <keyboard-shortcut first-keystroke="alt shift K"/>
+    </action>
+
+    <!-- Ctrl+T = new tab / Ctrl+Shift+T = reopen closed tab -->
+    <action id="Vcs.UpdateProject">
+        <keyboard-shortcut first-keystroke="alt T"/>
+    </action>
+    <action id="GotoTest">
+        <keyboard-shortcut first-keystroke="alt shift T"/>
+    </action>
+
+    <!-- Ctrl+Shift+I = devtools -->
+    <action id="QuickImplementations">
+        <keyboard-shortcut first-keystroke="alt shift I"/>
+    </action>
+
+    <!-- Ctrl+N = new window / Ctrl+Shift+A = tab search.
+         Both also reachable via double-Shift, these are convenience aliases. -->
+    <action id="GotoClass">
+        <keyboard-shortcut first-keystroke="alt N"/>
+    </action>
+    <action id="GotoChangedFile">
+        <keyboard-shortcut first-keystroke="alt N"/>
+    </action>
+    <action id="GotoAction">
+        <keyboard-shortcut first-keystroke="alt V"/>
+    </action>
+
+    <!-- Ctrl +/- = browser zoom, both variants -->
+    <action id="ExpandRegion">
+        <keyboard-shortcut first-keystroke="alt ADD"/>
+        <keyboard-shortcut first-keystroke="alt EQUALS"/>
+    </action>
+    <action id="CollapseRegion">
+        <keyboard-shortcut first-keystroke="alt SUBTRACT"/>
+        <keyboard-shortcut first-keystroke="alt MINUS"/>
+    </action>
+    <action id="ExpandAllRegions">
+        <keyboard-shortcut first-keystroke="alt shift ADD"/>
+        <keyboard-shortcut first-keystroke="alt shift EQUALS"/>
+    </action>
+    <action id="CollapseAllRegions">
+        <keyboard-shortcut first-keystroke="alt shift SUBTRACT"/>
+        <keyboard-shortcut first-keystroke="alt shift MINUS"/>
+    </action>
+    <action id="ExpandAll">
+        <keyboard-shortcut first-keystroke="alt ADD"/>
+        <keyboard-shortcut first-keystroke="alt EQUALS"/>
+    </action>
+    <action id="CollapseAll">
+        <keyboard-shortcut first-keystroke="alt SUBTRACT"/>
+        <keyboard-shortcut first-keystroke="alt MINUS"/>
+    </action>
+
+    <!-- Ctrl+Q = quit on Linux -->
+    <action id="QuickJavaDoc">
+        <keyboard-shortcut first-keystroke="alt shift Q"/>
+        <mouse-shortcut keystroke="alt button2"/>
+    </action>
+
+    <!-- ==== different letter: Alt+<original> is taken by Chrome ==== -->
+
+    <!-- Ctrl+E = omnibox search; Alt+E = Chrome menu. R = Recent -->
+    <action id="RecentFiles">
+        <keyboard-shortcut first-keystroke="alt R"/>
+    </action>
+    <action id="SwitcherRecentEditedChangedToggleCheckBox">
+        <keyboard-shortcut first-keystroke="alt R"/>
+    </action>
+    <action id="SwitcherIterateItems">
+        <keyboard-shortcut first-keystroke="alt R"/>
+    </action>
+    <!-- Alt+Shift+R is RerunTests -->
+    <action id="RecentLocations">
+        <keyboard-shortcut first-keystroke="control alt shift R"/>
+    </action>
+
+    <!-- Ctrl+Shift+C = devtools inspector; Alt+Shift+C is RecentChanges. P = Path -->
+    <action id="CopyPaths">
+        <keyboard-shortcut first-keystroke="alt shift P"/>
+    </action>
+
+    <!-- Ctrl+Shift+J = devtools console; Alt+J / Alt+Shift+J are multicaret, untouched -->
+    <action id="EditorJoinLines">
+        <keyboard-shortcut first-keystroke="alt shift Y"/>
+    </action>
+
+    <!-- Ctrl+0..9 = tab switching / zoom reset. Digit preserved. -->
+    <action id="GotoBookmark0">
+        <keyboard-shortcut first-keystroke="control alt shift 0"/>
+    </action>
+    <action id="GotoBookmark1">
+        <keyboard-shortcut first-keystroke="control alt shift 1"/>
+    </action>
+    <action id="GotoBookmark2">
+        <keyboard-shortcut first-keystroke="control alt shift 2"/>
+    </action>
+    <action id="GotoBookmark3">
+        <keyboard-shortcut first-keystroke="control alt shift 3"/>
+    </action>
+    <action id="GotoBookmark4">
+        <keyboard-shortcut first-keystroke="control alt shift 4"/>
+    </action>
+    <action id="GotoBookmark5">
+        <keyboard-shortcut first-keystroke="control alt shift 5"/>
+    </action>
+    <action id="GotoBookmark6">
+        <keyboard-shortcut first-keystroke="control alt shift 6"/>
+    </action>
+    <action id="GotoBookmark7">
+        <keyboard-shortcut first-keystroke="control alt shift 7"/>
+    </action>
+    <action id="GotoBookmark8">
+        <keyboard-shortcut first-keystroke="control alt shift 8"/>
+    </action>
+    <action id="GotoBookmark9">
+        <keyboard-shortcut first-keystroke="control alt shift 9"/>
+    </action>
+
+    <!-- ==== displaced by the above ==== -->
+
+    <!-- tasks.close moves off Alt+Shift+W; Ctrl+Alt+Shift+W held only by an
+         internal debug action (DumpLookupElementWeights), which loses its binding -->
+    <action id="tasks.close">
+        <keyboard-shortcut first-keystroke="control alt shift W"/>
+    </action>
+    <action id="DumpLookupElementWeights"/>
+
+    <!-- lost Alt+Shift+T to GotoTest; Ctrl+Alt+Shift+T is Refactorings quick list -->
+    <action id="tasks.switch"/>
+
+    <!-- lost Alt+Shift+I to QuickImplementations; Ctrl+Alt+Shift+I is RunInspection -->
+    <action id="CodeInspection.OnEditor"/>
+
+    <!-- ==== removed: no replacement possible ==== -->
+
+    <!-- Ctrl+Tab / Ctrl+Shift+Tab are hard-reserved by the browser -->
+    <action id="Diff.FocusOppositePane"/>
+    <action id="Diff.FocusOppositePaneAndScroll"/>
+
+    <!-- Ctrl+L is the omnibox; F3 / Shift+F3 remain as the working binding -->
+    <action id="FindNext">
+        <keyboard-shortcut first-keystroke="F3"/>
+    </action>
+    <action id="FindPrevious">
+        <keyboard-shortcut first-keystroke="shift F3"/>
+    </action>
+    <action id="Vcs.Log.FocusTextFilter"/>
+
+    <!-- F12 is devtools -->
+    <action id="JumpToLastWindow"/>
+</keymap>
