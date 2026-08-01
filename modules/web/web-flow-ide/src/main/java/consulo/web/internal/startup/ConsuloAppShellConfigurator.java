@@ -67,6 +67,7 @@ import org.vaadin.stefan.table.Table;
 @StyleSheet("./themes/consulo/statusbar.css")
 @StyleSheet("./themes/consulo/toolwindow.css")
 @JsModule("./webImage.js")
+@JsModule("./shortcuts.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
 @Uses(HorizontalLayout.class)

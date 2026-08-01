@@ -42,7 +42,7 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
    */
   @Override
   public void repaint() {
-    myEditor.scheduleChangeBandsUpdate();
+    myEditor.scheduleGutterBandsUpdate();
   }
 
   @Override

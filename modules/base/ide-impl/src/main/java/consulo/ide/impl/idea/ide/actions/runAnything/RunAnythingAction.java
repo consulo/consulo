@@ -6,7 +6,8 @@ import consulo.application.Application;
 import consulo.execution.executor.Executor;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
-import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
+import consulo.ui.event.details.ModifiedInputDetails.Modifier;
+import consulo.ui.ex.keymap.internal.ModifierKeyDoubleClickHandler;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.localize.LocalizeValue;
@@ -22,7 +23,6 @@ import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.FontUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.internal.CustomShortcutBuilder;
-import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 
@@ -41,19 +41,16 @@ public class RunAnythingAction extends LegacyDumbAwareAction {
     private boolean myIsDoubleCtrlRegistered;
     private final Application myApplication;
     
-    private final KeyMapSetting myKeyMapSetting;
 
     @Inject
     public RunAnythingAction(Application application,
-                             IdeEventQueueProxy ideEventQueueProxy,
-                             KeyMapSetting keyMapSetting) {
+                             IdeEventQueueProxy ideEventQueueProxy) {
         super(
             ActionLocalize.actionRunanythingText(),
             ActionLocalize.actionRunanythingDescription(),
             PlatformIconGroup.actionsRun_anything()
         );
         myApplication = application;
-        myKeyMapSetting = keyMapSetting;
         ideEventQueueProxy.addPostprocessor(
             event -> {
                 if (event instanceof KeyEvent keyEvent) {
@@ -74,12 +71,6 @@ public class RunAnythingAction extends LegacyDumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        if (!myKeyMapSetting.isEnabledDoublePressShortcuts()
-            && e.getInputEvent() instanceof KeyEvent keyEvent
-            && keyEvent.getKeyCode() == KeyEvent.VK_CONTROL) {
-            return;
-        }
-
         Project project = e.getData(Project.KEY);
         if (project != null) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_RUN_ANYTHING);
@@ -108,7 +99,7 @@ public class RunAnythingAction extends LegacyDumbAwareAction {
 
         if (getActiveKeymapShortcuts(RUN_ANYTHING_ACTION_ID).getShortcuts().length == 0) {
             if (!myIsDoubleCtrlRegistered) {
-                ModifierKeyDoubleClickHandler.getInstance().registerAction(RUN_ANYTHING_ACTION_ID, KeyEvent.VK_CONTROL, -1, false);
+                ModifierKeyDoubleClickHandler.getInstance().registerAction(RUN_ANYTHING_ACTION_ID, Modifier.CTRL, null, false);
                 myIsDoubleCtrlRegistered = true;
             }
         }

@@ -16,10 +16,21 @@
 package consulo.project.internal;
 
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 
 public interface ProjectEx extends Project {
     int REGULAR_PROJECT = 1 << 30;
     int DEFAULT_PROJECT = 1 << 31;
 
     void setProjectName(String name);
+
+    /**
+     * Called again whenever the ui is replaced under a still open project - a browser refresh builds a new one
+     * and closes the old. The coroutine context holds a copy of its own, so both have to be written.
+     */
+    default void setUIAccess(UIAccess uiAccess) {
+        putUserData(UIAccess.KEY, uiAccess);
+
+        coroutineContext().putCopyableUserData(UIAccess.KEY, uiAccess);
+    }
 }

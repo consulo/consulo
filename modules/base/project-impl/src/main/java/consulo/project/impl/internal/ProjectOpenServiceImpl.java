@@ -177,7 +177,13 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                             continuation.cancel();
                             return null;
                         }
-                        return new ProjectImpl(myApplication, myProjectManager.get(), projectDir.getPath(), null, true, myComponentBinding);
+
+                        ProjectImpl project =
+                            new ProjectImpl(myApplication, myProjectManager.get(), projectDir.getPath(), null, true, myComponentBinding);
+                        // before anything of the project asks for a ui - its coroutine context keeps the first
+                        // answer it gets, and the opening thread is the only place the right one is known
+                        project.setUIAccess(uiAccess);
+                        return project;
                     }));
 
                 // Allocate frame

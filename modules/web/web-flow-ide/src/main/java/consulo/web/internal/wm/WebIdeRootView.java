@@ -21,6 +21,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.WebFocusTracker;
+import consulo.web.internal.ui.base.WebKeyTracker;
 
 /**
  * @author VISTALL
@@ -49,6 +50,7 @@ public class WebIdeRootView {
         });
 
         WebFocusTracker.installRoot(myRootPanel.getComponent());
+        WebKeyTracker.installRoot(myRootPanel.getComponent());
 
         myMenuBar = new WebIdeMenuBar(myRootPanel.getComponent());
         myRootPanel.setMenuBar(myMenuBar.getMenuBar());

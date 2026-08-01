@@ -19,8 +19,13 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.RouterLayout;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.internal.ProjectEx;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebApplication;
+import consulo.web.application.WebSession;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import org.jspecify.annotations.Nullable;
 
@@ -60,8 +65,32 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
         // @PreserveOnRefresh moves this layout into a freshly created UI and closes the old one without
         // running the constructor again, so the session would keep pointing to a detached UIAccess
         WebApplication application = WebApplication.getInstance();
-        if (application != null && application.getCurrentSession() != null) {
-            application.setCurrentSession(new VaadinWebSessionImpl());
+        WebSession previousSession = application == null ? null : application.getCurrentSession();
+        if (previousSession == null) {
+            return;
+        }
+
+        UIAccess previousAccess = previousSession.getAccess();
+
+        VaadinWebSessionImpl session = new VaadinWebSessionImpl();
+        application.setCurrentSession(session);
+
+        rebindProjects(previousAccess, session.getAccess());
+    }
+
+    /**
+     * A project outlives the refresh, and the ui it was opened with does not. Matched by the access it was given
+     * rather than by the frame - another tab holds a project of its own and must keep its own ui.
+     */
+    private static void rebindProjects(@Nullable UIAccess previousAccess, @Nullable UIAccess uiAccess) {
+        if (previousAccess == null || uiAccess == null) {
+            return;
+        }
+
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            if (project instanceof ProjectEx projectEx && project.getUserData(UIAccess.KEY) == previousAccess) {
+                projectEx.setUIAccess(uiAccess);
+            }
         }
     }
 

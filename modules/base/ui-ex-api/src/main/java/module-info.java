@@ -71,6 +71,12 @@ module consulo.ui.ex.api {
         consulo.desktop.awt.os.mac,
         consulo.it;
 
+    exports consulo.ui.ex.keymap.internal to
+        consulo.ui.ex.impl,
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl,
+        consulo.desktop.swt.ide.impl;
+
     exports consulo.ui.ex.awtUnsafe.internal to
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl;

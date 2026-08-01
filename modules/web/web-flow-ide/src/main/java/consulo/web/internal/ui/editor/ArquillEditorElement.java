@@ -27,6 +27,10 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.shared.Registration;
 
+import consulo.web.internal.ui.editor.gutter.GutterBand;
+
+import java.util.List;
+
 /**
  * Wraps the compiled arquill editor bundle, which exposes window.arquillEditor.createEditor(options).
  *
@@ -325,11 +329,13 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     /**
-     * @param bandsJson array of {line1, line2, type, color} - the vcs line status ranges, where {@code line2}
-     *                  is exclusive and equal to {@code line1} for a deletion
+     * The line marker presentations of the document, already resolved to bands. Handed over as a property
+     * rather than an argument of the call - a list crosses as itself that way, and the browser is not left
+     * parsing a string the server just printed.
      */
-    public void setChangeBands(String bandsJson) {
-        getElement().executeJs("this.$arquillApi.setChangeBands($0);", bandsJson);
+    public void setGutterBands(List<GutterBand> bands) {
+        getElement().setPropertyList("gutterBands", bands);
+        getElement().executeJs("this.$arquillApi.setGutterBands(this.gutterBands);");
     }
 
     @Override

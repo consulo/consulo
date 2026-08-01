@@ -411,35 +411,59 @@
 
         // the vcs change bars, a strip of its own - the awt gutter paints them in the free painters
         // area right of the icons, so they must not land in the marker column
-        const changeBands = document.createElement('div');
-        changeBands.className = 'arquill-change-bands';
-        element.appendChild(changeBands);
+        // the line marker presentations, one absolutely positioned layer per gutter area. the areas the
+        // browser gutter can tell apart are the strip left of the annotation ruler, the icons column and the
+        // strip right of the folding ruler - the wider awt bands all resolve onto the whole gutter
+        const gutterBands = document.createElement('div');
+        gutterBands.className = 'arquill-gutter-bands';
+        // the geometry of a band is computed here anyway, so the structural part of it is set here too - the
+        // theme stylesheet only carries what is a matter of looks
+        gutterBands.style.cssText = 'position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1';
+        element.appendChild(gutterBands);
 
-        const renderChangeBands = () => {
-            changeBands.textContent = '';
+        const bandBounds = (area, hostRect) => {
+            const annotationRuler = element.querySelector('.textviewLeftRuler .ruler.annotations');
+            const foldingRuler = element.querySelector('.textviewLeftRuler .ruler.folding');
+            if (!annotationRuler || !foldingRuler) {
+                return null;
+            }
 
-            const bands = element.$arquillChangeBands ? JSON.parse(element.$arquillChangeBands) : [];
+            const left = annotationRuler.getBoundingClientRect();
+            const right = foldingRuler.getBoundingClientRect();
+
+            switch (area) {
+                case 'LEFT_FREE_PAINTERS':
+                    return { left: left.left - hostRect.left, width: BAND_WIDTH };
+                case 'RIGHT_FREE_PAINTERS':
+                    return { left: right.right - hostRect.left - BAND_WIDTH - 1, width: BAND_WIDTH };
+                case 'ICONS':
+                    return { left: left.left - hostRect.left, width: left.width };
+                default:
+                    return { left: left.left - hostRect.left, width: right.right - left.left };
+            }
+        };
+
+        const renderGutterBands = () => {
+            gutterBands.textContent = '';
+
+            const bands = element.$arquillGutterBands || [];
             if (!bands.length) {
                 return;
             }
 
-            // the folding ruler is added last among the left rulers, so its right edge is where the
-            // gutter ends and the text begins - the same place the awt bars sit
-            const foldingRuler = element.querySelector('.textviewLeftRuler .ruler.folding');
-            if (!foldingRuler) {
-                return;
-            }
-
             const hostRect = element.getBoundingClientRect();
-            const rulerRect = foldingRuler.getBoundingClientRect();
-
-            changeBands.style.left = (rulerRect.right - hostRect.left - BAND_WIDTH - 1) + 'px';
-            changeBands.style.width = BAND_WIDTH + 'px';
 
             for (const band of bands) {
-                const deleted = band.line1 === band.line2;
+                const bounds = bandBounds(band.area, hostRect);
+                if (!bounds) {
+                    continue;
+                }
 
-                const startLine = toViewLine(band.line1);
+                // a marker whose range is empty sits on the boundary between the two surviving lines,
+                // which is how a deletion is expressed - there are no lines left for it to cover
+                const boundary = band.startLine === band.endLine;
+
+                const startLine = toViewLine(band.startLine);
                 if (startLine < 0) {
                     continue;
                 }
@@ -447,13 +471,11 @@
                 const top = pageY(startLine) - hostRect.top;
 
                 let height;
-                if (deleted) {
-                    // a deletion has no lines left to cover, the awt gutter marks the boundary
-                    // between the two surviving lines instead
+                if (boundary) {
                     height = DELETION_HEIGHT;
                 }
                 else {
-                    const endLine = toViewLine(band.line2);
+                    const endLine = toViewLine(band.endLine);
                     // the whole range collapsed into a single fold, nothing of it is on screen
                     if (endLine < 0) {
                         continue;
@@ -466,11 +488,22 @@
                 }
 
                 const bar = document.createElement('div');
-                bar.className = 'arquill-change-band';
-                bar.style.top = (deleted ? top - DELETION_HEIGHT / 2 : top) + 'px';
+                bar.className = 'arquill-gutter-band';
+                bar.style.position = 'absolute';
+                bar.style.boxSizing = 'border-box';
+                bar.style.left = bounds.left + 'px';
+                bar.style.width = bounds.width + 'px';
+                bar.style.top = (boundary ? top - DELETION_HEIGHT / 2 : top) + 'px';
                 bar.style.height = height + 'px';
-                bar.style.backgroundColor = band.color;
-                changeBands.appendChild(bar);
+
+                if (band.color) {
+                    bar.style.backgroundColor = band.color;
+                }
+                if (band.borderColor) {
+                    bar.style.border = '1px ' + (band.dotted ? 'dotted ' : 'solid ') + band.borderColor;
+                }
+
+                gutterBands.appendChild(bar);
             }
         };
 
@@ -658,7 +691,7 @@
         const onProjectionChanged = () => {
             pushStyleRanges();
             renderGutterMarks();
-            renderChangeBands();
+            renderGutterBands();
 
             // the stripe is built after this, and the first fold pass already runs through here
             if (redrawErrorStripe) {
@@ -696,7 +729,7 @@
 
         const onViewChanged = () => {
             renderGutterMarks();
-            renderChangeBands();
+            renderGutterBands();
         };
 
         textView.addEventListener('Scroll', onViewChanged);
@@ -1006,9 +1039,9 @@
                 renderFoldRegions();
             },
 
-            setChangeBands: bandsJson => {
-                element.$arquillChangeBands = bandsJson;
-                renderChangeBands();
+            setGutterBands: bands => {
+                element.$arquillGutterBands = bands;
+                renderGutterBands();
             },
 
             setErrorStripeMarks: marksJson => {

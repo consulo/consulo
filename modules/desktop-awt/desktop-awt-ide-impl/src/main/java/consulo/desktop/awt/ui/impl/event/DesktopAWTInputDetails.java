@@ -57,17 +57,7 @@ public class DesktopAWTInputDetails {
             return new MouseInputDetails(details.getPosition(), details.getPositionOnScreen(), enumModifiers, MouseInputDetails.MouseButton.LEFT);
         } else {
             if (event instanceof InputEvent inputEvent) {
-                if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.CTRL_DOWN_MASK)) {
-                    modifiers.add(ModifiedInputDetails.Modifier.CTRL);
-                }
-
-                if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.ALT_DOWN_MASK)) {
-                    modifiers.add(ModifiedInputDetails.Modifier.ALT);
-                }
-
-                if (BitUtil.isSet(inputEvent.getModifiersEx(), MouseEvent.SHIFT_DOWN_MASK)) {
-                    modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
-                }
+                modifiers.addAll(toModifiers(inputEvent));
             }
 
             EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
@@ -95,5 +85,29 @@ public class DesktopAWTInputDetails {
         }
 
         throw new UnsupportedOperationException("unknown event " + event);
+    }
+
+    /**
+     * The modifiers alone, for the callers that have no component to place the event against - a global key
+     * dispatcher sees events of windows it does not own, and a key event carries no position worth reporting.
+     */
+    public static EnumSet<ModifiedInputDetails.Modifier> toModifiers(InputEvent event) {
+        EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+
+        int modifiersEx = event.getModifiersEx();
+        if (BitUtil.isSet(modifiersEx, InputEvent.CTRL_DOWN_MASK)) {
+            modifiers.add(ModifiedInputDetails.Modifier.CTRL);
+        }
+        if (BitUtil.isSet(modifiersEx, InputEvent.ALT_DOWN_MASK)) {
+            modifiers.add(ModifiedInputDetails.Modifier.ALT);
+        }
+        if (BitUtil.isSet(modifiersEx, InputEvent.META_DOWN_MASK)) {
+            modifiers.add(ModifiedInputDetails.Modifier.META);
+        }
+        if (BitUtil.isSet(modifiersEx, InputEvent.SHIFT_DOWN_MASK)) {
+            modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+        }
+
+        return modifiers;
     }
 }

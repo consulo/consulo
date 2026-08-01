@@ -6,6 +6,7 @@ import consulo.component.internal.ComponentBinding;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.web.internal.ui.WebUnboundUIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import org.jspecify.annotations.Nullable;
@@ -18,6 +19,8 @@ import java.util.function.BooleanSupplier;
  */
 public class WebApplicationImpl extends UnifiedApplication implements WebApplication {
   private static final Logger LOG = Logger.getInstance(WebApplicationImpl.class);
+
+  private final WebUnboundUIAccess myUnboundUIAccess = new WebUnboundUIAccess();
 
   private WebSession myCurrentSession;
 
@@ -58,7 +61,7 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   public UIAccess getLastUIAccess() {
     WebSession currentSession = getCurrentSession();
     if (currentSession == null) {
-      throw new IllegalArgumentException("No session");
+      return myUnboundUIAccess;
     }
     return currentSession.getAccess();
   }

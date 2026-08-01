@@ -30,6 +30,15 @@ import consulo.web.internal.ui.image.WebImageElement;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.LineMarkerPresentation;
+import consulo.codeEditor.markup.LineMarkerPresentationContext;
+import consulo.codeEditor.markup.LineMarkerPresentationProvider;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.MarkupModelListener;
+import consulo.web.internal.ui.editor.gutter.GutterBand;
+import consulo.web.internal.ui.editor.gutter.WebLineMarkerPresentationContext;
+import consulo.web.internal.ui.editor.gutter.WebLineMarkerPresentationPainter;
 
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
@@ -95,6 +104,8 @@ import org.intellij.lang.annotations.MagicConstant;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -162,12 +173,12 @@ public class WebEditorImpl extends CodeEditorBase {
   private final LineStatusTrackerListener myLineStatusTrackerListener = new LineStatusTrackerListener() {
     @Override
     public void onRangesChanged() {
-      scheduleChangeBandsUpdate();
+      scheduleGutterBandsUpdate();
     }
 
     @Override
     public void onBecomingValid() {
-      scheduleChangeBandsUpdate();
+      scheduleGutterBandsUpdate();
     }
   };
 
@@ -181,6 +192,39 @@ public class WebEditorImpl extends CodeEditorBase {
     myView.reset();
 
     Disposer.register(myDisposable, myView);
+
+    // a provider hangs off a highlighter, and the daemon adds and drops those as the caret moves - the xml tag
+    // tree marks the tag under the caret that way. without this the bands only ever refreshed with the whole
+    // editor, which no caret move triggers
+    if (project != null) {
+      MarkupModel documentMarkup = DocumentMarkupModel.forDocument(myDocument, project, true);
+      if (documentMarkup instanceof MarkupModelEx markupModelEx) {
+        markupModelEx.addMarkupModelListener(myDisposable, new MarkupModelListener() {
+          @Override
+          public void afterAdded(RangeHighlighterEx highlighter) {
+            scheduleIfPresentations(highlighter);
+          }
+
+          @Override
+          public void afterRemoved(RangeHighlighterEx highlighter) {
+            scheduleIfPresentations(highlighter);
+          }
+
+          @Override
+          public void attributesChanged(RangeHighlighterEx highlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
+            if (renderersChanged) {
+              scheduleIfPresentations(highlighter);
+            }
+          }
+
+          private void scheduleIfPresentations(RangeHighlighterEx highlighter) {
+            if (highlighter.getLineMarkerPresentationProvider() != null) {
+              scheduleGutterBandsUpdate();
+            }
+          }
+        });
+      }
+    }
 
     myEditorComponent = new EditorComponent();
 
@@ -514,8 +558,8 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   /** the line status tracker recomputes its ranges on a pooled thread */
-  void scheduleChangeBandsUpdate() {
-    giveUI(() -> Application.get().runReadAction((Runnable)this::updateChangeBands));
+  void scheduleGutterBandsUpdate() {
+    giveUI(() -> Application.get().runReadAction((Runnable)this::updateGutterBands));
   }
 
   /** the stripe settings - visibility, mark height - are pushed from wherever the platform changes them */
@@ -640,7 +684,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
     updateAnalyzeStatus();
 
-    updateChangeBands();
+    updateGutterBands();
 
     updateErrorStripeMarks();
   }
@@ -786,11 +830,12 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   /**
-   * The vcs changed line ranges of the current file, the counterpart of the change bars the awt gutter paints
-   * in its right free painters area.
+   * Every line marker presentation of the document, as bands for the browser. The awt gutter paints these
+   * itself; here the css draws them, so a painter turns a presentation into a {@link GutterBand} and the
+   * providers - vcs, coverage, diff - never learn which frontend they built for.
    */
   @RequiredReadAction
-  private void updateChangeBands() {
+  private void updateGutterBands() {
     if (isReleased) {
       return;
     }
@@ -798,51 +843,50 @@ public class WebEditorImpl extends CodeEditorBase {
     Vaadin vaadin = myEditorComponent.toVaadinComponent();
 
     if (myProject == null || myProject.isDisposed()) {
-      vaadin.setChangeBands("[]");
+      vaadin.setGutterBands(List.of());
       return;
     }
 
-    LineStatusTrackerI tracker = LineStatusTrackerManagerI.getInstance(myProject).getLineStatusTracker(myDocument);
+    // the tracker installs itself asynchronously and publishes its highlighters when it does, so it is
+    // picked up on the first pass that finds it
+    subscribeToLineStatusTracker(LineStatusTrackerManagerI.getInstance(myProject).getLineStatusTracker(myDocument));
 
-    subscribeToLineStatusTracker(tracker);
+    List<GutterBand> bands = new ArrayList<>();
 
-    java.util.List<VcsRange> ranges = tracker == null ? null : tracker.getRanges();
-    if (ranges == null) {
-      vaadin.setChangeBands("[]");
+    MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, false);
+    if (markupModel != null) {
+      for (RangeHighlighter highlighter : markupModel.getAllHighlighters()) {
+        collectBands(highlighter, bands);
+      }
+    }
+
+    for (RangeHighlighter highlighter : getMarkupModel().getAllHighlighters()) {
+      collectBands(highlighter, bands);
+    }
+
+    vaadin.setGutterBands(bands);
+  }
+
+  @RequiredReadAction
+  private void collectBands(RangeHighlighter highlighter, List<GutterBand> bands) {
+    LineMarkerPresentationProvider provider = highlighter.getLineMarkerPresentationProvider();
+    if (provider == null || !highlighter.isValid()) {
       return;
     }
 
-    EditorColorsScheme scheme = getColorsScheme();
+    LineMarkerPresentationContext context = new WebLineMarkerPresentationContext(this, highlighter);
 
-    StringBuilder bands = new StringBuilder("[");
-
-    for (VcsRange range : ranges) {
-      EditorColorKey colorKey = switch (range.getType()) {
-        case VcsRange.INSERTED -> EditorColors.ADDED_LINES_COLOR;
-        case VcsRange.DELETED -> EditorColors.DELETED_LINES_COLOR;
-        case VcsRange.MODIFIED -> EditorColors.MODIFIED_LINES_COLOR;
-        default -> null;
-      };
-
-      ColorValue color = colorKey == null ? null : scheme.getColor(colorKey);
-      if (color == null) {
+    for (LineMarkerPresentation presentation : provider.buildPresentations(context)) {
+      WebLineMarkerPresentationPainter painter = WebLineMarkerPresentationPainter.findPainter(presentation);
+      if (painter == null) {
         continue;
       }
 
-      if (bands.length() > 1) {
-        bands.append(',');
+      GutterBand band = painter.paint(presentation, this);
+      if (band != null) {
+        bands.add(band);
       }
-
-      // line2 is exclusive, and equal to line1 for a deletion - there are no lines left to cover, the
-      // marker sits on the boundary between the two surviving ones
-      bands.append("{\"line1\":").append(range.getLine1())
-        .append(",\"line2\":").append(range.getLine2())
-        .append(",\"color\":\"").append(toCssColor(color)).append("\"}");
     }
-
-    bands.append(']');
-
-    vaadin.setChangeBands(bands.toString());
   }
 
   private void subscribeToLineStatusTracker(@Nullable LineStatusTrackerI tracker) {

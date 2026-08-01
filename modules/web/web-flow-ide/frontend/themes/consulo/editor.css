@@ -122,22 +122,21 @@
   transform: translate(-70%, -50%) rotate(-45deg);
 }
 
-.arquill-change-bands
+/* the layer every line marker presentation is drawn into - one box per band, placed while rendering, since
+   which strip of the gutter an area resolves to is only known from the orion rulers */
+.arquill-gutter-bands
 {
-  /* left follows the folding ruler, it is set while rendering */
   position: absolute;
-  top: 0;
-  height: 100%;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
 }
 
-.arquill-change-band
+.arquill-gutter-band
 {
   position: absolute;
-  left: 0;
-  width: 100%;
+  box-sizing: border-box;
 }
 
 /* the error stripe, the counterpart of the awt error panel - the orion overview ruler, which ships at 14px and
