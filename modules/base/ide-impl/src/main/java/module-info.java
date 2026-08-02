@@ -535,7 +535,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.ui;
     exports consulo.ide.impl.ui.app;
     exports consulo.ide.impl.ui.app.impl.settings;
-    exports consulo.ide.impl.ui.dialog.impl;
     exports consulo.ide.impl.ui.docking.impl;
     exports consulo.ide.impl.ui.impl;
     exports consulo.ide.impl.ui.laf;
