@@ -15,13 +15,18 @@
  */
 package consulo.versionControlSystem.action;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.annotation.UsedInPlugin;
 import consulo.codeEditor.EditorKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.internal.VcsContextWrapper;
@@ -30,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
-public abstract class AbstractVcsAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+public abstract class AbstractVcsAction extends DumbAwareAction implements AnActionWithAsyncUpdate {
     protected AbstractVcsAction() {
     }
 
@@ -50,7 +55,7 @@ public abstract class AbstractVcsAction extends DumbAwareAction implements AnAct
         super(text, description, icon);
     }
 
-    @SuppressWarnings("unused") // Required for compatibility with external plugins.
+    @UsedInPlugin
     public static Collection<AbstractVcs> getActiveVcses(VcsContext dataContext) {
         Project project = dataContext.getProject();
 
@@ -59,9 +64,10 @@ public abstract class AbstractVcsAction extends DumbAwareAction implements AnAct
 
     @Override
     @SuppressWarnings("deprecation")
-    public void update(AnActionEvent e) {
-        //noinspection deprecation - required for compatibility with external plugins.
-        performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e, EditorKeys.EDITOR_SNAPSHOT));
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
+        return ActionSafeReadLock.run(e, presentation -> {
+            performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e, EditorKeys.EDITOR_SNAPSHOT));
+        }).toCoroutine();
     }
 
     @Override

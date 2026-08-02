@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.history;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
@@ -28,6 +29,7 @@ public class VcsSelectionUtil {
   private VcsSelectionUtil() {
   }
 
+  @RequiredReadAction
   public static @Nullable VcsSelection getSelection(VcsContext context) {
     VcsSelection selectionFromEditor = getSelectionFromEditor(context);
     if (selectionFromEditor != null) {

@@ -15,6 +15,7 @@
  */
 package consulo.localHistory.impl.internal.ui.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
@@ -71,10 +72,12 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
         return super.isEnabled(vcs, gw, f, e) && !f.isDirectory() && getSelection(e, true) != null;
     }
 
+    @RequiredReadAction
     private static @Nullable VcsSelection getSelection(AnActionEvent e, boolean forUpdate) {
         VcsContext c = VcsContextWrapper.createCachedInstanceOn(e, forUpdate ? EditorKeys.EDITOR_SNAPSHOT : Editor.KEY);
         return VcsSelectionUtil.getSelection(c);

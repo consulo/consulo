@@ -29,6 +29,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
@@ -36,6 +37,7 @@ import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.web.internal.ui.image.*;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -50,7 +52,10 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2016-06-11
  */
+@NullMarked
 public class WebUIInternalImpl extends UIInternal {
+    private final DummyTaskBarImpl myTaskBar = new DummyTaskBarImpl();
+
     @Override
     public CheckBox _Components_checkBox() {
         return new WebCheckBoxImpl();
@@ -193,7 +198,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
         return new WebTreeImpl<>(rootValue, model, disposable);
     }
 
@@ -364,7 +369,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public TextBoxWithExpandAction _Components_textBoxWithExpandAction(
-        Image editButtonImage,
+        @Nullable Image editButtonImage,
         String dialogTitle,
         Function<String, List<String>> parser,
         Function<List<String>, String> joiner
@@ -373,7 +378,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
+    public TextBoxWithExtensions _Components_textBoxWithExtensions(@Nullable String text) {
         throw notSupported();
         //return new WebTextBoxWithExtensionsImpl(text);
     }
@@ -406,9 +411,15 @@ public class WebUIInternalImpl extends UIInternal {
         throw notSupported();
         //return new WebIntSliderImpl(min, max, value);
     }
+
     @Override
     public FocusManager _FocusManager_get() {
         return WebFocusManagerImpl.ourInstance;
+    }
+
+    @Override
+    public TaskBar _TaskBar_get() {
+        return myTaskBar;
     }
 
     @Override

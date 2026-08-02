@@ -15,6 +15,7 @@
  */
 package consulo.localHistory.impl.internal.ui.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.LocalHistoryImpl;
@@ -67,6 +68,7 @@ public abstract class LocalHistoryAction extends DumbAwareAction implements AnAc
         return e.getPresentation().getTextValue();
     }
 
+    @RequiredReadAction
     protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, AnActionEvent e) {
         return isEnabled(vcs, gw, getFile(e), e);
     }
@@ -75,6 +77,7 @@ public abstract class LocalHistoryAction extends DumbAwareAction implements AnAc
         actionPerformed(p, gw, Objects.requireNonNull(getFile(e)), e);
     }
 
+    @RequiredReadAction
     protected boolean isEnabled(
         LocalHistoryFacade vcs,
         IdeaGateway gw,

@@ -15,6 +15,7 @@
  */
 package consulo.localHistory.impl.internal.ui.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.LocalHistoryFacade;
@@ -48,6 +49,7 @@ public class ShowHistoryAction extends LocalHistoryActionWithDialog {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
         return f != null && gw.isVersioned(f) && (f.isDirectory() || gw.areContentChangesVersioned(f));
     }
