@@ -632,6 +632,10 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-popover-flow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-flow-components-base</artifactId>
         </dependency>
         <dependency>

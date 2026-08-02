@@ -32,7 +32,8 @@
      */
     const style = document.createElement('style');
     style.textContent = `
-        web-image, web-image-empty, web-image-layered, web-image-colorize, web-image-transparent {
+        web-image, web-image-empty, web-image-layered, web-image-colorize, web-image-transparent,
+        web-image-grayed, web-image-append, web-image-text {
             display: inline-block;
             position: relative;
             line-height: 0;
@@ -56,6 +57,40 @@
             height: 100%;
             /* a non square icon must not be stretched into a square box */
             object-fit: contain;
+        }
+
+        /* the two sides stand beside each other and are centered against the taller one, the way the desktop
+           frontend rows them up */
+        web-image-append {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* a side keeps the size the platform gave it - a host fitting the pair into a box of its own sizes
+           the pair, not each half of it */
+        web-image-append > * {
+            flex: none;
+            --web-image-width: var(--web-image-own-width);
+            --web-image-height: var(--web-image-own-height);
+        }
+
+        /* the badge sits in the corner of the icon and is allowed to be wider than it, since the platform
+           sizes a texted image by the icon alone */
+        web-image-text > span {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            line-height: 1;
+            font-size: 6px;
+            white-space: nowrap;
+            color: var(--lumo-body-text-color, #000);
+            /* the desktop frontend paints the text over a halo of the background colour so that it stays
+               readable wherever it falls on the icon */
+            text-shadow:
+                1px 0 var(--lumo-base-color, #fff),
+                -1px 0 var(--lumo-base-color, #fff),
+                0 1px var(--lumo-base-color, #fff),
+                0 -1px var(--lumo-base-color, #fff);
         }
     `;
     document.head.appendChild(style);
@@ -202,12 +237,92 @@
         }
     }
 
+    const GRAY_FILTERS = new Set();
+
+    /*
+     * The gray filter of the desktop frontend spends the colour of a pixel down to a third of its luminance
+     * and then pulls the result back towards white by the percentage it was built with. That is a linear map
+     * of the source channels, so a colour matrix says the same thing to the browser in one pass, for an svg
+     * and for a raster alike.
+     */
+    function grayFilterId(percent) {
+        const id = 'web-image-gray-' + percent;
+        if (GRAY_FILTERS.has(id)) {
+            return id;
+        }
+        GRAY_FILTERS.add(id);
+
+        const rest = (100 - parseInt(percent, 10)) / 100;
+        const scale = rest / 3;
+        const row = [0.30 * scale, 0.59 * scale, 0.11 * scale, 0, 1 - rest];
+        const values = [...row, ...row, ...row, 0, 0, 0, 1, 0].join(' ');
+
+        const namespace = 'http://www.w3.org/2000/svg';
+
+        const matrix = document.createElementNS(namespace, 'feColorMatrix');
+        matrix.setAttribute('type', 'matrix');
+        matrix.setAttribute('values', values);
+
+        const filter = document.createElementNS(namespace, 'filter');
+        filter.setAttribute('id', id);
+        // without this the matrix would be applied to linearised channels and the icon would come out darker
+        filter.setAttribute('color-interpolation-filters', 'sRGB');
+        filter.appendChild(matrix);
+
+        const svg = document.createElementNS(namespace, 'svg');
+        svg.setAttribute('width', '0');
+        svg.setAttribute('height', '0');
+        svg.style.position = 'absolute';
+        svg.appendChild(filter);
+
+        document.body.appendChild(svg);
+        return id;
+    }
+
+    class WebImageGrayed extends WebImageBase {
+        static get observedAttributes() {
+            return [...SIZE_ATTRIBUTES, 'percent'];
+        }
+
+        render() {
+            const percent = this.getAttribute('percent');
+            if (percent) {
+                this.style.filter = 'url(#' + grayFilterId(percent) + ')';
+            }
+        }
+    }
+
+    /**
+     * The two sides are laid out by the stylesheet, so nothing has to run once the children arrive.
+     */
+    class WebImageAppend extends WebImageBase {
+    }
+
+    class WebImageText extends WebImageBase {
+        static get observedAttributes() {
+            return [...SIZE_ATTRIBUTES, 'text'];
+        }
+
+        render() {
+            let label = this.querySelector(':scope > span');
+            if (!label) {
+                label = document.createElement('span');
+                this.appendChild(label);
+            }
+
+            label.textContent = this.getAttribute('text') || '';
+        }
+    }
+
     const TAGS = {
         'web-image': WebImage,
         'web-image-empty': WebImageEmpty,
         'web-image-layered': WebImageLayered,
         'web-image-colorize': WebImageColorize,
-        'web-image-transparent': WebImageTransparent
+        'web-image-transparent': WebImageTransparent,
+        'web-image-grayed': WebImageGrayed,
+        'web-image-append': WebImageAppend,
+        'web-image-text': WebImageText
     };
 
     for (const [tag, type] of Object.entries(TAGS)) {

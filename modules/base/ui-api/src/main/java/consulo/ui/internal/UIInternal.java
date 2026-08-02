@@ -197,6 +197,10 @@ public abstract class UIInternal {
 
     public abstract Window _Window_create(String title, WindowOptions options);
 
+    public LightPopup _LightPopup_create(LightPopupOptions options) {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract @Nullable Window _Window_getActiveWindow();
 
     public @Nullable Window _Window_getFocusedWindow() {

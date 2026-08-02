@@ -36,6 +36,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.page.Inline;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.progressbar.ProgressBar;
@@ -44,6 +45,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -75,6 +77,7 @@ import org.vaadin.stefan.table.Table;
 @JsModule("./treeToggle.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
+@Uses(Popover.class)
 @Uses(HorizontalLayout.class)
 @Uses(Icon.class)
 @Uses(VerticalLayout.class)
@@ -98,6 +101,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(Div.class)
 @Uses(TreeGrid.class)
 @Uses(TextField.class)
+@Uses(PasswordField.class)
 @Uses(TabSheet.class)
 @Uses(TextArea.class)
 @Uses(ProgressBar.class)

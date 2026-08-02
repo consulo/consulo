@@ -42,6 +42,8 @@ public class WebImageRenderer {
 
     private static final String SVG_HEADER = "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"";
 
+    private static final int TEXT_FONT_SIZE = 6;
+
     public static @Nullable WebRenderedImage render(WebImageSpec spec) {
         return switch (spec) {
             case WebImageSpec.Key key -> renderKey(key);
@@ -52,6 +54,9 @@ public class WebImageRenderer {
             // the browser scales the element the image is served into, so a resize needs no new bytes
             case WebImageSpec.Resize resize -> render(resize.child());
             case WebImageSpec.Layered layered -> layered(layered);
+            case WebImageSpec.Gray gray -> gray(render(gray.child()), gray.percent());
+            case WebImageSpec.Append append -> append(append);
+            case WebImageSpec.Text text -> withText(text);
         };
     }
 
@@ -102,6 +107,120 @@ public class WebImageRenderer {
         }
 
         return WebRenderedImage.svg(builder.append("</svg>").toString());
+    }
+
+    private static @Nullable WebRenderedImage append(WebImageSpec.Append append) {
+        WebRenderedImage left = render(append.left());
+        WebRenderedImage right = render(append.right());
+        if (left == null || right == null) {
+            return null;
+        }
+
+        int leftWidth = WebImageSpec.widthOrDefault(append.left());
+        int leftHeight = WebImageSpec.heightOrDefault(append.left());
+        int rightWidth = WebImageSpec.widthOrDefault(append.right());
+        int rightHeight = WebImageSpec.heightOrDefault(append.right());
+
+        int width = leftWidth + rightWidth;
+        int height = Math.max(leftHeight, rightHeight);
+
+        return WebRenderedImage.svg(svgHeader(width, height)
+            + svgImage(0, (height - leftHeight) / 2, leftWidth, leftHeight, left)
+            + svgImage(leftWidth, (height - rightHeight) / 2, rightWidth, rightHeight, right)
+            + "</svg>");
+    }
+
+    private static @Nullable WebRenderedImage withText(WebImageSpec.Text text) {
+        WebRenderedImage base = render(text.child());
+        if (base == null) {
+            return null;
+        }
+
+        int width = WebImageSpec.widthOrDefault(text);
+        int height = WebImageSpec.heightOrDefault(text);
+
+        return WebRenderedImage.svg(svgHeader(width, height)
+            + svgImage(0, 0, width, height, base)
+            + "<text x=\"" + width + "\" y=\"" + height + "\" text-anchor=\"end\""
+            + " font-family=\"sans-serif\" font-size=\"" + TEXT_FONT_SIZE + "\""
+            // the awt effect draws the badge over a halo of the background colour, which an order of the
+            // stroke before the fill says in a document
+            + " fill=\"black\" stroke=\"white\" stroke-width=\"0.5\" paint-order=\"stroke\">"
+            + escapeXml(text.text())
+            + "</text></svg>");
+    }
+
+    /**
+     * Mirrors the awt gray filter: the luminance of a pixel is spent down to a third and then pulled back
+     * towards white by the percentage asked for, which leaves the shape of an icon and none of its colour.
+     */
+    private static @Nullable WebRenderedImage gray(@Nullable WebRenderedImage source, int percent) {
+        if (source == null) {
+            return null;
+        }
+
+        float rest = (100 - percent) / 100f;
+        float scale = rest / 3f;
+        float offset = 1 - rest;
+
+        if (source.svg()) {
+            return WebRenderedImage.svg(graySvg(text(source), scale, offset));
+        }
+
+        BufferedImage image = readPng(source);
+        if (image == null) {
+            return source;
+        }
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int argb = image.getRGB(x, y);
+                int alpha = (argb >> 24) & 0xFF;
+                if (alpha == 0) {
+                    continue;
+                }
+
+                double luminance = 0.30 * ((argb >> 16) & 0xFF) + 0.59 * ((argb >> 8) & 0xFF) + 0.11 * (argb & 0xFF);
+                int gray = Math.clamp(Math.round(offset * 255 + scale * luminance), 0, 255);
+
+                image.setRGB(x, y, (alpha << 24) | (gray << 16) | (gray << 8) | gray);
+            }
+        }
+
+        return writePng(image, source);
+    }
+
+    private static String graySvg(String svg, float scale, float offset) {
+        String id = "consulo-gray";
+
+        String row = (0.30f * scale) + " " + (0.59f * scale) + " " + (0.11f * scale) + " 0 " + offset + " ";
+
+        String defs = "<defs><filter id=\"" + id + "\" color-interpolation-filters=\"sRGB\">"
+            + "<feColorMatrix type=\"matrix\" values=\"" + row + row + row + "0 0 0 1 0\"/>"
+            + "</filter></defs>";
+
+        return wrapInGroup(svg, defs, "filter=\"url(#" + id + ")\"");
+    }
+
+    private static String svgHeader(int width, int height) {
+        return SVG_HEADER
+            + " width=\"" + width + "\" height=\"" + height + "\""
+            + " viewBox=\"0 0 " + width + ' ' + height + "\">";
+    }
+
+    /**
+     * An external reference is refused while an svg is loaded as an image, so a nested icon travels inline.
+     */
+    private static String svgImage(int x, int y, int width, int height, WebRenderedImage rendered) {
+        String dataURI = rendered.toDataURI();
+
+        return "<image x=\"" + x + "\" y=\"" + y + "\""
+            + " width=\"" + width + "\" height=\"" + height + "\""
+            + " href=\"" + dataURI + "\" xlink:href=\"" + dataURI + "\"/>";
+    }
+
+    private static String escapeXml(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private static @Nullable WebRenderedImage alpha(@Nullable WebRenderedImage source, float alpha) {

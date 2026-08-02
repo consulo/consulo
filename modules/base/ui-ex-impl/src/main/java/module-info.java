@@ -8,6 +8,7 @@ module consulo.ui.ex.impl {
     requires transitive consulo.application.impl;
     requires transitive consulo.project.ui.api;
     requires transitive consulo.language.api;
+    requires consulo.ui.impl;
     requires consulo.util.nodep;
     requires gnu.trove;
 

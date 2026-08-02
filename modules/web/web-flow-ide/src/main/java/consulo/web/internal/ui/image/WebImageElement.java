@@ -38,6 +38,9 @@ public class WebImageElement {
     private static final String LAYERED = "web-image-layered";
     private static final String COLORIZE = "web-image-colorize";
     private static final String TRANSPARENT = "web-image-transparent";
+    private static final String GRAYED = "web-image-grayed";
+    private static final String APPEND = "web-image-append";
+    private static final String TEXT = "web-image-text";
 
     public static @Nullable Element toElement(Image image) {
         WebImageSpec spec = WebImageUrl.toSpec(image);
@@ -73,6 +76,18 @@ public class WebImageElement {
                 for (WebImageSpec child : layered.children()) {
                     element.appendChild(toElement(child));
                 }
+            }
+            case WebImageSpec.Gray gray -> {
+                element.setAttribute("percent", String.valueOf(gray.percent()));
+                element.appendChild(toElement(gray.child()));
+            }
+            case WebImageSpec.Append append -> {
+                element.appendChild(toElement(append.left()));
+                element.appendChild(toElement(append.right()));
+            }
+            case WebImageSpec.Text text -> {
+                element.setAttribute("text", text.text());
+                element.appendChild(toElement(text.child()));
             }
         }
 
@@ -122,6 +137,15 @@ public class WebImageElement {
             }
             case WebImageSpec.Resize resize -> children = List.of(resize.child());
             case WebImageSpec.Layered layered -> children = layered.children();
+            case WebImageSpec.Gray gray -> {
+                html.append(" percent=\"").append(gray.percent()).append('"');
+                children = List.of(gray.child());
+            }
+            case WebImageSpec.Append append -> children = List.of(append.left(), append.right());
+            case WebImageSpec.Text text -> {
+                html.append(" text=\"").append(escape(text.text())).append('"');
+                children = List.of(text.child());
+            }
         }
 
         html.append('>');
@@ -141,6 +165,9 @@ public class WebImageElement {
             case WebImageSpec.Alpha ignored -> TRANSPARENT;
             case WebImageSpec.Resize ignored -> IMAGE;
             case WebImageSpec.Layered ignored -> LAYERED;
+            case WebImageSpec.Gray ignored -> GRAYED;
+            case WebImageSpec.Append ignored -> APPEND;
+            case WebImageSpec.Text ignored -> TEXT;
         };
     }
 

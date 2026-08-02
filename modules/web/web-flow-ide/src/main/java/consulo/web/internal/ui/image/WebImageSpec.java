@@ -17,7 +17,9 @@ package consulo.web.internal.ui.image;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -51,6 +53,15 @@ public sealed interface WebImageSpec {
     record Layered(List<WebImageSpec> children) implements WebImageSpec {
     }
 
+    record Gray(WebImageSpec child, int percent) implements WebImageSpec {
+    }
+
+    record Append(WebImageSpec left, WebImageSpec right) implements WebImageSpec {
+    }
+
+    record Text(WebImageSpec child, String text) implements WebImageSpec {
+    }
+
     static int width(WebImageSpec spec) {
         return switch (spec) {
             case Key key -> key.width();
@@ -59,6 +70,10 @@ public sealed interface WebImageSpec {
             case Alpha alpha -> width(alpha.child());
             case Resize resize -> resize.width();
             case Layered layered -> layered.children().stream().mapToInt(WebImageSpec::width).max().orElse(0);
+            case Gray gray -> width(gray.child());
+            // a side of unknown width still takes a box of its own, so the sum is over what is actually drawn
+            case Append append -> widthOrDefault(append.left()) + widthOrDefault(append.right());
+            case Text text -> width(text.child());
         };
     }
 
@@ -70,6 +85,9 @@ public sealed interface WebImageSpec {
             case Alpha alpha -> height(alpha.child());
             case Resize resize -> resize.height();
             case Layered layered -> layered.children().stream().mapToInt(WebImageSpec::height).max().orElse(0);
+            case Gray gray -> height(gray.child());
+            case Append append -> Math.max(height(append.left()), height(append.right()));
+            case Text text -> height(text.child());
         };
     }
 
@@ -123,7 +141,36 @@ public sealed interface WebImageSpec {
                 }
                 builder.append(')');
             }
+            case Gray gray -> {
+                builder.append("g(");
+                append(builder, gray.child());
+                builder.append(',').append(gray.percent()).append(')');
+            }
+            case Append appended -> {
+                builder.append("p(");
+                append(builder, appended.left());
+                builder.append(',');
+                append(builder, appended.right());
+                builder.append(')');
+            }
+            case Text text -> {
+                builder.append("t(");
+                append(builder, text.child());
+                builder.append(',').append(encodeText(text.text())).append(')');
+            }
         }
+    }
+
+    /**
+     * The text is whatever the platform badged an icon with, and the form here delimits on braces and commas
+     * without escaping anything - so it travels as base64 rather than as itself.
+     */
+    private static String encodeText(String text) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String decodeText(String text) {
+        return new String(Base64.getUrlDecoder().decode(text), StandardCharsets.UTF_8);
     }
 
     static @Nullable WebImageSpec decode(String text) {
@@ -176,6 +223,23 @@ public sealed interface WebImageSpec {
                 }
                 case "l": {
                     return new Layered(readChildren());
+                }
+                case "g": {
+                    WebImageSpec child = readSpec();
+                    expect(',');
+                    return new Gray(child, readInt(')'));
+                }
+                case "p": {
+                    WebImageSpec left = readSpec();
+                    expect(',');
+                    WebImageSpec right = readSpec();
+                    expect(')');
+                    return new Append(left, right);
+                }
+                case "t": {
+                    WebImageSpec child = readSpec();
+                    expect(',');
+                    return new Text(child, decodeText(readUntil(')')));
                 }
                 default: {
                     throw new IllegalArgumentException(type);

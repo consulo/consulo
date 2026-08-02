@@ -82,7 +82,7 @@ public class WebImageUrl {
     }
 
     public static @Nullable WebImageSpec toSpec(Image image) {
-        switch (image) {
+        switch (WebDelegatingImage.unwrap(image)) {
             case WebImageKeyImpl key: {
                 return new WebImageSpec.Key(key.getGroupId(), key.getImageId(), key.getWidth(), key.getHeight());
             }
@@ -115,6 +115,22 @@ public class WebImageUrl {
                 }
                 return children.isEmpty() ? null : new WebImageSpec.Layered(children);
             }
+            case WebGrayedImageImpl grayed: {
+                WebImageSpec child = toSpec(grayed.getOriginal());
+                return child == null ? null : new WebImageSpec.Gray(child, grayed.getPercent());
+            }
+            case WebAppendImageImpl appended: {
+                WebImageSpec left = toSpec(appended.getLeft());
+                WebImageSpec right = toSpec(appended.getRight());
+                if (left == null || right == null) {
+                    return null;
+                }
+                return new WebImageSpec.Append(left, right);
+            }
+            case WebTextImageImpl text: {
+                WebImageSpec child = toSpec(text.getBaseImage());
+                return child == null ? null : new WebImageSpec.Text(child, text.getText());
+            }
             default: {
                 return null;
             }
@@ -124,7 +140,9 @@ public class WebImageUrl {
     /**
      * @return data uri for an image the servlet cannot rebuild from its url alone
      */
-    private static @Nullable String toInlineURL(Image image) {
+    private static @Nullable String toInlineURL(Image original) {
+        Image image = WebDelegatingImage.unwrap(original);
+
         if (image instanceof WebCanvasImageImpl canvas) {
             WebCanvasSvgWriter writer = new WebCanvasSvgWriter(canvas.getWidth(), canvas.getHeight());
             canvas.getConsumer().accept(writer);

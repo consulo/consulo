@@ -28,6 +28,8 @@ import consulo.ui.image.EmptyImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
+import consulo.ui.image.ImageState;
+import consulo.ui.ex.impl.internal.UnifiedAlertImpl;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.DummyTaskBarImpl;
 import consulo.ui.impl.model.FlatDataModelImpl;
@@ -210,7 +212,12 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public Image _Image_lazy(Supplier<Image> imageSupplier) {
-        return imageSupplier.get();
+        return new WebLazyImageImpl(imageSupplier);
+    }
+
+    @Override
+    public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
+        return new WebStatedImageImpl<>(state, funcCall);
     }
 
     @Override
@@ -225,12 +232,15 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public Image _ImageEffects_grayed(Image original) {
-        return original;
+        if (original instanceof WebGrayedImageImpl) {
+            return original;
+        }
+        return new WebGrayedImageImpl(original);
     }
 
     @Override
     public Image _ImageEffects_appendRight(Image i0, Image i1) {
-        throw notSupported();
+        return new WebAppendImageImpl(i0, i1);
     }
 
     @Override
@@ -245,7 +255,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public Image _ImageEffects_withText(Image baseImage, String text) {
-        return baseImage;
+        return new WebTextImageImpl(baseImage, text);
     }
 
     @Override
@@ -312,6 +322,12 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    @RequiredUIAccess
+    public LightPopup _LightPopup_create(LightPopupOptions options) {
+        return new WebLightPopupImpl(options);
+    }
+
+    @Override
     public @Nullable Window _Window_getActiveWindow() {
         return null;
     }
@@ -322,7 +338,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
     @Override
     public <T> Alert<T> _Alerts_create() {
-        throw notSupported();
+        return new UnifiedAlertImpl<>();
     }
 
     @Override
