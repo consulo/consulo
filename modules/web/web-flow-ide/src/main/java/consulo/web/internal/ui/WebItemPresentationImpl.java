@@ -49,6 +49,14 @@ public class WebItemPresentationImpl implements TextItemPresentation {
     }
 
     @Override
+    public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
+        myBackgroundColor = color;
+
+        after();
+        return this;
+    }
+
+    @Override
     public void append(LocalizeValue text, TextAttribute textAttribute) {
         Span span = new Span(text.get());
 
@@ -56,18 +64,14 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         // colour of a changed one. dropping it left every fragment looking the same
         applyAttribute(span, textAttribute);
 
-        if (textAttribute != null && textAttribute.getBackgroundColor() != null) {
-            myBackgroundColor = textAttribute.getBackgroundColor();
-        }
-
         myFragments.add(span);
 
         after();
     }
 
     /**
-     * The fill the fragments asked for. A consumer whose whole surface is the item - an editor tab - paints it
-     * over that surface rather than behind the run of text alone.
+     * The fill of the item as a whole, if one was assigned. A consumer whose whole surface is the item - an
+     * editor tab, a tree row - paints it over that surface rather than behind the run of text alone.
      */
     public @Nullable ColorValue getBackgroundColor() {
         return myBackgroundColor;

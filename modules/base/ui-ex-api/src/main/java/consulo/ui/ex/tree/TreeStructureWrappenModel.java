@@ -94,9 +94,9 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
      * The descriptor carries everything the awt renderer paints - coloured fragments, the file status
      * foreground and the file colour background - and flattening it to {@code toString()} lost all of it.
      * The forced colour wins only where a fragment has no colour of its own, so the grey location text stays
-     * grey while the name takes the status colour. The background is the one the awt tree paints the whole
-     * row with - see {@code ProjectViewTree.getFileColorFor} - and every fragment carries it so a consumer
-     * whose surface is the item can pick it up.
+     * grey while the name takes the status colour. The background of the presentation is what the awt tree
+     * paints the whole row with - see {@code ProjectViewTree.getFileColorFor} - so it goes to the item rather
+     * than to the fragments, which paint theirs behind their own run of text.
      */
     private static void renderPresentation(
         TextItemPresentation itemPresentation,
@@ -105,26 +105,24 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
     ) {
         PresentationData presentation = presentable.getPresentation();
         ColorValue forced = presentation.getForcedTextForeground();
-        ColorValue background = presentation.getBackground();
+
+        itemPresentation.withBackgroundColor(presentation.getBackground());
 
         List<PresentableNodeDescriptor.ColoredFragment> fragments = presentation.getColoredText();
         if (fragments.isEmpty()) {
-            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced, background));
+            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced));
             return;
         }
 
         for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
-            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced, background));
+            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced));
         }
     }
 
-    private static TextAttribute toTextAttribute(
-        @Nullable SimpleTextAttributes attributes,
-        @Nullable ColorValue forced,
-        @Nullable ColorValue background
-    ) {
+    private static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes, @Nullable ColorValue forced) {
         int style = 0;
         ColorValue foreground = null;
+        ColorValue background = null;
 
         if (attributes != null) {
             if ((attributes.getStyle() & SimpleTextAttributes.STYLE_BOLD) != 0) {

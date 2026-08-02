@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
@@ -37,6 +38,16 @@ public interface TextItemPresentation {
     }
 
     default TextItemPresentation withFont(Font font) {
+        // unwarranted action
+        return this;
+    }
+
+    /**
+     * The fill of the item as a whole - the file colour of a project view row, the colour a tab carries. The
+     * background of a {@link TextAttribute} belongs to the run of text it is appended with; this one belongs
+     * to the surface the item is drawn on.
+     */
+    default TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
         // unwarranted action
         return this;
     }

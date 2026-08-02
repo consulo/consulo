@@ -76,11 +76,13 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
             myTab = tab;
 
             myTab.setRenderer((t, p) -> {
-                if (myForeground == null && myBackground == null) {
+                p.withBackgroundColor(myBackground);
+
+                if (myForeground == null) {
                     p.append(myText);
                 }
                 else {
-                    p.append(myText, new TextAttribute(consulo.ui.font.Font.STYLE_PLAIN, myForeground, myBackground));
+                    p.append(myText, new TextAttribute(consulo.ui.font.Font.STYLE_PLAIN, myForeground, null));
                 }
 
                 if (myImage != null) {

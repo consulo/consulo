@@ -29,13 +29,56 @@ vaadin-grid.web-tree vaadin-grid-tree-toggle
   cursor: default;
 }
 
+/* the grid places every row on a whole pixel pitch of its own averaged measurement while the row itself is
+   only as tall as its content - a fractional content height leaves a hairline of whatever is behind the grid
+   between one row and the next, which reads as a separator across a run of coloured or selected rows. a fixed
+   whole pixel row height makes the two agree */
+vaadin-grid.web-tree::part(body-cell)
+{
+  height: var(--consulo-tree-row-height, 30px);
+}
+
 /* the fill a file colour assigns - excluded folders, scope colours - covers the whole row in the awt tree.
-   the platform writes the value on the toggle, and the toggle is stretched over the row so the fill reads
-   as the row's */
+   the platform writes the value on the toggle, and the toggle is stretched over the row so the fill reads as
+   the row's. the cell pads and centres its content inside the row, which would leave the fill short of the
+   selection band on every side - the padding moves onto the toggle and the toggle takes the row's height
+   instead, so the text sits where it did and the fill reaches the edges the selection does. the level indent
+   is a spacer inside the toggle's shadow root and is not touched by this */
+vaadin-grid.web-tree vaadin-grid-cell-content
+{
+  padding: 0;
+  align-self: stretch;
+}
+
+/* the grid draws the selection band on the cell, under the slotted content - a row with a file colour on the
+   toggle covers it, so the selected row of the project view looked unselected. the state has to reach the
+   light dom to be drawn there, and a custom property is the one thing that crosses a slot: declared on the
+   selected cell, it inherits down the flattened tree into the toggle. registering it makes it compute at the
+   cell, so the color-mix resolves against the cell's colour and not against the file status foreground the
+   toggle carries */
+@property --consulo-tree-row-selection
+{
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+vaadin-grid.web-tree::part(selected-row-cell)
+{
+  --consulo-tree-row-selection: var(--vaadin-grid-row-selected-background-color, color-mix(in srgb, currentColor 8%, transparent));
+}
+
+/* the file colour is the fill and the selection is a layer over it - a background-image sits above the
+   background-color of the same element, so the two compose the way the awt tree paints them */
 vaadin-grid.web-tree vaadin-grid-tree-toggle
 {
+  box-sizing: border-box;
   width: 100%;
+  height: 100%;
+  align-items: center;
+  padding: 0 7px;
   background-color: var(--consulo-tree-row-background, transparent);
+  background-image: linear-gradient(var(--consulo-tree-row-selection), var(--consulo-tree-row-selection));
 }
 
 vaadin-grid.web-tree vaadin-grid-tree-toggle::part(toggle)

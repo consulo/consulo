@@ -21,6 +21,7 @@ import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
@@ -55,6 +56,13 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
   @Override
   public TextItemPresentation withIcon(@Nullable Image icon) {
     mySimpleColoredComponent.setIcon(icon);
+    return this;
+  }
+
+
+  @Override
+  public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
+    mySimpleColoredComponent.setBackground(TargetAWT.to(color));
     return this;
   }
 

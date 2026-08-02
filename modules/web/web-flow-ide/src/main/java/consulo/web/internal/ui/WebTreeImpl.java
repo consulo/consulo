@@ -19,6 +19,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataCommunicatorAccess;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.selection.SelectionModel;
@@ -140,14 +141,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             getElement()
                 .addEventListener("mousedown", event -> {
                     int index = event.getEventData().path(rowIndex).asInt(-1);
-                    // the rows of the shadow dom outlive a rebuild of the data, so an index read from one of
-                    // them can point past what the communicator now holds - and getItem throws rather than
-                    // answering null for that
-                    if (index < 0 || index >= getDataCommunicator().getItemCount()) {
-                        return;
-                    }
 
-                    WebTreeNodeImpl<NODE> item = getDataCommunicator().getItem(index);
+                    WebTreeNodeImpl<NODE> item =
+                        HierarchicalDataCommunicatorAccess.getItemByFlatIndex(getDataCommunicator(), index);
                     if (item != null) {
                         select(item);
                     }
