@@ -22,7 +22,10 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -50,6 +53,14 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     private BiConsumer<N, TextItemPresentation> myRenderer =
         (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
     private boolean myLeaf;
+
+    /**
+     * The grid keeps the open nodes of the ui it belongs to, and a refresh builds a new one - the nodes outlive
+     * it, so what was open is remembered here and put back once the new grid has the data.
+     */
+    private boolean myExpanded;
+
+    private Function<WebTreeNodeImpl<N>, CompletableFuture<List<WebTreeNodeImpl<N>>>> myLoader;
 
     public WebTreeNodeImpl(@Nullable WebTreeNodeImpl<N> parent, @Nullable N node, Map<String, WebTreeNodeImpl<N>> nodeMap) {
         myParent = parent;
@@ -108,6 +119,62 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
 
     public BiConsumer<N, TextItemPresentation> getRenderer() {
         return myRenderer;
+    }
+
+    /**
+     * Asks the tree for the children of this node, the way opening it would. Blocking - the model is read here -
+     * so it belongs off the ui thread.
+     */
+    public void setLoader(Function<WebTreeNodeImpl<N>, CompletableFuture<List<WebTreeNodeImpl<N>>>> loader) {
+        myLoader = loader;
+    }
+
+    @Override
+    public CompletableFuture<TreeNode<N>> findChild(Predicate<N> predicate) {
+        return loadChildren().thenApply(children -> {
+            for (WebTreeNodeImpl<N> child : children) {
+                if (predicate.test(child.getValue())) {
+                    return child;
+                }
+            }
+            return null;
+        });
+    }
+
+    @Override
+    public CompletableFuture<TreeNode<N>> findChildDeep(Predicate<N> predicate) {
+        return loadChildren().thenCompose(children -> findDeep(children, predicate, 0));
+    }
+
+    private CompletableFuture<TreeNode<N>> findDeep(List<WebTreeNodeImpl<N>> children, Predicate<N> predicate, int index) {
+        if (index >= children.size()) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        WebTreeNodeImpl<N> child = children.get(index);
+        if (predicate.test(child.getValue())) {
+            return CompletableFuture.completedFuture(child);
+        }
+
+        return child.findChildDeep(predicate)
+            .thenCompose(found -> found != null
+                ? CompletableFuture.completedFuture(found)
+                : findDeep(children, predicate, index + 1));
+    }
+
+    private CompletableFuture<List<WebTreeNodeImpl<N>>> loadChildren() {
+        if (isNotLoaded() && myLoader != null) {
+            return myLoader.apply(this);
+        }
+        return CompletableFuture.completedFuture(myChildren);
+    }
+
+    public boolean isExpanded() {
+        return myExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        myExpanded = expanded;
     }
 
     public int getLevel() {

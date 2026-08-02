@@ -30,6 +30,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -37,6 +38,8 @@ import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
@@ -57,7 +60,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     // rebuilding on css only changes, and the tree look was left one build behind
     @StyleSheet("/tree/webTree.css")
     public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
-        private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
+        // written by the background fetches and read by the ui thread, and now also walked when the state of
+        // the tree is written out
+        private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new ConcurrentHashMap<>();
+        private final CompletableFuture<Void> myRootLoaded = new CompletableFuture<>();
 
         private WebTreeNodeImpl<NODE> myRootNode;
         private TreeModel<NODE> myModel;
@@ -155,11 +161,19 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 Collection<WebTreeNodeImpl<NODE>> items = event.getItems();
 
                 for (WebTreeNodeImpl<NODE> item : items) {
+                    item.setExpanded(true);
+
                     if (item.isNotLoaded()) {
                         UI ui = UI.getCurrent();
                         // items not loaded
                         queue(item, ui);
                     }
+                }
+            });
+
+            addCollapseListener(event -> {
+                for (WebTreeNodeImpl<NODE> item : event.getItems()) {
+                    item.setExpanded(false);
                 }
             });
         }
@@ -168,6 +182,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         protected void onAttach(AttachEvent attachEvent) {
             super.onAttach(attachEvent);
 
+            // a refresh moves this grid into a freshly created ui and attaches it again. the nodes are the same
+            // objects, and building them anew would throw away what they hold - the children below them and the
+            // record of which were open - so only the data of the new grid is filled in
+            if (!myRootNode.isNotLoaded()) {
+                initTreeData(false);
+
+                myRootLoaded.complete(null);
+                return;
+            }
+
             UI ui = UI.getCurrent();
 
             invokeLater(() -> {
@@ -175,11 +199,19 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
                 ui.access(() -> {
                     initTreeData(false);
+
+                    myRootLoaded.complete(null);
                 });
             });
         }
 
         private void queue(WebTreeNodeImpl<NODE> parent, UI ui) {
+            loadChildren(parent, ui);
+        }
+
+        private CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildren(WebTreeNodeImpl<NODE> parent, UI ui) {
+            CompletableFuture<List<WebTreeNodeImpl<NODE>>> result = new CompletableFuture<>();
+
             invokeLater(() -> {
                 List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
                 if (parent.isNotLoaded()) {
@@ -187,6 +219,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
                     children = fetchChildren(parent, false);
                     if (children == CANCELED_RESULT) {
+                        ui.access(() -> result.complete(List.of()));
                         return;
                     }
 
@@ -208,13 +241,133 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                         getDataProvider().refreshItem(parent, true);
 
                         ui.push();
+
+                        result.complete(finalChildren);
                     });
+                }
+                else {
+                    // the whole chain that a walk down a path hangs on this future runs where it is completed,
+                    // and touching the grid outside the ui lock is what corrupts a session
+                    List<WebTreeNodeImpl<NODE>> loaded = children;
+                    ui.access(() -> result.complete(loaded));
+                }
+            });
+
+            return result;
+        }
+
+        /**
+         * The children of the root are fetched once the grid is attached, so a walk down a path - restoring the
+         * state of a previous session - has to wait for that rather than start a fetch of its own.
+         */
+        public CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildrenAsync(WebTreeNodeImpl<NODE> node) {
+            if (node == myRootNode) {
+                return myRootLoaded.thenApply(ignored -> myRootNode.getChildren());
+            }
+
+            return loadChildren(node, UI.getCurrent());
+        }
+
+        public CompletableFuture<Void> expandNode(WebTreeNodeImpl<NODE> node) {
+            return loadChildrenAsync(node).thenAccept(children -> {
+                if (node != myRootNode) {
+                    expand(List.of(node));
                 }
             });
         }
 
+        public WebTreeNodeImpl<NODE> getRootNode() {
+            return myRootNode;
+        }
+
+        public List<List<WebTreeNodeImpl<NODE>>> collectExpandedPaths() {
+            List<List<WebTreeNodeImpl<NODE>>> paths = new ArrayList<>();
+            for (WebTreeNodeImpl<NODE> node : myNodeMap.values()) {
+                if (!(node instanceof WebTreeNodeImpl.NotLoaded) && node.isExpanded()) {
+                    paths.add(pathTo(node));
+                }
+            }
+            return paths;
+        }
+
+        /**
+         * The root is a part of the path, the way the awt trees write theirs - the two frontends read the same
+         * state out of the workspace.
+         */
+        public List<WebTreeNodeImpl<NODE>> pathTo(WebTreeNodeImpl<NODE> node) {
+            LinkedList<WebTreeNodeImpl<NODE>> path = new LinkedList<>();
+            for (WebTreeNodeImpl<NODE> current = node; current != null; current = current.getParent()) {
+                path.addFirst(current);
+            }
+            return path;
+        }
+
         private void invokeLater(Runnable runnable) {
             AppExecutorUtil.getAppExecutorService().execute(runnable);
+        }
+
+        /**
+         * The children live in the {@link TreeData} rather than being asked from the model on every paint, so a
+         * change behind the tree only reaches it by rebuilding them here.
+         */
+        public void refreshNode(WebTreeNodeImpl<NODE> node, boolean refreshChildren) {
+            if (node == myRootNode) {
+                refreshRoot();
+                return;
+            }
+
+            TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
+            if (!data.contains(node)) {
+                return;
+            }
+
+            // a node whose children were never fetched has nothing to rebuild - it holds the placeholder, and
+            // opening it fetches them
+            if (!refreshChildren || node.isNotLoaded()) {
+                getDataProvider().refreshItem(node);
+                return;
+            }
+
+            UI ui = UI.getCurrent();
+            invokeLater(() -> {
+                List<WebTreeNodeImpl<NODE>> children = fetchChildren(node, false);
+                if (children == CANCELED_RESULT) {
+                    return;
+                }
+
+                ui.access(() -> {
+                    TreeData<WebTreeNodeImpl<NODE>> treeData = getTreeData();
+
+                    for (WebTreeNodeImpl<NODE> old : List.copyOf(treeData.getChildren(node))) {
+                        myNodeMap.remove(old.getId());
+                        treeData.removeItem(old);
+                    }
+
+                    treeData.addItems(node, children);
+                    for (WebTreeNodeImpl<NODE> child : children) {
+                        treeData.addItems(child, child.getChildren());
+                    }
+
+                    getDataProvider().refreshItem(node, true);
+
+                    ui.push();
+                });
+            });
+        }
+
+        public void refreshRoot() {
+            UI ui = UI.getCurrent();
+            invokeLater(() -> {
+                if (fetchChildren(myRootNode, false) == CANCELED_RESULT) {
+                    return;
+                }
+
+                ui.access(() -> {
+                    initTreeData(false);
+
+                    ui.push();
+                });
+            });
         }
 
         private void initTreeData(boolean init) {
@@ -226,7 +379,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             else {
                 data.addRootItems(myRootNode.getChildren());
                 for (WebTreeNodeImpl<NODE> node : myRootNode.getChildren()) {
-                    data.addItems(node, node.getChildren());
+                    addLoadedChildren(data, node);
                 }
             }
 
@@ -241,6 +394,47 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
             setDataProvider(provider);
             getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
+
+            if (!init) {
+                restoreExpanded(data);
+            }
+        }
+
+        /**
+         * A node holds the children it was given, and the placeholder while it has none - putting the whole of
+         * what is already known into the data is what lets the nodes that were open be opened again.
+         */
+        private void addLoadedChildren(TreeData<WebTreeNodeImpl<NODE>> data, WebTreeNodeImpl<NODE> node) {
+            List<WebTreeNodeImpl<NODE>> children = node.getChildren();
+            if (children.isEmpty()) {
+                return;
+            }
+
+            data.addItems(node, children);
+
+            if (node.isNotLoaded()) {
+                return;
+            }
+
+            for (WebTreeNodeImpl<NODE> child : children) {
+                addLoadedChildren(data, child);
+            }
+        }
+
+        private void restoreExpanded(TreeData<WebTreeNodeImpl<NODE>> data) {
+            List<WebTreeNodeImpl<NODE>> expanded = new ArrayList<>();
+            for (WebTreeNodeImpl<NODE> node : myNodeMap.values()) {
+                if (node.isExpanded() && data.contains(node)) {
+                    expanded.add(node);
+                }
+            }
+
+            if (!expanded.isEmpty()) {
+                // a node can only be opened once the one above it is, and the nodes are held in no order
+                expanded.sort(Comparator.comparingInt(WebTreeNodeImpl::getLevel));
+
+                expand(expanded);
+            }
         }
 
         private List<WebTreeNodeImpl<NODE>> fetchChildren(WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
@@ -251,6 +445,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 myModel.buildChildren(
                     node -> {
                         WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
+                        child.setLoader(this::loadChildrenAsync);
                         list.add(child);
                         return child;
                     },
@@ -310,6 +505,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 return;
             }
 
+            getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(this, selectedNode));
+
             // the return value is the contract - true asks the tree to toggle the node, the way the awt trees
             // do, and a model that answered with an action of its own - opening the file - says false
             if (model.onDoubleClick(this, selectedNode) && selectedNode instanceof WebTreeNodeImpl<NODE> node) {
@@ -337,6 +534,59 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     @Override
     public void expand(TreeNode<NODE> node) {
         toVaadinComponent().expand(node);
+    }
+
+    @Override
+    public TreeNode<NODE> getRootNode() {
+        return toVaadinComponent().getRootNode();
+    }
+
+    @Override
+    public List<List<TreeNode<NODE>>> getExpandedPaths() {
+        List<List<WebTreeNodeImpl<NODE>>> collected = toVaadinComponent().collectExpandedPaths();
+
+        List<List<TreeNode<NODE>>> paths = new ArrayList<>();
+        for (List<WebTreeNodeImpl<NODE>> path : collected) {
+            paths.add(List.copyOf(path));
+        }
+        return paths;
+    }
+
+    @Override
+    public List<TreeNode<NODE>> getSelectedPath() {
+        TreeNode<NODE> selected = getSelectedNode();
+        if (!(selected instanceof WebTreeNodeImpl<NODE> node)) {
+            return List.of();
+        }
+        return List.copyOf(toVaadinComponent().pathTo(node));
+    }
+
+    @Override
+    public CompletableFuture<Void> expandAsync(TreeNode<NODE> node) {
+        if (!(node instanceof WebTreeNodeImpl<NODE> webNode)) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return toVaadinComponent().expandNode(webNode);
+    }
+
+    @Override
+    public void select(TreeNode<NODE> node) {
+        if (node instanceof WebTreeNodeImpl<NODE> webNode) {
+            toVaadinComponent().select(webNode);
+        }
+    }
+
+    @Override
+    public void refreshItem(TreeNode<NODE> node, boolean refreshChildren) {
+        if (node instanceof WebTreeNodeImpl<NODE> webNode) {
+            toVaadinComponent().refreshNode(webNode, refreshChildren);
+        }
+    }
+
+    @Override
+    public void refreshAll() {
+        toVaadinComponent().refreshRoot();
     }
 
     @Override

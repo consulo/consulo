@@ -18,6 +18,11 @@ package consulo.ide.impl.projectView;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import org.jdom.Element;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
@@ -76,6 +81,7 @@ import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.TreeStructureWrappenModel;
+import consulo.ui.ex.tree.UITreeState;
 import consulo.ui.layout.WrappedLayout;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
@@ -94,7 +100,8 @@ import java.util.*;
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
+@State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable {
     private final class MyDataProvider implements UiDataProvider {
         /**
          * The selection lives in the consulo.ui tree, and reading it means touching the ui component. Every
@@ -328,12 +335,25 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         }
     }
 
+    private static final String ELEMENT_PANES = "panes";
+    private static final String ELEMENT_PANE = "pane";
+    private static final String ELEMENT_SUB_PANE = "subPane";
+    private static final String ATTRIBUTE_ID = "id";
+
     private final Project myProject;
     private final Map<String, SelectInTarget> mySelectInTargets = new LinkedHashMap<>();
 
     private AbstractProjectViewPane myCurrentPane;
 
     private Tree<AbstractTreeNode> myTree;
+
+    /**
+     * Read back before the tree exists, and kept afterwards so that the state of a session which is already
+     * gone - the tool window content is built anew for every ui - is still what gets written out.
+     */
+    private @Nullable UITreeState myReadTreeState;
+
+    private @Nullable Element myLoadedState;
 
     private final IdeView myIdeView = new MyIdeView();
 
@@ -508,6 +528,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             CustomizationUtil.installPopupHandler(popupTarget, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
         }
 
+        restoreExpandedPaths();
+
         Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
 
         toolWindow.getContentManager().addContent(content);
@@ -521,6 +543,81 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
     private void createTitleActions(List<? super AnAction> titleActions) {
         titleActions.add(ActionManager.getInstance().getAction(ProjectViewToolbarGroup.class));
+    }
+
+    private void saveExpandedPaths() {
+        if (myTree == null) {
+            return;
+        }
+
+        UITreeState treeState = UITreeState.createOn(myTree);
+        myReadTreeState = treeState.isEmpty() ? null : treeState;
+    }
+
+    private void restoreExpandedPaths() {
+        if (myTree != null && myReadTreeState != null) {
+            myReadTreeState.applyTo(myTree);
+        }
+    }
+
+    /**
+     * The awt project view writes the same component, and both frontends open the same project directory - the
+     * state is read and written in its layout, and everything this view does not model is carried over from what
+     * was read rather than dropped.
+     */
+    @Override
+    public @Nullable Element getState() {
+        saveExpandedPaths();
+
+        Element element = myLoadedState == null ? new Element("state") : myLoadedState.clone();
+
+        Element panes = element.getChild(ELEMENT_PANES);
+        if (panes == null) {
+            panes = new Element(ELEMENT_PANES);
+            element.addContent(panes);
+        }
+
+        Element pane = findPane(panes);
+        if (pane == null) {
+            pane = new Element(ELEMENT_PANE);
+            pane.setAttribute(ATTRIBUTE_ID, getPaneId());
+            panes.addContent(pane);
+        }
+
+        pane.removeChildren(ELEMENT_SUB_PANE);
+
+        if (myReadTreeState != null) {
+            Element subPane = new Element(ELEMENT_SUB_PANE);
+            myReadTreeState.writeExternal(subPane);
+            pane.addContent(subPane);
+        }
+
+        return element;
+    }
+
+    @Override
+    public void loadState(Element state) {
+        myLoadedState = state.clone();
+
+        Element panes = state.getChild(ELEMENT_PANES);
+        Element pane = panes == null ? null : findPane(panes);
+        Element subPane = pane == null ? null : pane.getChild(ELEMENT_SUB_PANE);
+
+        UITreeState treeState = UITreeState.createFrom(subPane);
+        myReadTreeState = treeState.isEmpty() ? null : treeState;
+    }
+
+    private @Nullable Element findPane(Element panes) {
+        for (Element pane : panes.getChildren(ELEMENT_PANE)) {
+            if (getPaneId().equals(pane.getAttributeValue(ATTRIBUTE_ID))) {
+                return pane;
+            }
+        }
+        return null;
+    }
+
+    private String getPaneId() {
+        return myCurrentPane == null ? ProjectViewPaneImpl.ID : myCurrentPane.getId();
     }
 
     @SuppressWarnings("unchecked")

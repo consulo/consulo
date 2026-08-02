@@ -21,8 +21,10 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
@@ -36,10 +38,13 @@ import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -50,11 +55,47 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         private boolean myLeaf;
 
         private final K myValue;
+        private final Object myParentElement;
+        private final MyStructureWrapper<K> myStructure;
 
         private BiConsumer<K, TextItemPresentation> myRenderer = (e, t) -> t.append(e == null ? "null" : e.toString());
 
-        private MyTreeNodeImpl(K value) {
+        private MyTreeNodeImpl(K value, Object parentElement, MyStructureWrapper<K> structure) {
             myValue = value;
+            myParentElement = parentElement;
+            myStructure = structure;
+        }
+
+        /**
+         * The structure builds the level below on demand, so the children exist by the time they are walked.
+         */
+        @Override
+        @SuppressWarnings("unchecked")
+        public CompletableFuture<TreeNode<K>> findChild(Predicate<K> predicate) {
+            for (Object element : myStructure.getChildElements(this)) {
+                MyTreeNodeImpl<K> child = (MyTreeNodeImpl<K>) element;
+                if (predicate.test(child.getValue())) {
+                    return CompletableFuture.completedFuture(child);
+                }
+            }
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public CompletableFuture<TreeNode<K>> findChildDeep(Predicate<K> predicate) {
+            for (Object element : myStructure.getChildElements(this)) {
+                MyTreeNodeImpl<K> child = (MyTreeNodeImpl<K>) element;
+                if (predicate.test(child.getValue())) {
+                    return CompletableFuture.completedFuture(child);
+                }
+
+                TreeNode<K> found = child.findChildDeep(predicate).join();
+                if (found != null) {
+                    return CompletableFuture.completedFuture(found);
+                }
+            }
+            return CompletableFuture.completedFuture(null);
         }
 
         @Override
@@ -154,7 +195,9 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         public Object[] getChildElements(Object element) {
             K targetParent = null;
             if (element == myRootValue) {
-                targetParent = null;
+                // the root stands for a value of the model, and a model built over a tree structure asks that
+                // structure for the children of it - only a tree created without a root value has none to give
+                targetParent = myRootValue == ObjectUtil.NULL ? null : (K) myRootValue;
             }
             else if (element instanceof MyTreeNodeImpl node) {
                 targetParent = (K) node.getValue();
@@ -162,7 +205,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
             List<MyTreeNodeImpl<K>> nodes = new ArrayList<>();
             myModel.buildChildren(k -> {
-                MyTreeNodeImpl<K> node = new MyTreeNodeImpl<>(k);
+                MyTreeNodeImpl<K> node = new MyTreeNodeImpl<>(k, element, this);
                 nodes.add(node);
                 return node;
             }, targetParent);
@@ -174,9 +217,13 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             return nodes.toArray(MyTreeNodeImpl[]::new);
         }
 
+        /**
+         * {@link StructureTreeModel#invalidate(Object, boolean)} walks up from the element to the root to find
+         * the node it stands for, so a tree that cannot answer this can only ever be invalidated whole.
+         */
         @Override
         public @Nullable Object getParentElement(Object element) {
-            return null;
+            return element instanceof MyTreeNodeImpl node ? node.myParentElement : null;
         }
 
         
@@ -198,8 +245,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     public class MyTree extends DnDAwareTree implements FromSwingComponentWrapper {
-        public MyTree(Disposable disposable, E rootValue, TreeModel<E> model) {
-            super(new AsyncTreeModel(new StructureTreeModel<>(new MyStructureWrapper<>(rootValue, model), disposable), disposable));
+        public MyTree(StructureTreeModel<MyStructureWrapper<E>> structureTreeModel, Disposable disposable) {
+            super(new AsyncTreeModel(structureTreeModel, disposable));
         }
 
         
@@ -209,21 +256,38 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
     }
 
-    private final E myRootValue;
     private final TreeModel<E> myModel;
     private final Disposable myDisposable;
+    private final StructureTreeModel<MyStructureWrapper<E>> myStructureTreeModel;
 
     public DesktopTreeImpl(E rootValue, TreeModel<E> model, Disposable disposable) {
-        myRootValue = rootValue;
         myModel = model;
         myDisposable = disposable;
+        myStructureTreeModel = new StructureTreeModel<>(new MyStructureWrapper<>(rootValue, model), disposable);
     }
 
     @Override
     protected MyTree createComponent() {
-        MyTree tree = new MyTree(myDisposable, myRootValue, myModel);
+        MyTree tree = new MyTree(myStructureTreeModel, myDisposable);
         tree.setRootVisible(false);
         tree.setCellRenderer(new NodeRenderer());
+
+        new DoubleClickListener() {
+            @Override
+            protected boolean onDoubleClick(MouseEvent event) {
+                TreeNode<E> node = getSelectedNode();
+                if (node == null) {
+                    return false;
+                }
+
+                getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(DesktopTreeImpl.this, node));
+
+                // the model answers whether the node should open, which is what the tree does on its own -
+                // the event is consumed only when the model took the click for an action of its own
+                return !myModel.onDoubleClick(DesktopTreeImpl.this, node);
+            }
+        }.installOn(tree);
+
         tree.addTreeSelectionListener(e -> {
             TreePath path = TreeUtil.getSelectedPathIfOne(tree);
             if (path == null) {
@@ -260,5 +324,15 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     @Override
     public void expand(TreeNode<E> node) {
+    }
+
+    @Override
+    public void refreshItem(TreeNode<E> node, boolean refreshChildren) {
+        myStructureTreeModel.invalidate(node, refreshChildren);
+    }
+
+    @Override
+    public void refreshAll() {
+        myStructureTreeModel.invalidate();
     }
 }

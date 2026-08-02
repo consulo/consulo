@@ -17,7 +17,9 @@ package consulo.ui;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -34,4 +36,20 @@ public interface TreeNode<T> {
      * @return if rootValue is null and treeNode wraps it
      */
     @Nullable T getValue();
+
+    /**
+     * Builds the children when they are not there yet and answers the first one the predicate takes. A tree
+     * holds a level at a time, so walking down to a node is a chain of these rather than a search over nodes
+     * which do not exist yet.
+     */
+    default CompletableFuture<TreeNode<T>> findChild(Predicate<T> predicate) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    /**
+     * The same over the whole subtree below this node, level by level.
+     */
+    default CompletableFuture<TreeNode<T>> findChildDeep(Predicate<T> predicate) {
+        return CompletableFuture.completedFuture(null);
+    }
 }

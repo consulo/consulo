@@ -112,6 +112,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     Disposer.register(this, myInfoAndProgressPanel);
 
     centerPanel().add(myInfoAndProgressPanel.getUIComponent());
+    myInfoAndProgressPanel.setProgressTarget(centerPanel());
 
     myComponent.putUserData(UiDataProvider.KEY, sink -> {
         sink.set(Project.KEY, getProject());
@@ -348,12 +349,14 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void addProgress(ProgressIndicator indicator, TaskInfo info) {
-
+    if (myInfoAndProgressPanel != null) {
+      myInfoAndProgressPanel.addProgress(indicator, info);
+    }
   }
 
   @Override
   public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
-    return null;
+    return myInfoAndProgressPanel == null ? List.of() : myInfoAndProgressPanel.getBackgroundProcesses();
   }
 
   @Override

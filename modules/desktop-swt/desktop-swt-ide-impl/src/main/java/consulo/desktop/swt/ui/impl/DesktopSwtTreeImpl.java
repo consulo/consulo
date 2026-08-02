@@ -19,6 +19,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
+import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeSelectEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -69,6 +70,8 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
         UIAccess.current().give(() -> {
           TreeNode<E> selectedNode = getSelectedNode();
           if (selectedNode != null) {
+            getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(DesktopSwtTreeImpl.this, selectedNode));
+
             myModel.onDoubleClick(DesktopSwtTreeImpl.this, selectedNode);
           }
         });
@@ -154,5 +157,37 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   @Override
   public void expand(TreeNode<E> node) {
 
+  }
+
+  @Override
+  public void refreshItem(TreeNode<E> node, boolean refreshChildren) {
+    if (!(node instanceof DesktopSwtTreeNode<E> swtNode)) {
+      return;
+    }
+
+    TreeItem item = swtNode.getTreeItem();
+    if (item == null || item.isDisposed()) {
+      return;
+    }
+
+    swtNode.render();
+
+    if (refreshChildren) {
+      for (TreeItem child : item.getItems()) {
+        child.dispose();
+      }
+
+      item.setData("loaded", Boolean.TRUE);
+      build(item, swtNode.getValue());
+    }
+  }
+
+  @Override
+  public void refreshAll() {
+    for (TreeItem item : myComponent.getItems()) {
+      item.dispose();
+    }
+
+    build(myComponent, myRootValue);
   }
 }

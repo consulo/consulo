@@ -47,6 +47,35 @@
     /* past this a modifier press is too old to be the first half of anything */
     const SEQUENCE_MS = 600;
 
+    /*
+     * The combinations the keymap of the platform owns, as sent by the server. A key of the ide must not also
+     * reach the browser - ctrl s belongs to the ide and would otherwise offer to save the page - so only the
+     * ones on this list are taken, and everything else is left alone.
+     */
+    const shortcutsOf = element => element.$consuloShortcutSet || (element.$consuloShortcutSet = new Set());
+
+    const comboOf = event => {
+        const parts = [];
+        if (event.altKey) {
+            parts.push('ALT');
+        }
+        if (event.ctrlKey) {
+            parts.push('CTRL');
+        }
+        if (event.metaKey) {
+            parts.push('META');
+        }
+        if (event.shiftKey) {
+            parts.push('SHIFT');
+        }
+        parts.push(event.keyCode);
+        return parts.join('+');
+    };
+
+    const setShortcuts = (element, combos) => {
+        element.$consuloShortcutSet = new Set(combos ? combos.split('\n') : []);
+    };
+
     const install = element => {
         if (element.$consuloShortcuts) {
             return;
@@ -89,6 +118,14 @@
         const onKey = (event, pressed) => {
             const modifier = MODIFIERS[event.code];
 
+            if (pressed && !modifier && shortcutsOf(element).has(comboOf(event))) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                element.dispatchEvent(new CustomEvent('consulo-shortcut', {detail: {combo: comboOf(event)}}));
+                return;
+            }
+
             if (modifier) {
                 // a repeat is the key being held, not pressed again - the machine would read it as a second click
                 if (!event.repeat) {
@@ -114,5 +151,5 @@
         document.addEventListener('keyup', event => onKey(event, false), true);
     };
 
-    window.consuloShortcuts = { install: install };
+    window.consuloShortcuts = { install: install, setShortcuts: setShortcuts };
 })();

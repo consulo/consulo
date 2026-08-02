@@ -55,6 +55,9 @@ public class BorderLayoutEx extends VerticalLayout {
     noPaddingMargin(myCenterLayout);
 
     myCenterHolder.setSizeFull();
+    // a flex item is not allowed to shrink below its content unless it is told to, so a wide center - a status
+    // bar with a running task in it - grew past its share of the row and drew over what sits east of it
+    myCenterHolder.getStyle().set("min-width", "0").set("overflow", "hidden");
 
     myCenterLayout.add(myWestHolder);
     myCenterLayout.add(myCenterHolder);

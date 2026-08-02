@@ -17,9 +17,13 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -53,8 +57,60 @@ public interface Tree<E> extends Component {
     default void collapseAll() {
     }
 
+    /**
+     * The node the tree was built on. It is not shown - the tree starts at its children - and it is where a
+     * walk down a stored path begins.
+     */
+    default @Nullable TreeNode<E> getRootNode() {
+        return null;
+    }
+
+    /**
+     * Paths of the expanded nodes, each starting at the root node. A tree which cannot walk its own nodes
+     * answers empty and is simply left unrestored, the way {@link #isExpandCollapseAllSupported()} is handled.
+     */
+    default List<List<TreeNode<E>>> getExpandedPaths() {
+        return List.of();
+    }
+
+    /**
+     * Path to the selected node, starting at the root node.
+     */
+    default List<TreeNode<E>> getSelectedPath() {
+        return List.of();
+    }
+
+    /**
+     * Opens the node, fetching its children first when they were not loaded yet.
+     */
+    default CompletableFuture<Void> expandAsync(TreeNode<E> node) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    default void select(TreeNode<E> node) {
+    }
+
+    /**
+     * Re-reads the node from the model - its presentation, and with {@code refreshChildren} its subtree.
+     */
+    void refreshItem(TreeNode<E> node, boolean refreshChildren);
+
+    default void refreshItem(TreeNode<E> node) {
+        refreshItem(node, false);
+    }
+
+    /**
+     * Rebuilds the whole tree from the model, for a change no single node can be pointed at.
+     */
+    void refreshAll();
+
     @SuppressWarnings("unchecked")
     default Disposable addSelectListener(ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {
         return addListener((Class) TreeSelectEvent.class, listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    default Disposable addDoubleClickListener(ComponentEventListener<Tree<E>, TreeDoubleClickEvent<E>> listener) {
+        return addListener((Class) TreeDoubleClickEvent.class, listener);
     }
 }

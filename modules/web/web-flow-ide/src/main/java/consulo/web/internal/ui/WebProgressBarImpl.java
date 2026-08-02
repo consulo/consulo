@@ -34,8 +34,16 @@ public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarIm
         }
     }
 
+    /**
+     * The awt bar builds a spinner as a component of its own. A vaadin bar cannot be exchanged for one after it
+     * exists, so the element stays and the style turns it round - the parts it is drawn from are the same.
+     */
     @Override
     public void addStyle(ProgressBarStyle style) {
+        switch (style) {
+            case SPINNER -> getVaadinComponent().addClassName("consulo-progress-spinner");
+            case TRANSPARENT_BACKGROUND -> getVaadinComponent().addClassName("consulo-progress-transparent");
+        }
     }
 
     @Override

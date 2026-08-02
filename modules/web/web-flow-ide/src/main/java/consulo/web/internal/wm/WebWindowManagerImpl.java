@@ -26,6 +26,7 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.util.collection.ContainerUtil;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
@@ -113,12 +114,12 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   
   @Override
   public IdeFrame[] getAllProjectFrames() {
-    return new IdeFrame[0];
+    return myProject2Frame.values().toArray(IdeFrame[]::new);
   }
 
   @Override
   public @Nullable IdeFrame findVisibleIdeFrame() {
-    return null;
+    return ContainerUtil.getFirstItem(myProject2Frame.values());
   }
 
   @Override
@@ -174,7 +175,12 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   @RequiredUIAccess
   @Override
   public IdeFrame findFrameFor(@Nullable Project project) {
-    return null;
+    if (project != null) {
+      return myProject2Frame.get(project);
+    }
+    // a task which names no project - saving all of them is one - still belongs to the frame on screen, and a
+    // background task without a frame has nowhere to show its progress and stays a modal window instead
+    return ContainerUtil.getFirstItem(myProject2Frame.values());
   }
 
   @Override
