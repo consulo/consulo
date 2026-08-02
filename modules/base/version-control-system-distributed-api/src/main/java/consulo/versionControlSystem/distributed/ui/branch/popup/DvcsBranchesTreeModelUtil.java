@@ -16,6 +16,7 @@
  */
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
@@ -24,12 +25,7 @@ import consulo.ui.ex.awt.tree.TreePathUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -46,8 +42,6 @@ public final class DvcsBranchesTreeModelUtil {
 
     /**
      * Weight added to the matching degree to prefer names starting with the pattern.
-     * Ported from {@code GitBranchesMatcherWrapper}, which cannot be a {@link MinusculeMatcher}
-     * subclass here because that class has a package-private constructor.
      */
     private static final int MATCH_OFFSET = 10000;
 
@@ -62,10 +56,11 @@ public final class DvcsBranchesTreeModelUtil {
         }
     }
 
-    static List<Object> buildBranchTreeNodes(DvcsRefType branchType,
-                                             Map<String, Object> branchesMap,
-                                             List<String> path,
-                                             @Nullable DvcsRepositoryModel repository) {
+    @UsedInPlugin
+    public static List<Object> buildBranchTreeNodes(DvcsRefType branchType,
+                                                    Map<String, Object> branchesMap,
+                                                    List<String> path,
+                                                    @Nullable DvcsRepositoryModel repository) {
         if (path.isEmpty()) {
             return mapToNodes(branchesMap, branchType, path, repository);
         }
@@ -106,7 +101,7 @@ public final class DvcsBranchesTreeModelUtil {
     }
 
     @Nullable
-    static TreePath createTreePathFor(DvcsBranchesTreeModel model, Object value) {
+    public static TreePath createTreePathFor(DvcsBranchesTreeModel model, Object value) {
         Object root = model.getRoot();
 
         if (value instanceof AnAction) {
@@ -193,7 +188,8 @@ public final class DvcsBranchesTreeModelUtil {
         return new MatchResult<>(result, topMatchNode);
     }
 
-    static List<Object> addSeparatorIfNeeded(Collection<Object> nodes, SeparatorWithText separator) {
+    @UsedInPlugin
+    public static List<Object> addSeparatorIfNeeded(Collection<Object> nodes, SeparatorWithText separator) {
         List<Object> result = new ArrayList<>(nodes);
         if (!result.isEmpty() && !(result.get(result.size() - 1) instanceof SeparatorWithText)) {
             result.add(separator);
@@ -201,7 +197,8 @@ public final class DvcsBranchesTreeModelUtil {
         return result;
     }
 
-    static class LazyRepositoryHolder extends LazyHolder<DvcsBranchesTreeModel.RepositoryNode> {
+    @UsedInPlugin
+    public static class LazyRepositoryHolder extends LazyHolder<DvcsBranchesTreeModel.RepositoryNode> {
         LazyRepositoryHolder(Project project,
                              List<DvcsRepositoryModel> repositories,
                              @Nullable MinusculeMatcher matcher,
@@ -215,7 +212,8 @@ public final class DvcsBranchesTreeModelUtil {
         }
     }
 
-    static class LazyActionsHolder extends LazyHolder<Object> {
+    @UsedInPlugin
+    public static class LazyActionsHolder extends LazyHolder<Object> {
         LazyActionsHolder(Project project, List<Object> actions, @Nullable MinusculeMatcher matcher) {
             super(actions,
                 matcher,
@@ -265,20 +263,21 @@ public final class DvcsBranchesTreeModelUtil {
         }
 
         @Nullable
-        N getTopMatch() {
+        @UsedInPlugin
+        public N getTopMatch() {
             return matchingResult().topMatch;
         }
 
-        Collection<N> getMatch() {
+        public Collection<N> getMatch() {
             return matchingResult().matchedNodes;
         }
 
-        boolean isEmpty() {
+        public boolean isEmpty() {
             return myInitiallyEmpty || !myNeedFilter.getAsBoolean() || getMatch().isEmpty();
         }
     }
 
-    static class LazyRefsSubtreeHolder {
+    public static class LazyRefsSubtreeHolder {
         private final boolean myInitiallyEmpty;
         private final Collection<DvcsRef> myUnsortedRefs;
         @Nullable
@@ -339,7 +338,8 @@ public final class DvcsBranchesTreeModelUtil {
         }
 
         @Nullable
-        DvcsRef getTopMatch() {
+        @UsedInPlugin
+        public DvcsRef getTopMatch() {
             return matchingResult().topMatch;
         }
 

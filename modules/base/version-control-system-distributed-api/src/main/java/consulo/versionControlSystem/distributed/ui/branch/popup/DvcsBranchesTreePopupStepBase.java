@@ -16,10 +16,13 @@
  */
 package consulo.versionControlSystem.distributed.ui.branch.popup;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
+import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.tree.Tree;
@@ -27,6 +30,7 @@ import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.SpeedSearchFilter;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
@@ -221,6 +225,12 @@ public abstract class DvcsBranchesTreePopupStepBase implements PopupStep<Object>
             return idx >= 0 ? name.substring(idx + 1) : name;
         }
         return name;
+    }
+
+    @RequiredUIAccess
+    @UsedInPlugin
+    protected void invokeAction(AnAction action) {
+        VersionControlSystemInternal.getInstance().invokeAction(myProject, action);
     }
 
     @Override

@@ -20,6 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -46,4 +48,7 @@ public interface VersionControlSystemInternal {
                      String head,
                      String compare,
                      VirtualFile file);
+
+    @RequiredUIAccess
+    void invokeAction(Project project, AnAction anAction);
 }
