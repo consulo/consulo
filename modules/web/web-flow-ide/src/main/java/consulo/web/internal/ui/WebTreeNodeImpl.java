@@ -95,6 +95,14 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
         return myChildren;
     }
 
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<TreeNode<N>> getLoadedChildren() {
+        // the placeholder stands for a level which is not built yet - answering it would hand the caller a
+        // node with no value where there are none
+        return isNotLoaded() ? List.of() : (List<TreeNode<N>>) (List) myChildren;
+    }
+
     public void setChildren(List<WebTreeNodeImpl<N>> children) {
         myChildren = children;
     }

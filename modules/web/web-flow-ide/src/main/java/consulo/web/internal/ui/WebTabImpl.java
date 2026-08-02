@@ -20,6 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.ui.Component;
+import consulo.ui.color.ColorValue;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,6 +43,8 @@ class WebTabImpl implements Tab {
     private com.vaadin.flow.component.tabs.Tab myVaadinTab;
     private @Nullable Component myContent;
     private @Nullable WebActionContextMenu myPopupMenu;
+    private @Nullable String myPopupGroupId;
+    private @Nullable String myPopupPlace;
 
     public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
         myTabbedLayout = tabbedLayout;
@@ -61,6 +64,16 @@ class WebTabImpl implements Tab {
     public void update() {
         WebItemPresentationImpl presentation = new WebItemPresentationImpl();
         myRenderer.accept(this, presentation);
+
+        // the fill of a tab means the whole tab, not the run of text. the value is only handed to the
+        // stylesheet - tabs.css decides what --consulo-tab-background is drawn as
+        ColorValue background = presentation.getBackgroundColor();
+        if (background != null) {
+            myVaadinTab.getElement().getStyle().set("--consulo-tab-background", WebColors.toCssColor(background));
+        }
+        else {
+            myVaadinTab.getElement().getStyle().remove("--consulo-tab-background");
+        }
 
         myVaadinTab.removeAll();
         myVaadinTab.add(presentation.toComponent());
@@ -101,23 +114,24 @@ class WebTabImpl implements Tab {
     }
 
     /**
-     * Must be called once the content is already inside the layout - the data context of a tab is the one of its
-     * content, and the providers above the content are only reachable after it is added.
+     * The content is what the data context of the tab is read from - the providers which answer for it sit above
+     * it in the layout.
      */
     @RequiredUIAccess
     public void setContent(Component content) {
         myContent = content;
 
-        // consulo.ui.Tab has no popup group of its own, an editor tab is recognized by the window its content
-        // belongs to, the same data the popup actions themselves work on
-        if (myPopupMenu == null && DataManager.getInstance().getDataContext(content).getData(FileEditorWindow.DATA_KEY) != null) {
-            myPopupMenu = new WebActionContextMenu(
-                myVaadinTab,
-                IdeActions.GROUP_EDITOR_TAB_POPUP,
-                ActionPlaces.EDITOR_TAB_POPUP,
-                this::createDataContext
-            );
+        // the vaadin tab the menu hangs on only exists once the tab was rendered into the layout, so the group
+        // is remembered when it is given and the menu is built here
+        if (myPopupMenu == null && myPopupGroupId != null) {
+            myPopupMenu = new WebActionContextMenu(myVaadinTab, myPopupGroupId, myPopupPlace, this::createDataContext);
         }
+    }
+
+    @Override
+    public void setPopupGroup(String groupId, String place) {
+        myPopupGroupId = groupId;
+        myPopupPlace = place;
     }
 
     private DataContext createDataContext() {

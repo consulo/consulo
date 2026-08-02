@@ -59,13 +59,15 @@ import org.vaadin.stefan.table.Table;
  * @since 28/05/2023
  */
 @StyleSheet(Aura.STYLESHEET)
-@StyleSheet("/themes/consulo/aura-utility.css")
-@StyleSheet("/themes/consulo/styles.css")
-@StyleSheet("/themes/consulo/scrollbar.css")
-@StyleSheet("/themes/consulo/editor.css")
-@StyleSheet("/themes/consulo/tabs.css")
-@StyleSheet("/themes/consulo/statusbar.css")
-@StyleSheet("/themes/consulo/toolwindow.css")
+// not under /themes/ on purpose - that path is vaadin's theme-in-a-jar convention, and the flow plugin
+// snapshots everything below it into prod.bundle, which is then reused without noticing the css changed
+@StyleSheet("/consulo/aura-utility.css")
+@StyleSheet("/consulo/styles.css")
+@StyleSheet("/consulo/scrollbar.css")
+@StyleSheet("/consulo/editor.css")
+@StyleSheet("/consulo/tabs.css")
+@StyleSheet("/consulo/statusbar.css")
+@StyleSheet("/consulo/toolwindow.css")
 // a progress bar lives only while its task runs, so its styles cannot be carried by the component itself
 @StyleSheet("/progress/webProgressBar.css")
 @JsModule("./webImage.js")

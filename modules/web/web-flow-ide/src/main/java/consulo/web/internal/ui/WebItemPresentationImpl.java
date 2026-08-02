@@ -38,6 +38,7 @@ import java.util.List;
 public class WebItemPresentationImpl implements TextItemPresentation {
     private Image myIcon;
     private List<Component> myFragments = new ArrayList<>();
+    private @Nullable ColorValue myBackgroundColor;
 
     @Override
     public TextItemPresentation withIcon(@Nullable Image image) {
@@ -55,9 +56,21 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         // colour of a changed one. dropping it left every fragment looking the same
         applyAttribute(span, textAttribute);
 
+        if (textAttribute != null && textAttribute.getBackgroundColor() != null) {
+            myBackgroundColor = textAttribute.getBackgroundColor();
+        }
+
         myFragments.add(span);
 
         after();
+    }
+
+    /**
+     * The fill the fragments asked for. A consumer whose whole surface is the item - an editor tab - paints it
+     * over that surface rather than behind the run of text alone.
+     */
+    public @Nullable ColorValue getBackgroundColor() {
+        return myBackgroundColor;
     }
 
     private static void applyAttribute(Span span, @Nullable TextAttribute textAttribute) {

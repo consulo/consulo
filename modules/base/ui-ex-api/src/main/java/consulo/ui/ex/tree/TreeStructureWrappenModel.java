@@ -91,10 +91,12 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
     }
 
     /**
-     * The descriptor carries everything the awt renderer paints - coloured fragments and the file status
-     * foreground - and flattening it to {@code toString()} lost all of it. The forced colour wins only where
-     * a fragment has no colour of its own, so the grey location text stays grey while the name takes the
-     * status colour.
+     * The descriptor carries everything the awt renderer paints - coloured fragments, the file status
+     * foreground and the file colour background - and flattening it to {@code toString()} lost all of it.
+     * The forced colour wins only where a fragment has no colour of its own, so the grey location text stays
+     * grey while the name takes the status colour. The background is the one the awt tree paints the whole
+     * row with - see {@code ProjectViewTree.getFileColorFor} - and every fragment carries it so a consumer
+     * whose surface is the item can pick it up.
      */
     private static void renderPresentation(
         TextItemPresentation itemPresentation,
@@ -103,19 +105,24 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
     ) {
         PresentationData presentation = presentable.getPresentation();
         ColorValue forced = presentation.getForcedTextForeground();
+        ColorValue background = presentation.getBackground();
 
         List<PresentableNodeDescriptor.ColoredFragment> fragments = presentation.getColoredText();
         if (fragments.isEmpty()) {
-            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced));
+            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced, background));
             return;
         }
 
         for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
-            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced));
+            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced, background));
         }
     }
 
-    private static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes, @Nullable ColorValue forced) {
+    private static TextAttribute toTextAttribute(
+        @Nullable SimpleTextAttributes attributes,
+        @Nullable ColorValue forced,
+        @Nullable ColorValue background
+    ) {
         int style = 0;
         ColorValue foreground = null;
 
@@ -129,12 +136,15 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
             if (attributes.getFgColor() != null) {
                 foreground = TargetAWT.from(attributes.getFgColor());
             }
+            if (attributes.getBgColor() != null) {
+                background = TargetAWT.from(attributes.getBgColor());
+            }
         }
 
         if (foreground == null) {
             foreground = forced;
         }
 
-        return new TextAttribute(style, foreground);
+        return new TextAttribute(style, foreground, background);
     }
 }

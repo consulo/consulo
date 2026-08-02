@@ -54,16 +54,22 @@
   box-shadow: none;
 }
 
-/* aura marks a tab - and the selected one especially - with its accent colour. an editor tab is not accented,
-   its colour is the platform's: the scheme foreground, and the background an EditorTabColorProvider gives it */
-.web-tabbed-layout vaadin-tab,
+/* aura marks the selected tab with its accent colour by assigning the tokens the tab draws itself with:
+   vaadin-tab[selected] { --vaadin-tab-text-color: accent; --vaadin-tab-background: surface }. an editor tab
+   is not accented - its text is the platform's foreground and its fill is what an EditorTabColorProvider
+   answers for the file. the same tokens are assigned here at higher specificity, and the platform stays in
+   charge of the value: --consulo-tab-foreground / --consulo-tab-background written on a tab win over these */
+.web-tabbed-layout vaadin-tab
+{
+  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--vaadin-text-color));
+  --vaadin-tab-background: var(--consulo-tab-background, transparent);
+}
+
+/* the selected tab is told apart by a plain fill - the awt tabs mark it with the editor background */
 .web-tabbed-layout vaadin-tab[selected]
 {
-  color: var(--vaadin-body-text-color, #000);
-
-  --vaadin-tab-color: var(--vaadin-body-text-color, #000);
-  --vaadin-tab-selected-color: var(--vaadin-body-text-color, #000);
-  --vaadin-tab-focus-color: transparent;
+  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--vaadin-text-color));
+  --vaadin-tab-background: var(--consulo-tab-background, var(--vaadin-background-container));
 }
 
 /* the label and the close cross are two separate children of the tab, without this they are laid out on the

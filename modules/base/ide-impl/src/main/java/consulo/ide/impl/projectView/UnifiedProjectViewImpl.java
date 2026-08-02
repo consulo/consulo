@@ -66,6 +66,7 @@ import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
@@ -93,6 +94,8 @@ import consulo.ui.layout.WrappedLayout;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -568,6 +571,21 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         // frontend has not built yet is not carried over when it finally renders
         restoreExpandedPaths();
 
+        // the awt view listens the same way - a status change re-renders the node of that file, a global one
+        // re-renders everything. the renderer builds its descriptor anew on every render, so re-reading the
+        // item is all a colour change needs
+        FileStatusManager.getInstance(myProject).addFileStatusListener(new FileStatusListener() {
+            @Override
+            public void fileStatusesChanged() {
+                refreshLoadedPresentations(null);
+            }
+
+            @Override
+            public void fileStatusChanged(VirtualFile file) {
+                refreshLoadedPresentations(file);
+            }
+        }, this);
+
         List<AnAction> titleActions = new ArrayList<>();
         createTitleActions(titleActions);
         if (!titleActions.isEmpty()) {
@@ -679,6 +697,40 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             super.update(e);
             AbstractProjectViewPane pane = getCurrentProjectViewPane();
             e.getPresentation().setEnabledAndVisible(pane != null && pane.supportsFoldersAlwaysOnTop());
+        }
+    }
+
+    /**
+     * Re-renders the loaded nodes standing for the file, every loaded node when there is no file to point
+     * at. Only what is already built is walked - a node that was never opened renders itself with the
+     * current status when it first appears.
+     */
+    private void refreshLoadedPresentations(@Nullable VirtualFile file) {
+        Tree<AbstractTreeNode> tree = myTree;
+        if (tree == null) {
+            return;
+        }
+
+        myProject.getApplication().getLastUIAccess().giveIfNeed(() -> {
+            TreeNode<AbstractTreeNode> root = tree.getRootNode();
+            if (root != null) {
+                refreshLoadedPresentations(tree, root, file);
+            }
+        });
+    }
+
+    private static void refreshLoadedPresentations(
+        Tree<AbstractTreeNode> tree,
+        TreeNode<AbstractTreeNode> node,
+        @Nullable VirtualFile file
+    ) {
+        for (TreeNode<AbstractTreeNode> child : node.getLoadedChildren()) {
+            if (file == null
+                || child.getValue() instanceof ProjectViewNode viewNode && file.equals(viewNode.getVirtualFile())) {
+                tree.refreshItem(child);
+            }
+
+            refreshLoadedPresentations(tree, child, file);
         }
     }
 

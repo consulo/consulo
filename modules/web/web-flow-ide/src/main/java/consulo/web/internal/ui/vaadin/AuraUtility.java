@@ -17,7 +17,7 @@ package consulo.web.internal.ui.vaadin;
 
 /**
  * CSS utility class constants for the Aura theme, replacing LumoUtility.
- * CSS rules are defined in frontend/themes/consulo/aura-utility.css.
+ * CSS rules are defined in META-INF/resources/consulo/aura-utility.css.
  *
  * @author VISTALL
  * @since 2026-04-06

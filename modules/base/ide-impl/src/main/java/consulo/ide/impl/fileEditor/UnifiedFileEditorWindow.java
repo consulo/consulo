@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.EditorTabPresentationUtil;
 import consulo.fileEditor.FileEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
@@ -32,13 +34,20 @@ import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.Tab;
+import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.UIAction;
 import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -56,13 +65,24 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         private String myText = "";
         private Image myImage;
 
+        // what the platform answers for the file - the status colour of the text, the fill a
+        // EditorTabColorProvider gives the tab
+        private ColorValue myForeground;
+        private ColorValue myBackground;
+
         private final Tab myTab;
 
         private TabInfo(Tab tab) {
             myTab = tab;
 
             myTab.setRenderer((t, p) -> {
-                p.append(myText);
+                if (myForeground == null && myBackground == null) {
+                    p.append(myText);
+                }
+                else {
+                    p.append(myText, new TextAttribute(consulo.ui.font.Font.STYLE_PLAIN, myForeground, myBackground));
+                }
+
                 if (myImage != null) {
                     p.withIcon(myImage);
                 }
@@ -135,6 +155,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setBackgroundColorAt(int index, Color color) {
+        TabInfo tab = getTabAt(index);
+        tab.myBackground = TargetAWT.from(color);
+        tab.update();
     }
 
     @Override
@@ -143,6 +166,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setForegroundAt(int index, Color color) {
+        TabInfo tab = getTabAt(index);
+        tab.myForeground = TargetAWT.from(color);
+        tab.update();
     }
 
     @Override
@@ -151,6 +177,13 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     protected void setIconAt(int index, Image icon) {
+        TabInfo tab = getTabAt(index);
+        tab.myImage = icon;
+        tab.update();
+    }
+
+    private TabInfo getTabAt(int index) {
+        return myEditors.get(getEditorAt(index));
     }
 
     @Override
@@ -374,8 +407,17 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 // the handler has to be known before the tab is rendered, the close affordance is part of the tab
                 tab.setCloseHandler((thisTab, component) -> performCloseTab(editor.getFile(), component));
 
+                tab.setPopupGroup(IdeActions.GROUP_EDITOR_TAB_POPUP, ActionPlaces.EDITOR_TAB_POPUP);
+
                 myTabbedLayout.addTab(tab, editor.getUIComponent());
                 myEditors.put(editor, tabInfo);
+
+                // a fresh tab carries nothing but the name and the icon, and the colours the platform assigns a
+                // file - the vcs status of the text, the fill a EditorTabColorProvider gives - only ever arrived
+                // with a later update. the awt container asks for both the moment the tab is inserted
+                VirtualFile file = editor.getFile();
+                myOwner.updateFileColor(file);
+                updateFileBackgroundColorAsync(file);
             }
             else {
                 TabInfo tab = myEditors.get(fileComposite);
@@ -383,6 +425,27 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 tab.select();
             }
         }
+    }
+
+    /**
+     * The provider reads the file scopes to answer, so the colour is computed under a read lock off the ui
+     * thread and only applied back on it.
+     */
+    private void updateFileBackgroundColorAsync(VirtualFile file) {
+        CoroutineScope.launchAsync(
+            myProject.coroutineContext(),
+            () -> Coroutine
+                .first(ReadLock.<Void, ColorValue>apply(ignored ->
+                    EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, this)))
+                .then(UIAction.<ColorValue, Void>apply(color -> {
+                    // the tab may be gone by the time the answer arrives
+                    int index = findEditorIndex(findFileComposite(file));
+                    if (index != -1) {
+                        setBackgroundColorAt(index, TargetAWT.to(color));
+                    }
+                    return null;
+                }))
+        );
     }
 
     @RequiredUIAccess

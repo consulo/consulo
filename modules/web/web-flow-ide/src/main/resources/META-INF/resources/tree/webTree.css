@@ -29,6 +29,15 @@ vaadin-grid.web-tree vaadin-grid-tree-toggle
   cursor: default;
 }
 
+/* the fill a file colour assigns - excluded folders, scope colours - covers the whole row in the awt tree.
+   the platform writes the value on the toggle, and the toggle is stretched over the row so the fill reads
+   as the row's */
+vaadin-grid.web-tree vaadin-grid-tree-toggle
+{
+  width: 100%;
+  background-color: var(--consulo-tree-row-background, transparent);
+}
+
 vaadin-grid.web-tree vaadin-grid-tree-toggle::part(toggle)
 {
   cursor: pointer;

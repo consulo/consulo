@@ -30,6 +30,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
@@ -110,6 +111,14 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                         }
                     }
                 }).setFilter("event.composedPath().some(node => node.getAttribute && node.getAttribute('part') === 'toggle')");
+
+                // the background of an item means the whole row, the way the awt tree paints a file colour.
+                // the value is only handed to the stylesheet - webTree.css decides what the row draws with it
+                ColorValue background = item.getBackgroundColor();
+                if (background != null) {
+                    toggle.getElement().getStyle().set("--consulo-tree-row-background", WebColors.toCssColor(background));
+                }
+
                 toggle.add(item.toComponent());
                 return toggle;
             }).setAutoWidth(true).setFlexGrow(1);
