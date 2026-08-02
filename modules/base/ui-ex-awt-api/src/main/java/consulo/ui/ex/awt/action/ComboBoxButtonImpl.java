@@ -20,6 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import org.jspecify.annotations.Nullable;
@@ -64,6 +65,8 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
                 setIcon(myPresentation.getIcon());
             }
         });
+
+        setFocusable(ScreenReader.isActive());
 
         // add and select one value
         revalidateValue();

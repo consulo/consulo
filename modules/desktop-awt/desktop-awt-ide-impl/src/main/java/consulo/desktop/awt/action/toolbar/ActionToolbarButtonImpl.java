@@ -23,6 +23,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 
 import javax.swing.*;
 
@@ -35,6 +36,8 @@ public class ActionToolbarButtonImpl extends JButton implements ActionButton {
 
     public ActionToolbarButtonImpl(AnAction action, Presentation presentation, String place, boolean alwaysDisplayText) {
         myEngine = new ActionToolbarButtonEngine(this, action, presentation, place, alwaysDisplayText, this::getDataContext);
+
+        setFocusable(ScreenReader.isActive());
 
         putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
