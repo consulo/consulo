@@ -54,6 +54,18 @@
   box-shadow: none;
 }
 
+/* aura marks a tab - and the selected one especially - with its accent colour. an editor tab is not accented,
+   its colour is the platform's: the scheme foreground, and the background an EditorTabColorProvider gives it */
+.web-tabbed-layout vaadin-tab,
+.web-tabbed-layout vaadin-tab[selected]
+{
+  color: var(--vaadin-body-text-color, #000);
+
+  --vaadin-tab-color: var(--vaadin-body-text-color, #000);
+  --vaadin-tab-selected-color: var(--vaadin-body-text-color, #000);
+  --vaadin-tab-focus-color: transparent;
+}
+
 /* the label and the close cross are two separate children of the tab, without this they are laid out on the
    text baseline and the cross sits below the label */
 vaadin-tab:has(> .web-tab-close)
