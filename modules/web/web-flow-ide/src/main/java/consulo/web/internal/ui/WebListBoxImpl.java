@@ -15,32 +15,41 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import consulo.ui.Component;
 import consulo.ui.ListBox;
 import consulo.ui.TextItemRenderer;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.WebSingleListComponentBase;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2023-05-27
  */
-public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Vaadin> implements ListBox<E> {
-    @Tag("div")
-    public class Vaadin extends com.vaadin.flow.component.listbox.ListBox implements FromVaadinComponentWrapper {
+@SuppressWarnings("unchecked")
+public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin> implements ListBox<E> {
+    public class Vaadin extends com.vaadin.flow.component.listbox.ListBox<E> implements FromVaadinComponentWrapper {
         @Override
         public consulo.ui.@Nullable Component toUIComponent() {
             return WebListBoxImpl.this;
         }
     }
 
-    private final ListModel<E> myModel;
-
     public WebListBoxImpl(ListModel<E> model) {
-        myModel = model;
+        super(model);
+
+        setRenderer(TextItemRenderer.defaultRenderer());
+    }
+
+    @Override
+    public void setRenderer(TextItemRenderer<E> renderer) {
+        toVaadinComponent().setRenderer(new ComponentRenderer((item) -> {
+            WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+            renderer.render(presentation, myModel.indexOf((E) item), (E) item);
+            return presentation.toComponent();
+        }));
     }
 
     @Override
@@ -49,25 +58,7 @@ public class WebListBoxImpl<E> extends VaadinComponentDelegate<WebListBoxImpl.Va
     }
 
     @Override
-    public void setRenderer(TextItemRenderer renderer) {
-    }
-
-    @Override
-    public void setValueByIndex(int index) {
-    }
-
-    @Override
-    public @Nullable E getValue() {
-        return null;
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void setValue(Object value, boolean fireListeners) {
-    }
-
-    @Override
-    public WebListBoxImpl.Vaadin createVaadinComponent() {
+    public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 }

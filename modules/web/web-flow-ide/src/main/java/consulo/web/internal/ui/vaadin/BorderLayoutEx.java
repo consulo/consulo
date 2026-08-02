@@ -59,6 +59,11 @@ public class BorderLayoutEx extends VerticalLayout {
     // bar with a running task in it - grew past its share of the row and drew over what sits east of it
     myCenterHolder.getStyle().set("min-width", "0").set("overflow", "hidden");
 
+    // the sides keep the width of what they hold - a menu bar which is allowed to shrink starts folding its
+    // items into an overflow button instead
+    myWestHolder.getStyle().set("flex", "0 0 auto");
+    myEastHolder.getStyle().set("flex", "0 0 auto");
+
     myCenterLayout.add(myWestHolder);
     myCenterLayout.add(myCenterHolder);
     myCenterLayout.setFlexGrow(1, myCenterHolder);
@@ -85,6 +90,16 @@ public class BorderLayoutEx extends VerticalLayout {
 
     myWestHolder.setVisible(myWestHolder.getComponentCount() > 0);
     myEastHolder.setVisible(myEastHolder.getComponentCount() > 0);
+  }
+
+  /**
+   * A side of an awt border layout is as tall as the row it sits in, and something drawn on its edge - the
+   * line which separates it from the centre - is only a separator while it runs the whole height.
+   */
+  private void fillHeight(Component component) {
+    if (component instanceof HasSize hasSize) {
+      hasSize.setHeightFull();
+    }
   }
 
   private <T extends Component & HasSize & ThemableLayout> T noPaddingMargin(T component) {
@@ -129,6 +144,8 @@ public class BorderLayoutEx extends VerticalLayout {
         myWestHolder.removeAll();
 
         if (component != null) {
+          fillHeight(component);
+
           myWestHolder.add(component);
         }
         break;
@@ -145,6 +162,8 @@ public class BorderLayoutEx extends VerticalLayout {
         myEastHolder.removeAll();
 
         if (component != null) {
+          fillHeight(component);
+
           myEastHolder.add(component);
         }
         break;

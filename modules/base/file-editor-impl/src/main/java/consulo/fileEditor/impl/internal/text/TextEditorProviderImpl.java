@@ -134,7 +134,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
         if (Boolean.TRUE.equals(editor.getUserData(TREAT_AS_SHOWN))) {
             scrollingRunnable.run();
         }
-        else if (editor instanceof EditorEx editorEx) {
+        else if (editor instanceof EditorEx editorEx && editorEx.isScrollPaneAvailable()) {
             EditorUtil.runWhenViewportReady(editorEx, scrollingRunnable);
         }
         else {

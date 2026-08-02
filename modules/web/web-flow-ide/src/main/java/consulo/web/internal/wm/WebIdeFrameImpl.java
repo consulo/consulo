@@ -95,9 +95,19 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
         return (Window) Objects.requireNonNull(myRootLayout).toUIComponent();
     }
 
+    /**
+     * A browser ignores {@code window.close()} for a tab it did not open itself, so asking for that left the
+     * frame of the closed project on screen with the welcome frame drawn over it. The content of the root
+     * layout is what the frame is, and taking it out is what closing means here.
+     */
     public void close() {
         WebApplication.invokeOnCurrentSession(() -> {
-            UI.getCurrent().getPage().executeJs("window.close();");
+            VaadinRootLayout rootLayout = myRootLayout;
+            if (rootLayout != null) {
+                rootLayout.removeAll();
+
+                myRootLayout = null;
+            }
         });
     }
 

@@ -1835,6 +1835,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
+    public boolean isScrollPaneAvailable() {
+        return true;
+    }
+
+    @Override
     public JScrollPane getScrollPane() {
         return myScrollPane;
     }

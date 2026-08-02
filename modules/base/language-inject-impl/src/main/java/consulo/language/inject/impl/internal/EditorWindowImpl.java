@@ -593,6 +593,11 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
 
   
   @Override
+  public boolean isScrollPaneAvailable() {
+    return myDelegate.isScrollPaneAvailable();
+  }
+
+  @Override
   public JScrollPane getScrollPane() {
     return myDelegate.getScrollPane();
   }

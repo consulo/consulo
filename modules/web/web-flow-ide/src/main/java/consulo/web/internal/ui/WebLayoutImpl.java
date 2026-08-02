@@ -17,10 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
-import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.impl.BorderInfo;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.util.lang.ObjectUtil;
@@ -28,7 +25,6 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -60,63 +56,5 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
             .filter(Objects::nonNull)
             .map(FromVaadinComponentWrapper::toUIComponent)
             .forEach(consumer::accept);
-    }
-
-    @Override
-    public void bordersChanged() {
-        C c = toVaadinComponent();
-
-        Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
-
-        addBorder(c, BorderPosition.TOP, borders);
-        addBorder(c, BorderPosition.BOTTOM, borders);
-        addBorder(c, BorderPosition.RIGHT, borders);
-        addBorder(c, BorderPosition.LEFT, borders);
-    }
-
-    private void addBorder(C c, BorderPosition pos, Map<BorderPosition, BorderInfo> borders) {
-        BorderInfo info = borders.get(pos);
-        if (info == null) {
-            return;
-        }
-
-        switch (info.getBorderStyle()) {
-            case LINE: {
-                c.addClassName(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
-
-                switch (info.getBorderPosition()) {
-                    case TOP:
-                        c.addClassName(AuraUtility.Border.TOP);
-                        break;
-                    case BOTTOM:
-                        c.addClassName(AuraUtility.Border.BOTTOM);
-                        break;
-                    case LEFT:
-                        c.addClassName(AuraUtility.Border.LEFT);
-                        break;
-                    case RIGHT:
-                        c.addClassName(AuraUtility.Border.RIGHT);
-                        break;
-                }
-                break;
-            }
-            case EMPTY: {
-                switch (info.getBorderPosition()) {
-                    case TOP:
-                        c.addClassName(AuraUtility.Padding.Top.SMALL);
-                        break;
-                    case BOTTOM:
-                        c.addClassName(AuraUtility.Padding.Bottom.SMALL);
-                        break;
-                    case LEFT:
-                        c.addClassName(AuraUtility.Padding.Left.SMALL);
-                        break;
-                    case RIGHT:
-                        c.addClassName(AuraUtility.Padding.Right.SMALL);
-                        break;
-                }
-                break;
-            }
-        }
     }
 }

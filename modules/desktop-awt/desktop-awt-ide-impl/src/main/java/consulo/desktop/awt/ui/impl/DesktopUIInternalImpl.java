@@ -308,6 +308,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+        return new DesktopVerticalLayoutImpl(vGap, alignment);
+    }
+
+    @Override
     public SwipeLayout _Layouts_swipe() {
         return new DesktopSwipeLayoutImpl();
     }

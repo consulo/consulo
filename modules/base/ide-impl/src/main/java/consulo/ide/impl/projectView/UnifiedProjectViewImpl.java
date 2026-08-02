@@ -528,11 +528,13 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             CustomizationUtil.installPopupHandler(popupTarget, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
         }
 
-        restoreExpandedPaths();
-
         Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
 
         toolWindow.getContentManager().addContent(content);
+
+        // the tree has to be in the tool window before the walk opens anything - an expand of a component the
+        // frontend has not built yet is not carried over when it finally renders
+        restoreExpandedPaths();
 
         List<AnAction> titleActions = new ArrayList<>();
         createTitleActions(titleActions);

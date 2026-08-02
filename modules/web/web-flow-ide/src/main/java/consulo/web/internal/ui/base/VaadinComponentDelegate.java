@@ -17,6 +17,7 @@ package consulo.web.internal.ui.base;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.shared.Tooltip;
+import com.vaadin.flow.dom.ClassList;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -34,13 +35,16 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.DetachEvent;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
+import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
 import consulo.web.internal.ui.WebFontImpl;
+import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.web.internal.ui.vaadin.InitiableComponent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -266,5 +270,61 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     public void bordersChanged() {
+        Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
+
+        applyBorder(BorderPosition.TOP, borders);
+        applyBorder(BorderPosition.BOTTOM, borders);
+        applyBorder(BorderPosition.RIGHT, borders);
+        applyBorder(BorderPosition.LEFT, borders);
+    }
+
+    private void applyBorder(BorderPosition pos, Map<BorderPosition, BorderInfo> borders) {
+        BorderInfo info = borders.get(pos);
+        if (info == null) {
+            return;
+        }
+
+        ClassList classList = myVaadinComponent.getElement().getClassList();
+
+        switch (info.getBorderStyle()) {
+            case LINE: {
+                classList.add(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
+
+                switch (info.getBorderPosition()) {
+                    case TOP:
+                        classList.add(AuraUtility.Border.TOP);
+                        break;
+                    case BOTTOM:
+                        classList.add(AuraUtility.Border.BOTTOM);
+                        break;
+                    case LEFT:
+                        classList.add(AuraUtility.Border.LEFT);
+                        break;
+                    case RIGHT:
+                        classList.add(AuraUtility.Border.RIGHT);
+                        break;
+                }
+                break;
+            }
+            case EMPTY: {
+                String padding = info.getWidth() + "px";
+
+                switch (info.getBorderPosition()) {
+                    case TOP:
+                        myVaadinComponent.getStyle().set("padding-top", padding);
+                        break;
+                    case BOTTOM:
+                        myVaadinComponent.getStyle().set("padding-bottom", padding);
+                        break;
+                    case LEFT:
+                        myVaadinComponent.getStyle().set("padding-left", padding);
+                        break;
+                    case RIGHT:
+                        myVaadinComponent.getStyle().set("padding-right", padding);
+                        break;
+                }
+                break;
+            }
+        }
     }
 }

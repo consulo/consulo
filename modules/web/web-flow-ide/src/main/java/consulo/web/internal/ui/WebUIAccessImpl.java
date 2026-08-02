@@ -135,6 +135,9 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
             });
         }
         else {
+            // answering an empty result rather than a value the caller asked for is already a loss, and a
+            // sequence that quietly carries on with nothing is impossible to tell from one that never ran
+            LOG.warn("give skipped, ui detached", new Throwable());
             result.setDone();
         }
         return result;
@@ -146,6 +149,11 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
 
         if (isValid()) {
             myUI.accessSynchronously(runnable::run);
+        }
+        else {
+            // dropping the work and returning as if it ran leaves whatever drives the caller - opening a
+            // project runs through here - stopped with nothing in the log to say so
+            LOG.warn("giveAndWait skipped, ui detached", new Throwable());
         }
     }
 

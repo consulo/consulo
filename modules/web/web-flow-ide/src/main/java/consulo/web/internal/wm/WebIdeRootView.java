@@ -17,6 +17,17 @@ package consulo.web.internal.wm;
 
 import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
+import consulo.ui.Component;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.web.internal.ui.action.WebActionMenuExpander;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.WebRootPaneImpl;
@@ -56,9 +67,36 @@ public class WebIdeRootView {
 
         myMenuBar = new WebIdeMenuBar(myRootPanel.getComponent());
         myRootPanel.setMenuBar(myMenuBar.getMenuBar());
+        myRootPanel.setMenuBarRightComponent(createCloseProjectButton());
 
         myNavigationBar = new WebNavigationBar(project, myRootPanel.getComponent());
         myRootPanel.setNavigationBar(myNavigationBar.getComponent());
+    }
+
+    /**
+     * Closing a project is the frame's own business - a browser has no window controls to put it among, so it
+     * sits at the end of the menu row. The platform action is what runs, the same one the File menu holds.
+     */
+    @RequiredUIAccess
+    private Component createCloseProjectButton() {
+        // the icon alone, drawn the way a toolbar draws its buttons - a label here wraps over two lines and
+        // takes the width the menu needs, which pushes the menu into an overflow of its own
+        Button button = Button.create(LocalizeValue.empty());
+        button.setIcon(PlatformIconGroup.actionsCancel());
+        button.setToolTipText(ActionLocalize.actionCloseprojectText());
+        button.addStyle(ButtonStyle.BORDERLESS);
+        button.addClickListener(event -> {
+            AnAction action = ActionManager.getInstance().getAction("CloseProject");
+            if (action != null) {
+                WebActionMenuExpander.performAction(
+                    action,
+                    WebFocusTracker.createDataContext(myRootPanel.getComponent()),
+                    ActionPlaces.MAIN_MENU,
+                    new MenuItemPresentationFactory()
+                );
+            }
+        });
+        return button;
     }
 
     @RequiredUIAccess

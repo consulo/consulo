@@ -74,6 +74,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+        return new WebVerticalLayoutImpl(vGap, alignment);
+    }
+
+    @Override
     public SwipeLayout _Layouts_swipe() {
         throw notSupported();
 
@@ -181,9 +186,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public ImageBox _Components_imageBox(Image image) {
-        throw notSupported();
-
-        //return new WebImageBoxImpl(image);
+        return new WebImageBoxImpl(image);
     }
 
     @Override

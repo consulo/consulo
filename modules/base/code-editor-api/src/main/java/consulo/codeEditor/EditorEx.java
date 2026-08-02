@@ -142,6 +142,14 @@ public interface EditorEx extends Editor {
     void setOneLineMode(boolean b);
 
     
+    /**
+     * Whether {@link #getScrollPane()} answers - the pane belongs to the awt editor, and a caller which only
+     * wants it to time its work must take another route on the platforms without one.
+     */
+    default boolean isScrollPaneAvailable() {
+        return false;
+    }
+
     default JScrollPane getScrollPane() {
         throw new UnsupportedOperationException("Unsupported platform");
     }

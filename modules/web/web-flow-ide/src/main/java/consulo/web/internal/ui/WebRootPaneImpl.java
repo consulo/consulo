@@ -33,6 +33,8 @@ public class WebRootPaneImpl {
     // the dock has a single top slot, the menu bar and the navigation bar are stacked inside it
     private final VerticalLayout myTopLayout = VerticalLayout.create();
 
+    private final DockLayout myMenuRow = DockLayout.create();
+
     public WebRootPaneImpl() {
         myDockLayout.top(myTopLayout);
     }
@@ -44,7 +46,20 @@ public class WebRootPaneImpl {
 
     @RequiredUIAccess
     public void setMenuBar(MenuBar menuBar) {
-        myTopLayout.add(menuBar);
+        // the middle rather than a side: a vaadin menu bar folds its items into an overflow button as soon as
+        // it measures itself narrower than they are, and only the middle of the row is given room to grow
+        myMenuRow.center(menuBar);
+
+        myTopLayout.add(myMenuRow);
+    }
+
+    /**
+     * The far end of the menu row, where a frame keeps the controls which belong to the window rather than to
+     * what is open in it.
+     */
+    @RequiredUIAccess
+    public void setMenuBarRightComponent(Component component) {
+        myMenuRow.right(component);
     }
 
     @RequiredUIAccess

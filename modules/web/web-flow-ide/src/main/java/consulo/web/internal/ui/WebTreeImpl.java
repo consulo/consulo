@@ -40,6 +40,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author VISTALL
@@ -64,6 +65,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         // the tree is written out
         private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new ConcurrentHashMap<>();
         private final CompletableFuture<Void> myRootLoaded = new CompletableFuture<>();
+
+        private ExecutorService myExecutor;
 
         private WebTreeNodeImpl<NODE> myRootNode;
         private TreeModel<NODE> myModel;
@@ -150,6 +153,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             myModel = model;
 
             myRootNode = new WebTreeNodeImpl<>(null, rootValue, myNodeMap);
+            // every node built below gets one from fetchChildren, and without it here the root answers its own
+            // placeholder child to a search instead of building the level - which is where a path walk starts
+            myRootNode.setLoader(this::loadChildrenAsync);
 
             if (myModel.isNeedBuildChildrenBeforeOpen(myRootNode)) {
                 fetchChildren(myRootNode, false);
@@ -260,19 +266,53 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
          * The children of the root are fetched once the grid is attached, so a walk down a path - restoring the
          * state of a previous session - has to wait for that rather than start a fetch of its own.
          */
+        /**
+         * {@link UI#getCurrent()} answers only on a thread the framework is driving, and a walk which opens one
+         * level after another runs its later steps on whichever thread completed the step before. The grid knows
+         * the ui it hangs in either way.
+         */
+        private @Nullable UI currentUI() {
+            UI ui = UI.getCurrent();
+            return ui != null ? ui : getUI().orElse(null);
+        }
+
         public CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildrenAsync(WebTreeNodeImpl<NODE> node) {
             if (node == myRootNode) {
                 return myRootLoaded.thenApply(ignored -> myRootNode.getChildren());
             }
 
-            return loadChildren(node, UI.getCurrent());
+            return loadChildren(node, currentUI());
         }
 
         public CompletableFuture<Void> expandNode(WebTreeNodeImpl<NODE> node) {
-            return loadChildrenAsync(node).thenAccept(children -> {
-                if (node != myRootNode) {
-                    expand(List.of(node));
+            return loadChildrenAsync(node).thenCompose(children -> {
+                if (node == myRootNode) {
+                    return CompletableFuture.completedFuture(null);
                 }
+
+                UI ui = currentUI();
+                if (ui == null) {
+                    return CompletableFuture.completedFuture(null);
+                }
+
+                CompletableFuture<Void> expanded = new CompletableFuture<>();
+
+                ui.access(() -> {
+                    // stored paths overlap - a parent is named by every path that runs through it - and asking
+                    // the grid to open a node it already holds open resets the subtree, closing what a previous
+                    // path opened below it
+                    if (!isExpanded(node)) {
+                        expand(List.of(node));
+
+                        // the toggle of a row is built once by the component column, and an expand driven from
+                        // here does not rebuild it - the row would keep the chevron of a closed node
+                        getDataProvider().refreshItem(node);
+                    }
+
+                    expanded.complete(null);
+                });
+
+                return expanded;
             });
         }
 
@@ -302,8 +342,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             return path;
         }
 
+        /**
+         * One thread for the whole tree, the way {@code Invoker} serialises the work of a swing tree. Building a
+         * level replaces the children of a node, and two of those running at once over the same node race each
+         * other - which is what a restore does, since every stored path asks for the nodes above it.
+         */
         private void invokeLater(Runnable runnable) {
-            AppExecutorUtil.getAppExecutorService().execute(runnable);
+            myExecutor.execute(runnable);
         }
 
         /**
@@ -489,6 +534,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     @RequiredUIAccess
     public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
         Vaadin vaadin = toVaadinComponent();
+        vaadin.myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor(
+            "WebTree Loader",
+            AppExecutorUtil.getAppExecutorService(),
+            1,
+            disposable
+        );
         vaadin.init(rootValue, model);
         vaadin.asSingleSelect().addValueChangeListener(event -> {
             WebTreeNodeImpl<NODE> value = event.getValue();

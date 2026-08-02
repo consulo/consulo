@@ -61,6 +61,13 @@ public abstract class UIInternal {
 
     public abstract VerticalLayout _Layouts_vertical(int vGap);
 
+    /**
+     * A backend which cannot place children at a side of the layout still has to answer a layout.
+     */
+    public VerticalLayout _Layouts_vertical(int vGap, HorizontalAlignment alignment) {
+        return _Layouts_vertical(vGap);
+    }
+
     public abstract SwipeLayout _Layouts_swipe();
 
     public abstract TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position);

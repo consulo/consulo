@@ -163,8 +163,10 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     }
 
     private CompletableFuture<List<WebTreeNodeImpl<N>>> loadChildren() {
-        if (isNotLoaded() && myLoader != null) {
-            return myLoader.apply(this);
+        if (isNotLoaded()) {
+            // the placeholder stands for a level which is not built yet and carries no value of its own, so a
+            // caller searching the children must never be handed it as if it were one
+            return myLoader == null ? CompletableFuture.completedFuture(List.of()) : myLoader.apply(this);
         }
         return CompletableFuture.completedFuture(myChildren);
     }

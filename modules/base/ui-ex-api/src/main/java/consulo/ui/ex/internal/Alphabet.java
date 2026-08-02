@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup.splash;
+package consulo.ui.ex.internal;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,9 +26,9 @@ import java.util.TreeSet;
  * @author UNV
  * @since 2016-12-11
  */
-class Alphabet {
-    final static Map<Character, Glyph> VALID_CHARACTERS;
-    final static Character[] ALPHABET;
+public class Alphabet {
+    public final static Map<Character, Glyph> VALID_CHARACTERS;
+    public final static Character[] ALPHABET;
 
     static {
         Map<Character, Glyph> font = new HashMap<>();

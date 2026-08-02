@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup.splash;
+package consulo.ui.ex.internal;
 
 /**
  * @author VISTALL
  * @since 2016-05-11
  */
-class Names {
-    final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA", ".WORMIX"};
+public class Names {
+    public final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA", ".WORMIX"};
 
-    final static String ourName = "CONSULO";
+    public final static String ourName = "CONSULO";
 
     static {
         for (String easterEgg : ourEasterNames) {

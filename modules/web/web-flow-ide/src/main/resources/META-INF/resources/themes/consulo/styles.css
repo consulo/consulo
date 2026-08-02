@@ -224,6 +224,21 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
   margin-top: auto;
 }
 
+/* the auto margin is what pushes the secondary group to the far end, and only the entry that opens the group
+   may carry it - flexbox splits the free space between every auto margin it finds, so a second one spread the
+   group out over the stripe instead of keeping it together */
+.web-tool-window-stripe-left .web-tool-window-stripe-button-secondary ~ .web-tool-window-stripe-button-secondary,
+.web-tool-window-stripe-right .web-tool-window-stripe-button-secondary ~ .web-tool-window-stripe-button-secondary
+{
+  margin-top: var(--web-tool-window-stripe-button-margin, 4px);
+}
+
+.web-tool-window-stripe-top .web-tool-window-stripe-button-secondary ~ .web-tool-window-stripe-button-secondary,
+.web-tool-window-stripe-bottom .web-tool-window-stripe-button-secondary ~ .web-tool-window-stripe-button-secondary
+{
+  margin-left: var(--web-tool-window-stripe-button-margin, 4px);
+}
+
 .web-icon > *
 {
   vertical-align: middle;
@@ -238,6 +253,9 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
   border: none;
   border-radius: 0;
   background: transparent;
+
+  /* aura gives a button an elevation, which drew every entry of the menu bar as its own raised box */
+  box-shadow: none;
 
   /* aura paints a button label in the accent colour, a main menu is plain text */
   color: var(--vaadin-body-text-color, #000);

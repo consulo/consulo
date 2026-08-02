@@ -59,13 +59,13 @@ import org.vaadin.stefan.table.Table;
  * @since 28/05/2023
  */
 @StyleSheet(Aura.STYLESHEET)
-@StyleSheet("./themes/consulo/aura-utility.css")
-@StyleSheet("./themes/consulo/styles.css")
-@StyleSheet("./themes/consulo/scrollbar.css")
-@StyleSheet("./themes/consulo/editor.css")
-@StyleSheet("./themes/consulo/tabs.css")
-@StyleSheet("./themes/consulo/statusbar.css")
-@StyleSheet("./themes/consulo/toolwindow.css")
+@StyleSheet("/themes/consulo/aura-utility.css")
+@StyleSheet("/themes/consulo/styles.css")
+@StyleSheet("/themes/consulo/scrollbar.css")
+@StyleSheet("/themes/consulo/editor.css")
+@StyleSheet("/themes/consulo/tabs.css")
+@StyleSheet("/themes/consulo/statusbar.css")
+@StyleSheet("/themes/consulo/toolwindow.css")
 // a progress bar lives only while its task runs, so its styles cannot be carried by the component itself
 @StyleSheet("/progress/webProgressBar.css")
 @JsModule("./webImage.js")

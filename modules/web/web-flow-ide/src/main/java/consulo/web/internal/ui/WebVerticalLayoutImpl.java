@@ -15,7 +15,9 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
@@ -45,10 +47,22 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
     }
 
     public WebVerticalLayoutImpl(int vGap) {
+        this(vGap, null);
+    }
+
+    public WebVerticalLayoutImpl(int vGap, @Nullable HorizontalAlignment alignment) {
         VaadinSizeUtil.setWidthFull(this);
 
         if (vGap > 0) {
             toVaadinComponent().getStyle().set("gap", vGap + "px");
+        }
+
+        if (alignment != null) {
+            toVaadinComponent().setAlignItems(switch (alignment) {
+                case LEFT -> Alignment.START;
+                case CENTER -> Alignment.CENTER;
+                case RIGHT -> Alignment.END;
+            });
         }
     }
 

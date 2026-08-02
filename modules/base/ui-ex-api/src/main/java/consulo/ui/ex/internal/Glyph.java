@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup.splash;
+package consulo.ui.ex.internal;
 
 /**
  * @author VISTALL
@@ -21,6 +21,11 @@ package consulo.desktop.awt.startup.splash;
  * @since 2016-12-11
  */
 public class Glyph {
+    @FunctionalInterface
+    public interface PixelSink {
+        void setPixel(int x, int y, boolean foreground);
+    }
+
     public static final int WIDTH = 5, HEIGHT = 5;
 
     private final int[] rows;
@@ -29,7 +34,7 @@ public class Glyph {
         this.rows = new int[]{row0, row1, row2, row3, row4};
     }
 
-    void draw(int dx, int dy, AnimatedLogoLabel canvas) {
+    public void draw(int dx, int dy, PixelSink canvas) {
         for (int y = 0; y < rows.length; y++) {
             int row = rows[y];
             for (int x = 0; x < 5; x++) {
