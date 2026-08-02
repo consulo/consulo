@@ -22,6 +22,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataSink;
@@ -30,6 +31,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.GroupByTypeComparator;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
@@ -68,10 +70,15 @@ import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awt.Messages;
@@ -340,6 +347,19 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     private static final String ELEMENT_SUB_PANE = "subPane";
     private static final String ATTRIBUTE_ID = "id";
 
+    // the same names the awt view reads and writes - one workspace is shared by both
+    private static final String ELEMENT_NAVIGATOR = "navigator";
+    private static final String ELEMENT_SORT_BY_TYPE = "sortByType";
+    private static final String ELEMENT_MANUAL_ORDER = "manualOrder";
+    private static final String ELEMENT_ABBREVIATE_PACKAGE_NAMES = "abbreviatePackageNames";
+    private static final String ELEMENT_FOLDERS_ALWAYS_ON_TOP = "foldersAlwaysOnTop";
+    private static final String ATTRIBUTE_VALUE = "value";
+
+    private final Map<String, Boolean> mySortByType = new HashMap<>();
+    private final Map<String, Boolean> myManualOrder = new HashMap<>();
+    private final Map<String, Boolean> myAbbreviatePackageNames = new HashMap<>();
+    private boolean myFoldersAlwaysOnTop = true;
+
     private final Project myProject;
     private final Map<String, SelectInTarget> mySelectInTargets = new LinkedHashMap<>();
 
@@ -485,6 +505,9 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         assert projectViewPane != null;
 
         myCurrentPane = projectViewPane;
+        // an option the pane contributes - Show Excluded Files - changes what the structure answers, and asks
+        // for the rebuild through the pane it belongs to
+        projectViewPane.setRebuildHandler(this::resortTree);
 
         SelectInTarget selectInTarget = projectViewPane.createSelectInTarget();
         if (selectInTarget != null) {
@@ -492,6 +515,10 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         }
 
         ProjectAbstractTreeStructureBase structure = projectViewPane.createStructure();
+
+        // the pane builds the very same one for the awt tree - the order of a level is a property of the view
+        // rather than of the frontend drawing it
+        Comparator<NodeDescriptor> nodeOrder = new GroupByTypeComparator(this, projectViewPane.getId());
 
         TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<>(structure) {
             @Override
@@ -505,6 +532,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
                 }
 
                 return true;
+            }
+
+            @Override
+            public Comparator<TreeNode<AbstractTreeNode>> getNodeComparator() {
+                return (o1, o2) -> nodeOrder.compare(o1.getValue(), o2.getValue());
             }
         };
 
@@ -541,10 +573,113 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         if (!titleActions.isEmpty()) {
             toolWindow.setTitleActions(titleActions.toArray(AnAction[]::new));
         }
+
+        toolWindow.setAdditionalGearActions(createViewOptionsGroup());
     }
 
     private void createTitleActions(List<? super AnAction> titleActions) {
         titleActions.add(ActionManager.getInstance().getAction(ProjectViewToolbarGroup.class));
+    }
+
+    /**
+     * The awt view hands the very same toggles to its tool window as gear actions - the options belong to the
+     * view, and the ones a pane contributes ({@code Show Excluded Files} among them) come from the pane.
+     */
+    private DefaultActionGroup createViewOptionsGroup() {
+        DefaultActionGroup group = new DefaultActionGroup();
+        group.add(new ManualOrderAction());
+        group.add(new SortByTypeAction());
+        group.add(new FoldersAlwaysOnTopAction());
+
+        AbstractProjectViewPane pane = myCurrentPane;
+        if (pane != null) {
+            pane.addToolbarActionsImpl(group);
+        }
+
+        return group;
+    }
+
+    private class ManualOrderAction extends ToggleAction implements DumbAware {
+        private ManualOrderAction() {
+            super(
+                IdeLocalize.actionManualOrder(),
+                IdeLocalize.actionManualOrder(),
+                PlatformIconGroup.objectbrowserSorted()
+            );
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent event) {
+            return isManualOrder(getCurrentViewId());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setSelected(AnActionEvent event, boolean flag) {
+            setManualOrder(getCurrentViewId(), flag);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void update(AnActionEvent e) {
+            super.update(e);
+            AbstractProjectViewPane pane = getCurrentProjectViewPane();
+            e.getPresentation().setEnabledAndVisible(pane != null && pane.supportsManualOrder());
+        }
+    }
+
+    private class SortByTypeAction extends ToggleAction implements DumbAware {
+        private SortByTypeAction() {
+            super(
+                IdeLocalize.actionSortByType(),
+                IdeLocalize.actionSortByType(),
+                PlatformIconGroup.objectbrowserSortbytype()
+            );
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent event) {
+            return isSortByType(getCurrentViewId());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setSelected(AnActionEvent event, boolean flag) {
+            setSortByType(getCurrentViewId(), flag);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void update(AnActionEvent e) {
+            super.update(e);
+            AbstractProjectViewPane pane = getCurrentProjectViewPane();
+            e.getPresentation().setEnabledAndVisible(pane != null && pane.supportsSortByType());
+        }
+    }
+
+    private class FoldersAlwaysOnTopAction extends ToggleAction implements DumbAware {
+        private FoldersAlwaysOnTopAction() {
+            super(LocalizeValue.localizeTODO("Folders Always on Top"));
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent event) {
+            return isFoldersAlwaysOnTop();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setSelected(AnActionEvent event, boolean flag) {
+            setFoldersAlwaysOnTop(flag);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void update(AnActionEvent e) {
+            super.update(e);
+            AbstractProjectViewPane pane = getCurrentProjectViewPane();
+            e.getPresentation().setEnabledAndVisible(pane != null && pane.supportsFoldersAlwaysOnTop());
+        }
     }
 
     private void saveExpandedPaths() {
@@ -573,6 +708,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
         Element element = myLoadedState == null ? new Element("state") : myLoadedState.clone();
 
+        writeNavigator(element);
+
         Element panes = element.getChild(ELEMENT_PANES);
         if (panes == null) {
             panes = new Element(ELEMENT_PANES);
@@ -597,9 +734,64 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         return element;
     }
 
+    /**
+     * The awt view keeps an option per pane as an attribute named after the pane, and a single
+     * {@code foldersAlwaysOnTop} carrying its own value - only the entries this view understands are rewritten,
+     * the rest of the navigator is carried over from what was read.
+     */
+    private void writeNavigator(Element element) {
+        Element navigator = element.getChild(ELEMENT_NAVIGATOR);
+        if (navigator == null) {
+            navigator = new Element(ELEMENT_NAVIGATOR);
+            element.addContent(navigator);
+        }
+
+        writeOption(navigator, mySortByType, ELEMENT_SORT_BY_TYPE);
+        writeOption(navigator, myManualOrder, ELEMENT_MANUAL_ORDER);
+        writeOption(navigator, myAbbreviatePackageNames, ELEMENT_ABBREVIATE_PACKAGE_NAMES);
+
+        navigator.removeChildren(ELEMENT_FOLDERS_ALWAYS_ON_TOP);
+        Element folders = new Element(ELEMENT_FOLDERS_ALWAYS_ON_TOP);
+        folders.setAttribute(ATTRIBUTE_VALUE, Boolean.toString(myFoldersAlwaysOnTop));
+        navigator.addContent(folders);
+    }
+
+    private static void writeOption(Element navigator, Map<String, Boolean> options, String optionName) {
+        navigator.removeChildren(optionName);
+
+        Element element = new Element(optionName);
+        for (Map.Entry<String, Boolean> entry : options.entrySet()) {
+            if (entry.getKey() != null) {
+                element.setAttribute(entry.getKey(), Boolean.toString(entry.getValue()));
+            }
+        }
+        navigator.addContent(element);
+    }
+
+    private static void readOption(@Nullable Element node, Map<String, Boolean> options) {
+        if (node == null) {
+            return;
+        }
+        for (Attribute attribute : node.getAttributes()) {
+            options.put(attribute.getName(), Boolean.TRUE.toString().equals(attribute.getValue()));
+        }
+    }
+
     @Override
     public void loadState(Element state) {
         myLoadedState = state.clone();
+
+        Element navigator = state.getChild(ELEMENT_NAVIGATOR);
+        if (navigator != null) {
+            readOption(navigator.getChild(ELEMENT_SORT_BY_TYPE), mySortByType);
+            readOption(navigator.getChild(ELEMENT_MANUAL_ORDER), myManualOrder);
+            readOption(navigator.getChild(ELEMENT_ABBREVIATE_PACKAGE_NAMES), myAbbreviatePackageNames);
+
+            Element folders = navigator.getChild(ELEMENT_FOLDERS_ALWAYS_ON_TOP);
+            if (folders != null) {
+                myFoldersAlwaysOnTop = Boolean.parseBoolean(folders.getAttributeValue(ATTRIBUTE_VALUE));
+            }
+        }
 
         Element panes = state.getChild(ELEMENT_PANES);
         Element pane = panes == null ? null : findPane(panes);
@@ -727,25 +919,67 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     @Override
     public boolean isAbbreviatePackageNames(String paneId) {
-        return false;
+        return getPaneOption(myAbbreviatePackageNames, paneId);
     }
 
     @Override
     public void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId) {
+        setPaneOption(myAbbreviatePackageNames, paneId, abbreviatePackageNames);
     }
 
     @Override
     public String getCurrentViewId() {
-        return null;
+        return getPaneId();
     }
 
     @Override
     public boolean isManualOrder(String paneId) {
-        return false;
+        return getPaneOption(myManualOrder, paneId);
     }
 
     @Override
     public void setManualOrder(String paneId, boolean enabled) {
+        setPaneOption(myManualOrder, paneId, enabled);
+    }
+
+    @Override
+    public boolean isFoldersAlwaysOnTop() {
+        return myFoldersAlwaysOnTop;
+    }
+
+    public void setFoldersAlwaysOnTop(boolean foldersAlwaysOnTop) {
+        if (myFoldersAlwaysOnTop != foldersAlwaysOnTop) {
+            myFoldersAlwaysOnTop = foldersAlwaysOnTop;
+            resortTree();
+        }
+    }
+
+    private boolean getPaneOption(Map<String, Boolean> options, String paneId) {
+        return Boolean.TRUE.equals(options.get(paneId));
+    }
+
+    private void setPaneOption(Map<String, Boolean> options, String paneId, boolean value) {
+        if (getPaneOption(options, paneId) != value) {
+            options.put(paneId, value);
+            resortTree();
+        }
+    }
+
+    /**
+     * The order of a level is settled while its children are built, and they are held from then on - so the tree
+     * builds them again rather than laying the ones it has out anew. That replaces every node, which is what
+     * carries the open ones away, so the paths are taken first and walked again after - the awt view stores and
+     * restores them around {@code updateFromRoot} for the same reason.
+     */
+    @RequiredUIAccess
+    private void resortTree() {
+        if (myTree == null) {
+            return;
+        }
+
+        saveExpandedPaths();
+
+        myTree.refreshAll().thenRun(this::restoreExpandedPaths);
     }
 
     @Override
@@ -754,11 +988,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     @Override
     public boolean isSortByType(String paneId) {
-        return false;
+        return getPaneOption(mySortByType, paneId);
     }
 
     @Override
     public void setSortByType(String paneId, boolean sortByType) {
+        setPaneOption(mySortByType, paneId, sortByType);
     }
 
     @Override

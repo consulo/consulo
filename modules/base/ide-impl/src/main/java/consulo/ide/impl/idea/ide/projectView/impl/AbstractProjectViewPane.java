@@ -294,6 +294,21 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         myTreeStructure = null;
     }
 
+    /**
+     * A frontend which draws the pane itself - the unified project view holds its own tree rather than the swing
+     * one built here - leaves {@link #updateFromRoot} without a builder to drive, while the actions a pane
+     * contributes still ask for a rebuild through it. This is how that request reaches whoever owns the tree.
+     */
+    private @Nullable Runnable myRebuildHandler;
+
+    public void setRebuildHandler(@Nullable Runnable rebuildHandler) {
+        myRebuildHandler = rebuildHandler;
+    }
+
+    protected @Nullable Runnable getRebuildHandler() {
+        return myRebuildHandler;
+    }
+
     @Override
     public abstract ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 

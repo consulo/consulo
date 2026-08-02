@@ -59,6 +59,13 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
             T element = (T) o;
             TreeNode<T> apply = nodeFactory.apply(element);
 
+            // the order of a level is decided on the descriptors of that level, and one which was never updated
+            // carries no presentation yet - its name is null, and a comparator ordering by name cannot tell two
+            // of them apart. the awt tree updates them as it builds, for the same reason
+            if (o instanceof NodeDescriptor descriptor) {
+                ReadAction.compute(() -> descriptor.update());
+            }
+
             apply.setLeaf(o instanceof consulo.ui.ex.tree.TreeNode && !((consulo.ui.ex.tree.TreeNode) o).isAlwaysShowPlus());
 
             apply.setRenderer((fileElement, itemPresentation) -> {

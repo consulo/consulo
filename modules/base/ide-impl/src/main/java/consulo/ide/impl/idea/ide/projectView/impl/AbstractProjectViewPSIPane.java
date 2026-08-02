@@ -219,6 +219,13 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         else if (myAsyncSupport != null) {
             myAsyncSupport.updateAll(afterUpdate);
         }
+        else {
+            Runnable rebuildHandler = getRebuildHandler();
+            if (rebuildHandler != null) {
+                rebuildHandler.run();
+            }
+            afterUpdate.run();
+        }
         return cb;
     }
 

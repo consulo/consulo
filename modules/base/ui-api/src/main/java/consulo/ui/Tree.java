@@ -102,7 +102,7 @@ public interface Tree<E> extends Component {
     /**
      * Rebuilds the whole tree from the model, for a change no single node can be pointed at.
      */
-    void refreshAll();
+    CompletableFuture<?> refreshAll();
 
     @SuppressWarnings("unchecked")
     default Disposable addSelectListener(ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {

@@ -332,7 +332,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     @Override
-    public void refreshAll() {
+    public CompletableFuture<?> refreshAll() {
         myStructureTreeModel.invalidate();
+        return CompletableFuture.completedFuture(null);
     }
 }

@@ -103,7 +103,9 @@ public final class UnifiedActionMenuExpander {
             presentationFactory,
             context,
             place,
-            false,
+            // everything expanded here ends up in a menu, and the platform reads that off the event - a toggle
+            // drops its icon there so the leading slot can show the check mark instead
+            true,
             false,
             uiAccess
         );

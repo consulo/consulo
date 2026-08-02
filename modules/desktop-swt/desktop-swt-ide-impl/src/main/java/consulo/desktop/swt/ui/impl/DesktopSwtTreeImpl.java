@@ -183,11 +183,12 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   }
 
   @Override
-  public void refreshAll() {
+  public CompletableFuture<?> refreshAll() {
     for (TreeItem item : myComponent.getItems()) {
       item.dispose();
     }
 
     build(myComponent, myRootValue);
+    return CompletableFuture.completedFuture(null);
   }
 }

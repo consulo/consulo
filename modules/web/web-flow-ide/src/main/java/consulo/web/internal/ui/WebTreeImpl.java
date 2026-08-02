@@ -400,10 +400,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             });
         }
 
-        public void refreshRoot() {
-            UI ui = UI.getCurrent();
+        public CompletableFuture<?> refreshRoot() {
+            UI ui = currentUI();
+            CompletableFuture<Void> result = new CompletableFuture<>();
+
             invokeLater(() -> {
                 if (fetchChildren(myRootNode, false) == CANCELED_RESULT) {
+                    result.complete(null);
                     return;
                 }
 
@@ -411,8 +414,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     initTreeData(false);
 
                     ui.push();
+
+                    result.complete(null);
                 });
             });
+
+            return result;
         }
 
         private void initTreeData(boolean init) {
@@ -636,8 +643,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    public void refreshAll() {
-        toVaadinComponent().refreshRoot();
+    public CompletableFuture<?> refreshAll() {
+        return toVaadinComponent().refreshRoot();
     }
 
     @Override

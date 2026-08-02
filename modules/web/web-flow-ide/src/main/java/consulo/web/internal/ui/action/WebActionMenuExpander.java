@@ -103,7 +103,9 @@ public final class WebActionMenuExpander {
             presentationFactory,
             context,
             place,
-            false,
+            // everything expanded here ends up in a menu, and the platform reads that off the event - a toggle
+            // drops its icon so the leading slot shows the check mark instead of an icon that never changes
+            true,
             false,
             uiAccess
         );
