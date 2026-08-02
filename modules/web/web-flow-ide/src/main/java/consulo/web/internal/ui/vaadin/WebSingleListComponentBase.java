@@ -18,17 +18,18 @@ package consulo.web.internal.ui.vaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.data.provider.HasListDataView;
-import consulo.ui.TextItemRenderer;
+import consulo.ui.TextItemRender;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
-import consulo.ui.model.MutableListModelListener;
+import consulo.ui.model.FlatDataModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -36,12 +37,14 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class WebSingleListComponentBase<V, C extends Component & HasListDataView & HasValue & FromVaadinComponentWrapper>
     extends VaadinComponentDelegate<C> implements ValueComponent<V> {
-    protected final ListModel<V> myModel;
-    protected TextItemRenderer<V> myRenderer =
-        (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
+    protected final FlatDataModel<V> myModel;
+    protected TextItemRender<V> myTextRender = TextItemRender.defaultRender();
+
+    protected @Nullable Function<V, String> mySpeedSearchConverter;
+    protected @Nullable ToIntFunction<V> myItemHeightGetter;
 
     @SuppressWarnings("unchecked")
-    protected WebSingleListComponentBase(ListModel<V> model) {
+    protected WebSingleListComponentBase(FlatDataModel<V> model) {
         myModel = model;
         C component = toVaadinComponent();
         component.setItems(ContainerUtil.collect(model.iterator()));
@@ -50,24 +53,30 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
             event -> getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()))
         );
 
-        if (myModel instanceof MutableListModel mutableListModel) {
-            mutableListModel.addListener(new MutableListModelListener() {
-                @Override
-                public void itemAdded(Object item) {
-                    component.setItems(ContainerUtil.collect(model.iterator()));
-                }
-
-                @Override
-                public void itemRemoved(Object item) {
-                    component.setItems(ContainerUtil.collect(model.iterator()));
-                }
-            });
-        }
+        // a vaadin list holds its own copy of the items, so any structural change has to be pushed back
+        model.addListener(event -> component.setItems(ContainerUtil.collect(model.iterator())));
     }
 
-    //@Override
-    public ListModel<V> getListModel() {
+    public FlatDataModel<V> getDataModel() {
         return myModel;
+    }
+
+    public void setSpeedSearchConverter(@Nullable Function<V, String> converter) {
+        mySpeedSearchConverter = converter;
+    }
+
+    public @Nullable String getSpeedSearchText() {
+        return null;
+    }
+
+    public void setItemHeightGetter(@Nullable ToIntFunction<V> getter) {
+        myItemHeightGetter = getter;
+    }
+
+    protected void applyItemHeight(com.vaadin.flow.component.Component itemComponent, @Nullable V item) {
+        if (myItemHeightGetter != null && item != null) {
+            itemComponent.getElement().getStyle().set("height", myItemHeightGetter.applyAsInt(item) + "px");
+        }
     }
 
     @RequiredUIAccess

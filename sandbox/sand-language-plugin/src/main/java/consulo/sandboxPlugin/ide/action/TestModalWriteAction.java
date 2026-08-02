@@ -36,7 +36,7 @@ import jakarta.inject.Inject;
  * @author VISTALL
  * @since 2025-07-16
  */
-@ActionImpl(id = "ShowUITesterAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
+@ActionImpl(id = "TestModalWriteAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class TestModalWriteAction extends DumbAwareAction {
     private final ProgressBuilderFactory myProgressBuilderFactory;
 

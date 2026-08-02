@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,49 +15,38 @@
  */
 package consulo.ui.model;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.disposer.Disposable;
-import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2018-05-15
+ * @since 2026-08-02
  */
-public interface MutableListModel<E> extends ListModel<E> {
-    static <T> MutableListModel<T> of(Collection<? extends T> items) {
-        return UIInternal.get()._MutableListModel_create(items);
-    }
-
-    @Deprecated
-    @DeprecationInfo("Use #of()")
-    static <T> MutableListModel<T> create(Collection<? extends T> items) {
-        return UIInternal.get()._MutableListModel_create(items);
+public interface MutableFlatDataModel<E> extends FlatDataModel<E> {
+    @RequiredUIAccess
+    default void add(E item) {
+        add(item, getSize());
     }
 
     @RequiredUIAccess
-    default void add(E e) {
-        add(e, getSize());
-    }
+    void add(E item, int index);
 
     @RequiredUIAccess
-    void add(E e, int index);
-
-    @RequiredUIAccess
-    void remove(E e);
+    void remove(E item);
 
     @RequiredUIAccess
     void removeAll();
 
     /**
-     * @param newItems
-     * @return oldItems
+     * @return replaced items
      */
     @RequiredUIAccess
     List<E> replaceAll(Iterable<E> newItems);
 
-    Disposable addListener(MutableListModelListener<E> modelListener);
+    /**
+     * Signals that the item changed in place, so its row must be redrawn.
+     */
+    @RequiredUIAccess
+    void update(E item);
 }

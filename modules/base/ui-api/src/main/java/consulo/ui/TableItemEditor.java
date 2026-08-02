@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.impl;
+package consulo.ui;
 
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.TableColumn;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
-import java.util.function.Function;
 
 /**
+ * Contract of an editable column - which widget edits the cell and where the value goes. The editor
+ * lifecycle stays with the backend, since that is where desktop and web genuinely differ.
+ *
  * @author VISTALL
- * @since 2020-09-15
+ * @since 2026-08-02
  */
-public class DesktopTableColumnInfo<Value, Item> extends ColumnInfo<Item, Value> implements TableColumn<Value, Item> {
-  private final Function<Item, Value> myConverter;
+public interface TableItemEditor<Item, Value> {
+    ValueComponent<Value> createComponent(Item item);
 
-  public DesktopTableColumnInfo(String name, Function<Item, Value> converter) {
-    super(name);
-    myConverter = converter;
-  }
+    @RequiredUIAccess
+    void commit(Item item, @Nullable Value value);
 
-  @Override
-  public @Nullable Value valueOf(Item value) {
-    return myConverter.apply(value);
-  }
+    default boolean isEditable(Item item) {
+        return true;
+    }
 }

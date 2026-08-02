@@ -23,7 +23,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
-import consulo.ui.model.ListModel;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.model.FlatDataModel;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -35,39 +42,90 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
             super(dataModel);
         }
 
-        
         @Override
         public Component toUIComponent() {
             return DesktopListBoxImpl.this;
         }
     }
 
-    private TextItemRenderer<E> myRenderer = ListItemRenderers.defaultRenderer();
+    private final FlatDataModel<E> myModel;
 
-    private ListModel<E> myModel;
+    private TextItemRender<E> myTextRender = TextItemRender.defaultRender();
+    private @Nullable ComponentItemRender<E> myComponentRender;
+    private @Nullable Function<E, String> mySpeedSearchConverter;
+    private @Nullable ToIntFunction<E> myItemHeightGetter;
 
-    public DesktopListBoxImpl(ListModel<E> model) {
+    public DesktopListBoxImpl(FlatDataModel<E> model) {
         myModel = model;
     }
 
     @Override
     protected JBList<E> createComponent() {
-        DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(myModel);
-
-        MyJBList<E> component = new MyJBList<>(wrapper);
-        component.setCellRenderer(new DesktopListRender<>(() -> myRenderer));
-        return  component;
+        MyJBList<E> component = new MyJBList<>(new DesktopFlatDataModelWrapper<>(myModel));
+        applyRender(component);
+        applySpeedSearch(component);
+        return component;
     }
 
-    
+    private void applyRender(JBList<E> component) {
+        ListCellRenderer<E> render = myComponentRender != null
+            ? new DesktopComponentItemRenderAdapter<>(myComponentRender)
+            : new DesktopListRender<>(() -> myTextRender);
+
+        component.setCellRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
+    }
+
+    private void applySpeedSearch(JBList<E> component) {
+        if (mySpeedSearchConverter != null) {
+            ListSpeedSearch.installOn(component, mySpeedSearchConverter::apply);
+        }
+    }
+
     @Override
-    public ListModel<E> getListModel() {
+    public FlatDataModel<E> getDataModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
-        myRenderer = renderer;
+    public void setRender(TextItemRender<E> render) {
+        myTextRender = render;
+        myComponentRender = null;
+        if (isRealized()) {
+            applyRender(toAWTComponent());
+        }
+    }
+
+    @Override
+    public void setRender(ComponentItemRender<E> render) {
+        myComponentRender = render;
+        if (isRealized()) {
+            applyRender(toAWTComponent());
+        }
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
+        mySpeedSearchConverter = converter;
+        if (isRealized()) {
+            applySpeedSearch(toAWTComponent());
+        }
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        if (!isRealized()) {
+            return null;
+        }
+        SpeedSearchSupply supply = SpeedSearchSupply.getSupply(toAWTComponent());
+        return supply == null ? null : supply.getEnteredPrefix();
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+        myItemHeightGetter = getter;
+        if (isRealized()) {
+            toAWTComponent().setFixedCellHeight(-1);
+        }
     }
 
     @Override
@@ -81,16 +139,14 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         toAWTComponent().setSelectedValue(value, true);
     }
 
-    
     @Override
     public Disposable addValueListener(ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
-        DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, toAWTComponent(), valueListener);
+        DesktopValueListenerAsListSelectionListener<E> listener =
+            new DesktopValueListenerAsListSelectionListener<>(this, toAWTComponent(), valueListener);
         toAWTComponent().addListSelectionListener(listener);
         return () -> toAWTComponent().removeListSelectionListener(listener);
     }
 
-    @SuppressWarnings("unchecked")
-    
     @Override
     public E getValue() {
         return toAWTComponent().getSelectedValue();

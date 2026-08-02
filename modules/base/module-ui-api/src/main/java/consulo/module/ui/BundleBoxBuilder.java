@@ -23,7 +23,7 @@ import consulo.ui.ComboBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.MutableFlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
@@ -157,7 +157,7 @@ public final class BundleBoxBuilder {
         private void sdkChangedImpl() {
           ComboBox<BundleBox.BundleBoxItem> component = box.getComponent();
 
-          MutableListModel<BundleBox.BundleBoxItem> listModel = (MutableListModel<BundleBox.BundleBoxItem>)component.getListModel();
+          MutableFlatDataModel<BundleBox.BundleBoxItem> listModel = (MutableFlatDataModel<BundleBox.BundleBoxItem>)component.getDataModel();
 
           BundleBox.BundleBoxItem bundleBoxItem = component.getValue();
 

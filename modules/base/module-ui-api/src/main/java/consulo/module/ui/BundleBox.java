@@ -31,8 +31,8 @@ import consulo.ui.PseudoComponent;
 import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -289,7 +289,8 @@ public class BundleBox implements PseudoComponent {
     ) {
         myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, nullItemName));
 
-        myOriginalComboBox.setRenderer((renderer, index, value) -> {
+        myOriginalComboBox.setRender((renderer, renderItem) -> {
+            var value = renderItem.getValue();
             if (value instanceof InvalidBundleBoxItem) {
                 renderer.withIcon(PlatformIconGroup.actionsHelp());
                 renderer.append(value.getBundleName(), TextAttribute.ERROR);
@@ -355,13 +356,13 @@ public class BundleBox implements PseudoComponent {
     }
 
     @RequiredUIAccess
-    private static ListModel<BundleBoxItem> model(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, LocalizeValue nullItemName) {
-        return MutableListModel.of(buildItems(holder, filter, nullItemName.isNotEmpty()));
+    private static FlatDataModel<BundleBoxItem> model(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, LocalizeValue nullItemName) {
+        return FlatDataModel.of(buildItems(holder, filter, nullItemName.isNotEmpty()));
     }
 
     @RequiredUIAccess
     public void addInvalidModuleItem(@Nullable String name) {
-        MutableListModel<BundleBoxItem> listModel = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
+        MutableFlatDataModel<BundleBoxItem> listModel = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
 
         listModel.add(new InvalidModuleBundleBoxItem(name));
     }
@@ -370,7 +371,7 @@ public class BundleBox implements PseudoComponent {
     @SuppressWarnings("unchecked")
     public <T extends MutableModuleExtension<?>>
     void addModuleExtensionItems(T moduleExtension, Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
-        MutableListModel<BundleBoxItem> listModel = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
+        MutableFlatDataModel<BundleBoxItem> listModel = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
 
         for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
             // don't add self module
@@ -396,7 +397,7 @@ public class BundleBox implements PseudoComponent {
 
     @RequiredUIAccess
     public void addBundleItem(Sdk bundle) {
-        MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
+        MutableFlatDataModel<BundleBoxItem> model = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
 
         model.add(new BaseBundleBoxItem(bundle));
     }
@@ -406,7 +407,7 @@ public class BundleBox implements PseudoComponent {
     public void addCustomBundleItem(String key, String presentableName, Image icon) {
         CustomBundleBoxItem item = new CustomBundleBoxItem(key, presentableName, icon);
 
-        MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
+        MutableFlatDataModel<BundleBoxItem> model = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
 
         int itemCount = model.getSize();
         if (itemCount > 0) {
@@ -435,7 +436,7 @@ public class BundleBox implements PseudoComponent {
 
     @RequiredUIAccess
     public void setSelectedBundle(@Nullable String name) {
-        ListModel<BundleBoxItem> model = myOriginalComboBox.getListModel();
+        FlatDataModel<BundleBoxItem> model = myOriginalComboBox.getDataModel();
         if (name != null) {
             int itemCount = model.getSize();
             for (int i = 0; i < itemCount; i++) {
@@ -460,7 +461,7 @@ public class BundleBox implements PseudoComponent {
     @RequiredUIAccess
     public void setInvalidBundle(String name) {
         removeInvalidElement();
-        MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
+        MutableFlatDataModel<BundleBoxItem> model = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
         InvalidBundleBoxItem item = new InvalidBundleBoxItem(name);
         model.add(item);
 
@@ -469,7 +470,7 @@ public class BundleBox implements PseudoComponent {
 
     @RequiredUIAccess
     private void removeInvalidElement() {
-        MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>) myOriginalComboBox.getListModel();
+        MutableFlatDataModel<BundleBoxItem> model = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
         int count = model.getSize();
 
         for (int idx = 0; idx < count; idx++) {
@@ -482,7 +483,7 @@ public class BundleBox implements PseudoComponent {
     }
 
     private int indexOfModuleItems(String moduleName) {
-        ListModel<BundleBoxItem> model = myOriginalComboBox.getListModel();
+        FlatDataModel<BundleBoxItem> model = myOriginalComboBox.getDataModel();
         int count = model.getSize();
         for (int idx = 0; idx < count; idx++) {
             BundleBoxItem elementAt = model.get(idx);
@@ -503,7 +504,7 @@ public class BundleBox implements PseudoComponent {
 
     @RequiredUIAccess
     public void setSelectedNoneBundle() {
-        ListModel<BundleBoxItem> listModel = myOriginalComboBox.getListModel();
+        FlatDataModel<BundleBoxItem> listModel = myOriginalComboBox.getDataModel();
         if (listModel.getSize() > 0 && listModel.get(0) instanceof NullBundleBoxItem) {
             myOriginalComboBox.setValueByIndex(0);
         }

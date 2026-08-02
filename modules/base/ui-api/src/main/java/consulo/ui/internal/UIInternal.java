@@ -26,9 +26,8 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
@@ -92,7 +91,7 @@ public abstract class UIInternal {
 
     public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions);
 
-    public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
+    public abstract <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model);
 
     public abstract TextBox _Components_textBox(String text);
 
@@ -108,7 +107,7 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
+    public abstract <E> ListBox<E> _Components_listBox(FlatDataModel<E> model);
 
     public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
         throw new UnsupportedOperationException();
@@ -206,13 +205,7 @@ public abstract class UIInternal {
 
     public abstract <T> Alert<T> _Alerts_create();
 
-    public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
-
-    public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
-        throw new UnsupportedOperationException();
-    }
-
-    public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
+    public abstract <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list);
 
     @RequiredUIAccess
     public abstract UIAccess _UIAccess_get();
@@ -234,10 +227,6 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public <Value, Item> TableColumn<Value, Item> _Components_tableColumnBuild(String name, Function<Item, Value> converter) {
-        throw new UnsupportedOperationException();
-    }
-
     public IconLibraryManager _IconLibraryManager_get() {
         throw new UnsupportedOperationException();
     }
@@ -250,7 +239,7 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
-    public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
+    public <T> Table<T> _Table_create(FlatDataModel<T> model) {
         throw new UnsupportedOperationException();
     }
 

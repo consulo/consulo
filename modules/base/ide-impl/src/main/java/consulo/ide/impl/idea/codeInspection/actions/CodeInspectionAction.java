@@ -39,7 +39,8 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -112,9 +113,10 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
         dialog.setAnalyzeInjectedCode(true);
 
-        MutableListModel<InspectionProfile> model = MutableListModel.of(List.of());
+        MutableFlatDataModel<InspectionProfile> model = FlatDataModel.of(List.of());
         ComboBox<InspectionProfile> profiles = ComboBox.create(model);
-        profiles.setRenderer((renderer, index, profile) -> {
+        profiles.setRender((renderer, renderItem) -> {
+            var profile = renderItem.getValue();
             if (profile != null) {
                 renderer.append(profile.getName());
                 renderer.withIcon(PlatformIconGroup.generalGearplain());
@@ -174,7 +176,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     @RequiredUIAccess
     private void reloadProfiles(
         ComboBox<InspectionProfile> profiles,
-        MutableListModel<InspectionProfile> model,
+        MutableFlatDataModel<InspectionProfile> model,
         InspectionProfileManager inspectionProfileManager,
         InspectionProjectProfileManager inspectionProjectProfileManager,
         InspectionManagerImpl inspectionManager

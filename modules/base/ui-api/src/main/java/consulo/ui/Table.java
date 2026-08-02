@@ -15,8 +15,18 @@
  */
 package consulo.ui;
 
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.TableDoubleClickEvent;
+import consulo.ui.event.TableSelectEvent;
 import consulo.ui.internal.UIInternal;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Table without scrollable layout parent header cannot be painted.
@@ -24,8 +34,45 @@ import consulo.ui.model.TableModel;
  * @author VISTALL
  * @since 2020-09-15
  */
-public interface Table<E> extends Component {
-    static <T> Table<T> create(Iterable<? extends TableColumn<?, T>> columns, TableModel<T> model) {
-        return UIInternal.get()._Table_create(columns, model);
+public interface Table<Item> extends Component, HasSpeedSearch<Item>, HasItemSize<Item> {
+    static <Item> Table<Item> create(FlatDataModel<Item> model) {
+        return UIInternal.get()._Table_create(model);
+    }
+
+    FlatDataModel<Item> getDataModel();
+
+    /**
+     * Columns belong to the table, so a column is always an object the table itself made.
+     */
+    <Value> TableColumn<Item, Value> addColumn(LocalizeValue header, Function<Item, Value> valueProvider);
+
+    List<TableColumn<Item, ?>> getColumns();
+
+    void setSelectionMode(SelectionMode mode);
+
+    @Nullable
+    Item getSelectedItem();
+
+    List<Item> getSelectedItems();
+
+    @RequiredUIAccess
+    void select(Item item);
+
+    @RequiredUIAccess
+    void deselectAll();
+
+    void setShowHeader(boolean show);
+
+    @RequiredUIAccess
+    void scrollTo(Item item);
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    default Disposable addSelectListener(ComponentEventListener<Table<Item>, TableSelectEvent<Item>> listener) {
+        return addListener((Class) TableSelectEvent.class, listener);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    default Disposable addDoubleClickListener(ComponentEventListener<Table<Item>, TableDoubleClickEvent<Item>> listener) {
+        return addListener((Class) TableDoubleClickEvent.class, listener);
     }
 }

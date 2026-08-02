@@ -16,11 +16,13 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import consulo.ui.Component;
+import consulo.ui.ComponentItemRender;
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRenderer;
-import consulo.ui.model.ListModel;
+import consulo.ui.RenderItem;
+import consulo.ui.TextItemRender;
+import consulo.ui.model.FlatDataModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.ToVaadinComponentWrapper;
 import consulo.web.internal.ui.vaadin.WebSingleListComponentBase;
 import org.jspecify.annotations.Nullable;
 
@@ -37,24 +39,39 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         }
     }
 
-    public WebListBoxImpl(ListModel<E> model) {
+    public WebListBoxImpl(FlatDataModel<E> model) {
         super(model);
 
-        setRenderer(TextItemRenderer.defaultRenderer());
+        setRender(TextItemRender.defaultRender());
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
-        toVaadinComponent().setRenderer(new ComponentRenderer((item) -> {
+    public void setRender(TextItemRender<E> render) {
+        myTextRender = render;
+
+        toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
             WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            renderer.render(presentation, myModel.indexOf((E) item), (E) item);
-            return presentation.toComponent();
+            render.render(presentation, RenderItem.of((E) item, isSelected((E) item)));
+
+            com.vaadin.flow.component.Component component = presentation.toComponent();
+            applyItemHeight(component, (E) item);
+            return component;
         }));
     }
 
     @Override
-    public ListModel<E> getListModel() {
-        return myModel;
+    public void setRender(ComponentItemRender<E> render) {
+        toVaadinComponent().setRenderer(new ComponentRenderer<>(item -> {
+            consulo.ui.Component rendered = render.render(RenderItem.of((E) item, isSelected((E) item)));
+
+            com.vaadin.flow.component.Component component = ((ToVaadinComponentWrapper) rendered).toVaadinComponent();
+            applyItemHeight(component, (E) item);
+            return component;
+        }));
+    }
+
+    private boolean isSelected(@Nullable E item) {
+        return item != null && item.equals(getValue());
     }
 
     @Override

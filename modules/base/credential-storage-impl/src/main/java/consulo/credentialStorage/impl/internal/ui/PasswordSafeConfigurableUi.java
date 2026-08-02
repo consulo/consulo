@@ -40,7 +40,8 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
@@ -84,7 +85,7 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
     private JRadioButton keepassRadioButton;
     private FileChooserTextBoxBuilder.Controller keePassDbFile;
 
-    private final MutableListModel<PgpKey> pgpListModel = MutableListModel.of(List.of());
+    private final MutableFlatDataModel<PgpKey> pgpListModel = FlatDataModel.of(List.of());
     private final Supplier<Pgp> pgp = LazyValue.notNull(Pgp::new);
     // https://youtrack.jetbrains.com/issue/IDEA-200188
     // reuse to avoid delays - on Linux SecureRandom is quite slow

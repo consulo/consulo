@@ -16,7 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
-import consulo.ui.model.ListModel;
+import consulo.ui.model.FlatDataModel;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,23 +25,25 @@ import java.util.Collection;
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface ListBox<E> extends ValueComponent<E> {
+public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E> {
     @SafeVarargs
     static <E> ListBox<E> create(E... elements) {
-        return UIInternal.get()._Components_listBox(ListModel.of(Arrays.asList(elements)));
+        return UIInternal.get()._Components_listBox(FlatDataModel.of(Arrays.asList(elements)));
     }
 
     static <E> ListBox<E> create(Collection<E> elements) {
-        return UIInternal.get()._Components_listBox(ListModel.of(elements));
+        return UIInternal.get()._Components_listBox(FlatDataModel.of(elements));
     }
 
-    static <E> ListBox<E> create(ListModel<E> model) {
+    static <E> ListBox<E> create(FlatDataModel<E> model) {
         return UIInternal.get()._Components_listBox(model);
     }
 
-    ListModel<E> getListModel();
+    FlatDataModel<E> getDataModel();
 
-    void setRenderer(TextItemRenderer<E> renderer);
+    void setRender(TextItemRender<E> render);
+
+    void setRender(ComponentItemRender<E> render);
 
     void setValueByIndex(int index);
 }

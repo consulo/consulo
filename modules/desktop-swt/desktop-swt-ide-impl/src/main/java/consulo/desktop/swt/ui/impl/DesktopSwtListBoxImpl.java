@@ -16,9 +16,12 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.ui.ListBox;
-import consulo.ui.TextItemRenderer;
+import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.model.ListModel;
+import consulo.ui.ComponentItemRender;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
+import consulo.ui.model.FlatDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
@@ -30,9 +33,9 @@ import org.jspecify.annotations.Nullable;
  * @since 2021-04-29
  */
 public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> implements ListBox<E> {
-    private final ListModel<E> myModel;
+    private final FlatDataModel<E> myModel;
 
-    public DesktopSwtListBoxImpl(ListModel<E> model) {
+    public DesktopSwtListBoxImpl(FlatDataModel<E> model) {
         myModel = model;
     }
 
@@ -48,12 +51,12 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
 
     
     @Override
-    public ListModel<E> getListModel() {
+    public FlatDataModel<E> getDataModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
+    public void setRender(TextItemRender<E> render) {
     }
 
     @Override
@@ -68,5 +71,22 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
     @Override
     @RequiredUIAccess
     public void setValue(E value, boolean fireListeners) {
+    }
+
+    @Override
+    public void setRender(ComponentItemRender<E> render) {
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        return null;
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
     }
 }

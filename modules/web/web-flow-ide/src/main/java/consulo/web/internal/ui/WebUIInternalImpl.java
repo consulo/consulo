@@ -29,13 +29,11 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.impl.model.ImmutableListModelImpl;
-import consulo.ui.impl.model.MutableListModelImpl;
+import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.web.internal.ui.image.*;
 import org.jspecify.annotations.Nullable;
@@ -128,7 +126,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+    public <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model) {
         return new WebComboBoxImpl<>(model);
     }
 
@@ -156,7 +154,7 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+    public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
         return new WebListBoxImpl<>(model);
     }
 
@@ -316,20 +314,14 @@ public class WebUIInternalImpl extends UIInternal {
     public @Nullable Window _Window_getFocusedWindow() {
         return null;
     }
-
     @Override
     public <T> Alert<T> _Alerts_create() {
         throw notSupported();
     }
 
     @Override
-    public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
-        return new ImmutableListModelImpl<>(list);
-    }
-
-    @Override
-    public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
-        return new MutableListModelImpl<>(list);
+    public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
+        return new FlatDataModelImpl<>(list);
     }
 
     @Override
@@ -405,9 +397,8 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
-        throw notSupported();
-        //return new WebTableImpl<>();
+    public <T> Table<T> _Table_create(FlatDataModel<T> model) {
+        return new WebTableImpl<>(model);
     }
 
     @Override
@@ -415,19 +406,6 @@ public class WebUIInternalImpl extends UIInternal {
         throw notSupported();
         //return new WebIntSliderImpl(min, max, value);
     }
-
-    @Override
-    public <Value, Item> TableColumn<Value, Item> _Components_tableColumnBuild(String name, Function<Item, Value> converter) {
-        throw notSupported();
-        //return new WebTableColumn<>(name, converter);
-    }
-
-    @Override
-    public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
-        throw notSupported();
-        //return new WebTableModel<>(list);
-    }
-
     @Override
     public FocusManager _FocusManager_get() {
         return WebFocusManagerImpl.ourInstance;

@@ -25,12 +25,11 @@ import consulo.ui.image.EmptyImage;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.impl.model.ImmutableListModelImpl;
-import consulo.ui.impl.model.MutableListModelImpl;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
+import consulo.ui.impl.model.FlatDataModelImpl;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
@@ -109,7 +108,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
+    public <E> ComboBox<E> _Components_comboBox(FlatDataModel<E> model) {
         return new HeadlessComboBox<>(model);
     }
 
@@ -129,7 +128,7 @@ public class HeadlessUIInternal extends UIInternal {
     }
 
     @Override
-    public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+    public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
         return new HeadlessListBox<>(model);
     }
 
@@ -227,22 +226,6 @@ public class HeadlessUIInternal extends UIInternal {
     public @Nullable Window _Window_getActiveWindow() {
         return null;
     }
-
-    @Override
-    public <T> Alert<T> _Alerts_create() {
-        return new HeadlessAlert<>();
-    }
-
-    @Override
-    public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
-        return new ImmutableListModelImpl<>(list);
-    }
-
-    @Override
-    public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
-        return new MutableListModelImpl<>(list);
-    }
-
     @Override
     public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
                                                                       String dialogTitle,
@@ -282,5 +265,15 @@ public class HeadlessUIInternal extends UIInternal {
     @Override
     public ModalityState _ModalityState_nonModal() {
         return ModalityStateImpl.NON_MODAL;
+    }
+
+    @Override
+    public <T> Alert<T> _Alerts_create() {
+        return new HeadlessAlert<>();
+    }
+
+    @Override
+    public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
+        return new FlatDataModelImpl<>(list);
     }
 }

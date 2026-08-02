@@ -27,7 +27,7 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.TimeoutUtil;
 import org.jspecify.annotations.Nullable;
@@ -174,13 +174,25 @@ public class UITester {
             map.put("test2", "3");
             map.put("test3", "5");
 
-            List<TableColumn<?, Map.Entry<String, String>>> columns = new ArrayList<>();
-            columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 1", Map.Entry::getKey).build());
-            columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 2", Map.Entry::getValue).build());
+            Table<Map.Entry<String, String>> table = Table.create(FlatDataModel.of(new ArrayList<>(map.entrySet())));
 
-            TableModel<Map.Entry<String, String>> model = TableModel.of(map.entrySet());
+            table.addColumn(LocalizeValue.localizeTODO("Key"), Map.Entry::getKey)
+                .setSortable(Comparator.naturalOrder())
+                .setWidth(160);
 
-            layout.center(ScrollableLayout.create(Table.create(columns, model)));
+            table.addColumn(LocalizeValue.localizeTODO("Value"), Map.Entry::getValue)
+                .setHorizontalAlignment(HorizontalAlignment.RIGHT)
+                .setSortable(Comparator.naturalOrder())
+                .setRender((presentation, item) -> presentation.append(
+                    String.valueOf(item.getValue()),
+                    item.isSelected() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
+                ));
+
+            table.setSelectionMode(SelectionMode.MULTIPLE);
+            table.setSpeedSearchConverter(Map.Entry::getKey);
+            table.addSelectListener(event -> Alerts.okInfo(LocalizeValue.of("Selected: " + event.getValues().size())).showAsync());
+
+            layout.center(ScrollableLayout.create(table));
 
             return layout;
         }

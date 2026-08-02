@@ -41,7 +41,7 @@ import consulo.ui.ex.internal.LogoImage;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.model.ListModel;
+import consulo.ui.model.FlatDataModel;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import jakarta.inject.Inject;
@@ -124,10 +124,11 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
             frameClosed();
         });
 
-        ListModel<AnAction> model = ListModel.of(Arrays.asList(recentProjectsActions));
+        FlatDataModel<AnAction> model = FlatDataModel.of(Arrays.asList(recentProjectsActions));
 
         ListBox<AnAction> listSelect = ListBox.create(model);
-        listSelect.setRenderer((renderer, index, item) -> {
+        listSelect.setRender((renderer, renderItem) -> {
+            var item = renderItem.getValue();
             ReopenProjectAction action = (ReopenProjectAction) item;
             renderer.append(action.getProjectName());
             String branch = RecentProjectsChecker.getInstance().getBranch(action.getProjectPath());

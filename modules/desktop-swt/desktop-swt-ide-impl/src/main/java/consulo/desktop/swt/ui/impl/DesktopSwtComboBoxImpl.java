@@ -16,9 +16,13 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.ui.ComboBox;
-import consulo.ui.TextItemRenderer;
+import consulo.ui.RenderItem;
+import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.model.ListModel;
+import consulo.ui.ComponentItemRender;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
+import consulo.ui.model.FlatDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,7 +39,7 @@ import java.util.List;
  * @since 2021-04-29
  */
 public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> implements ComboBox<E> {
-    private TextItemRenderer<E> myRenderer = (renderer, index, item) -> {
+    private TextItemRender<E> myRenderer = (renderer, item) -> {
         if (item == null) {
             renderer.append("");
         }
@@ -44,11 +48,11 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
         }
     };
 
-    private final ListModel<E> myModel;
+    private final FlatDataModel<E> myModel;
 
     private int mySelectedIndex = 0;
 
-    public DesktopSwtComboBoxImpl(ListModel<E> model) {
+    public DesktopSwtComboBoxImpl(FlatDataModel<E> model) {
         myModel = model;
     }
 
@@ -66,7 +70,7 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
 
             DesktopSwtTextItemPresentation presentation = new DesktopSwtTextItemPresentation();
 
-            myRenderer.render(presentation, i, element);
+            myRenderer.render(presentation, RenderItem.of(element, i == mySelectedIndex));
 
             items.add(presentation.toString());
         }
@@ -85,13 +89,13 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
 
     
     @Override
-    public ListModel<E> getListModel() {
+    public FlatDataModel<E> getDataModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
-        myRenderer = renderer;
+    public void setRender(TextItemRender<E> render) {
+        myRenderer = render;
     }
 
     @Override
@@ -112,5 +116,22 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
     @RequiredUIAccess
     public void setValue(E value, boolean fireListeners) {
         setValueByIndex(myModel.indexOf(value));
+    }
+
+    @Override
+    public void setRender(ComponentItemRender<E> render) {
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        return null;
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
     }
 }

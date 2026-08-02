@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import consulo.ui.model.ListModel;
+import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
@@ -33,17 +33,17 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2016-06-09
  */
-public interface ComboBox<E> extends ValueComponent<E> {
+public interface ComboBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E> {
     @SafeVarargs
     static <E> ComboBox<E> create(E... elements) {
-        return UIInternal.get()._Components_comboBox(ListModel.create(Arrays.asList(elements)));
+        return UIInternal.get()._Components_comboBox(FlatDataModel.of(Arrays.asList(elements)));
     }
 
     static <E> ComboBox<E> create(Collection<E> elements) {
-        return UIInternal.get()._Components_comboBox(ListModel.create(elements));
+        return UIInternal.get()._Components_comboBox(FlatDataModel.of(elements));
     }
 
-    static <E> ComboBox<E> create(ListModel<E> model) {
+    static <E> ComboBox<E> create(FlatDataModel<E> model) {
         return UIInternal.get()._Components_comboBox(model);
     }
 
@@ -119,21 +119,23 @@ public interface ComboBox<E> extends ValueComponent<E> {
         return new Builder<>();
     }
 
-    ListModel<E> getListModel();
+    FlatDataModel<E> getDataModel();
 
     @RequiredUIAccess
     default void selectFirst() {
-        ListModel<E> listModel = getListModel();
+        FlatDataModel<E> model = getDataModel();
 
-        if (listModel.getSize() > 0) {
-            setValue(listModel.get(0));
+        if (model.getSize() > 0) {
+            setValue(model.get(0));
         }
     }
 
-    void setRenderer(TextItemRenderer<E> renderer);
+    void setRender(TextItemRender<E> render);
+
+    void setRender(ComponentItemRender<E> render);
 
     default void setTextRenderer(Function<@Nullable E, LocalizeValue> localizeValueFunction) {
-        setRenderer((renderer, index, item) -> renderer.append(localizeValueFunction.apply(item)));
+        setRender((presentation, item) -> presentation.append(localizeValueFunction.apply(item.getValue())));
     }
 
     @RequiredUIAccess
@@ -141,7 +143,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
     @RequiredUIAccess
     default void setValueByCondition(Predicate<E> predicate) {
-        for (E e : getListModel()) {
+        for (E e : getDataModel()) {
             if (predicate.test(e)) {
                 setValue(e);
             }

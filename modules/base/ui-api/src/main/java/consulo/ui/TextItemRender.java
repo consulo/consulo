@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
  */
 package consulo.ui;
 
-import org.jspecify.annotations.Nullable;
-
 /**
  * @author VISTALL
- * @since 2016-06-12
+ * @since 2026-08-02
  */
-public interface TextItemRenderer<E> {
-    static <V> TextItemRenderer<V> defaultRenderer() {
-        return (renderer, index, item) -> renderer.append(item == null ? "" : item.toString());
+@FunctionalInterface
+public interface TextItemRender<E> {
+    static <V> TextItemRender<V> defaultRender() {
+        return (presentation, item) -> {
+            V value = item.getValue();
+            presentation.append(value == null ? "" : value.toString());
+        };
     }
 
-    void render(TextItemPresentation render, int index, @Nullable E item);
+    void render(TextItemPresentation presentation, RenderItem<E> item);
 }

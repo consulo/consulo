@@ -127,7 +127,8 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
             iconThemes.addAll(libraries.values());
             myIconThemeComboBox = ComboBox.create(iconThemes);
-            myIconThemeComboBox.setRenderer((renderer, index, item) -> {
+            myIconThemeComboBox.setRender((renderer, renderItem) -> {
+            var item = renderItem.getValue();
                 if (item == ObjectUtil.NULL) {
                     renderer.append(IdeLocalize.comboboxIconThemeUiDefault());
                 }
@@ -160,12 +161,12 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             TableLayout aaPanel = TableLayout.create(StaticPosition.CENTER);
 
             myAntialiasingInIDE = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInIDE.setRenderer(buildItemRenderer(false));
+            myAntialiasingInIDE.setRender(buildItemRender(false));
 
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeIde(), myAntialiasingInIDE), TableLayout.cell(0, 0).fill());
 
             myAntialiasingInEditor = ComboBox.create(AntialiasingType.values());
-            myAntialiasingInEditor.setRenderer(buildItemRenderer(true));
+            myAntialiasingInEditor.setRender(buildItemRender(true));
             aaPanel.add(LabeledBuilder.simple(IdeLocalize.labelTextAntialiasingScopeEditor(), myAntialiasingInEditor), TableLayout.cell(0, 1).fill());
 
             myPanel.add(LabeledLayout.create(IdeLocalize.groupAntialiasingMode(), aaPanel));
@@ -203,8 +204,9 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
         }
 
-        private TextItemRenderer<AntialiasingType> buildItemRenderer(boolean editor) {
-            return (renderer, index, item) -> {
+        private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
+            return (renderer, renderItem) -> {
+                AntialiasingType item = renderItem.getValue();
                 if (item == null) {
                     return;
                 }

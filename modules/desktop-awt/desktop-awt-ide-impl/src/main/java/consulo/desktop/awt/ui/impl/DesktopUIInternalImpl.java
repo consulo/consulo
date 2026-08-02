@@ -52,13 +52,11 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.*;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.impl.model.ImmutableListModelImpl;
-import consulo.ui.impl.model.MutableListModelImpl;
+import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
-import consulo.ui.model.ListModel;
-import consulo.ui.model.MutableListModel;
-import consulo.ui.model.TableModel;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import org.jspecify.annotations.Nullable;
 
@@ -271,20 +269,14 @@ public class DesktopUIInternalImpl extends UIInternal {
         Container window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         return (Window) TargetAWT.from((java.awt.Window) window);
     }
-
     @Override
     public <T> Alert<T> _Alerts_create() {
         return DesktopAlertFactory.create();
     }
 
     @Override
-    public <T> ListModel<T> _ListModel_create(Collection<? extends T> list) {
-        return new ImmutableListModelImpl<>(list);
-    }
-
-    @Override
-    public <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list) {
-        return new MutableListModelImpl<>(list);
+    public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
+        return new FlatDataModelImpl<>(list);
     }
 
     @Override
@@ -358,7 +350,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> ComboBox<E> _Components_comboBox(consulo.ui.model.ListModel<E> model) {
+    public <E> ComboBox<E> _Components_comboBox(consulo.ui.model.FlatDataModel<E> model) {
         return new DesktopComboBoxImpl<>(model);
     }
 
@@ -384,7 +376,7 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+    public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
         return new DesktopListBoxImpl<>(model);
     }
 
@@ -458,13 +450,6 @@ public class DesktopUIInternalImpl extends UIInternal {
     public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
         return new DesktopStatedImageImpl<>(state, funcCall);
     }
-
-    @Override
-    public <V, E> TableColumn<V, E> _Components_tableColumnBuild(String name, Function<E, V> converter) {
-        return new DesktopTableColumnInfo<>(name, converter);
-    }
-
-
     @Override
     public IconLibraryManager _IconLibraryManager_get() {
         return DesktopIconLibraryManagerImpl.ourInstance;
@@ -486,13 +471,8 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
-        return new DesktopTableImpl<>(columns, model);
-    }
-
-    @Override
-    public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
-        return new DesktopTableModelImpl<>(list);
+    public <T> Table<T> _Table_create(FlatDataModel<T> model) {
+        return new DesktopTableImpl<>(model);
     }
 
     @Override

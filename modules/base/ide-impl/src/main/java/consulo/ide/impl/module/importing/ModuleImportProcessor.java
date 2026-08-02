@@ -143,7 +143,8 @@ public class ModuleImportProcessor {
     @RequiredUIAccess
     private static AsyncResult<ModuleImportProvider> showImportTarget(List<ModuleImportProvider> providers) {
         ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
-        box.setRenderer((renderer, index, item) -> {
+        box.setRender((renderer, renderItem) -> {
+            var item = renderItem.getValue();
             assert item != null;
             renderer.withIcon(item.getIcon());
             renderer.append(item.getName());

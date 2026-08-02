@@ -1,0 +1,16 @@
+/* served straight from META-INF/resources, matching webTree.css - the theme goes through the vite
+   bundle, which skips rebuilding on css only changes */
+
+.web-table {
+    background: transparent;
+}
+
+.web-table::part(row),
+.web-table::part(cell) {
+    background: transparent;
+}
+
+/* vaadin has no api for hiding the header row, so WebTableImpl#setShowHeader toggles this class */
+.web-table-no-header::part(header-cell) {
+    display: none;
+}

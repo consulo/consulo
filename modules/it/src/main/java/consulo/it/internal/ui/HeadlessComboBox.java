@@ -16,8 +16,12 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.ComboBox;
-import consulo.ui.TextItemRenderer;
-import consulo.ui.model.ListModel;
+import consulo.ui.TextItemRender;
+import consulo.ui.ComponentItemRender;
+import org.jspecify.annotations.Nullable;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
+import consulo.ui.model.FlatDataModel;
 
 /**
  * Dummy-but-creatable headless {@link ComboBox}.
@@ -25,22 +29,39 @@ import consulo.ui.model.ListModel;
  * @author VISTALL
  */
 public class HeadlessComboBox<E> extends HeadlessValueComponentBase<E> implements ComboBox<E> {
-    private final ListModel<E> myModel;
+    private final FlatDataModel<E> myModel;
 
-    public HeadlessComboBox(ListModel<E> model) {
+    public HeadlessComboBox(FlatDataModel<E> model) {
         myModel = model;
     }
 
     @Override
-    public ListModel<E> getListModel() {
+    public FlatDataModel<E> getDataModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
+    public void setRender(TextItemRender<E> render) {
     }
 
     @Override
     public void setValueByIndex(int index) {
+    }
+
+    @Override
+    public void setRender(ComponentItemRender<E> render) {
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        return null;
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
     }
 }

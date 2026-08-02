@@ -22,8 +22,14 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.model.ListModel;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -38,30 +44,86 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
         }
     }
 
-    private final ListModel<E> myModel;
-    private TextItemRenderer<E> myRenderer = ListItemRenderers.defaultRenderer();
+    private final FlatDataModel<E> myModel;
 
-    public DesktopComboBoxImpl(ListModel<E> model) {
+    private TextItemRender<E> myTextRender = TextItemRender.defaultRender();
+    private @Nullable ComponentItemRender<E> myComponentRender;
+    private @Nullable Function<E, String> mySpeedSearchConverter;
+    private @Nullable ToIntFunction<E> myItemHeightGetter;
+
+    public DesktopComboBoxImpl(FlatDataModel<E> model) {
         myModel = model;
     }
 
     @Override
     protected MyComboBox createComponent() {
         MyComboBox<E> myComponent = new MyComboBox<>();
-        myComponent.setModel(new DesktopComboBoxModelWrapper<>(myModel));
-        myComponent.setRenderer(new DesktopListRender<>(() -> myRenderer));
+        myComponent.setModel(new DesktopFlatDataModelWrapper<>(myModel));
+        applyRender(myComponent);
+        applySpeedSearch(myComponent);
         return myComponent;
     }
 
-    
+    @SuppressWarnings("unchecked")
+    private void applyRender(MyComboBox<E> component) {
+        ListCellRenderer<E> render = myComponentRender != null
+            ? new DesktopComponentItemRenderAdapter<>(myComponentRender)
+            : new DesktopListRender<>(() -> myTextRender);
+
+        component.setRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
+    }
+
+    private void applySpeedSearch(MyComboBox<E> component) {
+        if (mySpeedSearchConverter != null) {
+            ComboboxSpeedSearch.installSpeedSearch(component, mySpeedSearchConverter::apply);
+        }
+    }
+
     @Override
-    public ListModel<E> getListModel() {
+    public FlatDataModel<E> getDataModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(TextItemRenderer<E> renderer) {
-        myRenderer = renderer;
+    @SuppressWarnings("unchecked")
+    public void setRender(TextItemRender<E> render) {
+        myTextRender = render;
+        myComponentRender = null;
+        if (isRealized()) {
+            applyRender(toAWTComponent());
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void setRender(ComponentItemRender<E> render) {
+        myComponentRender = render;
+        if (isRealized()) {
+            applyRender(toAWTComponent());
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
+        mySpeedSearchConverter = converter;
+        if (isRealized()) {
+            applySpeedSearch(toAWTComponent());
+        }
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        if (!isRealized()) {
+            return null;
+        }
+        SpeedSearchSupply supply = SpeedSearchSupply.getSupply(toAWTComponent());
+        return supply == null ? null : supply.getEnteredPrefix();
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+        myItemHeightGetter = getter;
     }
 
     @Override
