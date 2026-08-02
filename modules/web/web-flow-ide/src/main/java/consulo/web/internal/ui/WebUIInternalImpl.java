@@ -36,6 +36,7 @@ import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
+import consulo.util.lang.StringUtil;
 import consulo.web.internal.ui.image.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -397,8 +398,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
-        throw notSupported();
-        //return new WebPasswordBoxImpl(StringUtil.notNullize(passwordText));
+        return new WebPasswordBoxImpl(StringUtil.notNullize(passwordText));
     }
 
     @Override
