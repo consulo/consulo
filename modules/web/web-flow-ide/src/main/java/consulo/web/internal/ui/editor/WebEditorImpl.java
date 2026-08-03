@@ -155,9 +155,6 @@ public class WebEditorImpl extends CodeEditorBase {
 
   private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
 
-  /** the ui the editor component is attached to, the only one its pushes may go to */
-  private volatile @Nullable UIAccess myUIAccess;
-
   private volatile boolean myCaretFromClient;
 
   private volatile boolean myTextFromClient;
@@ -313,15 +310,12 @@ public class WebEditorImpl extends CodeEditorBase {
     // a reattach builds the browser side editor again, so everything that is not part of its input has to
     // be pushed once more
     vaadin.addAttachListener(attachEvent -> {
-      myUIAccess = UIAccess.get();
-
       updateFont();
       updateColors();
 
       update();
     });
 
-    vaadin.addDetachListener(detachEvent -> myUIAccess = null);
 
     Disposer.register(myDisposable, () -> subscribeToLineStatusTracker(null));
   }
@@ -638,9 +632,9 @@ public class WebEditorImpl extends CodeEditorBase {
    * everything again anyway.
    */
   private boolean giveUI(Runnable runnable) {
-    // captured while attaching, on the ui thread - resolving it here would read the ui of the component from
-    // whatever thread the document event arrived on, which is not allowed to touch the session
-    UIAccess uiAccess = myUIAccess;
+    // the ui the editor component is attached to - a detached editor has none, and its attach listener pushes
+    // everything again anyway
+    UIAccess uiAccess = myEditorComponent.getUIAccess();
     if (uiAccess == null) {
       return false;
     }

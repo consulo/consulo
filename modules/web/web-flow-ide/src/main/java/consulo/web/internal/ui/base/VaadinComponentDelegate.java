@@ -38,7 +38,11 @@ import consulo.ui.font.FontManager;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
+import consulo.ui.UIAccess;
 import consulo.web.internal.ui.WebFontImpl;
+import consulo.web.internal.ui.WebUIAccessImpl;
 import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.web.internal.ui.vaadin.InitiableComponent;
 import org.jspecify.annotations.Nullable;
@@ -58,6 +62,29 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     private Font myFont = FontManager.get().createFont("?", 12);
 
     private Cursor myCursor;
+
+    /**
+     * The web frontend has one ui per browser session, so the access is the one of the ui this component is
+     * attached to - a component that is not attached has none, and whatever wanted to push into it has no ui
+     * to push into yet.
+     */
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        return toVaadinComponent().getUI().map(VaadinComponentDelegate::getUIAccess).orElse(null);
+    }
+
+    /**
+     * The access of a ui, created once and kept on the ui itself - the same instance
+     * {@code UIInternal#_UIAccess_get} answers for the ui that is current.
+     */
+    public static UIAccess getUIAccess(UI ui) {
+        WebUIAccessImpl uiAccess = ComponentUtil.getData(ui, WebUIAccessImpl.class);
+        if (uiAccess == null) {
+            uiAccess = new WebUIAccessImpl(ui);
+            ComponentUtil.setData(ui, WebUIAccessImpl.class, uiAccess);
+        }
+        return uiAccess;
+    }
 
     public VaadinComponentDelegate(boolean noBody) {
     }

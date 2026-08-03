@@ -122,15 +122,25 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }
 
+  /**
+   * The bar is shown in one frame, and on the web a frame belongs to a single browser session - the access of
+   * its own component is the one its widgets may be pushed into. The application wide one is what is left
+   * while the bar is being built and not attached yet.
+   */
+  private UIAccess uiAccess() {
+    UIAccess uiAccess = myComponent.getUIAccess();
+    return uiAccess != null ? uiAccess : myApplication.getLastUIAccess();
+  }
+
   private void addWidget(StatusBarWidget widget, Position pos) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
+    UIAccess uiAccess = uiAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, pos, List.of()));
   }
 
   @Override
   public void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
+    UIAccess uiAccess = uiAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, order));
 
@@ -302,7 +312,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
     // the switcher hides itself while getProject() is null, and the project is only reachable through the frame
     if (myMaster == null) {
-      myApplication.getLastUIAccess().giveIfNeed(this::installToolWindowsSwitcher);
+      uiAccess().giveIfNeed(this::installToolWindowsSwitcher);
     }
   }
 
@@ -370,7 +380,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public void updateWidget(String id) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
+    UIAccess uiAccess = uiAccess();
     uiAccess.giveIfNeed(() -> {
       WidgetBean bean = myWidgetMap.get(id);
       if (bean != null) {

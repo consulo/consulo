@@ -18,8 +18,10 @@ package consulo.desktop.swt.ui.impl;
 import consulo.desktop.swt.ui.impl.layout.DesktopSwtScrollableLayoutImpl;
 import consulo.desktop.swt.ui.impl.layout.data.LayoutDataWithSize;
 import consulo.disposer.Disposable;
+
 import consulo.ui.Component;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -40,6 +42,12 @@ import org.eclipse.swt.widgets.Widget;
  */
 public abstract class SWTComponentDelegate<SWT extends Widget> implements Component {
     public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
+
+    /** the desktop frontend draws into a single ui, so every component of it answers the same access */
+    @Override
+    public UIAccess getUIAccess() {
+        return DesktopSwtUIAccess.INSTANCE;
+    }
 
     protected Size2D mySize;
 

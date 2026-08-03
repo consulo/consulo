@@ -39,6 +39,7 @@ import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.image.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -351,15 +352,7 @@ public class WebUIInternalImpl extends UIInternal {
     public UIAccess _UIAccess_get() {
         UI ui = UI.getCurrent();
         assert ui != null;
-        WebUIAccessImpl data = ComponentUtil.getData(ui, WebUIAccessImpl.class);
-        if (data != null) {
-            return data;
-        }
-        else {
-            WebUIAccessImpl access = new WebUIAccessImpl(ui);
-            ComponentUtil.setData(ui, WebUIAccessImpl.class, access);
-            return access;
-        }
+        return VaadinComponentDelegate.getUIAccess(ui);
     }
 
     @Override
