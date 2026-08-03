@@ -2,6 +2,9 @@
  * @author VISTALL
  * @since 13/01/2022
  */
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.ui.impl {
   requires consulo.annotation;
   requires consulo.proxy;
@@ -11,6 +14,7 @@ module consulo.ui.impl {
   requires consulo.ui.api;
   requires consulo.localize.api;
   requires com.google.protobuf;
+  requires tools.jackson.core;
 
   requires consulo.base.localize.library;
 

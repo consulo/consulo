@@ -1013,6 +1013,22 @@
                 }
             },
 
+            setColors: (background, foreground, selectionBackground, caretRowBackground) => {
+                const set = (name, value) => {
+                    if (value) {
+                        element.style.setProperty(name, value);
+                    }
+                    else {
+                        element.style.removeProperty(name);
+                    }
+                };
+
+                set('--arquill-editor-background', background);
+                set('--arquill-editor-foreground', foreground);
+                set('--arquill-editor-selection-background', selectionBackground);
+                set('--arquill-editor-caret-row-background', caretRowBackground);
+            },
+
             setGutterMarks: marksJson => {
                 element.$arquillGutterMarks = marksJson;
                 renderGutterMarks();
@@ -1032,6 +1048,19 @@
             setStyleRanges: rangesJson => {
                 element.$arquillStyleRanges = JSON.parse(rangesJson);
                 pushStyleRanges();
+            },
+
+            setSchemeStyles: css => {
+                let style = element.$arquillSchemeStyle;
+                if (!style) {
+                    style = document.createElement('style');
+                    element.$arquillSchemeStyle = style;
+                    element.appendChild(style);
+                }
+
+                if (style.textContent !== css) {
+                    style.textContent = css;
+                }
             },
 
             setFoldRegions: regionsJson => {

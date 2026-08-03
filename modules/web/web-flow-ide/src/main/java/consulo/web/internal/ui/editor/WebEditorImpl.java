@@ -71,6 +71,7 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
@@ -105,8 +106,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -151,6 +154,9 @@ public class WebEditorImpl extends CodeEditorBase {
   private final WebEditorGutterComponentImpl myGutterComponent;
 
   private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
+
+  /** the ui the editor component is attached to, the only one its pushes may go to */
+  private volatile @Nullable UIAccess myUIAccess;
 
   private volatile boolean myCaretFromClient;
 
@@ -234,6 +240,7 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
 
     updateFont();
+    updateColors();
 
 //    vaadin.addMouseDownListener(this::runMousePressedCommand);
 
@@ -306,10 +313,15 @@ public class WebEditorImpl extends CodeEditorBase {
     // a reattach builds the browser side editor again, so everything that is not part of its input has to
     // be pushed once more
     vaadin.addAttachListener(attachEvent -> {
+      myUIAccess = UIAccess.get();
+
       updateFont();
+      updateColors();
 
       update();
     });
+
+    vaadin.addDetachListener(detachEvent -> myUIAccess = null);
 
     Disposer.register(myDisposable, () -> subscribeToLineStatusTracker(null));
   }
@@ -570,11 +582,17 @@ public class WebEditorImpl extends CodeEditorBase {
   /** the daemon adds its highlighters one by one, a single push per batch is enough */
   private void scheduleUpdate() {
     if (myUpdateScheduled.compareAndSet(false, true)) {
-      giveUI(() -> {
+      boolean scheduled = giveUI(() -> {
         myUpdateScheduled.set(false);
 
         update();
       });
+
+      // the flag is cleared by the runnable, so a push that was never scheduled - the editor is between a
+      // detach and an attach - would latch it and every later batch of the daemon would be dropped
+      if (!scheduled) {
+        myUpdateScheduled.set(false);
+      }
     }
   }
 
@@ -614,12 +632,21 @@ public class WebEditorImpl extends CodeEditorBase {
     return WebAwtBridgeComponent.of(myEditorComponent);
   }
 
-  /** document and caret events arrive off the ui thread, the browser can only be touched from it */
-  private static void giveUI(Runnable runnable) {
-    UIAccess uiAccess = Application.get().getLastUIAccess();
-    if (uiAccess != null) {
-      uiAccess.giveIfNeed(runnable);
+  /**
+   * Document and caret events arrive off the ui thread, the browser can only be touched from it. The ui is
+   * the one the editor component sits in - a detached editor pushes nothing, its attach listener pushes
+   * everything again anyway.
+   */
+  private boolean giveUI(Runnable runnable) {
+    // captured while attaching, on the ui thread - resolving it here would read the ui of the component from
+    // whatever thread the document event arrived on, which is not allowed to touch the session
+    UIAccess uiAccess = myUIAccess;
+    if (uiAccess == null) {
+      return false;
     }
+
+    uiAccess.giveIfNeed(runnable);
+    return true;
   }
 
   /**
@@ -635,6 +662,21 @@ public class WebEditorImpl extends CodeEditorBase {
     giveUI(() -> myEditorComponent.toVaadinComponent().setFont(fontName, fontSize));
   }
 
+  private void updateColors() {
+    EditorColorsScheme scheme = getColorsScheme();
+
+    String background = toCssColor(scheme.getDefaultBackground());
+    String foreground = toCssColor(scheme.getDefaultForeground());
+
+    ColorValue selection = scheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR);
+    String selectionBackground = selection == null ? null : toCssColor(selection);
+
+    ColorValue caretRow = scheme.getColor(EditorColors.CARET_ROW_COLOR);
+    String caretRowBackground = caretRow == null ? null : toCssColor(caretRow);
+
+    giveUI(() -> myEditorComponent.toVaadinComponent().setColors(background, foreground, selectionBackground, caretRowBackground));
+  }
+
   public void update() {
     // the highlighter walk touches the document and the psi backed settings
     Application.get().runReadAction((Runnable)() -> {
@@ -647,7 +689,8 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @RequiredReadAction
   private void updateStyleRanges() {
-    if (getHighlighter() == null) {
+    EditorHighlighter editorHighlighter = getHighlighter();
+    if (editorHighlighter == null) {
       return;
     }
 
@@ -655,20 +698,48 @@ public class WebEditorImpl extends CodeEditorBase {
 
     StringBuilder ranges = new StringBuilder("[");
 
+    // a run that is nothing but a lexer token is pushed as classes named after the attribute keys of the
+    // scheme, and the styles of those keys travel once as a stylesheet - the same keyword does not repeat
+    // its resolved style through the whole file
+    HighlighterIterator tokenIterator = editorHighlighter.createIterator(0);
+    Set<TextAttributesKey> schemeKeys = new LinkedHashSet<>();
+
     // iteration state merges the lexer attributes with the markup model by layer, which is how the daemon
     // results - identifier highlighting, inspections - reach the view
     IterationState state = new IterationState(this, 0, textLength, null, false, false, false, false);
     while (!state.atEnd()) {
+      int start = state.getStartOffset();
+      int end = state.getEndOffset();
+
       String style = toCssStyle(state.getMergedAttributes());
 
       if (style != null) {
+        while (!tokenIterator.atEnd() && tokenIterator.getEnd() <= start) {
+          tokenIterator.advance();
+        }
+
+        // the run answers to the keys only when the markup added nothing over the token - what the merged
+        // attributes render as is what the token renders as then. the attributes themselves cannot be
+        // compared, their equals is the identity of an interned flyweight the merge does not go through
+        String styleClass = null;
+        if (!tokenIterator.atEnd() && tokenIterator.getStart() <= start && end <= tokenIterator.getEnd()) {
+          TextAttributes tokenAttributes = tokenIterator.getTextAttributes();
+          if (tokenAttributes != null && style.equals(toCssStyle(tokenAttributes))) {
+            styleClass = toSchemeClasses(tokenIterator.getTextAttributesKeys(), schemeKeys);
+          }
+        }
+
         if (ranges.length() > 1) {
           ranges.append(',');
         }
 
-        ranges.append("{\"start\":").append(state.getStartOffset())
-          .append(",\"end\":").append(state.getEndOffset())
-          .append(",\"style\":{\"style\":").append(style).append("}}");
+        ranges.append("{\"start\":").append(start).append(",\"end\":").append(end);
+        if (styleClass != null) {
+          ranges.append(",\"style\":{\"styleClass\":\"").append(styleClass).append("\"}}");
+        }
+        else {
+          ranges.append(",\"style\":{\"style\":").append(style).append("}}");
+        }
       }
 
       state.advance();
@@ -676,7 +747,11 @@ public class WebEditorImpl extends CodeEditorBase {
 
     ranges.append(']');
 
-    myEditorComponent.toVaadinComponent().setStyleRanges(ranges.toString());
+    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+
+    // the stylesheet has to be in the page before a range names a class of it
+    vaadin.setSchemeStyles(buildSchemeCss(schemeKeys));
+    vaadin.setStyleRanges(ranges.toString());
 
     updateTooltipRanges();
 
@@ -1156,7 +1231,59 @@ public class WebEditorImpl extends CodeEditorBase {
       background = null;
     }
 
-    return toCssStyle(style, foreground, background, attributes.getFontType(), attributes.getEffectType(), attributes.getEffectColor());
+    return toCssStyle(style, foreground, background, attributes.getFontType(), toCssTextDecoration(attributes));
+  }
+
+  /**
+   * The effects of the attributes as one text-decoration. A highlighter of the daemon merges its effect into
+   * the ones already on the run rather than replacing them - an error under an inspection underline carries
+   * both - and only the first of them is what {@code getEffectType} answers.
+   */
+  private static @Nullable String toCssTextDecoration(TextAttributes attributes) {
+    StringBuilder lines = new StringBuilder();
+    StringBuilder style = new StringBuilder();
+    StringBuilder color = new StringBuilder();
+
+    attributes.forEachEffect((effectType, effectColor) -> {
+      String decoration = toCssTextDecoration(effectType, effectColor);
+      if (decoration == null) {
+        return;
+      }
+
+      // css carries one line list, one style and one colour for the whole element, so several effects can
+      // only be drawn together when they agree - the first one to name a style and a colour wins
+      for (String part : decoration.split(" ")) {
+        if (part.equals("underline") || part.equals("line-through")) {
+          if (!lines.toString().contains(part)) {
+            if (lines.length() > 0) {
+              lines.append(' ');
+            }
+            lines.append(part);
+          }
+        }
+        else if (part.startsWith("#")) {
+          if (color.length() == 0) {
+            color.append(part);
+          }
+        }
+        else if (style.length() == 0) {
+          style.append(part);
+        }
+      }
+    });
+
+    if (lines.length() == 0) {
+      return null;
+    }
+
+    StringBuilder decoration = new StringBuilder(lines);
+    if (style.length() > 0) {
+      decoration.append(' ').append(style);
+    }
+    if (color.length() > 0) {
+      decoration.append(' ').append(color);
+    }
+    return decoration.toString();
   }
 
   private static @Nullable String toCssStyle(
@@ -1164,8 +1291,7 @@ public class WebEditorImpl extends CodeEditorBase {
     @Nullable ColorValue foreground,
     @Nullable ColorValue background,
     int fontType,
-    @Nullable EffectType effectType,
-    @Nullable ColorValue effectColor
+    @Nullable String decoration
   ) {
     if (foreground != null) {
       style.append("\"color\":\"").append(toCssColor(foreground)).append('"');
@@ -1193,7 +1319,6 @@ public class WebEditorImpl extends CodeEditorBase {
     }
 
     // without the effects an error reads as slightly differently coloured text, the wave is what makes it an error
-    String decoration = toCssTextDecoration(effectType, effectColor);
     if (decoration != null) {
       if (style.length() > 0) {
         style.append(',');
@@ -1202,6 +1327,72 @@ public class WebEditorImpl extends CodeEditorBase {
     }
 
     return style.length() == 0 ? null : "{" + style + "}";
+  }
+
+  private static @Nullable String toSchemeClasses(TextAttributesKey[] keys, Set<TextAttributesKey> collected) {
+    if (keys.length == 0) {
+      return null;
+    }
+
+    StringBuilder classes = new StringBuilder();
+    for (TextAttributesKey key : keys) {
+      collected.add(key);
+
+      if (classes.length() > 0) {
+        classes.append(' ');
+      }
+      classes.append(toSchemeClassName(key));
+    }
+    return classes.toString();
+  }
+
+  private static String toSchemeClassName(TextAttributesKey key) {
+    return "arquill-a-" + key.getExternalName().replaceAll("[^A-Za-z0-9_-]", "-");
+  }
+
+  /**
+   * The rules of the attribute keys the pushed ranges name. A key of the token stands later in its array the
+   * higher it layers, and the rules keep that order, so the cascade resolves a token with several keys the
+   * way the scheme merge does.
+   */
+  private String buildSchemeCss(Set<TextAttributesKey> keys) {
+    EditorColorsScheme scheme = getColorsScheme();
+
+    StringBuilder css = new StringBuilder();
+    for (TextAttributesKey key : keys) {
+      TextAttributes attributes = scheme.getAttributes(key);
+      if (attributes == null) {
+        continue;
+      }
+
+      css.append('.').append(toSchemeClassName(key)).append('{');
+
+      ColorValue foreground = attributes.getForegroundColor();
+      if (foreground != null && !Objects.equals(foreground, scheme.getDefaultForeground())) {
+        css.append("color:").append(toCssColor(foreground)).append(';');
+      }
+
+      ColorValue background = attributes.getBackgroundColor();
+      if (background != null && !Objects.equals(background, scheme.getDefaultBackground())) {
+        css.append("background-color:").append(toCssColor(background)).append(';');
+      }
+
+      int fontType = attributes.getFontType();
+      if ((fontType & Font.BOLD) != 0) {
+        css.append("font-weight:bold;");
+      }
+      if ((fontType & Font.ITALIC) != 0) {
+        css.append("font-style:italic;");
+      }
+
+      String decoration = toCssTextDecoration(attributes);
+      if (decoration != null) {
+        css.append("text-decoration:").append(decoration).append(';');
+      }
+
+      css.append("}\n");
+    }
+    return css.toString();
   }
 
   private static @Nullable String toCssTextDecoration(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
@@ -1477,9 +1668,25 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public void reinitSettings() {
+    // the delegate keeps the global scheme it was created against, a scheme switch reaches the editor only
+    // through this
+    if (myScheme instanceof MyColorSchemeDelegate schemeDelegate) {
+      schemeDelegate.updateGlobalScheme();
+    }
+
+    // the lexer highlighter caches the attributes of every token type against the scheme it was handed
+    EditorHighlighter highlighter = getHighlighter();
+    if (highlighter != null) {
+      highlighter.setColorScheme(myScheme);
+    }
+
     myView.reset();
 
     updateFont();
+    updateColors();
+
+    // the pushed ranges carry attributes resolved from the previous scheme
+    update();
   }
 
   @Override

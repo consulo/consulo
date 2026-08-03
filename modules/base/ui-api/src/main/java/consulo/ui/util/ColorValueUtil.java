@@ -4,6 +4,7 @@ import consulo.annotation.UsedInPlugin;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -16,26 +17,55 @@ public class ColorValueUtil {
      * <code>#abc123</code>,
      * <code>ABC123</code>,
      * <code>ab5</code>,
-     * <code>#FFF</code>.
+     * <code>#FFF</code>,
+     * and the same forms with a trailing alpha digit - <code>#FFF8</code>, <code>#abc12380</code>.
      *
      * @param str hex string
      * @return RGBColor object
      */
     public static RGBColor fromHex(String str) {
-        str = StringUtil.trimStart(str, "#");
-        if (str.length() == 3) {
-            return new RGBColor(
-                17 * Integer.valueOf(String.valueOf(str.charAt(0)), 16),
-                17 * Integer.valueOf(String.valueOf(str.charAt(1)), 16),
-                17 * Integer.valueOf(String.valueOf(str.charAt(2)), 16)
-            );
+        RGBColor color = fromHexOrNull(str);
+        if (color == null) {
+            throw new IllegalArgumentException("Should be String of 3, 4, 6 or 8 chars length.");
         }
-        else if (str.length() == 6) {
-            return RGBColor.decode("0x" + str);
+        return color;
+    }
+
+    public static @Nullable RGBColor fromHexOrNull(@Nullable String str) {
+        if (str == null) {
+            return null;
         }
-        else {
-            throw new IllegalArgumentException("Should be String of 3 or 6 chars length.");
+
+        String hex = StringUtil.trimStart(str, "#");
+        return switch (hex.length()) {
+            case 3 -> new RGBColor(fromHex1(hex, 0), fromHex1(hex, 1), fromHex1(hex, 2), 255);
+            case 4 -> new RGBColor(fromHex1(hex, 0), fromHex1(hex, 1), fromHex1(hex, 2), fromHex1(hex, 3));
+            case 6 -> new RGBColor(fromHex2(hex, 0), fromHex2(hex, 2), fromHex2(hex, 4), 255);
+            case 8 -> new RGBColor(fromHex2(hex, 0), fromHex2(hex, 2), fromHex2(hex, 4), fromHex2(hex, 6));
+            default -> null;
+        };
+    }
+
+    private static int fromHexDigit(String str, int pos) {
+        char ch = str.charAt(pos);
+        if (ch >= '0' && ch <= '9') {
+            return ch - '0';
         }
+        if (ch >= 'A' && ch <= 'F') {
+            return ch - 'A' + 10;
+        }
+        if (ch >= 'a' && ch <= 'f') {
+            return ch - 'a' + 10;
+        }
+        throw new IllegalArgumentException("unsupported char at " + pos + ":" + str);
+    }
+
+    private static int fromHex1(String str, int pos) {
+        return 17 * fromHexDigit(str, pos);
+    }
+
+    private static int fromHex2(String str, int pos) {
+        return 16 * fromHexDigit(str, pos) + fromHexDigit(str, pos + 1);
     }
 
     public static String toHtmlColor(ColorValue c) {

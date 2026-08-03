@@ -37,7 +37,7 @@ body
 
   /* separates the navigation bar from the tool window / editor area, like the awt frame does */
   box-sizing: border-box;
-  border-top: 1px solid lightgray;
+  border-top: 1px solid var(--consulo-component-border-color, lightgray);
 }
 
 .web-tool-window-panel-center
@@ -113,22 +113,22 @@ body
 
 .web-tool-window-stripe-top
 {
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid var(--consulo-component-border-color, lightgray);
 }
 
 .web-tool-window-stripe-bottom
 {
-  border-top: 1px solid lightgray;
+  border-top: 1px solid var(--consulo-component-border-color, lightgray);
 }
 
 .web-tool-window-stripe-left
 {
-  border-right: 1px solid lightgray;
+  border-right: 1px solid var(--consulo-component-border-color, lightgray);
 }
 
 .web-tool-window-stripe-right
 {
-  border-left: 1px solid lightgray;
+  border-left: 1px solid var(--consulo-component-border-color, lightgray);
 }
 
 .web-tool-window-content
@@ -143,12 +143,20 @@ vaadin-split-layout::part(splitter)
   flex: 0 0 5px;
 
   background-color: transparent;
-  background-image: linear-gradient(to right, transparent 2px, lightgray 2px, lightgray 3px, transparent 3px);
+  background-image: linear-gradient(to right,
+    transparent 2px,
+    var(--consulo-component-border-color, lightgray) 2px,
+    var(--consulo-component-border-color, lightgray) 3px,
+    transparent 3px);
 }
 
 vaadin-split-layout[orientation="vertical"]::part(splitter)
 {
-  background-image: linear-gradient(to bottom, transparent 2px, lightgray 2px, lightgray 3px, transparent 3px);
+  background-image: linear-gradient(to bottom,
+    transparent 2px,
+    var(--consulo-component-border-color, lightgray) 2px,
+    var(--consulo-component-border-color, lightgray) 3px,
+    transparent 3px);
 }
 
 vaadin-split-layout::part(handle)
@@ -192,12 +200,12 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
 
 .web-tool-window-stripe-button:hover
 {
-  background-color: gainsboro;
+  background-color: var(--consulo-tool-window-button-hover-background, gainsboro);
 }
 
 .web-tool-window-stripe-button-selected
 {
-  background-color: lightgray;
+  background-color: var(--consulo-tool-window-button-selected-background, lightgray);
 }
 
 .web-tool-window-stripe-top .web-tool-window-stripe-button-secondary
@@ -245,7 +253,7 @@ vaadin-split-layout.web-split-layout-no-divider::part(splitter)
 }
 .web-menu-bar
 {
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid var(--consulo-component-border-color, lightgray);
 }
 
 .web-menu-bar vaadin-menu-bar-button
@@ -350,3 +358,12 @@ vaadin-breadcrumbs-item svg
   flex: 0 0 16px;
 }
 
+
+/* the platform hands a disabled action its grayed icon, the way the awt buttons are painted - aura fades the
+   whole control on top of that, and a faded grayed icon reads as a rendering glitch rather than a disabled
+   button. the label carries the disabled text colour of the theme instead */
+vaadin-button[disabled]
+{
+  opacity: 1;
+  color: var(--consulo-label-disabled-foreground);
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Dark Grey",
+  "dark": true,
+  "author": "consulo.io",
+  "parentTheme": "dark",
+  "iconLibraryId": "dark",
+  "editorScheme": "Darcula",
+  "colors": {
+    "background": "#3c3f41",
+    "componentBackground": "#3f4041"
+  },
+  "ui": {
+    "TabbedPane": {
+      "background": "#3c3f41",
+      "foreground": "#dddddd",
+      "hoverColor": "#303234",
+      "underlineColor": "#007aff"
+    },
+    "ScrollBar": {
+      "thumb": "#6c6e70",
+      "hoverThumbColor": "#85888a"
+    },
+    "ToolWindow": {
+      "Button": {
+        "hoverBackground": "#757b7e",
+        "selectedBackground": "#696e70"
+      }
+    },
+    "Label": {
+      "disabledForeground": "#a6a6a6"
+    },
+    "Button": {
+      "hoverBackground": "#747678"
+    },
+    "Component": {
+      "focusColor": "#004999"
+    }
+  }
+}

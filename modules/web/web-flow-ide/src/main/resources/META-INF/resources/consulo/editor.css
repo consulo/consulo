@@ -145,9 +145,9 @@
 {
   width: var(--arquill-overview-ruler-width);
 
-  /* the stripe is a column of its own beside the text, so it carries the background of the editor rather
-     than of the application around it - the app one is a different grey and the seam shows */
-  background-color: var(--arquill-editor-background, #fff);
+  /* the stripe is a column of its own beside the text, and it carries the background of the panels around
+     the editor, like the awt error panel does */
+  background-color: var(--consulo-panel-background, #fff);
 }
 
 /* orion draws a mark as a rounded 8px pill left aligned in the column, the awt panel paints a dash over the
@@ -277,8 +277,9 @@
   max-width: 40em;
   padding: 4px 6px;
 
-  border: 1px solid lightgray;
-  background-color: white;
+  border: 1px solid var(--consulo-component-border-color, lightgray);
+  background-color: var(--consulo-tool-tip-background, white);
+  color: var(--consulo-tool-tip-foreground, black);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 
   font-size: 12px;
@@ -307,4 +308,60 @@
 .textviewZoom .textviewContent > div
 {
   line-height: normal !important;
+}
+
+/* the rules below override the bundled orion stylesheet, which carries fixed light colors of its own. the
+   bundle is regenerated on an arquill update, so the theme never touches it - and it is injected after this
+   file, which is why every selector doubles a class to win the cascade on specificity */
+
+.textview.textview
+{
+  color: var(--arquill-editor-foreground, #333);
+  background-color: var(--arquill-editor-background, white);
+}
+
+.textviewSelection.textviewSelection
+{
+  background: var(--arquill-editor-selection-background, rgb(180, 213, 255));
+}
+
+.textview .textviewContent ::-moz-selection
+{
+  background: var(--arquill-editor-selection-background, rgba(180, 213, 255, 0.99));
+}
+
+.textview .textviewContent ::selection
+{
+  background: var(--arquill-editor-selection-background, rgba(180, 213, 255, 0.99));
+}
+
+.annotationLine.annotationLine.currentLine,
+.meta.meta.annotation.currentLine
+{
+  background-color: var(--arquill-editor-caret-row-background, #EAF2FE);
+}
+
+/* the rulers sit on the panel background like the awt gutter and error panel, and their seams follow the
+   theme border */
+.textviewLeftRuler.textviewLeftRuler
+{
+  border-right: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--consulo-panel-background, white);
+}
+
+.textviewRightRuler.textviewRightRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--consulo-panel-background, white);
+}
+
+.textviewInnerRightRuler.textviewInnerRightRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--consulo-panel-background, white);
+}
+
+.textviewMarginRuler.textviewMarginRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
 }

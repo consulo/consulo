@@ -22,7 +22,10 @@ import com.vaadin.flow.function.DeploymentConfiguration;
 import com.vaadin.flow.server.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.image.IconLibraryManager;
+import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
+import consulo.web.internal.ui.WebStyleCssRegistry;
 import consulo.web.internal.ui.WebStyleImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -143,11 +146,39 @@ public class UIServlet extends VaadinServlet {
 
             StyleManager styleManager = StyleManager.get();
 
-            Disposable listenerDisposer = styleManager.addChangeListener((oldStyle, newStyle) -> {
-                ui.getPage().setColorScheme(((WebStyleImpl) newStyle).getVaadinThemeId());
-            });
+            applyStyle(ui, styleManager.getCurrentStyle());
+
+            Disposable listenerDisposer = styleManager.addChangeListener((oldStyle, newStyle) -> applyStyle(ui, newStyle));
 
             Disposer.register(vaadinUiDisposable, listenerDisposer);
+        });
+    }
+
+    private static void applyStyle(UI ui, Style style) {
+        // a style change arrives off the ui thread, and a ui the browser has already navigated away from is
+        // still on the listener list until its session is cleaned up - touching its page throws
+        if (ui.getSession() == null) {
+            return;
+        }
+
+        ui.access(() -> {
+            ui.getPage().setColorScheme(((WebStyleImpl)style).getVaadinThemeId());
+
+            // vaadin owns the 'theme' attribute and knows light and dark only, this one carries the consulo
+            // style id, which is what tells the styles sharing a vaadin color scheme apart
+            ui.getPage().executeJs(
+                "document.documentElement.setAttribute($0, $1)",
+                WebStyleCssRegistry.STYLE_ATTRIBUTE,
+                style.getId()
+            );
+
+            // every web-image leaf rewrites its url against this attribute and re-renders when it changes -
+            // that is what makes the icons follow the style, including the ones the server re-syncs later
+            // with the url they were first rendered with
+            ui.getPage().executeJs(
+                "document.documentElement.setAttribute('consulo-icon-version', $0)",
+                String.valueOf(IconLibraryManager.get().getModificationCount())
+            );
         });
     }
 }

@@ -34,6 +34,8 @@ import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -238,7 +240,7 @@ public class UnifiedActionRow {
     private Button createButton(UnifiedActionMenuExpander.MenuNode node, boolean showText) {
         // an icon action is shown by its icon, its text is what the user gets on hover
         Button button = Button.create(showText ? node.text() : LocalizeValue.empty());
-        button.setIcon(node.icon());
+        button.setIcon(toButtonIcon(node));
         button.setToolTipText(node.text());
         button.setEnabled(node.enabled());
 
@@ -247,5 +249,19 @@ public class UnifiedActionRow {
         }
 
         return button;
+    }
+
+    /**
+     * A disabled action is drawn with the grayed icon of the platform, the way the awt buttons do it - the
+     * presentation carries one of its own only when the action set it.
+     */
+    private static @Nullable Image toButtonIcon(UnifiedActionMenuExpander.MenuNode node) {
+        Image icon = node.icon();
+        if (icon == null || node.enabled()) {
+            return icon;
+        }
+
+        Image disabledIcon = node.disabledIcon();
+        return disabledIcon != null ? disabledIcon : ImageEffects.grayed(icon);
     }
 }

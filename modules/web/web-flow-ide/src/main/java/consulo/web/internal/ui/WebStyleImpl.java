@@ -16,22 +16,13 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.page.ColorScheme;
-import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
-import consulo.ui.style.ComponentColors;
-import consulo.ui.style.StandardColors;
-import consulo.ui.style.Style;
-import consulo.ui.style.StyleColorValue;
-
-import java.util.HashMap;
-import java.util.Map;
+import consulo.ui.impl.style.StyleImpl;
 
 /**
  * @author VISTALL
  * @since 2017-09-15
  */
-public class WebStyleImpl implements Style {
-    private Map<StyleColorValue, ColorValue> myColors = new HashMap<>();
+public class WebStyleImpl extends StyleImpl {
     private final String myId;
     private final String myName;
     private final boolean myIsDark;
@@ -42,15 +33,6 @@ public class WebStyleImpl implements Style {
         myName = name;
         myIsDark = isDark;
         myVaadinThemeId = value;
-
-        for (StandardColors color : StandardColors.values()) {
-            myColors.put(color, color.getStaticValue());
-        }
-
-        myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
-        myColors.put(ComponentColors.TEXT, StandardColors.BLACK.getStaticValue());
-        myColors.put(ComponentColors.TEXT_FOREGROUND, StandardColors.BLACK.getStaticValue());
-        myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
     }
 
     public ColorScheme.Value getVaadinThemeId() {
@@ -70,14 +52,5 @@ public class WebStyleImpl implements Style {
     @Override
     public String getName() {
         return myName;
-    }
-
-    @Override
-    public ColorValue getColorValue(StyleColorValue colorKey) {
-        ColorValue colorValue = myColors.get(colorKey);
-        if (colorValue == null) {
-            return StandardColors.RED.getStaticValue();
-        }
-        return colorValue;
     }
 }

@@ -54,6 +54,7 @@ import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.aura.Aura;
 import consulo.web.internal.ui.WebFontRegistry;
+import consulo.web.internal.ui.WebStyleCssRegistry;
 import org.vaadin.stefan.table.Table;
 
 /**
@@ -117,5 +118,72 @@ public class ConsuloAppShellConfigurator implements AppShellConfigurator {
     // built from the same list the font manager reports, a stylesheet of the theme would have to be kept in
     // step with it by hand
     settings.addInlineWithContents(WebFontRegistry.buildFontFaceCss(), Inline.Wrapping.STYLESHEET);
+
+    // every style is emitted at once, the active one is selected by the attribute set on <html>, so switching
+    // a style does not have to push a stylesheet to a running ui
+    settings.addInlineWithContents(WebStyleCssRegistry.buildStyleCss(), Inline.Wrapping.STYLESHEET);
+
+    // a vaadin component keeps its scroller inside its shadow root, and a ::-webkit-scrollbar rule of the
+    // document does not cross that boundary - those scrollers keep the scrollbar of the browser, arrow buttons
+    // and all. the rules of scrollbar.css are adopted into every shadow root instead, which is why they are
+    // read back out of it rather than written twice. inlined rather than shipped as a module so that the
+    // patch is installed before the components define their roots
+    settings.addInlineWithContents(
+      """
+      (() => {
+          const sheet = new CSSStyleSheet();
+
+          const adopt = root => {
+              if (!root.adoptedStyleSheets.includes(sheet)) {
+                  root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+              }
+          };
+
+          const attachShadow = Element.prototype.attachShadow;
+          Element.prototype.attachShadow = function (init) {
+              const root = attachShadow.call(this, init);
+              if (root.mode === 'open') {
+                  adopt(root);
+              }
+              return root;
+          };
+
+          const adoptExisting = node => {
+              for (const element of node.querySelectorAll('*')) {
+                  if (element.shadowRoot) {
+                      adopt(element.shadowRoot);
+                      adoptExisting(element.shadowRoot);
+                  }
+              }
+          };
+
+          // the text of the same file the document is styled with, so the two cannot drift. a sheet already
+          // adopted by a root updates in place when it is replaced, so filling it in late is fine
+          fetch('/consulo/scrollbar.css')
+              .then(response => response.text())
+              .then(text => sheet.replaceSync(text));
+
+          // a component whose class was defined before the patch above may hand out a root the patch never
+          // saw, and flow builds the whole ui long after the document is loaded - so the tree is swept again
+          // whenever it grows, coalesced into one pass per frame
+          let sweeping = false;
+          const sweep = () => {
+              if (sweeping) {
+                  return;
+              }
+              sweeping = true;
+              requestAnimationFrame(() => {
+                  sweeping = false;
+                  adoptExisting(document);
+              });
+          };
+
+          new MutationObserver(sweep).observe(document.documentElement, { childList: true, subtree: true });
+
+          document.documentElement.setAttribute('consulo-scrollbar', 'on');
+      })();
+      """,
+      Inline.Wrapping.JAVASCRIPT
+    );
   }
 }

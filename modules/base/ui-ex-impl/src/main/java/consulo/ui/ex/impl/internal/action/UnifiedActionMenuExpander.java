@@ -57,13 +57,14 @@ public final class UnifiedActionMenuExpander {
         @Nullable AnAction action,
         LocalizeValue text,
         @Nullable Image icon,
+        @Nullable Image disabledIcon,
         boolean enabled,
         @Nullable Boolean checked,
         LocalizeValue shortcutText,
         @Nullable List<MenuNode> children
     ) {
         static MenuNode separator() {
-            return new MenuNode(null, LocalizeValue.empty(), null, true, null, LocalizeValue.empty(), null);
+            return new MenuNode(null, LocalizeValue.empty(), null, null, true, null, LocalizeValue.empty(), null);
         }
 
         public boolean isSeparator() {
@@ -153,6 +154,7 @@ public final class UnifiedActionMenuExpander {
                             action,
                             presentation.getTextValue(),
                             presentation.getIcon(),
+                            presentation.getDisabledIcon(),
                             presentation.isEnabled(),
                             null,
                             LocalizeValue.empty(),
@@ -189,6 +191,7 @@ public final class UnifiedActionMenuExpander {
             action,
             presentation.getTextValue(),
             presentation.getIcon(),
+            presentation.getDisabledIcon(),
             presentation.isEnabled(),
             checked,
             LocalizeValue.of(KeymapUtil.getFirstKeyboardShortcutText(action)),

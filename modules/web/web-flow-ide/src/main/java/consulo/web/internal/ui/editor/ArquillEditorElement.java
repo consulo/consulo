@@ -28,6 +28,7 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.shared.Registration;
 
 import consulo.web.internal.ui.editor.gutter.GutterBand;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -242,6 +243,33 @@ public class ArquillEditorElement extends Component implements HasSize {
      */
     public void setFont(String fontName, int fontSize) {
         getElement().executeJs("this.$arquillApi.setFont($0, $1);", fontName, fontSize);
+    }
+
+    /**
+     * Default colors of the scheme. Nothing of the scheme is readable in the browser, so they travel the same
+     * way the font does, and the stylesheet reads them instead of carrying colors of its own.
+     */
+    public void setColors(
+        String background,
+        String foreground,
+        @Nullable String selectionBackground,
+        @Nullable String caretRowBackground
+    ) {
+        getElement().executeJs(
+            "this.$arquillApi.setColors($0, $1, $2, $3);",
+            background,
+            foreground,
+            selectionBackground,
+            caretRowBackground
+        );
+    }
+
+    /**
+     * The stylesheet of the attribute keys the style ranges name - one rule per key, replaced as a whole when
+     * the scheme changes.
+     */
+    public void setSchemeStyles(String css) {
+        getElement().executeJs("this.$arquillApi.setSchemeStyles($0);", css);
     }
 
     public Registration addTextChangeListener(ComponentEventListener<ArquillTextChangeEvent> listener) {
