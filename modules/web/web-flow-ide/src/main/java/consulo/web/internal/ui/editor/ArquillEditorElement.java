@@ -190,10 +190,17 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         // registering here also installs the dom listener - flow only forwards the event while the server listens
         addListener(ArquillTextChangeEvent.class, event -> applyToCache(event.getStart(), event.getStart() + event.getRemovedCharCount(), event.getText()));
+    }
 
-        // the server pushes into the editor while the scripts are still loading, so the api it calls has to
-        // exist before any of them. the stub collects the calls, install replays them once it takes over -
-        // this runs first, it is registered ahead of every other script of this element
+    /**
+     * The server pushes into the editor while the scripts are still loading, so the api it calls has to exist
+     * before any of them. The stub collects those calls and install replays them once it takes over.
+     * <p>
+     * It belongs to attaching rather than to the constructor: a browser reload builds a new ui and a new dom
+     * for the very same server side editor, and the constructor does not run a second time - the stub of the
+     * old document is gone and everything pushed while the bundle loads would be thrown away.
+     */
+    private void installApiStub() {
         getElement().executeJs("""
             const pending = this.$arquillPending = [];
             this.$arquillApi = new Proxy({}, {
@@ -369,6 +376,9 @@ public class ArquillEditorElement extends Component implements HasSize {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+
+        // ahead of the loader below, so that a push arriving while the scripts are on their way is collected
+        installApiStub();
 
         // the bundle measures the parent, so the editor can only be created once the element is in the dom.
         // the scripts are injected by hand - flow drops @JavaScript pointing at a context absolute path
