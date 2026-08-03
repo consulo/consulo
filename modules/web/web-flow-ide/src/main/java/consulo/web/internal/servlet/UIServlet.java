@@ -22,11 +22,11 @@ import com.vaadin.flow.function.DeploymentConfiguration;
 import com.vaadin.flow.server.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.image.IconLibraryManager;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.web.internal.ui.WebStyleCssRegistry;
 import consulo.web.internal.ui.WebStyleImpl;
+import consulo.web.internal.ui.image.WebImageUrl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -177,7 +177,7 @@ public class UIServlet extends VaadinServlet {
             // with the url they were first rendered with
             ui.getPage().executeJs(
                 "document.documentElement.setAttribute('consulo-icon-version', $0)",
-                String.valueOf(IconLibraryManager.get().getModificationCount())
+                WebImageUrl.currentVersion()
             );
         });
     }

@@ -184,7 +184,7 @@
 
             const version = document.documentElement.getAttribute(ICON_VERSION_ATTRIBUTE);
             if (src && version) {
-                src = src.replace(/([?&]v=)\d+/, '$1' + version);
+                src = src.replace(/([?&]v=)[^&]*/, '$1' + encodeURIComponent(version));
             }
 
             let image = this.firstElementChild;
