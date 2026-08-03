@@ -31,6 +31,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
@@ -63,13 +64,14 @@ public class WebIdeMenuBar {
         @Nullable AnAction action,
         LocalizeValue text,
         @Nullable Image icon,
+        @Nullable Image disabledIcon,
         boolean enabled,
         @Nullable Boolean checked,
         LocalizeValue shortcutText,
         @Nullable List<MenuNode> children
     ) {
         static MenuNode separator() {
-            return new MenuNode(null, LocalizeValue.empty(), null, true, null, LocalizeValue.empty(), null);
+            return new MenuNode(null, LocalizeValue.empty(), null, null, true, null, LocalizeValue.empty(), null);
         }
 
         boolean isSeparator() {
@@ -200,6 +202,7 @@ public class WebIdeMenuBar {
                         action,
                         presentation.getTextValue(),
                         presentation.getIcon(),
+                        presentation.getDisabledIcon(),
                         presentation.isEnabled(),
                         null,
                         LocalizeValue.empty(),
@@ -228,6 +231,7 @@ public class WebIdeMenuBar {
             action,
             presentation.getTextValue(),
             presentation.getIcon(),
+            presentation.getDisabledIcon(),
             presentation.isEnabled(),
             checked,
             LocalizeValue.of(shortcutText),
@@ -267,7 +271,7 @@ public class WebIdeMenuBar {
         List<MenuNode> children = node.children();
         if (children != null) {
             WebMenuImpl menu = new WebMenuImpl(node.text());
-            menu.setIcon(node.icon());
+            menu.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
             menu.setEnabled(node.enabled());
 
             for (MenuNode child : children) {
@@ -278,7 +282,7 @@ public class WebIdeMenuBar {
         }
 
         WebMenuItemImpl item = new WebMenuItemImpl(node.text());
-        item.setIcon(node.icon());
+        item.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
         item.setEnabled(node.enabled());
         item.setChecked(node.checked());
         item.setShortcutText(node.shortcutText());

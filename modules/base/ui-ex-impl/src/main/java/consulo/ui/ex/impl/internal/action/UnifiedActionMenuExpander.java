@@ -29,6 +29,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -73,6 +74,18 @@ public final class UnifiedActionMenuExpander {
     }
 
     private UnifiedActionMenuExpander() {
+    }
+
+    /**
+     * A disabled action is drawn with the grayed icon of the platform, the way the awt widgets do it - the
+     * presentation carries one of its own only when the action set it.
+     */
+    public static @Nullable Image toDisplayIcon(@Nullable Image icon, @Nullable Image disabledIcon, boolean enabled) {
+        if (icon == null || enabled) {
+            return icon;
+        }
+
+        return disabledIcon != null ? disabledIcon : ImageEffects.grayed(icon);
     }
 
     public static CompletableFuture<List<MenuNode>> expandAsync(
@@ -213,7 +226,7 @@ public final class UnifiedActionMenuExpander {
         List<MenuNode> children = node.children();
         if (children != null) {
             Menu menu = Menu.create(node.text());
-            menu.setIcon(node.icon());
+            menu.setIcon(toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
             menu.setEnabled(node.enabled());
 
             for (MenuNode child : children) {
@@ -224,7 +237,7 @@ public final class UnifiedActionMenuExpander {
         }
 
         MenuItem item = MenuItem.create(node.text());
-        item.setIcon(node.icon());
+        item.setIcon(toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
         item.setEnabled(node.enabled());
         item.setChecked(node.checked());
         item.setShortcutText(node.shortcutText());

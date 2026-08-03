@@ -362,7 +362,9 @@ vaadin-breadcrumbs-item svg
 /* the platform hands a disabled action its grayed icon, the way the awt buttons are painted - aura fades the
    whole control on top of that, and a faded grayed icon reads as a rendering glitch rather than a disabled
    button. the label carries the disabled text colour of the theme instead */
-vaadin-button[disabled]
+vaadin-button[disabled],
+vaadin-menu-bar-item[disabled],
+vaadin-context-menu-item[disabled]
 {
   opacity: 1;
   color: var(--consulo-label-disabled-foreground);
