@@ -50,6 +50,11 @@
   min-height: 0;
 
   padding: 0 8px;
+
+  /* an editor tab of the ide is a rectangle - aura rounds every corner, which also bends the ends of the
+     underline below, since an inset shadow follows the radius of the box it is drawn in */
+  --vaadin-tab-border-radius: 0;
+  border-radius: 0;
 }
 
 /* the selected tab is raised by a drop shadow in aura, the awt tabs mark it with an accent underline */
@@ -79,6 +84,13 @@
 {
   --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--consulo-tabbed-pane-foreground, var(--vaadin-text-color)));
   --vaadin-tab-background: var(--consulo-tab-background, transparent);
+}
+
+/* a tabsheet with no selected panel stays [loading] forever and spins in the middle of the empty content
+   area - the panels here are always attached up front, so the spinner never stands for work in flight */
+.web-tabbed-layout::part(loader)
+{
+  display: none;
 }
 
 /* the label and the close cross are two separate children of the tab, without this they are laid out on the
