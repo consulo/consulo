@@ -24,6 +24,7 @@ import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
 import consulo.ui.UIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -244,7 +245,8 @@ public final class UnifiedActionMenuExpander {
 
         AnAction action = node.action();
         if (action != null) {
-            item.addClickListener(event -> performAction(action, contextSupplier.get(), place, presentationFactory));
+            item.addClickListener(event ->
+                performAction(action, contextSupplier.get(), place, presentationFactory, event.getInputDetails()));
         }
 
         return item;
@@ -255,7 +257,8 @@ public final class UnifiedActionMenuExpander {
         AnAction action,
         DataContext context,
         String place,
-        PresentationFactory presentationFactory
+        PresentationFactory presentationFactory,
+        @Nullable InputDetails inputDetails
     ) {
         UIAccess uiAccess = UIAccess.current();
 
@@ -263,7 +266,8 @@ public final class UnifiedActionMenuExpander {
 
         Presentation presentation = presentationFactory.getPresentation(action);
 
-        AnActionEvent event = new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false);
+        AnActionEvent event =
+            new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false, inputDetails);
         event.setInjectedContext(action.isInInjectedContext());
 
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {

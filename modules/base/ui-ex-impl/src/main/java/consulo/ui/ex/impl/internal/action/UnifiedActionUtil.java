@@ -16,7 +16,6 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
@@ -37,6 +36,7 @@ public class UnifiedActionUtil {
     @RequiredUIAccess
     public static CompletableFuture<Void> expandActionGroup(ActionGroup group,
                                                             DataContext context,
+                                                            String place,
                                                             ActionManager actionManager,
                                                             PresentationFactory menuItemPresentationFactory,
                                                             Consumer<MenuItem> actionAdded) {
@@ -51,7 +51,7 @@ public class UnifiedActionUtil {
         List<CompletableFuture<?>> updates = new ArrayList<>();
         for (AnAction action : children) {
             Presentation presentation = menuItemPresentationFactory.getPresentation(action);
-            AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
+            AnActionEvent e = new AnActionEvent(null, context, place, presentation, actionManager, 0);
             e.setInjectedContext(action.isInInjectedContext());
             actions.add(action);
             presentations.add(presentation);
@@ -70,14 +70,25 @@ public class UnifiedActionUtil {
                     MenuItem menu = Menu.create(presentation.getTextValue());
                     menu.setIcon(presentation.getIcon());
                     actionAdded.accept(menu);
-                    expandActionGroup(actionGroup, context, actionManager, menuItemPresentationFactory, ((Menu) menu)::add);
+                    expandActionGroup(actionGroup, context, place, actionManager, menuItemPresentationFactory, ((Menu) menu)::add);
                 }
                 else {
                     MenuItem menu = MenuItem.create(presentation.getTextValue());
                     menu.addClickListener(event -> {
-                        DataContext dataContext = DataManager.getInstance().getDataContext();
+                        AnActionEvent clickEvent = new AnActionEvent(
+                            null,
+                            context,
+                            place,
+                            presentation,
+                            actionManager,
+                            0,
+                            true,
+                            false,
+                            event.getInputDetails()
+                        );
+                        clickEvent.setInjectedContext(action.isInInjectedContext());
 
-                        action.actionPerformed(AnActionEvent.createFromDataContext("Test", presentation, dataContext));
+                        action.actionPerformed(clickEvent);
                     });
                     menu.setIcon(presentation.getIcon());
                     actionAdded.accept(menu);

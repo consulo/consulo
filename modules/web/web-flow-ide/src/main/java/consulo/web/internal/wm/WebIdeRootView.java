@@ -92,7 +92,8 @@ public class WebIdeRootView {
                     action,
                     WebFocusTracker.createDataContext(myRootPanel.getComponent()),
                     ActionPlaces.MAIN_MENU,
-                    new MenuItemPresentationFactory()
+                    new MenuItemPresentationFactory(),
+                    event.getInputDetails()
                 );
             }
         });

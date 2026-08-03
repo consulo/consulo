@@ -197,7 +197,8 @@ public class UnifiedActionRow {
                 action,
                 myContextSupplier.get(),
                 myPlace,
-                myPresentationFactory
+                myPresentationFactory,
+                event.getInputDetails()
             ));
         }
 

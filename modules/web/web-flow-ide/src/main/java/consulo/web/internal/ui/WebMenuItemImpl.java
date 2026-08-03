@@ -27,6 +27,7 @@ import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.base.WebInputDetails;
 import consulo.web.internal.ui.image.WebImageConverter;
 import consulo.web.internal.ui.vaadin.SimpleComponent;
 import org.jspecify.annotations.Nullable;
@@ -140,9 +141,13 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
      */
     @RequiredUIAccess
     public void render(HasMenuItems target) {
-        com.vaadin.flow.component.contextmenu.MenuItem item = target.addItem(
-            getPlainText(),
-            event -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this))
+        // the typed vaadin item listener carries no position, and an action opening a popup at the click needs
+        // one - the dom listener reads it off the browser event, the way a button does
+        com.vaadin.flow.component.contextmenu.MenuItem item = target.addItem(getPlainText(), null);
+
+        WebInputDetails.addClickListener(
+            item.getElement(),
+            inputDetails -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, inputDetails))
         );
 
         myVaadinItem = item;

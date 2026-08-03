@@ -78,7 +78,9 @@ public final class WebShortcutDispatcher {
                     action,
                     WebFocusTracker.createDataContext(root),
                     ActionPlaces.MAIN_MENU,
-                    presentationFactory
+                    presentationFactory,
+                    // a shortcut is not pointed at anything - the awt key dispatcher leaves this out as well
+                    null
                 );
                 return;
             }

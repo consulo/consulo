@@ -26,6 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.MenuSeparator;
 import consulo.ui.UIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
@@ -289,14 +290,14 @@ public class WebIdeMenuBar {
 
         AnAction action = node.action();
         if (action != null) {
-            item.addClickListener(event -> performAction(action));
+            item.addClickListener(event -> performAction(action, event.getInputDetails()));
         }
 
         return item;
     }
 
     @RequiredUIAccess
-    private void performAction(AnAction action) {
+    private void performAction(AnAction action, @Nullable InputDetails inputDetails) {
         UIAccess uiAccess = UIAccess.current();
 
         ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
@@ -306,7 +307,7 @@ public class WebIdeMenuBar {
         Presentation presentation = myPresentationFactory.getPresentation(action);
 
         AnActionEvent event =
-            new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0, true, false);
+            new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0, true, false, inputDetails);
         event.setInjectedContext(action.isInInjectedContext());
 
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {

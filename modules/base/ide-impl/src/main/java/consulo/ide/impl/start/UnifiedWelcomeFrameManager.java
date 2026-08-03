@@ -245,7 +245,25 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
                 Presentation presentation = e.getPresentation();
                 if (presentation.isVisible()) {
-                    Button component = Button.create(presentation.getTextValue(), (event) -> action.actionPerformed(e));
+                    // the event above answered whether the action is shown at all, it says nothing about the click
+                    // which follows - an action opening a popup reads the position out of the event it is given,
+                    // and it is only the click that has one
+                    Button component = Button.create(presentation.getTextValue(), event -> {
+                        AnActionEvent clickEvent = new AnActionEvent(
+                            null,
+                            myDataManager.getDataContext(event.getComponent()),
+                            ActionPlaces.WELCOME_SCREEN,
+                            presentation,
+                            ActionManager.getInstance(),
+                            0,
+                            false,
+                            false,
+                            event.getInputDetails()
+                        );
+                        clickEvent.setInjectedContext(action.isInInjectedContext());
+
+                        action.actionPerformed(clickEvent);
+                    });
                     component.addStyle(ButtonStyle.BORDERLESS);
                     component.setIcon(presentation.getIcon());
 

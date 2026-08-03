@@ -20,8 +20,11 @@ import com.vaadin.flow.dom.DomListenerRegistration;
 import com.vaadin.flow.dom.Element;
 import consulo.ui.Point2D;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
+import tools.jackson.databind.JsonNode;
 
 import java.util.EnumSet;
 import java.util.function.Consumer;
@@ -45,6 +48,21 @@ public class WebInputDetails {
     private static final String SHIFT = "event.shiftKey";
     private static final String META = "event.metaKey";
 
+    /**
+     * Click count of the ui event - a pointer sets it, a click the browser synthesises for enter or space on a
+     * focused control leaves it at zero, which is what tells the two apart.
+     */
+    private static final String DETAIL = "event.detail";
+
+    /**
+     * A keyboard activation carries no coordinates at all - the box of the element stands in for them, so a
+     * caller placing a popup at the event still puts it against the control the user acted on.
+     */
+    private static final String ELEMENT_LEFT = "element.getBoundingClientRect().left";
+    private static final String ELEMENT_TOP = "element.getBoundingClientRect().top";
+    private static final String ELEMENT_SCREEN_X = "window.screenX + element.getBoundingClientRect().left";
+    private static final String ELEMENT_SCREEN_Y = "window.screenY + element.getBoundingClientRect().top";
+
     public static DomListenerRegistration addClickListener(Element element, Consumer<InputDetails> consumer) {
         DomListenerRegistration registration = element.addEventListener("click", event -> consumer.accept(convert(event)));
 
@@ -57,12 +75,17 @@ public class WebInputDetails {
         registration.addEventData(CTRL);
         registration.addEventData(SHIFT);
         registration.addEventData(META);
+        registration.addEventData(DETAIL);
+        registration.addEventData(ELEMENT_LEFT);
+        registration.addEventData(ELEMENT_TOP);
+        registration.addEventData(ELEMENT_SCREEN_X);
+        registration.addEventData(ELEMENT_SCREEN_Y);
 
         return registration;
     }
 
-    private static MouseInputDetails convert(DomEvent event) {
-        var data = event.getEventData();
+    private static InputDetails convert(DomEvent event) {
+        JsonNode data = event.getEventData();
 
         EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
         if (data.path(ALT).asBoolean(false)) {
@@ -76,6 +99,17 @@ public class WebInputDetails {
         }
         if (data.path(META).asBoolean(false)) {
             modifiers.add(ModifiedInputDetails.Modifier.META);
+        }
+
+        if (data.path(DETAIL).asInt(0) == 0) {
+            Point2D position = new Point2D(0, 0);
+            Point2D positionOnScreen = new Point2D(
+                (int) data.path(ELEMENT_SCREEN_X).asDouble(0),
+                (int) data.path(ELEMENT_SCREEN_Y).asDouble(0)
+            );
+
+            // the browser never says which key it was, and enter is the one every control answers to
+            return new KeyboardInputDetails(position, positionOnScreen, modifiers, KeyCode.ENTER);
         }
 
         MouseInputDetails.MouseButton button = switch (data.path(BUTTON).asInt(0)) {
