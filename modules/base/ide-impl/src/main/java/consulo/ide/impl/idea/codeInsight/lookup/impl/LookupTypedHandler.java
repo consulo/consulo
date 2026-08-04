@@ -10,7 +10,7 @@ import consulo.codeEditor.internal.ExtensionTypedActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
-import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
+import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;

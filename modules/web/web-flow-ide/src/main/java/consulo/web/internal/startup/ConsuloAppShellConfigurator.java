@@ -31,6 +31,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -84,6 +85,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(VerticalLayout.class)
 @Uses(Button.class)
 @Uses(ListBox.class)
+@Uses(VirtualList.class)
 @Uses(ComboBox.class)
 @Uses(Table.class)
 @Uses(Scroller.class)

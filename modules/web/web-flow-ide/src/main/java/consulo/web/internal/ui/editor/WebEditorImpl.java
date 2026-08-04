@@ -16,9 +16,13 @@
 package consulo.web.internal.ui.editor;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.PersistentEditorSettings;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.event.SelectionEvent;
+import consulo.codeEditor.event.SelectionListener;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.application.Application;
@@ -78,6 +82,8 @@ import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.undoRedo.CommandProcessor;
 import consulo.dataContext.DataContext;
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
@@ -116,7 +122,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebEditorImpl extends CodeEditorBase {
+public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationProvider {
   public static class Vaadin extends ArquillEditorElement implements ComponentHolder, FromVaadinComponentWrapper {
     private consulo.ui.Component myComponent;
 
@@ -160,6 +166,20 @@ public class WebEditorImpl extends CodeEditorBase {
   private volatile boolean myTextFromClient;
 
   private volatile @Nullable ClientEdit myClientEdit;
+
+  /**
+   * Where the caret is on screen, as the browser last reported it. Anything anchored to the caret - the completion
+   * popup above all - is placed by this, because only the browser can measure where a character ended up.
+   */
+  private volatile @Nullable CaretPixelLocation myCaretLocation;
+
+  /**
+   * The character cell the browser measured, which every mapping between a position and a point is built on. The
+   * defaults stand in only until the editor has reported - a zero cell would divide by zero the first time the
+   * caret moved.
+   */
+  private volatile int myCharWidth = 8;
+  private volatile int myLineHeight = 16;
 
   private final java.util.List<RangeHighlighter> myLinkHighlighters = new java.util.ArrayList<>();
 
@@ -237,11 +257,27 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
 
     updateFont();
+    updateCaretStyle();
     updateColors();
 
 //    vaadin.addMouseDownListener(this::runMousePressedCommand);
 
-    vaadin.addCaretListener(event -> moveCaretFromClient(event.getOffset()));
+    vaadin.addMetricsListener(event -> {
+      if (event.getCharWidth() > 0 && event.getLineHeight() > 0) {
+        myCharWidth = event.getCharWidth();
+        myLineHeight = event.getLineHeight();
+      }
+    });
+
+    vaadin.addCaretListener(event -> {
+      myCaretLocation = new CaretPixelLocation(event.getCaretX(), event.getCaretY(), event.getCaretHeight());
+
+      // where the caret is on screen always matters - a popup anchors to it - but only a move the user made is a
+      // move. echoing back one the platform just made would look like the user left, and a lookup closes on that
+      if (!event.isRectOnly()) {
+        moveCaretFromClient(event.getOffset(), event.getSelectionStart(), event.getSelectionEnd());
+      }
+    });
 
     vaadin.addCtrlHoverListener(event -> highlightLinkAt(event.getOffset()));
 
@@ -251,19 +287,24 @@ public class WebEditorImpl extends CodeEditorBase {
 
     vaadin.addFoldListener(event -> setFoldRegionExpandedFromClient(event.getStart(), !event.isCollapsed()));
 
+    vaadin.addTypedListener(event -> handleTypedFromClient(event.getText()));
+
     vaadin.addTextChangeListener(event -> replaceTextFromClient(event.getStart(), event.getRemovedCharCount(), event.getText()));
 
     myCaretModel.addCaretListener(new CaretListener() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
-        // the browser already moved its own caret when it made the edit
-        if (myCaretFromClient || myTextFromClient) {
-          return;
-        }
+        pushSelectionToClient();
+      }
+    }, myDisposable);
 
-        int offset = e.getCaret().getOffset();
-
-        giveUI(() -> vaadin.setCaretOffset(offset));
+    // the caret and the selection move apart: shift with an arrow key grows the range and moves the caret, but
+    // dragging past the anchor and back moves only the range. both are pushed the same way, and both push all of
+    // it - whichever fires last leaves the browser holding the whole truth rather than half of an update
+    getSelectionModel().addSelectionListener(new SelectionListener() {
+      @Override
+      public void selectionChanged(SelectionEvent e) {
+        pushSelectionToClient();
       }
     }, myDisposable);
 
@@ -286,7 +327,13 @@ public class WebEditorImpl extends CodeEditorBase {
           int end = start + event.getOldLength();
           String newFragment = event.getNewFragment().toString();
 
-          giveUI(() -> vaadin.replaceText(start, end, newFragment));
+          // the caret goes with the text and after it. writing into the model moves what orion draws only as far
+          // as the change forces it to, and where the caret belongs afterwards is the platform's to say - a tab
+          // which indents ends up past the indent, not in front of it
+          giveUI(() -> {
+            vaadin.replaceText(start, end, newFragment);
+            pushSelectionNow();
+          });
         }
 
         scheduleUpdate();
@@ -321,11 +368,37 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   /**
+   * Hands the browser the caret and the selection together, off the ui thread it is called on.
+   */
+  private void pushSelectionToClient() {
+    // the browser already moved its own caret when it made the edit
+    if (myCaretFromClient || myTextFromClient) {
+      return;
+    }
+
+    giveUI(this::pushSelectionNow);
+  }
+
+  /**
+   * The same push, for callers already on the ui thread and already inside a {@link #giveUI} block.
+   */
+  private void pushSelectionNow() {
+    Caret caret = myCaretModel.getPrimaryCaret();
+
+    myEditorComponent.toVaadinComponent().setSelection(caret.getSelectionStart(), caret.getSelectionEnd());
+  }
+
+  /**
    * Moves the platform caret to where the browser put it, so the daemon can rerun the passes bound to the
    * caret position - identifier highlighting above all.
+   * <p>
+   * The selection comes with it. {@code moveToOffset} leaves whatever was selected alone, so a caret taken on its
+   * own left the platform holding a range the user had long since dragged away from - and every action reading the
+   * selection, delete first among them, worked on that one instead of what was on screen.
    */
-  private void moveCaretFromClient(int offset) {
-    if (offset < 0 || offset > myDocument.getTextLength()) {
+  private void moveCaretFromClient(int offset, int selectionStart, int selectionEnd) {
+    int length = myDocument.getTextLength();
+    if (offset < 0 || offset > length || selectionStart < 0 || selectionEnd > length || selectionStart > selectionEnd) {
       return;
     }
 
@@ -334,7 +407,17 @@ public class WebEditorImpl extends CodeEditorBase {
       CommandProcessor.getInstance().newCommand()
         .project(myProject)
         .document(myDocument)
-        .run(() -> myCaretModel.getPrimaryCaret().moveToOffset(offset));
+        .run(() -> {
+          Caret caret = myCaretModel.getPrimaryCaret();
+          caret.moveToOffset(offset);
+
+          if (selectionStart == selectionEnd) {
+            caret.removeSelection();
+          }
+          else {
+            caret.setSelection(selectionStart, selectionEnd);
+          }
+        });
     }
     finally {
       myCaretFromClient = false;
@@ -375,9 +458,39 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   /**
+   * Runs a typed character through the platform, the way a keystroke does on the desktop.
+   * <p/>
+   * The browser has already been stopped from inserting it, so nothing is echoed back here - the change the typed
+   * action makes travels to the browser as any other document change does. That is also what keeps the completion
+   * lookup up while the user types: the lookup grows its prefix inside the guarded change the typed handler makes,
+   * and only a change from outside one closes it.
+   */
+  @RequiredUIAccess
+  private void handleTypedFromClient(String text) {
+    if (isViewer() || !myDocument.isWritable() || text == null || text.length() != 1) {
+      return;
+    }
+
+    // the caret is not taken from the browser here. the keystroke was stopped before the editor could act on it, so
+    // the caret over there has not moved and reports the same offset for every character of a run - putting each of
+    // them back at it would type the run out backwards. the caret on this side advances with each insert and is
+    // pushed back to the browser by the caret listener, which is what keeps the two together
+    EditorActionManager.getInstance().getTypedAction().actionPerformed(this, text.charAt(0), getDataContext());
+  }
+
+  /**
    * The edit the browser applied on its own, kept only until the document event carrying it arrives.
    */
   private record ClientEdit(int offset, int oldLength, String newText) {
+  }
+
+  /**
+   * Where the caret was last seen on screen. Reported by the browser on every caret move, so it is already known by
+   * the time something wants to open against it and nothing has to be asked for.
+   */
+  @Override
+  public @Nullable CaretPixelLocation getCaretPixelLocation() {
+    return myCaretLocation;
   }
 
   private boolean isEchoOfClientEdit(DocumentEvent event) {
@@ -453,7 +566,8 @@ public class WebEditorImpl extends CodeEditorBase {
 
     clearLinkHighlighters();
 
-    moveCaretFromClient(offset);
+    // a jump lands on a caret and selects nothing
+    moveCaretFromClient(offset, offset, offset);
 
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
@@ -652,8 +766,24 @@ public class WebEditorImpl extends CodeEditorBase {
 
     String fontName = scheme.getEditorFontName();
     int fontSize = scheme.getEditorFontSize();
+    // the row is the font times the spacing of the scheme, the way the awt editor sizes one - a fixed multiplier
+    // made every row twice the text and a caret, which stands as tall as the row, twice the glyphs beside it
+    float lineSpacing = scheme.getLineSpacing();
 
-    giveUI(() -> myEditorComponent.toVaadinComponent().setFont(fontName, fontSize));
+    giveUI(() -> myEditorComponent.toVaadinComponent().setFont(fontName, fontSize, lineSpacing));
+  }
+
+  /**
+   * What the caret looks like, which the browser cannot be asked for - it draws a one pixel caret in the colour of
+   * the text under it and blinks at a rate of its own, and the platform has a width and a blink period for it.
+   */
+  private void updateCaretStyle() {
+    PersistentEditorSettings settings = PersistentEditorSettings.getInstance();
+
+    int width = EditorUtil.getDefaultCaretWidth();
+    int blinkPeriod = settings.isBlinkCaret() ? settings.getBlinkPeriod() : 0;
+
+    giveUI(() -> myEditorComponent.toVaadinComponent().setCaretStyle(width, blinkPeriod));
   }
 
   private void updateColors() {
@@ -1730,7 +1860,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public int getLineHeight() {
-    return 0;
+    return myLineHeight;
   }
 
   @Override
@@ -1740,14 +1870,13 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public int visualLineToY(int visualLine) {
-    return 0;
+    return visualLine * myLineHeight;
   }
 
   @Override
   public boolean isShowing() {
     return myEditorComponent.isVisible();
   }
-
   
   @Override
   public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
@@ -1803,8 +1932,28 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   
+  @Override
   public java.awt.Point visualPositionToXY(VisualPosition visible) {
-    // todo fake return
-    return new Point(1, 1);
+    return new Point(visible.column * myCharWidth, visualLineToY(visible.line));
+  }
+
+  /**
+   * The inverse of {@link #visualPositionToXY}. Without it moving the caret up or down threw - the shared caret
+   * code keeps the column it started from as an x and asks for it back, and an editor which cannot answer stops
+   * the arrow keys dead.
+   */
+  @Override
+  public VisualPosition xyToVisualPosition(Point p) {
+    return new VisualPosition(Math.max(0, p.y / myLineHeight), Math.max(0, (p.x + myCharWidth / 2) / myCharWidth));
+  }
+
+  /**
+   * The same two steps the awt editor takes. Left unimplemented it threw "Unsupported platform" from the interface
+   * default, and brace highlighting asks for it on every caret move to decide whether the brace it matched has
+   * scrolled out of sight - so the failure arrived once per keystroke rather than once per hint.
+   */
+  @Override
+  public Point logicalPositionToXY(LogicalPosition pos) {
+    return visualPositionToXY(logicalToVisualPosition(pos));
   }
 }

@@ -1,0 +1,26 @@
+/* the overlay lives in the shadow root of the popover, so the only way at it is the part it exposes */
+
+/* a popup of the ide is a panel rather than a card - the rounding vaadin draws by default reads as a bubble at the
+   size a completion list is */
+vaadin-popover::part(overlay)
+{
+  border-radius: var(--consulo-popup-radius, 4px);
+}
+
+/* a popup of the platform is not a control - what is inside it may take the focus, the box around it never does,
+   and the ring the browser draws on it says otherwise */
+vaadin-popover::part(overlay)
+{
+  outline: none;
+}
+
+/* a popover carries no grip of its own, so the browser's is used for a popup which says it may be resized.
+   hidden rather than auto: a grip only needs the overflow not to be visible, and auto puts a second pair of bars
+   around content which already scrolls itself */
+vaadin-popover.consulo-resizable-popup::part(overlay)
+{
+  resize: both;
+  overflow: hidden;
+  max-width: none;
+  max-height: none;
+}

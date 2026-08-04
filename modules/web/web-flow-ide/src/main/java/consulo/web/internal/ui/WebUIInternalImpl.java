@@ -20,6 +20,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.AdvancedLabel;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -36,6 +37,8 @@ import consulo.ui.impl.model.FlatDataModelImpl;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
+import consulo.ui.impl.model.LazyFlatDataModelImpl;
+import consulo.ui.model.LazyFlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
@@ -128,6 +131,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public AdvancedLabel _Components_advancedLabel() {
+        return new WebAdvancedLabelImpl();
+    }
+
+    @Override
     public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
         throw notSupported();
 
@@ -164,6 +172,13 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public <E> ListBox<E> _Components_listBox(FlatDataModel<E> model) {
+        // a model which says it may be read a page at a time gets the pooled list - the rows are made once and
+        // rebound, so a model which changes on every typed character costs what actually differs rather than a tree
+        // of components per visible line
+        if (model instanceof LazyFlatDataModel) {
+            return new WebPooledListBoxImpl<>(model);
+        }
+
         return new WebListBoxImpl<>(model);
     }
 
@@ -324,8 +339,13 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     @RequiredUIAccess
-    public LightPopup _LightPopup_create(LightPopupOptions options) {
+    public LightPopup _LightPopup_create(PopupOptions options) {
         return new WebLightPopupImpl(options);
+    }
+
+    @Override
+    public HeavyPopup _HeavyPopup_create(PopupOptions options) {
+        return new WebHeavyPopupImpl(options);
     }
 
     @Override
@@ -345,6 +365,11 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list) {
         return new FlatDataModelImpl<>(list);
+    }
+
+    @Override
+    public <T> MutableFlatDataModel<T> _FlatDataModel_createLazy(Collection<? extends T> list) {
+        return new LazyFlatDataModelImpl<>(list);
     }
 
     @Override

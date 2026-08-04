@@ -19,6 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.filter.TrueFilter;
 import consulo.project.Project;
+import consulo.util.dataholder.Key;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -36,6 +37,13 @@ public class CompletionUtil {
   };
   public static final String DUMMY_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER;
   public static final String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
+
+  /**
+   * Whoever decided on the item has already put it into the document, so selecting it in the lookup must not insert it
+   * a second time. Lives here rather than with the completion handler which sets it, because the lookup reads it and
+   * cannot see that far up.
+   */
+  public static final Key<Boolean> DIRECT_INSERTION = Key.create("CodeCompletionHandlerBase.directInsertion");
 
   public static @Nullable CompletionData getCompletionDataByElement(@Nullable PsiElement position, PsiFile originalFile) {
     if (position == null) return null;

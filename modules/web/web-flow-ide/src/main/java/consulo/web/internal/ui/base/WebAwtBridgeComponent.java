@@ -67,6 +67,18 @@ public class WebAwtBridgeComponent extends JComponent implements ToVaadinCompone
         return TargetVaadin.to(myComponent);
     }
 
+    /**
+     * Whether the component this stands in for is on screen. A bridge is never added to a swing hierarchy, so the
+     * swing answer is that it has no peer and is therefore not showing - which is what the platform asks before it
+     * puts anything over an editor. Code completion, the hints, the tooltips and the brace highlighting all give up
+     * on that answer, so it has to come from the frontend instead: attached to a ui is as showing as the browser
+     * gets.
+     */
+    @Override
+    public boolean isShowing() {
+        return toVaadinComponent().getUI().isPresent();
+    }
+
     @Override
     @RequiredUIAccess
     public void installActionPopupMenu(ActionGroup group, String place) {

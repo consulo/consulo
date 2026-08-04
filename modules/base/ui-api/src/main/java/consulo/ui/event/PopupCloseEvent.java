@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.lookup.impl;
+package consulo.ui.event;
 
-public interface PrefixChangeListener {
-  default void afterAppend(char c) {
-  }
+import consulo.ui.Popup;
 
-  default void afterTruncate() {
-  }
-
-  default void beforeTruncate() {
-  }
-
-  default void beforeAppend(char c) {
-  }
+/**
+ * @author VISTALL
+ * @since 2026-08-02
+ */
+public final class PopupCloseEvent extends ComponentEvent<Popup> {
+    public PopupCloseEvent(Popup component) {
+        super(component);
+    }
 }

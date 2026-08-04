@@ -15,30 +15,43 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.ModalityMode;
-import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.LightPopup;
-import consulo.ui.LightPopupOptions;
-import consulo.ui.LightPopupPosition;
-import consulo.ui.Window;
+import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.LightPopupCloseEvent;
+import consulo.ui.event.PopupCloseEvent;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
- * A popup is a dialog without the chrome of one - a vaadin popover would anchor itself to a target, but it draws
- * nothing at all unless that target is a real element, and a popup raised from a menu has no element to point at.
+ * A popover rather than a dialog - it hangs off its target, it does not dim what is behind it, and it leaves the
+ * focus where it was. A dialog is the wrong shape for this: it is placed in the middle of the frame and has to be
+ * pushed into position afterwards, and it draws a curtain to catch the click which dismisses it.
+ * <p/>
+ * Positioning is the popover's own - it measures its target and turns itself around when there is no room, which is
+ * work that cannot be done from the server without asking the browser for every box first.
  *
  * @author VISTALL
  * @since 2026-08-02
  */
 public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl.Vaadin> implements LightPopup {
-    public class Vaadin extends Dialog implements FromVaadinComponentWrapper {
+    private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
+
+    @StyleSheet("/popup/webLightPopup.css")
+    public class Vaadin extends Popover implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
             return WebLightPopupImpl.this;
@@ -46,30 +59,50 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     }
 
     /**
-     * How far a stacked popup is moved off the one which owns it, so a cascade reads as a cascade.
+     * A zero sized element parked where the popup should hang from, for anchoring to a place inside a component
+     * rather than to the component - a caret has no element of its own to point at.
      */
-    private static final int CASCADE_STEP = 24;
+    private @Nullable Div myAnchor;
 
-    private final LightPopupPosition myPosition;
+    /**
+     * The popups escape closes, innermost first, kept on the ui because a browser session has one of its own.
+     * <p/>
+     * A popup which never takes the focus cannot answer the key by itself: the keymap owns escape, so the frontend
+     * hands it to the platform before anything on the page sees it. {@link consulo.web.internal.ui.base.WebShortcutDispatcher}
+     * asks here first, which is the order the desktop already runs in - the hint manager takes escape ahead of the
+     * editor action bound to it.
+     */
+    private static final String ESCAPABLE_POPUPS = "consulo.escapable.popups";
+
+    private boolean myEscapable;
+
+    private final PopupOptions myOptions;
 
     private boolean myDisposed;
 
-    private com.vaadin.flow.component.@Nullable Component myContent;
+    public WebLightPopupImpl(PopupOptions options) {
+        myOptions = options;
 
-    public WebLightPopupImpl(LightPopupOptions options) {
-        myPosition = options.getPosition();
+        Vaadin popover = getVaadinComponent();
 
-        Vaadin dialog = getVaadinComponent();
+        popover.setPosition(options.getPosition() == PopupPosition.END ? PopoverPosition.END_TOP : PopoverPosition.BOTTOM_START);
+        popover.setOpenOnClick(false);
+        popover.setCloseOnEsc(options.isCancelOnEscape());
+        popover.setCloseOnOutsideClick(options.isCancelOnClickOutside());
+        popover.setModal(false);
+        // the popup reports on what the user is doing somewhere else - the lookup is driven from the editor, and the
+        // caret has to stay there while it is up
+        popover.setAutofocus(options.isRequestFocus());
+        popover.setFocusDelay(0);
+        popover.setHoverDelay(0);
 
-        dialog.setCloseOnEsc(options.isCancelOnEscape());
-        dialog.setCloseOnOutsideClick(options.isCancelOnClickOutside());
-        dialog.setResizable(options.isResizable());
-        dialog.setDraggable(false);
-        // a click outside only reaches the popup when something is there to catch it, so dismissing that way needs
-        // a curtain - a visual one, which dismisses without blocking the ide the way a real modal would
-        dialog.setModality(options.isCancelOnClickOutside() ? ModalityMode.VISUAL : ModalityMode.MODELESS);
+        // a popover has no grip of its own, so the browser's is used. the box it draws is in the shadow root of the
+        // popover and is only reachable as a part of it, which is why the class goes on the popover itself
+        if (options.isResizable()) {
+            popover.getElement().getClassList().add(RESIZABLE_CLASS);
+        }
 
-        dialog.addOpenedChangeListener(event -> {
+        popover.addOpenedChangeListener(event -> {
             if (!event.isOpened()) {
                 closed();
             }
@@ -84,47 +117,121 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     @Override
     @RequiredUIAccess
     public void setTitle(@Nullable String title) {
-        getVaadinComponent().setHeaderTitle(title == null ? "" : title);
+        getVaadinComponent().setAriaLabel(title);
     }
 
     @Override
     @RequiredUIAccess
     public void setContent(Component content) {
-        Vaadin dialog = getVaadinComponent();
+        Vaadin popover = getVaadinComponent();
 
-        if (myContent != null) {
-            dialog.remove(myContent);
-        }
-
-        myContent = TargetVaadin.to(content);
-        dialog.add(myContent);
+        popover.removeAll();
+        popover.add(TargetVaadin.to(content));
     }
 
     @Override
     @RequiredUIAccess
     public void showBy(Component target) {
-        if (myDisposed) {
-            throw new IllegalArgumentException("LightPopup already disposed");
+        checkNotDisposed();
+
+        Vaadin popover = getVaadinComponent();
+
+        popover.setTarget(TargetVaadin.to(target));
+        popover.setOpened(true);
+        listenForEscape();
+    }
+
+    /**
+     * Only for a popup which asked not to take the focus - one which has it is given the key by the browser and the
+     * popover closes itself.
+     */
+    @RequiredUIAccess
+    private void listenForEscape() {
+        if (myEscapable || !myOptions.isCancelOnEscape() || myOptions.isRequestFocus()) {
+            return;
         }
 
-        if (myPosition == LightPopupPosition.END) {
-            // offset off the centre rather than measured against the target - a box is only measurable once it is
-            // on screen, and that answer comes back from the browser too late to place this one
-            getVaadinComponent().setLeft("calc(50% + " + CASCADE_STEP + "px)");
-            getVaadinComponent().setTop("calc(50% - " + CASCADE_STEP + "px)");
+        Deque<WebLightPopupImpl> popups = escapablePopups(ui());
+        if (popups != null) {
+            popups.push(this);
+            myEscapable = true;
+        }
+    }
+
+    private @Nullable UI ui() {
+        return getVaadinComponent().getUI().orElseGet(UI::getCurrent);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static @Nullable Deque<WebLightPopupImpl> escapablePopups(@Nullable UI ui) {
+        if (ui == null) {
+            return null;
         }
 
-        getVaadinComponent().open();
+        Deque<WebLightPopupImpl> popups = (Deque<WebLightPopupImpl>) ComponentUtil.getData(ui, ESCAPABLE_POPUPS);
+        if (popups == null) {
+            popups = new ArrayDeque<>();
+            ComponentUtil.setData(ui, ESCAPABLE_POPUPS, popups);
+        }
+        return popups;
+    }
+
+    /**
+     * Closes the innermost popup escape belongs to.
+     *
+     * @return whether the key was taken, so the caller leaves it alone rather than passing it to the keymap
+     */
+    @RequiredUIAccess
+    public static boolean closeTopEscapable(@Nullable UI ui) {
+        Deque<WebLightPopupImpl> popups = escapablePopups(ui);
+        WebLightPopupImpl popup = popups == null ? null : popups.peek();
+        if (popup == null) {
+            return false;
+        }
+
+        popup.close();
+        return true;
     }
 
     @Override
     @RequiredUIAccess
-    public void showInCenterOf(@Nullable Window window) {
+    public void showAt(Component target, int x, int y, int anchorHeight) {
+        checkNotDisposed();
+
+        // the anchor is put where the point is and the popover hangs off that, so the placement - and the turning
+        // around when there is no room below - stays the popover's own rather than being computed here
+        Div anchor = myAnchor;
+        if (anchor == null) {
+            anchor = new Div();
+            anchor.getStyle()
+                .set("position", "absolute")
+                .set("width", "0")
+                .set("pointer-events", "none");
+
+            TargetVaadin.to(target).getElement().appendChild(anchor.getElement());
+            myAnchor = anchor;
+        }
+
+        anchor.getStyle()
+            .set("height", anchorHeight + "px")
+            .set("left", x + "px")
+            .set("top", y + "px");
+
+        // a popup which is already up is only moved. re-targeting an open popover tears the overlay down and builds
+        // it again, which is every row of the list back over the wire for one typed character
+        Vaadin popover = getVaadinComponent();
+        if (!popover.isOpened()) {
+            popover.setTarget(anchor);
+            popover.setOpened(true);
+            listenForEscape();
+        }
+    }
+
+    @RequiredUIAccess
+    private void checkNotDisposed() {
         if (myDisposed) {
             throw new IllegalArgumentException("LightPopup already disposed");
         }
-
-        getVaadinComponent().open();
     }
 
     @Override
@@ -134,7 +241,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
             return;
         }
 
-        getVaadinComponent().close();
+        getVaadinComponent().setOpened(false);
 
         closed();
     }
@@ -151,9 +258,23 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         myDisposed = true;
 
+        if (myEscapable) {
+            myEscapable = false;
+
+            Deque<WebLightPopupImpl> popups = escapablePopups(ui());
+            if (popups != null) {
+                popups.remove(this);
+            }
+        }
+
+        if (myAnchor != null) {
+            myAnchor.getElement().removeFromParent();
+            myAnchor = null;
+        }
+
         getVaadinComponent().getElement().removeFromParent();
 
-        getListenerDispatcher(LightPopupCloseEvent.class).onEvent(new LightPopupCloseEvent(this));
+        getListenerDispatcher(PopupCloseEvent.class).onEvent(new PopupCloseEvent(this));
 
         Disposer.dispose(this);
     }

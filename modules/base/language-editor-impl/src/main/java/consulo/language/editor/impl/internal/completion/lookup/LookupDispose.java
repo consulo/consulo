@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2026 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.language.editor.impl.internal.completion.lookup;
+
+import consulo.util.lang.ExceptionUtil;
 
 /**
- * Where a {@link LightPopup} sits relative to what it was opened against.
- *
  * @author VISTALL
- * @since 2026-08-02
+ * @since 26/06/2023
  */
-public enum LightPopupPosition {
-    /**
-     * Under the target, which is where a popup opened off a button or a menu belongs.
-     */
-    BOTTOM,
-    /**
-     * Beside the target with their tops aligned - a submenu next to the popup which owns it.
-     */
-    END
+public class LookupDispose {
+  public static Throwable staticDisposeTrace = null;
+
+  public static String getLastLookupDisposeTrace() {
+    return ExceptionUtil.getThrowableText(staticDisposeTrace);
+  }
 }

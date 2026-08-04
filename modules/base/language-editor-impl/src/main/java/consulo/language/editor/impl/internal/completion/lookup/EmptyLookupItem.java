@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2026 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.event;
+package consulo.language.editor.impl.internal.completion.lookup;
 
-import consulo.ui.LightPopup;
+import consulo.language.editor.completion.lookup.LookupItem;
 
 /**
- * @author VISTALL
- * @since 2026-08-02
- */
-public final class LightPopupCloseEvent extends ComponentEvent<LightPopup> {
-    public LightPopupCloseEvent(LightPopup component) {
-        super(component);
-    }
+ * @author peter
+*/
+public class EmptyLookupItem extends LookupItem<String> {
+  private final boolean myLoading;
+
+  public EmptyLookupItem(String s, boolean loading) {
+    super(s, "           ");
+    myLoading = loading;
+  }
+
+  public boolean isLoading() {
+    return myLoading;
+  }
 }

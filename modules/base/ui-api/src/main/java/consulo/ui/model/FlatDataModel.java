@@ -34,6 +34,15 @@ public interface FlatDataModel<E> extends Iterable<E> {
         return UIInternal.get()._FlatDataModel_create(items);
     }
 
+    /**
+     * A model which says its items may be read a page at a time. A frontend which pays per row - the browser, where
+     * every row is a piece of the document - builds a list which fetches around what is on screen instead of one
+     * holding everything. Ask for it when the items may run to hundreds; a short list is better off with {@link #of}.
+     */
+    static <T> MutableFlatDataModel<T> lazyOf(Collection<? extends T> items) {
+        return UIInternal.get()._FlatDataModel_createLazy(items);
+    }
+
     int getSize();
 
     E get(int index);

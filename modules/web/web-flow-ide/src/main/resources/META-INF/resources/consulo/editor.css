@@ -16,9 +16,15 @@
   --arquill-editor-font-size: 12px;
   --arquill-editor-font-family: "Consolas", "Menlo", "Monaco", "Vera Mono", monospace;
 
+  /* the line spacing of the colour scheme, the same number the awt editor multiplies its row height by */
+  --arquill-editor-line-spacing: 1.0;
+
   /* every row of the view is this tall, rulers included - a length rather than a ratio, so that a row and the
      ruler row beside it cannot end up measured against two different font sizes */
-  --arquill-editor-line-height: calc(var(--arquill-editor-font-size) * 2);
+  /* the natural line box of a font is taller than the font size - what line-height: normal resolves to, near
+     1.2 for the faces an editor is set in. the spacing of the scheme multiplies that, not the size, so a scheme
+     at 1.0 leaves the gap the face was designed with instead of pressing the rows together */
+  --arquill-editor-line-height: calc(var(--arquill-editor-font-size) * 1.2 * var(--arquill-editor-line-spacing));
 }
 
 /* the font of the color scheme, published as custom properties by the client - the bundled .textview rule
@@ -293,6 +299,45 @@
 .textviewContent > div
 {
   line-height: var(--arquill-editor-line-height) !important;
+}
+
+/* the caret never takes the colour of what it stands in. left alone a contenteditable draws it in the colour of
+   the text under it, so it turned red inside an error and green inside a string - it belongs to the editor, not
+   to the token. one fixed colour, and a theme overrides it by writing the variable.
+   the spans carry the rule too: currentColor is resolved again by every one of them, so declaring it only on the
+   container is the same as not declaring it, and the caret is drawn inside whichever span it stands in */
+/* the caret is drawn here rather than by the browser. a contenteditable caret takes the colour of the text it
+   stands in, is always one pixel wide and blinks at a rate the page cannot ask about - the platform has a width,
+   a colour and a blink period for it, and none of the three are reachable through css on the native one */
+.textview .textviewContent,
+.textview .textviewContent *
+{
+  caret-color: transparent;
+}
+
+.arquill-caret
+{
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  width: var(--arquill-editor-caret-width, 2px);
+  background-color: var(--arquill-editor-caret-color, black);
+}
+
+/* step-end so it is shown or hidden and never faded, which is how an editor caret blinks */
+.arquill-caret.arquill-caret-blinking
+{
+  animation: arquill-caret-blink var(--arquill-editor-caret-blink-period, 500ms) step-end infinite;
+}
+
+.arquill-caret-hidden
+{
+  display: none;
+}
+
+@keyframes arquill-caret-blink
+{
+  50% { opacity: 0; }
 }
 
 /* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is

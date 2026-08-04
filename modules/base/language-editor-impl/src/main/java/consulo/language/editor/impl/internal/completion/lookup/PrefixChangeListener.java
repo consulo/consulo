@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.lookup.impl;
+package consulo.language.editor.impl.internal.completion.lookup;
 
-import consulo.util.lang.ExceptionUtil;
+public interface PrefixChangeListener {
+  default void afterAppend(char c) {
+  }
 
-/**
- * @author VISTALL
- * @since 26/06/2023
- */
-public class LookupDispose {
-  public static Throwable staticDisposeTrace = null;
+  default void afterTruncate() {
+  }
 
-  public static String getLastLookupDisposeTrace() {
-    return ExceptionUtil.getThrowableText(staticDisposeTrace);
+  default void beforeTruncate() {
+  }
+
+  default void beforeAppend(char c) {
   }
 }

@@ -170,7 +170,7 @@ public class HintManagerImpl implements HintManagerEx {
         myEditorDocumentListener = new DocumentListener() {
             @Override
             public void documentChanged(DocumentEvent event) {
-                LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+                UIAccess.assertIsUIThread();
                 if (event.getOldLength() == 0 && event.getNewLength() == 0) {
                     return;
                 }
@@ -234,7 +234,7 @@ public class HintManagerImpl implements HintManagerEx {
 
     @RequiredUIAccess
     private void updateScrollableHints(VisibleAreaEvent e) {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         for (HintInfo info : getHintsStackArray()) {
             if (info.hint != null && BitUtil.isSet(info.flags, UPDATE_BY_SCROLLING)) {
                 updateScrollableHintPosition(e, info.hint, BitUtil.isSet(info.flags, HIDE_IF_OUT_OF_EDITOR));
@@ -245,7 +245,7 @@ public class HintManagerImpl implements HintManagerEx {
     @Override
     @RequiredUIAccess
     public boolean hasShownHintsThatWillHideByOtherHint(boolean willShowTooltip) {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         for (HintInfo hintInfo : getHintsStackArray()) {
             if (hintInfo.hint.isVisible() && BitUtil.isSet(hintInfo.flags, HIDE_BY_OTHER_HINT)
                 || willShowTooltip && hintInfo.hint.isAwtTooltip()) {
@@ -360,7 +360,7 @@ public class HintManagerImpl implements HintManagerEx {
         boolean reviveOnEditorChange,
         HintHint hintInfo
     ) {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         myHideAlarm.cancelAllRequests();
 
         LightweightHintImpl impl = (LightweightHintImpl) hint;
@@ -424,7 +424,7 @@ public class HintManagerImpl implements HintManagerEx {
     @Override
     @RequiredUIAccess
     public void showHint(final JComponent component, RelativePoint p, int flags, int timeout) {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         myHideAlarm.cancelAllRequests();
 
         hideHints(HIDE_BY_OTHER_HINT, false, false);
@@ -530,7 +530,7 @@ public class HintManagerImpl implements HintManagerEx {
     @Override
     @RequiredUIAccess
     public void hideAllHints() {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         for (HintInfo info : getHintsStackArray()) {
             if (!info.hint.vetoesHiding()) {
                 info.hint.hide();
@@ -554,7 +554,7 @@ public class HintManagerImpl implements HintManagerEx {
         DataContext dataContext = editor.getDataContext();
         Rectangle dominantArea = dataContext.getData(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE);
 
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         if (dominantArea != null) {
             return getHintPositionRelativeTo(hint, editor, constraint, dominantArea, pos);
         }
@@ -1105,7 +1105,7 @@ public class HintManagerImpl implements HintManagerEx {
     }
 
     boolean isEscapeHandlerEnabled() {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         for (int i = myHintsStack.size() - 1; i >= 0; i--) {
             HintInfo info = myHintsStack.get(i);
             if (!info.hint.isVisible()) {
@@ -1129,7 +1129,7 @@ public class HintManagerImpl implements HintManagerEx {
     @Override
     @RequiredUIAccess
     public boolean hideHints(int mask, boolean onlyOne, boolean editorChanged) {
-        LOG.assertTrue(SwingUtilities.isEventDispatchThread());
+        UIAccess.assertIsUIThread();
         try {
             boolean done = false;
 

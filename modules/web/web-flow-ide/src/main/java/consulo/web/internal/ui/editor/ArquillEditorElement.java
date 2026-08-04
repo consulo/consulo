@@ -30,7 +30,10 @@ import com.vaadin.flow.shared.Registration;
 import consulo.web.internal.ui.editor.gutter.GutterBand;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Wraps the compiled arquill editor bundle, which exposes window.arquillEditor.createEditor(options).
@@ -44,17 +47,140 @@ public class ArquillEditorElement extends Component implements HasSize {
     /**
      * Fired when the user moves the caret in the browser, by clicking or by keyboard navigation.
      */
+    /**
+     * The size of a character cell, measured in the browser when the font is applied and again once the real face
+     * has loaded. The platform maps positions to points and back with it - moving the caret up and down keeps the
+     * column it started from as an x, and an editor which cannot answer cannot move its caret at all.
+     */
+    @DomEvent("arquill-metrics")
+    public static class ArquillMetricsEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myCharWidth;
+        private final int myLineHeight;
+
+        public ArquillMetricsEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.charWidth") int charWidth,
+            @EventData("event.detail.lineHeight") int lineHeight
+        ) {
+            super(source, fromClient);
+            myCharWidth = charWidth;
+            myLineHeight = lineHeight;
+        }
+
+        public int getCharWidth() {
+            return myCharWidth;
+        }
+
+        public int getLineHeight() {
+            return myLineHeight;
+        }
+    }
+
     @DomEvent("arquill-caret")
     public static class ArquillCaretEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myOffset;
+        private final int mySelectionStart;
+        private final int mySelectionEnd;
+        private final int myCaretX;
+        private final int myCaretY;
+        private final int myCaretHeight;
+        private final boolean myRectOnly;
 
-        public ArquillCaretEvent(ArquillEditorElement source, boolean fromClient, @EventData("event.detail.offset") int offset) {
+        public ArquillCaretEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.offset") int offset,
+            @EventData("event.detail.selectionStart") int selectionStart,
+            @EventData("event.detail.selectionEnd") int selectionEnd,
+            @EventData("event.detail.caretX") int caretX,
+            @EventData("event.detail.caretY") int caretY,
+            @EventData("event.detail.caretHeight") int caretHeight,
+            @EventData("event.detail.rectOnly") boolean rectOnly
+        ) {
             super(source, fromClient);
+            myRectOnly = rectOnly;
             myOffset = offset;
+            mySelectionStart = selectionStart;
+            mySelectionEnd = selectionEnd;
+            myCaretX = caretX;
+            myCaretY = caretY;
+            myCaretHeight = caretHeight;
         }
 
         public int getOffset() {
             return myOffset;
+        }
+
+        /**
+         * Start of what is selected, equal to {@link #getSelectionEnd()} when nothing is. A drag holds this still and
+         * moves only the end, so a report of the caret alone left the platform with a selection it had never been
+         * told about.
+         */
+        public int getSelectionStart() {
+            return mySelectionStart;
+        }
+
+        public int getSelectionEnd() {
+            return mySelectionEnd;
+        }
+
+        /**
+         * Pixels from the left of the editor component. Where anything anchored to the caret goes - the completion
+         * popup above all - and it rides on this event because the server cannot measure the browser.
+         */
+        public int getCaretX() {
+            return myCaretX;
+        }
+
+        /**
+         * Pixels from the top of the editor component, at the top of the caret line.
+         */
+        public int getCaretY() {
+            return myCaretY;
+        }
+
+        /**
+         * Height of the caret line, so a popup with no room below it can go above the line rather than over it.
+         */
+        public int getCaretHeight() {
+            return myCaretHeight;
+        }
+
+        /**
+         * The caret did not move - the platform moved it and this only says where it ended up on screen. Acting on
+         * it as a move would put the caret where it already is, and anything watching the caret would see one.
+         */
+        public boolean isRectOnly() {
+            return myRectOnly;
+        }
+    }
+
+    /**
+     * Fired when the user types a character. The browser has been stopped from inserting it - the platform puts it
+     * in instead, so the typed action chain runs and the edit comes back as a document change.
+     */
+    @DomEvent("arquill-typed")
+    public static class ArquillTypedEvent extends ComponentEvent<ArquillEditorElement> {
+        private final String myText;
+
+        public ArquillTypedEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.text") String text
+        ) {
+            super(source, fromClient);
+            myText = text;
+        }
+
+        /**
+         * Always one character - anything else is left to the editor and arrives as a change instead.
+         * <p/>
+         * Where it goes is not carried with it: the keystroke was stopped before the editor could act on it, so the
+         * caret there has not moved and would report the same offset for every character of a run.
+         */
+        public String getText() {
+            return myText;
         }
     }
 
@@ -180,6 +306,22 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     private boolean myReadOnly;
 
+    /**
+     * What each decoration channel last sent, keyed by the api call. The platform rebuilds every channel on
+     * every pass - a typed character runs the pass from its own document listener and again when the daemon
+     * finishes, and most channels come out byte for byte the same. A push that repeats the last one draws
+     * nothing new, so it does not travel. Cleared on attach: a reloaded browser holds none of it.
+     */
+    private final Map<String, Object> myLastPushed = new HashMap<>();
+
+    private boolean isUnchanged(String channel, Object value) {
+        if (Objects.equals(myLastPushed.get(channel), value)) {
+            return true;
+        }
+        myLastPushed.put(channel, value);
+        return false;
+    }
+
     public ArquillEditorElement(String text) {
         myText = text;
 
@@ -248,8 +390,18 @@ public class ArquillEditorElement extends Component implements HasSize {
      * @param fontName family name, the one the scheme stores
      * @param fontSize size in points, applied as css pixels
      */
-    public void setFont(String fontName, int fontSize) {
-        getElement().executeJs("this.$arquillApi.setFont($0, $1);", fontName, fontSize);
+    /**
+     * How the caret is drawn. The browser draws its own one pixel wide, in the colour of the text it stands in and
+     * blinking at a rate of its own, so the editor draws one instead and is told what it should look like.
+     *
+     * @param blinkPeriod milliseconds, or {@code 0} for a caret which does not blink
+     */
+    public void setCaretStyle(int width, int blinkPeriod) {
+        getElement().executeJs("this.$arquillApi.setCaretStyle($0, $1);", width, blinkPeriod);
+    }
+
+    public void setFont(String fontName, int fontSize, double lineSpacing) {
+        getElement().executeJs("this.$arquillApi.setFont($0, $1, $2);", fontName, fontSize, lineSpacing);
     }
 
     /**
@@ -276,6 +428,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      * the scheme changes.
      */
     public void setSchemeStyles(String css) {
+        if (isUnchanged("schemeStyles", css)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setSchemeStyles($0);", css);
     }
 
@@ -284,11 +439,30 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     public void setCaretOffset(int offset) {
-        getElement().executeJs("this.$arquillApi.setCaretOffset($0);", offset);
+        setSelection(offset, offset);
+    }
+
+    /**
+     * Where the caret is and what is selected, as one push. The caret is at {@code end} - the edge a growing range
+     * moves - and a caret with nothing selected is a range of no width.
+     * <p>
+     * One channel rather than two on purpose: a caret push and a selection push would race, and a caret arriving
+     * after a selection collapses the range that was just drawn. Whoever moved either of them says what both are.
+     */
+    public void setSelection(int start, int end) {
+        getElement().executeJs("this.$arquillApi.setSelection($0, $1);", start, end);
+    }
+
+    public Registration addTypedListener(ComponentEventListener<ArquillTypedEvent> listener) {
+        return addListener(ArquillTypedEvent.class, listener);
     }
 
     public Registration addCaretListener(ComponentEventListener<ArquillCaretEvent> listener) {
         return addListener(ArquillCaretEvent.class, listener);
+    }
+
+    public Registration addMetricsListener(ComponentEventListener<ArquillMetricsEvent> listener) {
+        return addListener(ArquillMetricsEvent.class, listener);
     }
 
     public Registration addCtrlHoverListener(ComponentEventListener<ArquillCtrlHoverEvent> listener) {
@@ -319,6 +493,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      * @param marksJson array of {id, line, iconUrl, tooltip} - gutter icons produced by the line marker pass
      */
     public void setGutterMarks(String marksJson) {
+        if (isUnchanged("gutterMarks", marksJson)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setGutterMarks($0);", marksJson);
     }
 
@@ -327,6 +504,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      *                   file, where {@code tooltip} is the html shown while the pointer is over the panel
      */
     public void setAnalyzeStatus(String statusJson) {
+        if (isUnchanged("analyzeStatus", statusJson)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setAnalyzeStatus($0);", statusJson);
     }
 
@@ -335,6 +515,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      *                   the daemon produced, shown while the pointer rests over the range
      */
     public void setTooltipRanges(String rangesJson) {
+        if (isUnchanged("tooltipRanges", rangesJson)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setTooltipRanges($0);", rangesJson);
     }
 
@@ -342,6 +525,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      * @param rangesJson array of {start, end, style} in absolute document offsets, sorted by start
      */
     public void setStyleRanges(String rangesJson) {
+        if (isUnchanged("styleRanges", rangesJson)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setStyleRanges($0);", rangesJson);
     }
 
@@ -350,6 +536,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      *                    platform folding model holds
      */
     public void setFoldRegions(String regionsJson) {
+        if (isUnchanged("foldRegions", regionsJson)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setFoldRegions($0);", regionsJson);
     }
 
@@ -360,6 +549,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      *                  works in and the line is only there to tell apart the marks sharing a row of the ruler
      */
     public void setErrorStripeMarks(String marksJson) {
+        if (isUnchanged("errorStripeMarks", marksJson)) {
+            return;
+        }
         getElement().executeJs("this.$arquillApi.setErrorStripeMarks($0);", marksJson);
     }
 
@@ -369,6 +561,9 @@ public class ArquillEditorElement extends Component implements HasSize {
      * parsing a string the server just printed.
      */
     public void setGutterBands(List<GutterBand> bands) {
+        if (isUnchanged("gutterBands", List.copyOf(bands))) {
+            return;
+        }
         getElement().setPropertyList("gutterBands", bands);
         getElement().executeJs("this.$arquillApi.setGutterBands(this.gutterBands);");
     }
@@ -376,6 +571,9 @@ public class ArquillEditorElement extends Component implements HasSize {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+
+        // a fresh dom holds none of the decoration channels, whatever this instance sent to the previous one
+        myLastPushed.clear();
 
         // ahead of the loader below, so that a push arriving while the scripts are on their way is collected
         installApiStub();

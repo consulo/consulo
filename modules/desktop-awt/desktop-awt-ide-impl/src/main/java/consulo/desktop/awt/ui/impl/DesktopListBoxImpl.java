@@ -129,6 +129,13 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
+    public void setVisibleRowCount(int count) {
+        if (count > 0) {
+            toAWTComponent().setVisibleRowCount(count);
+        }
+    }
+
+    @Override
     public void setValueByIndex(int index) {
         toAWTComponent().setSelectedIndex(index);
     }

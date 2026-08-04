@@ -250,6 +250,22 @@ public final class WebActionMenuExpander {
         MenuItemPresentationFactory presentationFactory,
         @Nullable InputDetails inputDetails
     ) {
+        performActionAsync(action, context, place, presentationFactory, inputDetails);
+    }
+
+    /**
+     * Runs the action if its update leaves it enabled, answering whether it ran. A caller holding several actions for
+     * the same shortcut needs to know which of them took it - an action that is not enabled here has not handled
+     * anything, and the next one still has to be offered the stroke.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> performActionAsync(
+        AnAction action,
+        DataContext context,
+        String place,
+        MenuItemPresentationFactory presentationFactory,
+        @Nullable InputDetails inputDetails
+    ) {
         UIAccess uiAccess = UIAccess.current();
 
         ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
@@ -260,19 +276,22 @@ public final class WebActionMenuExpander {
             new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false, inputDetails);
         event.setInjectedContext(action.isInInjectedContext());
 
-        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+        return ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).handleAsync((enabled, throwable) -> {
             if (throwable != null) {
                 if (!isProcessCanceled(throwable)) {
                     LOG.warn("Failed to update action before performing: " + action, throwable);
                 }
-                return;
+                return Boolean.FALSE;
             }
 
             if (Boolean.TRUE.equals(enabled)) {
                 actionManager.fireBeforeActionPerformed(action, context, event);
                 actionManager.performActionDumbAware(action, event);
                 actionManager.queueActionPerformedEvent(action, context, event);
+                return Boolean.TRUE;
             }
+
+            return Boolean.FALSE;
         }, uiAccess);
     }
 

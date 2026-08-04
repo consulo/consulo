@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.WriteAction;
@@ -45,6 +46,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.TestOnly;
@@ -64,7 +66,7 @@ public class CodeCompletionHandlerBase {
      * If this key is set for a lookup element, the framework will only call handleInsert() on the lookup element when it is selected,
      * and will not perform any additional processing such as multi-caret handling or insertion of completion character.
      */
-    public static final Key<Boolean> DIRECT_INSERTION = Key.create("CodeCompletionHandlerBase.directInsertion");
+    public static final Key<Boolean> DIRECT_INSERTION = CompletionUtil.DIRECT_INSERTION;
 
     final CompletionType completionType;
     final boolean invokedExplicitly;

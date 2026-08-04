@@ -81,6 +81,142 @@
         const pageY = viewLine =>
             textView.convert({ y: textView.getLinePixel(viewLine) }, 'document', 'page').y;
 
+        // where the caret is on screen, measured against the host rather than the viewport - what anchors a popup
+        // to the caret is a consulo.ui component, and the platform places one inside another, not on the page.
+        // carried by the caret event because the server has to know it before it opens anything, and asking only
+        // then would cost a round trip the popup would be waiting on
+        const caretDetail = (baseOffset, viewOffset) => {
+            // a caret with nothing selected is a range of no width over it, so every report carries a selection and
+            // the ones that have none say so rather than leaving the field out - an absent field reaches the server
+            // as a zero, which reads as a selection from the top of the document
+            const detail = {
+                offset: baseOffset,
+                selectionStart: baseOffset,
+                selectionEnd: baseOffset,
+                caretX: 0,
+                caretY: 0,
+                caretHeight: 0,
+                textY: 0,
+                rectOnly: false
+            };
+
+            try {
+                const location = textView.getLocationAtOffset(viewOffset);
+                // the y of the line rather than the y the location reports: inside text that one is the top of the
+                // glyph run, which sits below the top of the row by the leading - a caret drawn there hangs low,
+                // and only on an empty line, where there is no run to measure, did the two agree
+                const lineTop = textView.getLinePixel(viewModel.getLineAtOffset(viewOffset));
+                // orion's page space is the viewport one - offsetAt turns a raw clientX/clientY straight into it -
+                // so a host rect, which is viewport based as well, is the right thing to measure these against
+                const point = textView.convert({ x: location.x, y: lineTop }, 'document', 'page');
+                const host = element.getBoundingClientRect();
+
+                detail.caretX = Math.round(point.x - host.left);
+                detail.caretY = Math.round(point.y - host.top);
+                detail.caretHeight = Math.round(textView.getLineHeight());
+
+                // the top of the glyph box rather than of the row - what an inline background is drawn from, so
+                // it is where a caret standing next to the selection has to start
+                const textPoint = textView.convert({ x: location.x, y: location.y }, 'document', 'page');
+                detail.textY = Math.round(textPoint.y - host.top);
+            }
+            catch (e) {
+                // a caret inside a collapsed region has nowhere on screen to be, and the offset still matters
+            }
+
+            return detail;
+        };
+
+        /*
+         * The caret of the platform, drawn rather than left to the browser - it has a width, a colour and a blink
+         * period, and a contenteditable caret answers to none of them.
+         */
+        // the height an inline background covers - what the selection and the brace highlight are drawn at, and so
+        // what the caret has to match. measured, not derived from the font size: only the browser knows the box a
+        // face is laid out in
+        let textBoxHeight = 0;
+        let lineSpacing = 1;
+
+        const caretElement = document.createElement('div');
+        caretElement.className = 'arquill-caret arquill-caret-blinking arquill-caret-hidden';
+        element.appendChild(caretElement);
+
+        const placeCaret = () => {
+            const selection = textView.getSelection();
+            if (!selection || selection.start !== selection.end) {
+                // a caret is where there is nothing selected, and a selection draws itself
+                caretElement.classList.add('arquill-caret-hidden');
+                return;
+            }
+
+            const detail = caretDetail(toBaseOffset(selection.start), selection.start);
+            if (detail.caretHeight <= 0) {
+                caretElement.classList.add('arquill-caret-hidden');
+                return;
+            }
+
+            // the same box the selection is: an inline background covers the glyph box, and it starts where the
+            // glyphs do rather than where the row does. deriving the one from the other left the two a couple of
+            // pixels apart, which is the leading the row carries and the background does not
+            const height = textBoxHeight > 0 ? Math.min(detail.caretHeight, textBoxHeight) : detail.caretHeight;
+
+            caretElement.style.left = detail.caretX + 'px';
+            caretElement.style.top = (detail.textY > 0 ? detail.textY : detail.caretY) + 'px';
+            caretElement.style.height = height + 'px';
+            caretElement.classList.remove('arquill-caret-hidden');
+
+            // restarting the animation puts the caret back on solid, so it does not vanish while it is moved
+            caretElement.style.animation = 'none';
+            void caretElement.offsetWidth;
+            caretElement.style.animation = '';
+        };
+
+        /*
+         * The size of a character cell, which only the browser can measure. The platform maps a position to a point
+         * and back again - remembering a column as an x while the caret moves down a short line and onto a long one
+         * - and an editor which cannot answer stops the arrow keys dead.
+         *
+         * A span in the same font rather than orion's own metrics: what it caches is private, and a run of glyphs
+         * divided by its length is exact for the monospace face an editor is drawn with.
+         */
+        const reportMetrics = () => {
+            try {
+                const content = element.querySelector('.textviewContent') || element;
+                const style = window.getComputedStyle(content);
+
+                // line-height normal, so the box measured is the one the face is laid out in rather than the one
+                // the row was already set to - everything else is derived from this, and deriving it from a guess
+                // at the font size is what left the caret, the selection and the glyphs disagreeing
+                const ruler = document.createElement('span');
+                ruler.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;line-height:normal;';
+                ruler.style.font = style.font || (style.fontSize + ' ' + style.fontFamily);
+                ruler.textContent = 'MMMMMMMMMM';
+
+                content.appendChild(ruler);
+                const rulerBox = ruler.getBoundingClientRect();
+                const charWidth = rulerBox.width / 10;
+                textBoxHeight = Math.round(rulerBox.height);
+                ruler.remove();
+
+                // the row is the box of the face plus the leading the scheme asks for, so the glyphs sit in the
+                // middle of it the way an inline box always does
+                if (textBoxHeight > 0) {
+                    element.style.setProperty('--arquill-editor-line-height',
+                        Math.round(textBoxHeight * (lineSpacing > 0 ? lineSpacing : 1)) + 'px');
+                }
+
+                const lineHeight = textView.getLineHeight();
+                if (charWidth > 0 && lineHeight > 0) {
+                    element.dispatchEvent(new CustomEvent('arquill-metrics', {
+                        detail: { charWidth: Math.max(1, Math.round(charWidth)), lineHeight: Math.round(lineHeight) }
+                    }));
+                }
+            }
+            catch (e) {
+                // the platform keeps whatever it had - a wrong cell is better than an editor which cannot move
+            }
+        };
+
         // go to declaration is bound to ctrl/cmd click and to middle click, and the underline follows
         // the pointer while the modifier is held
         const offsetAt = domEvent => {
@@ -221,11 +357,53 @@
             const offset = offsetAt(domEvent);
             if (offset >= 0 && offset !== element.$arquillCaretOffset) {
                 element.$arquillCaretOffset = offset;
-                element.dispatchEvent(new CustomEvent('arquill-caret', { detail: { offset: offset } }));
+                element.dispatchEvent(new CustomEvent('arquill-caret', { detail: caretDetail(offset, toViewOffset(offset)) }));
             }
         }, { capture: true });
 
+        // a typed character is handed to the platform instead of going straight into the model. typing in an
+        // editor runs the typed action chain - the completion lookup grows its prefix from it, a brace or a quote
+        // closes itself, a tag mirrors into the one that closes it - and none of that happens when the editor puts
+        // the character in on its own. what comes back is a document change like any other
+        //
+        // keypress rather than beforeinput: orion drives its own edits off the key events and writes into the model
+        // itself, so the browser never raises an input event for a character typed here and there is nothing to
+        // cancel. taking the keypress first is what stops orion from inserting
+        let composing = false;
+        element.addEventListener('compositionstart', () => composing = true);
+        element.addEventListener('compositionend', () => composing = false);
+
+        element.addEventListener('keypress', domEvent => {
+            // a modifier makes it a shortcut, and the keymap has already had its say by here
+            if (composing || domEvent.ctrlKey || domEvent.metaKey || domEvent.altKey) {
+                return;
+            }
+
+            // one printable character. return, tab and the rest name themselves and are editor actions, not typing
+            const typed = domEvent.key;
+            if (typeof typed !== 'string' || typed.length !== 1) {
+                return;
+            }
+
+            const selection = textView.getSelection();
+            // replacing a selection is not typing, and the platform has no single character for it
+            if (!selection || selection.start !== selection.end) {
+                return;
+            }
+
+            domEvent.preventDefault();
+            domEvent.stopImmediatePropagation();
+
+            // only the character. the caret is the server's - this one does not move, because the keystroke stops
+            // here, and sending it would put every character of a run back at the same place
+            element.dispatchEvent(new CustomEvent('arquill-typed', { detail: { text: typed } }));
+        }, { capture: true });
+
         baseModel.addEventListener('Changed', event => {
+            // any edit moves the pixels an offset lands on, so the rect the server holds is stale either way -
+            // the next caret push has to measure and report again, suppressed edits included
+            element.$arquillLastRectOffset = -1;
+
             if (element.$arquillSuppressChange) {
                 return;
             }
@@ -244,13 +422,48 @@
         });
 
         textView.addEventListener('Selection', event => {
-            const offset = event.newValue ? toBaseOffset(event.newValue.start) : -1;
-            if (offset < 0 || offset === element.$arquillCaretOffset) {
+            // orion moves its own caret while the platform's text is written in, and the move it reports is a
+            // consequence of that edit rather than the user going anywhere. taking it moved the platform caret to
+            // wherever the replaced range left orion - the front of the document after a template was inserted -
+            // and the next character typed went in there
+            if (element.$arquillSuppressChange) {
+                return;
+            }
+
+            if (!event.newValue) {
+                return;
+            }
+
+            // the whole range, not just where it starts. a drag holds its start still and moves only its end, so a
+            // report of the start alone said nothing had happened and the platform kept a selection of its own that
+            // had never matched what was on screen - which is what delete then cut against
+            const viewStart = Math.min(event.newValue.start, event.newValue.end);
+            const viewEnd = Math.max(event.newValue.start, event.newValue.end);
+            const viewCaret = textView.getCaretOffset();
+
+            const start = toBaseOffset(viewStart);
+            const end = toBaseOffset(viewEnd);
+            const offset = toBaseOffset(viewCaret);
+            if (start < 0 || end < 0 || offset < 0) {
+                return;
+            }
+
+            if (offset === element.$arquillCaretOffset
+                && start === element.$arquillSelectionStart
+                && end === element.$arquillSelectionEnd) {
                 return;
             }
 
             element.$arquillCaretOffset = offset;
-            element.dispatchEvent(new CustomEvent('arquill-caret', { detail: { offset: offset } }));
+            element.$arquillSelectionStart = start;
+            element.$arquillSelectionEnd = end;
+            // the event just carried the rect of this offset, so the echo the server answers with has
+            // nothing left to report
+            element.$arquillLastRectOffset = offset;
+            element.dispatchEvent(new CustomEvent('arquill-caret', {
+                detail: Object.assign(caretDetail(offset, viewCaret), { selectionStart: start, selectionEnd: end })
+            }));
+            placeCaret();
         });
 
         // the fold placeholders are not in the document, so their ranges are built by the folding code
@@ -732,7 +945,10 @@
             renderGutterBands();
         };
 
-        textView.addEventListener('Scroll', onViewChanged);
+        textView.addEventListener('Scroll', () => {
+            onViewChanged();
+            placeCaret();
+        });
         textView.addEventListener('Resize', onViewChanged);
 
         renderFoldRegions();
@@ -966,25 +1182,94 @@
                 }
             },
 
+            setCaretStyle: (width, blinkPeriod) => {
+                if (width > 0) {
+                    element.style.setProperty('--arquill-editor-caret-width', width + 'px');
+                }
+
+                // a period of zero is a caret which does not blink at all
+                if (blinkPeriod > 0) {
+                    element.style.setProperty('--arquill-editor-caret-blink-period', blinkPeriod + 'ms');
+                    caretElement.classList.add('arquill-caret-blinking');
+                }
+                else {
+                    caretElement.classList.remove('arquill-caret-blinking');
+                }
+
+                placeCaret();
+            },
+
             setReadOnly: readOnly => {
                 if (element.$arquillEditor) {
                     element.$arquillEditor.getTextView().setOptions({ readonly: readOnly });
                 }
             },
 
-            setCaretOffset: offset => {
-                // remember the offset first, otherwise orion fires Selection back and the server sees its own move
-                element.$arquillCaretOffset = offset;
-                if (element.$arquillEditor) {
-                    element.$arquillEditor.setCaretOffset(offset, true);
+            setCaretOffset: offset => element.$arquillApi.setSelection(offset, offset),
+
+            /**
+             * Where the platform's caret is and what it has selected, as one thing. A caret is a range of no width,
+             * so there is one channel and not two - two would race, and whichever of them arrived last would win:
+             * a selection push followed by a caret push collapses the range that was just drawn.
+             */
+            setSelection: (start, end) => {
+                // the caret is at the end of the range - that is the edge that moves as it grows. remembered first,
+                // otherwise orion fires Selection back and the server sees its own move
+                element.$arquillCaretOffset = end;
+                element.$arquillSelectionStart = Math.min(start, end);
+                element.$arquillSelectionEnd = Math.max(start, end);
+
+                if (!element.$arquillEditor) {
+                    return;
                 }
+
+                if (start !== end) {
+                    element.$arquillSuppressChange = true;
+                    try {
+                        element.$arquillEditor.getTextView().setSelection(toViewOffset(start), toViewOffset(end), true);
+                    }
+                    finally {
+                        element.$arquillSuppressChange = false;
+                    }
+
+                    // a collapsed push landing on the same offset afterwards has a range to clear, so it must not be
+                    // taken for a repeat of one already applied
+                    element.$arquillLastRectOffset = -1;
+                    placeCaret();
+                    return;
+                }
+
+                // the server pushes the caret from more than one of its listeners per edit, and every push
+                // answered here costs it a round trip - the same offset over an unchanged layout has the
+                // same rect the server already holds
+                if (element.$arquillLastRectOffset === end) {
+                    return;
+                }
+
+                element.$arquillEditor.setCaretOffset(end, true);
+                element.$arquillLastRectOffset = end;
+
+                // the offset is the server's own and does not have to come back, but where it landed on screen
+                // is only measurable here. suppressing the whole event left the server holding the rect from
+                // wherever the caret was last put by hand, and a popup anchored to the caret opened there -
+                // pressing return and asking for completion put the list beside the old line
+                // rect only: the offset is the server's own and moving the platform caret to where it
+                // already is counts as a caret move, which is what a lookup goes away on
+                element.dispatchEvent(new CustomEvent('arquill-caret', {
+                    detail: Object.assign(caretDetail(end, toViewOffset(end)), {
+                        rectOnly: true,
+                        selectionStart: end,
+                        selectionEnd: end
+                    })
+                }));
+                placeCaret();
             },
 
             setLinkHovered: hovered => element.classList.toggle('arquill-ctrl-hover', hovered),
 
             // the theme reads both properties, the bundled .textview rule would otherwise win over an inline
             // style set on the host
-            setFont: (fontName, fontSize) => {
+            setFont: (fontName, fontSize, lineSpacingValue) => {
                 const quoted = fontName ? JSON.stringify(fontName) : '';
 
                 if (quoted) {
@@ -996,12 +1281,20 @@
                     element.style.setProperty('--arquill-editor-font-size', fontSize + 'px');
                 }
 
+                if (lineSpacingValue > 0) {
+                    lineSpacing = lineSpacingValue;
+                }
+
                 // orion measures its metrics while the view is created and lays every line out against what
                 // it cached - update(true) is the only way back into _calculateMetrics, and the overlays are
                 // placed at pixels the view reported, all of which just moved
                 const remeasure = () => {
+                    // the row is published first: orion caches what it measures, and updating before the height
+                    // is set leaves every line laid out against the previous one
+                    reportMetrics();
                     textView.update(true);
                     onProjectionChanged();
+                    placeCaret();
                 };
 
                 remeasure();

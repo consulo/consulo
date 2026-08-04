@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.ListBox;
@@ -32,6 +33,9 @@ import org.jspecify.annotations.Nullable;
  */
 @SuppressWarnings("unchecked")
 public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin> implements ListBox<E> {
+    // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
+    // on css only changes
+    @StyleSheet("/list/webListBox.css")
     public class Vaadin extends com.vaadin.flow.component.listbox.ListBox<E> implements FromVaadinComponentWrapper {
         @Override
         public consulo.ui.@Nullable Component toUIComponent() {
@@ -41,6 +45,8 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
     public WebListBoxImpl(FlatDataModel<E> model) {
         super(model);
+
+        toVaadinComponent().addClassName("web-list-box");
 
         setRender(TextItemRender.defaultRender());
     }
