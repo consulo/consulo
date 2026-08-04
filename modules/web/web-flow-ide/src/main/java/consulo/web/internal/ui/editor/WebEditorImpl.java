@@ -114,8 +114,10 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -185,6 +187,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
   /** the browser identifies a clicked marker by its index here - a line carries more than one of them */
   private final java.util.List<GutterMark> myGutterMarks = new java.util.ArrayList<>();
+
+  /** rebuilt on every inlay push - the browser answers a click with the place a run had in here */
+  private final List<InlayClickTarget> myInlayClickTargets = new ArrayList<>();
 
   private boolean myLinkHovered;
 
@@ -260,6 +265,31 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     updateCaretStyle();
     updateColors();
 
+    // the awt editor learns of an inlay through a repaint of the region it covers, which here reaches a bridge
+    // component and stops there - the model is the only thing left that knows. the pushes coalesce, so the hint
+    // passes adding their inlays one by one still cost a single round trip
+    myInlayModel.addListener(new InlayModel.Listener() {
+      @Override
+      public void onAdded(Inlay<?> inlay) {
+        scheduleUpdate();
+      }
+
+      @Override
+      public void onUpdated(Inlay<?> inlay, int changeFlags) {
+        scheduleUpdate();
+      }
+
+      @Override
+      public void onRemoved(Inlay<?> inlay) {
+        scheduleUpdate();
+      }
+
+      @Override
+      public void onBatchModeFinish(Editor editor) {
+        scheduleUpdate();
+      }
+    }, myDisposable);
+
 //    vaadin.addMouseDownListener(this::runMousePressedCommand);
 
     vaadin.addMetricsListener(event -> {
@@ -282,6 +312,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     vaadin.addCtrlHoverListener(event -> highlightLinkAt(event.getOffset()));
 
     vaadin.addCtrlClickListener(event -> navigateTo(event.getOffset()));
+
+    vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
 
     vaadin.addGutterClickListener(event -> performGutterClick(event.getId()));
 
@@ -613,6 +645,26 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   }
 
   /**
+   * A click the browser reported on a run of a hint. The renderer owns what the run does - a type hint reaching
+   * its class, a collapsed presentation opening - so the click is handed straight back to it.
+   */
+  @RequiredUIAccess
+  private void performInlayClick(int id, boolean controlDown) {
+    if (id < 0 || id >= myInlayClickTargets.size()) {
+      return;
+    }
+
+    InlayClickTarget target = myInlayClickTargets.get(id);
+    if (!target.inlay().isValid()) {
+      return;
+    }
+
+    clearLinkHighlighters();
+
+    target.inlay().getRenderer().handleClick(target.inlay(), target.contentIndex(), controlDown);
+  }
+
+  /**
    * Runs the left click action of a gutter marker, the same one the awt gutter fires from its mouse released
    * handler.
    */
@@ -807,8 +859,326 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
       // pushed first - the browser remaps every offset the other pushes carry once the projection changes
       updateFoldRegions();
 
+      updateInlays();
+
       updateStyleRanges();
     });
+  }
+
+  /**
+   * The inlays of the document, as the text they stand for. The browser puts each anchor into the view as a
+   * projection, the way a fold placeholder gets there, so the offsets pushed here are the document ones and the
+   * placement is spelled out rather than measured - nothing of the awt renderers survives the trip.
+   * <p>
+   * One entry per anchor offset. Two projections at one offset would render in the order the orion model happened
+   * to splice them, and a block inlay below a line anchors exactly where a block inlay above the next line does,
+   * so the ordering has to be settled here instead.
+   */
+  @RequiredReadAction
+  private void updateInlays() {
+    if (isReleased) {
+      return;
+    }
+
+    int textLength = myDocument.getTextLength();
+    int lineCount = myDocument.getLineCount();
+
+    // sorted - the client keys its projections by anchor, and the bundle wants them in offset order
+    Map<Integer, InlaySegments> anchors = new TreeMap<>();
+
+    for (Inlay<?> inlay : myInlayModel.getBlockElementsInRange(0, textLength)) {
+      InlayContent content = contentOf(inlay);
+      if (content == null) {
+        continue;
+      }
+
+      int line = myDocument.getLineNumber(inlay.getOffset());
+
+      // a block inlay stands on a line of its own, which leaves it at the margin while the code it belongs to is
+      // indented. the awt editor measures the indent and shifts the paint; here the text simply carries it
+      String indent = lineIndent(line);
+
+      if (inlay.getPlacement() == Inlay.Placement.ABOVE_LINE) {
+        // the anchor is the start of the line the inlay sits above, and the break at the end of the text pushes
+        // that line down - a document offset maps past the whole projection, so the line still answers for itself
+        anchors.computeIfAbsent(myDocument.getLineStartOffset(line), it -> new InlaySegments()).addBlock(inlay, content, indent, false);
+      }
+      else if (line + 1 < lineCount) {
+        anchors.computeIfAbsent(myDocument.getLineStartOffset(line + 1), it -> new InlaySegments())
+          .addBlock(inlay, content, indent, false);
+      }
+      else {
+        // below the last line there is no line start left to anchor to, so the break goes in front of the text
+        anchors.computeIfAbsent(textLength, it -> new InlaySegments()).addBlock(inlay, content, indent, true);
+      }
+    }
+
+    for (Inlay<?> inlay : myInlayModel.getInlineElementsInRange(0, textLength)) {
+      InlayContent content = contentOf(inlay);
+      if (content != null) {
+        anchors.computeIfAbsent(inlay.getOffset(), it -> new InlaySegments()).addInline(inlay, content);
+      }
+    }
+
+    for (Inlay<?> inlay : myInlayModel.getAfterLineEndElementsInRange(0, textLength)) {
+      InlayContent content = contentOf(inlay);
+      if (content != null) {
+        int lineEndOffset = myDocument.getLineEndOffset(myDocument.getLineNumber(inlay.getOffset()));
+        anchors.computeIfAbsent(lineEndOffset, it -> new InlaySegments()).addInline(inlay, content);
+      }
+    }
+
+    boolean useEditorFontInInlays = EditorSettingsExternalizable.getInstance().isUseEditorFontInInlays();
+
+    myInlayClickTargets.clear();
+
+    StringBuilder inlays = new StringBuilder("[");
+
+    for (Map.Entry<Integer, InlaySegments> entry : anchors.entrySet()) {
+      if (inlays.length() > 1) {
+        inlays.append(',');
+      }
+
+      inlays.append("{\"offset\":").append(entry.getKey()).append(",\"segments\":[");
+
+      boolean first = true;
+      for (InlaySegment segment : entry.getValue().flatten()) {
+        // a run which is only an image projects no text, and an empty span would swallow the click of its neighbour
+        if (segment.text().isEmpty() && !segment.lineBreak()) {
+          continue;
+        }
+
+        if (!first) {
+          inlays.append(',');
+        }
+        first = false;
+
+        inlays.append("{\"text\":\"").append(escapeJson(segment.text())).append('"');
+
+        // the break is a flag rather than a character - escapeJson turns a control character into a space, and a
+        // raw one would abort the parse on the client
+        if (segment.lineBreak()) {
+          inlays.append(",\"br\":true");
+        }
+
+        // the indent of a block hint carries no look of its own - it stands in for the code below it and has to
+        // measure like it
+        if (!segment.styled()) {
+          inlays.append('}');
+          continue;
+        }
+
+        String style = toCssStyle(segment.attributesKey() == null ? null : getColorsScheme().getAttributes(segment.attributesKey()));
+
+        // the awt editor measures a smaller hint against the editor font less one point, so the same one point
+        // is what travels - the browser is already laying the editor font out at the size the scheme asked for
+        String fontSize = segment.smallerFont()
+          ? "\"fontSize\":\"" + Math.max(1, getColorsScheme().getEditorFontSize() - 1) + "px\""
+          : null;
+
+        // the box - padding, rounding, the margin holding it off the code - belongs to the stylesheet rather
+        // than travelling as numbers. the scheme decides the colours, the frontend decides the shape, the same
+        // split a gutter band is drawn under
+        StringBuilder styleClass = new StringBuilder("arquill-inlay");
+        if (segment.boxed()) {
+          if (segment.first()) {
+            styleClass.append(" arquill-inlay-start");
+          }
+          if (segment.last()) {
+            styleClass.append(" arquill-inlay-end");
+          }
+        }
+
+        // a hint is set in the ui font rather than the editor one unless the setting says otherwise - which is
+        // what makes it read as a note about the code instead of as code. the awt editor takes the family from
+        // the label font, and the browser has a ui font of its own to take instead
+        if (!useEditorFontInInlays) {
+          styleClass.append(" arquill-inlay-ui-font");
+        }
+
+        // a run which reaches an action is answered for by its place in the list, and the browser hands that place
+        // back rather than a position - it never laid the hint out in offsets the platform knows
+        if (segment.inlay() != null && segment.inlay().getRenderer().hasClickAction(segment.inlay(), segment.contentIndex())) {
+          inlays.append(",\"click\":").append(myInlayClickTargets.size());
+
+          myInlayClickTargets.add(new InlayClickTarget(segment.inlay(), segment.contentIndex()));
+        }
+
+        inlays.append(",\"style\":{\"styleClass\":\"").append(styleClass).append('"');
+
+        if (style != null || fontSize != null) {
+          inlays.append(",\"style\":{");
+          if (style != null) {
+            inlays.append(style, 1, style.length() - 1);
+          }
+          if (fontSize != null) {
+            if (style != null) {
+              inlays.append(',');
+            }
+            inlays.append(fontSize);
+          }
+          inlays.append('}');
+        }
+
+        inlays.append("}}");
+      }
+
+      inlays.append("]}");
+    }
+
+    inlays.append(']');
+
+    myEditorComponent.toVaadinComponent().setInlays(inlays.toString());
+  }
+
+  /**
+   * The indent a line opens with, as spaces. A tab cannot travel - the json escape turns a control character into
+   * a space, and the payload the daemon messages share it with is why - so it is spent here against the tab size
+   * instead, which lands the text on the column the code is on.
+   */
+  @RequiredReadAction
+  private String lineIndent(int line) {
+    int start = myDocument.getLineStartOffset(line);
+    int end = myDocument.getLineEndOffset(line);
+
+    CharSequence text = myDocument.getCharsSequence();
+    int tabSize = Math.max(1, getSettings().getTabSize(myProject));
+
+    StringBuilder indent = new StringBuilder();
+    for (int offset = start; offset < end; offset++) {
+      char c = text.charAt(offset);
+      if (c == ' ') {
+        indent.append(' ');
+      }
+      else if (c == '\t') {
+        int spaces = tabSize - indent.length() % tabSize;
+        indent.append(" ".repeat(spaces));
+      }
+      else {
+        break;
+      }
+    }
+    return indent.toString();
+  }
+
+  private static @Nullable InlayContent contentOf(Inlay<?> inlay) {
+    if (!inlay.isValid()) {
+      return null;
+    }
+
+    InlayContent content = inlay.getRenderer().getContent(inlay);
+    if (content == null) {
+      return null;
+    }
+
+    // the runs are kept as they came - a run which is only an image cannot be projected, but dropping it here
+    // would shift every index after it, and the index is what a click is answered by
+    for (InlayContentSegment segment : content.segments()) {
+      if (!segment.text().isEmpty()) {
+        return content;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * One run of an anchor, once the placement of its inlay has been resolved into whether it ends a line.
+   */
+  /**
+   * @param styled the run belongs to a hint rather than to the whitespace lining a block one up with the code -
+   *               the indent has to stay in the editor font, a hint set in the ui font would measure it narrower
+   *               and the hint would no longer sit over the declaration it belongs to
+   * @param boxed  the hint is drawn as a box, which only the ones standing inside a line are. a block hint has a
+   *               line to itself, and padding it would only push it off the column its code is on
+   * @param first  the run opens a hint, {@code last} closes one - the edges are what get rounded and padded, so
+   *               a hint of several runs still reads as the one box the awt editor paints
+   */
+  private record InlaySegment(
+    String text,
+    @Nullable TextAttributesKey attributesKey,
+    boolean lineBreak,
+    boolean smallerFont,
+    boolean first,
+    boolean last,
+    boolean styled,
+    boolean boxed,
+    @Nullable Inlay<?> inlay,
+    int contentIndex
+  ) {
+  }
+
+  /**
+   * A run the user can click, as the browser hands it back - the index of this record is what travels, the same
+   * way a gutter mark is answered for by its place in {@link #myGutterMarks}.
+   */
+  private record InlayClickTarget(Inlay<?> inlay, int contentIndex) {
+  }
+
+  /**
+   * The runs of one anchor. Block inlays come out ahead of the inline ones sharing the offset - they end in a
+   * break, so anything after them would otherwise be carried onto their own line rather than staying on the code.
+   */
+  private static final class InlaySegments {
+    private final List<InlaySegment> myBlock = new ArrayList<>();
+    private final List<InlaySegment> myInline = new ArrayList<>();
+
+    private void addBlock(Inlay<?> inlay, InlayContent content, String indent, boolean breakBefore) {
+      boolean small = content.smallerFont();
+
+      if (breakBefore) {
+        myBlock.add(new InlaySegment("", null, true, small, false, false, false, false, null, -1));
+      }
+
+      // the indent stands outside the hint - it is the code the hint lines up with, so it stays plain and is
+      // measured in the editor font like the line below it
+      if (!indent.isEmpty()) {
+        myBlock.add(new InlaySegment(indent, null, false, false, false, false, false, false, null, -1));
+      }
+
+      List<InlayContentSegment> segments = content.segments();
+      for (int i = 0; i < segments.size(); i++) {
+        InlayContentSegment segment = segments.get(i);
+        boolean last = i == segments.size() - 1;
+        myBlock.add(new InlaySegment(
+          segment.text(),
+          segment.attributesKey(),
+          last && !breakBefore,
+          small,
+          i == 0,
+          last,
+          true,
+          false,
+          inlay,
+          i
+        ));
+      }
+    }
+
+    private void addInline(Inlay<?> inlay, InlayContent content) {
+      List<InlayContentSegment> segments = content.segments();
+      for (int i = 0; i < segments.size(); i++) {
+        InlayContentSegment segment = segments.get(i);
+        myInline.add(new InlaySegment(
+          segment.text(),
+          segment.attributesKey(),
+          false,
+          content.smallerFont(),
+          i == 0,
+          i == segments.size() - 1,
+          true,
+          true,
+          inlay,
+          i
+        ));
+      }
+    }
+
+    private List<InlaySegment> flatten() {
+      List<InlaySegment> all = new ArrayList<>(myBlock.size() + myInline.size());
+      all.addAll(myBlock);
+      all.addAll(myInline);
+      return all;
+    }
   }
 
   @RequiredReadAction

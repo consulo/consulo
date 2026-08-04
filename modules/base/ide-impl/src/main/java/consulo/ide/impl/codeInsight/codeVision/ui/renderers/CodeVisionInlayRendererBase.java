@@ -1,17 +1,22 @@
 package consulo.ide.impl.codeInsight.codeVision.ui.renderers;
 
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.Inlay;
+import consulo.codeEditor.InlayContent;
+import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.codeInsight.codeVision.ui.model.CodeVisionListData;
 import consulo.ide.impl.codeInsight.codeVision.ui.model.RangeCodeVisionModel;
 import consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters.CodeVisionListPainter;
+import consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters.CodeVisionPainters;
 import consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters.CodeVisionTheme;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.language.editor.codeVision.ClickableTextCodeVisionEntry;
 import consulo.language.editor.codeVision.CodeVisionEntry;
+import consulo.language.editor.codeVision.TextCodeVisionEntry;
 import consulo.ui.ex.RelativePoint;
 import org.jspecify.annotations.Nullable;
 
@@ -23,6 +28,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRenderer {
     private boolean isHovered = false;
@@ -67,6 +74,36 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
             isHovered && userData != null && userData.isMoreLensActive(),
             hoveredEntry
         );
+    }
+
+    /**
+     * The lens as text. Only the entries the painter would draw are taken, in the order it draws them, with the
+     * delimiter it leaves between them spelled out as a space - it paints nothing and is width alone, which a
+     * frontend laying text out cannot reproduce.
+     */
+    @Override
+    public @Nullable InlayContent getContent(Inlay<?> inlay) {
+        CodeVisionListData userData = inlay.getUserData(CodeVisionListData.KEY);
+        if (userData == null) {
+            return null;
+        }
+
+        List<CodeVisionEntry> visibleLens = userData.visibleLens;
+
+        List<InlayContentSegment> segments = new ArrayList<>(visibleLens.size());
+        for (int index = 0; index < visibleLens.size(); index++) {
+            CodeVisionEntry entry = visibleLens.get(index);
+
+            String text = entry instanceof TextCodeVisionEntry textEntry ? textEntry.text : entry.toString();
+            segments.add(InlayContentSegment.of(text, DefaultLanguageHighlighterColors.INLAY_TEXT_WITHOUT_BACKGROUND));
+
+            if (CodeVisionPainters.getPainter(entry).shouldBeDelimited(entry) && index < visibleLens.size() - 1) {
+                segments.add(InlayContentSegment.of(" "));
+            }
+        }
+        // a lens is set at the size CodeVisionThemeInfoProvider measures it, which is HintUtils.getSize - the
+        // editor font less one point, the same as every other hint
+        return new InlayContent(segments, true);
     }
 
     @Override

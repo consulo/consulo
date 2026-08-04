@@ -256,6 +256,36 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     /**
+     * Fired when a run of an inlay is clicked with ctrl/cmd held. The id is the {@code click} the run carried in
+     * the array last passed to {@link #setInlays(String)} - an inlay stands in no document offset, so the
+     * {@code arquill-ctrl-click} channel, which reports one, cannot answer for it.
+     */
+    @DomEvent("arquill-inlay-click")
+    public static class ArquillInlayClickEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myId;
+        private final boolean myControlDown;
+
+        public ArquillInlayClickEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.id") int id,
+            @EventData("event.detail.controlDown") boolean controlDown
+        ) {
+            super(source, fromClient);
+            myId = id;
+            myControlDown = controlDown;
+        }
+
+        public int getId() {
+            return myId;
+        }
+
+        public boolean isControlDown() {
+            return myControlDown;
+        }
+    }
+
+    /**
      * Fired when a gutter icon is left clicked. The id is the index the mark had in the array last passed to
      * {@link #setGutterMarks(String)} - a line is not enough, several markers can share one.
      */
@@ -473,6 +503,10 @@ public class ArquillEditorElement extends Component implements HasSize {
         return addListener(ArquillCtrlClickEvent.class, listener);
     }
 
+    public Registration addInlayClickListener(ComponentEventListener<ArquillInlayClickEvent> listener) {
+        return addListener(ArquillInlayClickEvent.class, listener);
+    }
+
     public Registration addGutterClickListener(ComponentEventListener<ArquillGutterClickEvent> listener) {
         return addListener(ArquillGutterClickEvent.class, listener);
     }
@@ -540,6 +574,21 @@ public class ArquillEditorElement extends Component implements HasSize {
             return;
         }
         getElement().executeJs("this.$arquillApi.setFoldRegions($0);", regionsJson);
+    }
+
+    /**
+     * The inlays of the document. Each anchor becomes a zero width projection of the orion model - text standing in
+     * the view without being in the document, which is what a fold placeholder already is.
+     *
+     * @param inlaysJson array of {offset, segments:[{text, style}]} in absolute document offsets, one entry per
+     *                   anchor. The segments of an anchor are laid out in the order given, and a segment whose text
+     *                   ends in a newline is what puts a block inlay on a line of its own
+     */
+    public void setInlays(String inlaysJson) {
+        if (isUnchanged("inlays", inlaysJson)) {
+            return;
+        }
+        getElement().executeJs("this.$arquillApi.setInlays($0);", inlaysJson);
     }
 
     /**

@@ -23,6 +23,13 @@
     // would grow into a block over the whole ruler
     const MAX_MARK_LINES = 5;
 
+    // what the marker column keeps to while nothing needs more - orion ships its annotation ruler at 16px,
+    // which is not even one icon of a normal editor font
+    const MIN_MARK_COLUMN_WIDTH = 32;
+
+    // breathing room on each side of a marker, so two of them on one line do not read as a single wide glyph
+    const MARK_GAP = 2;
+
     const install = (element, contents, readonly) => {
         if (element.$arquillEditor) {
             return;
@@ -304,7 +311,17 @@
         element.addEventListener('mousemove', domEvent => {
             const offset = offsetAt(domEvent);
 
-            fireHover(domEvent.ctrlKey || domEvent.metaKey ? offset : -1);
+            const modifier = domEvent.ctrlKey || domEvent.metaKey;
+
+            // the class only says the modifier is down - the stylesheet leaves it to :hover to pick out the run
+            // actually aimed at, which the pointer knows better than an offset does
+            element.classList.toggle('arquill-inlay-hover', modifier);
+
+            // a run of a hint the server already said reaches somewhere needs nothing asked about it, unlike an
+            // offset in the code which it has to resolve first
+            const overInlayAction = modifier && inlayActionAt(domEvent) >= 0;
+
+            fireHover(modifier && !overInlayAction ? offset : -1);
 
             const html = tooltipAt(offset);
             if (html) {
@@ -322,6 +339,9 @@
 
         const onKeyUp = domEvent => {
             if (domEvent.key === 'Control' || domEvent.key === 'Meta') {
+                // the pointer may not move again, so the link look of the hints has to be dropped from here too
+                element.classList.remove('arquill-inlay-hover');
+
                 fireHover(-1);
             }
         };
@@ -330,9 +350,30 @@
         // has to be dropped by hand on detach
         document.addEventListener('keyup', onKeyUp);
 
+        // the run of an inlay a pointer is over, if it is one which reaches an action
+        const inlayActionAt = domEvent => {
+            const span = domEvent.target instanceof Element
+                ? domEvent.target.closest('[data-arquill-inlay-click]')
+                : null;
+
+            return span && element.contains(span) ? Number(span.getAttribute('data-arquill-inlay-click')) : -1;
+        };
+
         element.addEventListener('mousedown', domEvent => {
             const wanted = domEvent.button === 1 || (domEvent.button === 0 && (domEvent.ctrlKey || domEvent.metaKey));
             if (!wanted) {
+                return;
+            }
+
+            // an inlay stands in no document offset, so it is answered for by what it is rather than by where -
+            // and it has to be taken before the offset path below, which would resolve to the code beside it
+            const inlayClick = inlayActionAt(domEvent);
+            if (inlayClick >= 0) {
+                domEvent.preventDefault();
+                fireHover(-1);
+                element.dispatchEvent(new CustomEvent('arquill-inlay-click', {
+                    detail: { id: inlayClick, controlDown: domEvent.ctrlKey || domEvent.metaKey }
+                }));
                 return;
             }
 
@@ -445,8 +486,16 @@
             const end = toBaseOffset(viewEnd);
             const offset = toBaseOffset(viewCaret);
             if (start < 0 || end < 0 || offset < 0) {
+                // a caret standing inside projected text answers for no document offset, so it is moved off it
+                // and the move that follows is what the server hears about
+                if (viewStart === viewEnd) {
+                    snapCaretOutOfProjection(viewCaret);
+                }
                 return;
             }
+
+            // the edge a later snap decides its direction from
+            element.$arquillLastViewCaret = viewCaret;
 
             if (offset === element.$arquillCaretOffset
                 && start === element.$arquillSelectionStart
@@ -470,20 +519,25 @@
         // further down rather than pushed by the server
         let foldPlaceholderStyles = null;
 
+        // the inlays are not in the document either, and their ranges are built the same way further down
+        let inlayStyles = null;
+
         // the bundle hands the ranges straight to the LineStyle event, which reports view offsets,
         // so what the server pushed in document offsets has to be mapped first
         // the end of a range is exclusive, so it may sit exactly on the start of a collapsed region -
         // an offset inside a projection maps to nothing, and the tag name of a folded <build...> would
         // lose its colour along with the text the fold hides. the last character it covers still maps
+        // taken from the last character the range covers rather than from the end itself. mapping the end lands
+        // past everything projected at that offset, so a range ending where an inlay is anchored would reach over
+        // the inlay - the highlight of an identifier would colour the hint that follows it, and the two ranges
+        // would overlap, which the bundle does not define an answer for
         const toViewRangeEnd = offset => {
-            const end = toViewOffset(offset);
-            if (end >= 0) {
-                return end;
+            const last = toViewOffset(offset - 1);
+            if (last >= 0) {
+                return last + 1;
             }
 
-            const last = toViewOffset(offset - 1);
-
-            return last < 0 ? -1 : last + 1;
+            return toViewOffset(offset);
         };
 
         const pushStyleRanges = () => {
@@ -501,10 +555,11 @@
                 mapped.push({ start: start, end: end, style: range.style });
             }
 
-            const placeholders = foldPlaceholderStyles ? foldPlaceholderStyles() : [];
-            if (placeholders.length) {
-                for (const placeholder of placeholders) {
-                    mapped.push(placeholder);
+            const projected = (foldPlaceholderStyles ? foldPlaceholderStyles() : [])
+                .concat(inlayStyles ? inlayStyles() : []);
+            if (projected.length) {
+                for (const style of projected) {
+                    mapped.push(style);
                 }
 
                 // the bundle binary searches the array for the first range of a line, which only
@@ -520,6 +575,10 @@
         const gutter = document.createElement('div');
         gutter.className = 'arquill-gutter';
         element.appendChild(gutter);
+
+        // the widest group of markers the column has been sized for, so it is only resized when it has to be -
+        // widening it makes orion measure the whole view again
+        let markColumnWidth = 0;
 
         const renderGutterMarks = () => {
             gutter.textContent = '';
@@ -561,10 +620,35 @@
             // before the first of its marks is placed
             const countPerLine = {};
 
+            let widest = 0;
             for (const mark of marks) {
                 if (mark.line >= 0 && mark.line < baseModel.getLineCount()) {
-                    countPerLine[mark.line] = (countPerLine[mark.line] || 0) + 1;
+                    const count = (countPerLine[mark.line] || 0) + 1;
+                    countPerLine[mark.line] = count;
+
+                    widest = Math.max(widest, count);
                 }
+            }
+
+            // the awt gutter grows to hold the widest group of markers - three of them land on a declaration
+            // which is both an override and an implementation. orion sizes its left ruler once, off the dom and
+            // while the view is created, so the column is widened here and the view is made to measure again -
+            // without that the third icon is drawn past the column and the overlay clips it away
+            // a marker takes its own width plus the gap on either side, and the column has to hold as many of
+            // those slots as the busiest line asks for
+            const slot = size + MARK_GAP * 2;
+
+            const wantedColumn = Math.max(MIN_MARK_COLUMN_WIDTH, widest * slot);
+            if (markColumnWidth !== wantedColumn) {
+                markColumnWidth = wantedColumn;
+                element.style.setProperty('--arquill-gutter-marks-width', wantedColumn + 'px');
+
+                // update(true) is the way back into _calculateMetrics, the same one a font change goes through
+                textView.update(true);
+
+                // everything below is placed at pixels the view reported, and all of them just moved
+                renderGutterMarks();
+                return;
             }
 
             for (const mark of marks) {
@@ -611,9 +695,12 @@
                 icon.style.width = size + 'px';
                 icon.style.height = lineHeight + 'px';
                 icon.style.top = top + 'px';
-                // a group wider than the column keeps to the left edge, half of it would be clipped away
-                icon.style.left =
-                    Math.max(0, (rulerRect.width - countPerLine[mark.line] * size) / 2 + column * size) + 'px';
+                // a group wider than the column keeps to the left edge, half of it would be clipped away. the
+                // gap is inside the slot, so the icon sits at its centre rather than against its neighbour
+                icon.style.left = Math.max(
+                    MARK_GAP,
+                    (rulerRect.width - countPerLine[mark.line] * slot) / 2 + column * slot + MARK_GAP
+                ) + 'px';
                 icon.addEventListener('click', () => {
                     hideTooltip();
                     element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: { id: mark.id } }));
@@ -829,6 +916,176 @@
             return styles;
         };
 
+        // an inlay is text standing in the view without being in the document - what a fold placeholder already
+        // is, so it is the same mechanism: a projection of no width, which inserts its text and hides nothing.
+        // the server keeps to document offsets and the model maps them, exactly as it does across a collapse
+        const inlayProjections = new Map();
+
+        const inlayText = inlay => {
+            let text = '';
+            for (const segment of inlay.segments || []) {
+                text += (segment.text || '') + (segment.br ? '\n' : '');
+            }
+            return text;
+        };
+
+        // where a projection ended up in the view. a document offset maps past everything the projection
+        // inserted, so its end is what answers and the text reaches back from there
+        const projectionViewRange = projection => {
+            const end = viewModel.mapOffset(projection.end, true);
+            if (end < 0) {
+                return null;
+            }
+
+            return { start: end - projection._model.getCharCount(), end: end };
+        };
+
+        // projections may not overlap, and a region about to collapse takes in whatever stood inside it. so the
+        // inlays step aside before the fold regions are reconciled, and renderInlays puts back the ones that
+        // still have somewhere to stand once the collapse has happened
+        const dropInlayProjections = () => {
+            for (const held of inlayProjections.values()) {
+                viewModel.removeProjection(held.projection);
+            }
+            inlayProjections.clear();
+        };
+
+        // a block inlay takes a view line of its own, and the bundle numbers that line by mapping its start back
+        // to the document - which answers nothing for a line that is only projected text, so it numbered them
+        // "0". they carry no number at all, the way a line an inlay owns has none in the awt editor either
+        const lineNumberRuler = element.$arquillEditor.getLineNumberRuler();
+        if (lineNumberRuler) {
+            const rulerAnnotations = lineNumberRuler.getAnnotations.bind(lineNumberRuler);
+
+            lineNumberRuler.getAnnotations = (startLine, endLine) => {
+                const result = rulerAnnotations(startLine, endLine);
+
+                for (let line = startLine; line < endLine; line++) {
+                    if (result[line] && toBaseOffset(viewModel.getLineStart(line)) < 0) {
+                        result[line].html = '';
+                    }
+                }
+
+                return result;
+            };
+        }
+
+        const renderInlays = () => {
+            const wanted = new Map();
+            for (const inlay of element.$arquillInlays ? JSON.parse(element.$arquillInlays) : []) {
+                wanted.set(inlay.offset, inlay);
+            }
+
+            // reconciled rather than rebuilt, as the fold regions are - dropping and readding every projection
+            // would move the view out from under the caret on each round trip
+            textView.setRedraw(false);
+            try {
+                for (const [offset, held] of Array.from(inlayProjections)) {
+                    const inlay = wanted.get(offset);
+
+                    // kept while the anchor is still wanted, still says the same thing, and is still somewhere a
+                    // projection can stand - a region collapsed over it takes the last of those away
+                    if (inlay && inlayText(inlay) === held.text && toViewOffset(offset) >= 0) {
+                        held.segments = inlay.segments;
+                        continue;
+                    }
+
+                    viewModel.removeProjection(held.projection);
+                    inlayProjections.delete(offset);
+                }
+
+                for (const [offset, inlay] of wanted) {
+                    if (inlayProjections.has(offset)) {
+                        continue;
+                    }
+
+                    // projections may not overlap, and an offset inside a collapsed one maps to nothing
+                    if (toViewOffset(offset) < 0) {
+                        continue;
+                    }
+
+                    const text = inlayText(inlay);
+                    if (!text) {
+                        continue;
+                    }
+
+                    const projection = { start: offset, end: offset, text: text };
+                    viewModel.addProjection(projection);
+                    inlayProjections.set(offset, { projection: projection, text: text, segments: inlay.segments });
+                }
+            }
+            finally {
+                textView.setRedraw(true);
+            }
+        };
+
+        inlayStyles = () => {
+            const styles = [];
+
+            for (const held of inlayProjections.values()) {
+                const range = projectionViewRange(held.projection);
+                if (!range) {
+                    continue;
+                }
+
+                // the runs are laid out in the order they were concatenated into the projection, and the break a
+                // block inlay ends on is a character of the projection like any other
+                let start = range.start;
+                for (const segment of held.segments || []) {
+                    const text = segment.text || '';
+                    if (text && segment.style) {
+                        // a run which reaches an action is marked on the span itself - the click is answered by
+                        // what it stands for and not by where it is, which is nowhere the document knows about
+                        const style = segment.click === undefined
+                            ? segment.style
+                            : Object.assign({}, segment.style, {
+                                styleClass: (segment.style.styleClass || '') + ' arquill-inlay-action',
+                                attributes: { 'data-arquill-inlay-click': String(segment.click) }
+                            });
+
+                        styles.push({ start: start, end: start + text.length, style: style });
+                    }
+
+                    start += text.length + (segment.br ? 1 : 0);
+                }
+            }
+
+            return styles;
+        };
+
+        // orion will put the caret inside a projection, and an offset in there maps to no document offset at all -
+        // the platform would keep the caret it had and quietly disagree with what is on screen. neither an inlay
+        // nor a fold placeholder is somewhere the user can stand, so the caret steps over it instead
+        let snappingCaret = false;
+
+        const snapCaretOutOfProjection = viewOffset => {
+            if (snappingCaret) {
+                return false;
+            }
+
+            for (const projection of viewModel.getProjections()) {
+                const range = projectionViewRange(projection);
+                if (!range || viewOffset <= range.start || viewOffset >= range.end) {
+                    continue;
+                }
+
+                // whichever edge the caret was not already on, so arrowing through moves past rather than sticking
+                const previous = element.$arquillLastViewCaret;
+                const target = typeof previous !== 'number' || previous <= range.start ? range.end : range.start;
+
+                snappingCaret = true;
+                try {
+                    textView.setSelection(target, target, true);
+                }
+                finally {
+                    snappingCaret = false;
+                }
+                return true;
+            }
+
+            return false;
+        };
+
         const renderFoldRegions = () => {
             if (!annotationModel) {
                 return;
@@ -844,6 +1101,8 @@
             element.$arquillSuppressFold = true;
             textView.setRedraw(false);
             try {
+                dropInlayProjections();
+
                 for (const [key, annotation] of Array.from(foldAnnotations)) {
                     if (wanted.has(key)) {
                         continue;
@@ -893,6 +1152,9 @@
                 textView.setRedraw(true);
                 element.$arquillSuppressFold = false;
             }
+
+            // a region that just opened or closed decides whether the inlays inside it have anywhere to stand
+            renderInlays();
 
             onProjectionChanged();
         };
@@ -1359,6 +1621,13 @@
             setFoldRegions: regionsJson => {
                 element.$arquillFoldRegions = regionsJson;
                 renderFoldRegions();
+            },
+
+            // adding a projection shifts every view offset after it, so the pushes keyed by offset are placed again
+            setInlays: inlaysJson => {
+                element.$arquillInlays = inlaysJson;
+                renderInlays();
+                onProjectionChanged();
             },
 
             setGutterBands: bands => {

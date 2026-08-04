@@ -5,9 +5,11 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.Inlay;
+import consulo.codeEditor.InlayContentSegment;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.ide.impl.idea.codeInsight.hints.presentation.PresentationFactory;
 import consulo.language.editor.inlay.HintColorKind;
 import consulo.language.editor.inlay.HintFontSize;
@@ -22,7 +24,9 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -214,14 +218,7 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
         RealEditor editor = (RealEditor) inlay.getEditor();
         InlayTextMetrics metrics = getMetrics(storage);
         int gap = ((int) targetRegion.getHeight() < metrics.getLineHeight() + 2) ? 1 : 2;
-        TextAttributes attrs = editor.getColorsScheme()
-            .getAttributes(
-                HintColorKind.Default == model.getHintFormat().getColorKind()
-                    ? DefaultLanguageHighlighterColors.INLAY_DEFAULT
-                    : model.getHintFormat().getColorKind() == HintColorKind.Parameter
-                    ? DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT
-                    : DefaultLanguageHighlighterColors.INLAY_TEXT_WITHOUT_BACKGROUND
-            );
+        TextAttributes attrs = editor.getColorsScheme().getAttributes(getColorKey());
 
         try (var ignored = GraphicsUtil.withTranslated(g, targetRegion.getX(), targetRegion.getY())) {
             if (model.getHintFormat().getColorKind().hasBackground()) {
@@ -259,6 +256,36 @@ public class InlayPresentationList implements DeclarativeHintViewWithMargins {
                 xOffset = partialWidthSums[i];
             }
         }
+    }
+
+    private TextAttributesKey getColorKey() {
+        HintColorKind colorKind = model.getHintFormat().getColorKind();
+        return HintColorKind.Default == colorKind
+            ? DefaultLanguageHighlighterColors.INLAY_DEFAULT
+            : colorKind == HintColorKind.Parameter
+            ? DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT
+            : DefaultLanguageHighlighterColors.INLAY_TEXT_WITHOUT_BACKGROUND;
+    }
+
+    /**
+     * Whether the hint is set smaller than the editor font - what {@link #getMetrics} asks the storage for.
+     */
+    public boolean isSmallerFont() {
+        return model.getHintFormat().getFontSize() == HintFontSize.ABitSmallerThanInEditor;
+    }
+
+    /**
+     * The presentation as runs of an {@link consulo.codeEditor.InlayContent}. The colour is resolved once here -
+     * the kind belongs to the format of the whole hint, while the entries only know their own text.
+     */
+    public List<InlayContentSegment> toContentSegments() {
+        TextAttributesKey colorKey = getColorKey();
+
+        List<InlayContentSegment> segments = new ArrayList<>(entries.length);
+        for (InlayPresentationEntry entry : entries) {
+            segments.add(entry.toContentSegment(colorKey));
+        }
+        return segments;
     }
 
     private InlayTextMetrics getMetrics(InlayTextMetricsStorage storage) {
