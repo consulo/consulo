@@ -276,7 +276,7 @@ public class UITreeState implements JDOMExternalizable {
                 return;
             }
 
-            tree.expandAsync(match).thenRun(() -> walk(tree, match, path, index + 1, expandTarget, onTarget));
+            tree.expand(match).thenRun(() -> walk(tree, match, path, index + 1, expandTarget, onTarget));
         });
     }
 

@@ -32,7 +32,9 @@ import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
+import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -52,7 +54,10 @@ import java.util.concurrent.ExecutorService;
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
     private static final List CANCELED_RESULT = new ArrayList<>();
 
-    private static final int EXPAND_ALL_DEPTH = 3;
+    /**
+     * Levels of rows an expand all opens, counting the top level ones.
+     */
+    private static final int EXPAND_ALL_DEPTH = 4;
 
     @Tag("vaadin-grid-tree-toggle")
     public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component
@@ -179,12 +184,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                         // items not loaded
                         queue(item, ui);
                     }
+
+                    fireExpand(item);
                 }
             });
 
             addCollapseListener(event -> {
                 for (WebTreeNodeImpl<NODE> item : event.getItems()) {
                     item.setExpanded(false);
+
+                    fireCollapse(item);
                 }
             });
         }
@@ -319,6 +328,34 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
                 return expanded;
             });
+        }
+
+        /**
+         * Opens the nodes and the levels below them, one level at a time. {@link #expandRecursively} walks only
+         * the levels the grid already holds, and the children of a node are fetched when it is first opened, so
+         * a level has to be waited for before the one below it can be asked for.
+         */
+        public CompletableFuture<Void> expandDeep(Collection<WebTreeNodeImpl<NODE>> nodes, int depth) {
+            if (depth <= 0 || nodes.isEmpty()) {
+                return CompletableFuture.completedFuture(null);
+            }
+
+            CompletableFuture<?>[] futures = nodes.stream()
+                // a leaf has nothing to open, and the placeholder row of a level still being fetched is not a
+                // node of the model
+                .filter(node -> !node.isLeaf() && !(node instanceof WebTreeNodeImpl.NotLoaded))
+                // the children are read after the node is open - a fetch replaces the list it held before
+                .map(node -> expandNode(node).thenCompose(ignored -> expandDeep(node.getChildren(), depth - 1)))
+                .toArray(CompletableFuture[]::new);
+
+            return CompletableFuture.allOf(futures);
+        }
+
+        /**
+         * The root is not a row of the grid, so a depth of one opens the top level rows.
+         */
+        public CompletableFuture<Void> expandAllDeep(int depth) {
+            return loadChildrenAsync(myRootNode).thenCompose(children -> expandDeep(children, depth));
         }
 
         public WebTreeNodeImpl<NODE> getRootNode() {
@@ -595,8 +632,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    public void expand(TreeNode<NODE> node) {
-        toVaadinComponent().expand(node);
+    public CompletableFuture<?> expand(TreeNode<NODE> node, int depth) {
+        if (!(node instanceof WebTreeNodeImpl<NODE> webNode)) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return toVaadinComponent().expandDeep(List.of(webNode), depth);
     }
 
     @Override
@@ -625,15 +666,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    public CompletableFuture<Void> expandAsync(TreeNode<NODE> node) {
-        if (!(node instanceof WebTreeNodeImpl<NODE> webNode)) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return toVaadinComponent().expandNode(webNode);
-    }
-
-    @Override
     public void select(TreeNode<NODE> node) {
         if (node instanceof WebTreeNodeImpl<NODE> webNode) {
             toVaadinComponent().select(webNode);
@@ -658,19 +690,43 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    public void expandAll() {
-        Vaadin vaadin = toVaadinComponent();
-
-        // the children of a node are fetched when it is first opened, so the depth is unknown here and a
-        // recursion over the whole tree could open a project view down to every file. the awt expand all
-        // stops at the same place - it only walks what the tree already holds
-        vaadin.expandRecursively(vaadin.getTreeData().getRootItems(), EXPAND_ALL_DEPTH);
+    public CompletableFuture<?> expandAll() {
+        // the children of a node are fetched when it is first opened, and every level costs a round trip, so
+        // an unbounded expand all would open a project view down to every file - the depth is capped instead
+        return expandAll(EXPAND_ALL_DEPTH);
     }
 
     @Override
-    public void collapseAll() {
+    public CompletableFuture<?> expandAll(int depth) {
+        return toVaadinComponent().expandAllDeep(depth);
+    }
+
+    @Override
+    public CompletableFuture<?> collapseAll() {
         Vaadin vaadin = toVaadinComponent();
 
+        // only the levels the grid holds can be open in the first place
         vaadin.collapseRecursively(vaadin.getTreeData().getRootItems(), Integer.MAX_VALUE);
+        return CompletableFuture.completedFuture(null);
+    }
+
+    /**
+     * The placeholder row of a node whose children are still being fetched is a row of the grid but not a node
+     * of the model, and is left out the way the selection listener leaves it out.
+     */
+    private void fireExpand(WebTreeNodeImpl<NODE> node) {
+        if (node instanceof WebTreeNodeImpl.NotLoaded) {
+            return;
+        }
+
+        getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent(this, node));
+    }
+
+    private void fireCollapse(WebTreeNodeImpl<NODE> node) {
+        if (node instanceof WebTreeNodeImpl.NotLoaded) {
+            return;
+        }
+
+        getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
     }
 }
