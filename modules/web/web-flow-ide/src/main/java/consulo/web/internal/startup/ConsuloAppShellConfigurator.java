@@ -76,6 +76,7 @@ import org.vaadin.stefan.table.Table;
 @StyleSheet("/progress/webProgressBar.css")
 @JsModule("./webImage.js")
 @JsModule("./shortcuts.js")
+@JsModule("./showNotifier.js")
 @JsModule("./treeToggle.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)

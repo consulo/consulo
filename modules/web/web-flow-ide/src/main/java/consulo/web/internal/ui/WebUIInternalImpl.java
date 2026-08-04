@@ -43,6 +43,7 @@ import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.base.WebShowNotifier;
 import consulo.web.internal.ui.image.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -463,25 +464,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public void _ShowNotifier_once(Component component, Runnable action) {
-        action.run();
-
-        // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, not on visible
-        //com.vaadin.ui.Component vaadinComponent = TargetVaadin.to(component);
-        //
-        //SimpleReference<Registration> ref = SimpleReference.create();
-        //
-        //Registration registration = vaadinComponent.addAttachListener(attachEvent -> {
-        //    UIAccess uiAccess = UIAccess.current();
-        //
-        //    uiAccess.give(() -> {
-        //        ref.get().remove();
-        //
-        //        action.run();
-        //    });
-        //});
-        //ref.set(registration);
-        //
-        //action.run();
+        WebShowNotifier.once(component, action);
     }
 
     @Override
