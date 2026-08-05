@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.WriteAction;

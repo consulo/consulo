@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.CompletionType;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -9,7 +9,7 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;

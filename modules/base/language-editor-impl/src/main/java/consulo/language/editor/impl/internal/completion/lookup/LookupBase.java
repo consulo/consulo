@@ -37,7 +37,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.completion.CamelHumpMatcher;

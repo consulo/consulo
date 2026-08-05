@@ -7,7 +7,7 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.impl.internal.template.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;

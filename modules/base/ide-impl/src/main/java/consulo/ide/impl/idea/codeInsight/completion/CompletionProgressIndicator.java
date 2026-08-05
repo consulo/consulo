@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.impl.internal.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.CodeCompletionFeatures;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
