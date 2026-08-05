@@ -23,10 +23,12 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
+import java.util.List;
 
 public class HintRenderer implements EditorCustomElementRenderer {
     private String text;
@@ -55,6 +57,19 @@ public class HintRenderer implements EditorCustomElementRenderer {
 
     protected TextAttributes getTextAttributes(Editor editor) {
         return editor.getColorsScheme().getAttributes(DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
+    }
+
+    /**
+     * The hint is a single run of text under the one key {@link #getTextAttributes} resolves, so it says itself
+     * without a presentation tree - the parameter hints of {@code ParameterHintsPass} come through here.
+     */
+    @Override
+    public @Nullable InlayContent getContent(Inlay<?> inlay) {
+        if (text == null || text.isEmpty()) {
+            return null;
+        }
+
+        return InlayContent.of(List.of(InlayContentSegment.of(text, DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT)));
     }
 
     @Override

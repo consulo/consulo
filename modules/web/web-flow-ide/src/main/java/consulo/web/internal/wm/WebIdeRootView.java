@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.wm;
 
+import consulo.disposer.Disposer;
 import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.localize.LocalizeValue;
@@ -70,6 +71,10 @@ public class WebIdeRootView {
         myRootPanel.setMenuBarRightComponent(createCloseProjectButton());
 
         myNavigationBar = new WebNavigationBar(project, myRootPanel.getComponent());
+        // the bar listens on the focus manager, which is one object for the whole application - nothing here is
+        // taken down when the project closes unless it is said out loud, and a listener left behind holds the bar,
+        // which holds the project. it then answers a focus change by asking a disposed project for a service
+        Disposer.register(project, myNavigationBar);
         myRootPanel.setNavigationBar(myNavigationBar.getComponent());
     }
 
@@ -92,7 +97,8 @@ public class WebIdeRootView {
                     action,
                     WebFocusTracker.createDataContext(myRootPanel.getComponent()),
                     ActionPlaces.MAIN_MENU,
-                    new MenuItemPresentationFactory()
+                    new MenuItemPresentationFactory(),
+                    event.getInputDetails()
                 );
             }
         });

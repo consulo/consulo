@@ -37,6 +37,7 @@ import consulo.ui.Tab;
 import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.ActionPlaces;
@@ -55,6 +56,7 @@ import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -169,7 +171,16 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     @Override
     protected void setForegroundAt(int index, Color color) {
         TabInfo tab = getTabAt(index);
-        tab.myForeground = TargetAWT.from(color);
+
+        // a file with no status of its own is answered with the swing label foreground, which is the colour of
+        // the awt laf - a frontend without one does not follow it, and a tab written in it stays dark on a dark
+        // theme. it says nothing about the file, so the tab carries no colour of its own and the style decides
+        ColorValue foreground = color == null || color.equals(UIUtil.getLabelForeground()) ? null : TargetAWT.from(color);
+        if (Objects.equals(tab.myForeground, foreground)) {
+            return;
+        }
+
+        tab.myForeground = foreground;
         tab.update();
     }
 

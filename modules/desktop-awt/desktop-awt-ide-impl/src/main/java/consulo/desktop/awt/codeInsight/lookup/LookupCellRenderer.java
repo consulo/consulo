@@ -23,7 +23,7 @@ import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.FontPreferences;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
+import consulo.language.editor.impl.internal.completion.lookup.EmptyLookupItem;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupIconUtil;
 import consulo.language.editor.completion.lookup.*;
 import consulo.logging.Logger;

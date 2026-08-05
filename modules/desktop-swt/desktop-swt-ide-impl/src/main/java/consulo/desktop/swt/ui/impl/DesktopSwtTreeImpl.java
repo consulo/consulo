@@ -19,7 +19,9 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
+import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
+import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -84,24 +86,95 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
       public void treeExpanded(TreeEvent e) {
         TreeItem item = (TreeItem)e.item;
 
-        Object loaded = item.getData("loaded");
-        if (loaded == Boolean.TRUE) {
-          return;
-        }
+        loadChildren(item);
 
-        if (item.getItemCount() == 1 && item.getItems()[0].getText().equals(stubText)) {
-          TreeItem stub = item.getItem(0);
-          stub.dispose();
+        fireExpand(item);
+      }
 
-          DesktopSwtTreeNode treeNode = (DesktopSwtTreeNode)item.getData("node");
-
-          build(item, (E)treeNode.getValue());
-
-          item.setData("loaded", Boolean.TRUE);
-        }
+      @Override
+      public void treeCollapsed(TreeEvent e) {
+        fireCollapse((TreeItem)e.item);
       }
     });
 
+  }
+
+  /**
+   * Builds the level below the item when it holds nothing but the stub. The children of a node are built when
+   * it is first opened, and {@link TreeItem#setExpanded(boolean)} runs neither this nor the tree listener, so
+   * an expand driven from the api has to come through here as well.
+   */
+  private void loadChildren(TreeItem item) {
+    Object loaded = item.getData("loaded");
+    if (loaded == Boolean.TRUE) {
+      return;
+    }
+
+    if (item.getItemCount() == 1 && item.getItems()[0].getText().equals(stubText)) {
+      TreeItem stub = item.getItem(0);
+      stub.dispose();
+
+      DesktopSwtTreeNode treeNode = (DesktopSwtTreeNode)item.getData("node");
+
+      build(item, (E)treeNode.getValue());
+
+      item.setData("loaded", Boolean.TRUE);
+    }
+  }
+
+  /**
+   * Opens the item and the levels below it, building each as it goes. The widget sends no event of its own for
+   * this, so the listeners are told here.
+   */
+  private void expandItem(TreeItem item, int depth) {
+    if (depth <= 0 || item.isDisposed()) {
+      return;
+    }
+
+    loadChildren(item);
+
+    // a leaf has nothing to open, and the widget would take the call all the same
+    if (item.getItemCount() == 0) {
+      return;
+    }
+
+    if (!item.getExpanded()) {
+      item.setExpanded(true);
+
+      fireExpand(item);
+    }
+
+    for (TreeItem child : item.getItems()) {
+      expandItem(child, depth - 1);
+    }
+  }
+
+  private void collapseItem(TreeItem item) {
+    if (item.isDisposed()) {
+      return;
+    }
+
+    for (TreeItem child : item.getItems()) {
+      collapseItem(child);
+    }
+
+    if (item.getExpanded()) {
+      item.setExpanded(false);
+
+      fireCollapse(item);
+    }
+  }
+
+  private void fireExpand(TreeItem item) {
+    if (item.getData("node") instanceof TreeNode node) {
+      getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent(this, node));
+    }
+  }
+
+  private void fireCollapse(TreeItem item) {
+    if (item.getData("node") instanceof TreeNode node) {
+      getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
+    }
   }
 
   private void build(Object parent, E value) {
@@ -156,8 +229,52 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   }
 
   @Override
-  public void expand(TreeNode<E> node) {
+  public CompletableFuture<?> expand(TreeNode<E> node, int depth) {
+    if (!(node instanceof DesktopSwtTreeNode<E> swtNode)) {
+      return CompletableFuture.completedFuture(null);
+    }
 
+    TreeItem item = swtNode.getTreeItem();
+    if (item == null || item.isDisposed()) {
+      return CompletableFuture.completedFuture(null);
+    }
+
+    // the item is only shown when the ones above it are open
+    for (TreeItem parent = item.getParentItem(); parent != null; parent = parent.getParentItem()) {
+      if (!parent.getExpanded()) {
+        parent.setExpanded(true);
+
+        fireExpand(parent);
+      }
+    }
+
+    expandItem(item, depth);
+
+    // every level is built and opened right here, on the ui thread
+    return CompletableFuture.completedFuture(null);
+  }
+
+  @Override
+  public boolean isExpandCollapseAllSupported() {
+    return true;
+  }
+
+  @Override
+  public CompletableFuture<?> expandAll(int depth) {
+    for (TreeItem item : myComponent.getItems()) {
+      expandItem(item, depth);
+    }
+
+    return CompletableFuture.completedFuture(null);
+  }
+
+  @Override
+  public CompletableFuture<?> collapseAll() {
+    for (TreeItem item : myComponent.getItems()) {
+      collapseItem(item);
+    }
+
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

@@ -153,7 +153,9 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
 
     @Override
     public ComponentPopupBuilder createComponentPopupBuilder(JComponent content, @Nullable JComponent preferableFocusComponent) {
-        throw new UnsupportedOperationException();
+        // a builder is configured far more often than a popup is created - a help tooltip does it on every
+        // install - so refusal is deferred to createPopup, where the swing content actually matters
+        return new UnifiedComponentPopupBuilder();
     }
 
     @Override

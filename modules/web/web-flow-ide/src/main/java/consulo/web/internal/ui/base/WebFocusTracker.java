@@ -90,6 +90,13 @@ public final class WebFocusTracker {
 
         ourScopes.put(id, delegate);
 
+        // put back on every attach. reloading the page detaches the whole tree from the old ui and attaches it to
+        // the new one, so a scope registered only here is taken out by the detach below and never returns - and a
+        // scope the map does not hold is a click the tracker cannot resolve, which leaves the ui with no focused
+        // component, no editor in the data context, and every editor action disabling itself in silence. typing
+        // still worked, because a typed character goes straight to the editor rather than through an action
+        vaadinComponent.addAttachListener(event -> ourScopes.put(id, delegate));
+
         // a session lives as long as its browser tab, the map must not keep growing with every closed frame
         vaadinComponent.addDetachListener(event -> ourScopes.remove(id));
 

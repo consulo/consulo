@@ -20,6 +20,10 @@
   height: var(--web-tab-strip-height);
   padding: var(--web-tab-strip-padding) 0;
   gap: 0;
+
+  /* aura sinks the strip into a container shade of its own, which drifts almost black on the dark themes -
+     the awt strip carries the tabbed pane background of the theme */
+  background-color: var(--consulo-tabbed-pane-background, var(--consulo-panel-background));
 }
 
 /* aura paints vaadin-tabs as a sunken surface - a filled bar with a shadow like edge behind the whole row.
@@ -46,12 +50,17 @@
   min-height: 0;
 
   padding: 0 8px;
+
+  /* an editor tab of the ide is a rectangle - aura rounds every corner, which also bends the ends of the
+     underline below, since an inset shadow follows the radius of the box it is drawn in */
+  --vaadin-tab-border-radius: 0;
+  border-radius: 0;
 }
 
-/* the selected tab is raised by a drop shadow in aura, the fill alone marks it in awt */
+/* the selected tab is raised by a drop shadow in aura, the awt tabs mark it with an accent underline */
 .web-tabbed-layout vaadin-tab[selected]
 {
-  box-shadow: none;
+  box-shadow: inset 0 -2px 0 var(--consulo-tabbed-pane-underline-color, #007aff);
 }
 
 /* aura marks the selected tab with its accent colour by assigning the tokens the tab draws itself with:
@@ -61,15 +70,27 @@
    charge of the value: --consulo-tab-foreground / --consulo-tab-background written on a tab win over these */
 .web-tabbed-layout vaadin-tab
 {
-  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--vaadin-text-color));
+  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--consulo-tabbed-pane-foreground, var(--vaadin-text-color)));
   --vaadin-tab-background: var(--consulo-tab-background, transparent);
 }
 
-/* the selected tab is told apart by a plain fill - the awt tabs mark it with the editor background */
+.web-tabbed-layout vaadin-tab:not([selected]):hover
+{
+  --vaadin-tab-background: var(--consulo-tab-background, var(--consulo-tabbed-pane-hover-color, transparent));
+}
+
+/* the selected tab keeps the strip background - the underline is what tells it apart, like the awt tabs */
 .web-tabbed-layout vaadin-tab[selected]
 {
-  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--vaadin-text-color));
-  --vaadin-tab-background: var(--consulo-tab-background, var(--vaadin-background-container));
+  --vaadin-tab-text-color: var(--consulo-tab-foreground, var(--consulo-tabbed-pane-foreground, var(--vaadin-text-color)));
+  --vaadin-tab-background: var(--consulo-tab-background, transparent);
+}
+
+/* a tabsheet with no selected panel stays [loading] forever and spins in the middle of the empty content
+   area - the panels here are always attached up front, so the spinner never stands for work in flight */
+.web-tabbed-layout::part(loader)
+{
+  display: none;
 }
 
 /* the label and the close cross are two separate children of the tab, without this they are laid out on the
@@ -96,5 +117,5 @@ vaadin-tab:has(> .web-tab-close)
 .web-tab-close:hover
 {
   opacity: 1;
-  background-color: gainsboro;
+  background-color: var(--consulo-button-hover-background, gainsboro);
 }

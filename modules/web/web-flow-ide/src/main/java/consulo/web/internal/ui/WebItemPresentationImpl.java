@@ -56,15 +56,34 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         return this;
     }
 
+    /**
+     * What each run says and how it is drawn, kept beside the span built from it - a consumer which owns its spans
+     * already can bind these onto the ones it has rather than take new ones.
+     */
+    public record Fragment(String text, @Nullable TextAttribute attribute) {
+    }
+
+    private final List<Fragment> myFragmentModels = new ArrayList<>();
+
+    public List<Fragment> getFragments() {
+        return myFragmentModels;
+    }
+
+    public @Nullable Image getIcon() {
+        return myIcon;
+    }
+
     @Override
     public void append(LocalizeValue text, TextAttribute textAttribute) {
-        Span span = new Span(text.get());
+        String string = text.get();
+        Span span = new Span(string);
 
         // the attribute is what tells a file apart in the project view - grayed out, red for an error, the vcs
         // colour of a changed one. dropping it left every fragment looking the same
         applyAttribute(span, textAttribute);
 
         myFragments.add(span);
+        myFragmentModels.add(new Fragment(string, textAttribute));
 
         after();
     }
@@ -77,12 +96,23 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         return myBackgroundColor;
     }
 
-    private static void applyAttribute(Span span, @Nullable TextAttribute textAttribute) {
+    /**
+     * Every property, always - a span may be one a consumer is reusing, and one which merely goes unset keeps
+     * whatever the run before it asked for. A completion row rebound from an item with a tail onto one without kept
+     * showing the old tail for exactly this reason.
+     */
+    static void applyAttribute(Span span, @Nullable TextAttribute textAttribute) {
+        Style style = span.getStyle();
+
+        style.remove("color");
+        style.remove("background-color");
+        style.remove("font-weight");
+        style.remove("font-style");
+        style.remove("text-decoration");
+
         if (textAttribute == null) {
             return;
         }
-
-        Style style = span.getStyle();
 
         ColorValue foreground = textAttribute.getForegroundColor();
         if (foreground != null) {
@@ -100,6 +130,13 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         }
         if ((fontStyle & Font.STYLE_ITALIC) != 0) {
             style.set("font-style", "italic");
+        }
+
+        // one css property covers both, so a fragment carrying the two has to ask for them together
+        boolean strikeout = (fontStyle & Font.STYLE_STRIKEOUT) != 0;
+        boolean underline = (fontStyle & Font.STYLE_UNDERLINE) != 0;
+        if (strikeout || underline) {
+            style.set("text-decoration", strikeout && underline ? "line-through underline" : strikeout ? "line-through" : "underline");
         }
     }
 

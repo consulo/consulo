@@ -19,18 +19,18 @@ package consulo.ui;
  * @author VISTALL
  * @since 2026-08-02
  */
-public final class LightPopupOptions extends ComponentOptions {
+public final class PopupOptions extends ComponentOptions {
     public static final class Builder {
         private boolean myCancelOnClickOutside = true;
         private boolean myCancelOnEscape = true;
         private boolean myRequestFocus = true;
         private boolean myResizable = false;
-        private LightPopupPosition myPosition = LightPopupPosition.BOTTOM;
+        private PopupPosition myPosition = PopupPosition.BOTTOM;
 
         private Builder() {
         }
 
-        public Builder position(LightPopupPosition position) {
+        public Builder position(PopupPosition position) {
             myPosition = position;
             return this;
         }
@@ -58,8 +58,8 @@ public final class LightPopupOptions extends ComponentOptions {
             return this;
         }
 
-        public LightPopupOptions build() {
-            return new LightPopupOptions(myCancelOnClickOutside, myCancelOnEscape, myRequestFocus, myResizable, myPosition);
+        public PopupOptions build() {
+            return new PopupOptions(myCancelOnClickOutside, myCancelOnEscape, myRequestFocus, myResizable, myPosition);
         }
     }
 
@@ -71,14 +71,14 @@ public final class LightPopupOptions extends ComponentOptions {
     private final boolean myCancelOnEscape;
     private final boolean myRequestFocus;
     private final boolean myResizable;
-    private final LightPopupPosition myPosition;
+    private final PopupPosition myPosition;
 
-    private LightPopupOptions(
+    private PopupOptions(
         boolean cancelOnClickOutside,
         boolean cancelOnEscape,
         boolean requestFocus,
         boolean resizable,
-        LightPopupPosition position
+        PopupPosition position
     ) {
         super(true);
 
@@ -89,7 +89,7 @@ public final class LightPopupOptions extends ComponentOptions {
         myPosition = position;
     }
 
-    public LightPopupPosition getPosition() {
+    public PopupPosition getPosition() {
         return myPosition;
     }
 

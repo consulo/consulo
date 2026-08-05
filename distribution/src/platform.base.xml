@@ -254,6 +254,7 @@
                 <include>org.lz4:lz4-java</include>
                 <include>com.github.markusbernhardt:proxy-vole</include>
                 <include>com.google.code.gson:gson</include>
+                <include>tools.jackson.core:jackson-core</include>
                 <include>net.bytebuddy:byte-buddy</include>
                 <include>org.apache.commons:commons-compress</include>
                 <include>org.tukaani:xz</include>

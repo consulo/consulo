@@ -21,6 +21,7 @@ import sun.font.FontDesignMetrics;
 import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
 import java.util.function.BiFunction;
 
@@ -31,17 +32,57 @@ import java.util.function.BiFunction;
 public class FontDesignMetricsHacking {
   private static final Logger LOG = Logger.getInstance(FontDesignMetricsHacking.class);
 
+  private static boolean ourUnavailableReported;
+
   public static FontMetrics getMetrics(Font font, FontRenderContext fontRenderContext) {
     try {
       return FontDesignMetrics.getMetrics(font, fontRenderContext);
     }
     catch (Throwable e) {
-      throw new RuntimeException(e);
+      reportUnavailable(e);
+
+      return fallbackMetrics(font, fontRenderContext);
+    }
+  }
+
+  /**
+   * Metrics for a runtime which did not open {@code sun.font}. The web frontend is one - it measures on a server
+   * nobody looks at, the browser lays the text out itself - so a launcher without the flag should measure a little
+   * differently rather than fail, which is what an editor asking for the width of an inlay used to get.
+   */
+  private static FontMetrics fallbackMetrics(Font font, FontRenderContext fontRenderContext) {
+    BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+
+    Graphics2D graphics = image.createGraphics();
+    try {
+      graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, fontRenderContext.getAntiAliasingHint());
+      graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, fontRenderContext.getFractionalMetricsHint());
+      graphics.setTransform(fontRenderContext.getTransform());
+
+      return graphics.getFontMetrics(font);
+    }
+    finally {
+      graphics.dispose();
     }
   }
 
   public static boolean isFontDesignMetrics(FontMetrics fontMetrics) {
-    return fontMetrics instanceof FontDesignMetrics;
+    try {
+      return fontMetrics instanceof FontDesignMetrics;
+    }
+    catch (Throwable e) {
+      reportUnavailable(e);
+
+      return false;
+    }
+  }
+
+  private static synchronized void reportUnavailable(Throwable e) {
+    if (!ourUnavailableReported) {
+      ourUnavailableReported = true;
+
+      LOG.warn("Couldn't access FontDesignMetrics, falling back to the metrics of an offscreen image", e);
+    }
   }
 
   public static @Nullable BiFunction<FontMetrics, Integer, Float> handleCharWidth() {

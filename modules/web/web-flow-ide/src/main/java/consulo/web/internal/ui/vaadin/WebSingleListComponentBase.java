@@ -42,19 +42,31 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
 
     protected @Nullable Function<V, String> mySpeedSearchConverter;
     protected @Nullable ToIntFunction<V> myItemHeightGetter;
+    protected int myVisibleRowCount;
 
     @SuppressWarnings("unchecked")
     protected WebSingleListComponentBase(FlatDataModel<V> model) {
         myModel = model;
         C component = toVaadinComponent();
-        component.setItems(ContainerUtil.collect(model.iterator()));
+        pushItems();
 
         component.addValueChangeListener(
             event -> getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()))
         );
 
         // a vaadin list holds its own copy of the items, so any structural change has to be pushed back
-        model.addListener(event -> component.setItems(ContainerUtil.collect(model.iterator())));
+        model.addListener(event -> pushItems());
+    }
+
+    /**
+     * Hands the list every item it holds. This one builds a row for each of them up front, which is why a model that
+     * may run long asks for the lazy list instead.
+     */
+    @SuppressWarnings("unchecked")
+    protected void pushItems() {
+        C component = toVaadinComponent();
+
+        component.setItems(ContainerUtil.collect(myModel.iterator()));
     }
 
     public FlatDataModel<V> getDataModel() {
@@ -77,6 +89,33 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
         if (myItemHeightGetter != null && item != null) {
             itemComponent.getElement().getStyle().set("height", myItemHeightGetter.applyAsInt(item) + "px");
         }
+    }
+
+    /**
+     * The browser has no row count to set, so the rows are bounded by how tall the list is allowed to grow, and what
+     * scrolls the rest past it is the scroll layout the list is placed in - a list never scrolls its own content.
+     * The height of one row is not known here, so it is taken from the item height when one was given and from the
+     * theme otherwise.
+     */
+    public void setVisibleRowCount(int count) {
+        myVisibleRowCount = count;
+
+        // what reaches the browser is bounded by this, so the rows have to be pushed again against the new bound
+        pushItems();
+
+        com.vaadin.flow.component.Component component = toVaadinComponent();
+
+        if (count <= 0) {
+            component.getElement().getStyle().remove("max-height");
+            return;
+        }
+
+        String rowHeight = myItemHeightGetter != null && myModel.getSize() > 0
+            ? myItemHeightGetter.applyAsInt(myModel.get(0)) + "px"
+            : "var(--consulo-list-row-height, 24px)";
+
+        // a height only - the list never scrolls anything itself, the scroll layout it is put in does
+        component.getElement().getStyle().set("max-height", "calc(" + count + " * " + rowHeight + ")");
     }
 
     @RequiredUIAccess

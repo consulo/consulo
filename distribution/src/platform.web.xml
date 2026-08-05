@@ -59,6 +59,7 @@
         <include>com.helger:ph-css</include>
         <include>com.vaadin:vaadin-core-internal</include>
         <include>com.vaadin:vaadin-list-box-flow</include>
+        <include>com.vaadin:vaadin-virtual-list-flow</include>
         <include>com.vaadin:vaadin-grid-flow</include>
         <include>com.vaadin:vaadin-context-menu-flow</include>
         <include>com.vaadin:flow-data</include>

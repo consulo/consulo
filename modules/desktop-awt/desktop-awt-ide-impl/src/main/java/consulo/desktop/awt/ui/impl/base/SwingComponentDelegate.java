@@ -24,9 +24,11 @@ import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyPressedListener;
 import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyReleasedListener;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -54,6 +56,12 @@ import java.util.Map;
  */
 public abstract class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
     private T myInitializedComponent;
+
+    /** the desktop frontend draws into a single ui, so every component of it answers the same access */
+    @Override
+    public UIAccess getUIAccess() {
+        return AWTUIAccessImpl.ourInstance;
+    }
 
     protected abstract T createComponent();
 

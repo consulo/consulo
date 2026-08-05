@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.event;
+
+import consulo.ui.Tree;
+import consulo.ui.TreeNode;
 
 /**
- * Where a {@link LightPopup} sits relative to what it was opened against.
+ * Sent when a node is opened, whether by the user or by a call on the tree.
  *
  * @author VISTALL
- * @since 2026-08-02
+ * @since 2026-08-04
  */
-public enum LightPopupPosition {
-    /**
-     * Under the target, which is where a popup opened off a button or a menu belongs.
-     */
-    BOTTOM,
-    /**
-     * Beside the target with their tops aligned - a submenu next to the popup which owns it.
-     */
-    END
+public final class TreeExpandEvent<V> extends ComponentEvent<Tree<V>> {
+    private final TreeNode<V> myValue;
+
+    public TreeExpandEvent(Tree<V> component, TreeNode<V> value) {
+        super(component);
+        myValue = value;
+    }
+
+    public TreeNode<V> getValue() {
+        return myValue;
+    }
 }

@@ -189,6 +189,16 @@ public class WebNavigationBar implements Disposable {
         Disposer.register(this, WebFocusManagerImpl.ourInstance.addListener(this::update));
     }
 
+    /**
+     * The bar outlives the project it was built for - the frame is taken down after the project is disposed, and the
+     * listeners it is driven from keep firing until it is. Asking a disposed project for a service throws, and on a
+     * browser frontend that throw lands in the request rather than on a screen: every round trip answers 500 and the
+     * ui stops on the first one.
+     */
+    private boolean isObsolete() {
+        return myProject.isDisposed();
+    }
+
     private NavBarService navBarService() {
         return myProject.getInstance(NavBarService.class);
     }
@@ -219,6 +229,10 @@ public class WebNavigationBar implements Disposable {
      * previous items until it does.
      */
     public void update() {
+        if (isObsolete()) {
+            return;
+        }
+
         UIAccess uiAccess = myProject.getUIAccess();
 
         if (myToolbar != null) {

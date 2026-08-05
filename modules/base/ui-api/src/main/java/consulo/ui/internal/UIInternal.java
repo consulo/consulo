@@ -197,7 +197,11 @@ public abstract class UIInternal {
 
     public abstract Window _Window_create(String title, WindowOptions options);
 
-    public LightPopup _LightPopup_create(LightPopupOptions options) {
+    public LightPopup _LightPopup_create(PopupOptions options) {
+        throw new UnsupportedOperationException();
+    }
+
+    public HeavyPopup _HeavyPopup_create(PopupOptions options) {
         throw new UnsupportedOperationException();
     }
 
@@ -210,6 +214,10 @@ public abstract class UIInternal {
     public abstract <T> Alert<T> _Alerts_create();
 
     public abstract <T> MutableFlatDataModel<T> _FlatDataModel_create(Collection<? extends T> list);
+
+    public <T> MutableFlatDataModel<T> _FlatDataModel_createLazy(Collection<? extends T> list) {
+        return _FlatDataModel_create(list);
+    }
 
     @RequiredUIAccess
     public abstract UIAccess _UIAccess_get();

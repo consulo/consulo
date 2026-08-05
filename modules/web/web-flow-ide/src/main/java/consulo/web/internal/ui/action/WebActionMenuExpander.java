@@ -22,11 +22,13 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.MenuSeparator;
 import consulo.ui.UIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.impl.internal.action.ActionUpdater;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
+import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
@@ -57,13 +59,14 @@ public final class WebActionMenuExpander {
         @Nullable AnAction action,
         LocalizeValue text,
         @Nullable Image icon,
+        @Nullable Image disabledIcon,
         boolean enabled,
         @Nullable Boolean checked,
         LocalizeValue shortcutText,
         @Nullable List<MenuNode> children
     ) {
         static MenuNode separator() {
-            return new MenuNode(null, LocalizeValue.empty(), null, true, null, LocalizeValue.empty(), null);
+            return new MenuNode(null, LocalizeValue.empty(), null, null, true, null, LocalizeValue.empty(), null);
         }
 
         public boolean isSeparator() {
@@ -153,6 +156,7 @@ public final class WebActionMenuExpander {
                             action,
                             presentation.getTextValue(),
                             presentation.getIcon(),
+                            presentation.getDisabledIcon(),
                             presentation.isEnabled(),
                             null,
                             LocalizeValue.empty(),
@@ -191,6 +195,7 @@ public final class WebActionMenuExpander {
             action,
             presentation.getTextValue(),
             presentation.getIcon(),
+            presentation.getDisabledIcon(),
             presentation.isEnabled(),
             checked,
             LocalizeValue.of(shortcutText),
@@ -212,7 +217,7 @@ public final class WebActionMenuExpander {
         List<MenuNode> children = node.children();
         if (children != null) {
             WebMenuImpl menu = new WebMenuImpl(node.text());
-            menu.setIcon(node.icon());
+            menu.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
             menu.setEnabled(node.enabled());
 
             for (MenuNode child : children) {
@@ -223,14 +228,15 @@ public final class WebActionMenuExpander {
         }
 
         WebMenuItemImpl item = new WebMenuItemImpl(node.text());
-        item.setIcon(node.icon());
+        item.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
         item.setEnabled(node.enabled());
         item.setChecked(node.checked());
         item.setShortcutText(node.shortcutText());
 
         AnAction action = node.action();
         if (action != null) {
-            item.addClickListener(event -> performAction(action, contextSupplier.get(), place, presentationFactory));
+            item.addClickListener(event ->
+                performAction(action, contextSupplier.get(), place, presentationFactory, event.getInputDetails()));
         }
 
         return item;
@@ -241,7 +247,24 @@ public final class WebActionMenuExpander {
         AnAction action,
         DataContext context,
         String place,
-        MenuItemPresentationFactory presentationFactory
+        MenuItemPresentationFactory presentationFactory,
+        @Nullable InputDetails inputDetails
+    ) {
+        performActionAsync(action, context, place, presentationFactory, inputDetails);
+    }
+
+    /**
+     * Runs the action if its update leaves it enabled, answering whether it ran. A caller holding several actions for
+     * the same shortcut needs to know which of them took it - an action that is not enabled here has not handled
+     * anything, and the next one still has to be offered the stroke.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> performActionAsync(
+        AnAction action,
+        DataContext context,
+        String place,
+        MenuItemPresentationFactory presentationFactory,
+        @Nullable InputDetails inputDetails
     ) {
         UIAccess uiAccess = UIAccess.current();
 
@@ -249,22 +272,26 @@ public final class WebActionMenuExpander {
 
         Presentation presentation = presentationFactory.getPresentation(action);
 
-        AnActionEvent event = new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false);
+        AnActionEvent event =
+            new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false, inputDetails);
         event.setInjectedContext(action.isInInjectedContext());
 
-        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
+        return ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).handleAsync((enabled, throwable) -> {
             if (throwable != null) {
                 if (!isProcessCanceled(throwable)) {
                     LOG.warn("Failed to update action before performing: " + action, throwable);
                 }
-                return;
+                return Boolean.FALSE;
             }
 
             if (Boolean.TRUE.equals(enabled)) {
                 actionManager.fireBeforeActionPerformed(action, context, event);
                 actionManager.performActionDumbAware(action, event);
                 actionManager.queueActionPerformedEvent(action, context, event);
+                return Boolean.TRUE;
             }
+
+            return Boolean.FALSE;
         }, uiAccess);
     }
 

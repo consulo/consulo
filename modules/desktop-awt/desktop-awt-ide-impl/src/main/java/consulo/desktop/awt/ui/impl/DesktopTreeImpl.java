@@ -21,7 +21,9 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
+import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.event.DoubleClickListener;
@@ -29,14 +31,20 @@ import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreePath;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -294,36 +302,115 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                 return;
             }
 
-            Object object = TreeUtil.getLastUserObject(path);
+            TreeNode<E> node = nodeOf(path);
+            if (node != null) {
+                getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(this, node));
+            }
+        });
 
-            if (object instanceof MyNodeDescriptor node) {
-                MyTreeNodeImpl element = (MyTreeNodeImpl) node.getElement();
+        // fires for the nodes the user toggles and for those a call on the tree opens alike
+        tree.addTreeExpansionListener(new TreeExpansionListener() {
+            @Override
+            public void treeExpanded(TreeExpansionEvent event) {
+                TreeNode<E> node = nodeOf(event.getPath());
+                if (node != null) {
+                    getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent<>(DesktopTreeImpl.this, node));
+                }
+            }
 
-                getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(this, element));
+            @Override
+            public void treeCollapsed(TreeExpansionEvent event) {
+                TreeNode<E> node = nodeOf(event.getPath());
+                if (node != null) {
+                    getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent<>(DesktopTreeImpl.this, node));
+                }
             }
         });
         return tree;
     }
 
-    @Override
+    /**
+     * The root is not a node of the model - it stands for the value the tree was built on - so a path pointing
+     * at it answers null and is left out of the events.
+     */
     @SuppressWarnings("unchecked")
-    public @Nullable TreeNode<E> getSelectedNode() {
-        TreePath path = TreeUtil.getSelectedPathIfOne(toAWTComponent());
-        if (path == null) {
-            return null;
-        }
-
+    private @Nullable TreeNode<E> nodeOf(TreePath path) {
         Object object = TreeUtil.getLastUserObject(path);
 
-        if (object instanceof MyNodeDescriptor node) {
-            return (MyTreeNodeImpl) node.getElement();
+        if (object instanceof MyNodeDescriptor node && node.getElement() instanceof MyTreeNodeImpl element) {
+            return element;
         }
 
         return null;
     }
 
     @Override
-    public void expand(TreeNode<E> node) {
+    public @Nullable TreeNode<E> getSelectedNode() {
+        TreePath path = TreeUtil.getSelectedPathIfOne(toAWTComponent());
+        return path == null ? null : nodeOf(path);
+    }
+
+    @Override
+    public CompletableFuture<?> expand(TreeNode<E> node, int depth) {
+        MyTree tree = toAWTComponent();
+
+        Promise<?> expanded = myStructureTreeModel.promiseVisitor(node)
+            .thenAsync(visitor -> TreeUtil.promiseExpand(tree, visitor))
+            .thenAsync(basePath -> depth <= 1 ? Promises.resolvedPromise(basePath) : expandBelow(tree, basePath, depth));
+
+        return toFuture(expanded);
+    }
+
+    /**
+     * A promise which found nothing to open is cancelled rather than rejected, and {@link Promise#onProcessed}
+     * is the one handler that runs whichever way it ends - a future left hanging would take its caller with it.
+     */
+    private static CompletableFuture<Void> toFuture(Promise<?> promise) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        promise.onProcessed(ignored -> future.complete(null));
+        return future;
+    }
+
+    /**
+     * {@link TreeUtil#expand(JTree, int)} counts from the root and opens every branch down to that depth, so a
+     * walk which stays inside one subtree is done here. Opening the visited path is what the walk of the
+     * platform does - see {@code TreeUtil#promiseMakeVisible} - and the visitor runs on EDT.
+     */
+    private Promise<TreePath> expandBelow(MyTree tree, TreePath basePath, int depth) {
+        int base = basePath.getPathCount();
+
+        return TreeUtil.promiseVisit(tree, path -> {
+            // the walk starts at the root, and the nodes above the base one are already open - only the way
+            // down to it is followed, the rest of the tree is left alone
+            if (path.getPathCount() <= base) {
+                return path.isDescendant(basePath) ? TreeVisitor.Action.CONTINUE : TreeVisitor.Action.SKIP_CHILDREN;
+            }
+
+            if (!basePath.isDescendant(path) || path.getPathCount() >= base + depth) {
+                return TreeVisitor.Action.SKIP_CHILDREN;
+            }
+
+            tree.expandPath(path);
+            return TreeVisitor.Action.CONTINUE;
+        });
+    }
+
+    @Override
+    public boolean isExpandCollapseAllSupported() {
+        return true;
+    }
+
+    @Override
+    public CompletableFuture<?> expandAll(int depth) {
+        // the root is hidden, so a top level row is at a path count of two
+        return toFuture(TreeUtil.promiseExpand(toAWTComponent(), depth == Integer.MAX_VALUE ? depth : depth + 1));
+    }
+
+    @Override
+    public CompletableFuture<?> collapseAll() {
+        // what DefaultTreeExpander - the collapse all of the platform trees - does
+        TreeUtil.collapseAll(toAWTComponent(), true, 1);
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

@@ -77,8 +77,32 @@ public class WebImageUrl {
         }
 
         // the same group and image resolve to different bytes once the icon library changes, and the url is
-        // the only thing a browser cache is keyed on
-        return url.append('&').append(VERSION).append('=').append(IconLibraryManager.get().getModificationCount()).toString();
+        // the only thing a browser cache is keyed on. the library has to be named in it rather than only a
+        // counter: a counter starts over with the process, so the very same url would stand for the icons of
+        // one library today and of another one tomorrow, and the browser would answer either from what it
+        // kept. the counter stays alongside it for the changes which keep the library and replace its content
+        return url.append('&').append(VERSION).append('=').append(encode(currentVersion())).toString();
+    }
+
+    /**
+     * What the icons of the page are drawn from right now - the library which answers for them, and how often
+     * the libraries have changed. A url carrying this is answered by the same bytes whenever it is asked.
+     */
+    public static String currentVersion() {
+        IconLibraryManager libraryManager = IconLibraryManager.get();
+        return libraryManager.getActiveLibraryId() + '.' + libraryManager.getModificationCount();
+    }
+
+    /**
+     * @return the library the url was built against, or null when it carries no library
+     */
+    public static @Nullable String toLibraryId(@Nullable String version) {
+        if (version == null) {
+            return null;
+        }
+
+        int separator = version.lastIndexOf('.');
+        return separator <= 0 ? null : version.substring(0, separator);
     }
 
     public static @Nullable WebImageSpec toSpec(Image image) {
@@ -176,7 +200,7 @@ public class WebImageUrl {
             return null;
         }
 
-        WebRenderedImage rendered = WebImageRenderer.render(spec);
+        WebRenderedImage rendered = WebImageRenderer.render(spec, null);
         return rendered == null ? null : rendered.toDataURI();
     }
 

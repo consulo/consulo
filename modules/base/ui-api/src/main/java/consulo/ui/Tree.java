@@ -17,7 +17,9 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
+import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
@@ -41,7 +43,24 @@ public interface Tree<E> extends Component {
     @Nullable
     TreeNode<E> getSelectedNode();
 
-    void expand(TreeNode<E> node);
+    /**
+     * Opens the node, building its children first when they were not built yet.
+     *
+     * @return a future which is done once the node is open
+     */
+    default CompletableFuture<?> expand(TreeNode<E> node) {
+        return expand(node, 1);
+    }
+
+    /**
+     * Opens the node and the levels below it, where a depth of 1 opens the node alone. The children of a node
+     * are built when it is first opened, so the depth is what keeps this from walking a whole project view.
+     *
+     * @return a future which is done once every level asked for is open
+     */
+    default CompletableFuture<?> expand(TreeNode<E> node, int depth) {
+        return CompletableFuture.completedFuture(null);
+    }
 
     /**
      * Counterpart of the expand all / collapse all actions of the platform, which need a
@@ -51,10 +70,22 @@ public interface Tree<E> extends Component {
         return false;
     }
 
-    default void expandAll() {
+    /**
+     * Opens the tree down to the given depth, where a depth of 1 opens the top level rows. The root is not
+     * shown, so it is not counted.
+     *
+     * @return a future which is done once every level asked for is open
+     */
+    default CompletableFuture<?> expandAll(int depth) {
+        return CompletableFuture.completedFuture(null);
     }
 
-    default void collapseAll() {
+    default CompletableFuture<?> expandAll() {
+        return expandAll(Integer.MAX_VALUE);
+    }
+
+    default CompletableFuture<?> collapseAll() {
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
@@ -78,13 +109,6 @@ public interface Tree<E> extends Component {
      */
     default List<TreeNode<E>> getSelectedPath() {
         return List.of();
-    }
-
-    /**
-     * Opens the node, fetching its children first when they were not loaded yet.
-     */
-    default CompletableFuture<Void> expandAsync(TreeNode<E> node) {
-        return CompletableFuture.completedFuture(null);
     }
 
     default void select(TreeNode<E> node) {
@@ -112,5 +136,21 @@ public interface Tree<E> extends Component {
     @SuppressWarnings("unchecked")
     default Disposable addDoubleClickListener(ComponentEventListener<Tree<E>, TreeDoubleClickEvent<E>> listener) {
         return addListener((Class) TreeDoubleClickEvent.class, listener);
+    }
+
+    /**
+     * Sent for every node that is opened, whether the user opened it or a call on the tree did.
+     */
+    @SuppressWarnings("unchecked")
+    default Disposable addExpandListener(ComponentEventListener<Tree<E>, TreeExpandEvent<E>> listener) {
+        return addListener((Class) TreeExpandEvent.class, listener);
+    }
+
+    /**
+     * Sent for every node that is closed, whether the user closed it or a call on the tree did.
+     */
+    @SuppressWarnings("unchecked")
+    default Disposable addCollapseListener(ComponentEventListener<Tree<E>, TreeCollapseEvent<E>> listener) {
+        return addListener((Class) TreeCollapseEvent.class, listener);
     }
 }

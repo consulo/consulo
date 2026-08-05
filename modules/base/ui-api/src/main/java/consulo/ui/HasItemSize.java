@@ -36,4 +36,14 @@ public interface HasItemSize<Item> extends Component {
      *               told outright instead of having to measure each row.
      */
     void setItemHeightGetter(@Nullable ToIntFunction<Item> getter);
+
+    /**
+     * How many rows are on screen at once. The rest of the items are still there, a scroll away - this bounds how
+     * much room the component asks for, not how much it holds.
+     *
+     * @param count {@code 0} or less restores platform sizing, where the component asks for every row it holds
+     */
+    default void setVisibleRowCount(int count) {
+        // unwarranted action
+    }
 }

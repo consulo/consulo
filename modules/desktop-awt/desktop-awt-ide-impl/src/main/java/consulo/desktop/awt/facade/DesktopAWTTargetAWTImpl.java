@@ -344,6 +344,18 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
         mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_PLAIN, BitUtil.isSet(textAttribute.getStyle(), TextAttribute.STYLE_PLAIN));
         mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_BOLD, BitUtil.isSet(textAttribute.getStyle(), TextAttribute.STYLE_BOLD));
         mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_ITALIC, BitUtil.isSet(textAttribute.getStyle(), TextAttribute.STYLE_ITALIC));
+        // what marks a deprecated completion item, and what an item being navigated to is underlined with.
+        // qualified - java.awt.Font is in scope here through the wildcard, and it is not the one meant
+        mask = BitUtil.set(
+            mask,
+            SimpleTextAttributes.STYLE_STRIKEOUT,
+            BitUtil.isSet(textAttribute.getStyle(), consulo.ui.font.Font.STYLE_STRIKEOUT)
+        );
+        mask = BitUtil.set(
+            mask,
+            SimpleTextAttributes.STYLE_UNDERLINE,
+            BitUtil.isSet(textAttribute.getStyle(), consulo.ui.font.Font.STYLE_UNDERLINE)
+        );
 
         ColorValue backgroundColor = textAttribute.getBackgroundColor();
         ColorValue foregroundColor = textAttribute.getForegroundColor();

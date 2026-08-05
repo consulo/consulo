@@ -143,6 +143,23 @@
         }
     }
 
+    /*
+     * The icon library only enters an icon url as its version parameter, and the url a server side component
+     * holds keeps the version it was rendered with. The attribute below carries the current version, every
+     * leaf rewrites its url against it while rendering, and a change of it re-renders every leaf on the page -
+     * which is what makes the icons follow a style switch, wherever the tag sits and however it got there.
+     */
+    const ICON_VERSION_ATTRIBUTE = 'consulo-icon-version';
+
+    const liveImages = new Set();
+
+    const iconVersionObserver = new MutationObserver(() => {
+        for (const image of liveImages) {
+            image.render();
+        }
+    });
+    iconVersionObserver.observe(document.documentElement, { attributes: true, attributeFilter: [ICON_VERSION_ATTRIBUTE] });
+
     /**
      * A leaf - the only tag that reaches the servlet. The intrinsic size of what comes back is irrelevant, a
      * two times bigger asset is served on purpose and the box is what decides how large it is drawn.
@@ -152,8 +169,23 @@
             return [...SIZE_ATTRIBUTES, 'src'];
         }
 
+        connectedCallback() {
+            liveImages.add(this);
+            super.connectedCallback();
+        }
+
+        disconnectedCallback() {
+            liveImages.delete(this);
+            super.disconnectedCallback();
+        }
+
         render() {
-            const src = this.getAttribute('src');
+            let src = this.getAttribute('src');
+
+            const version = document.documentElement.getAttribute(ICON_VERSION_ATTRIBUTE);
+            if (src && version) {
+                src = src.replace(/([?&]v=)[^&]*/, '$1' + encodeURIComponent(version));
+            }
 
             let image = this.firstElementChild;
             if (!image) {

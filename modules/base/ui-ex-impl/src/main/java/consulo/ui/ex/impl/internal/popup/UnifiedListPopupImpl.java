@@ -17,9 +17,11 @@ package consulo.ui.ex.impl.internal.popup;
 
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
+import consulo.ui.HeavyPopup;
+import consulo.ui.Popup;
 import consulo.ui.LightPopup;
-import consulo.ui.LightPopupOptions;
-import consulo.ui.LightPopupPosition;
+import consulo.ui.PopupOptions;
+import consulo.ui.PopupPosition;
 import consulo.ui.ListBox;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -48,7 +50,7 @@ import java.util.function.Consumer;
 public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup {
     private static final Logger LOG = Logger.getInstance(UnifiedListPopupImpl.class);
 
-    private record Level(ListPopupStep step, LightPopup popup) {
+    private record Level(ListPopupStep step, Popup popup) {
     }
 
     private final @Nullable ComponentManager myProject;
@@ -79,14 +81,20 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         return top == null ? myRootStep : top.step();
     }
 
+    /**
+     * A step reached through another one hangs off the popup which owns it, so it is a light popup. The first step has
+     * nothing to point at and is placed instead.
+     */
     @RequiredUIAccess
-    private LightPopup buildPopup(ListPopupStep step, boolean nested) {
-        LightPopupOptions.Builder options = LightPopupOptions.builder();
+    private Popup buildPopup(ListPopupStep step, boolean nested) {
+        PopupOptions.Builder options = PopupOptions.builder();
         if (nested) {
-            options.position(LightPopupPosition.END);
+            options.position(PopupPosition.END);
         }
 
-        LightPopup popup = LightPopup.create(options.build());
+        PopupOptions built = options.build();
+
+        Popup popup = nested ? LightPopup.create(built) : HeavyPopup.create(built);
 
         popup.setTitle(step.getTitle());
         popup.setContent(buildList(step));
@@ -168,17 +176,17 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private void pushLevel(ListPopupStep step) {
         Level parent = myLevels.peek();
 
-        LightPopup popup = buildPopup(step, parent != null);
+        Popup popup = buildPopup(step, parent != null);
 
         myLevels.push(new Level(step, popup));
 
-        if (parent == null) {
-            popup.showInCenterOf(null);
-        }
-        else {
+        if (popup instanceof LightPopup light && parent != null) {
             // anchored to the popup which owns the row rather than the row itself - how many components a list
             // makes for its rows is the frontend's business, so a row is not something to hold on to
-            popup.showBy(parent.popup());
+            light.showBy(parent.popup());
+        }
+        else if (popup instanceof HeavyPopup heavy) {
+            heavy.showInCenterOf(null);
         }
     }
 
@@ -245,7 +253,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
      * the stack is what ends the popup, so dismissing a submenu leaves the popup which owns it standing.
      */
     @RequiredUIAccess
-    private void unwindTo(@Nullable LightPopup level) {
+    private void unwindTo(@Nullable Popup level) {
         if (isDisposed() || myUnwinding) {
             return;
         }

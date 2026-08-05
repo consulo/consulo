@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2026 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.event;
+package consulo.language.editor.impl.internal.completion.lookup;
 
-import consulo.ui.LightPopup;
+import consulo.util.lang.ExceptionUtil;
 
 /**
  * @author VISTALL
- * @since 2026-08-02
+ * @since 26/06/2023
  */
-public final class LightPopupCloseEvent extends ComponentEvent<LightPopup> {
-    public LightPopupCloseEvent(LightPopup component) {
-        super(component);
-    }
+public class LookupDispose {
+  public static Throwable staticDisposeTrace = null;
+
+  public static String getLastLookupDisposeTrace() {
+    return ExceptionUtil.getThrowableText(staticDisposeTrace);
+  }
 }

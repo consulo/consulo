@@ -86,6 +86,35 @@ public interface EditorCustomElementRenderer {
     }
 
     /**
+     * What the element says, as text and colour scheme keys rather than as a painting.
+     * <p>
+     * The frontends which have no {@link Graphics2D} to hand rely on this instead of {@link #paint} - a renderer
+     * leaving it at {@code null} is invisible to them, which is the same tolerance a line marker presentation with
+     * no registered painter gets.
+     */
+    default @Nullable InlayContent getContent(Inlay<?> inlay) {
+        return null;
+    }
+
+    /**
+     * Whether the run of {@link #getContent} at this index does something when it is clicked - a type hint naming a
+     * class does, the punctuation around it does not. A frontend asks so it can point at what is reachable.
+     */
+    default boolean hasClickAction(Inlay<?> inlay, int segmentIndex) {
+        return false;
+    }
+
+    /**
+     * Handles a click on the run of {@link #getContent} at this index.
+     * <p>
+     * The index rather than a coordinate is what identifies the run, since a frontend which never laid the element
+     * out in pixels has no coordinate to hand back. An action belongs to the renderer which knows its own parts, so
+     * nothing of it has to travel inside the content.
+     */
+    default void handleClick(Inlay<?> inlay, int segmentIndex, boolean controlDown) {
+    }
+
+    /**
      * Returns a registered id of action group, which is to be used for displaying context menu for the given custom element.
      * If {@code null} is returned, standard editor's context menu will be displayed upon corresponding mouse event.
      */

@@ -23,6 +23,13 @@
     // would grow into a block over the whole ruler
     const MAX_MARK_LINES = 5;
 
+    // what the marker column keeps to while nothing needs more - orion ships its annotation ruler at 16px,
+    // which is not even one icon of a normal editor font
+    const MIN_MARK_COLUMN_WIDTH = 32;
+
+    // breathing room on each side of a marker, so two of them on one line do not read as a single wide glyph
+    const MARK_GAP = 2;
+
     const install = (element, contents, readonly) => {
         if (element.$arquillEditor) {
             return;
@@ -80,6 +87,142 @@
         // positioned inside it, so every y has to come back through the page
         const pageY = viewLine =>
             textView.convert({ y: textView.getLinePixel(viewLine) }, 'document', 'page').y;
+
+        // where the caret is on screen, measured against the host rather than the viewport - what anchors a popup
+        // to the caret is a consulo.ui component, and the platform places one inside another, not on the page.
+        // carried by the caret event because the server has to know it before it opens anything, and asking only
+        // then would cost a round trip the popup would be waiting on
+        const caretDetail = (baseOffset, viewOffset) => {
+            // a caret with nothing selected is a range of no width over it, so every report carries a selection and
+            // the ones that have none say so rather than leaving the field out - an absent field reaches the server
+            // as a zero, which reads as a selection from the top of the document
+            const detail = {
+                offset: baseOffset,
+                selectionStart: baseOffset,
+                selectionEnd: baseOffset,
+                caretX: 0,
+                caretY: 0,
+                caretHeight: 0,
+                textY: 0,
+                rectOnly: false
+            };
+
+            try {
+                const location = textView.getLocationAtOffset(viewOffset);
+                // the y of the line rather than the y the location reports: inside text that one is the top of the
+                // glyph run, which sits below the top of the row by the leading - a caret drawn there hangs low,
+                // and only on an empty line, where there is no run to measure, did the two agree
+                const lineTop = textView.getLinePixel(viewModel.getLineAtOffset(viewOffset));
+                // orion's page space is the viewport one - offsetAt turns a raw clientX/clientY straight into it -
+                // so a host rect, which is viewport based as well, is the right thing to measure these against
+                const point = textView.convert({ x: location.x, y: lineTop }, 'document', 'page');
+                const host = element.getBoundingClientRect();
+
+                detail.caretX = Math.round(point.x - host.left);
+                detail.caretY = Math.round(point.y - host.top);
+                detail.caretHeight = Math.round(textView.getLineHeight());
+
+                // the top of the glyph box rather than of the row - what an inline background is drawn from, so
+                // it is where a caret standing next to the selection has to start
+                const textPoint = textView.convert({ x: location.x, y: location.y }, 'document', 'page');
+                detail.textY = Math.round(textPoint.y - host.top);
+            }
+            catch (e) {
+                // a caret inside a collapsed region has nowhere on screen to be, and the offset still matters
+            }
+
+            return detail;
+        };
+
+        /*
+         * The caret of the platform, drawn rather than left to the browser - it has a width, a colour and a blink
+         * period, and a contenteditable caret answers to none of them.
+         */
+        // the height an inline background covers - what the selection and the brace highlight are drawn at, and so
+        // what the caret has to match. measured, not derived from the font size: only the browser knows the box a
+        // face is laid out in
+        let textBoxHeight = 0;
+        let lineSpacing = 1;
+
+        const caretElement = document.createElement('div');
+        caretElement.className = 'arquill-caret arquill-caret-blinking arquill-caret-hidden';
+        element.appendChild(caretElement);
+
+        const placeCaret = () => {
+            const selection = textView.getSelection();
+            if (!selection || selection.start !== selection.end) {
+                // a caret is where there is nothing selected, and a selection draws itself
+                caretElement.classList.add('arquill-caret-hidden');
+                return;
+            }
+
+            const detail = caretDetail(toBaseOffset(selection.start), selection.start);
+            if (detail.caretHeight <= 0) {
+                caretElement.classList.add('arquill-caret-hidden');
+                return;
+            }
+
+            // the same box the selection is: an inline background covers the glyph box, and it starts where the
+            // glyphs do rather than where the row does. deriving the one from the other left the two a couple of
+            // pixels apart, which is the leading the row carries and the background does not
+            const height = textBoxHeight > 0 ? Math.min(detail.caretHeight, textBoxHeight) : detail.caretHeight;
+
+            caretElement.style.left = detail.caretX + 'px';
+            caretElement.style.top = (detail.textY > 0 ? detail.textY : detail.caretY) + 'px';
+            caretElement.style.height = height + 'px';
+            caretElement.classList.remove('arquill-caret-hidden');
+
+            // restarting the animation puts the caret back on solid, so it does not vanish while it is moved
+            caretElement.style.animation = 'none';
+            void caretElement.offsetWidth;
+            caretElement.style.animation = '';
+        };
+
+        /*
+         * The size of a character cell, which only the browser can measure. The platform maps a position to a point
+         * and back again - remembering a column as an x while the caret moves down a short line and onto a long one
+         * - and an editor which cannot answer stops the arrow keys dead.
+         *
+         * A span in the same font rather than orion's own metrics: what it caches is private, and a run of glyphs
+         * divided by its length is exact for the monospace face an editor is drawn with.
+         */
+        const reportMetrics = () => {
+            try {
+                const content = element.querySelector('.textviewContent') || element;
+                const style = window.getComputedStyle(content);
+
+                // line-height normal, so the box measured is the one the face is laid out in rather than the one
+                // the row was already set to - everything else is derived from this, and deriving it from a guess
+                // at the font size is what left the caret, the selection and the glyphs disagreeing
+                const ruler = document.createElement('span');
+                ruler.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;line-height:normal;';
+                ruler.style.font = style.font || (style.fontSize + ' ' + style.fontFamily);
+                ruler.textContent = 'MMMMMMMMMM';
+
+                content.appendChild(ruler);
+                const rulerBox = ruler.getBoundingClientRect();
+                const charWidth = rulerBox.width / 10;
+                textBoxHeight = Math.round(rulerBox.height);
+                ruler.remove();
+
+                // the row is the box of the face plus the leading the scheme asks for, so the glyphs sit in the
+                // middle of it the way an inline box always does
+                if (textBoxHeight > 0) {
+                    element.style.setProperty('--arquill-editor-line-height',
+                        Math.round(textBoxHeight * (lineSpacing > 0 ? lineSpacing : 1)) + 'px');
+                }
+
+                const lineHeight = textView.getLineHeight();
+                if (charWidth > 0 && lineHeight > 0) {
+                    element.dispatchEvent(new CustomEvent('arquill-metrics', {
+                        detail: { charWidth: Math.max(1, Math.round(charWidth)), lineHeight: Math.round(lineHeight) }
+                    }));
+                }
+            }
+            catch (e) {
+                // the platform keeps whatever it had - a wrong cell is better than an editor which cannot move
+            }
+        };
 
         // go to declaration is bound to ctrl/cmd click and to middle click, and the underline follows
         // the pointer while the modifier is held
@@ -168,7 +311,17 @@
         element.addEventListener('mousemove', domEvent => {
             const offset = offsetAt(domEvent);
 
-            fireHover(domEvent.ctrlKey || domEvent.metaKey ? offset : -1);
+            const modifier = domEvent.ctrlKey || domEvent.metaKey;
+
+            // the class only says the modifier is down - the stylesheet leaves it to :hover to pick out the run
+            // actually aimed at, which the pointer knows better than an offset does
+            element.classList.toggle('arquill-inlay-hover', modifier);
+
+            // a run of a hint the server already said reaches somewhere needs nothing asked about it, unlike an
+            // offset in the code which it has to resolve first
+            const overInlayAction = modifier && inlayActionAt(domEvent) >= 0;
+
+            fireHover(modifier && !overInlayAction ? offset : -1);
 
             const html = tooltipAt(offset);
             if (html) {
@@ -186,6 +339,9 @@
 
         const onKeyUp = domEvent => {
             if (domEvent.key === 'Control' || domEvent.key === 'Meta') {
+                // the pointer may not move again, so the link look of the hints has to be dropped from here too
+                element.classList.remove('arquill-inlay-hover');
+
                 fireHover(-1);
             }
         };
@@ -194,9 +350,30 @@
         // has to be dropped by hand on detach
         document.addEventListener('keyup', onKeyUp);
 
+        // the run of an inlay a pointer is over, if it is one which reaches an action
+        const inlayActionAt = domEvent => {
+            const span = domEvent.target instanceof Element
+                ? domEvent.target.closest('[data-arquill-inlay-click]')
+                : null;
+
+            return span && element.contains(span) ? Number(span.getAttribute('data-arquill-inlay-click')) : -1;
+        };
+
         element.addEventListener('mousedown', domEvent => {
             const wanted = domEvent.button === 1 || (domEvent.button === 0 && (domEvent.ctrlKey || domEvent.metaKey));
             if (!wanted) {
+                return;
+            }
+
+            // an inlay stands in no document offset, so it is answered for by what it is rather than by where -
+            // and it has to be taken before the offset path below, which would resolve to the code beside it
+            const inlayClick = inlayActionAt(domEvent);
+            if (inlayClick >= 0) {
+                domEvent.preventDefault();
+                fireHover(-1);
+                element.dispatchEvent(new CustomEvent('arquill-inlay-click', {
+                    detail: { id: inlayClick, controlDown: domEvent.ctrlKey || domEvent.metaKey }
+                }));
                 return;
             }
 
@@ -221,11 +398,53 @@
             const offset = offsetAt(domEvent);
             if (offset >= 0 && offset !== element.$arquillCaretOffset) {
                 element.$arquillCaretOffset = offset;
-                element.dispatchEvent(new CustomEvent('arquill-caret', { detail: { offset: offset } }));
+                element.dispatchEvent(new CustomEvent('arquill-caret', { detail: caretDetail(offset, toViewOffset(offset)) }));
             }
         }, { capture: true });
 
+        // a typed character is handed to the platform instead of going straight into the model. typing in an
+        // editor runs the typed action chain - the completion lookup grows its prefix from it, a brace or a quote
+        // closes itself, a tag mirrors into the one that closes it - and none of that happens when the editor puts
+        // the character in on its own. what comes back is a document change like any other
+        //
+        // keypress rather than beforeinput: orion drives its own edits off the key events and writes into the model
+        // itself, so the browser never raises an input event for a character typed here and there is nothing to
+        // cancel. taking the keypress first is what stops orion from inserting
+        let composing = false;
+        element.addEventListener('compositionstart', () => composing = true);
+        element.addEventListener('compositionend', () => composing = false);
+
+        element.addEventListener('keypress', domEvent => {
+            // a modifier makes it a shortcut, and the keymap has already had its say by here
+            if (composing || domEvent.ctrlKey || domEvent.metaKey || domEvent.altKey) {
+                return;
+            }
+
+            // one printable character. return, tab and the rest name themselves and are editor actions, not typing
+            const typed = domEvent.key;
+            if (typeof typed !== 'string' || typed.length !== 1) {
+                return;
+            }
+
+            const selection = textView.getSelection();
+            // replacing a selection is not typing, and the platform has no single character for it
+            if (!selection || selection.start !== selection.end) {
+                return;
+            }
+
+            domEvent.preventDefault();
+            domEvent.stopImmediatePropagation();
+
+            // only the character. the caret is the server's - this one does not move, because the keystroke stops
+            // here, and sending it would put every character of a run back at the same place
+            element.dispatchEvent(new CustomEvent('arquill-typed', { detail: { text: typed } }));
+        }, { capture: true });
+
         baseModel.addEventListener('Changed', event => {
+            // any edit moves the pixels an offset lands on, so the rect the server holds is stale either way -
+            // the next caret push has to measure and report again, suppressed edits included
+            element.$arquillLastRectOffset = -1;
+
             if (element.$arquillSuppressChange) {
                 return;
             }
@@ -244,33 +463,81 @@
         });
 
         textView.addEventListener('Selection', event => {
-            const offset = event.newValue ? toBaseOffset(event.newValue.start) : -1;
-            if (offset < 0 || offset === element.$arquillCaretOffset) {
+            // orion moves its own caret while the platform's text is written in, and the move it reports is a
+            // consequence of that edit rather than the user going anywhere. taking it moved the platform caret to
+            // wherever the replaced range left orion - the front of the document after a template was inserted -
+            // and the next character typed went in there
+            if (element.$arquillSuppressChange) {
+                return;
+            }
+
+            if (!event.newValue) {
+                return;
+            }
+
+            // the whole range, not just where it starts. a drag holds its start still and moves only its end, so a
+            // report of the start alone said nothing had happened and the platform kept a selection of its own that
+            // had never matched what was on screen - which is what delete then cut against
+            const viewStart = Math.min(event.newValue.start, event.newValue.end);
+            const viewEnd = Math.max(event.newValue.start, event.newValue.end);
+            const viewCaret = textView.getCaretOffset();
+
+            const start = toBaseOffset(viewStart);
+            const end = toBaseOffset(viewEnd);
+            const offset = toBaseOffset(viewCaret);
+            if (start < 0 || end < 0 || offset < 0) {
+                // a caret standing inside projected text answers for no document offset, so it is moved off it
+                // and the move that follows is what the server hears about
+                if (viewStart === viewEnd) {
+                    snapCaretOutOfProjection(viewCaret);
+                }
+                return;
+            }
+
+            // the edge a later snap decides its direction from
+            element.$arquillLastViewCaret = viewCaret;
+
+            if (offset === element.$arquillCaretOffset
+                && start === element.$arquillSelectionStart
+                && end === element.$arquillSelectionEnd) {
                 return;
             }
 
             element.$arquillCaretOffset = offset;
-            element.dispatchEvent(new CustomEvent('arquill-caret', { detail: { offset: offset } }));
+            element.$arquillSelectionStart = start;
+            element.$arquillSelectionEnd = end;
+            // the event just carried the rect of this offset, so the echo the server answers with has
+            // nothing left to report
+            element.$arquillLastRectOffset = offset;
+            element.dispatchEvent(new CustomEvent('arquill-caret', {
+                detail: Object.assign(caretDetail(offset, viewCaret), { selectionStart: start, selectionEnd: end })
+            }));
+            placeCaret();
         });
 
         // the fold placeholders are not in the document, so their ranges are built by the folding code
         // further down rather than pushed by the server
         let foldPlaceholderStyles = null;
 
+        // the inlays are not in the document either, and their ranges are built the same way further down
+        let inlayStyles = null;
+
         // the bundle hands the ranges straight to the LineStyle event, which reports view offsets,
         // so what the server pushed in document offsets has to be mapped first
         // the end of a range is exclusive, so it may sit exactly on the start of a collapsed region -
         // an offset inside a projection maps to nothing, and the tag name of a folded <build...> would
         // lose its colour along with the text the fold hides. the last character it covers still maps
+        // taken from the last character the range covers rather than from the end itself. mapping the end lands
+        // past everything projected at that offset, so a range ending where an inlay is anchored would reach over
+        // the inlay - the highlight of an identifier would colour the hint that follows it, and the two ranges
+        // would overlap, which the bundle does not define an answer for
         const toViewRangeEnd = offset => {
-            const end = toViewOffset(offset);
-            if (end >= 0) {
-                return end;
+            const last = toViewOffset(offset - 1);
+            if (last >= 0) {
+                return last + 1;
             }
 
-            const last = toViewOffset(offset - 1);
-
-            return last < 0 ? -1 : last + 1;
+            return toViewOffset(offset);
         };
 
         const pushStyleRanges = () => {
@@ -288,10 +555,11 @@
                 mapped.push({ start: start, end: end, style: range.style });
             }
 
-            const placeholders = foldPlaceholderStyles ? foldPlaceholderStyles() : [];
-            if (placeholders.length) {
-                for (const placeholder of placeholders) {
-                    mapped.push(placeholder);
+            const projected = (foldPlaceholderStyles ? foldPlaceholderStyles() : [])
+                .concat(inlayStyles ? inlayStyles() : []);
+            if (projected.length) {
+                for (const style of projected) {
+                    mapped.push(style);
                 }
 
                 // the bundle binary searches the array for the first range of a line, which only
@@ -307,6 +575,10 @@
         const gutter = document.createElement('div');
         gutter.className = 'arquill-gutter';
         element.appendChild(gutter);
+
+        // the widest group of markers the column has been sized for, so it is only resized when it has to be -
+        // widening it makes orion measure the whole view again
+        let markColumnWidth = 0;
 
         const renderGutterMarks = () => {
             gutter.textContent = '';
@@ -348,10 +620,35 @@
             // before the first of its marks is placed
             const countPerLine = {};
 
+            let widest = 0;
             for (const mark of marks) {
                 if (mark.line >= 0 && mark.line < baseModel.getLineCount()) {
-                    countPerLine[mark.line] = (countPerLine[mark.line] || 0) + 1;
+                    const count = (countPerLine[mark.line] || 0) + 1;
+                    countPerLine[mark.line] = count;
+
+                    widest = Math.max(widest, count);
                 }
+            }
+
+            // the awt gutter grows to hold the widest group of markers - three of them land on a declaration
+            // which is both an override and an implementation. orion sizes its left ruler once, off the dom and
+            // while the view is created, so the column is widened here and the view is made to measure again -
+            // without that the third icon is drawn past the column and the overlay clips it away
+            // a marker takes its own width plus the gap on either side, and the column has to hold as many of
+            // those slots as the busiest line asks for
+            const slot = size + MARK_GAP * 2;
+
+            const wantedColumn = Math.max(MIN_MARK_COLUMN_WIDTH, widest * slot);
+            if (markColumnWidth !== wantedColumn) {
+                markColumnWidth = wantedColumn;
+                element.style.setProperty('--arquill-gutter-marks-width', wantedColumn + 'px');
+
+                // update(true) is the way back into _calculateMetrics, the same one a font change goes through
+                textView.update(true);
+
+                // everything below is placed at pixels the view reported, and all of them just moved
+                renderGutterMarks();
+                return;
             }
 
             for (const mark of marks) {
@@ -398,9 +695,12 @@
                 icon.style.width = size + 'px';
                 icon.style.height = lineHeight + 'px';
                 icon.style.top = top + 'px';
-                // a group wider than the column keeps to the left edge, half of it would be clipped away
-                icon.style.left =
-                    Math.max(0, (rulerRect.width - countPerLine[mark.line] * size) / 2 + column * size) + 'px';
+                // a group wider than the column keeps to the left edge, half of it would be clipped away. the
+                // gap is inside the slot, so the icon sits at its centre rather than against its neighbour
+                icon.style.left = Math.max(
+                    MARK_GAP,
+                    (rulerRect.width - countPerLine[mark.line] * slot) / 2 + column * slot + MARK_GAP
+                ) + 'px';
                 icon.addEventListener('click', () => {
                     hideTooltip();
                     element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: { id: mark.id } }));
@@ -616,6 +916,176 @@
             return styles;
         };
 
+        // an inlay is text standing in the view without being in the document - what a fold placeholder already
+        // is, so it is the same mechanism: a projection of no width, which inserts its text and hides nothing.
+        // the server keeps to document offsets and the model maps them, exactly as it does across a collapse
+        const inlayProjections = new Map();
+
+        const inlayText = inlay => {
+            let text = '';
+            for (const segment of inlay.segments || []) {
+                text += (segment.text || '') + (segment.br ? '\n' : '');
+            }
+            return text;
+        };
+
+        // where a projection ended up in the view. a document offset maps past everything the projection
+        // inserted, so its end is what answers and the text reaches back from there
+        const projectionViewRange = projection => {
+            const end = viewModel.mapOffset(projection.end, true);
+            if (end < 0) {
+                return null;
+            }
+
+            return { start: end - projection._model.getCharCount(), end: end };
+        };
+
+        // projections may not overlap, and a region about to collapse takes in whatever stood inside it. so the
+        // inlays step aside before the fold regions are reconciled, and renderInlays puts back the ones that
+        // still have somewhere to stand once the collapse has happened
+        const dropInlayProjections = () => {
+            for (const held of inlayProjections.values()) {
+                viewModel.removeProjection(held.projection);
+            }
+            inlayProjections.clear();
+        };
+
+        // a block inlay takes a view line of its own, and the bundle numbers that line by mapping its start back
+        // to the document - which answers nothing for a line that is only projected text, so it numbered them
+        // "0". they carry no number at all, the way a line an inlay owns has none in the awt editor either
+        const lineNumberRuler = element.$arquillEditor.getLineNumberRuler();
+        if (lineNumberRuler) {
+            const rulerAnnotations = lineNumberRuler.getAnnotations.bind(lineNumberRuler);
+
+            lineNumberRuler.getAnnotations = (startLine, endLine) => {
+                const result = rulerAnnotations(startLine, endLine);
+
+                for (let line = startLine; line < endLine; line++) {
+                    if (result[line] && toBaseOffset(viewModel.getLineStart(line)) < 0) {
+                        result[line].html = '';
+                    }
+                }
+
+                return result;
+            };
+        }
+
+        const renderInlays = () => {
+            const wanted = new Map();
+            for (const inlay of element.$arquillInlays ? JSON.parse(element.$arquillInlays) : []) {
+                wanted.set(inlay.offset, inlay);
+            }
+
+            // reconciled rather than rebuilt, as the fold regions are - dropping and readding every projection
+            // would move the view out from under the caret on each round trip
+            textView.setRedraw(false);
+            try {
+                for (const [offset, held] of Array.from(inlayProjections)) {
+                    const inlay = wanted.get(offset);
+
+                    // kept while the anchor is still wanted, still says the same thing, and is still somewhere a
+                    // projection can stand - a region collapsed over it takes the last of those away
+                    if (inlay && inlayText(inlay) === held.text && toViewOffset(offset) >= 0) {
+                        held.segments = inlay.segments;
+                        continue;
+                    }
+
+                    viewModel.removeProjection(held.projection);
+                    inlayProjections.delete(offset);
+                }
+
+                for (const [offset, inlay] of wanted) {
+                    if (inlayProjections.has(offset)) {
+                        continue;
+                    }
+
+                    // projections may not overlap, and an offset inside a collapsed one maps to nothing
+                    if (toViewOffset(offset) < 0) {
+                        continue;
+                    }
+
+                    const text = inlayText(inlay);
+                    if (!text) {
+                        continue;
+                    }
+
+                    const projection = { start: offset, end: offset, text: text };
+                    viewModel.addProjection(projection);
+                    inlayProjections.set(offset, { projection: projection, text: text, segments: inlay.segments });
+                }
+            }
+            finally {
+                textView.setRedraw(true);
+            }
+        };
+
+        inlayStyles = () => {
+            const styles = [];
+
+            for (const held of inlayProjections.values()) {
+                const range = projectionViewRange(held.projection);
+                if (!range) {
+                    continue;
+                }
+
+                // the runs are laid out in the order they were concatenated into the projection, and the break a
+                // block inlay ends on is a character of the projection like any other
+                let start = range.start;
+                for (const segment of held.segments || []) {
+                    const text = segment.text || '';
+                    if (text && segment.style) {
+                        // a run which reaches an action is marked on the span itself - the click is answered by
+                        // what it stands for and not by where it is, which is nowhere the document knows about
+                        const style = segment.click === undefined
+                            ? segment.style
+                            : Object.assign({}, segment.style, {
+                                styleClass: (segment.style.styleClass || '') + ' arquill-inlay-action',
+                                attributes: { 'data-arquill-inlay-click': String(segment.click) }
+                            });
+
+                        styles.push({ start: start, end: start + text.length, style: style });
+                    }
+
+                    start += text.length + (segment.br ? 1 : 0);
+                }
+            }
+
+            return styles;
+        };
+
+        // orion will put the caret inside a projection, and an offset in there maps to no document offset at all -
+        // the platform would keep the caret it had and quietly disagree with what is on screen. neither an inlay
+        // nor a fold placeholder is somewhere the user can stand, so the caret steps over it instead
+        let snappingCaret = false;
+
+        const snapCaretOutOfProjection = viewOffset => {
+            if (snappingCaret) {
+                return false;
+            }
+
+            for (const projection of viewModel.getProjections()) {
+                const range = projectionViewRange(projection);
+                if (!range || viewOffset <= range.start || viewOffset >= range.end) {
+                    continue;
+                }
+
+                // whichever edge the caret was not already on, so arrowing through moves past rather than sticking
+                const previous = element.$arquillLastViewCaret;
+                const target = typeof previous !== 'number' || previous <= range.start ? range.end : range.start;
+
+                snappingCaret = true;
+                try {
+                    textView.setSelection(target, target, true);
+                }
+                finally {
+                    snappingCaret = false;
+                }
+                return true;
+            }
+
+            return false;
+        };
+
         const renderFoldRegions = () => {
             if (!annotationModel) {
                 return;
@@ -631,6 +1101,8 @@
             element.$arquillSuppressFold = true;
             textView.setRedraw(false);
             try {
+                dropInlayProjections();
+
                 for (const [key, annotation] of Array.from(foldAnnotations)) {
                     if (wanted.has(key)) {
                         continue;
@@ -680,6 +1152,9 @@
                 textView.setRedraw(true);
                 element.$arquillSuppressFold = false;
             }
+
+            // a region that just opened or closed decides whether the inlays inside it have anywhere to stand
+            renderInlays();
 
             onProjectionChanged();
         };
@@ -732,7 +1207,10 @@
             renderGutterBands();
         };
 
-        textView.addEventListener('Scroll', onViewChanged);
+        textView.addEventListener('Scroll', () => {
+            onViewChanged();
+            placeCaret();
+        });
         textView.addEventListener('Resize', onViewChanged);
 
         renderFoldRegions();
@@ -966,25 +1444,94 @@
                 }
             },
 
+            setCaretStyle: (width, blinkPeriod) => {
+                if (width > 0) {
+                    element.style.setProperty('--arquill-editor-caret-width', width + 'px');
+                }
+
+                // a period of zero is a caret which does not blink at all
+                if (blinkPeriod > 0) {
+                    element.style.setProperty('--arquill-editor-caret-blink-period', blinkPeriod + 'ms');
+                    caretElement.classList.add('arquill-caret-blinking');
+                }
+                else {
+                    caretElement.classList.remove('arquill-caret-blinking');
+                }
+
+                placeCaret();
+            },
+
             setReadOnly: readOnly => {
                 if (element.$arquillEditor) {
                     element.$arquillEditor.getTextView().setOptions({ readonly: readOnly });
                 }
             },
 
-            setCaretOffset: offset => {
-                // remember the offset first, otherwise orion fires Selection back and the server sees its own move
-                element.$arquillCaretOffset = offset;
-                if (element.$arquillEditor) {
-                    element.$arquillEditor.setCaretOffset(offset, true);
+            setCaretOffset: offset => element.$arquillApi.setSelection(offset, offset),
+
+            /**
+             * Where the platform's caret is and what it has selected, as one thing. A caret is a range of no width,
+             * so there is one channel and not two - two would race, and whichever of them arrived last would win:
+             * a selection push followed by a caret push collapses the range that was just drawn.
+             */
+            setSelection: (start, end) => {
+                // the caret is at the end of the range - that is the edge that moves as it grows. remembered first,
+                // otherwise orion fires Selection back and the server sees its own move
+                element.$arquillCaretOffset = end;
+                element.$arquillSelectionStart = Math.min(start, end);
+                element.$arquillSelectionEnd = Math.max(start, end);
+
+                if (!element.$arquillEditor) {
+                    return;
                 }
+
+                if (start !== end) {
+                    element.$arquillSuppressChange = true;
+                    try {
+                        element.$arquillEditor.getTextView().setSelection(toViewOffset(start), toViewOffset(end), true);
+                    }
+                    finally {
+                        element.$arquillSuppressChange = false;
+                    }
+
+                    // a collapsed push landing on the same offset afterwards has a range to clear, so it must not be
+                    // taken for a repeat of one already applied
+                    element.$arquillLastRectOffset = -1;
+                    placeCaret();
+                    return;
+                }
+
+                // the server pushes the caret from more than one of its listeners per edit, and every push
+                // answered here costs it a round trip - the same offset over an unchanged layout has the
+                // same rect the server already holds
+                if (element.$arquillLastRectOffset === end) {
+                    return;
+                }
+
+                element.$arquillEditor.setCaretOffset(end, true);
+                element.$arquillLastRectOffset = end;
+
+                // the offset is the server's own and does not have to come back, but where it landed on screen
+                // is only measurable here. suppressing the whole event left the server holding the rect from
+                // wherever the caret was last put by hand, and a popup anchored to the caret opened there -
+                // pressing return and asking for completion put the list beside the old line
+                // rect only: the offset is the server's own and moving the platform caret to where it
+                // already is counts as a caret move, which is what a lookup goes away on
+                element.dispatchEvent(new CustomEvent('arquill-caret', {
+                    detail: Object.assign(caretDetail(end, toViewOffset(end)), {
+                        rectOnly: true,
+                        selectionStart: end,
+                        selectionEnd: end
+                    })
+                }));
+                placeCaret();
             },
 
             setLinkHovered: hovered => element.classList.toggle('arquill-ctrl-hover', hovered),
 
             // the theme reads both properties, the bundled .textview rule would otherwise win over an inline
             // style set on the host
-            setFont: (fontName, fontSize) => {
+            setFont: (fontName, fontSize, lineSpacingValue) => {
                 const quoted = fontName ? JSON.stringify(fontName) : '';
 
                 if (quoted) {
@@ -996,12 +1543,20 @@
                     element.style.setProperty('--arquill-editor-font-size', fontSize + 'px');
                 }
 
+                if (lineSpacingValue > 0) {
+                    lineSpacing = lineSpacingValue;
+                }
+
                 // orion measures its metrics while the view is created and lays every line out against what
                 // it cached - update(true) is the only way back into _calculateMetrics, and the overlays are
                 // placed at pixels the view reported, all of which just moved
                 const remeasure = () => {
+                    // the row is published first: orion caches what it measures, and updating before the height
+                    // is set leaves every line laid out against the previous one
+                    reportMetrics();
                     textView.update(true);
                     onProjectionChanged();
+                    placeCaret();
                 };
 
                 remeasure();
@@ -1011,6 +1566,22 @@
                 if (quoted && document.fonts) {
                     document.fonts.load((fontSize > 0 ? fontSize : 12) + 'px ' + quoted).then(remeasure, remeasure);
                 }
+            },
+
+            setColors: (background, foreground, selectionBackground, caretRowBackground) => {
+                const set = (name, value) => {
+                    if (value) {
+                        element.style.setProperty(name, value);
+                    }
+                    else {
+                        element.style.removeProperty(name);
+                    }
+                };
+
+                set('--arquill-editor-background', background);
+                set('--arquill-editor-foreground', foreground);
+                set('--arquill-editor-selection-background', selectionBackground);
+                set('--arquill-editor-caret-row-background', caretRowBackground);
             },
 
             setGutterMarks: marksJson => {
@@ -1034,9 +1605,29 @@
                 pushStyleRanges();
             },
 
+            setSchemeStyles: css => {
+                let style = element.$arquillSchemeStyle;
+                if (!style) {
+                    style = document.createElement('style');
+                    element.$arquillSchemeStyle = style;
+                    element.appendChild(style);
+                }
+
+                if (style.textContent !== css) {
+                    style.textContent = css;
+                }
+            },
+
             setFoldRegions: regionsJson => {
                 element.$arquillFoldRegions = regionsJson;
                 renderFoldRegions();
+            },
+
+            // adding a projection shifts every view offset after it, so the pushes keyed by offset are placed again
+            setInlays: inlaysJson => {
+                element.$arquillInlays = inlaysJson;
+                renderInlays();
+                onProjectionChanged();
             },
 
             setGutterBands: bands => {

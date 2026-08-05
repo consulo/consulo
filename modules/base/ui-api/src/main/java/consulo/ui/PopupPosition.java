@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.lookup.impl;
-
-import consulo.language.editor.completion.lookup.LookupItem;
+package consulo.ui;
 
 /**
- * @author peter
-*/
-public class EmptyLookupItem extends LookupItem<String> {
-  private final boolean myLoading;
-
-  public EmptyLookupItem(String s, boolean loading) {
-    super(s, "           ");
-    myLoading = loading;
-  }
-
-  public boolean isLoading() {
-    return myLoading;
-  }
+ * Where a {@link LightPopup} sits relative to what it was opened against.
+ *
+ * @author VISTALL
+ * @since 2026-08-02
+ */
+public enum PopupPosition {
+    /**
+     * Under the target, which is where a popup opened off a button or a menu belongs.
+     */
+    BOTTOM,
+    /**
+     * Beside the target with their tops aligned - a submenu next to the popup which owns it.
+     */
+    END
 }

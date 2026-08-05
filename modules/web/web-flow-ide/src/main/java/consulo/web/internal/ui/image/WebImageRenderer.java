@@ -44,26 +44,29 @@ public class WebImageRenderer {
 
     private static final int TEXT_FONT_SIZE = 6;
 
-    public static @Nullable WebRenderedImage render(WebImageSpec spec) {
+    /**
+     * @param libraryId the icon library the caller asked for, or null to take whichever one is active
+     */
+    public static @Nullable WebRenderedImage render(WebImageSpec spec, @Nullable String libraryId) {
         return switch (spec) {
-            case WebImageSpec.Key key -> renderKey(key);
+            case WebImageSpec.Key key -> renderKey(key, libraryId);
             case WebImageSpec.Empty empty -> WebRenderedImage.svg(SVG_HEADER
                 + " width=\"" + Math.max(empty.width(), 0) + "\" height=\"" + Math.max(empty.height(), 0) + "\"/>");
-            case WebImageSpec.Colorize colorize -> colorize(render(colorize.child()), colorize.rgb());
-            case WebImageSpec.Alpha alpha -> alpha(render(alpha.child()), alpha.alpha());
+            case WebImageSpec.Colorize colorize -> colorize(render(colorize.child(), libraryId), colorize.rgb());
+            case WebImageSpec.Alpha alpha -> alpha(render(alpha.child(), libraryId), alpha.alpha());
             // the browser scales the element the image is served into, so a resize needs no new bytes
-            case WebImageSpec.Resize resize -> render(resize.child());
-            case WebImageSpec.Layered layered -> layered(layered);
-            case WebImageSpec.Gray gray -> gray(render(gray.child()), gray.percent());
-            case WebImageSpec.Append append -> append(append);
-            case WebImageSpec.Text text -> withText(text);
+            case WebImageSpec.Resize resize -> render(resize.child(), libraryId);
+            case WebImageSpec.Layered layered -> layered(layered, libraryId);
+            case WebImageSpec.Gray gray -> gray(render(gray.child(), libraryId), gray.percent());
+            case WebImageSpec.Append append -> append(append, libraryId);
+            case WebImageSpec.Text text -> withText(text, libraryId);
         };
     }
 
-    private static @Nullable WebRenderedImage renderKey(WebImageSpec.Key key) {
+    private static @Nullable WebRenderedImage renderKey(WebImageSpec.Key key, @Nullable String libraryId) {
         WebImageKeyImpl imageKey = (WebImageKeyImpl)ImageKey.of(key.groupId(), key.imageId(), key.width(), key.height());
 
-        ImageReference reference = imageKey.calcImage();
+        ImageReference reference = imageKey.calcImage(libraryId);
         if (!(reference instanceof WebImageReference webReference)) {
             return null;
         }
@@ -71,7 +74,7 @@ public class WebImageRenderer {
         return new WebRenderedImage(webReference.getData(), webReference.isSVG());
     }
 
-    private static @Nullable WebRenderedImage layered(WebImageSpec.Layered layered) {
+    private static @Nullable WebRenderedImage layered(WebImageSpec.Layered layered, @Nullable String libraryId) {
         int width = WebImageSpec.widthOrDefault(layered);
         int height = WebImageSpec.heightOrDefault(layered);
 
@@ -82,7 +85,7 @@ public class WebImageRenderer {
         boolean any = false;
 
         for (WebImageSpec child : layered.children()) {
-            WebRenderedImage rendered = render(child);
+            WebRenderedImage rendered = render(child, libraryId);
             if (rendered == null) {
                 continue;
             }
@@ -109,9 +112,9 @@ public class WebImageRenderer {
         return WebRenderedImage.svg(builder.append("</svg>").toString());
     }
 
-    private static @Nullable WebRenderedImage append(WebImageSpec.Append append) {
-        WebRenderedImage left = render(append.left());
-        WebRenderedImage right = render(append.right());
+    private static @Nullable WebRenderedImage append(WebImageSpec.Append append, @Nullable String libraryId) {
+        WebRenderedImage left = render(append.left(), libraryId);
+        WebRenderedImage right = render(append.right(), libraryId);
         if (left == null || right == null) {
             return null;
         }
@@ -130,8 +133,8 @@ public class WebImageRenderer {
             + "</svg>");
     }
 
-    private static @Nullable WebRenderedImage withText(WebImageSpec.Text text) {
-        WebRenderedImage base = render(text.child());
+    private static @Nullable WebRenderedImage withText(WebImageSpec.Text text, @Nullable String libraryId) {
+        WebRenderedImage base = render(text.child(), libraryId);
         if (base == null) {
             return null;
         }

@@ -53,11 +53,15 @@ public class UIIconServlet extends HttpServlet {
             return;
         }
 
-        String key = WebImageSpec.encode(spec) + '@' + String.valueOf(req.getParameter(WebImageUrl.VERSION));
+        String version = req.getParameter(WebImageUrl.VERSION);
+        String key = WebImageSpec.encode(spec) + '@' + String.valueOf(version);
 
         WebRenderedImage image = myCache.get(key);
         if (image == null) {
-            image = WebImageRenderer.render(spec);
+            // the url names the library it was built for, and that is what it has to be answered from - the
+            // active library is whatever the last style switch left behind, and a browser asks for an url long
+            // after the page which built it was rendered
+            image = WebImageRenderer.render(spec, WebImageUrl.toLibraryId(version));
             if (image == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;

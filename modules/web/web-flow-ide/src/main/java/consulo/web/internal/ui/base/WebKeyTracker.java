@@ -39,6 +39,14 @@ public final class WebKeyTracker {
     private WebKeyTracker() {
     }
 
+    /**
+     * Idempotent on the browser side - the script keeps a flag per element and a second call does nothing, so
+     * re-running it on a dom which already has the listeners costs one message and changes nothing.
+     */
+    private static void installListeners(Element element) {
+        element.executeJs("window.consuloShortcuts.install(this)");
+    }
+
     public static void installRoot(Component root) {
         if (!(root instanceof ToVaadinComponentWrapper wrapper)) {
             return;
@@ -46,7 +54,11 @@ public final class WebKeyTracker {
 
         Element element = wrapper.toVaadinComponent().getElement();
 
-        element.executeJs("window.consuloShortcuts.install(this)");
+        // on every attach, not once when the root is built. the root is made per project and outlives the page, so
+        // reloading the browser hands the same component tree to a dom which holds none of what was pushed into the
+        // old one - and the listeners this installs are what every shortcut of the ide arrives through
+        element.addAttachListener(event -> installListeners(element));
+        installListeners(element);
 
         element.addEventListener("consulo-key", event -> {
             int keyCode = event.getEventData().path("event.detail.keyCode").asInt(0);

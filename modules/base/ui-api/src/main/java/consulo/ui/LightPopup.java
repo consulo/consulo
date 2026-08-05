@@ -15,35 +15,22 @@
  */
 package consulo.ui;
 
-import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ComponentEventListener;
-import consulo.ui.event.LightPopupCloseEvent;
 import consulo.ui.internal.UIInternal;
-import org.jspecify.annotations.Nullable;
 
 /**
- * An area which floats over the frame, like a {@link Window} but light - it carries no chrome of its own, it is
- * anchored to something rather than placed, and it goes away as soon as it loses interest.
+ * A popup which hangs off something on screen - it carries no chrome of its own, it does not dim what is behind it,
+ * and it goes away as soon as it loses interest. What a completion list, a hint or a submenu is shown with.
  * <p/>
- * This is only the surface. What is drawn on it, and what a close means, belongs to whoever builds it.
+ * It always has a target. A popup with nothing to point at is a {@link HeavyPopup}.
  *
  * @author VISTALL
  * @since 2026-08-02
  */
-public interface LightPopup extends Component, Disposable {
-    static LightPopup create(LightPopupOptions options) {
+public non-sealed interface LightPopup extends Popup {
+    static LightPopup create(PopupOptions options) {
         return UIInternal.get()._LightPopup_create(options);
     }
-
-    /**
-     * A caption over the content, shown only while there is one to show.
-     */
-    @RequiredUIAccess
-    void setTitle(@Nullable String title);
-
-    @RequiredUIAccess
-    void setContent(Component content);
 
     /**
      * Opens the popup against {@code target}, which is where it stays should the frame move under it.
@@ -52,22 +39,15 @@ public interface LightPopup extends Component, Disposable {
     void showBy(Component target);
 
     /**
-     * Opens the popup against the frame rather than any one component, for a popup raised by something with no
-     * place on screen - a menu action, a shortcut.
+     * Opens the popup at a point inside {@code target} rather than against the component as a whole, for something
+     * which has no component of its own to be anchored to - the caret of an editor above all.
+     * <p/>
+     * {@code anchorHeight} is the height of whatever the point belongs to, the caret line for an editor, so a popup
+     * with no room below it can go above that line instead of over it.
+     *
+     * @param x pixels from the left of {@code target}
+     * @param y pixels from the top of {@code target}
      */
     @RequiredUIAccess
-    void showInCenterOf(@Nullable Window window);
-
-    /**
-     * Closes the popup. A popup dismissed by the user closes the same way, so a close listener sees every close -
-     * whether one was a choice or an abandonment is for the caller to track.
-     */
-    @RequiredUIAccess
-    void close();
-
-    boolean isVisible();
-
-    default Disposable addCloseListener(ComponentEventListener<LightPopup, LightPopupCloseEvent> listener) {
-        return addListener(LightPopupCloseEvent.class, listener);
-    }
+    void showAt(Component target, int x, int y, int anchorHeight);
 }

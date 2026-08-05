@@ -16,9 +16,15 @@
   --arquill-editor-font-size: 12px;
   --arquill-editor-font-family: "Consolas", "Menlo", "Monaco", "Vera Mono", monospace;
 
+  /* the line spacing of the colour scheme, the same number the awt editor multiplies its row height by */
+  --arquill-editor-line-spacing: 1.0;
+
   /* every row of the view is this tall, rulers included - a length rather than a ratio, so that a row and the
      ruler row beside it cannot end up measured against two different font sizes */
-  --arquill-editor-line-height: calc(var(--arquill-editor-font-size) * 2);
+  /* the natural line box of a font is taller than the font size - what line-height: normal resolves to, near
+     1.2 for the faces an editor is set in. the spacing of the scheme multiplies that, not the size, so a scheme
+     at 1.0 leaves the gap the face was designed with instead of pressing the rows together */
+  --arquill-editor-line-height: calc(var(--arquill-editor-font-size) * 1.2 * var(--arquill-editor-line-spacing));
 }
 
 /* the font of the color scheme, published as custom properties by the client - the bundled .textview rule
@@ -27,6 +33,56 @@
 {
   font-family: var(--arquill-editor-font-family);
   font-size: var(--arquill-editor-font-size);
+}
+
+/* An inlay is projected into the view as text, so its box is drawn by the run itself rather than painted under
+   it. The colours travel from the scheme as inline styles; the shape is decided here, the way the awt editor
+   decides it in its own painter - padding of 6px against a rounded rect of 8, and a margin holding the hint off
+   the code it sits between.
+
+   A hint is several runs when its parts are coloured differently, so only the run which opens one is rounded and
+   padded on the left and only the run which closes one on the right - the parts in between carry the background
+   alone and the whole reads as a single box. */
+.arquill-inlay
+{
+  /* without this the box is only as tall as the glyphs and the rounding barely shows */
+  padding-top: 1px;
+  padding-bottom: 1px;
+  /* the hint must not stretch the line it sits on - a proportional face with taller metrics than the editor
+     one would otherwise push every line apart the moment a hint appeared on it */
+  line-height: 1;
+}
+
+/* the family the awt editor takes from the label font when USE_EDITOR_FONT_IN_INLAYS is off, which it is by
+   default - a hint reads as a note about the code rather than as more code */
+.arquill-inlay-ui-font
+{
+  font-family: var(--lumo-font-family, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+}
+
+/* a run which reaches somewhere reads as a link while the modifier is held, the same as a reference in the code.
+   the class on the editor says the modifier is down; which run is under the pointer is left to :hover, so a hint
+   of several reachable parts - the three class names of Map<String, Integer> - lights up only the one aimed at */
+.arquill-editor.arquill-inlay-hover .arquill-inlay-action:hover
+{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.arquill-inlay-start
+{
+  margin-left: 2px;
+  padding-left: 6px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.arquill-inlay-end
+{
+  margin-right: 2px;
+  padding-right: 6px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 /* overflow must be clipped - the marks are absolutely positioned across the whole document height and would
@@ -47,7 +103,9 @@
    markers on one line have to fit */
 .textviewLeftRuler .ruler.annotations
 {
-  min-width: 32px;
+  /* the script widens the column when a line carries more markers than it can hold, and makes orion measure
+     the view again - the value it sets is this property */
+  min-width: var(--arquill-gutter-marks-width, 32px);
 }
 
 .arquill-gutter-mark
@@ -145,9 +203,9 @@
 {
   width: var(--arquill-overview-ruler-width);
 
-  /* the stripe is a column of its own beside the text, so it carries the background of the editor rather
-     than of the application around it - the app one is a different grey and the seam shows */
-  background-color: var(--arquill-editor-background, #fff);
+  /* the stripe is a column of its own beside the text, and it carries the background of the panels around
+     the editor, like the awt error panel does */
+  background-color: var(--consulo-panel-background, #fff);
 }
 
 /* orion draws a mark as a rounded 8px pill left aligned in the column, the awt panel paints a dash over the
@@ -277,8 +335,9 @@
   max-width: 40em;
   padding: 4px 6px;
 
-  border: 1px solid lightgray;
-  background-color: white;
+  border: 1px solid var(--consulo-component-border-color, lightgray);
+  background-color: var(--consulo-tool-tip-background, white);
+  color: var(--consulo-tool-tip-foreground, black);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 
   font-size: 12px;
@@ -294,6 +353,45 @@
   line-height: var(--arquill-editor-line-height) !important;
 }
 
+/* the caret never takes the colour of what it stands in. left alone a contenteditable draws it in the colour of
+   the text under it, so it turned red inside an error and green inside a string - it belongs to the editor, not
+   to the token. one fixed colour, and a theme overrides it by writing the variable.
+   the spans carry the rule too: currentColor is resolved again by every one of them, so declaring it only on the
+   container is the same as not declaring it, and the caret is drawn inside whichever span it stands in */
+/* the caret is drawn here rather than by the browser. a contenteditable caret takes the colour of the text it
+   stands in, is always one pixel wide and blinks at a rate the page cannot ask about - the platform has a width,
+   a colour and a blink period for it, and none of the three are reachable through css on the native one */
+.textview .textviewContent,
+.textview .textviewContent *
+{
+  caret-color: transparent;
+}
+
+.arquill-caret
+{
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  width: var(--arquill-editor-caret-width, 2px);
+  background-color: var(--arquill-editor-caret-color, black);
+}
+
+/* step-end so it is shown or hidden and never faded, which is how an editor caret blinks */
+.arquill-caret.arquill-caret-blinking
+{
+  animation: arquill-caret-blink var(--arquill-editor-caret-blink-period, 500ms) step-end infinite;
+}
+
+.arquill-caret-hidden
+{
+  display: none;
+}
+
+@keyframes arquill-caret-blink
+{
+  50% { opacity: 0; }
+}
+
 /* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is
    drawn at the top of its row while the gutter marker beside it is centered in the same row - the two then
    read as misaligned even though both are where they were put */
@@ -307,4 +405,60 @@
 .textviewZoom .textviewContent > div
 {
   line-height: normal !important;
+}
+
+/* the rules below override the bundled orion stylesheet, which carries fixed light colors of its own. the
+   bundle is regenerated on an arquill update, so the theme never touches it - and it is injected after this
+   file, which is why every selector doubles a class to win the cascade on specificity */
+
+.textview.textview
+{
+  color: var(--arquill-editor-foreground, #333);
+  background-color: var(--arquill-editor-background, white);
+}
+
+.textviewSelection.textviewSelection
+{
+  background: var(--arquill-editor-selection-background, rgb(180, 213, 255));
+}
+
+.textview .textviewContent ::-moz-selection
+{
+  background: var(--arquill-editor-selection-background, rgba(180, 213, 255, 0.99));
+}
+
+.textview .textviewContent ::selection
+{
+  background: var(--arquill-editor-selection-background, rgba(180, 213, 255, 0.99));
+}
+
+.annotationLine.annotationLine.currentLine,
+.meta.meta.annotation.currentLine
+{
+  background-color: var(--arquill-editor-caret-row-background, #EAF2FE);
+}
+
+/* the rulers sit on the panel background like the awt gutter and error panel, and their seams follow the
+   theme border */
+.textviewLeftRuler.textviewLeftRuler
+{
+  border-right: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--consulo-panel-background, white);
+}
+
+.textviewRightRuler.textviewRightRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--consulo-panel-background, white);
+}
+
+.textviewInnerRightRuler.textviewInnerRightRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+  background-color: var(--consulo-panel-background, white);
+}
+
+.textviewMarginRuler.textviewMarginRuler
+{
+  border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
 }

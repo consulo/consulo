@@ -197,7 +197,8 @@ public class UnifiedActionRow {
                 action,
                 myContextSupplier.get(),
                 myPlace,
-                myPresentationFactory
+                myPresentationFactory,
+                event.getInputDetails()
             ));
         }
 
@@ -238,7 +239,7 @@ public class UnifiedActionRow {
     private Button createButton(UnifiedActionMenuExpander.MenuNode node, boolean showText) {
         // an icon action is shown by its icon, its text is what the user gets on hover
         Button button = Button.create(showText ? node.text() : LocalizeValue.empty());
-        button.setIcon(node.icon());
+        button.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
         button.setToolTipText(node.text());
         button.setEnabled(node.enabled());
 

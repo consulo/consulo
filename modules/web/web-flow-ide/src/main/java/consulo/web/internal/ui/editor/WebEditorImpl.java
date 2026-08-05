@@ -16,9 +16,13 @@
 package consulo.web.internal.ui.editor;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.PersistentEditorSettings;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.event.SelectionEvent;
+import consulo.codeEditor.event.SelectionListener;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.application.Application;
@@ -71,12 +75,15 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.undoRedo.CommandProcessor;
 import consulo.dataContext.DataContext;
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
@@ -105,15 +112,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebEditorImpl extends CodeEditorBase {
+public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationProvider {
   public static class Vaadin extends ArquillEditorElement implements ComponentHolder, FromVaadinComponentWrapper {
     private consulo.ui.Component myComponent;
 
@@ -158,10 +169,27 @@ public class WebEditorImpl extends CodeEditorBase {
 
   private volatile @Nullable ClientEdit myClientEdit;
 
+  /**
+   * Where the caret is on screen, as the browser last reported it. Anything anchored to the caret - the completion
+   * popup above all - is placed by this, because only the browser can measure where a character ended up.
+   */
+  private volatile @Nullable CaretPixelLocation myCaretLocation;
+
+  /**
+   * The character cell the browser measured, which every mapping between a position and a point is built on. The
+   * defaults stand in only until the editor has reported - a zero cell would divide by zero the first time the
+   * caret moved.
+   */
+  private volatile int myCharWidth = 8;
+  private volatile int myLineHeight = 16;
+
   private final java.util.List<RangeHighlighter> myLinkHighlighters = new java.util.ArrayList<>();
 
   /** the browser identifies a clicked marker by its index here - a line carries more than one of them */
   private final java.util.List<GutterMark> myGutterMarks = new java.util.ArrayList<>();
+
+  /** rebuilt on every inlay push - the browser answers a click with the place a run had in here */
+  private final List<InlayClickTarget> myInlayClickTargets = new ArrayList<>();
 
   private boolean myLinkHovered;
 
@@ -234,32 +262,81 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
 
     updateFont();
+    updateCaretStyle();
+    updateColors();
+
+    // the awt editor learns of an inlay through a repaint of the region it covers, which here reaches a bridge
+    // component and stops there - the model is the only thing left that knows. the pushes coalesce, so the hint
+    // passes adding their inlays one by one still cost a single round trip
+    myInlayModel.addListener(new InlayModel.Listener() {
+      @Override
+      public void onAdded(Inlay<?> inlay) {
+        scheduleUpdate();
+      }
+
+      @Override
+      public void onUpdated(Inlay<?> inlay, int changeFlags) {
+        scheduleUpdate();
+      }
+
+      @Override
+      public void onRemoved(Inlay<?> inlay) {
+        scheduleUpdate();
+      }
+
+      @Override
+      public void onBatchModeFinish(Editor editor) {
+        scheduleUpdate();
+      }
+    }, myDisposable);
 
 //    vaadin.addMouseDownListener(this::runMousePressedCommand);
 
-    vaadin.addCaretListener(event -> moveCaretFromClient(event.getOffset()));
+    vaadin.addMetricsListener(event -> {
+      if (event.getCharWidth() > 0 && event.getLineHeight() > 0) {
+        myCharWidth = event.getCharWidth();
+        myLineHeight = event.getLineHeight();
+      }
+    });
+
+    vaadin.addCaretListener(event -> {
+      myCaretLocation = new CaretPixelLocation(event.getCaretX(), event.getCaretY(), event.getCaretHeight());
+
+      // where the caret is on screen always matters - a popup anchors to it - but only a move the user made is a
+      // move. echoing back one the platform just made would look like the user left, and a lookup closes on that
+      if (!event.isRectOnly()) {
+        moveCaretFromClient(event.getOffset(), event.getSelectionStart(), event.getSelectionEnd());
+      }
+    });
 
     vaadin.addCtrlHoverListener(event -> highlightLinkAt(event.getOffset()));
 
     vaadin.addCtrlClickListener(event -> navigateTo(event.getOffset()));
 
+    vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
+
     vaadin.addGutterClickListener(event -> performGutterClick(event.getId()));
 
     vaadin.addFoldListener(event -> setFoldRegionExpandedFromClient(event.getStart(), !event.isCollapsed()));
+
+    vaadin.addTypedListener(event -> handleTypedFromClient(event.getText()));
 
     vaadin.addTextChangeListener(event -> replaceTextFromClient(event.getStart(), event.getRemovedCharCount(), event.getText()));
 
     myCaretModel.addCaretListener(new CaretListener() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
-        // the browser already moved its own caret when it made the edit
-        if (myCaretFromClient || myTextFromClient) {
-          return;
-        }
+        pushSelectionToClient();
+      }
+    }, myDisposable);
 
-        int offset = e.getCaret().getOffset();
-
-        giveUI(() -> vaadin.setCaretOffset(offset));
+    // the caret and the selection move apart: shift with an arrow key grows the range and moves the caret, but
+    // dragging past the anchor and back moves only the range. both are pushed the same way, and both push all of
+    // it - whichever fires last leaves the browser holding the whole truth rather than half of an update
+    getSelectionModel().addSelectionListener(new SelectionListener() {
+      @Override
+      public void selectionChanged(SelectionEvent e) {
+        pushSelectionToClient();
       }
     }, myDisposable);
 
@@ -282,7 +359,13 @@ public class WebEditorImpl extends CodeEditorBase {
           int end = start + event.getOldLength();
           String newFragment = event.getNewFragment().toString();
 
-          giveUI(() -> vaadin.replaceText(start, end, newFragment));
+          // the caret goes with the text and after it. writing into the model moves what orion draws only as far
+          // as the change forces it to, and where the caret belongs afterwards is the platform's to say - a tab
+          // which indents ends up past the indent, not in front of it
+          giveUI(() -> {
+            vaadin.replaceText(start, end, newFragment);
+            pushSelectionNow();
+          });
         }
 
         scheduleUpdate();
@@ -307,19 +390,47 @@ public class WebEditorImpl extends CodeEditorBase {
     // be pushed once more
     vaadin.addAttachListener(attachEvent -> {
       updateFont();
+      updateColors();
 
       update();
     });
+
 
     Disposer.register(myDisposable, () -> subscribeToLineStatusTracker(null));
   }
 
   /**
+   * Hands the browser the caret and the selection together, off the ui thread it is called on.
+   */
+  private void pushSelectionToClient() {
+    // the browser already moved its own caret when it made the edit
+    if (myCaretFromClient || myTextFromClient) {
+      return;
+    }
+
+    giveUI(this::pushSelectionNow);
+  }
+
+  /**
+   * The same push, for callers already on the ui thread and already inside a {@link #giveUI} block.
+   */
+  private void pushSelectionNow() {
+    Caret caret = myCaretModel.getPrimaryCaret();
+
+    myEditorComponent.toVaadinComponent().setSelection(caret.getSelectionStart(), caret.getSelectionEnd());
+  }
+
+  /**
    * Moves the platform caret to where the browser put it, so the daemon can rerun the passes bound to the
    * caret position - identifier highlighting above all.
+   * <p>
+   * The selection comes with it. {@code moveToOffset} leaves whatever was selected alone, so a caret taken on its
+   * own left the platform holding a range the user had long since dragged away from - and every action reading the
+   * selection, delete first among them, worked on that one instead of what was on screen.
    */
-  private void moveCaretFromClient(int offset) {
-    if (offset < 0 || offset > myDocument.getTextLength()) {
+  private void moveCaretFromClient(int offset, int selectionStart, int selectionEnd) {
+    int length = myDocument.getTextLength();
+    if (offset < 0 || offset > length || selectionStart < 0 || selectionEnd > length || selectionStart > selectionEnd) {
       return;
     }
 
@@ -328,7 +439,17 @@ public class WebEditorImpl extends CodeEditorBase {
       CommandProcessor.getInstance().newCommand()
         .project(myProject)
         .document(myDocument)
-        .run(() -> myCaretModel.getPrimaryCaret().moveToOffset(offset));
+        .run(() -> {
+          Caret caret = myCaretModel.getPrimaryCaret();
+          caret.moveToOffset(offset);
+
+          if (selectionStart == selectionEnd) {
+            caret.removeSelection();
+          }
+          else {
+            caret.setSelection(selectionStart, selectionEnd);
+          }
+        });
     }
     finally {
       myCaretFromClient = false;
@@ -369,9 +490,39 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   /**
+   * Runs a typed character through the platform, the way a keystroke does on the desktop.
+   * <p/>
+   * The browser has already been stopped from inserting it, so nothing is echoed back here - the change the typed
+   * action makes travels to the browser as any other document change does. That is also what keeps the completion
+   * lookup up while the user types: the lookup grows its prefix inside the guarded change the typed handler makes,
+   * and only a change from outside one closes it.
+   */
+  @RequiredUIAccess
+  private void handleTypedFromClient(String text) {
+    if (isViewer() || !myDocument.isWritable() || text == null || text.length() != 1) {
+      return;
+    }
+
+    // the caret is not taken from the browser here. the keystroke was stopped before the editor could act on it, so
+    // the caret over there has not moved and reports the same offset for every character of a run - putting each of
+    // them back at it would type the run out backwards. the caret on this side advances with each insert and is
+    // pushed back to the browser by the caret listener, which is what keeps the two together
+    EditorActionManager.getInstance().getTypedAction().actionPerformed(this, text.charAt(0), getDataContext());
+  }
+
+  /**
    * The edit the browser applied on its own, kept only until the document event carrying it arrives.
    */
   private record ClientEdit(int offset, int oldLength, String newText) {
+  }
+
+  /**
+   * Where the caret was last seen on screen. Reported by the browser on every caret move, so it is already known by
+   * the time something wants to open against it and nothing has to be asked for.
+   */
+  @Override
+  public @Nullable CaretPixelLocation getCaretPixelLocation() {
+    return myCaretLocation;
   }
 
   private boolean isEchoOfClientEdit(DocumentEvent event) {
@@ -447,7 +598,8 @@ public class WebEditorImpl extends CodeEditorBase {
 
     clearLinkHighlighters();
 
-    moveCaretFromClient(offset);
+    // a jump lands on a caret and selects nothing
+    moveCaretFromClient(offset, offset, offset);
 
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
@@ -490,6 +642,26 @@ public class WebEditorImpl extends CodeEditorBase {
     CommandProcessor.getInstance().newCommand()
       .project(myProject)
       .run(() -> navigatable.navigate(true));
+  }
+
+  /**
+   * A click the browser reported on a run of a hint. The renderer owns what the run does - a type hint reaching
+   * its class, a collapsed presentation opening - so the click is handed straight back to it.
+   */
+  @RequiredUIAccess
+  private void performInlayClick(int id, boolean controlDown) {
+    if (id < 0 || id >= myInlayClickTargets.size()) {
+      return;
+    }
+
+    InlayClickTarget target = myInlayClickTargets.get(id);
+    if (!target.inlay().isValid()) {
+      return;
+    }
+
+    clearLinkHighlighters();
+
+    target.inlay().getRenderer().handleClick(target.inlay(), target.contentIndex(), controlDown);
   }
 
   /**
@@ -570,11 +742,17 @@ public class WebEditorImpl extends CodeEditorBase {
   /** the daemon adds its highlighters one by one, a single push per batch is enough */
   private void scheduleUpdate() {
     if (myUpdateScheduled.compareAndSet(false, true)) {
-      giveUI(() -> {
+      boolean scheduled = giveUI(() -> {
         myUpdateScheduled.set(false);
 
         update();
       });
+
+      // the flag is cleared by the runnable, so a push that was never scheduled - the editor is between a
+      // detach and an attach - would latch it and every later batch of the daemon would be dropped
+      if (!scheduled) {
+        myUpdateScheduled.set(false);
+      }
     }
   }
 
@@ -614,12 +792,21 @@ public class WebEditorImpl extends CodeEditorBase {
     return WebAwtBridgeComponent.of(myEditorComponent);
   }
 
-  /** document and caret events arrive off the ui thread, the browser can only be touched from it */
-  private static void giveUI(Runnable runnable) {
-    UIAccess uiAccess = Application.get().getLastUIAccess();
-    if (uiAccess != null) {
-      uiAccess.giveIfNeed(runnable);
+  /**
+   * Document and caret events arrive off the ui thread, the browser can only be touched from it. The ui is
+   * the one the editor component sits in - a detached editor pushes nothing, its attach listener pushes
+   * everything again anyway.
+   */
+  private boolean giveUI(Runnable runnable) {
+    // the ui the editor component is attached to - a detached editor has none, and its attach listener pushes
+    // everything again anyway
+    UIAccess uiAccess = myEditorComponent.getUIAccess();
+    if (uiAccess == null) {
+      return false;
     }
+
+    uiAccess.giveIfNeed(runnable);
+    return true;
   }
 
   /**
@@ -631,8 +818,39 @@ public class WebEditorImpl extends CodeEditorBase {
 
     String fontName = scheme.getEditorFontName();
     int fontSize = scheme.getEditorFontSize();
+    // the row is the font times the spacing of the scheme, the way the awt editor sizes one - a fixed multiplier
+    // made every row twice the text and a caret, which stands as tall as the row, twice the glyphs beside it
+    float lineSpacing = scheme.getLineSpacing();
 
-    giveUI(() -> myEditorComponent.toVaadinComponent().setFont(fontName, fontSize));
+    giveUI(() -> myEditorComponent.toVaadinComponent().setFont(fontName, fontSize, lineSpacing));
+  }
+
+  /**
+   * What the caret looks like, which the browser cannot be asked for - it draws a one pixel caret in the colour of
+   * the text under it and blinks at a rate of its own, and the platform has a width and a blink period for it.
+   */
+  private void updateCaretStyle() {
+    PersistentEditorSettings settings = PersistentEditorSettings.getInstance();
+
+    int width = EditorUtil.getDefaultCaretWidth();
+    int blinkPeriod = settings.isBlinkCaret() ? settings.getBlinkPeriod() : 0;
+
+    giveUI(() -> myEditorComponent.toVaadinComponent().setCaretStyle(width, blinkPeriod));
+  }
+
+  private void updateColors() {
+    EditorColorsScheme scheme = getColorsScheme();
+
+    String background = toCssColor(scheme.getDefaultBackground());
+    String foreground = toCssColor(scheme.getDefaultForeground());
+
+    ColorValue selection = scheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR);
+    String selectionBackground = selection == null ? null : toCssColor(selection);
+
+    ColorValue caretRow = scheme.getColor(EditorColors.CARET_ROW_COLOR);
+    String caretRowBackground = caretRow == null ? null : toCssColor(caretRow);
+
+    giveUI(() -> myEditorComponent.toVaadinComponent().setColors(background, foreground, selectionBackground, caretRowBackground));
   }
 
   public void update() {
@@ -641,13 +859,332 @@ public class WebEditorImpl extends CodeEditorBase {
       // pushed first - the browser remaps every offset the other pushes carry once the projection changes
       updateFoldRegions();
 
+      updateInlays();
+
       updateStyleRanges();
     });
   }
 
+  /**
+   * The inlays of the document, as the text they stand for. The browser puts each anchor into the view as a
+   * projection, the way a fold placeholder gets there, so the offsets pushed here are the document ones and the
+   * placement is spelled out rather than measured - nothing of the awt renderers survives the trip.
+   * <p>
+   * One entry per anchor offset. Two projections at one offset would render in the order the orion model happened
+   * to splice them, and a block inlay below a line anchors exactly where a block inlay above the next line does,
+   * so the ordering has to be settled here instead.
+   */
+  @RequiredReadAction
+  private void updateInlays() {
+    if (isReleased) {
+      return;
+    }
+
+    int textLength = myDocument.getTextLength();
+    int lineCount = myDocument.getLineCount();
+
+    // sorted - the client keys its projections by anchor, and the bundle wants them in offset order
+    Map<Integer, InlaySegments> anchors = new TreeMap<>();
+
+    for (Inlay<?> inlay : myInlayModel.getBlockElementsInRange(0, textLength)) {
+      InlayContent content = contentOf(inlay);
+      if (content == null) {
+        continue;
+      }
+
+      int line = myDocument.getLineNumber(inlay.getOffset());
+
+      // a block inlay stands on a line of its own, which leaves it at the margin while the code it belongs to is
+      // indented. the awt editor measures the indent and shifts the paint; here the text simply carries it
+      String indent = lineIndent(line);
+
+      if (inlay.getPlacement() == Inlay.Placement.ABOVE_LINE) {
+        // the anchor is the start of the line the inlay sits above, and the break at the end of the text pushes
+        // that line down - a document offset maps past the whole projection, so the line still answers for itself
+        anchors.computeIfAbsent(myDocument.getLineStartOffset(line), it -> new InlaySegments()).addBlock(inlay, content, indent, false);
+      }
+      else if (line + 1 < lineCount) {
+        anchors.computeIfAbsent(myDocument.getLineStartOffset(line + 1), it -> new InlaySegments())
+          .addBlock(inlay, content, indent, false);
+      }
+      else {
+        // below the last line there is no line start left to anchor to, so the break goes in front of the text
+        anchors.computeIfAbsent(textLength, it -> new InlaySegments()).addBlock(inlay, content, indent, true);
+      }
+    }
+
+    for (Inlay<?> inlay : myInlayModel.getInlineElementsInRange(0, textLength)) {
+      InlayContent content = contentOf(inlay);
+      if (content != null) {
+        anchors.computeIfAbsent(inlay.getOffset(), it -> new InlaySegments()).addInline(inlay, content);
+      }
+    }
+
+    for (Inlay<?> inlay : myInlayModel.getAfterLineEndElementsInRange(0, textLength)) {
+      InlayContent content = contentOf(inlay);
+      if (content != null) {
+        int lineEndOffset = myDocument.getLineEndOffset(myDocument.getLineNumber(inlay.getOffset()));
+        anchors.computeIfAbsent(lineEndOffset, it -> new InlaySegments()).addInline(inlay, content);
+      }
+    }
+
+    boolean useEditorFontInInlays = EditorSettingsExternalizable.getInstance().isUseEditorFontInInlays();
+
+    myInlayClickTargets.clear();
+
+    StringBuilder inlays = new StringBuilder("[");
+
+    for (Map.Entry<Integer, InlaySegments> entry : anchors.entrySet()) {
+      if (inlays.length() > 1) {
+        inlays.append(',');
+      }
+
+      inlays.append("{\"offset\":").append(entry.getKey()).append(",\"segments\":[");
+
+      boolean first = true;
+      for (InlaySegment segment : entry.getValue().flatten()) {
+        // a run which is only an image projects no text, and an empty span would swallow the click of its neighbour
+        if (segment.text().isEmpty() && !segment.lineBreak()) {
+          continue;
+        }
+
+        if (!first) {
+          inlays.append(',');
+        }
+        first = false;
+
+        inlays.append("{\"text\":\"").append(escapeJson(segment.text())).append('"');
+
+        // the break is a flag rather than a character - escapeJson turns a control character into a space, and a
+        // raw one would abort the parse on the client
+        if (segment.lineBreak()) {
+          inlays.append(",\"br\":true");
+        }
+
+        // the indent of a block hint carries no look of its own - it stands in for the code below it and has to
+        // measure like it
+        if (!segment.styled()) {
+          inlays.append('}');
+          continue;
+        }
+
+        String style = toCssStyle(segment.attributesKey() == null ? null : getColorsScheme().getAttributes(segment.attributesKey()));
+
+        // the awt editor measures a smaller hint against the editor font less one point, so the same one point
+        // is what travels - the browser is already laying the editor font out at the size the scheme asked for
+        String fontSize = segment.smallerFont()
+          ? "\"fontSize\":\"" + Math.max(1, getColorsScheme().getEditorFontSize() - 1) + "px\""
+          : null;
+
+        // the box - padding, rounding, the margin holding it off the code - belongs to the stylesheet rather
+        // than travelling as numbers. the scheme decides the colours, the frontend decides the shape, the same
+        // split a gutter band is drawn under
+        StringBuilder styleClass = new StringBuilder("arquill-inlay");
+        if (segment.boxed()) {
+          if (segment.first()) {
+            styleClass.append(" arquill-inlay-start");
+          }
+          if (segment.last()) {
+            styleClass.append(" arquill-inlay-end");
+          }
+        }
+
+        // a hint is set in the ui font rather than the editor one unless the setting says otherwise - which is
+        // what makes it read as a note about the code instead of as code. the awt editor takes the family from
+        // the label font, and the browser has a ui font of its own to take instead
+        if (!useEditorFontInInlays) {
+          styleClass.append(" arquill-inlay-ui-font");
+        }
+
+        // a run which reaches an action is answered for by its place in the list, and the browser hands that place
+        // back rather than a position - it never laid the hint out in offsets the platform knows
+        if (segment.inlay() != null && segment.inlay().getRenderer().hasClickAction(segment.inlay(), segment.contentIndex())) {
+          inlays.append(",\"click\":").append(myInlayClickTargets.size());
+
+          myInlayClickTargets.add(new InlayClickTarget(segment.inlay(), segment.contentIndex()));
+        }
+
+        inlays.append(",\"style\":{\"styleClass\":\"").append(styleClass).append('"');
+
+        if (style != null || fontSize != null) {
+          inlays.append(",\"style\":{");
+          if (style != null) {
+            inlays.append(style, 1, style.length() - 1);
+          }
+          if (fontSize != null) {
+            if (style != null) {
+              inlays.append(',');
+            }
+            inlays.append(fontSize);
+          }
+          inlays.append('}');
+        }
+
+        inlays.append("}}");
+      }
+
+      inlays.append("]}");
+    }
+
+    inlays.append(']');
+
+    myEditorComponent.toVaadinComponent().setInlays(inlays.toString());
+  }
+
+  /**
+   * The indent a line opens with, as spaces. A tab cannot travel - the json escape turns a control character into
+   * a space, and the payload the daemon messages share it with is why - so it is spent here against the tab size
+   * instead, which lands the text on the column the code is on.
+   */
+  @RequiredReadAction
+  private String lineIndent(int line) {
+    int start = myDocument.getLineStartOffset(line);
+    int end = myDocument.getLineEndOffset(line);
+
+    CharSequence text = myDocument.getCharsSequence();
+    int tabSize = Math.max(1, getSettings().getTabSize(myProject));
+
+    StringBuilder indent = new StringBuilder();
+    for (int offset = start; offset < end; offset++) {
+      char c = text.charAt(offset);
+      if (c == ' ') {
+        indent.append(' ');
+      }
+      else if (c == '\t') {
+        int spaces = tabSize - indent.length() % tabSize;
+        indent.append(" ".repeat(spaces));
+      }
+      else {
+        break;
+      }
+    }
+    return indent.toString();
+  }
+
+  private static @Nullable InlayContent contentOf(Inlay<?> inlay) {
+    if (!inlay.isValid()) {
+      return null;
+    }
+
+    InlayContent content = inlay.getRenderer().getContent(inlay);
+    if (content == null) {
+      return null;
+    }
+
+    // the runs are kept as they came - a run which is only an image cannot be projected, but dropping it here
+    // would shift every index after it, and the index is what a click is answered by
+    for (InlayContentSegment segment : content.segments()) {
+      if (!segment.text().isEmpty()) {
+        return content;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * One run of an anchor, once the placement of its inlay has been resolved into whether it ends a line.
+   */
+  /**
+   * @param styled the run belongs to a hint rather than to the whitespace lining a block one up with the code -
+   *               the indent has to stay in the editor font, a hint set in the ui font would measure it narrower
+   *               and the hint would no longer sit over the declaration it belongs to
+   * @param boxed  the hint is drawn as a box, which only the ones standing inside a line are. a block hint has a
+   *               line to itself, and padding it would only push it off the column its code is on
+   * @param first  the run opens a hint, {@code last} closes one - the edges are what get rounded and padded, so
+   *               a hint of several runs still reads as the one box the awt editor paints
+   */
+  private record InlaySegment(
+    String text,
+    @Nullable TextAttributesKey attributesKey,
+    boolean lineBreak,
+    boolean smallerFont,
+    boolean first,
+    boolean last,
+    boolean styled,
+    boolean boxed,
+    @Nullable Inlay<?> inlay,
+    int contentIndex
+  ) {
+  }
+
+  /**
+   * A run the user can click, as the browser hands it back - the index of this record is what travels, the same
+   * way a gutter mark is answered for by its place in {@link #myGutterMarks}.
+   */
+  private record InlayClickTarget(Inlay<?> inlay, int contentIndex) {
+  }
+
+  /**
+   * The runs of one anchor. Block inlays come out ahead of the inline ones sharing the offset - they end in a
+   * break, so anything after them would otherwise be carried onto their own line rather than staying on the code.
+   */
+  private static final class InlaySegments {
+    private final List<InlaySegment> myBlock = new ArrayList<>();
+    private final List<InlaySegment> myInline = new ArrayList<>();
+
+    private void addBlock(Inlay<?> inlay, InlayContent content, String indent, boolean breakBefore) {
+      boolean small = content.smallerFont();
+
+      if (breakBefore) {
+        myBlock.add(new InlaySegment("", null, true, small, false, false, false, false, null, -1));
+      }
+
+      // the indent stands outside the hint - it is the code the hint lines up with, so it stays plain and is
+      // measured in the editor font like the line below it
+      if (!indent.isEmpty()) {
+        myBlock.add(new InlaySegment(indent, null, false, false, false, false, false, false, null, -1));
+      }
+
+      List<InlayContentSegment> segments = content.segments();
+      for (int i = 0; i < segments.size(); i++) {
+        InlayContentSegment segment = segments.get(i);
+        boolean last = i == segments.size() - 1;
+        myBlock.add(new InlaySegment(
+          segment.text(),
+          segment.attributesKey(),
+          last && !breakBefore,
+          small,
+          i == 0,
+          last,
+          true,
+          false,
+          inlay,
+          i
+        ));
+      }
+    }
+
+    private void addInline(Inlay<?> inlay, InlayContent content) {
+      List<InlayContentSegment> segments = content.segments();
+      for (int i = 0; i < segments.size(); i++) {
+        InlayContentSegment segment = segments.get(i);
+        myInline.add(new InlaySegment(
+          segment.text(),
+          segment.attributesKey(),
+          false,
+          content.smallerFont(),
+          i == 0,
+          i == segments.size() - 1,
+          true,
+          true,
+          inlay,
+          i
+        ));
+      }
+    }
+
+    private List<InlaySegment> flatten() {
+      List<InlaySegment> all = new ArrayList<>(myBlock.size() + myInline.size());
+      all.addAll(myBlock);
+      all.addAll(myInline);
+      return all;
+    }
+  }
+
   @RequiredReadAction
   private void updateStyleRanges() {
-    if (getHighlighter() == null) {
+    EditorHighlighter editorHighlighter = getHighlighter();
+    if (editorHighlighter == null) {
       return;
     }
 
@@ -655,20 +1192,48 @@ public class WebEditorImpl extends CodeEditorBase {
 
     StringBuilder ranges = new StringBuilder("[");
 
+    // a run that is nothing but a lexer token is pushed as classes named after the attribute keys of the
+    // scheme, and the styles of those keys travel once as a stylesheet - the same keyword does not repeat
+    // its resolved style through the whole file
+    HighlighterIterator tokenIterator = editorHighlighter.createIterator(0);
+    Set<TextAttributesKey> schemeKeys = new LinkedHashSet<>();
+
     // iteration state merges the lexer attributes with the markup model by layer, which is how the daemon
     // results - identifier highlighting, inspections - reach the view
     IterationState state = new IterationState(this, 0, textLength, null, false, false, false, false);
     while (!state.atEnd()) {
+      int start = state.getStartOffset();
+      int end = state.getEndOffset();
+
       String style = toCssStyle(state.getMergedAttributes());
 
       if (style != null) {
+        while (!tokenIterator.atEnd() && tokenIterator.getEnd() <= start) {
+          tokenIterator.advance();
+        }
+
+        // the run answers to the keys only when the markup added nothing over the token - what the merged
+        // attributes render as is what the token renders as then. the attributes themselves cannot be
+        // compared, their equals is the identity of an interned flyweight the merge does not go through
+        String styleClass = null;
+        if (!tokenIterator.atEnd() && tokenIterator.getStart() <= start && end <= tokenIterator.getEnd()) {
+          TextAttributes tokenAttributes = tokenIterator.getTextAttributes();
+          if (tokenAttributes != null && style.equals(toCssStyle(tokenAttributes))) {
+            styleClass = toSchemeClasses(tokenIterator.getTextAttributesKeys(), schemeKeys);
+          }
+        }
+
         if (ranges.length() > 1) {
           ranges.append(',');
         }
 
-        ranges.append("{\"start\":").append(state.getStartOffset())
-          .append(",\"end\":").append(state.getEndOffset())
-          .append(",\"style\":{\"style\":").append(style).append("}}");
+        ranges.append("{\"start\":").append(start).append(",\"end\":").append(end);
+        if (styleClass != null) {
+          ranges.append(",\"style\":{\"styleClass\":\"").append(styleClass).append("\"}}");
+        }
+        else {
+          ranges.append(",\"style\":{\"style\":").append(style).append("}}");
+        }
       }
 
       state.advance();
@@ -676,7 +1241,11 @@ public class WebEditorImpl extends CodeEditorBase {
 
     ranges.append(']');
 
-    myEditorComponent.toVaadinComponent().setStyleRanges(ranges.toString());
+    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+
+    // the stylesheet has to be in the page before a range names a class of it
+    vaadin.setSchemeStyles(buildSchemeCss(schemeKeys));
+    vaadin.setStyleRanges(ranges.toString());
 
     updateTooltipRanges();
 
@@ -1156,7 +1725,59 @@ public class WebEditorImpl extends CodeEditorBase {
       background = null;
     }
 
-    return toCssStyle(style, foreground, background, attributes.getFontType(), attributes.getEffectType(), attributes.getEffectColor());
+    return toCssStyle(style, foreground, background, attributes.getFontType(), toCssTextDecoration(attributes));
+  }
+
+  /**
+   * The effects of the attributes as one text-decoration. A highlighter of the daemon merges its effect into
+   * the ones already on the run rather than replacing them - an error under an inspection underline carries
+   * both - and only the first of them is what {@code getEffectType} answers.
+   */
+  private static @Nullable String toCssTextDecoration(TextAttributes attributes) {
+    StringBuilder lines = new StringBuilder();
+    StringBuilder style = new StringBuilder();
+    StringBuilder color = new StringBuilder();
+
+    attributes.forEachEffect((effectType, effectColor) -> {
+      String decoration = toCssTextDecoration(effectType, effectColor);
+      if (decoration == null) {
+        return;
+      }
+
+      // css carries one line list, one style and one colour for the whole element, so several effects can
+      // only be drawn together when they agree - the first one to name a style and a colour wins
+      for (String part : decoration.split(" ")) {
+        if (part.equals("underline") || part.equals("line-through")) {
+          if (!lines.toString().contains(part)) {
+            if (lines.length() > 0) {
+              lines.append(' ');
+            }
+            lines.append(part);
+          }
+        }
+        else if (part.startsWith("#")) {
+          if (color.length() == 0) {
+            color.append(part);
+          }
+        }
+        else if (style.length() == 0) {
+          style.append(part);
+        }
+      }
+    });
+
+    if (lines.length() == 0) {
+      return null;
+    }
+
+    StringBuilder decoration = new StringBuilder(lines);
+    if (style.length() > 0) {
+      decoration.append(' ').append(style);
+    }
+    if (color.length() > 0) {
+      decoration.append(' ').append(color);
+    }
+    return decoration.toString();
   }
 
   private static @Nullable String toCssStyle(
@@ -1164,8 +1785,7 @@ public class WebEditorImpl extends CodeEditorBase {
     @Nullable ColorValue foreground,
     @Nullable ColorValue background,
     int fontType,
-    @Nullable EffectType effectType,
-    @Nullable ColorValue effectColor
+    @Nullable String decoration
   ) {
     if (foreground != null) {
       style.append("\"color\":\"").append(toCssColor(foreground)).append('"');
@@ -1193,7 +1813,6 @@ public class WebEditorImpl extends CodeEditorBase {
     }
 
     // without the effects an error reads as slightly differently coloured text, the wave is what makes it an error
-    String decoration = toCssTextDecoration(effectType, effectColor);
     if (decoration != null) {
       if (style.length() > 0) {
         style.append(',');
@@ -1202,6 +1821,72 @@ public class WebEditorImpl extends CodeEditorBase {
     }
 
     return style.length() == 0 ? null : "{" + style + "}";
+  }
+
+  private static @Nullable String toSchemeClasses(TextAttributesKey[] keys, Set<TextAttributesKey> collected) {
+    if (keys.length == 0) {
+      return null;
+    }
+
+    StringBuilder classes = new StringBuilder();
+    for (TextAttributesKey key : keys) {
+      collected.add(key);
+
+      if (classes.length() > 0) {
+        classes.append(' ');
+      }
+      classes.append(toSchemeClassName(key));
+    }
+    return classes.toString();
+  }
+
+  private static String toSchemeClassName(TextAttributesKey key) {
+    return "arquill-a-" + key.getExternalName().replaceAll("[^A-Za-z0-9_-]", "-");
+  }
+
+  /**
+   * The rules of the attribute keys the pushed ranges name. A key of the token stands later in its array the
+   * higher it layers, and the rules keep that order, so the cascade resolves a token with several keys the
+   * way the scheme merge does.
+   */
+  private String buildSchemeCss(Set<TextAttributesKey> keys) {
+    EditorColorsScheme scheme = getColorsScheme();
+
+    StringBuilder css = new StringBuilder();
+    for (TextAttributesKey key : keys) {
+      TextAttributes attributes = scheme.getAttributes(key);
+      if (attributes == null) {
+        continue;
+      }
+
+      css.append('.').append(toSchemeClassName(key)).append('{');
+
+      ColorValue foreground = attributes.getForegroundColor();
+      if (foreground != null && !Objects.equals(foreground, scheme.getDefaultForeground())) {
+        css.append("color:").append(toCssColor(foreground)).append(';');
+      }
+
+      ColorValue background = attributes.getBackgroundColor();
+      if (background != null && !Objects.equals(background, scheme.getDefaultBackground())) {
+        css.append("background-color:").append(toCssColor(background)).append(';');
+      }
+
+      int fontType = attributes.getFontType();
+      if ((fontType & Font.BOLD) != 0) {
+        css.append("font-weight:bold;");
+      }
+      if ((fontType & Font.ITALIC) != 0) {
+        css.append("font-style:italic;");
+      }
+
+      String decoration = toCssTextDecoration(attributes);
+      if (decoration != null) {
+        css.append("text-decoration:").append(decoration).append(';');
+      }
+
+      css.append("}\n");
+    }
+    return css.toString();
   }
 
   private static @Nullable String toCssTextDecoration(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
@@ -1477,9 +2162,25 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public void reinitSettings() {
+    // the delegate keeps the global scheme it was created against, a scheme switch reaches the editor only
+    // through this
+    if (myScheme instanceof MyColorSchemeDelegate schemeDelegate) {
+      schemeDelegate.updateGlobalScheme();
+    }
+
+    // the lexer highlighter caches the attributes of every token type against the scheme it was handed
+    EditorHighlighter highlighter = getHighlighter();
+    if (highlighter != null) {
+      highlighter.setColorScheme(myScheme);
+    }
+
     myView.reset();
 
     updateFont();
+    updateColors();
+
+    // the pushed ranges carry attributes resolved from the previous scheme
+    update();
   }
 
   @Override
@@ -1529,7 +2230,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public int getLineHeight() {
-    return 0;
+    return myLineHeight;
   }
 
   @Override
@@ -1539,14 +2240,13 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public int visualLineToY(int visualLine) {
-    return 0;
+    return visualLine * myLineHeight;
   }
 
   @Override
   public boolean isShowing() {
     return myEditorComponent.isVisible();
   }
-
   
   @Override
   public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
@@ -1602,8 +2302,28 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   
+  @Override
   public java.awt.Point visualPositionToXY(VisualPosition visible) {
-    // todo fake return
-    return new Point(1, 1);
+    return new Point(visible.column * myCharWidth, visualLineToY(visible.line));
+  }
+
+  /**
+   * The inverse of {@link #visualPositionToXY}. Without it moving the caret up or down threw - the shared caret
+   * code keeps the column it started from as an x and asks for it back, and an editor which cannot answer stops
+   * the arrow keys dead.
+   */
+  @Override
+  public VisualPosition xyToVisualPosition(Point p) {
+    return new VisualPosition(Math.max(0, p.y / myLineHeight), Math.max(0, (p.x + myCharWidth / 2) / myCharWidth));
+  }
+
+  /**
+   * The same two steps the awt editor takes. Left unimplemented it threw "Unsupported platform" from the interface
+   * default, and brace highlighting asks for it on every caret move to decide whether the brace it matched has
+   * scrolled out of sight - so the failure arrived once per keystroke rather than once per hint.
+   */
+  @Override
+  public Point logicalPositionToXY(LogicalPosition pos) {
+    return visualPositionToXY(logicalToVisualPosition(pos));
   }
 }

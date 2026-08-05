@@ -47,7 +47,11 @@ public class WebImageKeyImpl implements ImageKey {
   }
 
   public @Nullable ImageReference calcImage() {
-    return ourLibraryManager.resolveImage(null, this);
+    return calcImage(null);
+  }
+
+  public @Nullable ImageReference calcImage(@Nullable String libraryId) {
+    return ourLibraryManager.resolveImage(libraryId, this);
   }
 
   
