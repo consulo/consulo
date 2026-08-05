@@ -29,6 +29,7 @@ import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
+import consulo.language.index.impl.internal.moduleAware.ModuleAwareIndexMetaRecorder;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
@@ -128,6 +129,11 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
     int id = SingleEntryFileBasedIndexExtension.getFileKey(vFile);
     if (id <= 0) {
+      return null;
+    }
+
+    if (ModuleAwareIndexMetaRecorder.isStale(StubUpdatingIndex.INDEX_ID, vFile, project)) {
+      FileBasedIndex.getInstance().requestReindex(vFile);
       return null;
     }
 
