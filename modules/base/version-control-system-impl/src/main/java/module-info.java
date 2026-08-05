@@ -3,6 +3,7 @@
  * @since 10-Jul-22
  */
 module consulo.version.control.system.impl {
+    requires consulo.mcp.server.api;
     requires consulo.version.control.system.api;
     requires consulo.ui.ex.api;
     requires consulo.code.editor.api;

@@ -11,6 +11,11 @@ module consulo.it {
     requires consulo.component.api;
     requires consulo.component.impl;
     requires consulo.component.store.api;
+    requires consulo.ai.api;
+    requires consulo.credential.storage.impl;
+    requires consulo.ai.impl;
+    requires consulo.mcp.server.api;
+    requires consulo.mcp.server.impl;
     requires consulo.project.api;
     requires consulo.project.impl;
     requires consulo.project.ui.api;

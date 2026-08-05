@@ -1,0 +1,12 @@
+configurable.display.name:
+    text: MCP Server
+checkbox.enable.mcp.server:
+    text: Enable MCP server
+label.port:
+    text: Port
+column.enabled:
+    text: Enabled
+column.tool:
+    text: Tool
+column.description:
+    text: Description

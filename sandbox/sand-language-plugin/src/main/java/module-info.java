@@ -9,6 +9,8 @@ module consulo.sand.language.plugin {
   
   requires consulo.virtual.file.watcher.api;
 
+  requires consulo.ai.api;
+
   requires consulo.ide.api;
 
   requires consulo.compiler.api;

@@ -3,6 +3,7 @@
  * @since 08-Aug-22
  */
 module consulo.compiler.impl {
+    requires consulo.mcp.server.api;
     requires transitive consulo.compiler.api;
     requires transitive consulo.compiler.artifact.api;
     requires transitive consulo.project.ui.api;

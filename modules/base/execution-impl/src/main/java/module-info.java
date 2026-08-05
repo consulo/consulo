@@ -3,6 +3,7 @@
  * @since 08-Aug-22
  */
 module consulo.execution.impl {
+    requires consulo.mcp.server.api;
     requires consulo.execution.api;
     requires consulo.configuration.editor.api;
     requires static consulo.task.api;

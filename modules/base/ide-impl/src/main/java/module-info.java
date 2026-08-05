@@ -22,6 +22,7 @@ open module consulo.ide.impl {
     requires consulo.desktop.awt.eawt.wrapper;
 
     requires consulo.undo.redo.api;
+    requires consulo.mcp.server.api;
     requires consulo.annotation;
     requires consulo.proxy;
     requires consulo.platform.api;
