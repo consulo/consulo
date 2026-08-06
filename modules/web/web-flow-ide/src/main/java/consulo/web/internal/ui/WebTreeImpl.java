@@ -298,6 +298,23 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             return loadChildren(node, currentUI());
         }
 
+        public void selectDeep(WebTreeNodeImpl<NODE> node) {
+            List<WebTreeNodeImpl<NODE>> path = pathTo(node);
+
+            CompletableFuture<Void> expanded = CompletableFuture.completedFuture(null);
+            for (int i = 0; i < path.size() - 1; i++) {
+                WebTreeNodeImpl<NODE> ancestor = path.get(i);
+                expanded = expanded.thenCompose(ignored -> expandNode(ancestor));
+            }
+
+            expanded.thenRun(() -> {
+                UI ui = currentUI();
+                if (ui != null) {
+                    ui.access(() -> select(node));
+                }
+            });
+        }
+
         public CompletableFuture<Void> expandNode(WebTreeNodeImpl<NODE> node) {
             return loadChildrenAsync(node).thenCompose(children -> {
                 if (node == myRootNode) {
@@ -668,7 +685,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     @Override
     public void select(TreeNode<NODE> node) {
         if (node instanceof WebTreeNodeImpl<NODE> webNode) {
-            toVaadinComponent().select(webNode);
+            toVaadinComponent().selectDeep(webNode);
         }
     }
 
