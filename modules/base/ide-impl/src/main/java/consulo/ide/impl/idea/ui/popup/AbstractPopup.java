@@ -57,6 +57,7 @@ import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.touchBar.TouchBarController;
@@ -542,6 +543,20 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @RequiredUIAccess
     public void showUnderneathOf(Component aComponent) {
         show(new RelativePoint(aComponent, new Point(JBUIScale.scale(2), aComponent.getHeight())));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showUnderneathOf(AnActionEvent e) {
+        InputEvent inputEvent = e.getInputEvent();
+        Component componentUnder = inputEvent == null ? null : inputEvent.getComponent();
+
+        if (componentUnder != null) {
+            showUnderneathOf(componentUnder);
+        }
+        else {
+            showInBestPositionFor(e.getDataContext());
+        }
     }
 
     @Override

@@ -197,7 +197,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         DataManager dataManager = DataManager.getInstance();
 
         // the groups are expanded off the ui thread, the providers have to be snapshotted before that
-        return dataManager.createAsyncDataContext(dataManager.getDataContext(myLayout));
+        return dataManager.createAsyncDataContext(dataManager.getDataContext(myToolWindow.getUIComponent()));
     }
 
     @Override

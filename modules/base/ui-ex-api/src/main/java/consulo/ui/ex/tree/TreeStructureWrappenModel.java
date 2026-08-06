@@ -66,7 +66,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
                 ReadAction.compute(() -> descriptor.update());
             }
 
-            apply.setLeaf(o instanceof consulo.ui.ex.tree.TreeNode && !((consulo.ui.ex.tree.TreeNode) o).isAlwaysShowPlus());
+            apply.setLeaf(o instanceof LeafState.Supplier supplier && supplier.getLeafState() == LeafState.ALWAYS);
 
             apply.setRenderer((fileElement, itemPresentation) -> {
                 NodeDescriptor descriptor = myStructure.createDescriptor(element, null);

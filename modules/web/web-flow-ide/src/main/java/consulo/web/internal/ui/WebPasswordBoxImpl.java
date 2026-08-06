@@ -22,6 +22,7 @@ import consulo.ui.PasswordBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -62,8 +63,8 @@ public class WebPasswordBoxImpl extends VaadinComponentDelegate<WebPasswordBoxIm
 
     @RequiredUIAccess
     @Override
-    public void setValue(String value, boolean fireListeners) {
-        toVaadinComponent().setValue(value);
+    public void setValue(@Nullable String value, boolean fireListeners) {
+        toVaadinComponent().setValue(StringUtil.notNullize(value));
     }
 
     @Override

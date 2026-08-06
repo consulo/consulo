@@ -39,7 +39,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
-import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JTree;
@@ -50,6 +49,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -125,6 +125,16 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         public @Nullable K getValue() {
             return myValue;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof MyTreeNodeImpl<?> node && Objects.equals(myValue, node.myValue);
+        }
+
+        @Override
+        public int hashCode() {
+            return myValue == null ? 0 : myValue.hashCode();
+        }
     }
 
     private static class MyNodeDescriptor<K> extends PresentableNodeDescriptor {
@@ -183,33 +193,29 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     public static class MyStructureWrapper<K> extends AbstractTreeStructure {
-        private final Object myRootValue;
         private final TreeModel<K> myModel;
+
+        private final MyTreeNodeImpl<K> myRootNode;
 
         public MyStructureWrapper(K rootValue, TreeModel<K> model) {
             myModel = model;
-            myRootValue = rootValue == null ? ObjectUtil.NULL : rootValue;
+            myRootNode = new MyTreeNodeImpl<>(rootValue, null, this);
         }
 
-        
+        public MyTreeNodeImpl<K> getRootNode() {
+            return myRootNode;
+        }
+
         @Override
         public Object getRootElement() {
-            return myRootValue;
+            return myRootNode;
         }
 
         
         @Override
         @SuppressWarnings("unchecked")
         public Object[] getChildElements(Object element) {
-            K targetParent = null;
-            if (element == myRootValue) {
-                // the root stands for a value of the model, and a model built over a tree structure asks that
-                // structure for the children of it - only a tree created without a root value has none to give
-                targetParent = myRootValue == ObjectUtil.NULL ? null : (K) myRootValue;
-            }
-            else if (element instanceof MyTreeNodeImpl node) {
-                targetParent = (K) node.getValue();
-            }
+            K targetParent = element instanceof MyTreeNodeImpl node ? (K) node.getValue() : null;
 
             List<MyTreeNodeImpl<K>> nodes = new ArrayList<>();
             myModel.buildChildren(k -> {
@@ -238,7 +244,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         @Override
         @SuppressWarnings("unchecked")
         public NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
-            return new MyNodeDescriptor(myRootValue, element, parentDescriptor);
+            return new MyNodeDescriptor(myRootNode, element, parentDescriptor);
         }
 
         @Override
@@ -266,12 +272,14 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     private final TreeModel<E> myModel;
     private final Disposable myDisposable;
+    private final MyStructureWrapper<E> myStructure;
     private final StructureTreeModel<MyStructureWrapper<E>> myStructureTreeModel;
 
     public DesktopTreeImpl(E rootValue, TreeModel<E> model, Disposable disposable) {
         myModel = model;
         myDisposable = disposable;
-        myStructureTreeModel = new StructureTreeModel<>(new MyStructureWrapper<>(rootValue, model), disposable);
+        myStructure = new MyStructureWrapper<>(rootValue, model);
+        myStructureTreeModel = new StructureTreeModel<>(myStructure, disposable);
     }
 
     @Override
@@ -329,18 +337,18 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         return tree;
     }
 
-    /**
-     * The root is not a node of the model - it stands for the value the tree was built on - so a path pointing
-     * at it answers null and is left out of the events.
-     */
-    @SuppressWarnings("unchecked")
     private @Nullable TreeNode<E> nodeOf(TreePath path) {
-        Object object = TreeUtil.getLastUserObject(path);
+        TreeNode<E> node = nodeOfComponent(TreeUtil.getLastUserObject(path));
+        return node == myStructure.getRootNode() ? null : node;
+    }
 
-        if (object instanceof MyNodeDescriptor node && node.getElement() instanceof MyTreeNodeImpl element) {
+    @SuppressWarnings("unchecked")
+    private @Nullable TreeNode<E> nodeOfComponent(@Nullable Object component) {
+        Object userObject = component instanceof MyNodeDescriptor ? component : TreeUtil.getUserObject(component);
+
+        if (userObject instanceof MyNodeDescriptor descriptor && descriptor.getElement() instanceof MyTreeNodeImpl element) {
             return element;
         }
-
         return null;
     }
 
@@ -348,6 +356,49 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     public @Nullable TreeNode<E> getSelectedNode() {
         TreePath path = TreeUtil.getSelectedPathIfOne(toAWTComponent());
         return path == null ? null : nodeOf(path);
+    }
+
+    @Override
+    public TreeNode<E> getRootNode() {
+        return myStructure.getRootNode();
+    }
+
+    @Override
+    public void select(TreeNode<E> node) {
+        MyTree tree = toAWTComponent();
+
+        myStructureTreeModel.promiseVisitor(node).onSuccess(visitor -> TreeUtil.promiseSelect(tree, visitor));
+    }
+
+    @Override
+    public List<TreeNode<E>> getSelectedPath() {
+        TreePath path = TreeUtil.getSelectedPathIfOne(toAWTComponent());
+        return path == null ? List.of() : nodesOf(path);
+    }
+
+    @Override
+    public List<List<TreeNode<E>>> getExpandedPaths() {
+        List<List<TreeNode<E>>> paths = new ArrayList<>();
+
+        for (TreePath path : TreeUtil.collectExpandedPaths(toAWTComponent())) {
+            List<TreeNode<E>> nodes = nodesOf(path);
+            if (!nodes.isEmpty()) {
+                paths.add(nodes);
+            }
+        }
+        return paths;
+    }
+
+    private List<TreeNode<E>> nodesOf(TreePath path) {
+        List<TreeNode<E>> nodes = new ArrayList<>();
+
+        for (Object component : path.getPath()) {
+            TreeNode<E> node = nodeOfComponent(component);
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
+        return nodes;
     }
 
     @Override
@@ -420,7 +471,46 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     @Override
     public CompletableFuture<?> refreshAll() {
-        myStructureTreeModel.invalidate();
-        return CompletableFuture.completedFuture(null);
+        MyTree tree = toAWTComponent();
+
+        List<TreeNode<E>> expanded = expandedNodes(tree);
+        TreeNode<E> selected = getSelectedNode();
+
+        return toFuture(myStructureTreeModel.invalidate())
+            .thenCompose(ignored -> restoreExpanded(tree, expanded))
+            .thenCompose(ignored -> restoreSelected(tree, selected));
+    }
+
+    private List<TreeNode<E>> expandedNodes(MyTree tree) {
+        List<TreeNode<E>> nodes = new ArrayList<>();
+
+        for (TreePath path : TreeUtil.collectExpandedPaths(tree)) {
+            TreeNode<E> node = nodeOf(path);
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
+        return nodes;
+    }
+
+    private CompletableFuture<?> restoreExpanded(MyTree tree, List<TreeNode<E>> nodes) {
+        if (nodes.isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        List<Promise<TreeVisitor>> visitors = new ArrayList<>();
+        for (TreeNode<E> node : nodes) {
+            visitors.add(myStructureTreeModel.promiseVisitor(node));
+        }
+
+        return toFuture(Promises.collectResults(visitors, true).thenAsync(list -> TreeUtil.promiseExpand(tree, list.stream())));
+    }
+
+    private CompletableFuture<?> restoreSelected(MyTree tree, @Nullable TreeNode<E> node) {
+        if (node == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return toFuture(myStructureTreeModel.promiseVisitor(node).thenAsync(visitor -> TreeUtil.promiseSelect(tree, visitor)));
     }
 }

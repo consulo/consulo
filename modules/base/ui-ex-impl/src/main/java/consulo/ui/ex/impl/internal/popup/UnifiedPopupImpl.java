@@ -22,6 +22,7 @@ import consulo.logging.Logger;
 import consulo.ui.LightPopup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -208,6 +209,19 @@ public abstract class UnifiedPopupImpl implements JBPopup {
     @RequiredUIAccess
     public void showUnderneathOf(Component componentUnder) {
         showCenteredInCurrentWindow(null);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showUnderneathOf(AnActionEvent e) {
+        consulo.ui.Component component = e.getData(consulo.ui.Component.KEY);
+
+        if (component != null) {
+            showBy(component, e.getInputDetails());
+        }
+        else {
+            showCenteredInCurrentWindow(null);
+        }
     }
 
     @Override

@@ -1776,6 +1776,10 @@ public abstract class DialogWrapper {
         myInitialLocationCallback = callback;
     }
 
+    public @Nullable Dimension getInitialSize() {
+        return null;
+    }
+
     private void registerKeyboardShortcuts() {
         JRootPane rootPane = getRootPane();
 

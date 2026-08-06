@@ -19,6 +19,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.DebouncePhase;
 import com.vaadin.flow.dom.Element;
+import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
@@ -114,8 +115,12 @@ public final class WebFocusTracker {
 
         Element element = wrapper.toVaadinComponent().getElement();
 
-        for (String eventType : new String[]{"mousedown", "focusin"}) {
-            element.addEventListener(eventType, event -> setFocusedScope(event.getEventData().path(SCOPE_OF_EVENT).asString("")))
+        for (String eventType : new String[]{"mousedown", "focusin", "keydown"}) {
+            element.addEventListener(eventType, event -> {
+                ActivityTracker.getInstance().inc();
+
+                setFocusedScope(event.getEventData().path(SCOPE_OF_EVENT).asString(""));
+            })
                 .addEventData(SCOPE_OF_EVENT)
                 .debounce(DEBOUNCE_MS, DebouncePhase.TRAILING);
         }

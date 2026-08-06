@@ -40,12 +40,41 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
     public class Vaadin extends Table implements FromVaadinComponentWrapper {
         private final Map<Component, TableCell> myChildren = new LinkedHashMap<>();
 
+        private @Nullable TableRow myFillerRow;
+
         public void add(Component component, TableCell cell) {
             myChildren.put(component, cell);
 
             com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
-            ((HasSize) vComponent).setSizeFull();
-            validate(cell).add(vComponent);
+            if (cell.isFill() && vComponent instanceof HasSize hasSize) {
+                hasSize.setWidthFull();
+            }
+
+            TableDataCell dataCell = validate(cell);
+            dataCell.getStyle().set("vertical-align", "top");
+            dataCell.add(vComponent);
+
+            updateFiller();
+        }
+
+        private void updateFiller() {
+            if (myPosition == StaticPosition.CENTER) {
+                return;
+            }
+
+            TableRow filler = addRow();
+            filler.addDataCell();
+            filler.getStyle().set("height", "100%");
+
+            myFillerRow = filler;
+        }
+
+        private void dropFiller() {
+            TableRow filler = myFillerRow;
+            if (filler != null) {
+                myFillerRow = null;
+                removeRows(filler);
+            }
         }
 
         private TableDataCell validate(TableCell tableCell) {
@@ -54,6 +83,8 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
 
             int rowSize = rowIndex + 1;
             int columnSize = columnIndex + 1;
+
+            dropFiller();
 
             List<TableRow> rows = getRows();
             if (rows.size() < rowSize) {
@@ -76,7 +107,10 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
         }
     }
 
+    private final StaticPosition myPosition;
+
     public WebTableLayoutImpl(StaticPosition fillOption) {
+        myPosition = fillOption;
     }
 
     @Override

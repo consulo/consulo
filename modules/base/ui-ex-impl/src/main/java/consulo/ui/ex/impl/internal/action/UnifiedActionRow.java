@@ -18,8 +18,11 @@ package consulo.ui.ex.impl.internal.action;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
@@ -31,6 +34,8 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.PresentationFactory;
 import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
@@ -63,6 +68,20 @@ public class UnifiedActionRow {
     private String mySignature = "";
     private List<AnAction> myActions = List.of();
     private @Nullable ProgressIndicator myIndicator;
+    private @Nullable Disposable myTickerRegistration;
+
+    private final TimerListener myTimerListener = new TimerListener() {
+        @Override
+        public ModalityState getModalityState() {
+            return ModalityState.any();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void run() {
+            updateAsync();
+        }
+    };
 
     public UnifiedActionRow(
         Supplier<ActionGroup> groupSupplier,
@@ -79,6 +98,30 @@ public class UnifiedActionRow {
         myPresentationFactory = presentationFactory;
         myStyle = style;
         myLayout = style.isHorizontal() ? HorizontalLayout.create(0) : VerticalLayout.create(0);
+
+        myLayout.addAttachListener(event -> startTicking());
+        myLayout.addDetachListener(event -> stopTicking());
+    }
+
+    @RequiredUIAccess
+    private void startTicking() {
+        if (myTickerRegistration != null) {
+            return;
+        }
+
+        myTickerRegistration = ActionTicker.getInstance().addListener(UIAccess.current(), myTimerListener);
+
+        updateAsync();
+    }
+
+    private void stopTicking() {
+        Disposable registration = myTickerRegistration;
+        if (registration == null) {
+            return;
+        }
+
+        myTickerRegistration = null;
+        Disposer.dispose(registration);
     }
 
     public Component getComponent() {
