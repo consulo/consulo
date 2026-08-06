@@ -50,6 +50,16 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
         return myStructure.isToBuildChildrenInBackground(node.getValue());
     }
 
+    private boolean isLeaf(Object element) {
+        LeafState leafState = element instanceof LeafState.Supplier supplier ? supplier.getLeafState() : LeafState.DEFAULT;
+
+        return switch (leafState) {
+            case ALWAYS -> true;
+            case NEVER, ASYNC -> false;
+            case DEFAULT -> ReadAction.compute(() -> myStructure.getChildElements(element)).length == 0;
+        };
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void buildChildren(Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
@@ -66,7 +76,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
                 ReadAction.compute(() -> descriptor.update());
             }
 
-            apply.setLeaf(o instanceof LeafState.Supplier supplier && supplier.getLeafState() == LeafState.ALWAYS);
+            apply.setLeaf(isLeaf(o));
 
             apply.setRenderer((fileElement, itemPresentation) -> {
                 NodeDescriptor descriptor = myStructure.createDescriptor(element, null);

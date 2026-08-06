@@ -1958,6 +1958,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void scrollFromSource() {
         myAutoScrollFromSourceHandler.scrollFromSource();

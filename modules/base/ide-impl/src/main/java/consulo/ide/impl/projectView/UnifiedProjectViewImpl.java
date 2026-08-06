@@ -68,8 +68,10 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -1036,6 +1038,40 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     @Override
     public void selectPsiElement(PsiElement element, boolean requestFocus) {
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void scrollFromSource() {
+        Tree<AbstractTreeNode> tree = myTree;
+        if (tree == null) {
+            return;
+        }
+
+        VirtualFile[] selectedFiles = FileEditorManager.getInstance(myProject).getSelectedFiles();
+        if (selectedFiles.length == 0) {
+            return;
+        }
+
+        TreeNode<AbstractTreeNode> rootNode = tree.getRootNode();
+        if (rootNode == null) {
+            return;
+        }
+
+        VirtualFile file = selectedFiles[0];
+
+        rootNode.findChildDeep(node -> node != null && file.equals(virtualFileOf(node)))
+            .whenCompleteAsync((treeNode, throwable) -> {
+                if (treeNode != null) {
+                    tree.select(treeNode);
+                }
+            }, UIAccess.current());
+    }
+
+    private static @Nullable VirtualFile virtualFileOf(AbstractTreeNode node) {
+        return node.getValue() instanceof PsiElement element && element.isValid()
+            ? PsiUtilCore.getVirtualFile(element)
+            : null;
     }
 
     @Override
