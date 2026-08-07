@@ -23,7 +23,10 @@ import org.cobraparser.ua.ImageResponse;
 import org.cobraparser.ua.NetworkRequest;
 import org.cobraparser.ua.NetworkRequestListener;
 import org.cobraparser.ua.UserAgentContext;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
+
+import consulo.ui.HtmlView;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -33,24 +36,45 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ForkJoinPool;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2025-01-21
  */
 public class ConsuloNetworkRequest implements NetworkRequest {
+    /**
+     * What {@link HtmlView#IMAGE_SRC_PREFIX} becomes once the parser has resolved it against the base of the
+     * document - a relative path, so it lands under the root rather than staying as it was written.
+     */
+    private static final String IMAGE_PATH = "/" + HtmlView.IMAGE_SRC_PREFIX;
+
     private final List<NetworkRequestListener> listeners = new CopyOnWriteArrayList<>();
+
+    private final @Nullable Function<String, BufferedImage> imageResolver;
 
     private volatile int readyState = STATE_UNINITIALIZED;
     private volatile int status = 0;
     private volatile byte[] responseBytes;
     private volatile URL requestUrl;
     private volatile String classpathResource;
+    private volatile String imageId;
+    private volatile Image resolvedImage;
     private volatile boolean async;
+
+    public ConsuloNetworkRequest() {
+        this(null);
+    }
+
+    public ConsuloNetworkRequest(@Nullable Function<String, BufferedImage> imageResolver) {
+        this.imageResolver = imageResolver;
+    }
 
     @Override
     public int getReadyState() {
@@ -70,6 +94,11 @@ public class ConsuloNetworkRequest implements NetworkRequest {
 
     @Override
     public ImageResponse getResponseImage() {
+        Image resolved = resolvedImage;
+        if (resolved != null) {
+            return new ImageResponse(ImageResponse.State.loaded, resolved);
+        }
+
         byte[] b = responseBytes;
         if (b == null) {
             return new ImageResponse(ImageResponse.State.error, null);
@@ -166,6 +195,15 @@ public class ConsuloNetworkRequest implements NetworkRequest {
     public void open(String method, URL url, boolean asyncFlag) throws IOException {
         this.requestUrl = url;
         this.async = asyncFlag;
+
+        String path = url.getPath();
+        if (path != null && path.startsWith(IMAGE_PATH)) {
+            // only what the parser escaped is taken back out - a plus of an id is a plus, not a space, so it is
+            // hidden from the decoder rather than handed to it
+            String id = path.substring(IMAGE_PATH.length());
+            this.imageId = URLDecoder.decode(id.replace("+", "%2B"), StandardCharsets.UTF_8);
+        }
+
         setReadyState(STATE_LOADING);
     }
 
@@ -192,7 +230,9 @@ public class ConsuloNetworkRequest implements NetworkRequest {
 
     @Override
     public void send(String content, UserAgentContext.Request requestType) throws IOException {
-        if (classpathResource != null || !async) {
+        // an id is answered out of what the platform already holds, there is nothing to wait for and a thread
+        // would only push the answer past the layout pass which asked for it
+        if (classpathResource != null || imageId != null || !async) {
             execute();
         }
         else {
@@ -201,6 +241,13 @@ public class ConsuloNetworkRequest implements NetworkRequest {
     }
 
     private void execute() {
+        String id = imageId;
+        if (id != null) {
+            resolveImage(id);
+            setReadyState(STATE_COMPLETE);
+            return;
+        }
+
         String cp = classpathResource;
         if (cp != null) {
             try (InputStream in = getClass().getResourceAsStream(cp)) {
@@ -236,6 +283,12 @@ public class ConsuloNetworkRequest implements NetworkRequest {
             responseBytes = null;
         }
         setReadyState(STATE_COMPLETE);
+    }
+
+    private void resolveImage(String id) {
+        Function<String, BufferedImage> resolver = imageResolver;
+        resolvedImage = resolver == null ? null : resolver.apply(id);
+        status = resolvedImage == null ? 404 : 200;
     }
 
     @Override

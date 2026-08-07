@@ -15,15 +15,10 @@
  */
 package consulo.externalService.impl.internal.whatsNew;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
-import consulo.application.ui.UISettings;
 import consulo.application.util.HtmlBuilder;
 import consulo.application.util.HtmlChunk;
 import consulo.application.util.JBDateFormat;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.configuration.editor.ConfigurationFileEditor;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -38,9 +33,13 @@ import consulo.externalService.impl.internal.repository.api.pluginHistory.Plugin
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecker;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.Component;
+import consulo.ui.HtmlView;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LoadingLayout;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.MultiMap;
@@ -48,8 +47,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -60,10 +57,12 @@ import java.util.concurrent.Future;
  * @since 2021-11-15
  */
 public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
-    private final UpdateHistory myUpdateHistory;
-    private JEditorPane myEditorPanel;
+    private static final Logger LOG = Logger.getInstance(WhatsNewVirtualFileEditor.class);
 
-    private JBLoadingPanel myLoadingPanel;
+    private final UpdateHistory myUpdateHistory;
+
+    private HtmlView myHtmlView;
+    private Component myComponent;
 
     private Future<?> myLoadingFuture = CompletableFuture.completedFuture(null);
 
@@ -72,15 +71,22 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
         myUpdateHistory = updateHistory;
     }
 
-    
+    /**
+     * Built once and kept. The platform asks an editor for its component again whenever the selection changes,
+     * and a fresh one per call would leave the tab holding a layout nobody is filling any more - the view is
+     * moved into whichever layout the fetch that finishes last was started for.
+     */
+    @RequiredUIAccess
     @Override
-    public JComponent getComponent() {
-        myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
+    public Component getUIComponent() {
+        if (myComponent != null) {
+            return myComponent;
+        }
 
-        myEditorPanel = new JEditorPane("text/html", "");
-        myEditorPanel.setFont(getEditorFont());
-        JBHtmlEditorKit kit = JBHtmlEditorKit.create();
-        kit.setImageResolver(src -> {
+        myHtmlView = HtmlView.create();
+        // an img of the document names a plugin, and only this editor knows that a plugin id stands for the
+        // icon of that plugin rather than for something the view could fetch
+        myHtmlView.setImageResolver(src -> {
             PluginId pluginId = PluginId.getId(src);
             if (PlatformOrPluginUpdateChecker.isPlatform(pluginId)) {
                 return PluginIconHolder.decorateIcon(Application.get().getBigIcon());
@@ -93,77 +99,76 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
             return null;
         });
-        myEditorPanel.setEditorKit(kit);
-        myEditorPanel.setEditable(false);
-        myEditorPanel.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
-        myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
+        LoadingLayout<DockLayout> loadingLayout = LoadingLayout.create(DockLayout.create(), this);
+        loadingLayout.setLoadingText(ExternalServiceLocalize.whatsnewLoadingText());
 
-        UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-            myLoadingPanel.setLoadingText(ExternalServiceLocalize.whatsnewLoadingText());
-            myLoadingPanel.startLoading();
-            fetchData();
-        });
+        myLoadingFuture = loadingLayout.startLoading(this::fetchHistorySafe, (layout, entries) -> {
+            // the view goes in whatever the html turns out to be - an editor which drops out of here before it
+            // adds anything leaves a tab with nothing in it and no way to tell why
+            layout.center(myHtmlView);
 
-        return myLoadingPanel;
-    }
-
-    @Deprecated
-    @DeprecationInfo("Migrate to unified UI. Also see AWTLanguageEditorUtil")
-    public static Font getEditorFont() {
-        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-        int size = UISettings.getInstance().getPresentationMode()
-            ? UISettings.getInstance().getPresentationModeFontSize() - 4
-            : scheme.getEditorFontSize();
-        return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
-    }
-
-    private void fetchData() {
-        myLoadingFuture = AppExecutorUtil.getAppExecutorService().submit(() -> {
-            List<PluginDescriptor> plugins = PluginManager.getPlugins();
-
-            MultiMap<PluginId, PluginHistoryEntry> entries = MultiMap.createLinked();
-            PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
-            String platformBuild = Application.get().getBuildNumber().asString();
-
-            List<PluginHistoryRequest.PluginInfo> infos = new ArrayList<>(plugins.size() + 1);
-
-            addPlugin(infos, platformPluginId, platformBuild);
-            for (PluginDescriptor plugin : plugins) {
-                if (myLoadingFuture.isCancelled()) {
-                    return;
-                }
-
-                if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-                    continue;
-                }
-
-                String version = plugin.getVersion();
-                if (version == null || "SNAPSHOT".equals(version)) {
-                    continue;
-                }
-
-                addPlugin(infos, plugin.getPluginId(), version);
+            String html;
+            try {
+                html = buildHtml(entries);
+            }
+            catch (Exception e) {
+                LOG.error("Failed to build the what's new page", e);
+                return;
             }
 
-            PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
+            myHtmlView.render(new HtmlView.RenderData(html));
+        });
 
-            for (PluginHistoryResponse.PluginHistory entry : response.entries) {
-                if (myLoadingFuture.isCancelled()) {
-                    return;
-                }
+        myComponent = loadingLayout;
+        return loadingLayout;
+    }
 
-                entries.putValue(PluginId.getId(entry.id), entry);
+    /**
+     * A repository which is unreachable leaves the page saying there is nothing new rather than leaving the
+     * spinner up - the loading layout only ever stops on a value, and a throw out of here would be swallowed by
+     * the future nobody waits on and hold the editor empty for good.
+     */
+    private MultiMap<PluginId, PluginHistoryEntry> fetchHistorySafe() {
+        try {
+            return fetchHistory();
+        }
+        catch (Exception e) {
+            LOG.warn("Failed to fetch the plugin history of the what's new page", e);
+            return MultiMap.createLinked();
+        }
+    }
+
+    private MultiMap<PluginId, PluginHistoryEntry> fetchHistory() {
+        List<PluginDescriptor> plugins = PluginManager.getPlugins();
+
+        MultiMap<PluginId, PluginHistoryEntry> entries = MultiMap.createLinked();
+        PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
+        String platformBuild = Application.get().getBuildNumber().asString();
+
+        List<PluginHistoryRequest.PluginInfo> infos = new ArrayList<>(plugins.size() + 1);
+
+        addPlugin(infos, platformPluginId, platformBuild);
+        for (PluginDescriptor plugin : plugins) {
+            if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+                continue;
             }
 
-            SwingUtilities.invokeLater(() -> {
-                setHtmlFromEntries(entries);
+            String version = plugin.getVersion();
+            if (version == null || "SNAPSHOT".equals(version)) {
+                continue;
+            }
 
-                myLoadingPanel.invalidate();
+            addPlugin(infos, plugin.getPluginId(), version);
+        }
 
-                myLoadingPanel.stopLoading();
-            });
-        });
+        PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
+
+        for (PluginHistoryResponse.PluginHistory entry : response.entries) {
+            entries.putValue(PluginId.getId(entry.id), entry);
+        }
+
+        return entries;
     }
 
     private void addPlugin(List<PluginHistoryRequest.PluginInfo> result, PluginId pluginId, String version) {
@@ -177,7 +182,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
         }
     }
 
-    private void setHtmlFromEntries(MultiMap<PluginId, PluginHistoryEntry> map) {
+    private String buildHtml(MultiMap<PluginId, PluginHistoryEntry> map) {
         HtmlBuilder html = new HtmlBuilder();
 
         HtmlChunk.Element body = HtmlChunk.body();
@@ -199,8 +204,13 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                     pluginVersion = myProject.getApplication().getBuildNumber().asString();
                 }
                 else {
+                    // the repository answers for what was asked, and a plugin can be gone by the time the
+                    // answer arrives - it was worth an assert while this ran on a swing editor which swallowed
+                    // it, but here the throw would cost the whole page
                     PluginDescriptor plugin = PluginManager.findPlugin(key);
-                    assert plugin != null;
+                    if (plugin == null) {
+                        continue;
+                    }
                     pluginName = plugin.getName();
                     pluginVersion = plugin.getVersion();
                 }
@@ -208,16 +218,16 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                 HtmlChunk.Element imgTd = HtmlChunk.tag("td");
 
                 HtmlChunk.Element pluginImg = HtmlChunk.tag("img")
-                    .attr("src", key.getIdString())
+                    .attr("src", HtmlView.IMAGE_SRC_PREFIX + key.getIdString())
                     .attr("width", PluginIconHolder.ICON_SIZE)
                     .attr("height", PluginIconHolder.ICON_SIZE);
                 imgTd = imgTd.child(pluginImg);
 
                 HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");
 
-                Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
-
-                nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
+                // relative rather than a size in points off the label font - the document is laid out by
+                // whichever renderer the frontend brings, and only it knows what it is scaling against
+                nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: 120%").addText(pluginName));
 
                 StringBuilder versionHistorySpan = new StringBuilder();
                 String historyVersion = myUpdateHistory.getHistoryVersion(key, StringUtil.notNullize(pluginVersion, "N/A"));
@@ -225,7 +235,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                     versionHistorySpan.append("#");
                     versionHistorySpan.append(historyVersion);
                     versionHistorySpan.append(" ");
-                    versionHistorySpan.append(UIUtil.rightArrow());
+                    versionHistorySpan.append('\u2192');
                     versionHistorySpan.append(" ");
                 }
 
@@ -267,7 +277,12 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                         ));
                         String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
                         if (commitUrl != null) {
-                            commitSpan = commitSpan.child(HtmlChunk.tag("a").attr("href", commitUrl).addText(commitShort));
+                            // a commit is read outside of the ide - without this the browser of the web frontend
+                            // would follow the link in the tab the ide itself is running in
+                            commitSpan = commitSpan.child(HtmlChunk.tag("a")
+                                .attr("href", commitUrl)
+                                .attr("target", "_blank")
+                                .addText(commitShort));
                         }
                         else {
                             commitSpan = commitSpan.addText(commitShort);
@@ -297,8 +312,9 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
         html.append(body);
 
-        myEditorPanel.setText(html.wrapWith("html").toString());
-        myEditorPanel.setCaretPosition(0);
+        // a head of its own, empty - the view puts the colours of the theme and the stylesheets it was handed
+        // in there, and a document without one gets none of that
+        return html.wrapWith("html").toString().replace("<html>", "<html><head></head>");
     }
 
     private static String buildCommitUrl(String url, String commitHash) {
@@ -321,8 +337,8 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
     }
 
     @Override
-    public @Nullable JComponent getPreferredFocusedComponent() {
-        return myEditorPanel;
+    public @Nullable Component getPreferredFocusedUIComponent() {
+        return myHtmlView;
     }
 
     @Override

@@ -15,9 +15,10 @@
  */
 package consulo.web.internal.ui.htmlView;
 
-import com.vaadin.flow.component.html.IFrame;
+import com.vaadin.flow.component.html.Div;
 import consulo.logging.Logger;
 import consulo.util.io.StreamUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
@@ -25,8 +26,11 @@ import consulo.web.internal.ui.WebColors;
 import consulo.ui.style.StyleManager;
 import consulo.ui.style.Style;
 import consulo.ui.style.ComponentColors;
+import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.image.WebImageElement;
+import consulo.web.internal.ui.image.WebImageUrl;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -34,10 +38,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * The rendered document is given to an iframe as {@code srcdoc}, so the page styles of the document can not reach
- * the ide around it. The frame stays same origin, which is what makes the source offset lookup below possible.
+ * The document is rendered into a shadow root of a plain element of the page. Not an iframe: a frame has a
+ * registry and a connection of its own, and nothing of the platform - the image tags among them - would work
+ * inside one. The shadow root keeps the stylesheet of the document off the ide around it, which is the only
+ * thing the frame was there for, and custom elements still upgrade because it is the same document.
  *
  * @author VISTALL
  * @since 2026-08-07
@@ -45,8 +54,23 @@ import java.util.concurrent.CompletableFuture;
 public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaadin> implements HtmlView {
     private static final Logger LOG = Logger.getInstance(WebHtmlViewImpl.class);
 
+    private static final String RENDER_SCRIPT = """
+        const root = this.shadowRoot || this.attachShadow({mode: 'open'});
+        root.innerHTML = $0;
+        """;
+
+    /**
+     * An {@code img} of the document which names an image of the platform. The whole tag is taken over rather
+     * than only the {@code src} - what stands in its place is a tree of custom elements, not a picture at a
+     * url, so there is nothing left of the original to keep.
+     */
+    private static final Pattern PLATFORM_IMAGE = Pattern.compile(
+        "<img\\b[^>]*\\bsrc\\s*=\\s*\"" + Pattern.quote(IMAGE_SRC_PREFIX) + "([^\"]*)\"[^>]*>",
+        Pattern.CASE_INSENSITIVE
+    );
+
     private static final String SCROLL_TO_SRC_OFFSET_SCRIPT = """
-        var doc = this.contentDocument;
+        var doc = this.shadowRoot;
         if (doc) {
             var offset = $0;
             var best = null;
@@ -74,16 +98,19 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
         }
         """;
 
-    public class Vaadin extends IFrame implements FromVaadinComponentWrapper {
+    public class Vaadin extends Div implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
             return WebHtmlViewImpl.this;
         }
     }
 
+    private volatile @Nullable Function<String, Image> myImageResolver;
+
     public WebHtmlViewImpl() {
         getVaadinComponent().setSizeFull();
-        getVaadinComponent().getElement().setAttribute("frameborder", "0");
+        // the document scrolls inside this element rather than growing it
+        getVaadinComponent().getStyle().set("overflow", "auto");
     }
 
     @Override
@@ -92,16 +119,76 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
     }
 
     @Override
+    public void setImageResolver(@Nullable Function<String, Image> imageResolver) {
+        myImageResolver = imageResolver;
+    }
+
+    /**
+     * Resolved while the document is still a string on the server. The browser is never told about an id it
+     * could not fetch anyway, so nothing asks for a url which is not there and no image loads twice.
+     * <p>
+     * An id nobody resolves, or an image which has no form on the web, leaves the tag out rather than drawing a
+     * broken picture - a document names images of the platform, and not every build has every one of them.
+     */
+    private String resolveImages(String html) {
+        Function<String, Image> resolver = myImageResolver;
+        if (resolver == null) {
+            return html;
+        }
+
+        Matcher matcher = PLATFORM_IMAGE.matcher(html);
+        StringBuilder result = new StringBuilder();
+
+        while (matcher.find()) {
+            String id = matcher.group(1);
+
+            String replacement = "";
+            try {
+                Image image = resolver.apply(id);
+                if (image != null) {
+                    replacement = toImageHtml(image);
+                    if (replacement.isEmpty()) {
+                        LOG.warn("The image " + id + " of an html view has no form the browser could show");
+                    }
+                }
+            }
+            catch (Exception e) {
+                LOG.warn("Failed to resolve the image " + id + " of an html view", e);
+            }
+
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    /**
+     * The custom elements first - they follow the theme and the servlet serves each icon by its id. Not every
+     * image is a composition of those though: one painted onto a canvas, or read out of a plugin jar, only ever
+     * becomes a url, and an {@code img} of that url is the whole of what the browser needs.
+     */
+    private static String toImageHtml(Image image) {
+        String elements = WebImageElement.toHtml(image);
+        if (elements != null) {
+            return elements;
+        }
+
+        String url = WebImageUrl.toURL(image);
+        return url == null ? "" : "<img src=\"" + StringUtil.escapeXmlEntities(url) + "\">";
+    }
+
+    @Override
     public CompletableFuture<?> render(RenderData renderData) {
-        String document = buildDocument(renderData);
+        String document = resolveImages(buildDocument(renderData));
 
         UIAccess uiAccess = getUIAccess();
         if (uiAccess == null) {
-            getVaadinComponent().getElement().setAttribute("srcdoc", document);
+            getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, document);
             return CompletableFuture.completedFuture(null);
         }
 
-        return uiAccess.giveAsync(() -> getVaadinComponent().getElement().setAttribute("srcdoc", document));
+        return uiAccess.giveAsync(() -> getVaadinComponent().getElement().executeJs(RENDER_SCRIPT, document));
     }
 
     @Override
@@ -151,6 +238,15 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
     }
 
     /**
+     * A stylesheet of a document is written against a document - it styles {@code body}, which a shadow root
+     * does not have. The host of the root stands in for it, so those rules keep applying to what they were
+     * written for instead of matching nothing.
+     */
+    private static String toShadowCss(String css) {
+        return css.replaceAll("(^|[},;]|\\*/)(\\s*)body\\b", "$1$2:host");
+    }
+
+    /**
      * Every stylesheet is inlined rather than linked. The urls a caller hands over point into the running
      * platform - a {@code jar:file:} inside a plugin - and a browser has no idea what those are, so the frame
      * has to be given the text itself.
@@ -165,7 +261,9 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
             }
 
             try (InputStream stream = css.openStream()) {
-                head.append("<style>\n").append(StreamUtil.readText(stream, StandardCharsets.UTF_8)).append("\n</style>\n");
+                head.append("<style>\n")
+                    .append(toShadowCss(StreamUtil.readText(stream, StandardCharsets.UTF_8)))
+                    .append("\n</style>\n");
             }
             catch (IOException e) {
                 LOG.warn("Failed to read the stylesheet " + css + " of an html view", e);
@@ -174,7 +272,7 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
 
         String inlineCss = renderData.inlineCss();
         if (!inlineCss.isEmpty()) {
-            head.append("<style>\n").append(inlineCss).append("\n</style>\n");
+            head.append("<style>\n").append(toShadowCss(inlineCss)).append("\n</style>\n");
         }
 
         return renderData.html().replace("<head>", "<head>" + head);

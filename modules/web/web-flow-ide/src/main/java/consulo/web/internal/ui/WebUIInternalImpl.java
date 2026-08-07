@@ -50,6 +50,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -120,6 +121,11 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public TableLayout _Layouts_table(StaticPosition fillOption) {
         return new WebTableLayoutImpl(fillOption);
+    }
+
+    @Override
+    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
+        return new WebLoadingLayoutImpl<>(innerLayout, parent);
     }
 
     @Override
@@ -236,6 +242,15 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public Image _Image_fromUrl(URL url) throws IOException {
         return new WebImageImpl(url);
+    }
+
+    /**
+     * Without this a plugin icon - the only image the platform hands over as bytes rather than by an id - threw
+     * out of {@link Image#fromStream}, and every plugin was drawn with the stand-in icon of the caller.
+     */
+    @Override
+    public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
+        return new WebBytesImageImpl(imageType, stream.readAllBytes());
     }
 
     @Override

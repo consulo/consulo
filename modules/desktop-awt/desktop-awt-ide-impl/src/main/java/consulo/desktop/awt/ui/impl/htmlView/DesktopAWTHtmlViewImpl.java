@@ -21,6 +21,9 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.Pair;
@@ -44,12 +47,14 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -58,11 +63,13 @@ import java.util.concurrent.CompletableFuture;
 public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtmlViewImpl.MyHtmlPanel> implements HtmlView {
     private static final int FOCUS_ELEMENT_DY = 100;
 
+    private volatile @Nullable Function<String, Image> myImageResolver;
+
     public class MyHtmlPanel extends HtmlPanel implements FromSwingComponentWrapper {
         private final ConsuloHtmlRendererContext myContext;
 
         public MyHtmlPanel() {
-            myContext = new ConsuloHtmlRendererContext(this);
+            myContext = new ConsuloHtmlRendererContext(this, DesktopAWTHtmlViewImpl.this::resolveImage);
         }
 
         @Override
@@ -127,6 +134,40 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         });
 
         return future;
+    }
+
+    @Override
+    public void setImageResolver(@Nullable Function<String, Image> imageResolver) {
+        myImageResolver = imageResolver;
+    }
+
+    /**
+     * An icon of the platform is painted into a raster rather than encoded and read back - the renderer wants a
+     * picture, and a trip through a file format on the way there would only cost the scaling of the icon.
+     */
+    private @Nullable BufferedImage resolveImage(String id) {
+        Function<String, Image> resolver = myImageResolver;
+        Image image = resolver == null ? null : resolver.apply(id);
+        if (image == null) {
+            return null;
+        }
+
+        Icon icon = TargetAWT.to(image);
+        BufferedImage raster = ImageUtil.createImage(
+            Math.max(1, icon.getIconWidth()),
+            Math.max(1, icon.getIconHeight()),
+            BufferedImage.TYPE_INT_ARGB
+        );
+
+        Graphics2D graphics = raster.createGraphics();
+        try {
+            icon.paintIcon(null, graphics, 0, 0);
+        }
+        finally {
+            graphics.dispose();
+        }
+
+        return raster;
     }
 
     @Override
