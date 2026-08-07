@@ -21,6 +21,10 @@ import consulo.util.io.StreamUtil;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
+import consulo.web.internal.ui.WebColors;
+import consulo.ui.style.StyleManager;
+import consulo.ui.style.Style;
+import consulo.ui.style.ComponentColors;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -111,12 +115,50 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
     }
 
     /**
+     * The colours a stylesheet of this view is written against. The awt backend resolves them out of the look
+     * and feel while it parses, which a frame cannot do - custom properties are resolved in the tree they are
+     * declared in, and an iframe shares nothing with the page holding it. So they are declared again inside.
+     */
+    private static void appendThemeVariables(StringBuilder head) {
+        Style style = StyleManager.get().getCurrentStyle();
+
+        head.append("<style>\n:root {\n");
+        appendVariable(head, "--cobra-bg", style, ComponentColors.LAYOUT);
+        appendVariable(head, "--cobra-fg", style, ComponentColors.TEXT_FOREGROUND);
+        appendVariable(head, "--cobra-disabled-fg", style, ComponentColors.DISABLED_TEXT);
+        appendVariable(head, "--cobra-separator-fg", style, ComponentColors.SEPARATOR);
+        appendVariable(head, "--cobra-input-bg", style, ComponentColors.COMPONENT_BACKGROUND);
+        appendVariable(head, "--cobra-link", style, ComponentColors.LINK_FOREGROUND);
+        head.append("}\n");
+
+        // the scrollbar of the frame is its own, the sheet of the ide does not reach in here either. same shape
+        // as consulo/scrollbar.css - no arrow buttons, transparent track, the thumb of the theme
+        appendVariable(head.append(":root {\n"), "--scrollbar-thumb", style, ComponentColors.SCROLL_BAR_THUMB);
+        appendVariable(head, "--scrollbar-hover-thumb", style, ComponentColors.SCROLL_BAR_HOVER_THUMB);
+        head.append("}\n")
+            .append("::-webkit-scrollbar { width: 8px; height: 8px; background-color: transparent; }\n")
+            .append("::-webkit-scrollbar-button { display: none; width: 0; height: 0; }\n")
+            .append("::-webkit-scrollbar-track,\n")
+            .append("::-webkit-scrollbar-track-piece,\n")
+            .append("::-webkit-scrollbar-corner { background-color: transparent; }\n")
+            .append("::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 5px; }\n")
+            .append("::-webkit-scrollbar-thumb:hover { background-color: var(--scrollbar-hover-thumb); }\n")
+            .append("</style>\n");
+    }
+
+    private static void appendVariable(StringBuilder head, String name, Style style, ComponentColors color) {
+        head.append("  ").append(name).append(": ").append(WebColors.toCssColor(style.getColorValue(color))).append(";\n");
+    }
+
+    /**
      * Every stylesheet is inlined rather than linked. The urls a caller hands over point into the running
      * platform - a {@code jar:file:} inside a plugin - and a browser has no idea what those are, so the frame
      * has to be given the text itself.
      */
     private static String buildDocument(RenderData renderData) {
         StringBuilder head = new StringBuilder();
+        appendThemeVariables(head);
+
         for (URL css : renderData.externalCsses()) {
             if (css == null) {
                 continue;
