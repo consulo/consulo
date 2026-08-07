@@ -44,6 +44,7 @@ import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.base.WebShowNotifier;
+import consulo.web.internal.ui.htmlView.WebHtmlViewImpl;
 import consulo.web.internal.ui.image.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -137,6 +138,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public HtmlView _Components_htmlView() {
+        return new WebHtmlViewImpl();
+    }
+
+    @Override
     public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
         throw notSupported();
 
@@ -192,6 +198,11 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public Button _Components_button(LocalizeValue text) {
         return new WebButtonImpl(text);
+    }
+
+    @Override
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        return new WebToggleButtonImpl(text);
     }
 
     @Override

@@ -89,15 +89,21 @@ public final class UnifiedActionMenuExpander {
         return disabledIcon != null ? disabledIcon : ImageEffects.grayed(icon);
     }
 
+    /**
+     * @param toolbar the top level of the expansion is drawn as a row of buttons rather than as menu entries -
+     *                a toggle keeps its icon there instead of dropping it for a leading check mark. Whatever a
+     *                popup group opens below that row is a menu again.
+     */
     public static CompletableFuture<List<MenuNode>> expandAsync(
         ActionGroup group,
         DataContext context,
         String place,
         PresentationFactory presentationFactory,
         UIAccess uiAccess,
-        ProgressIndicator indicator
+        ProgressIndicator indicator,
+        boolean toolbar
     ) {
-        return expandGroupAsync(group, context, place, presentationFactory, uiAccess, indicator, 0);
+        return expandGroupAsync(group, context, place, presentationFactory, uiAccess, indicator, 0, toolbar);
     }
 
     private static CompletableFuture<List<MenuNode>> expandGroupAsync(
@@ -107,21 +113,22 @@ public final class UnifiedActionMenuExpander {
         PresentationFactory presentationFactory,
         UIAccess uiAccess,
         ProgressIndicator indicator,
-        int depth
+        int depth,
+        boolean toolbar
     ) {
         if (depth > MAX_DEPTH) {
             return CompletableFuture.completedFuture(List.of());
         }
+
+        boolean toolbarLevel = toolbar && depth == 0;
 
         ActionUpdater updater = new ActionUpdater(
             ActionManager.getInstance(),
             presentationFactory,
             context,
             place,
-            // everything expanded here ends up in a menu, and the platform reads that off the event - a toggle
-            // drops its icon there so the leading slot can show the check mark instead
-            true,
-            false,
+            !toolbarLevel,
+            toolbarLevel,
             uiAccess
         );
 
@@ -135,7 +142,8 @@ public final class UnifiedActionMenuExpander {
                 presentationFactory,
                 uiAccess,
                 indicator,
-                depth
+                depth,
+                toolbar
             ));
     }
 
@@ -148,7 +156,8 @@ public final class UnifiedActionMenuExpander {
         PresentationFactory presentationFactory,
         UIAccess uiAccess,
         ProgressIndicator indicator,
-        int depth
+        int depth,
+        boolean toolbar
     ) {
         for (int i = startIndex; i < children.size(); i++) {
             AnAction action = children.get(i);
@@ -162,7 +171,7 @@ public final class UnifiedActionMenuExpander {
             if (action instanceof ActionGroup actionGroup && !Boolean.TRUE.equals(presentation.getClientProperty(PERFORM_ONLY))) {
                 int nextIndex = i + 1;
 
-                return expandGroupAsync(actionGroup, context, place, presentationFactory, uiAccess, indicator, depth + 1)
+                return expandGroupAsync(actionGroup, context, place, presentationFactory, uiAccess, indicator, depth + 1, toolbar)
                     .thenCompose(groupChildren -> {
                         result.add(new MenuNode(
                             action,
@@ -184,7 +193,8 @@ public final class UnifiedActionMenuExpander {
                             presentationFactory,
                             uiAccess,
                             indicator,
-                            depth
+                            depth,
+                            toolbar
                         );
                     });
             }
@@ -246,19 +256,26 @@ public final class UnifiedActionMenuExpander {
         AnAction action = node.action();
         if (action != null) {
             item.addClickListener(event ->
-                performAction(action, contextSupplier.get(), place, presentationFactory, event.getInputDetails()));
+                performAction(action, contextSupplier.get(), place, presentationFactory, event.getInputDetails(), false));
         }
 
         return item;
     }
 
+    /**
+     * @param toolbar the action was invoked from a row of buttons rather than from a menu entry. The event is
+     *                what the action reads that off, and it updates against the cached presentation the widget
+     *                was built from - telling it "context menu" here makes a toggle strip the icon it is drawn
+     *                with, and nothing ever puts that icon back.
+     */
     @RequiredUIAccess
     public static void performAction(
         AnAction action,
         DataContext context,
         String place,
         PresentationFactory presentationFactory,
-        @Nullable InputDetails inputDetails
+        @Nullable InputDetails inputDetails,
+        boolean toolbar
     ) {
         UIAccess uiAccess = UIAccess.current();
 
@@ -267,7 +284,7 @@ public final class UnifiedActionMenuExpander {
         Presentation presentation = presentationFactory.getPresentation(action);
 
         AnActionEvent event =
-            new AnActionEvent(null, context, place, presentation, actionManager, 0, true, false, inputDetails);
+            new AnActionEvent(null, context, place, presentation, actionManager, 0, !toolbar, toolbar, inputDetails);
         event.setInjectedContext(action.isInInjectedContext());
 
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {

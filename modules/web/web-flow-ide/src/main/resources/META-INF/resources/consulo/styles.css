@@ -369,3 +369,10 @@ vaadin-context-menu-item[disabled]
   opacity: 1;
   color: var(--consulo-label-disabled-foreground);
 }
+
+/* a toolbar button standing for a selected toggle action - the awt toolbar paints the same fill behind the
+   icon, and without it a borderless button gives the state away by nothing at all */
+vaadin-button[theme~="pressed"]
+{
+  background-color: var(--consulo-tool-window-button-selected-background, lightgray);
+}

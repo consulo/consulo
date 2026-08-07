@@ -79,7 +79,7 @@ public class WebContainerStartup implements ContainerStartup {
 
     StartupUtil.initializeLogger();
 
-    Server server = new Server(8080);
+    Server server = new Server(Integer.getInteger("consulo.web.port", 8080));
 
     ServletContextHandler handler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
     handler.setClassLoader(getClass().getClassLoader());

@@ -117,6 +117,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        throw new UnsupportedOperationException();
+    }
+
     public Hyperlink _Components_hyperlink(LocalizeValue text) {
         throw new UnsupportedOperationException();
     }
