@@ -233,7 +233,9 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   
   @Override
   public DocumentContent createClipboardContent(@Nullable Project project, @Nullable DocumentContent referent) {
-    String text = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
+    // the clipboard of a browser is a round trip; this one is called from places which cannot wait, and the
+    // local half is what a diff against "clipboard" almost always means anyway
+    String text = CopyPasteManager.getInstance().getLocalContents().get(DataTransferType.TEXT);
 
     FileType type = referent != null ? referent.getContentType() : null;
     VirtualFile highlightFile = referent != null ? referent.getHighlightFile() : null;

@@ -31,7 +31,6 @@ import consulo.ui.clipboard.DataTransfer;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
 
 /**
@@ -45,8 +44,8 @@ public class PasteAction extends EditorAction {
         @RequiredWriteAction
         public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             TextRange range = null;
-            if (myTransferable != null) {
-                TextRange[] ranges = EditorCopyPasteHelper.getInstance().pasteTransferable(editor, myTransferable);
+            if (myTransfer != null) {
+                TextRange[] ranges = EditorCopyPasteHelper.getInstance().pasteDataTransfer(editor, myTransfer);
                 if (ranges != null && ranges.length == 1) {
                     range = ranges[0];
                 }
@@ -54,8 +53,6 @@ public class PasteAction extends EditorAction {
             editor.putUserData(EditorEx.LAST_PASTED_REGION, range);
         }
     }
-
-    public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
 
     /**
      * The payload of the running paste action. Pinned once when the paste starts, so every provider

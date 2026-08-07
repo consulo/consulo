@@ -21,6 +21,7 @@ import consulo.execution.configuration.EnvironmentVariable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -176,7 +177,19 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
             public void actionPerformed(AnActionEvent e) {
                 removeSelected();
                 stopEditing();
-                String content = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
+
+                UIAccess uiAccess = UIAccess.current();
+                CopyPasteManager.getInstance()
+                    .getContentsAsync(DataTransferType.TEXT)
+                    .whenCompleteAsync((content, throwable) -> {
+                        if (throwable == null) {
+                            pasteVariables(content);
+                        }
+                    }, uiAccess);
+            }
+
+            @RequiredUIAccess
+            private void pasteVariables(@Nullable String content) {
                 if (content == null || !content.contains("=")) {
                     return;
                 }

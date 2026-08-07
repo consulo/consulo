@@ -1347,12 +1347,13 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         @Override
         @RequiredUIAccess
         public void execute(ConsoleViewImpl consoleView, DataContext context) {
-            String text = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
-            if (text == null) {
-                return;
-            }
-            Editor editor = consoleView.myEditor;
-            consoleView.type(editor, text);
+            UIAccess uiAccess = UIAccess.current();
+            CopyPasteManager.getInstance().getContentsAsync(DataTransferType.TEXT).whenCompleteAsync((text, throwable) -> {
+                if (throwable != null || text == null) {
+                    return;
+                }
+                consoleView.type(consoleView.myEditor, text);
+            }, uiAccess);
         }
     }
 

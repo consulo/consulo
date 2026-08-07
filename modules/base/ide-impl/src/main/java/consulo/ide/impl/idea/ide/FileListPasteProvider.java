@@ -25,6 +25,8 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.language.editor.FilePasteProvider;
 import consulo.ui.UIAccess;
+import org.jspecify.annotations.Nullable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.ClipboardFeature;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.CopyPasteManager;
@@ -41,12 +43,24 @@ import java.util.List;
 @ExtensionImpl(id = "fileList")
 public class FileListPasteProvider implements FilePasteProvider {
   @Override
+  @RequiredUIAccess
   public void performPaste(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     IdeView ideView = dataContext.getData(IdeView.KEY);
     if (project == null || ideView == null) return;
 
-    List<File> fileList = CopyPasteManager.getInstance().getContentsNow(DataTransferType.FILE_LIST);
+    UIAccess uiAccess = UIAccess.current();
+    CopyPasteManager.getInstance()
+      .getContentsAsync(DataTransferType.FILE_LIST)
+      .whenCompleteAsync((fileList, throwable) -> {
+        if (throwable == null) {
+          pasteFiles(project, ideView, fileList);
+        }
+      }, uiAccess);
+  }
+
+  @RequiredUIAccess
+  private void pasteFiles(Project project, IdeView ideView, @Nullable List<File> fileList) {
     if (fileList == null) return;
 
     List<PsiElement> elements = new ArrayList<>();

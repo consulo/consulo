@@ -6,6 +6,8 @@ import consulo.application.util.Patches;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 
 import org.jspecify.annotations.Nullable;
@@ -15,20 +17,17 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
   private @Nullable String myCachedClipboardValue;
 
   @Override
+  @RequiredUIAccess
   public void applicationActivated(IdeFrame ideFrame) {
-    Runnable processClipboard = () -> {
-      String clipboard = ClipboardUtil.getTextInClipboard();
-      if (clipboard != null && clipboard.length() < MAX_SIZE && !clipboard.equals(myCachedClipboardValue)) {
-        myCachedClipboardValue = clipboard;
-        Project project = ideFrame.getProject();
-        if (project != null && !project.isDefault()) {
-          T handleValue = canHandle(clipboard);
-          if (handleValue != null) {
-            handle(project, myCachedClipboardValue, handleValue);
+    UIAccess uiAccess = UIAccess.current();
+
+    Runnable processClipboard = () ->
+      ClipboardUtil.getTextInClipboard()
+        .whenCompleteAsync((clipboard, throwable) -> {
+          if (throwable == null) {
+            processClipboard(ideFrame, clipboard);
           }
-        }
-      }
-    };
+        }, uiAccess);
 
     if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS) {
       //IDEA's clipboard is synchronized with the system clipboard on frame activation so we need to postpone clipboard processing
@@ -39,12 +38,34 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
     }
   }
 
+  @RequiredUIAccess
+  private void processClipboard(IdeFrame ideFrame, @Nullable String clipboard) {
+    if (clipboard != null && clipboard.length() < MAX_SIZE && !clipboard.equals(myCachedClipboardValue)) {
+      myCachedClipboardValue = clipboard;
+      Project project = ideFrame.getProject();
+      if (project != null && !project.isDefault()) {
+        T handleValue = canHandle(clipboard);
+        if (handleValue != null) {
+          handle(project, myCachedClipboardValue, handleValue);
+        }
+      }
+    }
+  }
+
   protected abstract void handle(Project project, String value, T handleValue);
 
   @Override
+  @RequiredUIAccess
   public void applicationDeactivated(IdeFrame ideFrame) {
     if (!ApplicationManager.getApplication().isDisposed()) {
-      myCachedClipboardValue = ClipboardUtil.getTextInClipboard();
+      UIAccess uiAccess = UIAccess.current();
+
+      ClipboardUtil.getTextInClipboard()
+        .whenCompleteAsync((value, throwable) -> {
+          if (throwable == null) {
+            myCachedClipboardValue = value;
+          }
+        }, uiAccess);
     }
   }
 

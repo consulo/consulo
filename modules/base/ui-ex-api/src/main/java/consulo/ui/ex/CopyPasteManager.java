@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.clipboard.Clipboard;
-import consulo.ui.clipboard.ClipboardFeature;
+import consulo.ui.clipboard.ClipboardAccessException;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -30,7 +29,6 @@ import consulo.ui.clipboard.DataTransfer;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 /**
@@ -84,26 +82,20 @@ public interface CopyPasteManager {
     }
 
     /**
-     * The best synchronous answer a frontend can give: the local payload when this process wrote last,
-     * otherwise - only where a read needs no gesture or permission - a bounded wait on the system
-     * clipboard. Where the wait could never complete it is not attempted, so this never deadlocks a
-     * session thread; it answers {@code null} instead.
+     * One representation of what would be pasted. The local payload answers at once when this process wrote
+     * last, otherwise the system clipboard is read - which is a round trip on a frontend where the clipboard
+     * lives in the browser, so the answer is a future rather than a value.
+     * <p>
+     * Completes with {@code null} when the clipboard holds nothing of that type, and exceptionally with
+     * {@link ClipboardAccessException} when the frontend was refused.
      */
     @RequiredUIAccess
-    default @Nullable <T> T getContentsNow(DataTransferType<T> type) {
+    default <T> CompletableFuture<@Nullable T> getContentsAsync(DataTransferType<T> type) {
         T local = getLocalContents().get(type);
         if (local != null) {
-            return local;
+            return CompletableFuture.completedFuture(local);
         }
 
-        Clipboard clipboard = UIAccess.current().getClipboard();
-        if (clipboard.isSupported(ClipboardFeature.UNRESTRICTED_READ)) {
-            try {
-                return getContents().get(1, TimeUnit.SECONDS).get(type);
-            }
-            catch (Exception ignored) {
-            }
-        }
-        return null;
+        return getContents().thenApply(transfer -> transfer.get(type));
     }
 }

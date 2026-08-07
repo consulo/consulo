@@ -16,6 +16,8 @@
 package consulo.web.internal.ui.htmlView;
 
 import com.vaadin.flow.component.html.IFrame;
+import consulo.logging.Logger;
+import consulo.util.io.StreamUtil;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.UIAccess;
@@ -23,7 +25,10 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -34,6 +39,8 @@ import java.util.concurrent.CompletableFuture;
  * @since 2026-08-07
  */
 public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaadin> implements HtmlView {
+    private static final Logger LOG = Logger.getInstance(WebHtmlViewImpl.class);
+
     private static final String SCROLL_TO_SRC_OFFSET_SCRIPT = """
         var doc = this.contentDocument;
         if (doc) {
@@ -103,11 +110,23 @@ public class WebHtmlViewImpl extends VaadinComponentDelegate<WebHtmlViewImpl.Vaa
         uiAccess.give(() -> getVaadinComponent().getElement().executeJs(SCROLL_TO_SRC_OFFSET_SCRIPT, offset));
     }
 
+    /**
+     * Every stylesheet is inlined rather than linked. The urls a caller hands over point into the running
+     * platform - a {@code jar:file:} inside a plugin - and a browser has no idea what those are, so the frame
+     * has to be given the text itself.
+     */
     private static String buildDocument(RenderData renderData) {
         StringBuilder head = new StringBuilder();
         for (URL css : renderData.externalCsses()) {
-            if (css != null) {
-                head.append("<link rel=\"stylesheet\" href=\"").append(css).append("\" />\n");
+            if (css == null) {
+                continue;
+            }
+
+            try (InputStream stream = css.openStream()) {
+                head.append("<style>\n").append(StreamUtil.readText(stream, StandardCharsets.UTF_8)).append("\n</style>\n");
+            }
+            catch (IOException e) {
+                LOG.warn("Failed to read the stylesheet " + css + " of an html view", e);
             }
         }
 

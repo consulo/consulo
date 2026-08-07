@@ -22,6 +22,7 @@ import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.CopyPasteManager;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 public class ClipboardUtil {
@@ -49,7 +50,7 @@ public class ClipboardUtil {
   }
 
   @RequiredUIAccess
-  public static @Nullable String getTextInClipboard() {
-    return CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
+  public static CompletableFuture<@Nullable String> getTextInClipboard() {
+    return CopyPasteManager.getInstance().getContentsAsync(DataTransferType.TEXT);
   }
 }

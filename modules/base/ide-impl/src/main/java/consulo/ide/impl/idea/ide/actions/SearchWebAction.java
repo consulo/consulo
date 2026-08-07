@@ -11,6 +11,7 @@ import consulo.util.io.URLUtil;
 import consulo.webBrowser.BrowserUtil;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -41,11 +42,14 @@ public class SearchWebAction extends AnAction implements DumbAware, AnActionWith
     public void actionPerformed(AnActionEvent e) {
         CopyProvider provider = e.getRequiredData(CopyProvider.KEY);
         provider.performCopy(e.getDataContext());
-        String content = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
-        if (StringUtil.isNotEmpty(content)) {
-            WebSearchEngine engine = myWebSearchOptions.getEngine();
-            BrowserUtil.browse(BundleBase.format(engine.getUrlTemplate(), URLUtil.encodeURIComponent(content)));
-        }
+
+        UIAccess uiAccess = UIAccess.current();
+        CopyPasteManager.getInstance().getContentsAsync(DataTransferType.TEXT).whenCompleteAsync((content, throwable) -> {
+            if (throwable == null && StringUtil.isNotEmpty(content)) {
+                WebSearchEngine engine = myWebSearchOptions.getEngine();
+                BrowserUtil.browse(BundleBase.format(engine.getUrlTemplate(), URLUtil.encodeURIComponent(content)));
+            }
+        }, uiAccess);
     }
 
     @Override

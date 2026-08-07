@@ -31,6 +31,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.Pair;
@@ -39,10 +40,10 @@ import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static consulo.codeEditor.util.EditorUtil.getTabSize;
@@ -397,23 +398,25 @@ public class EditorImplUtil {
     }
 
     /**
-     * A paste which follows a copy made in this process is answered from the local half of the payload, so
-     * it stays synchronous - which is what lets the paste handlers keep running inside a write action. Only
-     * a payload put there by another application has to be awaited, and that is done before the paste.
+     * A paste which follows a copy made in this process is answered from the local half of the payload and the
+     * future is already complete. Only a payload put there by another application costs a read, which on a
+     * frontend holding its clipboard in a browser is a round trip - so the paste is arranged around this
+     * completing rather than around it returning.
      */
     @RequiredUIAccess
-    public static @Nullable Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
+    public static CompletableFuture<@Nullable DataTransfer> getContentsToPasteToEditor(@Nullable Supplier<DataTransfer> producer) {
         if (producer != null) {
-            return producer.get();
+            return CompletableFuture.completedFuture(producer.get());
         }
 
         CopyPasteManager manager = CopyPasteManager.getInstance();
-        Transferable local = manager.getLocalContents().get(TRANSFERABLE);
-        if (local != null) {
-            return local;
+        DataTransfer local = manager.getLocalContents();
+        if (!local.isEmpty()) {
+            return CompletableFuture.completedFuture(local);
         }
 
-        String text = manager.getContentsNow(DataTransferType.TEXT);
-        return text == null ? null : new StringSelection(text);
+        // whatever another application left there. it is handed on as the platform payload rather than wrapped
+        // into an awt transferable, which is what lets a frontend without a toolkit paste at all
+        return manager.getContents().thenApply(transfer -> transfer.isEmpty() ? null : transfer);
     }
 }

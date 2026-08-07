@@ -22,6 +22,7 @@ import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.impl.clipboard.BaseClipboard;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,12 +43,40 @@ public class WebClipboardImpl extends BaseClipboard {
         myUI = ui;
 
         ui.getElement()
-            .addEventListener("paste", event -> myPasted = DataTransfer.builder()
-                .put(DataTransferType.TEXT, event.getEventData().path(PASTED_TEXT).asString(""))
-                .put(DataTransferType.HTML, event.getEventData().path(PASTED_HTML).asString(""))
-                .build())
+            .addEventListener("paste", event -> stagePasted(
+                event.getEventData().path(PASTED_TEXT).asString(""),
+                event.getEventData().path(PASTED_HTML).asString("")
+            ))
             .addEventData(PASTED_TEXT)
             .addEventData(PASTED_HTML);
+    }
+
+    /**
+     * What the browser handed over with a paste gesture - the only payload it gives a page without a permission
+     * prompt, and the moment the session learns what the system clipboard holds.
+     */
+    public void stagePasted(String text, String html) {
+        DataTransfer.Builder builder = DataTransfer.builder();
+        if (!text.isEmpty()) {
+            builder.put(DataTransferType.TEXT, text);
+        }
+        if (!html.isEmpty()) {
+            builder.put(DataTransferType.HTML, html);
+        }
+
+        DataTransfer pasted = builder.build();
+        if (pasted.isEmpty()) {
+            return;
+        }
+
+        myPasted = pasted;
+
+        // the gesture is the one moment this session learns what the system clipboard really holds. if that is
+        // not what this process copied last, another application has taken it and the rich half we kept no
+        // longer describes what would be pasted
+        if (!Objects.equals(getLocalContents().get(DataTransferType.TEXT), text)) {
+            fireForeignChange();
+        }
     }
 
     @Override
@@ -55,14 +84,20 @@ public class WebClipboardImpl extends BaseClipboard {
         return false;
     }
 
+    /**
+     * What a paste gesture handed over is preferred over asking the browser. It is the same clipboard and it is
+     * already here, so asking costs a round trip which has to come back before anything can be pasted - and the
+     * answer to that request needs a permission the gesture did not.
+     */
     @Override
     protected CompletableFuture<DataTransfer> readNative() {
+        DataTransfer pasted = myPasted;
+        if (!pasted.isEmpty()) {
+            return CompletableFuture.completedFuture(pasted);
+        }
+
         return execute("return navigator.clipboard.readText();", String.class)
-            .thenApply(text -> text == null ? DataTransfer.EMPTY : DataTransfer.of(text))
-            .exceptionallyCompose(e -> {
-                DataTransfer pasted = myPasted;
-                return pasted.isEmpty() ? CompletableFuture.failedFuture(e) : CompletableFuture.completedFuture(pasted);
-            });
+            .thenApply(text -> text == null || text.isEmpty() ? DataTransfer.EMPTY : DataTransfer.of(text));
     }
 
     @Override

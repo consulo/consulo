@@ -20,11 +20,14 @@ import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
+import consulo.web.internal.ui.clipboard.WebClipboardImpl;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -79,8 +82,13 @@ public final class WebShortcutDispatcher {
         // reloaded browser is a new dom holding none of what was pushed into the old one, and a set which is never
         // sent again leaves the page taking no key of the keymap at all
         String combos = String.join("\n", shortcuts.keySet());
-        element.addAttachListener(event -> pushShortcuts(element, combos));
+        String clipboardCombos = clipboardCombos(shortcuts);
+        element.addAttachListener(event -> {
+            pushShortcuts(element, combos);
+            pushClipboardShortcuts(element, clipboardCombos);
+        });
         pushShortcuts(element, combos);
+        pushClipboardShortcuts(element, clipboardCombos);
 
         // one stroke finishes before the next is offered. each perform is asynchronous, and two keys arriving
         // back to back would otherwise run their actions concurrently and complete in either order - a paste
@@ -98,11 +106,21 @@ public final class WebShortcutDispatcher {
                 return;
             }
 
+            // a paste carries what the browser handed the page inside the gesture. it is staged before the action
+            // runs, which is the only ordering that works - the paste handler reads the clipboard synchronously
+            stagePasted(
+                event.getEventData().path("event.detail.pasteText").asString(""),
+                event.getEventData().path("event.detail.pasteHtml").asString("")
+            );
+
             List<String> actionIds = shortcuts.getOrDefault(combo, List.of());
             strokeQueue.updateAndGet(previous -> previous
                 .exceptionally(throwable -> null)
                 .thenCompose(ignored -> perform(actionIds, root)));
-        }).addEventData("event.detail.combo");
+        })
+            .addEventData("event.detail.combo")
+            .addEventData("event.detail.pasteText")
+            .addEventData("event.detail.pasteHtml");
     }
 
     private static CompletableFuture<Void> perform(List<String> actionIds, Component root) {
@@ -171,6 +189,42 @@ public final class WebShortcutDispatcher {
 
     private static void pushShortcuts(Element element, String combos) {
         element.executeJs("window.consuloShortcuts.setShortcuts(this, $0)", combos);
+    }
+
+    private static void pushClipboardShortcuts(Element element, String combos) {
+        element.executeJs("window.consuloShortcuts.setClipboardShortcuts(this, $0)", combos);
+    }
+
+    /**
+     * The strokes whose default action in the browser is what hands the page the system clipboard. Only paste for
+     * now - copy and cut need the payload to be on the client before the gesture, which is a separate piece.
+     */
+    private static String clipboardCombos(Map<String, List<String>> shortcuts) {
+        StringBuilder result = new StringBuilder();
+        for (Map.Entry<String, List<String>> entry : shortcuts.entrySet()) {
+            if (entry.getValue().contains(IdeActions.ACTION_PASTE)) {
+                if (!result.isEmpty()) {
+                    result.append('\n');
+                }
+                result.append(entry.getKey()).append("=paste");
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * Hands the payload of a paste gesture to the clipboard of this session, so the read which follows is answered
+     * without asking the browser - a request of the server arrives outside the activation and is refused.
+     */
+    @RequiredUIAccess
+    private static void stagePasted(String text, String html) {
+        if (text.isEmpty() && html.isEmpty()) {
+            return;
+        }
+
+        if (UIAccess.current().getClipboard() instanceof WebClipboardImpl clipboard) {
+            clipboard.stagePasted(text, html);
+        }
     }
 
     private static Map<String, List<String>> collectShortcuts() {
