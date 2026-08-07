@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Words.html#Words">backward-kill-word</a> command.
  * <p/>
  * Generally, it removes text from the previous word start up to the current cursor position and puts
- * it to the {@link KillRingTransferable kill ring}.
+ * it to the {@link consulo.codeEditor.internal.KillRingData kill ring}.
  * <p/>
  * Thread-safe.
  *

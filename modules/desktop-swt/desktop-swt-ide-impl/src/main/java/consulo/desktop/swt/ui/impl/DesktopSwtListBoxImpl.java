@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.TransferHandler;
 import consulo.ui.ListBox;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,6 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2021-04-29
  */
 public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> implements ListBox<E> {
+  private @Nullable TransferHandler myTransferHandler;
     private final FlatDataModel<E> myModel;
 
     public DesktopSwtListBoxImpl(FlatDataModel<E> model) {
@@ -89,4 +91,14 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
     @Override
     public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
     }
+
+  @Override
+  public void setTransferHandler(@Nullable TransferHandler handler) {
+      myTransferHandler = handler;
+  }
+
+  @Override
+  public @Nullable TransferHandler getTransferHandler() {
+      return myTransferHandler;
+  }
 }

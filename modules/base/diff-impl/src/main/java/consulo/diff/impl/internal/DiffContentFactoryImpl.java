@@ -38,7 +38,8 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.platform.LineSeparator;
 import consulo.project.Project;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
@@ -53,7 +54,6 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import java.awt.datatransfer.DataFlavor;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -233,7 +233,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   
   @Override
   public DocumentContent createClipboardContent(@Nullable Project project, @Nullable DocumentContent referent) {
-    String text = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+    String text = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
 
     FileType type = referent != null ? referent.getContentType() : null;
     VirtualFile highlightFile = referent != null ? referent.getHighlightFile() : null;

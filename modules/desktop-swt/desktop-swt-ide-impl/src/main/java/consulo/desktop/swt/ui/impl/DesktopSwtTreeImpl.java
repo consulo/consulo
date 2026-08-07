@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
@@ -39,6 +40,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 29/04/2021
  */
 public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.widgets.Tree> implements Tree<E> {
+  private @Nullable TransferHandler myTransferHandler;
   private final E myRootValue;
   private final TreeModel<E> myModel;
 
@@ -308,5 +310,15 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
 
     build(myComponent, myRootValue);
     return CompletableFuture.completedFuture(null);
+  }
+
+  @Override
+  public void setTransferHandler(@Nullable TransferHandler handler) {
+      myTransferHandler = handler;
+  }
+
+  @Override
+  public @Nullable TransferHandler getTransferHandler() {
+      return myTransferHandler;
   }
 }

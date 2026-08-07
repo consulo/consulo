@@ -28,7 +28,7 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import org.jspecify.annotations.Nullable;
 

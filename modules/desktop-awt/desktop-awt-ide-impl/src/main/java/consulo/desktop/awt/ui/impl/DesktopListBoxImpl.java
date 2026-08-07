@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.TransferHandler;
+import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferHandlerAdapter;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
@@ -37,6 +39,7 @@ import java.util.function.ToIntFunction;
  * @since 2017-09-12
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
+    private @Nullable TransferHandler myTransferHandler;
     class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
         MyJBList(javax.swing.ListModel<T> dataModel) {
             super(dataModel);
@@ -157,5 +160,16 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     @Override
     public E getValue() {
         return toAWTComponent().getSelectedValue();
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler handler) {
+        myTransferHandler = handler;
+        toAWTComponent().setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter(this, handler));
+    }
+
+    @Override
+    public @Nullable TransferHandler getTransferHandler() {
+        return myTransferHandler;
     }
 }

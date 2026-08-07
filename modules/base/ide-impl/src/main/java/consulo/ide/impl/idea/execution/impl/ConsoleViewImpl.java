@@ -57,7 +57,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.UIUtil;
@@ -76,7 +77,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -1347,7 +1347,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         @Override
         @RequiredUIAccess
         public void execute(ConsoleViewImpl consoleView, DataContext context) {
-            String text = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+            String text = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
             if (text == null) {
                 return;
             }

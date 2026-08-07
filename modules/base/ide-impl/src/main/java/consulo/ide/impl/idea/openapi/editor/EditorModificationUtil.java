@@ -22,7 +22,7 @@ import consulo.document.FileDocumentManager;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
@@ -103,17 +103,7 @@ public class EditorModificationUtil {
   }
 
   private static Transferable getTransferable(Supplier<Transferable> producer) {
-    Transferable content = null;
-    if (producer != null) {
-      content = producer.get();
-    }
-    else {
-      CopyPasteManager manager = CopyPasteManager.getInstance();
-      if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
-        content = manager.getContents();
-      }
-    }
-    return content;
+    return EditorImplUtil.getContentsToPasteToEditor(producer);
   }
 
   /**

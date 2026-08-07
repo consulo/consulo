@@ -30,14 +30,16 @@ import consulo.document.impl.TextRangeInterval;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +53,12 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
  */
 public class EditorImplUtil {
     private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
+
+    /**
+     * The rich half of an editor copy, kept in this process next to the plain text every other application
+     * sees. Declared here rather than in the editor api because it still carries an awt payload.
+     */
+    public static final DataTransferType<Transferable> TRANSFERABLE = DataTransferType.create("consulo.editor.transferable");
 
     public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
@@ -388,13 +396,24 @@ public class EditorImplUtil {
             FontInfo.getFontRenderContext(editor.getContentComponent()));
     }
 
+    /**
+     * A paste which follows a copy made in this process is answered from the local half of the payload, so
+     * it stays synchronous - which is what lets the paste handlers keep running inside a write action. Only
+     * a payload put there by another application has to be awaited, and that is done before the paste.
+     */
+    @RequiredUIAccess
     public static @Nullable Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
-        if (producer == null) {
-            CopyPasteManager manager = CopyPasteManager.getInstance();
-            return manager.areDataFlavorsAvailable(DataFlavor.stringFlavor) ? manager.getContents() : null;
-        }
-        else {
+        if (producer != null) {
             return producer.get();
         }
+
+        CopyPasteManager manager = CopyPasteManager.getInstance();
+        Transferable local = manager.getLocalContents().get(TRANSFERABLE);
+        if (local != null) {
+            return local;
+        }
+
+        String text = manager.getContentsNow(DataTransferType.TEXT);
+        return text == null ? null : new StringSelection(text);
     }
 }

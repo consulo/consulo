@@ -15,13 +15,13 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.WebSearchEngine;
 import consulo.webBrowser.WebSearchOptions;
 import jakarta.inject.Inject;
 
-import java.awt.datatransfer.DataFlavor;
 
 @ActionImpl(id = "$SearchWeb")
 public class SearchWebAction extends AnAction implements DumbAware, AnActionWithAsyncUpdate {
@@ -41,7 +41,7 @@ public class SearchWebAction extends AnAction implements DumbAware, AnActionWith
     public void actionPerformed(AnActionEvent e) {
         CopyProvider provider = e.getRequiredData(CopyProvider.KEY);
         provider.performCopy(e.getDataContext());
-        String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+        String content = CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
         if (StringUtil.isNotEmpty(content)) {
             WebSearchEngine engine = myWebSearchOptions.getEngine();
             BrowserUtil.browse(BundleBase.format(engine.getUrlTemplate(), URLUtil.encodeURIComponent(content)));

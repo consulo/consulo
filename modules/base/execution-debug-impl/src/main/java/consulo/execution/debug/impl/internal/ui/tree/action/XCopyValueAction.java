@@ -22,10 +22,12 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.impl.internal.ui.tree.node.WatchNode;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.collection.ContainerUtil;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 /**
@@ -33,6 +35,8 @@ import java.util.List;
  */
 @ActionImpl(id = XDebuggerActions.COPY_VALUE)
 public class XCopyValueAction extends XFetchValueActionBase {
+    public static final DataTransferType<List<XExpression>> WATCH_EXPRESSIONS = DataTransferType.create("consulo.debugger.watchExpressions");
+
     public XCopyValueAction() {
         super(XDebuggerLocalize.actionCopyValueText(), XDebuggerLocalize.actionCopyValueDescription());
     }
@@ -44,12 +48,13 @@ public class XCopyValueAction extends XFetchValueActionBase {
         }
         List<? extends WatchNode> watchNodes = XWatchesTreeActionBase.getSelectedNodes(tree, WatchNode.class);
         if (watchNodes.isEmpty()) {
-            CopyPasteManager.getInstance().setContents(new StringSelection(value));
+            CopyPasteManager.getInstance().setText(value);
         }
         else {
-            CopyPasteManager.getInstance().setContents(
-                new XWatchTransferable(value, ContainerUtil.map(watchNodes, WatchNode::getExpression))
-            );
+            CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+                .put(DataTransferType.TEXT, value)
+                .put(WATCH_EXPRESSIONS, List.copyOf(ContainerUtil.map(watchNodes, WatchNode::getExpression)))
+                .build());
         }
     }
 }

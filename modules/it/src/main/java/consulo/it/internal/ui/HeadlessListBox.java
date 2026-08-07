@@ -15,6 +15,7 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.TransferHandler;
 import consulo.ui.ListBox;
 import consulo.ui.TextItemRender;
 import consulo.ui.ComponentItemRender;
@@ -29,6 +30,7 @@ import consulo.ui.model.FlatDataModel;
  * @author VISTALL
  */
 public class HeadlessListBox<E> extends HeadlessValueComponentBase<E> implements ListBox<E> {
+    private @Nullable TransferHandler myTransferHandler;
     private final FlatDataModel<E> myModel;
 
     public HeadlessListBox(FlatDataModel<E> model) {
@@ -63,5 +65,15 @@ public class HeadlessListBox<E> extends HeadlessValueComponentBase<E> implements
 
     @Override
     public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler getTransferHandler() {
+        return myTransferHandler;
     }
 }

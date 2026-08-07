@@ -28,7 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 /**
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Kill-Commands.html">kill-ring-save</a> command.
  * <p/>
- * Generally, it puts currently selected text to the {@link KillRingTransferable kill ring}.
+ * Generally, it puts currently selected text to the {@link consulo.codeEditor.internal.KillRingData kill ring}.
  * <p/>
  * Thread-safe.
  *

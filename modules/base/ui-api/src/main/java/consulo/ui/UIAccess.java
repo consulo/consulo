@@ -17,11 +17,13 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.Clipboard;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -31,7 +33,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2016-06-11
  */
-public interface UIAccess extends Executor {
+public interface UIAccess extends Executor, UserDataHolder {
     Key<UIAccess> KEY = Key.of(UIAccess.class);
 
     /**
@@ -71,6 +73,8 @@ public interface UIAccess extends Executor {
     static void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         UIInternal.get().addModalityStateListener(listener, parentDisposable);
     }
+
+    Clipboard getClipboard();
 
     @RequiredUIAccess
     default int getEventCount() {

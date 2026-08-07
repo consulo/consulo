@@ -25,7 +25,7 @@ import java.util.Collection;
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E> {
+public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler {
     @SafeVarargs
     static <E> ListBox<E> create(E... elements) {
         return UIInternal.get()._Components_listBox(FlatDataModel.of(Arrays.asList(elements)));

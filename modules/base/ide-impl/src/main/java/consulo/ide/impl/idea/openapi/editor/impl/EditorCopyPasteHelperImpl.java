@@ -23,7 +23,10 @@ import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.document.util.TextRange;
 import consulo.application.util.LineTokenizer;
 import jakarta.inject.Singleton;
@@ -56,7 +59,10 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
     s = TextBlockTransferable.convertLineSeparators(s, "\n", extraData);
     Transferable contents = editor.getCaretModel().supportsMultipleCarets() ? new TextBlockTransferable(s, extraData, null) : new StringSelection(s);
-    CopyPasteManager.getInstance().setContents(contents);
+    CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+      .put(DataTransferType.TEXT, s)
+      .put(EditorImplUtil.TRANSFERABLE, contents)
+      .build());
   }
 
   public static String getSelectedTextForClipboard(Editor editor, Collection<TextBlockTransferableData> extraDataCollector) {
@@ -80,15 +86,10 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   @Override
+  @RequiredUIAccess
   public TextRange @Nullable [] pasteFromClipboard(Editor editor) {
-    CopyPasteManager manager = CopyPasteManager.getInstance();
-    if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
-      Transferable clipboardContents = manager.getContents();
-      if (clipboardContents != null) {
-        return pasteTransferable(editor, clipboardContents);
-      }
-    }
-    return null;
+    Transferable contents = EditorImplUtil.getContentsToPasteToEditor(null);
+    return contents == null ? null : pasteTransferable(editor, contents);
   }
 
   @Override

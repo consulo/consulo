@@ -18,7 +18,8 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CustomPasteProvider;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -94,20 +95,12 @@ public class PasteReferenceProvider implements CustomPasteProvider {
     }
 
     private static @Nullable String getCopiedFqn(DataContext context) {
-        Supplier<Transferable> producer = context.getData(PasteAction.TRANSFERABLE_PROVIDER);
-
+        Supplier<DataTransfer> producer = context.getData(PasteAction.DATA_TRANSFER_PROVIDER);
         if (producer != null) {
-            Transferable transferable = producer.get();
-            if (transferable != null) {
-                try {
-                    return (String)transferable.getTransferData(CopyReferenceFQNTransferable.DATA_FLAVOR);
-                }
-                catch (Exception ignored) {
-                }
-            }
-            return null;
+            DataTransfer transfer = producer.get();
+            return transfer == null ? null : transfer.get(CopyReferenceFQNTransferable.FQN);
         }
 
-        return CopyPasteManager.getInstance().getContents(CopyReferenceFQNTransferable.DATA_FLAVOR);
+        return CopyPasteManager.getInstance().getLocalContents().get(CopyReferenceFQNTransferable.FQN);
     }
 }

@@ -28,7 +28,7 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
 import org.jspecify.annotations.Nullable;
 

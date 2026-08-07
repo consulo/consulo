@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.ui.ComponentItemRender;
@@ -33,6 +34,7 @@ import org.jspecify.annotations.Nullable;
  */
 @SuppressWarnings("unchecked")
 public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin> implements ListBox<E> {
+    private @Nullable TransferHandler myTransferHandler;
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
     // on css only changes
     @StyleSheet("/list/webListBox.css")
@@ -83,5 +85,15 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler getTransferHandler() {
+        return myTransferHandler;
     }
 }

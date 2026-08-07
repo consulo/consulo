@@ -38,7 +38,7 @@ import consulo.project.ui.view.tree.PackageElementNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.HighlightedRegion;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.usage.UsageTreeColors;

@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -53,6 +54,8 @@ import java.util.concurrent.ExecutorService;
 @SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
     private static final List CANCELED_RESULT = new ArrayList<>();
+
+    private @Nullable TransferHandler myTransferHandler;
 
     /**
      * Levels of rows an expand all opens, counting the top level ones.
@@ -745,5 +748,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
 
         getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler getTransferHandler() {
+        return myTransferHandler;
     }
 }

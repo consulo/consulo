@@ -35,6 +35,8 @@ import consulo.web.internal.ui.action.WebActionMenuExpander;
 import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -80,6 +82,12 @@ public final class WebShortcutDispatcher {
         element.addAttachListener(event -> pushShortcuts(element, combos));
         pushShortcuts(element, combos);
 
+        // one stroke finishes before the next is offered. each perform is asynchronous, and two keys arriving
+        // back to back would otherwise run their actions concurrently and complete in either order - a paste
+        // overtaken by the caret move pressed before it pastes into the old selection. the awt frontend gets
+        // this ordering for free from the single event queue
+        AtomicReference<CompletableFuture<?>> strokeQueue = new AtomicReference<>(CompletableFuture.completedFuture(null));
+
         element.addEventListener("consulo-shortcut", event -> {
             String combo = event.getEventData().path("event.detail.combo").asString("");
 
@@ -90,11 +98,14 @@ public final class WebShortcutDispatcher {
                 return;
             }
 
-            perform(shortcuts.getOrDefault(combo, List.of()), root);
+            List<String> actionIds = shortcuts.getOrDefault(combo, List.of());
+            strokeQueue.updateAndGet(previous -> previous
+                .exceptionally(throwable -> null)
+                .thenCompose(ignored -> perform(actionIds, root)));
         }).addEventData("event.detail.combo");
     }
 
-    private static void perform(List<String> actionIds, Component root) {
+    private static CompletableFuture<Void> perform(List<String> actionIds, Component root) {
         ActionManager actionManager = ActionManager.getInstance();
 
         List<AnAction> actions = new ArrayList<>();
@@ -109,7 +120,7 @@ public final class WebShortcutDispatcher {
         // does, the same way IdeKeyEventDispatcher sorts before it offers the stroke to anything
         actions.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
 
-        performFirstEnabled(actions, 0, root, new MenuItemPresentationFactory());
+        return performFirstEnabled(actions, 0, root, new MenuItemPresentationFactory());
     }
 
     /**
@@ -122,38 +133,40 @@ public final class WebShortcutDispatcher {
      * user wanted never sees it.
      */
     @RequiredUIAccess
-    private static void performFirstEnabled(
+    private static CompletableFuture<Void> performFirstEnabled(
         List<AnAction> actions,
         int index,
         Component root,
         MenuItemPresentationFactory presentationFactory
     ) {
         if (index >= actions.size()) {
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
         AnAction action = actions.get(index);
 
-        WebActionMenuExpander.performActionAsync(
+        return WebActionMenuExpander.performActionAsync(
                 action,
                 WebFocusTracker.createDataContext(root),
                 ActionPlaces.MAIN_MENU,
                 presentationFactory,
                 null
             )
-            .whenComplete((performed, throwable) -> {
+            .handle((performed, throwable) -> {
                 // an action which threw is not an action which said no. passing the stroke on as if it had
                 // declined loses the failure and leaves the key looking dead - the arrow keys moved no caret for
                 // exactly this reason, the thread assert inside the caret model arriving here as a throwable
                 if (throwable != null) {
                     LOG.error("Shortcut action " + ActionManager.getInstance().getId(action) + " failed", throwable);
-                    return;
+                    return CompletableFuture.<Void>completedFuture(null);
                 }
 
                 if (!Boolean.TRUE.equals(performed)) {
-                    performFirstEnabled(actions, index + 1, root, presentationFactory);
+                    return performFirstEnabled(actions, index + 1, root, presentationFactory);
                 }
-            });
+                return CompletableFuture.<Void>completedFuture(null);
+            })
+            .thenCompose(next -> next);
     }
 
     private static void pushShortcuts(Element element, String combos) {

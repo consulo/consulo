@@ -35,7 +35,8 @@ import consulo.execution.ui.console.*;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
@@ -44,7 +45,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 
 /**
  * @author yole
@@ -60,7 +60,7 @@ public class AnalyzeStacktraceUtil {
     }
 
     public static @Nullable String getTextInClipboard() {
-        return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+        return CopyPasteManager.getInstance().getContentsNow(DataTransferType.TEXT);
     }
 
     public interface ConsoleFactory {

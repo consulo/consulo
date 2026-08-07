@@ -35,11 +35,12 @@ import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
-import consulo.execution.debug.impl.internal.ui.tree.action.XWatchTransferable;
+import consulo.execution.debug.impl.internal.ui.tree.action.XCopyValueAction;
 import consulo.execution.debug.impl.internal.ui.tree.node.*;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDEvent;
@@ -107,12 +108,10 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
-                Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
-                if (contents instanceof List) {
-                    for (Object item : ((List) contents)) {
-                        if (item instanceof XExpression) {
-                            addWatchExpression(((XExpression) item), -1, true);
-                        }
+                List<XExpression> expressions = CopyPasteManager.getInstance().getLocalContents().get(XCopyValueAction.WATCH_EXPRESSIONS);
+                if (expressions != null) {
+                    for (XExpression item : expressions) {
+                        addWatchExpression(item, -1, true);
                     }
                 }
             }

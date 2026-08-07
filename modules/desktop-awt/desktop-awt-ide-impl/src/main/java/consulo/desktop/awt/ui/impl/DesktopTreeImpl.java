@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.TransferHandler;
+import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferHandlerAdapter;
 import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
@@ -59,6 +61,7 @@ import java.util.function.Predicate;
  * @since 2021-07-14
  */
 public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.MyTree> implements Tree<E> {
+    private @Nullable TransferHandler myTransferHandler;
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;
 
@@ -512,5 +515,16 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         return toFuture(myStructureTreeModel.promiseVisitor(node).thenAsync(visitor -> TreeUtil.promiseSelect(tree, visitor)));
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler handler) {
+        myTransferHandler = handler;
+        toAWTComponent().setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter(this, handler));
+    }
+
+    @Override
+    public @Nullable TransferHandler getTransferHandler() {
+        return myTransferHandler;
     }
 }

@@ -9,7 +9,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import org.jspecify.annotations.Nullable;
 

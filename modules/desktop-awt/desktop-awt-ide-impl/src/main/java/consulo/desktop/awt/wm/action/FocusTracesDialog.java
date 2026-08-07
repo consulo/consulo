@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.action;
 import consulo.desktop.awt.wm.FocusRequestInfo;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.JBTable;
@@ -29,7 +29,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +101,7 @@ public class FocusTracesDialog extends DialogWrapper {
     return new AbstractAction("&Copy stacktrace") {
       @Override
       public void actionPerformed(ActionEvent e) {
-        CopyPasteManager.getInstance().setContents(new StringSelection(myStacktrace.getText()));
+        CopyPasteManager.getInstance().setText(myStacktrace.getText());
       }
     };
   }

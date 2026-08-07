@@ -20,6 +20,8 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.desktop.swt.ui.impl.clipboard.DesktopSwtClipboardImpl;
+import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
@@ -145,6 +147,11 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
   }
 
   
+  @Override
+  protected Clipboard createClipboard() {
+    return new DesktopSwtClipboardImpl();
+  }
+
   @Override
   protected SingleUIAccessScheduler createScheduler() {
     Application application = Application.get();

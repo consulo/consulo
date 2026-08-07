@@ -31,7 +31,6 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.tree.AbstractTreeStructure;
@@ -68,7 +67,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
     PsiManager.getInstance(project).addPsiTreeChangeListener(createPsiTreeChangeListener(project), this);
     FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);
-    CopyPasteManager.getInstance().addContentChangedListener(new CopyPasteUtil.DefaultCopyPasteListener(getUpdater()), this);
+    CopyPasteUtil.addDefaultListener(this, element -> getUpdater().addSubtreeToUpdateByElement(element));
 
     connection.subscribe(ProblemListener.class, new MyProblemListener());
 

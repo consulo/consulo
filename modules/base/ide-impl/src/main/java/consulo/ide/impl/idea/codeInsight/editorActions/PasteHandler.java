@@ -49,7 +49,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -91,6 +92,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         if (transferable == null) {
             return;
         }
+        DataTransfer pinnedTransfer = producer == null ? CopyPasteManager.getInstance().getLocalContents() : null;
 
         if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) {
             return;
@@ -104,14 +106,13 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         DataContext context = new DataContext() {
             @Override
             public Object getData(Key dataId) {
-                return PasteAction.TRANSFERABLE_PROVIDER == dataId
-                    ? new Supplier<Transferable>() {
-                        @Override
-                        public @Nullable Transferable get() {
-                            return transferable;
-                        }
-                    }
-                    : dataContext.getData(dataId);
+                if (PasteAction.TRANSFERABLE_PROVIDER == dataId) {
+                    return (Supplier<Transferable>) () -> transferable;
+                }
+                if (PasteAction.DATA_TRANSFER_PROVIDER == dataId && pinnedTransfer != null) {
+                    return (Supplier<DataTransfer>) () -> pinnedTransfer;
+                }
+                return dataContext.getData(dataId);
             }
         };
 

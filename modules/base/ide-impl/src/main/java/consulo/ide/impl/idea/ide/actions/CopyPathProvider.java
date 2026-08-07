@@ -33,14 +33,13 @@ import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +61,7 @@ public class CopyPathProvider extends DumbAwareAction implements AnActionWithAsy
 
         List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, customDataContext);
         String copy = getQualifiedName(project, elements, editor, customDataContext);
-        CopyPasteManager.getInstance().setContents(new StringSelection(copy));
+        CopyPasteManager.getInstance().setText(copy);
 
         CopyReferenceUtil.highlight(editor, project, elements);
     }

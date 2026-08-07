@@ -27,6 +27,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
@@ -55,6 +56,13 @@ public class PasteAction extends EditorAction {
     }
 
     public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
+
+    /**
+     * The payload of the running paste action. Pinned once when the paste starts, so every provider
+     * taking part in the same invocation acts on the same payload rather than on whatever the clipboard
+     * holds by the time it asks.
+     */
+    public static final Key<Supplier<DataTransfer>> DATA_TRANSFER_PROVIDER = Key.create("PasteDataTransferProvider");
 
     public PasteAction() {
         super(CodeEditorLocalize.actionPasteText(), new Handler());
