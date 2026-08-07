@@ -28,16 +28,16 @@ import consulo.ui.clipboard.DataTransfer;
  * @since 2026-08-07
  */
 public final class TransferHandlerCopyProvider implements CopyProvider {
-    private final HasTransferHandler myComponent;
+    private final HasTransferHandler<?> myComponent;
 
-    public TransferHandlerCopyProvider(HasTransferHandler component) {
+    public TransferHandlerCopyProvider(HasTransferHandler<?> component) {
         myComponent = component;
     }
 
     @Override
     @RequiredUIAccess
     public void performCopy(DataContext dataContext) {
-        TransferHandler handler = myComponent.getTransferHandler();
+        TransferHandler<?> handler = myComponent.getTransferHandler();
         DataTransfer transfer = handler == null ? null : handler.createTransfer(myComponent);
         if (transfer != null && !transfer.isEmpty()) {
             CopyPasteManager.getInstance().setContents(transfer);

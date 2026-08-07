@@ -15,10 +15,13 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dnd.GridDropLocation;
+import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataCommunicatorAccess;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
@@ -32,6 +35,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
@@ -55,7 +59,7 @@ import java.util.concurrent.ExecutorService;
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
     private static final List CANCELED_RESULT = new ArrayList<>();
 
-    private @Nullable TransferHandler myTransferHandler;
+    private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
 
     /**
      * Levels of rows an expand all opens, counting the top level ones.
@@ -80,6 +84,47 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
         private WebTreeNodeImpl<NODE> myRootNode;
         private TreeModel<NODE> myModel;
+
+        private List<TreeNode<NODE>> myDraggedItems = List.of();
+        private DataTransfer myDragTransfer = DataTransfer.EMPTY;
+        private boolean myDragAndDropBound;
+
+        /**
+         * The toolkit tells the browser what may be dropped where, and only reports a drop that got
+         * past it, so the check pass the handler is owed is run here right before the drop itself.
+         */
+        private void bindDragAndDrop(DragAndDropTransferHandler<TreeNode<NODE>> handler) {
+            if (myDragAndDropBound) {
+                return;
+            }
+            myDragAndDropBound = true;
+
+            addDragStartListener(event -> {
+                myDraggedItems = new ArrayList<>(event.getDraggedItems());
+                DataTransfer transfer = handler.createDragTransfer(WebTreeImpl.this, myDraggedItems, true);
+                myDragTransfer = transfer == null ? DataTransfer.EMPTY : transfer;
+            });
+
+            addDragEndListener(event -> {
+                myDraggedItems = List.of();
+                myDragTransfer = DataTransfer.EMPTY;
+            });
+
+            addDropListener(event -> {
+                WebTreeNodeImpl<NODE> target = event.getDropTargetItem().orElse(null);
+                DragAndDropTransferHandler.DropPosition position = positionOf(event.getDropLocation());
+                if (target == null || position == null) {
+                    return;
+                }
+
+                DropContextImpl context = new DropContextImpl(target, position, myDragTransfer, myDraggedItems, true);
+                if (!handler.drop(WebTreeImpl.this, context)) {
+                    return;
+                }
+
+                handler.drop(WebTreeImpl.this, context.toPerforming());
+            });
+        }
 
         public Vaadin() {
             setAllRowsVisible(true);
@@ -750,13 +795,86 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
     }
 
-    @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
-        myTransferHandler = handler;
+    /**
+     * A drop on no row at all is refused rather than aimed at the root, so nothing lands somewhere
+     * the user did not point at.
+     */
+    private static DragAndDropTransferHandler.@Nullable DropPosition positionOf(GridDropLocation location) {
+        return switch (location) {
+            case ON_TOP -> DragAndDropTransferHandler.DropPosition.INTO;
+            case ABOVE -> DragAndDropTransferHandler.DropPosition.ABOVE;
+            case BELOW -> DragAndDropTransferHandler.DropPosition.BELOW;
+            case EMPTY -> null;
+        };
+    }
+
+    private class DropContextImpl implements DragAndDropTransferHandler.DropContext<TreeNode<NODE>> {
+        private final TreeNode<NODE> myTarget;
+        private final DragAndDropTransferHandler.DropPosition myPosition;
+        private final DataTransfer myTransfer;
+        private final List<TreeNode<NODE>> myItems;
+        private final boolean myCheckOnly;
+
+        private DropContextImpl(TreeNode<NODE> target,
+                                DragAndDropTransferHandler.DropPosition position,
+                                DataTransfer transfer,
+                                List<TreeNode<NODE>> items,
+                                boolean checkOnly) {
+            myTarget = target;
+            myPosition = position;
+            myTransfer = transfer;
+            myItems = items;
+            myCheckOnly = checkOnly;
+        }
+
+        private DropContextImpl toPerforming() {
+            return new DropContextImpl(myTarget, myPosition, myTransfer, myItems, false);
+        }
+
+        @Override
+        public TreeNode<NODE> getTarget() {
+            return myTarget;
+        }
+
+        @Override
+        public DragAndDropTransferHandler.DropPosition getPosition() {
+            return myPosition;
+        }
+
+        @Override
+        public boolean isCheckOnly() {
+            return myCheckOnly;
+        }
+
+        @Override
+        public DataTransfer getTransfer() {
+            return myTransfer;
+        }
+
+        @Override
+        public List<TreeNode<NODE>> getItems() {
+            return myItems;
+        }
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public void setTransferHandler(@Nullable TransferHandler<TreeNode<NODE>> handler) {
+        myTransferHandler = handler;
+
+        Vaadin vaadin = toVaadinComponent();
+        if (!(handler instanceof DragAndDropTransferHandler<TreeNode<NODE>> dragAndDrop)) {
+            vaadin.setRowsDraggable(false);
+            vaadin.setDropMode(null);
+            return;
+        }
+
+        vaadin.setRowsDraggable(true);
+        vaadin.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
+        vaadin.bindDragAndDrop(dragAndDrop);
+    }
+
+    @Override
+    public @Nullable TransferHandler<TreeNode<NODE>> getTransferHandler() {
         return myTransferHandler;
     }
 }

@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  */
 @SuppressWarnings("unchecked")
 public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxImpl.Vaadin> implements ListBox<E> {
-    private @Nullable TransferHandler myTransferHandler;
+    private @Nullable TransferHandler<E> myTransferHandler;
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
     // on css only changes
     @StyleSheet("/list/webListBox.css")
@@ -88,12 +88,12 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
         myTransferHandler = handler;
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
     }
 }

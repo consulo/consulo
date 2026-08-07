@@ -19,13 +19,16 @@ import consulo.ui.clipboard.DataTransfer;
 import org.jspecify.annotations.Nullable;
 
 /**
- * What a copy of a component is, and what a paste into it does. Drag and drop is not part of it and
- * arrives separately.
+ * What a copy of a component is, and what a paste into it does. Dragging and dropping arrive with
+ * {@link DragAndDropTransferHandler}, so a component carrying this alone can neither be dragged
+ * out of nor dropped into.
  *
+ * @param <Item> what the component is a collection of, carried here so that a handler keeps naming
+ *               the same items the component does once it takes on more than the clipboard
  * @author VISTALL
  * @since 2026-08-07
  */
-public interface TransferHandler {
+public interface TransferHandler<Item> {
     /**
      * The payload a copy of this component produces, {@code null} when there is nothing to copy.
      */

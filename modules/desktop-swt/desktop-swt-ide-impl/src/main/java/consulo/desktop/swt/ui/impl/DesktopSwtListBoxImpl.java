@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2021-04-29
  */
 public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> implements ListBox<E> {
-  private @Nullable TransferHandler myTransferHandler;
+  private @Nullable TransferHandler<E> myTransferHandler;
     private final FlatDataModel<E> myModel;
 
     public DesktopSwtListBoxImpl(FlatDataModel<E> model) {
@@ -93,12 +93,12 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
     }
 
   @Override
-  public void setTransferHandler(@Nullable TransferHandler handler) {
+  public void setTransferHandler(@Nullable TransferHandler<E> handler) {
       myTransferHandler = handler;
   }
 
   @Override
-  public @Nullable TransferHandler getTransferHandler() {
+  public @Nullable TransferHandler<E> getTransferHandler() {
       return myTransferHandler;
   }
 }

@@ -30,7 +30,7 @@ import consulo.ui.model.FlatDataModel;
  * @author VISTALL
  */
 public class HeadlessListBox<E> extends HeadlessValueComponentBase<E> implements ListBox<E> {
-    private @Nullable TransferHandler myTransferHandler;
+    private @Nullable TransferHandler<E> myTransferHandler;
     private final FlatDataModel<E> myModel;
 
     public HeadlessListBox(FlatDataModel<E> model) {
@@ -68,12 +68,12 @@ public class HeadlessListBox<E> extends HeadlessValueComponentBase<E> implements
     }
 
     @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
         myTransferHandler = handler;
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
     }
 }

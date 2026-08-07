@@ -57,7 +57,7 @@ import java.util.function.ToIntFunction;
  */
 @SuppressWarnings("unchecked")
 public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBoxImpl.Vaadin> implements ListBox<E> {
-    private @Nullable TransferHandler myTransferHandler;
+    private @Nullable TransferHandler<E> myTransferHandler;
     // the same stylesheet the eager list uses, so a row looks the same whichever of them drew it
     @StyleSheet("/list/webListBox.css")
     public class Vaadin extends VirtualList<E> implements FromVaadinComponentWrapper {
@@ -354,12 +354,12 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     }
 
     @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
         myTransferHandler = handler;
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
     }
 }

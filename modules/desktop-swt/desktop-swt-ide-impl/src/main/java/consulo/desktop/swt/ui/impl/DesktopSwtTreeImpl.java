@@ -40,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 29/04/2021
  */
 public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.widgets.Tree> implements Tree<E> {
-  private @Nullable TransferHandler myTransferHandler;
+  private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
   private final E myRootValue;
   private final TreeModel<E> myModel;
 
@@ -313,12 +313,12 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   }
 
   @Override
-  public void setTransferHandler(@Nullable TransferHandler handler) {
+  public void setTransferHandler(@Nullable TransferHandler<TreeNode<E>> handler) {
       myTransferHandler = handler;
   }
 
   @Override
-  public @Nullable TransferHandler getTransferHandler() {
+  public @Nullable TransferHandler<TreeNode<E>> getTransferHandler() {
       return myTransferHandler;
   }
 }

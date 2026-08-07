@@ -39,7 +39,7 @@ import java.util.function.ToIntFunction;
  * @since 2017-09-12
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
-    private @Nullable TransferHandler myTransferHandler;
+    private @Nullable TransferHandler<E> myTransferHandler;
     class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
         MyJBList(javax.swing.ListModel<T> dataModel) {
             super(dataModel);
@@ -163,13 +163,13 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
         myTransferHandler = handler;
-        toAWTComponent().setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter(this, handler));
+        toAWTComponent().setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter<>(this, handler));
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
     }
 }

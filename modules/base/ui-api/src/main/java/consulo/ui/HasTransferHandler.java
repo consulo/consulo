@@ -18,14 +18,16 @@ package consulo.ui;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A component able to carry a {@link TransferHandler}.
+ * A component able to carry a {@link TransferHandler}. A collection component additionally acts on a
+ * {@link DragAndDropTransferHandler}, whose items are its own.
  *
+ * @param <Item> what this component is a collection of, see {@link TransferHandler}
  * @author VISTALL
  * @since 2026-08-07
  */
-public interface HasTransferHandler extends Component {
-    void setTransferHandler(@Nullable TransferHandler handler);
+public interface HasTransferHandler<Item> extends Component {
+    void setTransferHandler(@Nullable TransferHandler<Item> handler);
 
     @Nullable
-    TransferHandler getTransferHandler();
+    TransferHandler<Item> getTransferHandler();
 }

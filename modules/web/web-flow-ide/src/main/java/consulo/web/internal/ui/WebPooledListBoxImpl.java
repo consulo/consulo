@@ -59,7 +59,7 @@ import java.util.function.ToIntFunction;
  */
 @SuppressWarnings("unchecked")
 public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledListBoxImpl.Vaadin> implements ListBox<E> {
-    private @Nullable TransferHandler myTransferHandler;
+    private @Nullable TransferHandler<E> myTransferHandler;
     /**
      * Rows kept beyond the viewport on each side, matching the overscan the script uses - the pool has to be able to
      * hold everything the script may ask for.
@@ -444,12 +444,12 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
     }
 
     @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
         myTransferHandler = handler;
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
     }
 }

@@ -16,7 +16,9 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.TransferHandler;
+import consulo.ui.DragAndDropTransferHandler;
 import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferHandlerAdapter;
+import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferTarget;
 import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
@@ -43,6 +45,7 @@ import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.DropMode;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -60,8 +63,9 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2021-07-14
  */
-public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.MyTree> implements Tree<E> {
-    private @Nullable TransferHandler myTransferHandler;
+public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.MyTree>
+    implements Tree<E>, DesktopAWTTransferTarget<TreeNode<E>> {
+    private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;
 
@@ -518,13 +522,81 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     @Override
-    public void setTransferHandler(@Nullable TransferHandler handler) {
+    public void setTransferHandler(@Nullable TransferHandler<TreeNode<E>> handler) {
         myTransferHandler = handler;
-        toAWTComponent().setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter(this, handler));
+
+        MyTree tree = toAWTComponent();
+        if (handler == null) {
+            tree.setTransferHandler(null);
+            tree.setDragEnabled(false);
+            return;
+        }
+
+        DesktopAWTTransferHandlerAdapter<TreeNode<E>> adapter = new DesktopAWTTransferHandlerAdapter<>(this, handler, this);
+        tree.setTransferHandler(adapter);
+        tree.setDragEnabled(adapter.isDragAndDropSupported());
+        if (adapter.isDragAndDropSupported()) {
+            tree.setDropMode(DropMode.ON_OR_INSERT);
+        }
     }
 
     @Override
-    public @Nullable TransferHandler getTransferHandler() {
+    public @Nullable TransferHandler<TreeNode<E>> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public List<TreeNode<E>> getTransferItems() {
+        TreePath[] paths = toAWTComponent().getSelectionPaths();
+        if (paths == null) {
+            return List.of();
+        }
+
+        List<TreeNode<E>> nodes = new ArrayList<>(paths.length);
+        for (TreePath path : paths) {
+            TreeNode<E> node = nodeOf(path);
+            if (node != null) {
+                nodes.add(node);
+            }
+        }
+        return nodes;
+    }
+
+    /**
+     * The toolkit states a drop as a parent path plus the index it would be inserted at, so an
+     * insertion is turned back into the sibling it lands next to. An insertion into a parent with no
+     * children left to name lands on the parent itself.
+     */
+    @Override
+    public @Nullable Drop<TreeNode<E>> resolveDrop(javax.swing.TransferHandler.TransferSupport support) {
+        if (!(support.getDropLocation() instanceof JTree.DropLocation location)) {
+            return null;
+        }
+
+        TreePath path = location.getPath();
+        if (path == null) {
+            return null;
+        }
+
+        int childIndex = location.getChildIndex();
+        if (childIndex == -1) {
+            TreeNode<E> node = nodeOf(path);
+            return node == null ? null : new Drop<>(node, DragAndDropTransferHandler.DropPosition.INTO);
+        }
+
+        javax.swing.tree.TreeModel model = toAWTComponent().getModel();
+        Object parent = path.getLastPathComponent();
+        int childCount = model.getChildCount(parent);
+        if (childCount == 0) {
+            TreeNode<E> node = nodeOf(path);
+            return node == null ? null : new Drop<>(node, DragAndDropTransferHandler.DropPosition.INTO);
+        }
+
+        boolean above = childIndex < childCount;
+        TreeNode<E> sibling = nodeOfComponent(model.getChild(parent, above ? childIndex : childCount - 1));
+        if (sibling == null) {
+            return null;
+        }
+        return new Drop<>(sibling, above ? DragAndDropTransferHandler.DropPosition.ABOVE : DragAndDropTransferHandler.DropPosition.BELOW);
     }
 }
