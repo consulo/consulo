@@ -54,7 +54,9 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
         myModuleFileEncodings = CachedValuesManager.getManager(project).createCachedValue(
             () -> {
                 Map<Module, Set<Charset>> result = computeModuleCharsetMap();
-                return CachedValueProvider.Result.create(result, ProjectRootManager.getInstance(myProject),
+                return CachedValueProvider.Result.create(
+                    result,
+                    ProjectRootManager.getInstance(myProject),
                     EncodingProjectManager.getInstance(myProject).getModificationTracker()
                 );
             },

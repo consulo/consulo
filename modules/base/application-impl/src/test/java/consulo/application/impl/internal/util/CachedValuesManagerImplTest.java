@@ -111,7 +111,7 @@ public class CachedValuesManagerImplTest {
     @SuppressWarnings("unchecked")
     void testGetCachedValueExHit() {
         String value = "Foobar";
-        CachedValueProvider<String> provider = () -> null;
+        CachedValueProvider<@Nullable String> provider = () -> null;
 
         CachedValue<String> cachedValue = mock(CachedValue.class, withSettings().extraInterfaces(ProjectCachedValueEx.class));
         ProjectCachedValueEx cachedValueEx = (ProjectCachedValueEx) cachedValue;

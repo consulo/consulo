@@ -69,7 +69,6 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByTy
     return ourRefsCache.get(element, null).getValue();
   }
 
-  
   @Override
   public ReferenceProviderType getReferenceProviderType() {
     return CommentsReferenceContributor.COMMENTS_REFERENCE_PROVIDER_TYPE;

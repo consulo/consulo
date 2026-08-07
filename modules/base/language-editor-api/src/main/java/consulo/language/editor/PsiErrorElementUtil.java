@@ -50,7 +50,8 @@ public class PsiErrorElementUtil {
 
     private static boolean hasErrors(PsiFile psiFile) {
         CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(psiFile.getProject());
-        return cachedValuesManager.getCachedValue(psiFile,
+        return cachedValuesManager.getCachedValue(
+            psiFile,
             CONTAINS_ERROR_ELEMENT,
             () -> {
                 boolean error = hasErrorElements(psiFile);

@@ -171,15 +171,10 @@ public class CoverageSuitesBundle {
         return null;
     }
 
-    public GlobalSearchScope getSearchScope(final Project project) {
+    public GlobalSearchScope getSearchScope(Project project) {
         if (myCachedValue == null) {
             myCachedValue = CachedValuesManager.getManager(project).createCachedValue(
-                new CachedValueProvider<GlobalSearchScope>() {
-                    @Override
-                    public @Nullable Result<GlobalSearchScope> compute() {
-                        return new Result<>(getSearchScopeInner(project), ProjectRootModificationTracker.getInstance(project));
-                    }
-                },
+                () -> new CachedValueProvider.Result<>(getSearchScopeInner(project), ProjectRootModificationTracker.getInstance(project)),
                 false
             );
         }

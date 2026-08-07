@@ -45,12 +45,11 @@ import consulo.util.collection.ConcurrentList;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -114,6 +113,7 @@ public class InjectedLanguageUtil {
     return ((DocumentWindowImpl)document).getShreds();
   }
 
+  @RequiredReadAction
   public static void enumerate(DocumentWindow documentWindow, PsiFile hostPsiFile, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     Segment[] ranges = documentWindow.getHostRanges();
     Segment rangeMarker = ranges.length > 0 ? ranges[0] : null;
@@ -138,6 +138,7 @@ public class InjectedLanguageUtil {
    * @deprecated use {@link InjectedLanguageManager#enumerateEx(PsiElement, PsiFile, boolean, PsiLanguageInjectionHost.InjectedPsiVisitor)} instead
    */
   @Deprecated
+  @RequiredReadAction
   public static boolean enumerate(PsiElement host, PsiFile containingFile, boolean probeUp, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     //do not inject into nonphysical files except during completion
     if (!containingFile.isPhysical() && containingFile.getOriginalFile() == containingFile) {
@@ -179,6 +180,7 @@ public class InjectedLanguageUtil {
    * {@link #getEditorForInjectedLanguageNoCommit(Editor, Caret, PsiFile)} or other methods here, which don't work
    * for uncommitted documents.
    */
+  @RequiredReadAction
   static boolean mightHaveInjectedFragmentAtCaret(Project project, Document hostDocument, int hostOffset) {
     PsiFile hostPsiFile = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostDocument);
     if (hostPsiFile == null || !hostPsiFile.isValid()) return false;
@@ -290,6 +292,7 @@ public class InjectedLanguageUtil {
    * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
    */
   // consider injected elements
+  @RequiredReadAction
   public static PsiElement findElementAtNoCommit(PsiFile file, int offset) {
     FileViewProvider viewProvider = file.getViewProvider();
     Trinity<PsiElement, PsiElement, Language> result = null;
@@ -311,6 +314,7 @@ public class InjectedLanguageUtil {
   // list of injected fragments injected into this psi element (can be several if some crazy injector calls startInjecting()/doneInjecting()/startInjecting()/doneInjecting())
   private static final Key<Supplier<InjectionResult>> INJECTED_PSI = Key.create("INJECTED_PSI");
 
+  @RequiredReadAction
   private static void probeElementsUp(PsiElement element, PsiFile hostPsiFile, boolean probeUp, PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
     element = skipNonInjectablePsi(element, probeUp);
     if (element == null) return;
@@ -376,7 +380,12 @@ public class InjectedLanguageUtil {
   }
 
   private static InjectionResult getEmptyInjectionResult(PsiFile host) {
-    return LanguageCachedValueUtil.getCachedValue(host, () -> CachedValueProvider.Result.createSingleDependency(new InjectionResult(host, null, null), PsiModificationTracker.MODIFICATION_COUNT));
+    return LanguageCachedValueUtil.getCachedValue(host,
+      () -> CachedValueProvider.Result.createSingleDependency(
+        new InjectionResult(host, null, null),
+        PsiModificationTracker.MODIFICATION_COUNT
+      )
+    );
   }
 
   /**
@@ -400,6 +409,7 @@ public class InjectedLanguageUtil {
     return element instanceof PsiFileSystemItem || element instanceof PsiLanguageInjectionHost;
   }
 
+  @RequiredReadAction
   private static boolean intersects(PsiElement hostElement, PlaceImpl place) {
     TextRange hostElementRange = hostElement.getTextRange();
     boolean intersects = false;
@@ -416,6 +426,7 @@ public class InjectedLanguageUtil {
   /**
    * Invocation of this method on uncommitted {@code hostFile} can lead to unexpected results, including throwing an exception!
    */
+  @RequiredReadAction
   static PsiElement findInjectedElementNoCommit(PsiFile hostFile, int offset) {
     if (hostFile instanceof PsiCompiledElement) return null;
     Project project = hostFile.getProject();
@@ -428,6 +439,7 @@ public class InjectedLanguageUtil {
   // returns (injected psi, leaf element at the offset, language of the leaf element)
   // since findElementAt() is expensive, we trying to reuse its result
   
+  @RequiredReadAction
   private static Trinity<PsiElement, PsiElement, Language> tryOffset(PsiFile hostFile, int offset, PsiDocumentManager documentManager) {
     FileViewProvider provider = hostFile.getViewProvider();
     Language leafLanguage = null;
@@ -455,8 +467,9 @@ public class InjectedLanguageUtil {
     return Trinity.create(null, leafElement, leafLanguage);
   }
 
+  @RequiredReadAction
   private static PsiElement findInside(PsiElement element, PsiFile hostFile, int hostOffset, PsiDocumentManager documentManager) {
-    Ref<PsiElement> out = new Ref<>();
+    SimpleReference<PsiElement> out = new SimpleReference<>();
     enumerate(element, hostFile, true, (injectedPsi, places) -> {
       for (PsiLanguageInjectionHost.Shred place : places) {
         TextRange hostRange = place.getHost().getTextRange();
@@ -482,7 +495,7 @@ public class InjectedLanguageUtil {
     // modification of cachedInjectedDocuments must be under InjectedLanguageManagerImpl.ourInjectionPsiLock only
     List<DocumentWindow> injected = hostPsiFile.getUserData(INJECTED_DOCS_KEY);
     if (injected == null) {
-      injected = ((UserDataHolderEx)hostPsiFile).putUserDataIfAbsent(INJECTED_DOCS_KEY, Lists.newLockFreeCopyOnWriteList());
+      injected = hostPsiFile.putUserDataIfAbsent(INJECTED_DOCS_KEY, Lists.newLockFreeCopyOnWriteList());
     }
     return (ConcurrentList<DocumentWindow>)injected;
   }
@@ -497,6 +510,7 @@ public class InjectedLanguageUtil {
     file.putUserData(INJECTED_DOCS_KEY, null);
   }
 
+  @RequiredReadAction
   static void clearCaches(PsiFile injected, DocumentWindowImpl documentWindow) {
     VirtualFileWindowImpl virtualFile = (VirtualFileWindowImpl)injected.getVirtualFile();
     PsiManagerEx psiManagerEx = (PsiManagerEx) injected.getManager();
@@ -563,6 +577,7 @@ public class InjectedLanguageUtil {
   }
 
   @Deprecated
+  @RequiredReadAction
   public static boolean isInInjectedLanguagePrefixSuffix(PsiElement element) {
     return InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element);
   }
@@ -610,13 +625,15 @@ public class InjectedLanguageUtil {
    * @deprecated Use {@link InjectedLanguageManager#getInjectedPsiFiles(PsiElement)} != null instead
    */
   @Deprecated
+  @RequiredReadAction
   public static boolean hasInjections(PsiLanguageInjectionHost host) {
     if (!host.isPhysical()) return false;
-    Ref<Boolean> result = Ref.create(false);
+    SimpleReference<Boolean> result = SimpleReference.create(false);
     enumerate(host, (injectedPsi, places) -> result.set(true));
-    return result.get().booleanValue();
+    return result.get();
   }
 
+  @RequiredReadAction
   public static String getUnescapedText(PsiFile file, final @Nullable PsiElement startElement, final @Nullable PsiElement endElement) {
     InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
     if (manager.getInjectionHost(file) == null) {
@@ -628,6 +645,7 @@ public class InjectedLanguageUtil {
       Boolean myState = startElement == null ? Boolean.TRUE : null;
 
       @Override
+      @RequiredReadAction
       public void visitElement(PsiElement element) {
         if (element == startElement) myState = Boolean.TRUE;
         if (element == endElement) myState = Boolean.FALSE;
@@ -659,6 +677,7 @@ public class InjectedLanguageUtil {
     return !(host instanceof InjectionBackgroundSuppressor);
   }
 
+  @RequiredReadAction
   public static int getInjectedStart(List<? extends PsiLanguageInjectionHost.Shred> places) {
     PsiLanguageInjectionHost.Shred shred = places.get(0);
     PsiLanguageInjectionHost host = shred.getHost();
@@ -666,21 +685,25 @@ public class InjectedLanguageUtil {
     return shred.getRangeInsideHost().getStartOffset() + host.getTextRange().getStartOffset();
   }
 
+  @RequiredReadAction
   public static @Nullable PsiElement findElementInInjected(PsiLanguageInjectionHost injectionHost, int offset) {
-    Ref<PsiElement> ref = Ref.create();
+    SimpleReference<PsiElement> ref = SimpleReference.create();
     enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();
   }
 
+  @RequiredReadAction
   public static @Nullable PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
     return InjectedLanguageManagerUtil.findInjectionHost(psi);
   }
 
+  @RequiredReadAction
   public static @Nullable PsiLanguageInjectionHost findInjectionHost(@Nullable VirtualFile virtualFile) {
     return virtualFile instanceof VirtualFileWindow virtualFileWindow
       ? getShreds(virtualFileWindow.getDocumentWindow()).getHostPointer().getElement() : null;
   }
 
+  @RequiredReadAction
   public static <T> void putInjectedFileUserData(PsiElement element, Language language, Key<T> key, @Nullable T value) {
     PsiFile file = getCachedInjectedFileWithLanguage(element, language);
     if (file != null) {
@@ -688,6 +711,7 @@ public class InjectedLanguageUtil {
     }
   }
 
+  @RequiredReadAction
   public static @Nullable PsiFile getCachedInjectedFileWithLanguage(PsiElement element, Language language) {
     if (!element.isValid()) return null;
     PsiFile containingFile = element.getContainingFile();
@@ -703,8 +727,9 @@ public class InjectedLanguageUtil {
    * Unlike {@link MultiHostRegistrar#startInjecting(Language)} this method doesn't inject the full blown file in the other language.
    * Instead, it just marks some range as a reference in some language.
    * For example, you can inject file reference into string literal.
-   * After that, it won't be highlighted as an injected fragment but still can be subject to e.g. "Goto declaraion" action.
+   * After that, it won't be highlighted as an injected fragment but still can be subject to e.g. "Goto declaration" action.
    */
+  @RequiredReadAction
   public static void injectReference(MultiHostRegistrar registrar,
                                      Language language,
                                      String prefix,
@@ -715,6 +740,7 @@ public class InjectedLanguageUtil {
   }
 
   // null means failed to reparse
+  @RequiredReadAction
   public static BooleanSupplier reparse(PsiFile injectedPsiFile,
                                         DocumentWindow injectedDocument,
                                         PsiFile hostPsiFile,
