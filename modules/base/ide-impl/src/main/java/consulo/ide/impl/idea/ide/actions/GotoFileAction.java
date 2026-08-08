@@ -51,7 +51,7 @@ import java.util.List;
  * @author Constantine.Plotnikov
  */
 @ActionImpl(id = GotoFileAction.ID)
-public class GotoFileAction extends GotoActionBase implements DumbAware {
+public class GotoFileAction extends SearchEverywhereBaseAction implements DumbAware {
     public static final String ID = "GotoFile";
 
     public GotoFileAction() {
@@ -62,81 +62,6 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         showInSearchEverywherePopup(FileSearchEverywhereContributor.class.getSimpleName(), e, true, true);
-    }
-
-    @Override
-    public void gotoActionPerformed(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
-        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file");
-
-        GotoFileModel gotoFileModel = new GotoFileModel(project);
-        GotoActionCallback<FileType> callback = new GotoActionCallback<>() {
-            @Override
-            protected ChooseByNameFilter<FileType> createFilter(ChooseByNamePopup popup) {
-                return new GotoFileFilter(popup, gotoFileModel, project);
-            }
-
-            @Override
-            @RequiredUIAccess
-            public void elementChosen(ChooseByNamePopup popup, Object element) {
-                if (element == null) {
-                    return;
-                }
-                UIAccess.assertIsUIThread();
-                Navigatable n = (Navigatable)element;
-                //this is for better cursor position
-                if (element instanceof PsiFile file) {
-                    VirtualFile virtualFile = file.getVirtualFile();
-                    if (virtualFile == null) {
-                        return;
-                    }
-                    OpenFileDescriptorImpl descriptor =
-                        new OpenFileDescriptorImpl(project, virtualFile, popup.getLinePosition(), popup.getColumnPosition());
-                    n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
-                }
-
-                if (n.canNavigate()) {
-                    n.navigate(true);
-                }
-            }
-        };
-        showNavigationPopup(
-            e,
-            gotoFileModel,
-            callback,
-            IdeLocalize.goToFileToolwindowTitle().get(),
-            true,
-            true
-        );
-    }
-
-    protected static class GotoFileFilter extends ChooseByNameFilter<FileType> {
-        GotoFileFilter(ChooseByNamePopup popup, GotoFileModel model, Project project) {
-            super(popup, model, GotoFileConfiguration.getInstance(project), project);
-        }
-
-        @Override
-        
-        protected List<FileType> getAllFilterValues() {
-            List<FileType> elements = new ArrayList<>();
-            ContainerUtil.addAll(elements, FileTypeManager.getInstance().getRegisteredFileTypes());
-            Collections.sort(elements, FileTypeComparator.INSTANCE);
-            return elements;
-        }
-
-        @Override
-        protected String textForFilterValue(FileType value) {
-            return value.getDisplayName().get();
-        }
-
-        @Override
-        protected Image iconForFilterValue(FileType value) {
-            return value.getIcon();
-        }
     }
 
     /**

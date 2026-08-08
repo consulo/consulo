@@ -17,6 +17,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
+import consulo.ide.impl.idea.ide.actions.SearchEverywhereBaseAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -26,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * Bound to Ctrl+Alt+Shift+E (or Cmd+Alt+Shift+E on Mac).
  */
 @ActionImpl(id = "TextSearchAction")
-public class TextSearchAction extends GotoActionBase implements DumbAware {
+public class TextSearchAction extends SearchEverywhereBaseAction implements DumbAware {
     public TextSearchAction() {
         super(FindLocalize.textSearchActionText(), FindLocalize.textSearchActionDescription());
     }
@@ -39,10 +40,5 @@ public class TextSearchAction extends GotoActionBase implements DumbAware {
             return;
         }
         showInSearchEverywherePopup(TextSearchContributor.ID, e, true, true);
-    }
-
-    @Override
-    protected void gotoActionPerformed(AnActionEvent e) {
-        // not used, actionPerformed directly calls showInSearchEverywherePopup
     }
 }
