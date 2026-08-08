@@ -38,16 +38,4 @@ public non-sealed interface LightPopup extends Popup {
     @RequiredUIAccess
     void showBy(Component target);
 
-    /**
-     * Opens the popup at a point inside {@code target} rather than against the component as a whole, for something
-     * which has no component of its own to be anchored to - the caret of an editor above all.
-     * <p/>
-     * {@code anchorHeight} is the height of whatever the point belongs to, the caret line for an editor, so a popup
-     * with no room below it can go above that line instead of over it.
-     *
-     * @param x pixels from the left of {@code target}
-     * @param y pixels from the top of {@code target}
-     */
-    @RequiredUIAccess
-    void showAt(Component target, int x, int y, int anchorHeight);
 }

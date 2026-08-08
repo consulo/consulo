@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.popup.actionPopup;
+package consulo.ui.ex.impl.internal.popup.action;
 
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.localize.LocalizeValue;

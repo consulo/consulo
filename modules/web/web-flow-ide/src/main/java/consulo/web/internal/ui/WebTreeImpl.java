@@ -42,6 +42,8 @@ import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -56,10 +58,13 @@ import java.util.concurrent.ExecutorService;
  * @since 2019-02-18
  */
 @SuppressWarnings("unchecked")
-public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
+public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE>, PopupOwner {
     private static final List CANCELED_RESULT = new ArrayList<>();
 
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
+
+    /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
+    private volatile @Nullable Point2D myPopupPosition;
 
     /**
      * Levels of rows an expand all opens, counting the top level ones.
@@ -191,6 +196,11 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             // so closest() cannot reach the row - the composed path is the only way across the boundary
             String rowIndex = "(event.composedPath().find(node => node.localName === 'tr') || {}).index";
 
+            // where the row ended up is only measurable in the browser, and the same click which moves the
+            // selection is the one a popup is raised from - so it is reported here rather than asked for later
+            String rowLeft = rowMetric("Math.round(row.left - grid.left)");
+            String rowBottom = rowMetric("Math.round(row.bottom - grid.top)");
+
             getElement()
                 .addEventListener("mousedown", event -> {
                     int index = event.getEventData().path(rowIndex).asInt(-1);
@@ -200,11 +210,28 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     if (item != null) {
                         select(item);
                     }
+
+                    int left = event.getEventData().path(rowLeft).asInt(-1);
+                    int bottom = event.getEventData().path(rowBottom).asInt(-1);
+                    // mirrors the awt trees, which anchor at the bottom left of the selected row
+                    myPopupPosition = left < 0 || bottom < 0 ? null : new Point2D(left + 2, bottom - 1);
                 })
                 // header rows carry no index, and only the right button has to move the selection - the left one
                 // is the grid's own business
                 .addEventData(rowIndex)
+                .addEventData(rowLeft)
+                .addEventData(rowBottom)
                 .setFilter("event.button === 2");
+        }
+
+        private static String rowMetric(String expression) {
+            return "(() => {"
+                + "const tr = event.composedPath().find(node => node.localName === 'tr');"
+                + "if (!tr) { return -1; }"
+                + "const row = tr.getBoundingClientRect();"
+                + "const grid = element.getBoundingClientRect();"
+                + "return " + expression + ";"
+                + "})()";
         }
 
         public void init(NODE rootValue, TreeModel<NODE> model) {
@@ -876,5 +903,10 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     @Override
     public @Nullable TransferHandler<TreeNode<NODE>> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public @Nullable Point2D getBestPopupPosition() {
+        return myPopupPosition;
     }
 }

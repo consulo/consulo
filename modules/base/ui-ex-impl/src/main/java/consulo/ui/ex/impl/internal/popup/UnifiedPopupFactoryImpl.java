@@ -19,11 +19,17 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
+import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.BasePresentationFactory;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ui.ex.popup.*;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -32,6 +38,7 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -122,7 +129,18 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
         @Nullable Predicate<? super AnAction> preselectActionCondition,
         boolean forceHeavyPopup
     ) {
-        throw new UnsupportedOperationException();
+        return createActionGroupPopup(
+            title,
+            actionGroup,
+            dataContext,
+            showNumbers,
+            true,
+            showDisabledActions,
+            honorActionMnemonics,
+            disposeCallback,
+            preselectActionCondition,
+            null
+        );
     }
 
     @Override
@@ -138,7 +156,58 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
         @Nullable String actionPlace,
         BiPredicate<Object, Boolean> customFilter
     ) {
-        throw new UnsupportedOperationException();
+        return createActionGroupPopup(
+            title,
+            actionGroup,
+            dataContext,
+            aid == ActionSelectionAid.ALPHA_NUMBERING || aid == ActionSelectionAid.NUMBERING,
+            aid == ActionSelectionAid.ALPHA_NUMBERING,
+            showDisabledActions,
+            aid == ActionSelectionAid.MNEMONICS,
+            disposeCallback,
+            preselectActionCondition,
+            actionPlace
+        );
+    }
+
+    private ListPopup createActionGroupPopup(
+        @Nullable String title,
+        ActionGroup actionGroup,
+        DataContext dataContext,
+        boolean showNumbers,
+        boolean useAlphaAsNumbers,
+        boolean showDisabledActions,
+        boolean honorActionMnemonics,
+        @Nullable Runnable disposeCallback,
+        @Nullable Predicate<? super AnAction> preselectActionCondition,
+        @Nullable String actionPlace
+    ) {
+        CompletableFuture<ListPopupStep<ActionPopupItem>> step = ActionPopupStep.createActionsStep(
+            actionGroup,
+            dataContext,
+            showNumbers,
+            useAlphaAsNumbers,
+            showDisabledActions,
+            title,
+            honorActionMnemonics,
+            false,
+            () -> dataContext,
+            actionPlace,
+            preselectActionCondition,
+            -1,
+            new BasePresentationFactory()
+        );
+
+        UnifiedListPopupImpl popup = new UnifiedListPopupImpl(dataContext.getData(Project.KEY), step);
+        if (disposeCallback != null) {
+            popup.addListener(new JBPopupListener() {
+                @Override
+                public void onClosed(LightweightWindowEvent event) {
+                    disposeCallback.run();
+                }
+            });
+        }
+        return popup;
     }
 
     @Override

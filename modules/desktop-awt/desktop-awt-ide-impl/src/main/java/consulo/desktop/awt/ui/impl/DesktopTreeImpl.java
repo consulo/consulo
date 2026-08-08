@@ -46,10 +46,15 @@ import consulo.util.concurrent.Promises;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.DropMode;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
+
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreePath;
+import java.awt.Rectangle;
+import java.util.Arrays;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -64,7 +69,32 @@ import java.util.function.Predicate;
  * @since 2021-07-14
  */
 public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.MyTree>
-    implements Tree<E>, DesktopAWTTransferTarget<TreeNode<E>> {
+    implements Tree<E>, PopupOwner, DesktopAWTTransferTarget<TreeNode<E>> {
+
+    @Override
+    public @Nullable Point2D getBestPopupPosition() {
+        MyTree tree = toAWTComponent();
+
+        int[] selectionRows = tree.getSelectionRows();
+        if (selectionRows == null || selectionRows.length == 0) {
+            return null;
+        }
+
+        Rectangle visibleRect = tree.getVisibleRect();
+
+        int[] sorted = selectionRows.clone();
+        Arrays.sort(sorted);
+
+        for (int row : sorted) {
+            Rectangle rowBounds = tree.getRowBounds(row);
+            if (visibleRect.contains(rowBounds)) {
+                // the same point the swing popup factory anchors at - the bottom left of the selected row
+                return new Point2D(rowBounds.x + 2, rowBounds.y + rowBounds.height - 1);
+            }
+        }
+        return null;
+    }
+
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;

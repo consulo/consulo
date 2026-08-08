@@ -31,7 +31,8 @@ import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.ui.popup.PopupOwner;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
@@ -1299,8 +1300,8 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
 
         @Override
-        public Point getBestPopupPosition() {
-            return new Point(myTextFieldPanel.getWidth(), getHeight());
+        public Point2D getBestPopupPosition() {
+            return new Point2D(myTextFieldPanel.getWidth(), getHeight());
         }
 
         @Override

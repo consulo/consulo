@@ -22,6 +22,7 @@ import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.UiDataRule;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -48,6 +49,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
 
     private final BaseDataManager myDataManager;
     private final List<DataProvider> myProviders;
+    private final consulo.ui.@Nullable Component myComponent;
     private Map<Key, Object> myUserData;
 
     /**
@@ -58,8 +60,17 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
      * @param providers   providers in hierarchy order (child-first)
      */
     public PreCachedDataContext(BaseDataManager dataManager, List<DataProvider> providers) {
+        this(dataManager, providers, null);
+    }
+
+    public PreCachedDataContext(
+        BaseDataManager dataManager,
+        List<DataProvider> providers,
+        consulo.ui.@Nullable Component component
+    ) {
         myDataManager = dataManager;
         myProviders = providers;
+        myComponent = component;
     }
 
     @Override
@@ -75,6 +86,13 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
             if (data != null) {
                 return data;
             }
+        }
+
+        // the component the context was built from is the last word on what it is, so a provider which names a
+        // component of its own - the tree inside the panel the provider hangs off - is answered first
+        if (myComponent != null && (consulo.ui.Component.KEY == dataId || PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId)) {
+            //noinspection unchecked
+            return (T) myComponent;
         }
         return null;
     }

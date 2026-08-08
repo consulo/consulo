@@ -17,6 +17,8 @@
 package consulo.ui.ex.popup;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.ui.TextItemRender;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.InputEvent;
@@ -58,6 +60,14 @@ public interface ListPopup extends JBPopup {
     void addListSelectionListener(ListSelectionListener listSelectionListener);
 
     void addSelectionListener(Consumer<Object> selectionListener);
+
+    @RequiredUIAccess
+    default void setRender(TextItemRender<?> render) {
+    }
+
+    @RequiredUIAccess
+    default void setMinimumWidth(int width) {
+    }
 
     default boolean isShowSubmenuOnHover() {
         return false;

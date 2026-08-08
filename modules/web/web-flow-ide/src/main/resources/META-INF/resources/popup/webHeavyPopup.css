@@ -1,0 +1,17 @@
+/* the overlay sits in the shadow root of the dialog and exports its parts, so the host is what a rule outside
+   reaches it through - vaadin-dialog-overlay is not matchable from here */
+
+/* the curtain is there to catch a click outside the popup, not to say the ide is unavailable - a popup raised over
+   the frame leaves everything under it readable */
+vaadin-dialog::part(backdrop)
+{
+  background: transparent;
+}
+
+/* a popup of the ide is a panel rather than a card - the rounding and the drop shadow vaadin draws by default read
+   as a bubble at the size a list of actions is */
+vaadin-dialog::part(overlay)
+{
+  border-radius: var(--consulo-popup-radius, 8px);
+  box-shadow: none;
+}
