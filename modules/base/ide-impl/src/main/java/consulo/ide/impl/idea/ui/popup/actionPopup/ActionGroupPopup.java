@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.actionPopup;
 
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
@@ -223,6 +225,9 @@ public class ActionGroupPopup extends ListPopupImpl {
             myPendingShow = null;
             pendingShow.run();
         }
+
+        // after the show, so a popup which was waiting for its items is measured while it is on screen
+        updatePopupSize();
     }
 
     @Override

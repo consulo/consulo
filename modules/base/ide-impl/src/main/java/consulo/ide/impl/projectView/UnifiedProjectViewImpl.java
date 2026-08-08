@@ -68,8 +68,10 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.PsiDirectoryNode;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -165,6 +167,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             // and expands to nothing, and cut/copy/paste have no provider to run through
             sink.set(IdeView.KEY, myIdeView);
             sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+
+            // the provider hangs off the layout around the tree, but a popup anchors to the tree - it is the one
+            // which knows where its selected row ended up
+            if (myTree != null) {
+                sink.set(consulo.ui.Component.KEY, myTree);
+            }
             if (myCopyPasteDelegator != null) {
                 sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
                 sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());
@@ -355,12 +363,14 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     private static final String ELEMENT_SORT_BY_TYPE = "sortByType";
     private static final String ELEMENT_MANUAL_ORDER = "manualOrder";
     private static final String ELEMENT_ABBREVIATE_PACKAGE_NAMES = "abbreviatePackageNames";
+    private static final String ELEMENT_SHOW_LIBRARY_CONTENTS = "showLibraryContents";
     private static final String ELEMENT_FOLDERS_ALWAYS_ON_TOP = "foldersAlwaysOnTop";
     private static final String ATTRIBUTE_VALUE = "value";
 
     private final Map<String, Boolean> mySortByType = new HashMap<>();
     private final Map<String, Boolean> myManualOrder = new HashMap<>();
     private final Map<String, Boolean> myAbbreviatePackageNames = new HashMap<>();
+    private final Map<String, Boolean> myShowLibraryContents = new HashMap<>();
     private boolean myFoldersAlwaysOnTop = true;
 
     private final Project myProject;
@@ -566,10 +576,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
 
         toolWindow.getContentManager().addContent(content);
-
-        // the tree has to be in the tool window before the walk opens anything - an expand of a component the
-        // frontend has not built yet is not carried over when it finally renders
-        restoreExpandedPaths();
 
         // the awt view listens the same way - a status change re-renders the node of that file, a global one
         // re-renders everything. the renderer builds its descriptor anew on every render, so re-reading the
@@ -801,6 +807,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         writeOption(navigator, mySortByType, ELEMENT_SORT_BY_TYPE);
         writeOption(navigator, myManualOrder, ELEMENT_MANUAL_ORDER);
         writeOption(navigator, myAbbreviatePackageNames, ELEMENT_ABBREVIATE_PACKAGE_NAMES);
+        writeOption(navigator, myShowLibraryContents, ELEMENT_SHOW_LIBRARY_CONTENTS);
 
         navigator.removeChildren(ELEMENT_FOLDERS_ALWAYS_ON_TOP);
         Element folders = new Element(ELEMENT_FOLDERS_ALWAYS_ON_TOP);
@@ -838,6 +845,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             readOption(navigator.getChild(ELEMENT_SORT_BY_TYPE), mySortByType);
             readOption(navigator.getChild(ELEMENT_MANUAL_ORDER), myManualOrder);
             readOption(navigator.getChild(ELEMENT_ABBREVIATE_PACKAGE_NAMES), myAbbreviatePackageNames);
+            readOption(navigator.getChild(ELEMENT_SHOW_LIBRARY_CONTENTS), myShowLibraryContents);
 
             Element folders = navigator.getChild(ELEMENT_FOLDERS_ALWAYS_ON_TOP);
             if (folders != null) {
@@ -935,11 +943,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     @Override
     public boolean isShowLibraryContents(String paneId) {
-        return false;
+        return getPaneOption(myShowLibraryContents, paneId);
     }
 
     @Override
     public void setShowLibraryContents(boolean showLibraryContents, String paneId) {
+        setPaneOption(myShowLibraryContents, paneId, showLibraryContents);
     }
 
     @Override
@@ -1036,6 +1045,51 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
 
     @Override
     public void selectPsiElement(PsiElement element, boolean requestFocus) {
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void reRestoreExpandedPaths() {
+        Tree<AbstractTreeNode> tree = myTree;
+        if (tree == null) {
+            return;
+        }
+
+        tree.refreshAll().thenRunAsync(this::restoreExpandedPaths, UIAccess.current());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void scrollFromSource() {
+        Tree<AbstractTreeNode> tree = myTree;
+        if (tree == null) {
+            return;
+        }
+
+        VirtualFile[] selectedFiles = FileEditorManager.getInstance(myProject).getSelectedFiles();
+        if (selectedFiles.length == 0) {
+            return;
+        }
+
+        TreeNode<AbstractTreeNode> rootNode = tree.getRootNode();
+        if (rootNode == null) {
+            return;
+        }
+
+        VirtualFile file = selectedFiles[0];
+
+        rootNode.findChildDeep(node -> node != null && file.equals(virtualFileOf(node)))
+            .whenCompleteAsync((treeNode, throwable) -> {
+                if (treeNode != null) {
+                    tree.select(treeNode);
+                }
+            }, UIAccess.current());
+    }
+
+    private static @Nullable VirtualFile virtualFileOf(AbstractTreeNode node) {
+        return node.getValue() instanceof PsiElement element && element.isValid()
+            ? PsiUtilCore.getVirtualFile(element)
+            : null;
     }
 
     @Override

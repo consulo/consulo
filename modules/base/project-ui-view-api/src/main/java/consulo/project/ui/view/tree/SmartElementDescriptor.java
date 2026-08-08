@@ -26,7 +26,7 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;

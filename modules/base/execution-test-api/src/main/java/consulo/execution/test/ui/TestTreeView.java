@@ -27,7 +27,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
@@ -40,7 +40,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -146,7 +145,7 @@ public abstract class TestTreeView extends Tree implements UiDataProvider, CopyP
       AbstractTestProxy selectedTest = getSelectedTest();
       fqn = selectedTest instanceof TestProxyRoot ? ((TestProxyRoot)selectedTest).getRootLocation() : selectedTest != null ? selectedTest.getLocationUrl() : null;
     }
-    CopyPasteManager.getInstance().setContents(new StringSelection(fqn));
+    CopyPasteManager.getInstance().setText(fqn);
   }
 
   @Override

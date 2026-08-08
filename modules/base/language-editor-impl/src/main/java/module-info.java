@@ -3,6 +3,7 @@
  * @since 23-Mar-22
  */
 module consulo.language.editor.impl {
+    requires consulo.mcp.server.api;
   // TODO remove this dependency in future
   requires java.desktop;
   requires forms.rt;

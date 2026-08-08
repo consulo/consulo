@@ -15,9 +15,13 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.ui.DragAndDropTransferHandler;
+import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dnd.GridDropLocation;
+import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataCommunicatorAccess;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
@@ -31,12 +35,15 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
@@ -51,8 +58,13 @@ import java.util.concurrent.ExecutorService;
  * @since 2019-02-18
  */
 @SuppressWarnings("unchecked")
-public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
+public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE>, PopupOwner {
     private static final List CANCELED_RESULT = new ArrayList<>();
+
+    private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
+
+    /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
+    private volatile @Nullable Point2D myPopupPosition;
 
     /**
      * Levels of rows an expand all opens, counting the top level ones.
@@ -77,6 +89,47 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
         private WebTreeNodeImpl<NODE> myRootNode;
         private TreeModel<NODE> myModel;
+
+        private List<TreeNode<NODE>> myDraggedItems = List.of();
+        private DataTransfer myDragTransfer = DataTransfer.EMPTY;
+        private boolean myDragAndDropBound;
+
+        /**
+         * The toolkit tells the browser what may be dropped where, and only reports a drop that got
+         * past it, so the check pass the handler is owed is run here right before the drop itself.
+         */
+        private void bindDragAndDrop(DragAndDropTransferHandler<TreeNode<NODE>> handler) {
+            if (myDragAndDropBound) {
+                return;
+            }
+            myDragAndDropBound = true;
+
+            addDragStartListener(event -> {
+                myDraggedItems = new ArrayList<>(event.getDraggedItems());
+                DataTransfer transfer = handler.createDragTransfer(WebTreeImpl.this, myDraggedItems, true);
+                myDragTransfer = transfer == null ? DataTransfer.EMPTY : transfer;
+            });
+
+            addDragEndListener(event -> {
+                myDraggedItems = List.of();
+                myDragTransfer = DataTransfer.EMPTY;
+            });
+
+            addDropListener(event -> {
+                WebTreeNodeImpl<NODE> target = event.getDropTargetItem().orElse(null);
+                DragAndDropTransferHandler.DropPosition position = positionOf(event.getDropLocation());
+                if (target == null || position == null) {
+                    return;
+                }
+
+                DropContextImpl context = new DropContextImpl(target, position, myDragTransfer, myDraggedItems, true);
+                if (!handler.drop(WebTreeImpl.this, context)) {
+                    return;
+                }
+
+                handler.drop(WebTreeImpl.this, context.toPerforming());
+            });
+        }
 
         public Vaadin() {
             setAllRowsVisible(true);
@@ -143,6 +196,11 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             // so closest() cannot reach the row - the composed path is the only way across the boundary
             String rowIndex = "(event.composedPath().find(node => node.localName === 'tr') || {}).index";
 
+            // where the row ended up is only measurable in the browser, and the same click which moves the
+            // selection is the one a popup is raised from - so it is reported here rather than asked for later
+            String rowLeft = rowMetric("Math.round(row.left - grid.left)");
+            String rowBottom = rowMetric("Math.round(row.bottom - grid.top)");
+
             getElement()
                 .addEventListener("mousedown", event -> {
                     int index = event.getEventData().path(rowIndex).asInt(-1);
@@ -152,11 +210,28 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     if (item != null) {
                         select(item);
                     }
+
+                    int left = event.getEventData().path(rowLeft).asInt(-1);
+                    int bottom = event.getEventData().path(rowBottom).asInt(-1);
+                    // mirrors the awt trees, which anchor at the bottom left of the selected row
+                    myPopupPosition = left < 0 || bottom < 0 ? null : new Point2D(left + 2, bottom - 1);
                 })
                 // header rows carry no index, and only the right button has to move the selection - the left one
                 // is the grid's own business
                 .addEventData(rowIndex)
+                .addEventData(rowLeft)
+                .addEventData(rowBottom)
                 .setFilter("event.button === 2");
+        }
+
+        private static String rowMetric(String expression) {
+            return "(() => {"
+                + "const tr = event.composedPath().find(node => node.localName === 'tr');"
+                + "if (!tr) { return -1; }"
+                + "const row = tr.getBoundingClientRect();"
+                + "const grid = element.getBoundingClientRect();"
+                + "return " + expression + ";"
+                + "})()";
         }
 
         public void init(NODE rootValue, TreeModel<NODE> model) {
@@ -296,6 +371,23 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             }
 
             return loadChildren(node, currentUI());
+        }
+
+        public void selectDeep(WebTreeNodeImpl<NODE> node) {
+            List<WebTreeNodeImpl<NODE>> path = pathTo(node);
+
+            CompletableFuture<Void> expanded = CompletableFuture.completedFuture(null);
+            for (int i = 0; i < path.size() - 1; i++) {
+                WebTreeNodeImpl<NODE> ancestor = path.get(i);
+                expanded = expanded.thenCompose(ignored -> expandNode(ancestor));
+            }
+
+            expanded.thenRun(() -> {
+                UI ui = currentUI();
+                if (ui != null) {
+                    ui.access(() -> select(node));
+                }
+            });
         }
 
         public CompletableFuture<Void> expandNode(WebTreeNodeImpl<NODE> node) {
@@ -668,7 +760,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     @Override
     public void select(TreeNode<NODE> node) {
         if (node instanceof WebTreeNodeImpl<NODE> webNode) {
-            toVaadinComponent().select(webNode);
+            toVaadinComponent().selectDeep(webNode);
         }
     }
 
@@ -728,5 +820,93 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
 
         getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
+    }
+
+    /**
+     * A drop on no row at all is refused rather than aimed at the root, so nothing lands somewhere
+     * the user did not point at.
+     */
+    private static DragAndDropTransferHandler.@Nullable DropPosition positionOf(GridDropLocation location) {
+        return switch (location) {
+            case ON_TOP -> DragAndDropTransferHandler.DropPosition.INTO;
+            case ABOVE -> DragAndDropTransferHandler.DropPosition.ABOVE;
+            case BELOW -> DragAndDropTransferHandler.DropPosition.BELOW;
+            case EMPTY -> null;
+        };
+    }
+
+    private class DropContextImpl implements DragAndDropTransferHandler.DropContext<TreeNode<NODE>> {
+        private final TreeNode<NODE> myTarget;
+        private final DragAndDropTransferHandler.DropPosition myPosition;
+        private final DataTransfer myTransfer;
+        private final List<TreeNode<NODE>> myItems;
+        private final boolean myCheckOnly;
+
+        private DropContextImpl(TreeNode<NODE> target,
+                                DragAndDropTransferHandler.DropPosition position,
+                                DataTransfer transfer,
+                                List<TreeNode<NODE>> items,
+                                boolean checkOnly) {
+            myTarget = target;
+            myPosition = position;
+            myTransfer = transfer;
+            myItems = items;
+            myCheckOnly = checkOnly;
+        }
+
+        private DropContextImpl toPerforming() {
+            return new DropContextImpl(myTarget, myPosition, myTransfer, myItems, false);
+        }
+
+        @Override
+        public TreeNode<NODE> getTarget() {
+            return myTarget;
+        }
+
+        @Override
+        public DragAndDropTransferHandler.DropPosition getPosition() {
+            return myPosition;
+        }
+
+        @Override
+        public boolean isCheckOnly() {
+            return myCheckOnly;
+        }
+
+        @Override
+        public DataTransfer getTransfer() {
+            return myTransfer;
+        }
+
+        @Override
+        public List<TreeNode<NODE>> getItems() {
+            return myItems;
+        }
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<TreeNode<NODE>> handler) {
+        myTransferHandler = handler;
+
+        Vaadin vaadin = toVaadinComponent();
+        if (!(handler instanceof DragAndDropTransferHandler<TreeNode<NODE>> dragAndDrop)) {
+            vaadin.setRowsDraggable(false);
+            vaadin.setDropMode(null);
+            return;
+        }
+
+        vaadin.setRowsDraggable(true);
+        vaadin.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
+        vaadin.bindDragAndDrop(dragAndDrop);
+    }
+
+    @Override
+    public @Nullable TransferHandler<TreeNode<NODE>> getTransferHandler() {
+        return myTransferHandler;
+    }
+
+    @Override
+    public @Nullable Point2D getBestPopupPosition() {
+        return myPopupPosition;
     }
 }

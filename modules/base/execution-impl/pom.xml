@@ -34,6 +34,11 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-mcp-server-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-execution-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -67,6 +72,14 @@
             <artifactId>consulo-ui-ex-awt-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>jediterm-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>pty4j</artifactId>
         </dependency>
     </dependencies>
 </project>

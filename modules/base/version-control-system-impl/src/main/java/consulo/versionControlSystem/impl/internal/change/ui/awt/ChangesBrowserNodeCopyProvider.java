@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
@@ -25,7 +25,6 @@ import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
-import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,7 +49,7 @@ class ChangesBrowserNodeCopyProvider implements CopyProvider {
   @Override
   public void performCopy(DataContext dataContext) {
     List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtil.assertNotNull(myTree.getSelectionPaths())), TreeUtil.getDisplayOrderComparator(myTree));
-    CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(paths, path -> {
+    CopyPasteManager.getInstance().setText(StringUtil.join(paths, path -> {
       Object node = path.getLastPathComponent();
       if (node instanceof ChangesBrowserNode) {
         return ((ChangesBrowserNode)node).getTextPresentation();
@@ -58,6 +57,6 @@ class ChangesBrowserNodeCopyProvider implements CopyProvider {
       else {
         return node.toString();
       }
-    }, "\n")));
+    }, "\n"));
   }
 }

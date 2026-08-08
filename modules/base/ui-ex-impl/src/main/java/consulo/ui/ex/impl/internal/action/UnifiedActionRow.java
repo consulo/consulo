@@ -18,12 +18,16 @@ package consulo.ui.ex.impl.internal.action;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.PopupMenu;
+import consulo.ui.ToggleButton;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -31,13 +35,17 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.PresentationFactory;
 import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.internal.ActionTicker;
+import consulo.ui.ex.internal.TimerListener;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -60,9 +68,25 @@ public class UnifiedActionRow {
     private final ActionToolbar.Style myStyle;
     private final Layout<?> myLayout;
 
+    private final Map<AnAction, ToggleButton> myToggleButtons = new HashMap<>();
+
     private String mySignature = "";
     private List<AnAction> myActions = List.of();
     private @Nullable ProgressIndicator myIndicator;
+    private @Nullable Disposable myTickerRegistration;
+
+    private final TimerListener myTimerListener = new TimerListener() {
+        @Override
+        public ModalityState getModalityState() {
+            return ModalityState.any();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void run() {
+            updateAsync();
+        }
+    };
 
     public UnifiedActionRow(
         Supplier<ActionGroup> groupSupplier,
@@ -79,6 +103,30 @@ public class UnifiedActionRow {
         myPresentationFactory = presentationFactory;
         myStyle = style;
         myLayout = style.isHorizontal() ? HorizontalLayout.create(0) : VerticalLayout.create(0);
+
+        myLayout.addAttachListener(event -> startTicking());
+        myLayout.addDetachListener(event -> stopTicking());
+    }
+
+    @RequiredUIAccess
+    private void startTicking() {
+        if (myTickerRegistration != null) {
+            return;
+        }
+
+        myTickerRegistration = ActionTicker.getInstance().addListener(UIAccess.current(), myTimerListener);
+
+        updateAsync();
+    }
+
+    private void stopTicking() {
+        Disposable registration = myTickerRegistration;
+        if (registration == null) {
+            return;
+        }
+
+        myTickerRegistration = null;
+        Disposer.dispose(registration);
     }
 
     public Component getComponent() {
@@ -109,7 +157,8 @@ public class UnifiedActionRow {
             myPlace,
             myPresentationFactory,
             uiAccess,
-            indicator
+            indicator,
+            true
         ).whenCompleteAsync((nodes, throwable) -> {
             if (myIndicator != indicator) {
                 result.complete(myActions);
@@ -159,12 +208,16 @@ public class UnifiedActionRow {
         String signature = builder.toString();
 
         if (signature.equals(mySignature)) {
+            // a toggle button flips itself on click, but the state belongs to the action - if performing it left
+            // the action where it was, the optimistic flip has to be taken back
+            syncToggleStates(nodes);
             return;
         }
 
         mySignature = signature;
 
         myLayout.removeAll();
+        myToggleButtons.clear();
 
         for (UnifiedActionMenuExpander.MenuNode node : nodes) {
             if (node.isSeparator()) {
@@ -172,6 +225,22 @@ public class UnifiedActionRow {
             }
 
             add(node.children() == null ? createActionButton(node) : createActionMenu(node));
+        }
+    }
+
+    @RequiredUIAccess
+    private void syncToggleStates(List<UnifiedActionMenuExpander.MenuNode> nodes) {
+        for (UnifiedActionMenuExpander.MenuNode node : nodes) {
+            AnAction action = node.action();
+            Boolean checked = node.checked();
+            if (action == null || checked == null) {
+                continue;
+            }
+
+            ToggleButton button = myToggleButtons.get(action);
+            if (button != null) {
+                button.setValue(checked, false);
+            }
         }
     }
 
@@ -193,13 +262,18 @@ public class UnifiedActionRow {
 
         AnAction action = node.action();
         if (action != null) {
-            button.addClickListener(event -> UnifiedActionMenuExpander.performAction(
-                action,
-                myContextSupplier.get(),
-                myPlace,
-                myPresentationFactory,
-                event.getInputDetails()
-            ));
+            button.addClickListener(event -> {
+                UnifiedActionMenuExpander.performAction(
+                    action,
+                    myContextSupplier.get(),
+                    myPlace,
+                    myPresentationFactory,
+                    event.getInputDetails(),
+                    true
+                );
+
+                updateAsync();
+            });
         }
 
         return button;
@@ -237,8 +311,25 @@ public class UnifiedActionRow {
 
     @RequiredUIAccess
     private Button createButton(UnifiedActionMenuExpander.MenuNode node, boolean showText) {
+        LocalizeValue text = showText ? node.text() : LocalizeValue.empty();
+
         // an icon action is shown by its icon, its text is what the user gets on hover
-        Button button = Button.create(showText ? node.text() : LocalizeValue.empty());
+        Boolean checked = node.checked();
+
+        Button button;
+        if (checked == null) {
+            button = Button.create(text);
+        }
+        else {
+            ToggleButton toggleButton = ToggleButton.create(text, checked);
+            button = toggleButton;
+
+            AnAction action = node.action();
+            if (action != null) {
+                myToggleButtons.put(action, toggleButton);
+            }
+        }
+
         button.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
         button.setToolTipText(node.text());
         button.setEnabled(node.enabled());

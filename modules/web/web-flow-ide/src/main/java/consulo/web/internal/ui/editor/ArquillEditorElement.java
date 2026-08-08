@@ -454,6 +454,25 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     /**
+     * The line number colours of the scheme, which the awt gutter paints itself. Set as custom properties rather
+     * than pushed through the editor api - the bundled orion stylesheet gives the ruler a colour of its own, and
+     * the sheet of the ide only has to outweigh it.
+     */
+    public void setLineNumberColors(@Nullable String color, @Nullable String caretRowColor) {
+        setStyleProperty("--arquill-editor-line-number-color", color);
+        setStyleProperty("--arquill-editor-line-number-caret-row-color", caretRowColor);
+    }
+
+    private void setStyleProperty(String name, @Nullable String value) {
+        if (value == null) {
+            getElement().getStyle().remove(name);
+        }
+        else {
+            getElement().getStyle().set(name, value);
+        }
+    }
+
+    /**
      * The stylesheet of the attribute keys the style ranges name - one rule per key, replaced as a whole when
      * the scheme changes.
      */

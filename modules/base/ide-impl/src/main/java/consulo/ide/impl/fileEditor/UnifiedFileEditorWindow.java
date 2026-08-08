@@ -425,6 +425,12 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 myTabbedLayout.addTab(tab, editor.getUIComponent());
                 myEditors.put(editor, tabInfo);
 
+                // a file opened into a tab which was already there comes to the front, and one opening a tab of
+                // its own has no more reason to stay behind whatever was selected before it
+                if (selectEditor) {
+                    tabInfo.select();
+                }
+
                 // a fresh tab carries nothing but the name and the icon, and the colours the platform assigns a
                 // file - the vcs status of the text, the fill a EditorTabColorProvider gives - only ever arrived
                 // with a later update. the awt container asks for both the moment the tab is inserted

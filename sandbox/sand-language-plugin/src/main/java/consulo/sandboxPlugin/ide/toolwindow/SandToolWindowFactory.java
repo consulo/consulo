@@ -83,28 +83,20 @@ public class SandToolWindowFactory implements ToolWindowFactory {
     }
 
     @Override
-    public boolean isUnified() {
-        return true;
-    }
-
-    @Override
     public boolean canCloseContents() {
         return true;
     }
 
-    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.RIGHT;
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowpalette();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Sand");

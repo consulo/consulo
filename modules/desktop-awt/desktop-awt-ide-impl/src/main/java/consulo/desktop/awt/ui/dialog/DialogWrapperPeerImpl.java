@@ -775,6 +775,14 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 }
 
                 if (myInitialSize == null) {
+                    Dimension initialSize = dialogWrapper.getInitialSize();
+                    if (initialSize != null) {
+                        myInitialSize = new Dimension(initialSize);
+                        _setSizeForLocation(myInitialSize.width, myInitialSize.height, location);
+                    }
+                }
+
+                if (myInitialSize == null) {
                     myInitialSize = getSize();
                 }
             }

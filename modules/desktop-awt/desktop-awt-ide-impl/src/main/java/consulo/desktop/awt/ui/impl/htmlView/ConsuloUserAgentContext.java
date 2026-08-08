@@ -4,10 +4,16 @@ import consulo.application.Application;
 import org.cobraparser.ua.NetworkRequest;
 import org.cobraparser.ua.UserAgentContext;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.security.Policy;
+import java.util.function.Function;
 
 class ConsuloUserAgentContext implements UserAgentContext {
+    private final Function<String, BufferedImage> myImageResolver;
+
+    ConsuloUserAgentContext(Function<String, BufferedImage> imageResolver) {
+        myImageResolver = imageResolver;
+    }
 
     @Override
     public boolean isRequestPermitted(Request request) {
@@ -16,7 +22,7 @@ class ConsuloUserAgentContext implements UserAgentContext {
 
     @Override
     public NetworkRequest createHttpRequest() {
-        return new ConsuloNetworkRequest();
+        return new ConsuloNetworkRequest(myImageResolver);
     }
 
     @Override

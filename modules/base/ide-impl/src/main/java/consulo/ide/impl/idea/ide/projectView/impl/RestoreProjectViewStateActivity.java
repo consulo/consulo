@@ -20,6 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.internal.ProjectViewEx;
 import consulo.ui.UIAccess;
 
 /**
@@ -32,8 +33,8 @@ public class RestoreProjectViewStateActivity implements PostStartupActivity, Dum
     public void runActivity(Project project, UIAccess uiAccess) {
         uiAccess.give(() -> {
             ProjectView projectView = ProjectView.getInstance(project);
-            if (projectView instanceof ProjectViewImpl impl) {
-                impl.reRestoreExpandedPaths();
+            if (projectView instanceof ProjectViewEx projectViewEx) {
+                projectViewEx.reRestoreExpandedPaths();
             }
         });
     }

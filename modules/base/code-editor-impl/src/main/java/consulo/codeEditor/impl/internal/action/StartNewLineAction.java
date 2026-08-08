@@ -27,7 +27,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import org.jspecify.annotations.Nullable;
 
 /**

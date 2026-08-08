@@ -46,6 +46,10 @@ public abstract class DialogDescriptor {
         return null;
     }
 
+    public @Nullable String getDimensionServiceKey() {
+        return null;
+    }
+
     
     @RequiredUIAccess
     public abstract Component createCenterComponent(Disposable uiDisposable);

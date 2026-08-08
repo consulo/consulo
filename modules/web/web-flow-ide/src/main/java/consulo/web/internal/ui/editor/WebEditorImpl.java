@@ -92,7 +92,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
+import consulo.web.internal.ui.WebColors;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -841,16 +841,21 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   private void updateColors() {
     EditorColorsScheme scheme = getColorsScheme();
 
-    String background = toCssColor(scheme.getDefaultBackground());
-    String foreground = toCssColor(scheme.getDefaultForeground());
+    String background = WebColors.toCssColor(scheme.getDefaultBackground());
+    String foreground = WebColors.toCssColor(scheme.getDefaultForeground());
+    String selectionBackground = WebColors.toCssColor(scheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR));
+    String caretRowBackground = WebColors.toCssColor(scheme.getColor(EditorColors.CARET_ROW_COLOR));
 
-    ColorValue selection = scheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR);
-    String selectionBackground = selection == null ? null : toCssColor(selection);
+    // the gutter of the awt editor paints its line numbers with these two, so the ruler in the browser has to
+    // be told about them as well - otherwise it keeps the colour the bundled orion stylesheet gives it
+    String lineNumberColor = WebColors.toCssColor(scheme.getColor(EditorColors.LINE_NUMBERS_COLOR));
+    String lineNumberCaretRowColor = WebColors.toCssColor(scheme.getColor(EditorColors.LINE_NUMBER_ON_CARET_ROW_COLOR));
 
-    ColorValue caretRow = scheme.getColor(EditorColors.CARET_ROW_COLOR);
-    String caretRowBackground = caretRow == null ? null : toCssColor(caretRow);
-
-    giveUI(() -> myEditorComponent.toVaadinComponent().setColors(background, foreground, selectionBackground, caretRowBackground));
+    giveUI(() -> {
+      ArquillEditorElement vaadin = myEditorComponent.toVaadinComponent();
+      vaadin.setColors(background, foreground, selectionBackground, caretRowBackground);
+      vaadin.setLineNumberColors(lineNumberColor, lineNumberCaretRowColor);
+    });
   }
 
   public void update() {
@@ -1319,7 +1324,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         .append(",\"end\":").append(end)
         .append(",\"layer\":").append(highlighter.getLayer())
         .append(",\"thin\":").append(highlighter.isThinErrorStripeMark())
-        .append(",\"color\":\"").append(toCssColor(color))
+        .append(",\"color\":\"").append(WebColors.toCssColor(color))
         .append("\",\"tooltip\":\"").append(escapeJson(toTooltipHtml(highlighter.getErrorStripeTooltip()))).append("\"}");
     }
   }
@@ -1788,14 +1793,14 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     @Nullable String decoration
   ) {
     if (foreground != null) {
-      style.append("\"color\":\"").append(toCssColor(foreground)).append('"');
+      style.append("\"color\":\"").append(WebColors.toCssColor(foreground)).append('"');
     }
 
     if (background != null) {
       if (style.length() > 0) {
         style.append(',');
       }
-      style.append("\"backgroundColor\":\"").append(toCssColor(background)).append('"');
+      style.append("\"backgroundColor\":\"").append(WebColors.toCssColor(background)).append('"');
     }
 
     if ((fontType & Font.BOLD) != 0) {
@@ -1863,12 +1868,12 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
       ColorValue foreground = attributes.getForegroundColor();
       if (foreground != null && !Objects.equals(foreground, scheme.getDefaultForeground())) {
-        css.append("color:").append(toCssColor(foreground)).append(';');
+        css.append("color:").append(WebColors.toCssColor(foreground)).append(';');
       }
 
       ColorValue background = attributes.getBackgroundColor();
       if (background != null && !Objects.equals(background, scheme.getDefaultBackground())) {
-        css.append("background-color:").append(toCssColor(background)).append(';');
+        css.append("background-color:").append(WebColors.toCssColor(background)).append(';');
       }
 
       int fontType = attributes.getFontType();
@@ -1896,7 +1901,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
       return null;
     }
 
-    String color = " " + toCssColor(effectColor);
+    String color = " " + WebColors.toCssColor(effectColor);
 
     return switch (effectType) {
       case WAVE_UNDERSCORE -> "underline wavy" + color;
@@ -1908,10 +1913,6 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     };
   }
 
-  private static String toCssColor(ColorValue colorValue) {
-    RGBColor color = colorValue.toRGB();
-    return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-  }
 
 //  private Map<String, String> convertToCssProperties(TextAttributes textAttributes) {
 //    Map<String, String> map = new HashMap<>();

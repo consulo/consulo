@@ -22,7 +22,10 @@ import consulo.document.FileDocumentManager;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.UIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
@@ -65,10 +68,26 @@ public class EditorModificationUtil {
     return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
   }
 
+  @RequiredUIAccess
   public static void pasteTransferableAsBlock(Editor editor, @Nullable Supplier<Transferable> producer) {
-    Transferable content = getTransferable(producer);
-    if (content == null) return;
-    String text = getStringContent(content);
+    UIAccess uiAccess = UIAccess.current();
+
+    Supplier<DataTransfer> transferProducer = producer == null
+      ? null
+      : () -> DataTransfer.builder().put(EditorImplUtil.TRANSFERABLE, producer.get()).build();
+
+    EditorImplUtil.getContentsToPasteToEditor(transferProducer)
+      .whenCompleteAsync((transfer, throwable) -> {
+        if (throwable == null && transfer != null) {
+          pasteAsBlock(editor, transfer);
+        }
+      }, uiAccess);
+  }
+
+  @RequiredUIAccess
+  private static void pasteAsBlock(Editor editor, DataTransfer transfer) {
+    Transferable content = transfer.get(EditorImplUtil.TRANSFERABLE);
+    String text = content != null ? getStringContent(content) : transfer.get(DataTransferType.TEXT);
     if (text == null) return;
 
     int caretLine = editor.getCaretModel().getLogicalPosition().line;
@@ -100,20 +119,6 @@ public class EditorModificationUtil {
     }
 
     return null;
-  }
-
-  private static Transferable getTransferable(Supplier<Transferable> producer) {
-    Transferable content = null;
-    if (producer != null) {
-      content = producer.get();
-    }
-    else {
-      CopyPasteManager manager = CopyPasteManager.getInstance();
-      if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
-        content = manager.getContents();
-      }
-    }
-    return content;
   }
 
   /**

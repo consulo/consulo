@@ -22,6 +22,8 @@ import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.clipboard.Clipboard;
+import consulo.web.internal.ui.clipboard.WebClipboardImpl;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
@@ -159,6 +161,11 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
 
     public UI getUI() {
         return myUI;
+    }
+
+    @Override
+    protected Clipboard createClipboard() {
+        return new WebClipboardImpl(myUI);
     }
 
     @Override

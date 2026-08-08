@@ -167,6 +167,17 @@ public class WebImageUrl {
     private static @Nullable String toInlineURL(Image original) {
         Image image = WebDelegatingImage.unwrap(original);
 
+        if (image instanceof WebBytesImageImpl bytes) {
+            return bytes.toRendered().toDataURI();
+        }
+
+        // a resize is the box of its child at another size - the box is the caller's to set, an img carries it
+        // as attributes and the canvas writer is told it outright, so only the picture underneath matters here.
+        // without this a resized image of bytes falls through to the spec, which has no way to name one
+        if (image instanceof WebResizeImageImpl resize) {
+            return toInlineURL(resize.getOriginal());
+        }
+
         if (image instanceof WebCanvasImageImpl canvas) {
             WebCanvasSvgWriter writer = new WebCanvasSvgWriter(canvas.getWidth(), canvas.getHeight());
             canvas.getConsumer().accept(writer);

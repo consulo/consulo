@@ -25,6 +25,7 @@ module consulo.application.impl {
     requires java.management;
 
     requires args4j;
+    requires com.google.gson;
     requires org.slf4j;
 
     exports consulo.application.impl.internal to

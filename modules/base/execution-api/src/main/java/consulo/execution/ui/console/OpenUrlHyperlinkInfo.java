@@ -22,14 +22,13 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 
 import org.jspecify.annotations.Nullable;
 
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.util.function.Predicate;
 
@@ -75,7 +74,7 @@ public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
-                CopyPasteManager.getInstance().setContents(new StringSelection(url));
+                CopyPasteManager.getInstance().setText(url);
             }
         });
         return builder.build();

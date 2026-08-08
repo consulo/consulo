@@ -21,7 +21,9 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.ProcessCanceledException;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTClipboardImpl;
 import consulo.logging.Logger;
+import consulo.ui.clipboard.Clipboard;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -128,6 +130,11 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
   }
 
   
+  @Override
+  protected Clipboard createClipboard() {
+    return new DesktopAWTClipboardImpl();
+  }
+
   @Override
   protected SingleUIAccessScheduler createScheduler() {
     Application application = Application.get();

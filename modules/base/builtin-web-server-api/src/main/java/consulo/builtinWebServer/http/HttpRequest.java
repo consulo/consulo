@@ -46,5 +46,11 @@ public interface HttpRequest {
 
   @Nullable String getParameterValue(String parameter);
 
+  /**
+   * Port this request arrived on. The built-in server can be bound to several ports at once, so a
+   * handler that must serve only one of them has to check this.
+   */
+  int localPort();
+
   void terminate();
 }

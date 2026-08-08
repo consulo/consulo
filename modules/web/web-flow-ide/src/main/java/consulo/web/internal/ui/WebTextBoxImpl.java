@@ -22,6 +22,7 @@ import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -62,8 +63,8 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
 
     @Override
     @RequiredUIAccess
-    public void setValue(String value, boolean fireListeners) {
-        getVaadinComponent().setValue(value);
+    public void setValue(@Nullable String value, boolean fireListeners) {
+        getVaadinComponent().setValue(StringUtil.notNullize(value));
     }
 
     @Override

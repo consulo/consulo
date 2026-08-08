@@ -71,6 +71,7 @@ module consulo.application.api {
         consulo.language.code.style.impl,
         consulo.http.api,
         consulo.builtin.web.server.impl,
+        consulo.mcp.server.impl,
         consulo.version.control.system.distributed.api,
         consulo.version.control.system.log.impl,
         consulo.compiler.impl,

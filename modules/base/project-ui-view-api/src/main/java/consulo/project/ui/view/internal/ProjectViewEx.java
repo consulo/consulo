@@ -26,4 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 public interface ProjectViewEx extends ProjectView {
   @RequiredUIAccess
   void setupToolWindow(ToolWindow toolWindow, boolean loadPaneExtensions);
+
+  @RequiredUIAccess
+  void reRestoreExpandedPaths();
 }

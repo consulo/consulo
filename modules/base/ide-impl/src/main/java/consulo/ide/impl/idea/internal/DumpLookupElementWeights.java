@@ -26,10 +26,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.Pair;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +62,7 @@ public class DumpLookupElementWeights extends LegacyDumbAwareAction {
         System.out.println(sb);
         LOG.info(sb);
         try {
-            CopyPasteManager.getInstance().setContents(new StringSelection(sb));
+            CopyPasteManager.getInstance().setText(sb);
         }
         catch (Exception ignore) {
         }

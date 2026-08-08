@@ -5,9 +5,11 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.LightweightWindow;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jspecify.annotations.Nullable;
@@ -34,6 +36,15 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @param componentUnder the component near which the popup should be displayed.
      */
     void showUnderneathOf(Component componentUnder);
+
+    /**
+     * Shows the popup under whatever the action was invoked from. What that is depends on the frontend - an awt
+     * event carries the component it happened on, a browser one carries the point it happened at.
+     *
+     * @param e the event the action is performed with.
+     */
+    @RequiredUIAccess
+    void showUnderneathOf(AnActionEvent e);
 
     /**
      * Shows the popup at the specified point.
@@ -93,7 +104,14 @@ public interface JBPopup extends Disposable, LightweightWindow {
         showBy(uiEvent.getComponent(), Objects.requireNonNull(uiEvent.getInputDetails()));
     }
 
-    void showBy(consulo.ui.Component component, InputDetails inputDetails);
+    void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails);
+
+    /**
+     * Whether the user may resize the popup. Set it before the popup is shown.
+     */
+    @RequiredUIAccess
+    default void setResizable(boolean resizable) {
+    }
 
     /**
      * Shows the popup in the center of the active window in the IDE frame for the specified project.

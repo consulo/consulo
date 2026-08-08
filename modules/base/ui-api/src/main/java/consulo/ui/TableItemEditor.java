@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-02
  */
 public interface TableItemEditor<Item, Value> {
+    @RequiredUIAccess
     ValueComponent<Value> createComponent(Item item);
 
     @RequiredUIAccess

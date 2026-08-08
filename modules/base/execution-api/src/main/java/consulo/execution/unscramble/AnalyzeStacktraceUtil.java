@@ -33,18 +33,21 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -59,8 +62,9 @@ public class AnalyzeStacktraceUtil {
         consoleView.scrollTo(0);
     }
 
-    public static @Nullable String getTextInClipboard() {
-        return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
+    @RequiredUIAccess
+    public static CompletableFuture<@Nullable String> getTextInClipboard() {
+        return CopyPasteManager.getInstance().getContentsAsync(DataTransferType.TEXT);
     }
 
     public interface ConsoleFactory {
@@ -174,10 +178,13 @@ public class AnalyzeStacktraceUtil {
 
         @RequiredUIAccess
         public void pasteTextFromClipboard() {
-            String text = getTextInClipboard();
-            if (text != null) {
-                setText(text);
-            }
+            UIAccess uiAccess = UIAccess.current();
+
+            getTextInClipboard().whenCompleteAsync((text, throwable) -> {
+                if (throwable == null && text != null) {
+                    setText(text);
+                }
+            }, uiAccess);
         }
 
         @Override

@@ -15,13 +15,19 @@
  */
 package consulo.ui.ex.impl.internal.popup;
 
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.LightPopup;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.internal.AnchoredPopup;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -44,7 +50,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2026-08-03
  */
-public abstract class UnifiedPopupImpl implements JBPopup {
+public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
     private static final Logger LOG = Logger.getInstance(UnifiedPopupImpl.class);
 
     private final List<JBPopupListener> myListeners = new ArrayList<>();
@@ -212,6 +218,19 @@ public abstract class UnifiedPopupImpl implements JBPopup {
 
     @Override
     @RequiredUIAccess
+    public void showUnderneathOf(AnActionEvent e) {
+        consulo.ui.Component component = e.getData(consulo.ui.Component.KEY);
+
+        if (component != null) {
+            showBy(component, e.getInputDetails());
+        }
+        else {
+            showCenteredInCurrentWindow(null);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
     public void show(RelativePoint point) {
         showCenteredInCurrentWindow(null);
     }
@@ -225,7 +244,33 @@ public abstract class UnifiedPopupImpl implements JBPopup {
     @Override
     @RequiredUIAccess
     public void showInBestPositionFor(DataContext dataContext) {
-        showCenteredInCurrentWindow(null);
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor != null) {
+            EditorPopupHelper.getInstance().showPopupInBestPositionFor(editor, this);
+            return;
+        }
+
+        consulo.ui.Component component = dataContext.getData(consulo.ui.Component.KEY);
+
+        if (component == null) {
+            showCenteredInCurrentWindow(null);
+            return;
+        }
+
+        Point2D position = component instanceof PopupOwner popupOwner ? popupOwner.getBestPopupPosition() : null;
+
+        if (position != null) {
+            showAtPoint(component, position.x(), position.y(), 0);
+        }
+        else {
+            showBy(component, null);
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showAtPoint(consulo.ui.Component target, int x, int y, int anchorHeight) {
+        showBy(target, null);
     }
 
     @Override

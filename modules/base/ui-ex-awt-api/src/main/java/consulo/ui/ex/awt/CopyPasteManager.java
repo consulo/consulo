@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -27,6 +28,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.EventListener;
 
+@Deprecated
+@DeprecationInfo("Use consulo.ui.ex.CopyPasteManager, this one reaches the awt clipboard and throws headless")
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CopyPasteManager {
   public static final ColorValue CUT_COLOR = new RGBColor(160, 160, 160);
@@ -61,7 +64,6 @@ public abstract class CopyPasteManager {
    * However, there are situations when all 'kill rings' should be stopped manually (e.g. on undo). Hence, we need
    * a handle to ask for that. This method works like such a handle.
    *
-   * @see KillRingTransferable
    */
   public abstract void stopKillRings();
 

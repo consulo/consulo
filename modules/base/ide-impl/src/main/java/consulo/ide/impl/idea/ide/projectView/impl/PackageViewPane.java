@@ -169,8 +169,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         @Override
         @RequiredUIAccess
         public void setSelected(AnActionEvent event, boolean flag) {
-            ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(myProject);
-            projectView.setShowLibraryContents(flag, getId());
+            ProjectView.getInstance(myProject).setShowLibraryContents(flag, getId());
         }
 
         @Override
@@ -178,8 +177,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
         public void update(AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
-            ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(myProject);
-            presentation.setVisible(projectView.getCurrentProjectViewPane() == PackageViewPane.this);
+            presentation.setVisible(ProjectView.getInstance(myProject).getCurrentProjectViewPane() == PackageViewPane.this);
         }
     }
 

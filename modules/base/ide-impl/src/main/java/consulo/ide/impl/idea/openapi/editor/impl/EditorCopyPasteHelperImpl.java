@@ -23,7 +23,10 @@ import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.document.util.TextRange;
 import consulo.application.util.LineTokenizer;
 import jakarta.inject.Singleton;
@@ -56,7 +59,10 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
     s = TextBlockTransferable.convertLineSeparators(s, "\n", extraData);
     Transferable contents = editor.getCaretModel().supportsMultipleCarets() ? new TextBlockTransferable(s, extraData, null) : new StringSelection(s);
-    CopyPasteManager.getInstance().setContents(contents);
+    CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+      .put(DataTransferType.TEXT, s)
+      .put(EditorImplUtil.TRANSFERABLE, contents)
+      .build());
   }
 
   public static String getSelectedTextForClipboard(Editor editor, Collection<TextBlockTransferableData> extraDataCollector) {
@@ -80,21 +86,55 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   @Override
+  @RequiredUIAccess
   public TextRange @Nullable [] pasteFromClipboard(Editor editor) {
-    CopyPasteManager manager = CopyPasteManager.getInstance();
-    if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
-      Transferable clipboardContents = manager.getContents();
-      if (clipboardContents != null) {
-        return pasteTransferable(editor, clipboardContents);
-      }
-    }
-    return null;
+    // the clipboard answers as a future, and this one has to give a value back - only the payload this process
+    // already holds can be pasted here, which is what every caller of this overload means anyway
+    DataTransfer contents = CopyPasteManager.getInstance().getLocalContents();
+    return contents.isEmpty() ? null : pasteDataTransfer(editor, contents);
   }
 
   @Override
   public TextRange @Nullable [] pasteTransferable(final Editor editor, Transferable content) {
     String text = getStringContent(content);
     if (text == null) return null;
+
+    return pasteText(editor, text, caretStateOf(content));
+  }
+
+  /**
+   * The awt free entry point. A payload which came from another application carries text and nothing else, and
+   * the caret layout of a multi caret copy only ever exists in a payload this process wrote itself.
+   */
+  @Override
+  public TextRange @Nullable [] pasteDataTransfer(final Editor editor, DataTransfer content) {
+    Transferable transferable = content.get(EditorImplUtil.TRANSFERABLE);
+    if (transferable != null) {
+      return pasteTransferable(editor, transferable);
+    }
+
+    String text = content.get(DataTransferType.TEXT);
+    if (text == null) return null;
+
+    return pasteText(editor, text, null);
+  }
+
+  private static @Nullable CaretStateTransferableData caretStateOf(Transferable content) {
+    try {
+      return content.isDataFlavorSupported(CaretStateTransferableData.FLAVOR)
+             ? (CaretStateTransferableData)content.getTransferData(CaretStateTransferableData.FLAVOR) : null;
+    }
+    catch (Exception e) {
+      LOG.error(e);
+      return null;
+    }
+  }
+
+  private static TextRange @Nullable [] pasteText(
+    final Editor editor,
+    String text,
+    @Nullable CaretStateTransferableData caretData
+  ) {
 
     if (editor.getCaretModel().supportsMultipleCarets()) {
       int caretCount = editor.getCaretModel().getCaretCount();
@@ -109,14 +149,6 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
           }
         }
         caretCount = editor.getCaretModel().getCaretCount();
-      }
-      CaretStateTransferableData caretData = null;
-      try {
-        caretData = content.isDataFlavorSupported(CaretStateTransferableData.FLAVOR)
-                    ? (CaretStateTransferableData)content.getTransferData(CaretStateTransferableData.FLAVOR) : null;
-      }
-      catch (Exception e) {
-        LOG.error(e);
       }
       final TextRange[] ranges = new TextRange[caretCount];
       final Iterator<String> segments = new ClipboardTextPerCaretSplitter().split(text, caretData, caretCount).iterator();

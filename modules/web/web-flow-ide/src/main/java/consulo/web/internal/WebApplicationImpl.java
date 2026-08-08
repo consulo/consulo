@@ -32,28 +32,32 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
     return (WebStartupProgressImpl)mySplashRef.get();
   }
 
+  /**
+   * Always defers, even when the caller already is the ui thread - running inline would let a service constructor
+   * that posts an initializer re-enter itself before the container finished binding it.
+   */
   @Override
   public void invokeLater(Runnable runnable) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(Runnable runnable, BooleanSupplier expired) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(Runnable runnable, consulo.ui.ModalityState state) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   

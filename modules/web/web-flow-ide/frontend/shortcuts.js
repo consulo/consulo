@@ -54,6 +54,34 @@
      */
     const shortcutsOf = element => element.$consuloShortcutSet || (element.$consuloShortcutSet = new Set());
 
+    /*
+     * The combinations which must reach the browser rather than being taken here. A page is handed the system
+     * clipboard only inside the event the browser itself raises - cancelling the keydown of ctrl v cancels the
+     * paste event with it, and then nothing on either side has the payload. So these keys are left alone, and
+     * the shortcut of the platform is dispatched from the clipboard event instead, carrying what it holds.
+     */
+    const clipboardOf = element => element.$consuloClipboardSet || (element.$consuloClipboardSet = new Map());
+
+    const comboForKind = (element, kind) => {
+        for (const [combo, value] of clipboardOf(element)) {
+            if (value === kind) {
+                return combo;
+            }
+        }
+        return null;
+    };
+
+    const setClipboardShortcuts = (element, spec) => {
+        const map = new Map();
+        (spec ? spec.split('\n') : []).forEach(line => {
+            const at = line.lastIndexOf('=');
+            if (at > 0) {
+                map.set(line.substring(0, at), line.substring(at + 1));
+            }
+        });
+        element.$consuloClipboardSet = map;
+    };
+
     const comboOf = event => {
         const parts = [];
         if (event.altKey) {
@@ -116,7 +144,20 @@
         };
 
         const onKey = (event, pressed) => {
+            // a terminal talks to a process which owns the keyboard - enter, tab and the control keys are input
+            // for that process, so the keymap of the ide must not take them first
+            const target = event.target;
+            if (target && target.closest && target.closest('[consulo-keyboard-capture]')) {
+                return;
+            }
+
             const modifier = MODIFIERS[event.code];
+
+            // left for the browser on purpose - see clipboardOf. the stroke still reaches the platform, but from
+            // the clipboard event which the untouched default action raises, not from here
+            if (pressed && !modifier && clipboardOf(element).has(comboOf(event))) {
+                return;
+            }
 
             if (pressed && !modifier && shortcutsOf(element).has(comboOf(event))) {
                 event.preventDefault();
@@ -149,7 +190,31 @@
         // before the editor or a text field acts on it
         document.addEventListener('keydown', event => onKey(event, true), true);
         document.addEventListener('keyup', event => onKey(event, false), true);
+
+        /*
+         * Capture, so the editor in the page does not also act on it - the orion client div is contenteditable
+         * and would insert the text itself, on top of what the paste action of the platform inserts.
+         */
+        document.addEventListener('paste', event => {
+            const combo = comboForKind(element, 'paste');
+            if (!combo || !event.clipboardData) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            element.dispatchEvent(new CustomEvent('consulo-shortcut', {
+                detail: {
+                    combo: combo,
+                    // the payload travels with the stroke rather than being asked for afterwards - by the time a
+                    // request of the server reached the page the activation of this gesture would be spent
+                    pasteText: event.clipboardData.getData('text/plain') || '',
+                    pasteHtml: event.clipboardData.getData('text/html') || ''
+                }
+            }));
+        }, true);
     };
 
-    window.consuloShortcuts = { install: install, setShortcuts: setShortcuts };
+    window.consuloShortcuts = { install: install, setShortcuts: setShortcuts, setClipboardShortcuts: setClipboardShortcuts };
 })();

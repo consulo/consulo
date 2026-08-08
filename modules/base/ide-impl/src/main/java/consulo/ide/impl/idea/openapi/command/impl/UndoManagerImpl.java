@@ -36,7 +36,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.UndoProvider;

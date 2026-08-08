@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.virtuallist.VirtualList;
@@ -56,6 +57,7 @@ import java.util.function.ToIntFunction;
  */
 @SuppressWarnings("unchecked")
 public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBoxImpl.Vaadin> implements ListBox<E> {
+    private @Nullable TransferHandler<E> myTransferHandler;
     // the same stylesheet the eager list uses, so a row looks the same whichever of them drew it
     @StyleSheet("/list/webListBox.css")
     public class Vaadin extends VirtualList<E> implements FromVaadinComponentWrapper {
@@ -349,5 +351,15 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
+        myTransferHandler = handler;
+    }
+
+    @Override
+    public @Nullable TransferHandler<E> getTransferHandler() {
+        return myTransferHandler;
     }
 }

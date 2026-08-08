@@ -21,7 +21,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.HtmlPanel;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
@@ -32,7 +32,6 @@ import consulo.versionControlSystem.history.VcsHistoryUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 import static consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer.formatTextWithLinks;
@@ -106,7 +105,7 @@ class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
   public void performCopy(DataContext dataContext) {
     String selectedText = getSelectedText();
     if (selectedText == null || selectedText.isEmpty()) selectedText = StringHtmlUtil.removeHtmlTags(getText());
-    CopyPasteManager.getInstance().setContents(new StringSelection(selectedText));
+    CopyPasteManager.getInstance().setText(selectedText);
   }
 
   @Override

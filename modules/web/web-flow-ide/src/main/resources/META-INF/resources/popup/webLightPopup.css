@@ -1,10 +1,11 @@
 /* the overlay lives in the shadow root of the popover, so the only way at it is the part it exposes */
 
-/* a popup of the ide is a panel rather than a card - the rounding vaadin draws by default reads as a bubble at the
-   size a completion list is */
+/* a popup of the ide is a panel rather than a card - the rounding and the drop shadow vaadin draws by default read
+   as a bubble at the size a completion list is */
 vaadin-popover::part(overlay)
 {
-  border-radius: var(--consulo-popup-radius, 4px);
+  border-radius: var(--consulo-popup-radius, 8px);
+  box-shadow: none;
 }
 
 /* a popup of the platform is not a control - what is inside it may take the focus, the box around it never does,
@@ -12,6 +13,12 @@ vaadin-popover::part(overlay)
 vaadin-popover::part(overlay)
 {
   outline: none;
+}
+
+/* a popup whose content only settles after it is up would otherwise snap to the width of what it had at first */
+vaadin-popover::part(overlay)
+{
+  min-width: var(--consulo-popup-min-width, auto);
 }
 
 /* a popover carries no grip of its own, so the browser's is used for a popup which says it may be resized.

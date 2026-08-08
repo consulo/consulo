@@ -21,7 +21,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 /**
  * Stands for emacs <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Other-Kill-Commands.html">kill-region</a> command.
  * <p/>
- * Generally, it removes currently selected text from the document and puts it to the {@link KillRingTransferable kill ring}.
+ * Generally, it removes currently selected text from the document and puts it to the {@link consulo.codeEditor.internal.KillRingData kill ring}.
  * <p/>
  * Thread-safe.
  *

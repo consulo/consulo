@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.ModalityMode;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
@@ -38,6 +39,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-02
  */
 public class WebHeavyPopupImpl extends VaadinComponentDelegate<WebHeavyPopupImpl.Vaadin> implements HeavyPopup {
+    @StyleSheet("/popup/webHeavyPopup.css")
     public class Vaadin extends Dialog implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
@@ -93,6 +95,33 @@ public class WebHeavyPopupImpl extends VaadinComponentDelegate<WebHeavyPopupImpl
     @RequiredUIAccess
     public void setTitle(@Nullable String title) {
         getVaadinComponent().setHeaderTitle(title == null ? "" : title);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showAt(Component target, int x, int y, int anchorHeight) {
+        Vaadin dialog = getVaadinComponent();
+
+        // only the browser knows where the target ended up, and the dialog has to be placed before it opens -
+        // opening first shows it centred for a frame
+        TargetVaadin.to(target).getElement().executeJs(
+            """
+            const rect = this.getBoundingClientRect();
+            return (rect.left + $0) + ',' + (rect.top + $1);
+            """,
+            x, y
+        ).then(String.class, position -> {
+            int comma = position.indexOf(',');
+            dialog.setLeft(position.substring(0, comma) + "px");
+            dialog.setTop(position.substring(comma + 1) + "px");
+            dialog.setOpened(true);
+        });
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void setMinimumWidth(int width) {
+        getVaadinComponent().setMinWidth(width <= 0 ? null : width + "px");
     }
 
     @Override

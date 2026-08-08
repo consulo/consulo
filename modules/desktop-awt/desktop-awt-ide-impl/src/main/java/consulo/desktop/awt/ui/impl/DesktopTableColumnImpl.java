@@ -130,8 +130,15 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     public @Nullable TableCellRenderer getRenderer(Item item) {
         if (myComponentRender != null) {
             ComponentItemRender<Value> render = myComponentRender;
-            return (table, value, selected, hasFocus, row, column) ->
-                TargetAWT.to(render.render(RenderItem.of(valueOf(item), selected)));
+            return (table, value, selected, hasFocus, row, column) -> {
+                java.awt.Component awtComponent = TargetAWT.to(render.render(RenderItem.of(valueOf(item), selected)));
+
+                // swing components are opaque by default and would paint over the row background
+                if (awtComponent instanceof JComponent jComponent) {
+                    jComponent.setOpaque(false);
+                }
+                return awtComponent;
+            };
         }
 
         return new ColoredTableCellRenderer() {

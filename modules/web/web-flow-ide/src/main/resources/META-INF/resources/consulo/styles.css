@@ -369,3 +369,28 @@ vaadin-context-menu-item[disabled]
   opacity: 1;
   color: var(--consulo-label-disabled-foreground);
 }
+
+/* a toolbar button standing for a selected toggle action - the awt toolbar paints the same fill behind the
+   icon, and without it a borderless button gives the state away by nothing at all */
+vaadin-button[theme~="pressed"]
+{
+  background-color: var(--consulo-tool-window-button-selected-background, lightgray);
+}
+
+/* the awt panel draws its spinner over the content it covers - here the panel takes the place of the content
+   while it is hidden, so the bar has the whole area to sit in the middle of */
+.web-loading-layout-panel
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+.web-loading-layout-panel vaadin-progress-bar
+{
+  max-width: 240px;
+}

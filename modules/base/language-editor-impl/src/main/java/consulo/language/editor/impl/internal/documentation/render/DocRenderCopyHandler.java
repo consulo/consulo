@@ -9,12 +9,11 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Point;
-import java.awt.datatransfer.StringSelection;
 
 @ExtensionImpl
 public final class DocRenderCopyHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -29,7 +28,7 @@ public final class DocRenderCopyHandler extends EditorActionHandler implements E
                 if (!StringUtil.isEmpty(text)) {
                     Point selectionPositionInEditor = pane.getSelectionPositionInEditor();
                     if (selectionPositionInEditor != null) {
-                        CopyPasteManager.getInstance().setContents(new StringSelection(text));
+                        CopyPasteManager.getInstance().setText(text);
 
                         ScrollingModel scrollingModel = editor.getScrollingModel();
                         if (!scrollingModel.getVisibleAreaOnScrollingFinished().contains(selectionPositionInEditor)) {

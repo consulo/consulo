@@ -18,6 +18,7 @@ module consulo.ui.api {
 
     exports consulo.ui;
     exports consulo.ui.annotation;
+    exports consulo.ui.clipboard;
     exports consulo.ui.color;
     exports consulo.ui.cursor;
     exports consulo.ui.border;

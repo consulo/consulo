@@ -1,0 +1,32 @@
+configurable.display.name:
+    text: Providers
+label.default.model:
+    text: Default model
+label.default.provider:
+    text: Default account
+label.installed.types:
+    text: Installed providers
+label.no.accounts:
+    text: No accounts configured yet.
+label.provider.configured:
+    text: configured
+label.provider.not.configured:
+    text: not configured - an API key is required
+toolwindow.display.name:
+    text: AI Chat
+button.send:
+    text: Send
+button.clear:
+    text: Clear
+label.no.model:
+    text: No AI account is configured. Add one in Settings | AI | Providers.
+label.prompt.placeholder:
+    text: Ask about this project
+label.you:
+    text: You
+label.assistant:
+    text: Assistant
+label.tool.call:
+    text: called {0}
+label.failed:
+    text: Request failed - {0}

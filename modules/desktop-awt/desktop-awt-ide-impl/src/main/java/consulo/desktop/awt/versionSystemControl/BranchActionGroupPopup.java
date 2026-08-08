@@ -5,7 +5,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

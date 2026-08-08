@@ -40,6 +40,7 @@ import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
+import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Singleton;
@@ -150,10 +151,31 @@ public class DesktopAwtDialogService implements DialogService {
             setTitle(myDescriptor.getTitle());
 
             init();
+        }
 
+        @Override
+        public @Nullable Dimension getInitialSize() {
             Size2D size = myDescriptor.getInitialSize();
-            if (size != null) {
-                setScalableSize(size.width(), size.height());
+            if (size == null) {
+                return null;
+            }
+            return new Dimension(JBUI.scale(size.width()), JBUI.scale(size.height()));
+        }
+
+        @Override
+        protected @Nullable String getDimensionServiceKey() {
+            return myDescriptor.getDimensionServiceKey();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void doCancelAction() {
+            DialogCancelAction action = new DialogCancelAction();
+
+            if (myDescriptor.canHandle(action, null, TargetAWT.from(getWindow()))) {
+                myDescriptor.onHandleValue(action, null);
+
+                super.doCancelAction();
             }
         }
 

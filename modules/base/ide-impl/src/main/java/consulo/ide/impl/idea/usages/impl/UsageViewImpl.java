@@ -39,6 +39,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.TextCopyProvider;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;

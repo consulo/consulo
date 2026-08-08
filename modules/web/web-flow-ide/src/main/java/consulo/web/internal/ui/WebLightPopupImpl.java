@@ -49,6 +49,7 @@ import java.util.Deque;
  */
 public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl.Vaadin> implements LightPopup {
     private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
+    private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
 
     @StyleSheet("/popup/webLightPopup.css")
     public class Vaadin extends Popover implements FromVaadinComponentWrapper {
@@ -122,6 +123,13 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     @Override
     @RequiredUIAccess
+    public void setMinimumWidth(int width) {
+        // the overlay lives in the shadow root, so it is reached through a property the part it exposes reads
+        getVaadinComponent().getElement().getStyle().set(MIN_WIDTH_PROPERTY, width <= 0 ? null : width + "px");
+    }
+
+    @Override
+    @RequiredUIAccess
     public void setContent(Component content) {
         Vaadin popover = getVaadinComponent();
 
@@ -136,9 +144,28 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         Vaadin popover = getVaadinComponent();
 
+        attachToUI();
+
         popover.setTarget(TargetVaadin.to(target));
         popover.setOpened(true);
         listenForEscape();
+    }
+
+    /**
+     * A popover is not a dialog: it does not put itself on the page when it opens, so an unattached one opens into
+     * nothing at all.
+     */
+    @RequiredUIAccess
+    private void attachToUI() {
+        Vaadin popover = getVaadinComponent();
+        if (popover.getParent().isPresent()) {
+            return;
+        }
+
+        UI ui = ui();
+        if (ui != null) {
+            ui.add(popover);
+        }
     }
 
     /**
@@ -199,32 +226,50 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         checkNotDisposed();
 
         // the anchor is put where the point is and the popover hangs off that, so the placement - and the turning
-        // around when there is no room below - stays the popover's own rather than being computed here
+        // around when there is no room below - stays the popover's own rather than being computed here.
+        // it cannot live inside the target: a component which owns its light dom - a grid does - drops whatever it
+        // does not recognise, so it is placed on the page and moved to where the target is instead
         Div anchor = myAnchor;
         if (anchor == null) {
             anchor = new Div();
             anchor.getStyle()
-                .set("position", "absolute")
+                .set("position", "fixed")
                 .set("width", "0")
                 .set("pointer-events", "none");
 
-            TargetVaadin.to(target).getElement().appendChild(anchor.getElement());
+            UI.getCurrent().add(anchor);
             myAnchor = anchor;
         }
 
-        anchor.getStyle()
-            .set("height", anchorHeight + "px")
-            .set("left", x + "px")
-            .set("top", y + "px");
+        anchor.getStyle().set("height", anchorHeight + "px");
 
         // a popup which is already up is only moved. re-targeting an open popover tears the overlay down and builds
         // it again, which is every row of the list back over the wire for one typed character
         Vaadin popover = getVaadinComponent();
-        if (!popover.isOpened()) {
-            popover.setTarget(anchor);
+        boolean open = !popover.isOpened();
+
+        Div anchorToShow = anchor;
+        // only the browser knows where the target ended up, and the popover has to be opened against an anchor
+        // which is already in place - opening first would measure it at the top left of the page
+        TargetVaadin.to(target).getElement().executeJs(
+            """
+            const rect = this.getBoundingClientRect();
+            $0.style.left = (rect.left + $1) + 'px';
+            $0.style.top = (rect.top + $2) + 'px';
+            return true;
+            """,
+            anchorToShow.getElement(), x, y
+        ).then(Boolean.class, positioned -> {
+            if (myDisposed || !open) {
+                return;
+            }
+
+            attachToUI();
+
+            popover.setTarget(anchorToShow);
             popover.setOpened(true);
             listenForEscape();
-        }
+        });
     }
 
     @RequiredUIAccess

@@ -18,10 +18,13 @@ package consulo.ui;
 import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 /**
  * Simple HTML view. HTML5, CSS3, JS not supported. WebView can be used as replacement, if you need more powerful HTML view.
@@ -30,6 +33,15 @@ import java.util.concurrent.CompletableFuture;
  * @since 2021-11-24
  */
 public interface HtmlView extends Component {
+    /**
+     * Marks the {@code src} of an {@code img} as an id of an image of the platform rather than as something to
+     * fetch. A relative path on purpose - it stays a valid url whichever renderer parses the document, so no
+     * frontend has to rewrite the markup before it hands it over.
+     *
+     * @see #setImageResolver(Function)
+     */
+    String IMAGE_SRC_PREFIX = "consulo-image/";
+
     record RenderData(String html, String inlineCss, URL[] externalCsses) {
         public RenderData(String html) {
             this(html, "", new URL[0]);
@@ -41,6 +53,16 @@ public interface HtmlView extends Component {
     }
 
     CompletableFuture<?> render(RenderData renderData);
+
+    /**
+     * Resolves an id of an {@code img} under {@link #IMAGE_SRC_PREFIX} to an image of the platform. A document
+     * names an image by an id of its own - a plugin id, a name of an icon - rather than by something which
+     * could be fetched, and only whoever built the html knows what those stand for.
+     * <p>
+     * An id nobody resolves draws nothing, so a document may name an image which this build does not have.
+     */
+    default void setImageResolver(@Nullable Function<String, Image> imageResolver) {
+    }
 
     /**
      * Use only of result of processing {@link #render(RenderData)}

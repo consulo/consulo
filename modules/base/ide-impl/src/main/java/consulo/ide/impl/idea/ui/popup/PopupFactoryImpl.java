@@ -15,8 +15,10 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.actionPopup.ActionGroupPopup;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
@@ -345,8 +347,9 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
             }
             popupMenuPoint = new Point(rect.x, rect.y + rect.height - 1);
         }
-        else if (component instanceof PopupOwner) {
-            popupMenuPoint = ((PopupOwner) component).getBestPopupPosition();
+        else if (component instanceof PopupOwner popupOwner) {
+            Point2D position = popupOwner.getBestPopupPosition();
+            popupMenuPoint = position == null ? null : new Point(position.x(), position.y());
         }
         if (popupMenuPoint == null) {
             popupMenuPoint = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height / 2);

@@ -12,7 +12,7 @@ import consulo.desktop.awt.action.menu.ActionMenuItemImpl;
 import consulo.desktop.awt.action.menu.ActionToggleMenuItemImpl;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.ex.impl.internal.action.ActionUpdater;
-import consulo.ide.impl.idea.ui.popup.NothingHereAction;
+import consulo.ui.ex.impl.internal.popup.action.NothingHereAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;

@@ -13,6 +13,7 @@ module consulo.desktop.ide.impl {
     requires consulo.project.ui.api;
     requires consulo.application.impl;
     requires consulo.ui.ex.awt.api;
+    requires consulo.ui.ex.impl;
     requires consulo.external.service.api;
     requires consulo.web.browser.api;
 

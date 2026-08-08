@@ -72,11 +72,15 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
             hasSize.setSizeFull();
         }
 
+        boolean first = toVaadinComponent().getTabCount() == 0;
+
         toVaadinComponent().add(vaadinTab, vaadinContent);
 
         webTab.setContent(component);
 
-        webTab.select();
+        if (first) {
+            webTab.select();
+        }
         return tab;
     }
 

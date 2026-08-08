@@ -44,11 +44,13 @@ import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.base.WebShowNotifier;
+import consulo.web.internal.ui.htmlView.WebHtmlViewImpl;
 import consulo.web.internal.ui.image.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -122,6 +124,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
+        return new WebLoadingLayoutImpl<>(innerLayout, parent);
+    }
+
+    @Override
     public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
         return new WebScrollLayoutImpl(component, options);
     }
@@ -134,6 +141,11 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public AdvancedLabel _Components_advancedLabel() {
         return new WebAdvancedLabelImpl();
+    }
+
+    @Override
+    public HtmlView _Components_htmlView() {
+        return new WebHtmlViewImpl();
     }
 
     @Override
@@ -195,6 +207,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public ToggleButton _Components_toggleButton(LocalizeValue text) {
+        return new WebToggleButtonImpl(text);
+    }
+
+    @Override
     @RequiredUIAccess
     public Hyperlink _Components_hyperlink(LocalizeValue text) {
         WebHyperlinkImpl hyperlink = new WebHyperlinkImpl();
@@ -225,6 +242,15 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public Image _Image_fromUrl(URL url) throws IOException {
         return new WebImageImpl(url);
+    }
+
+    /**
+     * Without this a plugin icon - the only image the platform hands over as bytes rather than by an id - threw
+     * out of {@link Image#fromStream}, and every plugin was drawn with the stand-in icon of the caller.
+     */
+    @Override
+    public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
+        return new WebBytesImageImpl(imageType, stream.readAllBytes());
     }
 
     @Override

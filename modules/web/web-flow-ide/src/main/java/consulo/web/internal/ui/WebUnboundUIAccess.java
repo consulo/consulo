@@ -20,6 +20,8 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.clipboard.Clipboard;
+import consulo.ui.impl.clipboard.MemoryClipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
@@ -114,6 +116,11 @@ public class WebUnboundUIAccess extends BaseUIAccess implements UIAccess {
         report();
 
         runnable.run();
+    }
+
+    @Override
+    protected Clipboard createClipboard() {
+        return new MemoryClipboard();
     }
 
     @Override

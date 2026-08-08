@@ -20,12 +20,13 @@ import consulo.ui.model.FlatDataModel;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E> {
+public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E> {
     @SafeVarargs
     static <E> ListBox<E> create(E... elements) {
         return UIInternal.get()._Components_listBox(FlatDataModel.of(Arrays.asList(elements)));
@@ -46,4 +47,11 @@ public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasIte
     void setRender(ComponentItemRender<E> render);
 
     void setValueByIndex(int index);
+
+    /**
+     * Which items stand between the others rather than being ones of their own. A separator is drawn as a line and
+     * cannot be selected.
+     */
+    default void isSeparator(Predicate<E> predicate) {
+    }
 }

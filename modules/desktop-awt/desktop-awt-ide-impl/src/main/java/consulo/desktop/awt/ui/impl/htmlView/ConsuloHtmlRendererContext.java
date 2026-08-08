@@ -11,17 +11,19 @@ import org.w3c.dom.html.HTMLElement;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Optional;
+import java.util.function.Function;
 
 class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
     private final HtmlPanel myHtmlPanel;
 
     private final UserAgentContext myUserAgentContext;
 
-    public ConsuloHtmlRendererContext(HtmlPanel panel) {
+    public ConsuloHtmlRendererContext(HtmlPanel panel, Function<String, BufferedImage> imageResolver) {
         myHtmlPanel = panel;
-        myUserAgentContext = new ConsuloUserAgentContext();
+        myUserAgentContext = new ConsuloUserAgentContext(imageResolver);
     }
 
     @Override

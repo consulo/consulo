@@ -438,6 +438,18 @@
   background-color: var(--arquill-editor-caret-row-background, #EAF2FE);
 }
 
+/* the bundled orion sheet gives the line number ruler a grey of its own, which is what the scheme colour of
+   the ide has to outweigh - the awt gutter paints these two keys itself */
+.textviewLeftRuler.textviewLeftRuler .rulerLines.rulerLines
+{
+  color: var(--arquill-editor-line-number-color, #767676);
+}
+
+.textviewLeftRuler.textviewLeftRuler .rulerLines.rulerLines.currentLine
+{
+  color: var(--arquill-editor-line-number-caret-row-color, var(--arquill-editor-line-number-color, #767676));
+}
+
 /* the rulers sit on the panel background like the awt gutter and error panel, and their seams follow the
    theme border */
 .textviewLeftRuler.textviewLeftRuler

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
@@ -47,8 +46,6 @@ public class SelectFileAction extends DumbAwareAction {
             return;
         }
 
-        ProjectViewImpl projectView = (ProjectViewImpl) ProjectView.getInstance(project);
-
-        projectView.scrollFromSource();
+        ProjectView.getInstance(project).scrollFromSource();
     }
 }

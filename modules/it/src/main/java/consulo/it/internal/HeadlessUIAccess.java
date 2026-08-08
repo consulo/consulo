@@ -18,6 +18,8 @@ package consulo.it.internal;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.ui.ModalityState;
+import consulo.ui.clipboard.Clipboard;
+import consulo.ui.impl.clipboard.MemoryClipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
@@ -80,6 +82,11 @@ public final class HeadlessUIAccess extends BaseUIAccess {
             }
         });
         return result;
+    }
+
+    @Override
+    protected Clipboard createClipboard() {
+        return new MemoryClipboard();
     }
 
     @Override

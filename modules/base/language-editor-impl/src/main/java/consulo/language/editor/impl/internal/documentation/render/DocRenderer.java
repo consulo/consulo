@@ -30,7 +30,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -52,7 +52,6 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
@@ -595,7 +594,7 @@ public class DocRenderer implements CustomFoldRegionRenderer {
         public void actionPerformed(AnActionEvent e) {
             String text = myPane == null ? null : myPane.getSelectedText();
             if (!StringUtil.isEmpty(text)) {
-                CopyPasteManager.getInstance().setContents(new StringSelection(text));
+                CopyPasteManager.getInstance().setText(text);
             }
         }
     }

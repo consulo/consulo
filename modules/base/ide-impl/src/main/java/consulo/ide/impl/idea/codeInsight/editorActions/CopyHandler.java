@@ -33,7 +33,10 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.CopyPasteManager;
 
 import org.jspecify.annotations.Nullable;
 
@@ -103,12 +106,16 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
         String escapedText = Application.get().getExtensionPoint(CopyPastePreProcessor.class).computeSafeIfAny(
             processor -> processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText)
         );
+        String clipboardText = escapedText != null ? escapedText : rawText;
         Transferable transferable = new TextBlockTransferable(
-            escapedText != null ? escapedText : rawText,
+            clipboardText,
             transferableDatas,
             escapedText != null ? new RawText(rawText) : null
         );
-        CopyPasteManager.getInstance().setContents(transferable);
+        CopyPasteManager.getInstance().setContents(DataTransfer.builder()
+            .put(DataTransferType.TEXT, clipboardText)
+            .put(EditorImplUtil.TRANSFERABLE, transferable)
+            .build());
         if (editor instanceof EditorEx ex && ex.isStickySelection()) {
             ex.setStickySelection(false);
         }

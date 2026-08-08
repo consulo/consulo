@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.TransferHandler;
+import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferHandlerAdapter;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
@@ -23,6 +25,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
+
+import javax.swing.DefaultListSelectionModel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.model.FlatDataModel;
@@ -30,6 +36,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
 /**
@@ -37,6 +44,7 @@ import java.util.function.ToIntFunction;
  * @since 2017-09-12
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
+    private @Nullable TransferHandler<E> myTransferHandler;
     class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
         MyJBList(javax.swing.ListModel<T> dataModel) {
             super(dataModel);
@@ -54,6 +62,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     private @Nullable ComponentItemRender<E> myComponentRender;
     private @Nullable Function<E, String> mySpeedSearchConverter;
     private @Nullable ToIntFunction<E> myItemHeightGetter;
+    private Predicate<E> mySeparatorPredicate = item -> false;
 
     public DesktopListBoxImpl(FlatDataModel<E> model) {
         myModel = model;
@@ -64,6 +73,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         MyJBList<E> component = new MyJBList<>(new DesktopFlatDataModelWrapper<>(myModel));
         applyRender(component);
         applySpeedSearch(component);
+        applySeparatorSelection(component);
         return component;
     }
 
@@ -72,7 +82,57 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
             ? new DesktopComponentItemRenderAdapter<>(myComponentRender)
             : new DesktopListRender<>(() -> myTextRender);
 
-        component.setCellRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
+        ListCellRenderer<E> withHeight = DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter);
+
+        // the swing popups do the same - the renderer answers a separator with a component of its own rather than
+        // with a row, see GroupedItemsListRenderer
+        component.setCellRenderer((list, value, index, selected, focused) -> {
+            if (value != null && mySeparatorPredicate.test(value)) {
+                TitledSeparator separator = new TitledSeparator();
+                separator.setBorder(JBUI.Borders.empty());
+                separator.setOpaque(false);
+                return separator;
+            }
+            return withHeight.getListCellRendererComponent(list, value, index, selected, focused);
+        });
+    }
+
+    @Override
+    public void isSeparator(Predicate<E> predicate) {
+        mySeparatorPredicate = predicate;
+        if (isRealized()) {
+            applyRender(toAWTComponent());
+            applySeparatorSelection(toAWTComponent());
+        }
+    }
+
+    /**
+     * The swing popups move over a separator rather than onto it - see {@code ListPopupImpl.MyListSelectionModel}.
+     */
+    private void applySeparatorSelection(JBList<E> component) {
+        component.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                javax.swing.ListModel<E> model = component.getModel();
+
+                if (index0 > getLeadSelectionIndex()) {
+                    for (int i = index0; i < model.getSize(); i++) {
+                        if (!mySeparatorPredicate.test(model.getElementAt(i))) {
+                            super.setSelectionInterval(i, i);
+                            return;
+                        }
+                    }
+                }
+                else {
+                    for (int i = index0; i >= 0; i--) {
+                        if (!mySeparatorPredicate.test(model.getElementAt(i))) {
+                            super.setSelectionInterval(i, i);
+                            return;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void applySpeedSearch(JBList<E> component) {
@@ -157,5 +217,16 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     @Override
     public E getValue() {
         return toAWTComponent().getSelectedValue();
+    }
+
+    @Override
+    public void setTransferHandler(@Nullable TransferHandler<E> handler) {
+        myTransferHandler = handler;
+        toAWTComponent().setTransferHandler(handler == null ? null : new DesktopAWTTransferHandlerAdapter<>(this, handler));
+    }
+
+    @Override
+    public @Nullable TransferHandler<E> getTransferHandler() {
+        return myTransferHandler;
     }
 }

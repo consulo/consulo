@@ -32,6 +32,7 @@ import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
+import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
 import consulo.ui.layout.DockLayout;
 import jakarta.inject.Singleton;
@@ -79,7 +80,15 @@ public class UnifiedDialogServiceImpl implements DialogService {
             // the cross of the window and a close coming from the frontend are a cancel, the same way closing a
             // DialogWrapper is. doOkAction completes the result before it closes, so this only ever answers for a
             // close which no action handled
-            myWindow.addCloseListener(event -> myResult.completeExceptionally(new IllegalArgumentException("reject")));
+            myWindow.addCloseListener(event -> {
+                if (myResult.isDone()) {
+                    return;
+                }
+
+                myDescriptor.onHandleValue(new DialogCancelAction(), null);
+
+                myResult.completeExceptionally(new IllegalArgumentException("reject"));
+            });
 
             myWindow.show();
 

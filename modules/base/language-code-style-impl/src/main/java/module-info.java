@@ -3,6 +3,7 @@
  * @since 2025-06-15
  */
 module consulo.language.code.style.impl {
+    requires consulo.mcp.server.api;
     requires consulo.language.code.style.api;
     requires consulo.language.code.style.ui.api;
 

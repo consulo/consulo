@@ -633,6 +633,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void reRestoreExpandedPaths() {
         AbstractProjectViewPane pane = getCurrentProjectViewPane();
@@ -1958,6 +1959,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponentW
         }
     }
 
+    @Override
     @RequiredUIAccess
     public void scrollFromSource() {
         myAutoScrollFromSourceHandler.scrollFromSource();

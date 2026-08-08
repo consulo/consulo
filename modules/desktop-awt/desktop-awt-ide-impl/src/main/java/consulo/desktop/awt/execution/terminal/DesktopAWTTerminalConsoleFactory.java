@@ -26,9 +26,12 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Alerts;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 
 /**
@@ -57,7 +60,12 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
         };
         Disposer.register(parentDisposable, widget);
 
-        ((AbstractTerminalRunner) session).openSessionInDirectory(widget);
+        try {
+            widget.createTerminalSession(session.connect()).start();
+        }
+        catch (ExecutionException e) {
+            Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync();
+        }
 
         return widget;
     }

@@ -47,6 +47,11 @@
     <module>modules/base/annotation</module>
     <module>modules/base/builtin-web-server-api</module>
     <module>modules/base/builtin-web-server-impl</module>
+    <module>modules/base/ai-api</module>
+    <module>modules/base/ai-impl</module>
+    <module>modules/base/mcp-api</module>
+    <module>modules/base/mcp-server-api</module>
+    <module>modules/base/mcp-server-impl</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
     <module>modules/base/build-ui-api</module>
