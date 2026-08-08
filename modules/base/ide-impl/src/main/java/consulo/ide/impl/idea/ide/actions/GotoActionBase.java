@@ -190,9 +190,6 @@ public abstract class GotoActionBase extends LegacyAnAction {
         return selectedText != null && !selectedText.contains("\n") ? selectedText : null;
     }
 
-    protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, GotoActionCallback<T> callback) {
-        showNavigationPopup(e, model, callback, true);
-    }
 
     protected <T> void showNavigationPopup(
         AnActionEvent e,
@@ -201,16 +198,6 @@ public abstract class GotoActionBase extends LegacyAnAction {
         boolean allowMultipleSelection
     ) {
         showNavigationPopup(e, model, callback, null, true, allowMultipleSelection);
-    }
-
-    protected <T> void showNavigationPopup(
-        AnActionEvent e,
-        ChooseByNameModel model,
-        GotoActionCallback<T> callback,
-        @Nullable String findUsagesTitle,
-        boolean useSelectionFromEditor
-    ) {
-        showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, true);
     }
 
     protected <T> void showNavigationPopup(
@@ -258,10 +245,6 @@ public abstract class GotoActionBase extends LegacyAnAction {
             ),
             allowMultipleSelection
         );
-    }
-
-    protected <T> void showNavigationPopup(GotoActionCallback<T> callback, @Nullable String findUsagesTitle, ChooseByNamePopup popup) {
-        showNavigationPopup(callback, findUsagesTitle, popup, true);
     }
 
     protected <T> void showNavigationPopup(
@@ -370,38 +353,6 @@ public abstract class GotoActionBase extends LegacyAnAction {
                 myHistoryIndex = myHistoryIndex <= 0 ? strings.size() - 1 : myHistoryIndex - 1;
             }
         }.registerCustomShortcutSet(CustomShortcutSet.fromString("ctrl DOWN"), editor);
-    }
-
-    protected void showInSearchEverywherePopup(String searchProviderID, AnActionEvent event, boolean useEditorSelection) {
-        showInSearchEverywherePopup(searchProviderID, event, useEditorSelection, false);
-    }
-
-    protected void showInSearchEverywherePopup(
-        String searchProviderID,
-        AnActionEvent event,
-        boolean useEditorSelection,
-        boolean sendStatistics
-    ) {
-        Project project = event.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-        SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
-        FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
-
-        if (seManager.isShown()) {
-            if (searchProviderID.equals(seManager.getSelectedContributorID())) {
-                seManager.toggleEverywhereFilter();
-            }
-            else {
-                seManager.setSelectedContributor(searchProviderID);
-            }
-            return;
-        }
-
-        IdeEventQueueProxy.getInstance().closeAllPopups(false);
-        String searchText = StringUtil.nullize(getInitialText(useEditorSelection, event).first);
-        seManager.show(searchProviderID, searchText, event);
     }
 
     private static boolean historyEnabled() {

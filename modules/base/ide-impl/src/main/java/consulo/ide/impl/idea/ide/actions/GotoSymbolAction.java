@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "GotoSymbol")
-public class GotoSymbolAction extends GotoActionBase implements DumbAware {
+public class GotoSymbolAction extends SearchEverywhereBaseAction implements DumbAware {
     private final Application myApplication;
 
     @Inject
@@ -42,39 +42,8 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
             showInSearchEverywherePopup(SymbolSearchEverywhereContributor.class.getSimpleName(), e, true, true);
         }
         else {
-            GotoClassAction.invokeGoToFile(project, e);
+            invokeGoToFile(project, e);
         }
-    }
-
-    @Override
-    public void gotoActionPerformed(AnActionEvent e) {
-        FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.symbol");
-
-        Project project = e.getData(Project.KEY);
-        if (project == null) {
-            return;
-        }
-
-        GotoSymbolModel2 model = new GotoSymbolModel2(project);
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-        showNavigationPopup(
-            e,
-            model,
-            new GotoActionCallback<Language>() {
-                @Override
-                protected ChooseByNameFilter<Language> createFilter(ChooseByNamePopup popup) {
-                    return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
-                }
-
-                @Override
-                @RequiredReadAction
-                public void elementChosen(ChooseByNamePopup popup, Object element) {
-                    GotoClassAction.handleSubMemberNavigation(popup, element);
-                }
-            },
-            "Symbols matching patterns",
-            true
-        );
     }
 
     @Override
