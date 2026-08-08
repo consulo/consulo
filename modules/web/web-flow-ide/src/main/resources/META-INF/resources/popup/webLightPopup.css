@@ -4,8 +4,15 @@
    as a bubble at the size a completion list is */
 vaadin-popover::part(overlay)
 {
-  border-radius: var(--consulo-popup-radius, 8px);
+  border-radius: var(--consulo-popup-radius, 4px);
   box-shadow: none;
+}
+
+/* the content is the popup - what it is given already carries whatever spacing it wants, and the padding of a
+   card around it only makes the popup bigger than the thing it shows */
+vaadin-popover::part(content)
+{
+  padding: 2px;
 }
 
 /* a popup of the platform is not a control - what is inside it may take the focus, the box around it never does,

@@ -2,6 +2,8 @@
 package consulo.ide.action.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import org.jspecify.annotations.Nullable;
@@ -14,9 +16,16 @@ public class NewItemPopupUtil {
     }
 
     public static JBPopup createNewItemPopup(LocalizeValue title,
-                                             JComponent content,
-                                             @Nullable JComponent preferableFocusComponent) {
-        return JBPopupFactory.getInstance().createComponentPopupBuilder(content, preferableFocusComponent)
+                                             Component content,
+                                             @Nullable Component preferableFocusComponent) {
+        return configure(
+            JBPopupFactory.getInstance().createComponentPopupBuilder(content, preferableFocusComponent),
+            title
+        );
+    }
+
+    private static JBPopup configure(ComponentPopupBuilder builder, LocalizeValue title) {
+        return builder
             .setTitle(title)
             .setResizable(false)
             .setModalContext(true)

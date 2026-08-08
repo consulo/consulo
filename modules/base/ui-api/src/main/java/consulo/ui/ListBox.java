@@ -15,6 +15,10 @@
  */
 package consulo.ui;
 
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.FlatDataModel;
 
@@ -47,6 +51,30 @@ public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasIte
     void setRender(ComponentItemRender<E> render);
 
     void setValueByIndex(int index);
+
+    /**
+     * Moves the selection by {@code delta} items, stopping at the ends. Selecting nothing yet counts as standing
+     * before the first item.
+     */
+    @RequiredUIAccess
+    default void moveSelection(int delta) {
+        FlatDataModel<E> model = getDataModel();
+
+        int size = model.getSize();
+        if (size == 0) {
+            return;
+        }
+
+        E value = getValue();
+        int index = value == null ? -1 : model.indexOf(value);
+
+        setValueByIndex(Math.max(0, Math.min(size - 1, index + delta)));
+    }
+
+    @SuppressWarnings("unchecked")
+    default Disposable addDoubleClickListener(ComponentEventListener<ListBox<E>, ListDoubleClickEvent<E>> listener) {
+        return addListener((Class)ListDoubleClickEvent.class, listener);
+    }
 
     /**
      * Which items stand between the others rather than being ones of their own. A separator is drawn as a line and

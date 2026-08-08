@@ -2,72 +2,73 @@
 package consulo.ide.action.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.TextBoxWithExtensions;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ImageBox;
+import consulo.ui.TextBox;
+import consulo.ui.TextItemRender;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 public class CreateWithTemplatesDialogPanel extends NewItemWithTemplatesPopupPanel<Trinity<LocalizeValue, Image, String>> {
 
+    @RequiredUIAccess
     public CreateWithTemplatesDialogPanel(List<Trinity<LocalizeValue, Image, String>> templates, @Nullable String selectedItem) {
         super(templates, LIST_RENDERER);
-        myTemplatesList.addListSelectionListener(e -> {
-            Trinity<LocalizeValue, Image, String> selectedValue = myTemplatesList.getSelectedValue();
+
+        myTemplatesList.addValueListener(event -> {
+            Trinity<LocalizeValue, Image, String> selectedValue = event.getValue();
             if (selectedValue != null) {
                 setTextFieldIcon(selectedValue.second);
             }
         });
-        selectTemplate(selectedItem);
+
+        selectTemplate(templates, selectedItem);
         setTemplatesListVisible(templates.size() > 1);
     }
 
-    public TextBoxWithExtensions getNameField() {
+    public TextBox getNameField() {
         return myTextField;
     }
 
-    
     public String getEnteredName() {
         return myTextField.getValue().trim();
     }
 
-    
     public String getSelectedTemplate() {
-        return myTemplatesList.getSelectedValue().third;
+        return myTemplatesList.getValue().third;
     }
 
+    @RequiredUIAccess
     private void setTextFieldIcon(Image icon) {
-        myTextField.setExtensions(new TextBoxWithExtensions.Extension(true, icon, null));
+        ImageBox box = ImageBox.create(icon);
+        myTextField.setPrefixComponent(box);
     }
 
-    private void selectTemplate(@Nullable String selectedItem) {
+    @RequiredUIAccess
+    private void selectTemplate(List<Trinity<LocalizeValue, Image, String>> templates, @Nullable String selectedItem) {
         if (selectedItem == null) {
-            myTemplatesList.setSelectedIndex(0);
+            myTemplatesList.setValueByIndex(0);
             return;
         }
 
-        ListModel<Trinity<LocalizeValue, Image, String>> model = myTemplatesList.getModel();
-        for (int i = 0; i < model.getSize(); i++) {
-            String templateID = model.getElementAt(i).getThird();
-            if (selectedItem.equals(templateID)) {
-                myTemplatesList.setSelectedIndex(i);
+        for (int i = 0; i < templates.size(); i++) {
+            if (selectedItem.equals(templates.get(i).getThird())) {
+                myTemplatesList.setValueByIndex(i);
                 return;
             }
         }
     }
 
-    private static final ListCellRenderer<Trinity<LocalizeValue, Image, String>> LIST_RENDERER = new ColoredListCellRenderer<>() {
-        @Override
-        protected void customizeCellRenderer(JList<? extends Trinity<LocalizeValue, Image, String>> list, Trinity<LocalizeValue, Image, String> value, int index, boolean selected, boolean hasFocus) {
-            setBorder(JBCurrentTheme.listCellBorderFull());
-            if (value != null) {
-                append(value.first);
-                setIcon(value.second);
-            }
+    private static final TextItemRender<Trinity<LocalizeValue, Image, String>> LIST_RENDERER = (presentation, item) -> {
+        Trinity<LocalizeValue, Image, String> value = item.getValue();
+        if (value != null) {
+            presentation.withIcon(value.second);
+            presentation.append(value.first);
         }
     };
 }

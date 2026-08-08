@@ -19,7 +19,6 @@ package consulo.ide.action.ui;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.disposer.Disposer;
 import consulo.fileTemplate.*;
 import consulo.ide.action.CreateFileAction;
 import consulo.ide.localize.IdeLocalize;
@@ -38,16 +37,20 @@ import java.awt.*;
 import java.util.Map;
 import java.util.Properties;
 
-public class CreateFromTemplateDialog extends DialogWrapper {
+/**
+ * A template whose attributes are all known is created without anything being asked, and this is not a dialog until
+ * there is something to ask - building one costs a dialog peer, which the frontends without swing have not got.
+ */
+public class CreateFromTemplateDialog {
     private static final Logger LOG = Logger.getInstance(CreateFromTemplateDialog.class);
-    
+
     private final PsiDirectory myDirectory;
-    
+
     private final Project myProject;
     private PsiElement myCreatedElement;
     private final CreateFromTemplatePanel myAttrPanel;
     private final JComponent myAttrComponent;
-    
+
     private final FileTemplate myTemplate;
     private final Map<String, Object> myDefaultProperties;
 
@@ -71,11 +74,9 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         @Nullable AttributesDefaults attributesDefaults,
         @Nullable Map<String, Object> defaultProperties
     ) {
-        super(directory.getProject(), true);
         myDirectory = directory;
         myProject = directory.getProject();
         myTemplate = template;
-        setTitle(IdeLocalize.titleNewFromTemplate(template.getName()));
 
         myDefaultProperties =
             defaultProperties == null ? FileTemplateManager.getInstance(myProject).getDefaultVariables() : defaultProperties;
@@ -97,7 +98,6 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         if (unsetAttributes != null) {
             myAttrPanel = new CreateFromTemplatePanel(unsetAttributes, mustEnterName, attributesDefaults);
             myAttrComponent = myAttrPanel.getComponent();
-            init();
         }
         else {
             myAttrPanel = null;
@@ -109,37 +109,16 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     public PsiElement create() {
         if (Application.get().isUnitTestMode()) {
             doCreate(myTemplate.getName() + "." + myTemplate.getExtension());
-            Disposer.dispose(getDisposable());
             return myCreatedElement;
         }
         if (myAttrPanel != null) {
             if (myAttrPanel.hasSomethingToAsk()) {
-                show();
+                new AttributesDialog().show();
                 return myCreatedElement;
             }
             doCreate(null);
         }
-        close(DialogWrapper.OK_EXIT_CODE);
         return myCreatedElement;
-    }
-
-    @Override
-    @RequiredUIAccess
-    protected void doOKAction() {
-        String fileName = myAttrPanel.getFileName();
-        if (fileName != null && fileName.length() == 0) {
-            Messages.showMessageDialog(
-                myAttrComponent,
-                IdeLocalize.errorPleaseEnterAFileName().get(),
-                CommonLocalize.titleError().get(),
-                UIUtil.getErrorIcon()
-            );
-            return;
-        }
-        doCreate(fileName);
-        if (myCreatedElement != null) {
-            super.doOKAction();
-        }
     }
 
     @RequiredUIAccess
@@ -192,20 +171,48 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         return IdeLocalize.errorUnableToParseTemplateMessage(myTemplate.getName(), message).get();
     }
 
-    @Override
-    protected JComponent createCenterPanel() {
-        myAttrPanel.ensureFitToScreen(200, 200);
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.add(
-            myAttrComponent,
-            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0)
-        );
-        return centerPanel;
-    }
+    private class AttributesDialog extends DialogWrapper {
+        @RequiredUIAccess
+        AttributesDialog() {
+            super(myProject, true);
+            setTitle(IdeLocalize.titleNewFromTemplate(myTemplate.getName()));
+            init();
+        }
 
-    @Override
-    @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
-        return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myAttrComponent);
+        @Override
+        @RequiredUIAccess
+        protected void doOKAction() {
+            String fileName = myAttrPanel.getFileName();
+            if (fileName != null && fileName.length() == 0) {
+                Messages.showMessageDialog(
+                    myAttrComponent,
+                    IdeLocalize.errorPleaseEnterAFileName().get(),
+                    CommonLocalize.titleError().get(),
+                    UIUtil.getErrorIcon()
+                );
+                return;
+            }
+            doCreate(fileName);
+            if (myCreatedElement != null) {
+                super.doOKAction();
+            }
+        }
+
+        @Override
+        protected JComponent createCenterPanel() {
+            myAttrPanel.ensureFitToScreen(200, 200);
+            JPanel centerPanel = new JPanel(new GridBagLayout());
+            centerPanel.add(
+                myAttrComponent,
+                new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0)
+            );
+            return centerPanel;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public JComponent getPreferredFocusedComponent() {
+            return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myAttrComponent);
+        }
     }
 }

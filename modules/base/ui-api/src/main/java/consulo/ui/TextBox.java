@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-11-19
  */
-public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent {
+public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent, HasPrefixComponent {
     static TextBox create() {
         return create(null);
     }

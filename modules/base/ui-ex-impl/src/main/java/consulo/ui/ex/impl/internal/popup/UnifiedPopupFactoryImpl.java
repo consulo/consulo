@@ -228,6 +228,14 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
     }
 
     @Override
+    public ComponentPopupBuilder createComponentPopupBuilder(
+        consulo.ui.Component content,
+        consulo.ui.@Nullable Component preferableFocusComponent
+    ) {
+        return new UnifiedComponentPopupBuilder(content, preferableFocusComponent);
+    }
+
+    @Override
     public RelativePoint guessBestPopupLocation(DataContext dataContext) {
         throw new UnsupportedOperationException();
     }

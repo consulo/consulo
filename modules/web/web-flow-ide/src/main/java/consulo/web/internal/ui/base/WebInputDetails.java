@@ -43,6 +43,8 @@ public class WebInputDetails {
     private static final String SCREEN_X = "event.screenX";
     private static final String SCREEN_Y = "event.screenY";
     private static final String BUTTON = "event.button";
+    private static final String KEY = "event.key";
+    private static final String KEY_CODE = "event.keyCode";
     private static final String ALT = "event.altKey";
     private static final String CTRL = "event.ctrlKey";
     private static final String SHIFT = "event.shiftKey";
@@ -82,6 +84,78 @@ public class WebInputDetails {
         registration.addEventData(ELEMENT_SCREEN_Y);
 
         return registration;
+    }
+
+    public static DomListenerRegistration addKeyListener(
+        Element element,
+        String eventType,
+        Consumer<KeyboardInputDetails> consumer
+    ) {
+        DomListenerRegistration registration = element.addEventListener(eventType, event -> consumer.accept(convertKey(event)));
+
+        registration.addEventData(KEY);
+        registration.addEventData(KEY_CODE);
+        registration.addEventData(ALT);
+        registration.addEventData(CTRL);
+        registration.addEventData(SHIFT);
+        registration.addEventData(META);
+        registration.addEventData(ELEMENT_SCREEN_X);
+        registration.addEventData(ELEMENT_SCREEN_Y);
+
+        return registration;
+    }
+
+    private static KeyboardInputDetails convertKey(DomEvent event) {
+        JsonNode data = event.getEventData();
+
+        Point2D positionOnScreen = new Point2D(
+            (int) data.path(ELEMENT_SCREEN_X).asDouble(0),
+            (int) data.path(ELEMENT_SCREEN_Y).asDouble(0)
+        );
+
+        return new KeyboardInputDetails(new Point2D(0, 0), positionOnScreen, modifiers(data), keyCode(data));
+    }
+
+    /**
+     * The browser numbers its keys on its own - enter is 13 where {@link KeyCode#ENTER} is 10 - so the named keys
+     * are matched by {@code event.key} and only the rest fall back to the numeric code.
+     */
+    private static KeyCode keyCode(JsonNode data) {
+        String key = data.path(KEY).asString("");
+
+        return switch (key) {
+            case "Enter" -> KeyCode.ENTER;
+            case "Escape" -> KeyCode.ESCAPE;
+            case "Tab" -> KeyCode.TAB;
+            case "ArrowUp" -> KeyCode.UP;
+            case "ArrowDown" -> KeyCode.DOWN;
+            case "ArrowLeft" -> KeyCode.LEFT;
+            case "ArrowRight" -> KeyCode.RIGHT;
+            case "Home" -> KeyCode.HOME;
+            case "End" -> KeyCode.END;
+            case "Shift" -> KeyCode.SHIFT;
+            case "Control" -> KeyCode.CTRL;
+            case "Alt" -> KeyCode.ALT;
+            case "Meta" -> KeyCode.META;
+            default -> KeyCode.of(data.path(KEY_CODE).asInt(0));
+        };
+    }
+
+    private static EnumSet<ModifiedInputDetails.Modifier> modifiers(JsonNode data) {
+        EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+        if (data.path(ALT).asBoolean(false)) {
+            modifiers.add(ModifiedInputDetails.Modifier.ALT);
+        }
+        if (data.path(CTRL).asBoolean(false)) {
+            modifiers.add(ModifiedInputDetails.Modifier.CTRL);
+        }
+        if (data.path(SHIFT).asBoolean(false)) {
+            modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+        }
+        if (data.path(META).asBoolean(false)) {
+            modifiers.add(ModifiedInputDetails.Modifier.META);
+        }
+        return modifiers;
     }
 
     private static InputDetails convert(DomEvent event) {

@@ -15,11 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.util.GraphicsUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.DesktopAntialiasingType;
 import consulo.ui.AntialiasingType;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemPresentation;
@@ -43,6 +41,7 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
 
   @Override
   protected void customizeCellRenderer(JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
+    setBorder(JBCurrentTheme.listCellBorderFull());
     DesktopTextItemPresentationImpl render = new DesktopTextItemPresentationImpl(this) {
       
       @Override

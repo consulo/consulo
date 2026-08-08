@@ -42,6 +42,7 @@ public class ScalableIconComponent extends JComponent {
       Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
       this.setPreferredSize(size);
       this.setMinimumSize(size);
+      this.setMaximumSize(size);
     }
   }
 
@@ -54,7 +55,13 @@ public class ScalableIconComponent extends JComponent {
       g2.setBackground(getBackground());
       AffineTransform savedTransform = g2.getTransform();
 
-      g2.scale(((double)getWidth()) / icon.getWidth(), ((double)getHeight()) / icon.getHeight());
+      double scale = Math.min(1.0, Math.min(((double)getWidth()) / icon.getWidth(), ((double)getHeight()) / icon.getHeight()));
+
+      int width = (int)Math.round(icon.getWidth() * scale);
+      int height = (int)Math.round(icon.getHeight() * scale);
+
+      g2.translate((getWidth() - width) / 2, (getHeight() - height) / 2);
+      g2.scale(scale, scale);
       TargetAWT.to(icon).paintIcon(this, g2, 0, 0);
 
       g2.setTransform(savedTransform);

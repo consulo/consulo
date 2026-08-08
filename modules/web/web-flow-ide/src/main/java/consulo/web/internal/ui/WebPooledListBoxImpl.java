@@ -24,6 +24,7 @@ import consulo.ui.RenderItem;
 import consulo.ui.ReusableComponentItemRender;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
@@ -109,6 +110,11 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
                     setValue(myItem);
                 }
             });
+            myVaadin.getElement().addEventListener(
+                "dblclick",
+                event -> getListenerDispatcher(ListDoubleClickEvent.class)
+                    .onEvent(new ListDoubleClickEvent(WebPooledListBoxImpl.this, myItem))
+            );
         }
     }
 

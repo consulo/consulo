@@ -15,12 +15,16 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.ToVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -30,6 +34,9 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-18
  */
 public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadin> implements TextBox {
+    // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
+    // on css only changes
+    @StyleSheet("/textBox/webTextBox.css")
     public class Vaadin extends TextField implements FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
@@ -37,18 +44,51 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
         }
     }
 
+    private @Nullable Component mySuffixComponent;
+    private @Nullable Component myPrefixComponent;
+
     @RequiredUIAccess
+    @SuppressWarnings("unchecked")
     public WebTextBoxImpl(String text) {
         setValue(text, false);
+
+        Vaadin field = getVaadinComponent();
+
+        // a field which reports only when it is left keeps the typed name from the server until then, and the
+        // stroke which acts on that name - enter in a popup - arrives before it
+        field.setValueChangeMode(ValueChangeMode.EAGER);
+
+        field.addValueChangeListener(
+            event -> getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, event.getValue()))
+        );
     }
 
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+
+        toVaadinComponent().setSuffixComponent(toVaadinOrNull(suffixComponent));
     }
 
     @Override
     public @Nullable Component getSuffixComponent() {
-        return null;
+        return mySuffixComponent;
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+
+        toVaadinComponent().setPrefixComponent(toVaadinOrNull(prefixComponent));
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    private static com.vaadin.flow.component.@Nullable Component toVaadinOrNull(@Nullable Component component) {
+        return component == null ? null : ((ToVaadinComponentWrapper) component).toVaadinComponent();
     }
 
     @Override

@@ -1,0 +1,32 @@
+/* the theme sets the shadow from a rule of its own, which is loaded after this one */
+.consulo-flat-input::part(input-field) {
+    box-shadow: none !important;
+}
+
+/* a field which declares its own border says what the space around its text is, and the padding the theme keeps
+   for a form control is added to that - the height of the row is then a good deal more than the line in it */
+.consulo-flat-input::part(input-field) {
+    padding: 0 4px !important;
+    min-height: 0 !important;
+}
+
+/* the theme gives the field a height of its own, which the line of text no longer decides. a fixed height in a
+   row which stretches its items is laid at the top of it, so the line is placed in the middle by hand */
+.consulo-flat-input > input {
+    height: 1lh !important;
+    min-height: 0 !important;
+    align-self: center !important;
+}
+
+/* whatever is put beside the text is centred on the line rather than made as tall as the row */
+.consulo-flat-input > [slot="prefix"],
+.consulo-flat-input > [slot="suffix"] {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* a field drawn without a border of its own has nothing for a ring to sit on */
+.consulo-flat-input::part(input-field),
+.consulo-flat-input[focus-ring]::part(input-field) {
+    outline: none !important;
+}

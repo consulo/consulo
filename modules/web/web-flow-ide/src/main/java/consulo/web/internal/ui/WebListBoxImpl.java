@@ -23,6 +23,7 @@ import com.vaadin.flow.component.html.Hr;
 import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
+import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.ToVaadinComponentWrapper;
@@ -109,7 +110,7 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
             com.vaadin.flow.component.Component component = presentation.toComponent();
             applyItemHeight(component, (E) item);
-            return component;
+            return applyDoubleClick(component, (E) item);
         }));
     }
 
@@ -127,8 +128,16 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
 
             com.vaadin.flow.component.Component component = ((ToVaadinComponentWrapper) rendered).toVaadinComponent();
             applyItemHeight(component, (E) item);
-            return component;
+            return applyDoubleClick(component, (E) item);
         }));
+    }
+
+    private com.vaadin.flow.component.Component applyDoubleClick(com.vaadin.flow.component.Component component, @Nullable E item) {
+        component.getElement().addEventListener(
+            "dblclick",
+            event -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item))
+        );
+        return component;
     }
 
     private boolean isSelected(@Nullable E item) {

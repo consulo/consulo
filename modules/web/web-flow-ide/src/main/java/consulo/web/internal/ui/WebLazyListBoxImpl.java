@@ -29,6 +29,7 @@ import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.FlatDataModelEvent;
@@ -235,6 +236,11 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
         }).preventDefault();
 
         rendered.getElement().addEventListener("click", event -> setValue((E) ComponentUtil.getData(rendered, ITEM)));
+
+        rendered.getElement().addEventListener("dblclick", event -> {
+            E item = (E) ComponentUtil.getData(rendered, ITEM);
+            getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item));
+        });
     }
 
     private void markSelected(com.vaadin.flow.component.Component rendered, @Nullable E item) {
@@ -272,6 +278,11 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
         }).preventDefault();
 
         rendered.getElement().addEventListener("click", event -> setValue(item));
+
+        rendered.getElement().addEventListener(
+            "dblclick",
+            event -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item))
+        );
 
         return rendered;
     }

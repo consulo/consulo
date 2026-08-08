@@ -17,6 +17,7 @@ package consulo.ui.ex.impl.internal.popup;
 
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.PopupOptions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
@@ -31,30 +32,48 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Accepts a configuration and cannot build from it - the content handed over is a swing component, which the
- * unified frontends have no window for yet.
- * <p>
- * The builder exists anyway because configuring is not showing. A help tooltip builds and configures its popup
- * builder the moment it is installed on a component and only creates the popup when the pointer rests on it -
- * install runs on every status bar widget update, once per keystroke, and a factory that refuses at the first
- * step turns each of those updates into a logged failure. So the configuration is taken and dropped, and it is
- * {@link #createPopup()} that still names the missing piece.
- *
  * @author VISTALL
  */
 public class UnifiedComponentPopupBuilder implements ComponentPopupBuilder {
+    private final consulo.ui.@Nullable Component myContent;
+    private final consulo.ui.@Nullable Component myPreferableFocusComponent;
+
+    private final List<JBPopupListener> myListeners = new ArrayList<>();
+
+    private @Nullable String myTitle;
+    private boolean myResizable;
+    private boolean myRequestFocus = true;
+    private boolean myCancelOnClickOutside = true;
+    private boolean myCancelKeyEnabled = true;
+    private @Nullable Supplier<Boolean> myCancelCallback;
+
+    public UnifiedComponentPopupBuilder() {
+        this(null, null);
+    }
+
+    public UnifiedComponentPopupBuilder(
+        consulo.ui.@Nullable Component content,
+        consulo.ui.@Nullable Component preferableFocusComponent
+    ) {
+        myContent = content;
+        myPreferableFocusComponent = preferableFocusComponent;
+    }
+
     @Override
     public ComponentPopupBuilder setTitle(String title) {
+        myTitle = title;
         return this;
     }
 
     @Override
     public ComponentPopupBuilder setResizable(boolean forceResizable) {
+        myResizable = forceResizable;
         return this;
     }
 
@@ -65,6 +84,7 @@ public class UnifiedComponentPopupBuilder implements ComponentPopupBuilder {
 
     @Override
     public ComponentPopupBuilder setRequestFocus(boolean requestFocus) {
+        myRequestFocus = requestFocus;
         return this;
     }
 
@@ -85,16 +105,19 @@ public class UnifiedComponentPopupBuilder implements ComponentPopupBuilder {
 
     @Override
     public ComponentPopupBuilder setCancelCallback(Supplier<Boolean> shouldProceed) {
+        myCancelCallback = shouldProceed;
         return this;
     }
 
     @Override
     public ComponentPopupBuilder setCancelOnClickOutside(boolean cancel) {
+        myCancelOnClickOutside = cancel;
         return this;
     }
 
     @Override
     public ComponentPopupBuilder addListener(JBPopupListener listener) {
+        myListeners.add(listener);
         return this;
     }
 
@@ -105,7 +128,38 @@ public class UnifiedComponentPopupBuilder implements ComponentPopupBuilder {
 
     @Override
     public JBPopup createPopup() {
-        throw new UnsupportedOperationException("swing content cannot be shown on the unified frontends");
+        consulo.ui.Component content = myContent;
+        if (content == null) {
+            throw new UnsupportedOperationException("swing content cannot be shown on the unified frontends");
+        }
+
+        PopupOptions.Builder options = PopupOptions.builder();
+        if (myResizable) {
+            options.resizable();
+        }
+        if (!myRequestFocus) {
+            options.disableRequestFocus();
+        }
+        if (!myCancelOnClickOutside) {
+            options.disableCancelOnClickOutside();
+        }
+        if (!myCancelKeyEnabled) {
+            options.disableCancelOnEscape();
+        }
+
+        UnifiedComponentPopupImpl popup = new UnifiedComponentPopupImpl(
+            content,
+            myPreferableFocusComponent,
+            myTitle,
+            options.build(),
+            myCancelCallback
+        );
+
+        for (JBPopupListener listener : myListeners) {
+            popup.addListener(listener);
+        }
+
+        return popup;
     }
 
     @Override
@@ -120,6 +174,7 @@ public class UnifiedComponentPopupBuilder implements ComponentPopupBuilder {
 
     @Override
     public ComponentPopupBuilder setCancelKeyEnabled(boolean enabled) {
+        myCancelKeyEnabled = enabled;
         return this;
     }
 

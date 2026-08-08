@@ -482,6 +482,12 @@ public abstract class JBPopupFactory {
         @Nullable JComponent preferableFocusComponent
     );
 
+
+    public abstract ComponentPopupBuilder createComponentPopupBuilder(
+        consulo.ui.Component content,
+        consulo.ui.@Nullable Component preferableFocusComponent
+    );
+
     /**
      * Returns the location where a popup with the specified data context is displayed.
      *

@@ -105,7 +105,7 @@ public class CreateDirectoryOrPackageAction extends LegacyDumbAwareAction {
         if (!StringUtil.isEmptyOrSpaces(defaultValue)) {
             nameField.setValue(defaultValue);
         }
-        JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
+        JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel.getComponent(), nameField);
         contentPanel.addValidator(value -> {
             if (!validator.checkInput(value)) {
                 String message = InputValidatorEx.getErrorText(validator, value, LanguageLocalize.incorrectName().get());

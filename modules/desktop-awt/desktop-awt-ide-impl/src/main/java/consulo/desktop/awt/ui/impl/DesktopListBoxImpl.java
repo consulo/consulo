@@ -23,8 +23,10 @@ import consulo.disposer.Disposable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 
 import javax.swing.DefaultListSelectionModel;
 import consulo.ui.ex.awt.JBUI;
@@ -35,6 +37,8 @@ import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -74,7 +78,34 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         applyRender(component);
         applySpeedSearch(component);
         applySeparatorSelection(component);
+        applyDoubleClick(component);
         return component;
+    }
+
+    private void applyDoubleClick(JBList<E> component) {
+        new DoubleClickListener() {
+            @Override
+            protected boolean onDoubleClick(MouseEvent event) {
+                int index = component.locationToIndex(event.getPoint());
+                if (index < 0) {
+                    return false;
+                }
+
+                Rectangle bounds = component.getCellBounds(index, index);
+                if (bounds == null || !bounds.contains(event.getPoint())) {
+                    return false;
+                }
+
+                E value = component.getModel().getElementAt(index);
+                if (mySeparatorPredicate.test(value)) {
+                    return false;
+                }
+
+                getListenerDispatcher(ListDoubleClickEvent.class)
+                    .onEvent(new ListDoubleClickEvent(DesktopListBoxImpl.this, value));
+                return true;
+            }
+        }.installOn(component);
     }
 
     private void applyRender(JBList<E> component) {

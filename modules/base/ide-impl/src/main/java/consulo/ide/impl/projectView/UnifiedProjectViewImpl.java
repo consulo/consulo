@@ -48,7 +48,12 @@ import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.event.PsiTreeChangeAdapter;
+import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.language.psi.PsiModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
@@ -386,6 +391,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
      */
     private @Nullable UITreeState myReadTreeState;
 
+    private boolean myStructureRefreshScheduled;
+
     private @Nullable Element myLoadedState;
 
     private final IdeView myIdeView = new MyIdeView();
@@ -591,6 +598,10 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
                 refreshLoadedPresentations(file);
             }
         }, this);
+
+        // a status listener only re-reads the nodes which are already there, so a created or deleted file has to
+        // come from the psi tree - which is where the awt view takes it from as well
+        PsiManager.getInstance(myProject).addPsiTreeChangeListener(new MyPsiTreeChangeListener(), this);
 
         List<AnAction> titleActions = new ArrayList<>();
         createTitleActions(titleActions);
@@ -1032,6 +1043,92 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
      * carries the open ones away, so the paths are taken first and walked again after - the awt view stores and
      * restores them around {@code updateFromRoot} for the same reason.
      */
+    /**
+     * {@code ProjectViewPsiTreeChangeListener} answers a change by queueing the subtree which holds it. There is no
+     * subtree to queue here - the model builds its levels from the structure and gives them out whole - so the
+     * change is answered by rebuilding, and the strokes of one edit are collapsed into a single rebuild by the psi
+     * modification count, which the awt listener reads for the same reason.
+     */
+    private class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
+        private final PsiModificationTracker myModificationTracker = PsiManager.getInstance(myProject).getModificationTracker();
+
+        private long myModificationCount = -1;
+
+        @Override
+        public void childAdded(PsiTreeChangeEvent event) {
+            if (!(event.getNewChild() instanceof PsiWhiteSpace)) {
+                structureChanged();
+            }
+        }
+
+        @Override
+        public void childRemoved(PsiTreeChangeEvent event) {
+            if (!(event.getOldChild() instanceof PsiWhiteSpace)) {
+                structureChanged();
+            }
+        }
+
+        @Override
+        public void childReplaced(PsiTreeChangeEvent event) {
+            if (!(event.getOldChild() instanceof PsiWhiteSpace && event.getNewChild() instanceof PsiWhiteSpace)) {
+                structureChanged();
+            }
+        }
+
+        @Override
+        public void childMoved(PsiTreeChangeEvent event) {
+            structureChanged();
+        }
+
+        @Override
+        public void childrenChanged(PsiTreeChangeEvent event) {
+            structureChanged();
+        }
+
+        @Override
+        public void propertyChanged(PsiTreeChangeEvent event) {
+            String propertyName = event.getPropertyName();
+
+            if (PsiTreeChangeEvent.PROP_ROOTS.equals(propertyName)
+                || PsiTreeChangeEvent.PROP_FILE_NAME.equals(propertyName)
+                || PsiTreeChangeEvent.PROP_DIRECTORY_NAME.equals(propertyName)
+                || PsiTreeChangeEvent.PROP_FILE_TYPES.equals(propertyName)
+                || PsiTreeChangeEvent.PROP_UNLOADED_PSI.equals(propertyName)) {
+                structureChanged();
+            }
+        }
+
+        private void structureChanged() {
+            long newModificationCount = myModificationTracker.getModificationCount();
+            if (newModificationCount == myModificationCount) {
+                return;
+            }
+            myModificationCount = newModificationCount;
+
+            scheduleStructureRefresh();
+        }
+    }
+
+    /**
+     * Every change of one modification asks for the same rebuild, and the ones which arrive while it is still
+     * being asked for are the same rebuild again - so only the first schedules it.
+     */
+    private void scheduleStructureRefresh() {
+        if (myTree == null || myStructureRefreshScheduled) {
+            return;
+        }
+
+        UIAccess uiAccess = myProject.getApplication().getLastUIAccess();
+
+        myStructureRefreshScheduled = true;
+
+        uiAccess.give(() -> {
+            myStructureRefreshScheduled = false;
+
+            resortTree();
+        });
+    }
+
     @RequiredUIAccess
     private void resortTree() {
         if (myTree == null) {

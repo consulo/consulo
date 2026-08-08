@@ -44,7 +44,6 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
     mySimpleColoredComponent.clear();
     mySimpleColoredComponent.setIcon(icon);
   }
-
   
   @Override
   public TextItemPresentation withFont(Font font) {
@@ -52,13 +51,11 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
     return this;
   }
 
-  
   @Override
   public TextItemPresentation withIcon(@Nullable Image icon) {
     mySimpleColoredComponent.setIcon(icon);
     return this;
   }
-
 
   @Override
   public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
@@ -68,6 +65,6 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
 
   @Override
   public void append(LocalizeValue text, TextAttribute textAttribute) {
-    mySimpleColoredComponent.append(text.get(), DesktopAWTTargetAWTImpl.from(textAttribute));
+    mySimpleColoredComponent.append(text, DesktopAWTTargetAWTImpl.from(textAttribute));
   }
 }

@@ -120,6 +120,20 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     }
 
     @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        toAWTComponent().putClientProperty("JTextField.leadingComponent", TargetAWT.to(prefixComponent));
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        Object object = toAWTComponent().getClientProperty("JTextField.leadingComponent");
+        if (object instanceof JComponent jComponent) {
+            return TargetAWT.from(jComponent);
+        }
+        return null;
+    }
+
+    @Override
     public void setForegroundColor(@Nullable ColorValue foreground) {
         toAWTComponent().setForegroundColor(foreground);
     }

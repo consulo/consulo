@@ -18,6 +18,7 @@ package consulo.web.internal.ui.base;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.dom.ClassList;
+import com.vaadin.flow.dom.Style;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -33,6 +34,8 @@ import consulo.ui.event.AttachEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.DetachEvent;
+import consulo.ui.event.KeyPressedEvent;
+import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.impl.BorderInfo;
@@ -90,6 +93,9 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     private String myClassNamePrefix;
+
+    private boolean myKeyPressedInstalled;
+    private boolean myKeyReleasedInstalled;
 
     public VaadinComponentDelegate() {
         String[] impls = NameUtilCore.splitNameIntoWords(getClass().getSimpleName().replace("Impl", ""));
@@ -213,7 +219,40 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
+        if (eventClass == KeyPressedEvent.class && !myKeyPressedInstalled) {
+            myKeyPressedInstalled = true;
+
+            keepKeysFromShortcuts();
+
+            WebInputDetails.addKeyListener(
+                toVaadinComponent().getElement(),
+                "keydown",
+                details -> getListenerDispatcher(KeyPressedEvent.class).onEvent(new KeyPressedEvent(this, details))
+            );
+        }
+
+        if (eventClass == KeyReleasedEvent.class && !myKeyReleasedInstalled) {
+            myKeyReleasedInstalled = true;
+
+            keepKeysFromShortcuts();
+
+            WebInputDetails.addKeyListener(
+                toVaadinComponent().getElement(),
+                "keyup",
+                details -> getListenerDispatcher(KeyReleasedEvent.class).onEvent(new KeyReleasedEvent(this, details))
+            );
+        }
+
         return dataObject().addListener(eventClass, listener);
+    }
+
+    /**
+     * {@code shortcuts.js} takes the keys the keymap owns from a document level capture listener, so a stroke
+     * bound to an action never reaches the component it was typed in. The terminal marks itself the same way to
+     * keep the keys its process reads.
+     */
+    private void keepKeysFromShortcuts() {
+        toVaadinComponent().getElement().setAttribute("consulo-keyboard-capture", "");
     }
 
     @Override
@@ -285,7 +324,12 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     public void focus() {
-
+        if (myVaadinComponent instanceof Focusable<?> focusable) {
+            focusable.focus();
+        }
+        else {
+            myVaadinComponent.getElement().callJsFunction("focus");
+        }
     }
 
     public void setFocusable(boolean focusable) {
@@ -298,6 +342,21 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     public void bordersChanged() {
         Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
+
+        if (!borders.isEmpty()) {
+            // swing answers the same borders by replacing the one the look and feel gave the component, and its
+            // insets are counted inside the size. a vaadin field keeps its own border in the shadow dom, where a
+            // class on the host cannot reach it, so it is turned off through the properties it reads
+            Style style = myVaadinComponent.getStyle();
+            style.set("box-sizing", "border-box");
+            style.set("--vaadin-input-field-border-width", "0");
+            style.set("--vaadin-input-field-border-radius", "0");
+            style.set("--vaadin-input-field-background", "transparent");
+
+            // the shadow under the field is written into the theme rather than read from a property, so it takes
+            // a rule reaching the part itself
+            myVaadinComponent.getElement().getClassList().add("consulo-flat-input");
+        }
 
         applyBorder(BorderPosition.TOP, borders);
         applyBorder(BorderPosition.BOTTOM, borders);
