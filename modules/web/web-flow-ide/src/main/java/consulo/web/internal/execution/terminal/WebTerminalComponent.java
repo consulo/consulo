@@ -41,11 +41,15 @@ public class WebTerminalComponent extends VaadinComponentDelegate<WebTerminalCom
     private final Consumer<String> myInputConsumer;
     private final Consumer<WebTerminalConsole.TerminalSize> myResizeConsumer;
 
+    /** past this the replay is trimmed from the front, an endless session must not be an endless buffer */
+    private static final int MAX_REPLAY = 200_000;
+
     /**
-     * The process starts writing before the browser has the component, and those first characters are the
-     * banner and the prompt - they are kept until there is a ui to write them into.
+     * Everything the process has written. Detaching the component disposes the terminal in the browser along
+     * with its screen - switching tabs is a detach - so the output is replayed into the terminal which takes
+     * its place. It also covers the characters produced before the browser had the component at all.
      */
-    private final StringBuilder myPendingOutput = new StringBuilder();
+    private final StringBuilder myOutput = new StringBuilder();
 
     public WebTerminalComponent(Consumer<String> inputConsumer, Consumer<WebTerminalConsole.TerminalSize> resizeConsumer) {
         myInputConsumer = inputConsumer;
@@ -70,7 +74,7 @@ public class WebTerminalComponent extends VaadinComponentDelegate<WebTerminalCom
         // theme is applied every time the component arrives in a ui rather than once at construction
         xterm.addAttachListener(event -> {
             applyTheme();
-            flushPendingOutput();
+            replayOutput();
         });
     }
 
@@ -95,11 +99,15 @@ public class WebTerminalComponent extends VaadinComponentDelegate<WebTerminalCom
     }
 
     public void write(String text) {
+        synchronized (myOutput) {
+            myOutput.append(text);
+            if (myOutput.length() > MAX_REPLAY) {
+                myOutput.delete(0, myOutput.length() - MAX_REPLAY);
+            }
+        }
+
         UIAccess uiAccess = getUIAccess();
         if (uiAccess == null) {
-            synchronized (myPendingOutput) {
-                myPendingOutput.append(text);
-            }
             return;
         }
 
@@ -115,19 +123,18 @@ public class WebTerminalComponent extends VaadinComponentDelegate<WebTerminalCom
         getVaadinComponent().getElement().callJsFunction("writeText", text);
     }
 
-    private void flushPendingOutput() {
-        String pending;
-        synchronized (myPendingOutput) {
-            if (myPendingOutput.isEmpty()) {
+    private void replayOutput() {
+        String output;
+        synchronized (myOutput) {
+            if (myOutput.isEmpty()) {
                 return;
             }
-            pending = myPendingOutput.toString();
-            myPendingOutput.setLength(0);
+            output = myOutput.toString();
         }
 
         UIAccess uiAccess = getUIAccess();
         if (uiAccess != null) {
-            uiAccess.give(() -> writeToClient(pending));
+            uiAccess.give(() -> writeToClient(output));
         }
     }
 
