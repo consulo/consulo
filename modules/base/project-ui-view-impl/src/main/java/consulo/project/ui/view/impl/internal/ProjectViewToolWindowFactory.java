@@ -49,23 +49,15 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAwar
     }
 
     @Override
-    public boolean isUnified() {
-        return true;
-    }
-
-    
-    @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.LEFT;
     }
 
-    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowproject();
     }
 
-    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectUILocalize.toolwindowProjectDisplayName();

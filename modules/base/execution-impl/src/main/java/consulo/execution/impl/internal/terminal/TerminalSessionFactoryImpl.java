@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.execution.terminal;
+package consulo.execution.impl.internal.terminal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.terminal.TerminalSession;
@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  */
 @ServiceImpl
 @Singleton
-public class DesktopAWTTerminalSessionFactory implements TerminalSessionFactory {
+public class TerminalSessionFactoryImpl implements TerminalSessionFactory {
   
   @Override
   public TerminalSession createLocal(String connectorName,

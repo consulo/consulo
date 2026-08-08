@@ -9,6 +9,8 @@ module consulo.execution.impl {
     requires static consulo.task.api;
 
     requires com.google.common;
+    requires jediterm.core;
+    requires pty4j;
 
     // TODO remove in future
     requires consulo.ui.ex.awt.api;

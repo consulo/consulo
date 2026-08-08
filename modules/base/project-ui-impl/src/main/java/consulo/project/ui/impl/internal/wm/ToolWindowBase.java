@@ -443,15 +443,9 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         // clear it first to avoid SOE
         myContentFactory = null;
 
-        if (!myToolWindowManager.isUnified() || contentFactory.isUnified()) {
-            myContentManager.removeAllContents(false);
-            contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
-        }
-        else {
-            myContentFactory = null;
-            // nothing
-            // FIXME just leave initialize label
-        }
+        myContentManager.removeAllContents(false);
+
+        contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
     }
 
     @Override

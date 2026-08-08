@@ -25,6 +25,7 @@ import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.ui.Component;
 import consulo.ui.ex.awt.JBScrollBar;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.model.RangeModel;
 
 import javax.swing.*;
 
@@ -39,8 +40,34 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Jedi
     }
 
     @Override
-    public BoundedRangeModel getTerminalVerticalScrollModel() {
-        return myTerminalPanel.getVerticalScrollModel();
+    public RangeModel getTerminalVerticalScrollModel() {
+        BoundedRangeModel model = myTerminalPanel.getVerticalScrollModel();
+        return new RangeModel() {
+            @Override
+            public int getValue() {
+                return model.getValue();
+            }
+
+            @Override
+            public void setValue(int value) {
+                model.setValue(value);
+            }
+
+            @Override
+            public int getMinimum() {
+                return model.getMinimum();
+            }
+
+            @Override
+            public int getMaximum() {
+                return model.getMaximum();
+            }
+
+            @Override
+            public int getExtent() {
+                return model.getExtent();
+            }
+        };
     }
 
     @Override

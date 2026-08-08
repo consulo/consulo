@@ -144,6 +144,13 @@
         };
 
         const onKey = (event, pressed) => {
+            // a terminal talks to a process which owns the keyboard - enter, tab and the control keys are input
+            // for that process, so the keymap of the ide must not take them first
+            const target = event.target;
+            if (target && target.closest && target.closest('[consulo-keyboard-capture]')) {
+                return;
+            }
+
             const modifier = MODIFIERS[event.code];
 
             // left for the browser on purpose - see clipboardOf. the stroke still reaches the platform, but from

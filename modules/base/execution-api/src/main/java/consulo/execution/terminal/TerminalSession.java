@@ -15,10 +15,19 @@
  */
 package consulo.execution.terminal;
 
+import com.jediterm.terminal.TtyConnector;
+
+import java.util.concurrent.ExecutionException;
+
 /**
  * @author VISTALL
  * @since 15/04/2023
  */
 public interface TerminalSession {
     String getConnectorName();
+
+    /**
+     * Starts the underlying process and returns the channel used to talk to it.
+     */
+    TtyConnector connect() throws ExecutionException;
 }

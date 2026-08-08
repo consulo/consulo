@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.execution.terminal;
+package consulo.web.internal.execution.terminal;
 
-import com.jediterm.terminal.*;
+import com.jediterm.terminal.Terminal;
+import com.jediterm.terminal.TerminalDataStream;
+import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.emulator.JediEmulator;
-import com.jediterm.terminal.model.JediTerminal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.terminal.TerminalSession;
@@ -36,68 +38,59 @@ import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 15/04/2023
+ * @since 2026-08-08
  */
 @ServiceImpl
 @Singleton
-public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory {
+public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
+    private static final int DEFAULT_COLUMNS = 80;
+    private static final int DEFAULT_ROWS = 24;
+
     private final Application myApplication;
 
     @Inject
-    public DesktopAWTTerminalConsoleFactory(Application application) {
+    public WebTerminalConsoleFactory(Application application) {
         myApplication = application;
+    }
+
+    private void listenForThemeChange(WebTerminalConsole console, Disposable parentDisposable) {
+        myApplication.getMessageBus()
+            .connect(parentDisposable)
+            .subscribe(EditorColorsListener.class, scheme -> console.updateTheme());
     }
 
     @Override
     public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
-        JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
-
-        JBTerminalWidget widget = new JBTerminalWidget(provider) {
-            @Override
-            public String getSessionName() {
-                return session.getConnectorName();
-            }
-        };
-        Disposer.register(parentDisposable, widget);
-
+        TtyConnector connector;
         try {
-            widget.createTerminalSession(session.connect()).start();
+            connector = session.connect();
         }
         catch (ExecutionException e) {
             Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync();
+            return null;
         }
 
-        return widget;
+        WebTerminalConsole console = new WebTerminalConsole(
+            session.getConnectorName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS);
+        Disposer.register(parentDisposable, console);
+        listenForThemeChange(console, parentDisposable);
+        console.start();
+        return console;
     }
 
+    /**
+     * The supplied emulator drives the server side model only - characters reach xterm.js as the pty produced
+     * them, so an emulator which rewrites what it prints will show one thing and record another.
+     */
     @Override
     public JediTerminalConsole createCustom(Disposable parentDisposable,
                                             BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
                                             TtyConnector connector) {
-        JBTerminalSystemSettingsProvider provider =
-            new JBTerminalSystemSettingsProvider(myApplication, TerminalConsoleSettings.DEFAULT, parentDisposable);
-
-        JBTerminalWidget widget = new JBTerminalWidget(provider) {
-            @Override
-            protected TerminalStarter createTerminalStarter(JediTerminal terminal, TtyConnector conn) {
-                return new TerminalStarter(
-                    terminal,
-                    conn,
-                    new TtyBasedArrayDataStream(conn, getTypeAheadManager()::onTerminalStateChanged),
-                    getTypeAheadManager(),
-                    getExecutorServiceManager()
-                ) {
-                    @Override
-                    protected JediEmulator createEmulator(TerminalDataStream dataStream, Terminal terminal) {
-                        return jediEmulatorFactory.apply(dataStream, terminal);
-                    }
-                };
-            }
-        };
-
-        widget.setTtyConnector(connector);
-        widget.start();
-
-        return widget;
+        WebTerminalConsole console = new WebTerminalConsole(
+            connector.getName(), connector, jediEmulatorFactory, DEFAULT_COLUMNS, DEFAULT_ROWS);
+        Disposer.register(parentDisposable, console);
+        listenForThemeChange(console, parentDisposable);
+        console.start();
+        return console;
     }
 }

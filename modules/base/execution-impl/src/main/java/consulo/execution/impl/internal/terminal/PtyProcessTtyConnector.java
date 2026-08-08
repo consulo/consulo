@@ -1,4 +1,4 @@
-package consulo.desktop.awt.execution.terminal;
+package consulo.execution.impl.internal.terminal;
 
 import com.jediterm.core.util.TermSize;
 import com.jediterm.terminal.ProcessTtyConnector;

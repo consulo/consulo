@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.ui.terminal;
+package com.flowingcode.vaadin.addons.xterm;
 
-import com.jediterm.terminal.Terminal;
-import com.jediterm.terminal.model.TerminalTextBuffer;
-import consulo.ui.model.RangeModel;
+import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.dependency.JsModule;
 
 /**
+ * Terminal talking to a pty. The line editing, history and prompt of {@link XTerm} belong to a console the
+ * server draws, and get in the way of a process which draws its own screen.
+ *
  * @author VISTALL
- * @since 2026-01-31
+ * @since 2026-08-08
  */
-public interface JediTerminalConsole extends TerminalConsole {
-    Terminal getTerminal();
-
-    TerminalTextBuffer getTerminalTextBuffer();
-
-    RangeModel getTerminalVerticalScrollModel();
-
-    boolean isShowing();
+@SuppressWarnings("serial")
+@Tag("consulo-pty-term")
+@JsModule("Frontend/fc-xterm/consulo-pty-term.ts")
+public class ConsuloPtyTerm extends XTermBase implements ITerminalFit {
 }

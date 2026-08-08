@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.execution.terminal;
+package consulo.execution.impl.internal.terminal;
 
 import com.jediterm.terminal.TtyConnector;
 import com.pty4j.PtyProcess;

@@ -26,6 +26,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dependency.Uses;
+import com.flowingcode.vaadin.addons.xterm.ConsuloPtyTerm;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -80,6 +81,7 @@ import org.vaadin.stefan.table.Table;
 @JsModule("./treeToggle.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
+@Uses(ConsuloPtyTerm.class)
 @Uses(Popover.class)
 @Uses(HorizontalLayout.class)
 @Uses(Icon.class)

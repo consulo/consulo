@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.ui.terminal;
-
-import com.jediterm.terminal.Terminal;
-import com.jediterm.terminal.model.TerminalTextBuffer;
-import consulo.ui.model.RangeModel;
+package consulo.ui.model;
 
 /**
  * @author VISTALL
- * @since 2026-01-31
+ * @since 2026-08-08
  */
-public interface JediTerminalConsole extends TerminalConsole {
-    Terminal getTerminal();
+public interface RangeModel {
+    int getValue();
 
-    TerminalTextBuffer getTerminalTextBuffer();
+    void setValue(int value);
 
-    RangeModel getTerminalVerticalScrollModel();
+    int getMinimum();
 
-    boolean isShowing();
+    int getMaximum();
+
+    int getExtent();
 }
