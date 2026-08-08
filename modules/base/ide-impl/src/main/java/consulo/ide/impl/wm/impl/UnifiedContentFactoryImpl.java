@@ -19,8 +19,11 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.Label;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
@@ -36,6 +39,8 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedContentFactoryImpl implements ContentFactory {
+  private static final Logger LOG = Logger.getInstance(UnifiedContentFactoryImpl.class);
+
   
   @Override
   public ContentManager createContentManager(ContentUI contentUI, boolean canCloseContents, ComponentManager project) {
@@ -52,5 +57,17 @@ public class UnifiedContentFactoryImpl implements ContentFactory {
   @Override
   public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
     return new UnifiedContentImpl(component, displayName, isLockable);
+  }
+
+  /**
+   * A swing component cannot be shown by a frontend without an awt hierarchy. The content is built while a tool
+   * window initializes, and throwing there takes the whole ui down rather than the one tool window still asking
+   * for a JComponent - so an empty content is answered instead, and the rest of the ide comes up.
+   */
+  @Override
+  public Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+    LOG.warn("Content of '" + displayName + "' is a swing component, which this frontend cannot show");
+
+    return new UnifiedContentImpl(Label.create(LocalizeValue.of("Unsupported UI")), displayName, isLockable);
   }
 }
