@@ -37,6 +37,11 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionRow;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.action.ToolWindowActions;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.style.ComponentColors;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import org.jspecify.annotations.Nullable;
@@ -162,24 +167,79 @@ public class UnifiedToolWindowHeader implements Disposable {
         myTabsLayout.removeAll();
 
         ContentManager contentManager = myToolWindow.getContentManagerIfCreated();
-        if (contentManager == null || contentManager.getContentCount() < 2) {
+        if (contentManager == null || !hasTabsToShow(contentManager)) {
             return;
         }
 
         Content selected = contentManager.getSelectedContent();
 
         for (Content content : contentManager.getContents()) {
-            Button tab = Button.create(LocalizeValue.of(content.getTabName()));
-            tab.setIcon(content.getIcon());
-            tab.addStyle(content == selected ? ButtonStyle.PRIMARY : ButtonStyle.BORDERLESS);
-            tab.addClickListener(event -> {
-                contentManager.setSelectedContent(content, true);
-
-                myToolWindow.fireActivated();
-            });
-
-            myTabsLayout.add(tab);
+            myTabsLayout.add(createTab(contentManager, content, content == selected));
         }
+    }
+
+    /**
+     * A lone content is the tool window itself and needs no tab, but one which can be closed has to offer the
+     * way to close it.
+     */
+    private static boolean hasTabsToShow(ContentManager contentManager) {
+        int count = contentManager.getContentCount();
+        if (count >= 2) {
+            return true;
+        }
+        return count == 1 && isCloseable(contentManager, contentManager.getContents()[0]);
+    }
+
+    /**
+     * A content answers that it is closeable by default, so a tool window holding a single content - the project
+     * view - would look closeable on its own. What decides is the tool window, which is what the close actions
+     * of the platform ask as well.
+     */
+    private static boolean isCloseable(ContentManager contentManager, Content content) {
+        return contentManager.canCloseContents() && content.isCloseable();
+    }
+
+    @RequiredUIAccess
+    private Component createTab(ContentManager contentManager, Content content, boolean selected) {
+        Style style = StyleManager.get().getCurrentStyle();
+
+        Button tab = Button.create(LocalizeValue.of(content.getTabName()));
+        tab.setIcon(content.getIcon());
+        // never the primary style - that paints the accent color of the toolkit, which is not a color of the theme.
+        // the borderless text follows the theme already, the foreground of a component is not settable on every
+        // frontend
+        tab.addStyle(ButtonStyle.BORDERLESS);
+        tab.addClickListener(event -> {
+            contentManager.setSelectedContent(content, true);
+
+            myToolWindow.fireActivated();
+        });
+
+        // the label and the cross are one tab, so the underline of the selection has to be drawn under both of
+        // them rather than under the label alone
+        HorizontalLayout tabLayout = HorizontalLayout.create(0);
+        tabLayout.add(tab);
+
+        if (isCloseable(contentManager, content)) {
+            Button close = Button.create(LocalizeValue.of(""));
+            close.setIcon(PlatformIconGroup.actionsClose());
+            // the inplace style is a lumo variant, and a theme which is not lumo leaves it looking like a button
+            close.addStyle(ButtonStyle.BORDERLESS);
+            close.addClickListener(event -> contentManager.removeContent(content, true));
+
+            tabLayout.add(close);
+        }
+
+        if (selected) {
+            tabLayout.addBorder(
+                BorderPosition.BOTTOM,
+                BorderStyle.LINE,
+                style.getColorValue(ComponentColors.TABBED_PANE_UNDERLINE),
+                2
+            );
+        }
+
+        return tabLayout;
     }
 
     private UnifiedActionRow createActionRow(Supplier<ActionGroup> groupProducer) {
