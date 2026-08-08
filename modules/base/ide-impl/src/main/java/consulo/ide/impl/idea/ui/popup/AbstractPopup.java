@@ -117,6 +117,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     private boolean myForcedHeavyweight;
     private boolean myLocateWithinScreen;
     private boolean myResizable;
+
+    @Override
+    public void setResizable(boolean resizable) {
+        myResizable = resizable;
+    }
     private WindowResizeListener myResizeListener;
     private WindowMoveListener myMoveListener;
     private JPanel myHeaderPanel;

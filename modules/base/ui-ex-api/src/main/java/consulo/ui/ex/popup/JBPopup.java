@@ -104,7 +104,14 @@ public interface JBPopup extends Disposable, LightweightWindow {
         showBy(uiEvent.getComponent(), Objects.requireNonNull(uiEvent.getInputDetails()));
     }
 
-    void showBy(consulo.ui.Component component, InputDetails inputDetails);
+    void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails);
+
+    /**
+     * Whether the user may resize the popup. Set it before the popup is shown.
+     */
+    @RequiredUIAccess
+    default void setResizable(boolean resizable) {
+    }
 
     /**
      * Shows the popup in the center of the active window in the IDE frame for the specified project.

@@ -22,13 +22,24 @@ import consulo.ui.Popup;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
+import consulo.ui.Point2D;
 import consulo.ui.ListBox;
+import consulo.ui.TextAttribute;
 import consulo.ui.TextItemRender;
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.action.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutSet;
+import consulo.ui.ex.awt.popup.ListPopupStepEx;
+import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.ListSelectionListener;
@@ -37,6 +48,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 
 /**
@@ -54,7 +67,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     }
 
     private final @Nullable ComponentManager myProject;
-    private final ListPopupStep myRootStep;
+    private final CompletableFuture<? extends ListPopupStep> myRootStep;
 
     private final List<Consumer<Object>> mySelectionListeners = new ArrayList<>();
 
@@ -64,6 +77,14 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private final Deque<Level> myLevels = new ArrayDeque<>();
 
     private @Nullable ListBox<Object> myTopList;
+    private @Nullable TextItemRender<Object> myRender;
+    private int myMinimumWidth = -1;
+    private boolean myResizable;
+
+    private consulo.ui.@Nullable Component myAnchor;
+    private @Nullable InputDetails myAnchorDetails;
+    private @Nullable Point2D myAnchorPoint;
+    private int myAnchorHeight;
 
     private boolean myAutoHandleBeforeShow;
     // closing a level from here fires its close listener as well, and that listener is the one which unwinds the
@@ -71,6 +92,10 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private boolean myUnwinding;
 
     public UnifiedListPopupImpl(@Nullable ComponentManager project, ListPopupStep step) {
+        this(project, CompletableFuture.completedFuture(step));
+    }
+
+    public UnifiedListPopupImpl(@Nullable ComponentManager project, CompletableFuture<? extends ListPopupStep> step) {
         myProject = project;
         myRootStep = step;
     }
@@ -78,16 +103,40 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     @Override
     public ListPopupStep getListStep() {
         Level top = myLevels.peek();
-        return top == null ? myRootStep : top.step();
+        return top == null ? myRootStep.join() : top.step();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setRender(TextItemRender<?> render) {
+        myRender = (TextItemRender<Object>) render;
+
+        ListBox<Object> list = myTopList;
+        if (list != null) {
+            list.setRender(myRender);
+        }
+    }
+
+    @Override
+    public void setMinimumWidth(int width) {
+        myMinimumWidth = width;
+    }
+
+    @Override
+    public void setResizable(boolean resizable) {
+        myResizable = resizable;
     }
 
     /**
-     * A step reached through another one hangs off the popup which owns it, so it is a light popup. The first step has
-     * nothing to point at and is placed instead.
+     * A step reached through another one is stacked beside the one which owns it, the way a submenu is. The first
+     * step hangs under whatever raised it, and is placed instead when there is nothing to hang off.
      */
     @RequiredUIAccess
     private Popup buildPopup(ListPopupStep step, boolean nested) {
         PopupOptions.Builder options = PopupOptions.builder();
+        if (myResizable) {
+            options.resizable();
+        }
         if (nested) {
             options.position(PopupPosition.END);
         }
@@ -98,6 +147,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
         popup.setTitle(step.getTitle());
         popup.setContent(buildList(step));
+        popup.setMinimumWidth(myMinimumWidth);
 
         popup.addCloseListener(event -> unwindTo(popup));
 
@@ -109,15 +159,31 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     private ListBox<Object> buildList(ListPopupStep step) {
         ListBox<Object> list = ListBox.create(step.getValues());
 
-        list.setRender((TextItemRender<Object>) (presentation, item) -> {
+        TextItemRender<Object> render = myRender;
+        list.setRender(render != null ? render : (presentation, item) -> {
             Object value = item.getValue();
             if (value == null) {
                 return;
             }
 
             presentation.withIcon(step.getIconFor(value));
-            presentation.append(step.getTextFor(value));
+            presentation.append(TextWithMnemonic.parse(step.getTextFor(value)).getText());
+
+            if (value instanceof ShortcutProvider shortcutProvider) {
+                ShortcutSet shortcutSet = shortcutProvider.getShortcut();
+                Shortcut shortcut = shortcutSet == null ? null : ArrayUtil.getFirstElement(shortcutSet.getShortcuts());
+                if (shortcut != null) {
+                    presentation.append("  " + KeymapUtil.getShortcutText(shortcut), TextAttribute.GRAYED);
+                }
+            }
+
+            String secondary = step instanceof ListPopupStepEx<?> stepEx ? ((ListPopupStepEx<Object>) stepEx).getValueFor(value) : null;
+            if (secondary != null) {
+                presentation.append("  " + secondary, TextAttribute.GRAYED);
+            }
         });
+
+        list.isSeparator(step::isSeparator);
 
         int defaultIndex = step.getDefaultOptionIndex();
         if (defaultIndex >= 0 && defaultIndex < step.getValues().size()) {
@@ -158,6 +224,32 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
             next = PopupStep.FINAL_CHOICE;
         }
 
+        if (next instanceof AsyncPopupStep<?> asyncStep) {
+            UIAccess uiAccess = UIAccess.current();
+
+            CompletableFuture.supplyAsync(() -> {
+                try {
+                    return asyncStep.call();
+                }
+                catch (Exception e) {
+                    throw new CompletionException(e);
+                }
+            }).whenCompleteAsync((resolved, throwable) -> {
+                if (isDisposed()) {
+                    return;
+                }
+
+                if (throwable != null) {
+                    LOG.error("Popup step failed to build its substep", throwable);
+                    unwindTo(null);
+                }
+                else if (resolved instanceof ListPopupStep resolvedListStep) {
+                    pushLevel(resolvedListStep);
+                }
+            }, uiAccess);
+            return;
+        }
+
         if (next == PopupStep.FINAL_CHOICE || !(next instanceof ListPopupStep nextListStep)) {
             markOk();
 
@@ -180,10 +272,16 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
         myLevels.push(new Level(step, popup));
 
-        if (popup instanceof LightPopup light && parent != null) {
+        if (parent != null && popup instanceof LightPopup light) {
             // anchored to the popup which owns the row rather than the row itself - how many components a list
             // makes for its rows is the frontend's business, so a row is not something to hold on to
             light.showBy(parent.popup());
+        }
+        else if (myAnchor != null && myAnchorPoint != null) {
+            popup.showAt(myAnchor, myAnchorPoint.x(), myAnchorPoint.y(), myAnchorHeight);
+        }
+        else if (myAnchor != null && popup instanceof LightPopup light) {
+            light.showBy(myAnchor);
         }
         else if (popup instanceof HeavyPopup heavy) {
             heavy.showInCenterOf(null);
@@ -193,32 +291,58 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     @Override
     @RequiredUIAccess
     public void showCenteredInCurrentWindow(ComponentManager project) {
+        myAnchor = null;
+        myAnchorDetails = null;
         show();
     }
 
     @Override
     @RequiredUIAccess
-    public void showBy(consulo.ui.Component component, InputDetails inputDetails) {
+    public void showBy(consulo.ui.Component component, @Nullable InputDetails inputDetails) {
+        myAnchor = component;
+        myAnchorDetails = inputDetails;
+        show();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void showAtPoint(consulo.ui.Component target, int x, int y, int anchorHeight) {
+        myAnchor = target;
+        myAnchorDetails = null;
+        myAnchorPoint = new Point2D(x, y);
+        myAnchorHeight = anchorHeight;
         show();
     }
 
     @RequiredUIAccess
     private void show() {
-        if (handleAutoSelection()) {
-            return;
-        }
+        UIAccess uiAccess = UIAccess.current();
 
-        fireBeforeShown();
+        myRootStep.whenCompleteAsync((step, throwable) -> {
+            if (isDisposed()) {
+                return;
+            }
 
-        try {
-            pushLevel(myRootStep);
-        }
-        catch (Throwable e) {
-            // the action runner drops whatever this throws into a future nobody reads, so an unlogged failure
-            // here looks exactly like a popup which silently did not open
-            consulo.logging.Logger.getInstance(UnifiedListPopupImpl.class).error("Failed to show popup", e);
-            throw e;
-        }
+            if (throwable != null) {
+                // the action runner drops whatever this throws into a future nobody reads, so an unlogged failure
+                // here looks exactly like a popup which silently did not open
+                LOG.error("Failed to build popup step", throwable);
+                return;
+            }
+
+            if (handleAutoSelection(step)) {
+                return;
+            }
+
+            fireBeforeShown();
+
+            try {
+                pushLevel(step);
+            }
+            catch (Throwable e) {
+                LOG.error("Failed to show popup", e);
+            }
+        }, uiAccess);
     }
 
     /**
@@ -226,15 +350,15 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
      * without ever putting a list on screen.
      */
     @RequiredUIAccess
-    private boolean handleAutoSelection() {
+    private boolean handleAutoSelection(ListPopupStep step) {
         if (!myAutoHandleBeforeShow) {
             return false;
         }
 
         int selectable = 0;
         Object single = null;
-        for (Object value : myRootStep.getValues()) {
-            if (myRootStep.isSelectable(value)) {
+        for (Object value : step.getValues()) {
+            if (step.isSelectable(value)) {
                 selectable++;
                 single = value;
             }
@@ -244,7 +368,7 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
             return false;
         }
 
-        onValueChosen(myRootStep, single);
+        onValueChosen(step, single);
         return true;
     }
 

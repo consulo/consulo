@@ -19,7 +19,8 @@ package consulo.desktop.awt.navbar.ui;
 
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
-import consulo.ide.impl.idea.ui.popup.PopupOwner;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
 import consulo.navigationBar.model.*;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.logging.Logger;
@@ -281,13 +282,13 @@ public final class NewNavBarPanel extends JPanel implements UiDataProvider, Popu
     }
 
     @Override
-    public @Nullable Point getBestPopupPosition() {
+    public @Nullable Point2D getBestPopupPosition() {
         int selectedIndex = myVm.getSelectedIndex();
         if (selectedIndex < 0 || selectedIndex >= myItemComponents.size()) {
             return null;
         }
         NavBarItemComponent itemComponent = myItemComponents.get(selectedIndex);
-        return new Point(itemComponent.getX(), itemComponent.getY() + itemComponent.getHeight());
+        return new Point2D(itemComponent.getX(), itemComponent.getY() + itemComponent.getHeight());
     }
 
     @Override

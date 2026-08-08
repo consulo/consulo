@@ -33,6 +33,7 @@ module consulo.code.editor.api {
         consulo.desktop.awt.ide.impl;
 
     exports consulo.codeEditor.internal to consulo.ide.impl,
+        consulo.ui.ex.impl,
         consulo.code.editor.impl,
         consulo.language.inject.impl,
         consulo.desktop.awt.ide.impl,

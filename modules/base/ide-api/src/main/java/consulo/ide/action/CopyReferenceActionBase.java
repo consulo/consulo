@@ -21,6 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.internal.CopyPathProviderUtil;
+import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.ide.internal.CopyReferenceFQNTransferable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.QualifiedNameProviderUtil;
@@ -81,6 +82,7 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction implements
 
             if (calcQualifiedName) {
                 e.getPresentation().putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, getQualifiedName(editor, elements));
+                e.getPresentation().putClientProperty(ListPopupStepEx.SECONDARY_TEXT, getQualifiedName(editor, elements));
             }
         }
 

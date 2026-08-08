@@ -40,6 +40,23 @@ public sealed interface Popup extends Component, Disposable permits LightPopup, 
     @RequiredUIAccess
     void setContent(Component content);
 
+    @RequiredUIAccess
+    default void setMinimumWidth(int width) {
+    }
+
+    /**
+     * Opens the popup at a point inside {@code target} rather than against the component as a whole. Only the
+     * frontend can measure where the target ended up, so a popup raised over a row or a caret is placed by it.
+     *
+     * @param x            pixels from the left of {@code target}
+     * @param y            pixels from the top of {@code target}
+     * @param anchorHeight height of whatever the point belongs to - the caret line for an editor - so a popup with
+     *                     no room below it can go above that line rather than over it
+     */
+    @RequiredUIAccess
+    default void showAt(Component target, int x, int y, int anchorHeight) {
+    }
+
     /**
      * Closes the popup. A popup dismissed by the user closes the same way, so a close listener sees every close -
      * whether one was a choice or an abandonment is for the caller to track.

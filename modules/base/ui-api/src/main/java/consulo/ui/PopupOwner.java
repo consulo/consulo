@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.popup;
+package consulo.ui;
 
 import org.jspecify.annotations.Nullable;
-import java.awt.*;
 
 /**
+ * A component which says for itself where a popup raised over it belongs - under the selected row, above all. The
+ * unified counterpart of the swing {@code PopupOwner}, which answers a {@link java.awt.Point}.
+ *
  * @author anna
  * @since 2005-11-11
  */
 public interface PopupOwner {
-  @Nullable Point getBestPopupPosition();
+    /**
+     * Pixels from the top left of the component, or {@code null} while there is nothing selected to point at.
+     */
+    @Nullable
+    Point2D getBestPopupPosition();
 }

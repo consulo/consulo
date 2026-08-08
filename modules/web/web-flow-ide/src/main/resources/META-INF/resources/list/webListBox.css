@@ -82,3 +82,21 @@ consulo-virtual-list.web-list-box [selected]
   border-radius: var(--consulo-list-row-selection-radius, 4px);
   background: var(--consulo-list-row-selection, #d4e2ff);
 }
+
+/* a separator is the gap between two groups of items, so it carries the row rather than sitting inside it.
+   the row is a flex box, and a rule left to itself in one collapses to no width at all */
+.web-list-box-separator
+{
+  flex: 1 1 auto;
+  align-self: center;
+  margin: 5px 0;
+  border: none;
+  border-top: 1px solid var(--consulo-component-border-color);
+}
+
+/* the row carries a line rather than a label, so it gives up the padding and the height a row of text needs */
+vaadin-item:has(> .web-list-box-separator)
+{
+  min-height: 0;
+  padding: 0;
+}

@@ -13,8 +13,8 @@ import consulo.ide.impl.idea.ui.UiInterceptors;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupItem;
-import consulo.ide.impl.idea.ui.popup.actionPopup.ActionPopupStep;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupItem;
+import consulo.ui.ex.impl.internal.popup.action.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.actionPopup.PopupInlineActionsSupportKt;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.PlatformDataKeys;
@@ -77,6 +77,8 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
     private boolean myShowSubmenuOnHover;
     private boolean myExecuteExpandedItemOnClick;
+
+    private int myMinimumWidth = -1;
 
     /**
      * @deprecated use {@link #ListPopupImpl(Project, ListPopupStep)} + {@link #setMaxRowCount(int)}
@@ -420,6 +422,34 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
     protected ListCellRenderer getListElementRenderer() {
         return new PopupListElementRenderer(this);
+    }
+
+    @Override
+    public void setMinimumWidth(int width) {
+        myMinimumWidth = width;
+    }
+
+    /**
+     * The items of an action group arrive after the popup is up, so whatever it was packed to is a size for a list
+     * it no longer holds.
+     */
+    protected void updatePopupSize() {
+        int minimumWidth = myMinimumWidth <= 0 ? 0 : JBUIScale.scale(myMinimumWidth);
+
+        ApplicationManager.getApplication().invokeLater(() -> {
+            JComponent content = getContent();
+
+            // a size set here is the one handed back next time, so the content is asked what it wants before
+            // anything is forced on it
+            content.setPreferredSize(null);
+
+            Dimension preferred = content.getPreferredSize();
+            Dimension size = new Dimension(Math.max(preferred.width, minimumWidth), preferred.height);
+
+            content.setPreferredSize(size);
+            content.setSize(size);
+            setSize(size);
+        });
     }
 
     @Override

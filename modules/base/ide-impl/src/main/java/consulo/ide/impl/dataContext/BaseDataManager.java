@@ -136,7 +136,7 @@ public abstract class BaseDataManager implements DataManagerEx {
             if (Application.KEY == dataId) {
                 return (T) Application.get();
             }
-            if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId) {
+            if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId || consulo.ui.Component.KEY == dataId) {
                 return (T) component;
             }
             if (ModalityState.KEY == dataId) {
@@ -268,7 +268,7 @@ public abstract class BaseDataManager implements DataManagerEx {
             DataProvider provider = getDataProviderForComponent(c);
             providers.add(PreCachedDataContext.initProviderForAsync(myApplication, provider));
         }
-        return new PreCachedDataContext(this, providers);
+        return new PreCachedDataContext(this, providers, component);
     }
 
     @Override

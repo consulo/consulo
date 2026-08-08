@@ -1,5 +1,5 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup.actionPopup;
+package consulo.ui.ex.impl.internal.popup.action;
 
 import consulo.application.Application;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, MnemonicNavigationFilter<ActionPopupItem>, SpeedSearchFilter<ActionPopupItem> {
+
     private final List<ActionPopupItem> myItems;
     private final String myTitle;
     private final Supplier<? extends DataContext> myContext;
@@ -253,6 +254,11 @@ public class ActionPopupStep implements ListPopupStepEx<ActionPopupItem>, Mnemon
     @Override
     public String getTextFor(ActionPopupItem value) {
         return value.getText().getValue();
+    }
+
+    @Override
+    public @Nullable String getValueFor(ActionPopupItem value) {
+        return value.getClientProperty(ListPopupStepEx.SECONDARY_TEXT);
     }
 
     @Override

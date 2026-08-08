@@ -8,6 +8,7 @@ module consulo.ui.ex.impl {
     requires transitive consulo.application.impl;
     requires transitive consulo.project.ui.api;
     requires transitive consulo.language.api;
+    requires transitive consulo.code.editor.api;
     requires consulo.ui.impl;
     requires consulo.util.nodep;
     requires gnu.trove;
@@ -20,6 +21,10 @@ module consulo.ui.ex.impl {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.os.mac,
         consulo.desktop.swt.ide.impl;
+
+    exports consulo.ui.ex.impl.internal.popup.action to
+        consulo.ide.impl,
+        consulo.desktop.awt.ide.impl;
 
     exports consulo.ui.ex.impl.internal.keymap to
         consulo.ide.impl,

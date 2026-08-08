@@ -21,6 +21,7 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.internal.CopyPathProviderUtil;
+import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.language.editor.internal.CopyReferenceUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -95,6 +96,7 @@ public class CopyPathProvider extends DumbAwareAction implements AnActionWithAsy
 
             Presentation presentation = e.getPresentation();
             presentation.putClientProperty(CopyPathProviderUtil.QUALIFIED_NAME, qualifiedName);
+            presentation.putClientProperty(ListPopupStepEx.SECONDARY_TEXT, qualifiedName);
             presentation.setEnabledAndVisible(qualifiedName != null);
         }).toCoroutine();
     }

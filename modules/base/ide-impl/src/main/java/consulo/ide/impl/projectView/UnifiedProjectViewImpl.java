@@ -167,6 +167,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             // and expands to nothing, and cut/copy/paste have no provider to run through
             sink.set(IdeView.KEY, myIdeView);
             sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
+
+            // the provider hangs off the layout around the tree, but a popup anchors to the tree - it is the one
+            // which knows where its selected row ended up
+            if (myTree != null) {
+                sink.set(consulo.ui.Component.KEY, myTree);
+            }
             if (myCopyPasteDelegator != null) {
                 sink.set(PlatformDataKeys.CUT_PROVIDER, myCopyPasteDelegator.getCutProvider());
                 sink.set(PlatformDataKeys.COPY_PROVIDER, myCopyPasteDelegator.getCopyProvider());

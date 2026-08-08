@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.popup.actionPopup;
+package consulo.ui.ex.impl.internal.popup.action;
 
 import consulo.application.localize.ApplicationLocalize;
 import consulo.dataContext.DataContext;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
+import consulo.ui.ex.impl.internal.action.ActionGroupExpander;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.ui.popup.NothingHereAction;
+import consulo.ui.ex.impl.internal.popup.action.NothingHereAction;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
