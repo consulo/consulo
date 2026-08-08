@@ -127,57 +127,53 @@
   width: 22px;
 }
 
-/* the folding marker is an empty div the annotation of the row carries, so it only exists on a row a
-   region starts on. the bundle draws a plus and a minus circle into it out of its own images, which is
-   not what the ide gutter shows - the rule has to outweigh the bundled .annotationHTML.expanded, whose
-   stylesheet is added to the page after the theme */
+/* the folding marker is the div the annotation of the row carries. what stands inside it is the gutter icon of
+   the platform, handed to the editor as markup - the rule has to outweigh the bundled .annotationHTML.expanded,
+   whose stylesheet is added after the theme. an open region carries two: the head on the row it begins on and
+   the foot on the row it ends on, which is the bracket the awt gutter draws around what the region holds */
 .textviewLeftRuler .ruler.folding .annotationHTML.expanded,
-.textviewLeftRuler .ruler.folding .annotationHTML.collapsed
+.textviewLeftRuler .ruler.folding .annotationHTML.collapsed,
+.textviewLeftRuler .ruler.folding .annotationHTML.expandedBottom
 {
   position: relative;
 
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
 
+  /* the bundle draws a plus and a minus circle of its own here */
   background-image: none;
   cursor: pointer;
-  opacity: 0.55;
+
+  /* the image of the platform is sized by the box it hangs in, as in the gutter marks. the icon is a chevron
+     drawn inside a square with a margin of its own - at the 9px the file declares, the mark reads far heavier
+     beside a 13px line than the awt one does in a gutter row, so the box is taken down to the width the stroke
+     actually covers and the chevron ends up about as tall as the x height of the text */
+  --web-image-width: var(--arquill-fold-icon-size, 9px);
+  --web-image-height: var(--arquill-fold-icon-size, 9px);
+
+  /* the awt gutter only shows the anchors while the pointer is over it - see the alpha context of
+     EditorGutterComponentImpl, which is made visible by the hover of the gutter */
+  opacity: 0;
+  transition: opacity 100ms;
 }
 
-.textviewLeftRuler .ruler.folding .annotationHTML.expanded:hover,
-.textviewLeftRuler .ruler.folding .annotationHTML.collapsed:hover
+/* the whole left gutter is the hover area, the way the awt one is - the anchors of every row appear at once
+   rather than the one under the pointer */
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expanded,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.collapsed,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expandedBottom
+{
+  opacity: 0.75;
+}
+
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expanded:hover,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.collapsed:hover,
+.textviewLeftRuler:hover .ruler.folding .annotationHTML.expandedBottom:hover
 {
   opacity: 1;
-}
-
-/* the chevron the awt gutter draws - two strokes rather than a filled triangle - out of the inherited text
-   colour so it follows the scheme rather than a grey of its own */
-.textviewLeftRuler .ruler.folding .annotationHTML.expanded::after,
-.textviewLeftRuler .ruler.folding .annotationHTML.collapsed::after
-{
-  content: '';
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-
-  width: 5px;
-  height: 5px;
-
-  border: solid currentColor;
-  border-width: 0 1.5px 1.5px 0;
-}
-
-/* the chevron points at what the click does, so an expanded region carries the one that collapses it */
-.textviewLeftRuler .ruler.folding .annotationHTML.expanded::after
-{
-  transform: translate(-50%, -70%) rotate(45deg);
-}
-
-.textviewLeftRuler .ruler.folding .annotationHTML.collapsed::after
-{
-  transform: translate(-70%, -50%) rotate(-45deg);
 }
 
 /* the layer every line marker presentation is drawn into - one box per band, placed while rendering, since
@@ -392,6 +388,16 @@
   50% { opacity: 0; }
 }
 
+/* the line numbers are drawn in the font of the color scheme, the way the awt gutter draws them - the rule
+   which publishes it matches .textview, and the ruler is a column of its own beside it. the row metric is
+   pinned below and is computed from the same size, so a taller font does not pull the numbers off the lines
+   they belong to */
+.textviewLeftRuler .ruler.lines
+{
+  font-family: var(--arquill-editor-font-family);
+  font-size: var(--arquill-editor-font-size);
+}
+
 /* the ruler rows are laid out at the height of a text row but keep the default line height, so the number is
    drawn at the top of its row while the gutter marker beside it is centered in the same row - the two then
    read as misaligned even though both are where they were put */
@@ -473,4 +479,12 @@
 .textviewMarginRuler.textviewMarginRuler
 {
   border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
+}
+
+/* the pointer over a collapsed placeholder says the click opens it, the hand cursor the awt editor answers
+   with from DesktopEditorImpl#getDefaultCursor */
+.arquill-fold-hover .textview,
+.arquill-fold-hover .textview *
+{
+  cursor: pointer;
 }

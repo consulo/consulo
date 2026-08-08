@@ -596,6 +596,29 @@ public class ArquillEditorElement extends Component implements HasSize {
     }
 
     /**
+     * The markup the folding ruler draws its anchors with. The editor owns no icons, the platform ones are
+     * handed over as the markup of a live image - a tag which reloads itself when the style of the ide changes,
+     * which a url written into the ruler could not do.
+     *
+     * @param expandedHtml       head of a region which is open, on the row it begins on
+     * @param collapsedHtml      anchor of a region which is folded
+     * @param expandedBottomHtml foot of a region which is open, on the row it ends on - the lower end of the
+     *                           bracket the awt gutter draws around what an open region holds
+     */
+    public void setFoldingAnchors(String expandedHtml, String collapsedHtml, String expandedBottomHtml) {
+        String anchors = expandedHtml + "\u0000" + collapsedHtml + "\u0000" + expandedBottomHtml;
+        if (isUnchanged("foldingAnchors", anchors)) {
+            return;
+        }
+        getElement().executeJs(
+            "this.$arquillApi.setFoldingAnchors($0, $1, $2);",
+            expandedHtml,
+            collapsedHtml,
+            expandedBottomHtml
+        );
+    }
+
+    /**
      * The inlays of the document. Each anchor becomes a zero width projection of the orion model - text standing in
      * the view without being in the document, which is what a fold placeholder already is.
      *

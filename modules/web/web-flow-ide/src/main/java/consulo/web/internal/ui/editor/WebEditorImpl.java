@@ -30,6 +30,7 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.web.internal.ui.image.WebImageElement;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.HighlighterLayer;
@@ -861,6 +862,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   public void update() {
     // the highlighter walk touches the document and the psi backed settings
     Application.get().runReadAction((Runnable)() -> {
+      // the ruler needs the icons before it draws an anchor with them
+      updateFoldingAnchors();
+
       // pushed first - the browser remaps every offset the other pushes carry once the projection changes
       updateFoldRegions();
 
@@ -1359,6 +1363,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
       regions.append("{\"start\":").append(start)
         .append(",\"end\":").append(end)
         .append(",\"collapsed\":").append(!region.isExpanded())
+        .append(",\"anchor\":").append(isAnchorVisible(region))
         .append(",\"placeholder\":\"").append(escapeJson(region.getPlaceholderText())).append('"');
 
       // the same shape the style ranges carry, the client feeds both to the LineStyle event of the bundle
@@ -1372,6 +1377,90 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     regions.append(']');
 
     myEditorComponent.toVaadinComponent().setFoldRegions(regions.toString());
+  }
+
+  /**
+   * Whether the folding ruler draws an anchor for the region. Mirrors
+   * {@link consulo.codeEditor.impl.FoldingAnchorsOverlayStrategy} - a region which can never be opened is
+   * folded without an anchor, and one which stays inside a single logical line is not marked unless it asked
+   * to be. Without this every region of the pass gets a marker, which the awt ruler never shows.
+   */
+  @RequiredReadAction
+  private boolean isAnchorVisible(FoldRegion region) {
+    if (region.shouldNeverExpand()) {
+      return false;
+    }
+
+    int startOffset = region.getStartOffset();
+    int endOffset = region.getEndOffset();
+
+    Document document = getDocument();
+    if (document.getLineNumber(startOffset) != document.getLineNumber(endOffset)) {
+      return true;
+    }
+
+    if (region.isGutterMarkEnabledForSingleLine()) {
+      return true;
+    }
+
+    return getSettings().isAllowSingleLogicalLineFolding()
+      && (endOffset - startOffset) > 1
+      && !getSoftWrapModel().getSoftWrapsForRange(startOffset + 1, endOffset - 1).isEmpty();
+  }
+
+  /**
+   * Hands the ruler the fold icons of the platform. They travel as the markup of a live image rather than a
+   * url, so the tag in the ruler reloads itself when the style changes, the way every other icon of the page
+   * does.
+   */
+  private void updateFoldingAnchors() {
+    if (isReleased) {
+      return;
+    }
+
+    // the three the awt gutter paints - see FoldingAnchorsOverlayStrategy and EditorGutterComponentImpl: an open
+    // region is a bracket, drawn as a head on its first line and a foot on its last, and a folded one is a single
+    // marker on the line its placeholder stands on
+    String expanded = WebImageElement.toHtml(PlatformIconGroup.gutterFold());
+    String collapsed = WebImageElement.toHtml(PlatformIconGroup.gutterUnfold());
+    String expandedBottom = WebImageElement.toHtml(PlatformIconGroup.gutterFoldbottom());
+
+    if (expanded == null || collapsed == null || expandedBottom == null) {
+      return;
+    }
+
+    // the classes the ruler of the bundle puts on its own anchor - the stylesheet places the box and the hover
+    // through them, and the image of the platform is what stands inside it
+    myEditorComponent.toVaadinComponent().setFoldingAnchors(
+      "<div class='annotationHTML expanded'>" + expanded + "</div>",
+      "<div class='annotationHTML collapsed'>" + collapsed + "</div>",
+      "<div class='annotationHTML expandedBottom'>" + expandedBottom + "</div>"
+    );
+  }
+
+  /**
+   * Takes every caret standing inside the region out of it, to the offset the region begins at, the way the awt
+   * editor does when the gutter anchor of a region holding the caret is clicked.
+   * <p>
+   * A collapse with the caret inside it is refused by
+   * {@link consulo.codeEditor.impl.CodeEditorFoldingModelBase#collapseFoldRegion}, and moving the caret back into
+   * a region which did close reopens it - see the fold expansion scheduled by
+   * {@link consulo.codeEditor.impl.CodeEditorCaretBase#moveToLogicalPosition}. Either way the region stays open
+   * while the browser has already drawn it folded, and the push at the end of the batch takes that back: the
+   * click reads as doing nothing. The caret is moved before the batch, so the collapse meets none of it.
+   */
+  @RequiredUIAccess
+  private void moveCaretsOutOfRegion(FoldRegion region) {
+    int startOffset = region.getStartOffset();
+    int endOffset = region.getEndOffset();
+
+    for (Caret caret : myCaretModel.getAllCarets()) {
+      int offset = caret.getOffset();
+      // the same range the folding model calls a caret inside a region - the offset it begins at is not in it
+      if (offset > startOffset && offset < endOffset) {
+        caret.moveToOffset(startOffset);
+      }
+    }
   }
 
   /**
@@ -1393,6 +1482,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     FoldRegion region = found;
+
+    if (!expanded) {
+      moveCaretsOutOfRegion(region);
+    }
 
     myFoldingModel.runBatchFoldingOperation(() -> region.setExpanded(expanded));
 

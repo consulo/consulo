@@ -317,6 +317,9 @@
             // actually aimed at, which the pointer knows better than an offset does
             element.classList.toggle('arquill-inlay-hover', modifier);
 
+            // the awt editor answers a hand cursor over a placeholder, see DesktopEditorImpl#getDefaultCursor
+            element.classList.toggle('arquill-fold-hover', !!foldPlaceholderAt(domEvent));
+
             // a run of a hint the server already said reaches somewhere needs nothing asked about it, unlike an
             // offset in the code which it has to resolve first
             const overInlayAction = modifier && inlayActionAt(domEvent) >= 0;
@@ -360,6 +363,20 @@
         };
 
         element.addEventListener('mousedown', domEvent => {
+            // a plain click on a placeholder opens the region, the way the awt editor does - taken before the
+            // caret is placed, since the offsets of a projection all map outside the view
+            if (domEvent.button === 0 && !domEvent.ctrlKey && !domEvent.metaKey) {
+                const placeholder = foldPlaceholderAt(domEvent);
+                if (placeholder) {
+                    domEvent.preventDefault();
+                    domEvent.stopPropagation();
+
+                    element.classList.remove('arquill-fold-hover');
+                    placeholder.expand();
+                    return;
+                }
+            }
+
             const wanted = domEvent.button === 1 || (domEvent.button === 0 && (domEvent.ctrlKey || domEvent.metaKey));
             if (!wanted) {
                 return;
@@ -482,9 +499,28 @@
             const viewEnd = Math.max(event.newValue.start, event.newValue.end);
             const viewCaret = textView.getCaretOffset();
 
-            const start = toBaseOffset(viewStart);
-            const end = toBaseOffset(viewEnd);
-            const offset = toBaseOffset(viewCaret);
+            // an edge of a range standing in a placeholder is not one mapOffset can answer for - every offset a
+            // projection covers maps to nothing, and letting it decide took the region the placeholder stands for
+            // in whole, so a drag over one line came back with the entire fold selected. the placeholder is one
+            // thing to a selection: an edge inside it is put on the side of the region the range grows towards,
+            // and the region is then either wholly in or wholly out
+            const toSelectionBaseOffset = (viewOffset, isEnd) => {
+                const range = viewStart === viewEnd ? null : foldPlaceholderRangeAt(viewOffset);
+                if (!range) {
+                    return toBaseOffset(viewOffset);
+                }
+
+                return isEnd ? range.annotation._projection.end : range.annotation._projection.start;
+            };
+
+            const start = toSelectionBaseOffset(viewStart, false);
+            const end = toSelectionBaseOffset(viewEnd, true);
+
+            // the caret rides one of the two edges - the one which moves as the range grows - so it goes wherever
+            // that edge was put rather than being mapped a second time
+            const offset = viewCaret === viewEnd && viewStart !== viewEnd
+                ? end
+                : viewCaret === viewStart && viewStart !== viewEnd ? start : toBaseOffset(viewCaret);
             if (start < 0 || end < 0 || offset < 0) {
                 // a caret standing inside projected text answers for no document offset, so it is moved off it
                 // and the move that follows is what the server hears about
@@ -519,6 +555,16 @@
         // further down rather than pushed by the server
         let foldPlaceholderStyles = null;
 
+        // the placeholder of a collapsed region is clickable, the way the awt editor opens a fold from the text
+        // rather than only from the ruler - assigned by the folding code further down
+        let foldPlaceholderAt = () => null;
+
+        // where the placeholders stand, by view offset and by document offset - both assigned by the folding
+        // code further down. an offset which falls in one of these has no counterpart in the other space, so
+        // whatever crosses between them asks here first
+        let foldPlaceholderRangeAt = () => null;
+        let foldPlaceholderRangeOf = () => null;
+
         // the inlays are not in the document either, and their ranges are built the same way further down
         let inlayStyles = null;
 
@@ -538,6 +584,20 @@
             }
 
             return toViewOffset(offset);
+        };
+
+        // where an edge of the platform's selection is drawn. the platform takes a collapsed region in whole -
+        // an edge which fell inside one is moved to the edge of the region - and none of the offsets the region
+        // covers has a view offset, so the edge is drawn against the placeholder standing for it
+        const toSelectionViewOffset = (baseOffset, isEnd) => {
+            const view = toViewOffset(baseOffset);
+            if (view >= 0) {
+                return view;
+            }
+
+            const range = foldPlaceholderRangeOf(baseOffset);
+
+            return range ? (isEnd ? range.end : range.start) : -1;
         };
 
         const pushStyleRanges = () => {
@@ -859,18 +919,109 @@
             return end < 0 ? -1 : viewModel.getLineAtOffset(end - projection.text.length);
         };
 
+        // the row the head of a region stands on - the row it begins on while it is open, the row its
+        // placeholder ended up on once it is folded
+        const anchorLine = annotation => {
+            if (!annotation.expanded) {
+                return placeholderLine(annotation);
+            }
+
+            const start = toViewOffset(annotation.start);
+
+            return start < 0 ? -1 : viewModel.getLineAtOffset(start);
+        };
+
+        // the row the foot of an open region stands on - the row its last character ended up on. the awt gutter
+        // draws an open region as a bracket reaching from its first line to its last, and this is the lower end
+        // of it; a folded region is a single row and has none, and neither has one held on one row
+        const anchorBottomLine = annotation => {
+            if (!annotation.expanded) {
+                return -1;
+            }
+
+            const last = toViewOffset(Math.max(annotation.start, annotation.end - 1));
+            if (last < 0) {
+                return -1;
+            }
+
+            const line = viewModel.getLineAtOffset(last);
+
+            return line === anchorLine(annotation) ? -1 : line;
+        };
+
         const foldingRuler = element.$arquillEditor.getFoldingRuler();
         if (foldingRuler) {
             const rulerAnnotations = foldingRuler.getAnnotations.bind(foldingRuler);
 
+            // the ruler does not put the annotation on the row - Ruler._mergeAnnotation builds a plain
+            // {html, style} out of it - so an annotation can only be kept off the ruler here. returning
+            // nothing leaves the row empty, which is what getAnnotations checks before it stores one
+            const mergeAnnotation = foldingRuler._mergeAnnotation.bind(foldingRuler);
+
+            foldingRuler._mergeAnnotation = (result, annotation, index, count) => {
+                const region = annotation && annotation.$arquillFold;
+                if (region) {
+                    // folded without a marker - shouldNeverExpand, or a region inside a single line
+                    if (region.anchor === false) {
+                        return undefined;
+                    }
+
+                    // a collapsed region is drawn on the row its placeholder ended up on, added below -
+                    // leaving this one as well would put two anchors on screen for the one region
+                    if (!annotation.expanded) {
+                        return undefined;
+                    }
+                }
+
+                return mergeAnnotation(result, annotation, index, count);
+            };
+
+            // a region the platform folds without marking - one which can never be opened, or one which stays
+            // inside a single line - is projected like any other but carries no anchor, the way the awt ruler
+            // leaves it unmarked
+            const isAnchored = annotation => {
+                const region = annotation && annotation.$arquillFold;
+                return !region || region.anchor !== false;
+            };
+
             foldingRuler.getAnnotations = (startLine, endLine) => {
                 const result = rulerAnnotations(startLine, endLine);
 
+
                 for (const annotation of foldAnnotations.values()) {
+                    if (!isAnchored(annotation)) {
+                        continue;
+                    }
+
                     const line = placeholderLine(annotation);
                     if (line >= startLine && line < endLine) {
                         result[line] = annotation;
                     }
+                }
+
+                // the bundle holds one annotation per region and puts it on the row the region begins on, so the
+                // foot of the bracket is a row nothing answers for. the ruler reads the markup and the style off
+                // whatever object it is handed, so the foot is the annotation with its markup replaced - a click
+                // on the row then still finds the region behind it
+                for (const annotation of foldAnnotations.values()) {
+                    if (!isAnchored(annotation)) {
+                        continue;
+                    }
+
+                    const line = anchorBottomLine(annotation);
+                    if (line < startLine || line >= endLine) {
+                        continue;
+                    }
+
+                    // the cell holds one marker, and a row where a region begins keeps the head of it - that is
+                    // the anchor worth clicking, the way the awt gutter draws the innermost one over the rest
+                    if (result[line] && result[line].html) {
+                        continue;
+                    }
+
+                    const foot = Object.create(annotation);
+                    foot.html = annotation._expandedBottomHTML;
+                    result[line] = foot;
                 }
 
                 return result;
@@ -886,18 +1037,44 @@
                     }
                 }
 
+                // the bundle looks for a region beginning on the row it was clicked on, and the foot of a bracket
+                // stands on the row its region ends on - it would find nothing there and the click would be lost.
+                // both ends are one anchor, so the foot closes what the head opened
+                let foot = null;
+                for (const annotation of foldAnnotations.values()) {
+                    if (!isAnchored(annotation)) {
+                        continue;
+                    }
+
+                    if (anchorLine(annotation) === lineIndex) {
+                        foot = null;
+                        break;
+                    }
+
+                    // the innermost of the regions ending there, as the awt gutter answers a click with the
+                    // nearest anchor rather than the widest one
+                    if (anchorBottomLine(annotation) === lineIndex && (!foot || annotation.start > foot.start)) {
+                        foot = annotation;
+                    }
+                }
+
+                if (foot) {
+                    foot.collapse();
+                    return;
+                }
+
                 rulerClick(lineIndex, domEvent);
             };
         }
 
         // the placeholder stands where the region was, so its view range is what lies right before the
-        // end of the projection - the document offsets it covers all map outside the view
-        foldPlaceholderStyles = () => {
-            const styles = [];
+        // end of the projection - the document offsets it covers all map outside the view. every answer
+        // about a placeholder is taken from here, so there is one derivation of the range and not four
+        const foldPlaceholderRanges = () => {
+            const ranges = [];
 
             for (const annotation of foldAnnotations.values()) {
-                const region = annotation.$arquillFold;
-                if (annotation.expanded || !region || !region.style || !placeholderOf(region)) {
+                if (annotation.expanded || !annotation._projection) {
                     continue;
                 }
 
@@ -906,14 +1083,75 @@
                     continue;
                 }
 
-                styles.push({
+                ranges.push({
+                    annotation: annotation,
                     start: end - annotation._projection.text.length,
-                    end: end,
-                    style: region.style
+                    end: end
                 });
             }
 
+            return ranges;
+        };
+
+        foldPlaceholderStyles = () => {
+            const styles = [];
+
+            for (const range of foldPlaceholderRanges()) {
+                const region = range.annotation.$arquillFold;
+                if (!region || !region.style || !placeholderOf(region)) {
+                    continue;
+                }
+
+                styles.push({ start: range.start, end: range.end, style: region.style });
+            }
+
             return styles;
+        };
+
+        // which placeholder, if any, a view offset stands in
+        foldPlaceholderRangeAt = viewOffset => {
+            for (const range of foldPlaceholderRanges()) {
+                if (viewOffset >= range.start && viewOffset < range.end) {
+                    return range;
+                }
+            }
+
+            return null;
+        };
+
+        // the same question asked from the document side - the placeholder standing for the region an offset
+        // is hidden in. what the server holds in document offsets is placed through this, since every offset
+        // the region covers maps to nothing in the view
+        foldPlaceholderRangeOf = baseOffset => {
+            for (const range of foldPlaceholderRanges()) {
+                const projection = range.annotation._projection;
+                if (baseOffset >= projection.start && baseOffset < projection.end) {
+                    return range;
+                }
+            }
+
+            return null;
+        };
+
+        // the same range the styles are built from, asked the other way round - which collapsed region, if any,
+        // the pointer is over
+        foldPlaceholderAt = domEvent => {
+            let offset;
+            try {
+                const point = textView.convert({ x: domEvent.clientX, y: domEvent.clientY }, 'page', 'document');
+                if (!textView.isValidTextPosition(point.x, point.y)) {
+                    return null;
+                }
+                // the view offset, not the document one - the placeholder stands only in the view
+                offset = textView.getOffsetAtLocation(point.x, point.y);
+            }
+            catch (e) {
+                return null;
+            }
+
+            const range = foldPlaceholderRangeAt(offset);
+
+            return range ? range.annotation : null;
         };
 
         // an inlay is text standing in the view without being in the document - what a fold placeholder already
@@ -1486,9 +1724,19 @@
                 }
 
                 if (start !== end) {
+                    // an edge inside a collapsed region has no view offset of its own, and the placeholder is
+                    // where the region ended up - the edge is drawn against it. handing orion the -1 the mapping
+                    // answers with had it clamp to the top of the document, and a selection which merely touched
+                    // a fold was painted from there
+                    const viewStart = toSelectionViewOffset(start, false);
+                    const viewEnd = toSelectionViewOffset(end, true);
+                    if (viewStart < 0 || viewEnd < 0) {
+                        return;
+                    }
+
                     element.$arquillSuppressChange = true;
                     try {
-                        element.$arquillEditor.getTextView().setSelection(toViewOffset(start), toViewOffset(end), true);
+                        element.$arquillEditor.getTextView().setSelection(viewStart, viewEnd, true);
                     }
                     finally {
                         element.$arquillSuppressChange = false;
@@ -1620,6 +1868,17 @@
 
             setFoldRegions: regionsJson => {
                 element.$arquillFoldRegions = regionsJson;
+                renderFoldRegions();
+            },
+
+            // the icons belong to the platform, the editor only draws what it is handed. an open region has two
+            // of them - the head on the row it begins on and the foot on the row it ends on
+            setFoldingAnchors: (expanded, collapsed, expandedBottom) => {
+                window.arquillEditor.setFoldingAnchors({
+                    expanded: expanded,
+                    collapsed: collapsed,
+                    expandedBottom: expandedBottom
+                });
                 renderFoldRegions();
             },
 
