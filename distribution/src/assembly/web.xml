@@ -29,7 +29,7 @@
 
   <fileSets>
     <fileSet>
-      <directory>${project.basedir}/boot/win/</directory>
+      <directory>${project.basedir}/boot/web/</directory>
       <includes>
         <include>*</include>
       </includes>
