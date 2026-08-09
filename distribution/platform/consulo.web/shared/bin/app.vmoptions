@@ -1,0 +1,5 @@
+--add-opens=java.base/java.lang=ALL-UNNAMED
+-Didea.io.use.nio2=true
+-Dfile.encoding=UTF-8
+-Dsun.stdout.encoding=UTF-8
+-Dsun.stderr.encoding=UTF-8
