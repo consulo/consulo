@@ -185,32 +185,43 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
         list.isSeparator(step::isSeparator);
 
+        // the pointer is what a popup is chosen with, so the row under it is the one the popup is offering - the
+        // awt list does the same from its mouse motion listener
+        list.setSelectOnHover(true);
+
         int defaultIndex = step.getDefaultOptionIndex();
         if (defaultIndex >= 0 && defaultIndex < step.getValues().size()) {
             list.setValueByIndex(defaultIndex);
         }
 
-        list.addValueListener(event -> onValueChosen(step, event.getValue()));
+        // moving over the rows only previews them - what a listener does with that is its own, the breakpoint
+        // chooser marks the range each variant would cover
+        list.addValueListener(event -> fireSelectionChanged(event.getValue()));
+
+        // the choice is the click, not the move onto the row: a step preselects its default, and choosing from a
+        // change of value would refuse the row the selection already sits on
+        list.addClickListener(event -> onValueChosen(step, list.getValue()));
 
         myTopList = list;
         return list;
     }
 
-    @RequiredUIAccess
-    private void onValueChosen(ListPopupStep step, @Nullable Object value) {
-        if (isDisposed() || value == null || !step.isSelectable(value)) {
-            return;
-        }
-
+    private void fireSelectionChanged(@Nullable Object value) {
         for (Consumer<Object> listener : new ArrayList<>(mySelectionListeners)) {
-            // a listener previews the choice, and a preview which cannot be applied is still a choice - letting it
-            // throw here would leave the popup open over a selection it already reported
+            // a listener previews the choice, and a preview which fails is no reason to refuse the choice itself
             try {
                 listener.accept(value);
             }
             catch (Throwable e) {
                 LOG.error("Popup selection listener failed", e);
             }
+        }
+    }
+
+    @RequiredUIAccess
+    private void onValueChosen(ListPopupStep step, @Nullable Object value) {
+        if (isDisposed() || value == null || !step.isSelectable(value)) {
+            return;
         }
 
         PopupStep next;

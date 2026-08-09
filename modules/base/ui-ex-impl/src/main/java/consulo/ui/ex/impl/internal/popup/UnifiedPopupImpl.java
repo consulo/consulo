@@ -23,15 +23,19 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.LightPopup;
 import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.PopupOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.AnchoredPopup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import org.jspecify.annotations.Nullable;
+
+import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -205,15 +209,17 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
         return false;
     }
 
-    /**
-     * Every way of showing a popup against a swing component lands here. There is no such component to measure on a
-     * frontend without swing, so the popup is shown the one way which needs nothing to measure - a popup in the
-     * middle of the frame is still the popup the caller asked for, where a refusal is nothing at all.
-     */
     @Override
     @RequiredUIAccess
     public void showUnderneathOf(Component componentUnder) {
-        showCenteredInCurrentWindow(null);
+        consulo.ui.Component component = TargetAWT.from(componentUnder);
+
+        if (component != null) {
+            showBy(component, null);
+        }
+        else {
+            showCenteredInCurrentWindow(null);
+        }
     }
 
     @Override
@@ -232,13 +238,46 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
     @Override
     @RequiredUIAccess
     public void show(RelativePoint point) {
-        showCenteredInCurrentWindow(null);
+        show((RelativePoint2D)point);
     }
 
+    /**
+     * A point of the screen is the one placement which does not survive the trip - there is no screen to measure
+     * against, and converting it needs a live layout the frontend does not have.
+     */
     @Override
     @RequiredUIAccess
     public void showInScreenCoordinates(Component owner, Point point) {
         showCenteredInCurrentWindow(null);
+    }
+
+    /**
+     * A point of a component is the one placement which survives the trip: the frontend anchors to the component and
+     * offsets inside it, where a screen coordinate means nothing to it.
+     */
+    @Override
+    @RequiredUIAccess
+    public void show(RelativePoint2D point) {
+        consulo.ui.Component target = point.getUIComponent();
+
+        if (target == null) {
+            showCenteredInCurrentWindow(null);
+            return;
+        }
+
+        Point2D uiPoint = point.getUIPoint();
+
+        showAtPoint(target, uiPoint.x(), uiPoint.y(), 0);
+    }
+
+    // TODO accelerators of a popup are not bound yet, and the interface default throws rather than ignoring them -
+    // which took down every caller that offers one, the breakpoint variant chooser among them
+    @Override
+    public void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+    }
+
+    @Override
+    public void registerAction(String aActionName, KeyStroke keyStroke, Action aAction) {
     }
 
     @Override

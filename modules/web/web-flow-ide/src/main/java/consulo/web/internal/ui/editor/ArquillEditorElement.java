@@ -47,6 +47,8 @@ import java.util.Objects;
 public class ArquillEditorElement extends Component implements HasSize {
     private static final int VIEWPORT_THROTTLE_MS = 50;
 
+    private static final int HOVER_THROTTLE_MS = 60;
+
     /**
      * Fired when the user moves the caret in the browser, by clicking or by keyboard navigation.
      */
@@ -342,6 +344,95 @@ public class ArquillEditorElement extends Component implements HasSize {
         }
     }
 
+    @DomEvent("arquill-gutter-context-menu")
+    public static class ArquillGutterContextMenuEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myLine;
+        private final int myMarkId;
+
+        public ArquillGutterContextMenuEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.line") int line,
+            @EventData("event.detail.markId") int markId
+        ) {
+            super(source, fromClient);
+            myLine = line;
+            myMarkId = markId;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+
+        public int getMarkId() {
+            return myMarkId;
+        }
+    }
+
+    @DomEvent("arquill-gutter-hover")
+    public static class ArquillGutterHoverEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myLine;
+
+        public ArquillGutterHoverEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.line") int line
+        ) {
+            super(source, fromClient);
+            myLine = line;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+    }
+
+    @DomEvent("arquill-gutter-line-click")
+    public static class ArquillGutterLineClickEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myLine;
+        private final boolean myAltKey;
+        private final boolean myShiftKey;
+        private final boolean myCtrlKey;
+        private final boolean myMetaKey;
+
+        public ArquillGutterLineClickEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.line") int line,
+            @EventData("event.detail.altKey") boolean altKey,
+            @EventData("event.detail.shiftKey") boolean shiftKey,
+            @EventData("event.detail.ctrlKey") boolean ctrlKey,
+            @EventData("event.detail.metaKey") boolean metaKey
+        ) {
+            super(source, fromClient);
+            myLine = line;
+            myAltKey = altKey;
+            myShiftKey = shiftKey;
+            myCtrlKey = ctrlKey;
+            myMetaKey = metaKey;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+
+        public boolean isAltKey() {
+            return myAltKey;
+        }
+
+        public boolean isShiftKey() {
+            return myShiftKey;
+        }
+
+        public boolean isCtrlKey() {
+            return myCtrlKey;
+        }
+
+        public boolean isMetaKey() {
+            return myMetaKey;
+        }
+    }
+
     @DomEvent("arquill-viewport")
     public static class ArquillViewportEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myX;
@@ -586,6 +677,22 @@ public class ArquillEditorElement extends Component implements HasSize {
         return addListener(ArquillGutterClickEvent.class, listener);
     }
 
+    public Registration addGutterLineClickListener(ComponentEventListener<ArquillGutterLineClickEvent> listener) {
+        return addListener(ArquillGutterLineClickEvent.class, listener);
+    }
+
+    public Registration addGutterContextMenuListener(ComponentEventListener<ArquillGutterContextMenuEvent> listener) {
+        return addListener(ArquillGutterContextMenuEvent.class, listener);
+    }
+
+    public Registration addGutterHoverListener(ComponentEventListener<ArquillGutterHoverEvent> listener) {
+        return getEventBus().addListener(
+            ArquillGutterHoverEvent.class,
+            listener,
+            registration -> registration.debounce(HOVER_THROTTLE_MS, DebouncePhase.LEADING, DebouncePhase.TRAILING)
+        );
+    }
+
     public Registration addFoldListener(ComponentEventListener<ArquillFoldEvent> listener) {
         return addListener(ArquillFoldEvent.class, listener);
     }
@@ -614,6 +721,13 @@ public class ArquillEditorElement extends Component implements HasSize {
     /**
      * @param marksJson array of {id, line, iconUrl, tooltip} - gutter icons produced by the line marker pass
      */
+    public void setGutterHoverMark(String markJson) {
+        if (isUnchanged("gutterHoverMark", markJson)) {
+            return;
+        }
+        getElement().executeJs("this.$arquillApi.setGutterHoverMark($0);", markJson);
+    }
+
     public void setGutterMarks(String marksJson) {
         if (isUnchanged("gutterMarks", marksJson)) {
             return;

@@ -21,6 +21,8 @@ import consulo.codeEditor.markup.GutterMark;
 import consulo.ui.ex.action.ActionGroup;
 
 import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -32,8 +34,15 @@ import java.util.List;
 public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   private final WebEditorImpl myEditor;
 
+  private final JComponent myPropertyHolder = new JPanel();
+
   public WebEditorGutterComponentImpl(WebEditorImpl editor) {
     myEditor = editor;
+  }
+
+  @Override
+  public JComponent getComponent() {
+    return myPropertyHolder;
   }
 
   /**
@@ -43,6 +52,8 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   @Override
   public void repaint() {
     myEditor.scheduleGutterBandsUpdate();
+
+    myEditor.scheduleGutterHoverUpdate();
   }
 
   @Override

@@ -19,6 +19,8 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.project.Project;
+import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.util.ShortcutUtil;
@@ -79,7 +81,7 @@ public class DebuggerUIUtil {
     }
 
     public static void showPopupForEditorLine(JBPopup popup, Editor editor, int line) {
-        RelativePoint point = getPositionForPopup(editor, line);
+        RelativePoint2D point = getPositionForPopup(editor, line);
         if (point != null) {
             popup.show(point);
         }
@@ -94,8 +96,27 @@ public class DebuggerUIUtil {
         }
     }
 
-    public static @Nullable RelativePoint getPositionForPopup(Editor editor, int line) {
+    /**
+     * Where a popup for a line belongs, or {@code null} while that line is not on screen.
+     * <p/>
+     * The editor lays its text out for the whole document, so the point it answers with is one of the document -
+     * taken against what is on screen it is the point of the editor the line is drawn at, which is the one thing
+     * every frontend can place something against.
+     */
+    public static @Nullable RelativePoint2D getPositionForPopup(Editor editor, int line) {
         Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
-        return editor.getScrollingModel().getVisibleArea().contains(p) ? new RelativePoint(editor.getContentComponent(), p) : null;
+
+        Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
+        if (!visibleArea.contains(p)) {
+            return null;
+        }
+
+        // the text does not start at the edge of the editor, the gutter stands before it
+        int contentOffset = editor.getContentComponent().getX();
+
+        return RelativePoint2D.of(
+            editor.getUIComponent(),
+            new Point2D(p.x - visibleArea.x + contentOffset, p.y - visibleArea.y)
+        );
     }
 }

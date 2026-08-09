@@ -61,6 +61,57 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         setRender(TextItemRender.defaultRender());
     }
 
+    /**
+     * The rows are the light dom children of the vaadin list, one per item in the order of the model - so which one
+     * the pointer is over is the index of the row it entered, and selecting is left to the platform.
+     */
+    @Override
+    public void setSelectOnHover(boolean selectOnHover) {
+        toVaadinComponent().getElement().executeJs(
+            """
+            const list = this;
+            if (list.$consuloHoverSelect) {
+                list.$consuloHoverSelect = $0;
+                return;
+            }
+
+            list.$consuloHoverSelect = $0;
+
+            // the list opens under the pointer, and the event that arrives from standing still would take the
+            // selection off whatever the step chose as its default - only a pointer which moved is following it
+            let lastX = null;
+            let lastY = null;
+
+            list.addEventListener('mousemove', event => {
+                if (!list.$consuloHoverSelect) {
+                    return;
+                }
+
+                if (lastX === null || (lastX === event.clientX && lastY === event.clientY)) {
+                    lastX = event.clientX;
+                    lastY = event.clientY;
+                    return;
+                }
+
+                lastX = event.clientX;
+                lastY = event.clientY;
+
+                const item = event.target.closest && event.target.closest('vaadin-list-box > *');
+                if (!item || item.hasAttribute('disabled')) {
+                    return;
+                }
+
+                const index = Array.prototype.indexOf.call(list.children, item);
+                if (index >= 0 && index !== list.selected) {
+                    list.selected = index;
+                    list.dispatchEvent(new CustomEvent('selected-changed', { detail: { value: index } }));
+                }
+            });
+            """,
+            selectOnHover
+        );
+    }
+
     @Override
     public void isSeparator(Predicate<E> predicate) {
         mySeparatorPredicate = predicate;

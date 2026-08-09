@@ -21,6 +21,10 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
+import consulo.codeEditor.event.EditorMouseListener;
+import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.codeEditor.impl.*;
@@ -60,7 +64,14 @@ import consulo.language.editor.impl.internal.markup.PassWrapper;
 import consulo.language.editor.impl.internal.markup.StatusItem;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.project.DumbService;
+import consulo.ui.Point2D;
+import consulo.ui.event.details.ModifiedInputDetails;
+import consulo.ui.event.details.MouseInputDetails;
+import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -114,6 +125,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -188,6 +200,12 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
   /** the browser identifies a clicked marker by its index here - a line carries more than one of them */
   private final java.util.List<GutterMark> myGutterMarks = new java.util.ArrayList<>();
+
+  /** which lines already show a mark in place of their number, so the hovered offer is not drawn over one */
+  private final java.util.Set<Integer> myLineNumberMarkLines = new java.util.HashSet<>();
+
+  /** the line the last right click was over, or {@code -1} when it was not over the gutter */
+  private int myGutterContextLine = -1;
 
   /** rebuilt on every inlay push - the browser answers a click with the place a run had in here */
   private final List<InlayClickTarget> myInlayClickTargets = new ArrayList<>();
@@ -321,6 +339,18 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
 
     vaadin.addGutterClickListener(event -> performGutterClick(event.getId()));
+
+    vaadin.addGutterHoverListener(event -> performGutterHover(event.getLine()));
+
+    vaadin.addGutterContextMenuListener(event -> performGutterContextMenu(event.getLine(), event.getMarkId()));
+
+    vaadin.addGutterLineClickListener(event -> performGutterLineClick(
+      event.getLine(),
+      event.isAltKey(),
+      event.isShiftKey(),
+      event.isCtrlKey(),
+      event.isMetaKey()
+    ));
 
     vaadin.addFoldListener(event -> setFoldRegionExpandedFromClient(event.getStart(), !event.isCollapsed()));
 
@@ -714,6 +744,90 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }, uiAccess);
   }
 
+  private void performGutterLineClick(int line, boolean altKey, boolean shiftKey, boolean ctrlKey, boolean metaKey) {
+    if (line < 0 || line >= myDocument.getLineCount()) {
+      return;
+    }
+
+    EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+    if (altKey) {
+      modifiers.add(ModifiedInputDetails.Modifier.ALT);
+    }
+    if (shiftKey) {
+      modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+    }
+    if (ctrlKey) {
+      modifiers.add(ModifiedInputDetails.Modifier.CTRL);
+    }
+    if (metaKey) {
+      modifiers.add(ModifiedInputDetails.Modifier.META);
+    }
+
+    EditorMouseEvent event = gutterMouseEvent(line, new MouseInputDetails(
+      new Point2D(0, visualLineToY(logicalToVisualPosition(new LogicalPosition(line, 0)).line)),
+      new Point2D(0, 0),
+      modifiers,
+      MouseInputDetails.MouseButton.LEFT
+    ));
+
+    // a listener which tells a drag from a click is told the button went down first, and takes a click it was
+    // never told about as the end of one
+    for (EditorMouseListener listener : myMouseListeners) {
+      listener.mousePressed(event);
+    }
+
+    for (EditorMouseListener listener : myMouseListeners) {
+      listener.mouseClicked(event);
+    }
+  }
+
+  /**
+   * The pointer over the line numbers, which is what offers a breakpoint on the line it is over - the promoter of
+   * the debugger listens for it and answers by putting an icon on the gutter component.
+   *
+   * @param line the line the pointer is over, or {@code -1} when it left the column
+   */
+  private void performGutterHover(int line) {
+    boolean overGutter = line >= 0 && line < myDocument.getLineCount();
+
+    int y = overGutter ? visualLineToY(logicalToVisualPosition(new LogicalPosition(line, 0)).line) : 0;
+
+    MouseInputDetails details = new MouseInputDetails(
+      new Point2D(0, y),
+      new Point2D(0, 0),
+      EnumSet.noneOf(ModifiedInputDetails.Modifier.class),
+      MouseInputDetails.MouseButton.LEFT
+    );
+
+    // off the column the promoter is told about a move somewhere else, which is what makes it drop its icon
+    EditorMouseEvent event = overGutter
+      ? gutterMouseEvent(line, details)
+      : new EditorMouseEvent(this, details, false, EditorMouseEventArea.EDITING_AREA);
+
+    for (EditorMouseMotionListener listener : myMouseMotionListeners) {
+      listener.mouseMoved(event);
+    }
+  }
+
+  private EditorMouseEvent gutterMouseEvent(int line, MouseInputDetails details) {
+    LogicalPosition logicalPosition = new LogicalPosition(line, 0);
+
+    return new EditorMouseEvent(
+      this,
+      fakeEvent,
+      details,
+      false,
+      EditorMouseEventArea.LINE_NUMBERS_AREA,
+      myDocument.getLineStartOffset(line),
+      logicalPosition,
+      logicalToVisualPosition(logicalPosition),
+      false,
+      null,
+      null,
+      null
+    );
+  }
+
   @Override
   protected void onHighlighterChanged(
     RangeHighlighterEx highlighter,
@@ -737,6 +851,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   /** the line status tracker recomputes its ranges on a pooled thread */
   void scheduleGutterBandsUpdate() {
     giveUI(() -> Application.get().runReadAction((Runnable)this::updateGutterBands));
+  }
+
+  void scheduleGutterHoverUpdate() {
+    giveUI(this::updateHoverMark);
   }
 
   /** the stripe settings - visibility, mark height - are pushed from wherever the platform changes them */
@@ -780,8 +898,55 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
       groupId,
       ActionPlaces.EDITOR_POPUP,
       // the group is expanded off the ui thread, the providers have to be snapshotted before that
-      () -> dataManager.createAsyncDataContext(dataManager.getDataContext(myEditorComponent))
+      () -> dataManager.createAsyncDataContext(gutterAwareDataContext(dataManager.getDataContext(myEditorComponent)))
     );
+  }
+
+  /**
+   * The line a gutter action answers for is the one the pointer was over rather than the one the caret is on, and
+   * {@code EditorGutterComponentImpl} publishes the same keys off its own last actionable click.
+   */
+  private DataContext gutterAwareDataContext(DataContext editorContext) {
+    int line = myGutterContextLine;
+    if (line < 0) {
+      return editorContext;
+    }
+
+    return SimpleDataContext.builder()
+      .setParent(editorContext)
+      .add(EditorGutter.KEY, getGutterComponentEx())
+      .add(Editor.KEY, this)
+      .add(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR, line)
+      .build();
+  }
+
+  /**
+   * The gutter carries a menu of its own, and a mark standing on the line carries one more.
+   */
+  private void performGutterContextMenu(int line, int markId) {
+    myGutterContextLine = line;
+
+    WebActionContextMenu popupMenu = myPopupMenu;
+    if (popupMenu != null) {
+      popupMenu.setOverrideGroup(line < 0 ? null : gutterPopupGroup(markId));
+
+      // the items are expanded off the pointer entering the target, which by the time a right click lands has
+      // long since happened - so the group that just changed is expanded from here instead
+      popupMenu.refresh();
+    }
+  }
+
+  private @Nullable ActionGroup gutterPopupGroup(int markId) {
+    if (markId >= 0 && markId < myGutterMarks.size()
+      && myGutterMarks.get(markId) instanceof GutterIconRenderer renderer) {
+      ActionGroup renderetGroup = renderer.getPopupMenuActions();
+      if (renderetGroup != null) {
+        return renderetGroup;
+      }
+    }
+
+    return CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER)
+      instanceof ActionGroup group ? group : null;
   }
 
   // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
@@ -1760,6 +1925,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     myGutterMarks.clear();
+    myLineNumberMarkLines.clear();
 
     StringBuilder marks = new StringBuilder("[");
 
@@ -1780,8 +1946,16 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         marks.append(',');
       }
 
+      boolean onLineNumbers = renderer instanceof GutterIconRenderer iconRenderer
+        && iconRenderer.getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS;
+
+      if (onLineNumbers) {
+        myLineNumberMarkLines.add(line);
+      }
+
       marks.append("{\"id\":").append(myGutterMarks.size())
         .append(",\"line\":").append(line)
+        .append(",\"onLineNumbers\":").append(onLineNumbers)
         .append(",\"iconHtml\":\"").append(escapeJson(iconHtml)).append('"')
         .append(",\"tooltip\":\"").append(escapeJson(toHtmlContent(renderer.getTooltipValue().get()))).append("\"}");
 
@@ -1791,6 +1965,27 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     marks.append(']');
 
     myEditorComponent.toVaadinComponent().setGutterMarks(marks.toString());
+
+    updateHoverMark();
+  }
+
+  void updateHoverMark() {
+    JComponent gutter = getGutterComponentEx().getComponent();
+
+    consulo.ui.image.Image icon = gutter.getClientProperty("line.number.hover.icon") instanceof consulo.ui.image.Image hovered
+      ? hovered
+      : null;
+
+    Integer line = gutter.getClientProperty("active.line.number") instanceof Integer hoveredLine ? hoveredLine : null;
+
+    String iconHtml = icon == null || line == null || myLineNumberMarkLines.contains(line) ? null : toIconHtml(icon);
+
+    String json = iconHtml == null
+      ? "null"
+      : "{\"id\":-1,\"line\":" + line + ",\"onLineNumbers\":true,\"hover\":true,\"iconHtml\":\""
+        + escapeJson(iconHtml) + "\",\"tooltip\":\"\"}";
+
+    myEditorComponent.toVaadinComponent().setGutterHoverMark(json);
   }
 
   /**
@@ -2355,13 +2550,53 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   
   @Override
   public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
-    return new VisualPosition(logicalPos.line, logicalPos.column, logicalPos.visualPositionLeansRight);
+    return new VisualPosition(logicalToVisualLine(logicalPos.line), logicalPos.column, logicalPos.visualPositionLeansRight);
   }
 
-  
+
   @Override
   public LogicalPosition visualToLogicalPosition(VisualPosition visiblePos) {
-    return new LogicalPosition(visiblePos.getLine(), visiblePos.getColumn(), visiblePos.leansRight);
+    return new LogicalPosition(visualToLogicalLine(visiblePos.getLine()), visiblePos.getColumn(), visiblePos.leansRight);
+  }
+
+  /**
+   * What a collapsed region takes out of the document stands between a line and the row it is drawn at, so the two
+   * only agree while nothing is folded.
+   */
+  private int logicalToVisualLine(int logicalLine) {
+    int lineCount = myDocument.getLineCount();
+    if (logicalLine <= 0 || lineCount == 0) {
+      return Math.max(0, logicalLine);
+    }
+
+    int offset = myDocument.getLineStartOffset(Math.min(logicalLine, lineCount - 1));
+
+    return Math.max(0, logicalLine - myFoldingModel.getFoldedLinesCountBefore(offset));
+  }
+
+  private int visualToLogicalLine(int visualLine) {
+    if (visualLine <= 0) {
+      return Math.max(0, visualLine);
+    }
+
+    int logicalLine = visualLine;
+
+    // the regions come in the order of the document, so what each of them hides moves the line further down and
+    // the one after it is measured against where the line has got to
+    for (FoldRegion region : myFoldingModel.getAllFoldRegions()) {
+      if (region.isExpanded() || !region.isValid()) {
+        continue;
+      }
+
+      int startLine = myDocument.getLineNumber(region.getStartOffset());
+      if (startLine >= logicalLine) {
+        break;
+      }
+
+      logicalLine += Math.max(0, myDocument.getLineNumber(region.getEndOffset()) - startLine);
+    }
+
+    return Math.min(logicalLine, Math.max(0, myDocument.getLineCount() - 1));
   }
 
   

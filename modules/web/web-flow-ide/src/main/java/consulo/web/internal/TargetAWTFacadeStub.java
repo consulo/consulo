@@ -82,13 +82,13 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
     return component == null ? null : WebAwtBridgeComponent.of(component);
   }
 
+  /**
+   * {@code null} for a component this frontend never made, which is a question worth asking rather than a mistake -
+   * a popup handed a point measured against something else falls back to placing itself.
+   */
   @Override
-  public consulo.ui.Component from(@Nullable Component component) {
-    if (component instanceof WebAwtBridgeComponent bridge) {
-      return bridge.getUIComponent();
-    }
-
-    throw new UnsupportedOperationException("Component " + component + " did not come from this frontend");
+  public consulo.ui.@Nullable Component from(@Nullable Component component) {
+    return component instanceof WebAwtBridgeComponent bridge ? bridge.getUIComponent() : null;
   }
 
   @Override

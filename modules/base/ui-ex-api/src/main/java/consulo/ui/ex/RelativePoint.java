@@ -1,13 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex;
 
+import consulo.ui.Point2D;
+import consulo.ui.RelativePoint2D;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-public class RelativePoint {
-  
+public class RelativePoint implements RelativePoint2D {
+
   private final Component myComponent;
   
   private final Point myPointOnComponent;
@@ -165,5 +168,19 @@ public class RelativePoint {
   
   public Point getOriginalPoint() {
     return myOriginalPoint;
+  }
+
+  /**
+   * The component the point was given against, not the one it was re-anchored to - a root pane is a thing of this
+   * frontend alone, and the platform can say nothing about a point measured against one.
+   */
+  @Override
+  public consulo.ui.@Nullable Component getUIComponent() {
+    return TargetAWT.from(myOriginalComponent);
+  }
+
+  @Override
+  public Point2D getUIPoint() {
+    return TargetAWT.from(myOriginalPoint);
   }
 }

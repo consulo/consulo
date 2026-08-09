@@ -82,4 +82,12 @@ public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasIte
      */
     default void isSeparator(Predicate<E> predicate) {
     }
+
+    /**
+     * Whether the item under the pointer becomes the selected one. What a list of a popup does, where the pointer is
+     * what the user is choosing with - selecting is not choosing, so the list only follows the pointer.
+     */
+    @RequiredUIAccess
+    default void setSelectOnHover(boolean selectOnHover) {
+    }
 }

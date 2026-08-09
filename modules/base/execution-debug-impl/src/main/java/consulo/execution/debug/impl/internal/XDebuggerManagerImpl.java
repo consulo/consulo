@@ -21,6 +21,7 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -114,7 +115,9 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
             EditorGutter editorGutter = editor.getGutter();
             if (editorGutter instanceof EditorGutterComponentEx gutter) {
                 if (e.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA && BreakpointEditorUtil.isBreakPointsOnLineNumbers()) {
-                    int line = consulo.codeEditor.util.EditorUtil.yToLogicalLineNoCustomRenderers(editor, e.getMouseEvent().getY());
+                    int line = e.getInputDetails() != null
+                        ? e.getLogicalPosition().line
+                        : EditorUtil.yToLogicalLineNoCustomRenderers(editor, e.getMouseEvent().getY());
                     Document document = editor.getDocument();
                     if (DocumentUtil.isValidLine(line, document)) {
                         XSourcePositionImpl position = XSourcePositionImpl.create(FileDocumentManager.getInstance().getFile(document), line);

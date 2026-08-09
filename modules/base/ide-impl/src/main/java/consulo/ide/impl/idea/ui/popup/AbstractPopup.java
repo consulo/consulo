@@ -68,6 +68,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ListenerUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.ui.ex.popup.*;
@@ -573,6 +574,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         HelpTooltipImpl.setMasterPopup(aPoint.getOriginalComponent(), this);
         Point screenPoint = aPoint.getScreenPoint();
         show(aPoint.getComponent(), screenPoint.x, screenPoint.y, false);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void show(RelativePoint2D point) {
+        show(new RelativePoint(TargetAWT.to(point.getUIComponent()), TargetAWT.to(point.getUIPoint())));
     }
 
     @Override

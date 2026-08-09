@@ -119,6 +119,38 @@
   --web-image-height: var(--arquill-gutter-icon-size, 12px);
 }
 
+/* a breakpoint stands in place of the line number, so it covers the whole column and is painted on the gutter
+   background - the digit underneath is still drawn by orion, which the awt gutter simply skips */
+.arquill-gutter-mark-line-number
+{
+  width: 100%;
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
+
+  --web-image-width: var(--arquill-gutter-icon-size, 12px);
+}
+
+/* the icon is narrower than the column it replaces, and the box it hangs in is stretched across that column */
+.arquill-gutter-mark-line-number > *
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* the breakpoint the hovered line would take is only an offer, drawn at the alpha the awt gutter paints it with -
+   EditorGutterComponentImpl reads it from Breakpoint.iconHoverAlpha, which defaults to 0.5 */
+/* an offer rather than a control - what the click belongs to is the column of line numbers underneath, so the
+   pointer goes through it */
+.arquill-gutter-mark-hover
+{
+  pointer-events: none;
+}
+
+.arquill-gutter-mark-hover > *
+{
+  opacity: 0.5;
+}
+
 /* the vcs change bars are drawn over the right edge of the folding ruler, which is the last of the left
    rulers and so the only column that touches the text - the same place the awt gutter paints them. the
    ruler ships at 14px and its anchors are left aligned inline blocks, so the extra width stays free */

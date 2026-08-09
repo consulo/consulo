@@ -56,6 +56,12 @@ public final class WebActionContextMenu {
     private final ContextMenu myContextMenu = new ContextMenu();
     private final @Nullable String myGroupId;
     private final @Nullable ActionGroup myGroup;
+
+    /**
+     * Set when the group the next open belongs to is decided by what was under the pointer rather than by the
+     * component the menu hangs on.
+     */
+    private @Nullable ActionGroup myOverrideGroup;
     private final String myPlace;
     private final WebActionMenuExpander.DataContextSupplier myContextSupplier;
     private final MenuItemPresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
@@ -144,9 +150,16 @@ public final class WebActionContextMenu {
             """, REPLAY_DELAY_MS);
     }
 
+    /**
+     * Which group the next open shows, or {@code null} to go back to the one the menu was built with.
+     */
+    public void setOverrideGroup(@Nullable ActionGroup group) {
+        myOverrideGroup = group;
+    }
+
     @RequiredUIAccess
     public void refresh() {
-        ActionGroup group = myGroup;
+        ActionGroup group = myOverrideGroup != null ? myOverrideGroup : myGroup;
         if (group == null) {
             // the customization schema is what turns the id into the group the user actually configured
             AnAction correctedAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction(myGroupId);

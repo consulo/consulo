@@ -710,14 +710,100 @@
         gutter.className = 'arquill-gutter';
         element.appendChild(gutter);
 
+        // a breakpoint of the new ui stands where the line number is rather than in the marker column, so it needs
+        // a column of its own over the line number ruler
+        const lineNumberGutter = document.createElement('div');
+        lineNumberGutter.className = 'arquill-gutter arquill-gutter-line-numbers';
+        element.appendChild(lineNumberGutter);
+
         // the widest group of markers the column has been sized for, so it is only resized when it has to be -
         // widening it makes orion measure the whole view again
         let markColumnWidth = 0;
 
+        // the icon takes the whole width of the line number column and is painted on the gutter background, which
+        // is how it hides the number underneath - the awt gutter simply leaves that number undrawn
+        const renderLineNumberMarks = marks => {
+            if (!marks.length) {
+                return;
+            }
+
+            const linesRuler = element.querySelector('.textviewLeftRuler .ruler.lines');
+            if (!linesRuler) {
+                return;
+            }
+
+            const hostRect = element.getBoundingClientRect();
+            const rulerRect = linesRuler.getBoundingClientRect();
+            const lineHeight = textView.getLineHeight();
+
+            lineNumberGutter.style.left = (rulerRect.left - hostRect.left) + 'px';
+            lineNumberGutter.style.width = rulerRect.width + 'px';
+
+            for (const mark of marks) {
+                if (mark.line < 0 || mark.line >= baseModel.getLineCount()) {
+                    continue;
+                }
+
+                const viewLine = toViewLine(mark.line);
+                if (viewLine < 0) {
+                    continue;
+                }
+
+                const top = pageY(viewLine) - hostRect.top;
+                if (top < 0 || top > element.clientHeight) {
+                    continue;
+                }
+
+                const icon = document.createElement('span');
+                icon.className = 'arquill-gutter-mark arquill-gutter-mark-line-number'
+                    + (mark.hover ? ' arquill-gutter-mark-hover' : '');
+                icon.$arquillMarkId = mark.id;
+                icon.innerHTML = mark.iconHtml;
+                icon.style.top = top + 'px';
+                icon.style.height = lineHeight + 'px';
+
+                if (mark.tooltip) {
+                    icon.addEventListener('mousemove', domEvent => {
+                        domEvent.stopPropagation();
+                        showTooltip(mark.tooltip, domEvent.clientX, domEvent.clientY);
+                    });
+                    icon.addEventListener('mouseleave', hideTooltip);
+                }
+
+                icon.addEventListener('click', domEvent => {
+                    // the column sits over the line numbers, whose click puts a breakpoint - the icon is the one
+                    // that is already there, and its own action is what a click on it means
+                    domEvent.stopPropagation();
+                    hideTooltip();
+                    element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: { id: mark.id } }));
+                });
+
+                lineNumberGutter.appendChild(icon);
+            }
+        };
+
+        // the marks standing in place of a line number: whatever the document carries plus the one the pointer is
+        // being offered, which arrives on its own and must not rebuild the rest
+        const renderLineNumberColumn = () => {
+            const all = element.$arquillGutterMarks ? JSON.parse(element.$arquillGutterMarks) : [];
+            const marks = all.filter(mark => mark.onLineNumbers);
+
+            if (element.$arquillGutterHoverMark) {
+                marks.push(JSON.parse(element.$arquillGutterHoverMark));
+            }
+
+            lineNumberGutter.textContent = '';
+            renderLineNumberMarks(marks);
+        };
+
         const renderGutterMarks = () => {
             gutter.textContent = '';
 
-            const marks = element.$arquillGutterMarks ? JSON.parse(element.$arquillGutterMarks) : [];
+            const allMarks = element.$arquillGutterMarks ? JSON.parse(element.$arquillGutterMarks) : [];
+            const marks = allMarks.filter(mark => !mark.onLineNumbers);
+
+            renderLineNumberColumn();
+
             if (!marks.length) {
                 return;
             }
@@ -812,6 +898,7 @@
                 // a single url however many images the platform built it from
                 const icon = document.createElement('span');
                 icon.className = 'arquill-gutter-mark';
+                icon.$arquillMarkId = mark.id;
 
                 if (mark.iconHtml) {
                     icon.innerHTML = mark.iconHtml;
@@ -842,6 +929,88 @@
                 gutter.appendChild(icon);
             }
         };
+
+        // which line of the document a point of the page is beside, for the columns of the gutter - they are
+        // outside the text, so the offset the pointer is over cannot be asked for directly
+        const lineAtPageY = pageY => {
+            const point = textView.convert({ x: 0, y: pageY }, 'page', 'document');
+            const viewLine = Math.floor(point.y / textView.getLineHeight());
+
+            if (viewLine < 0 || viewLine >= viewModel.getLineCount()) {
+                return -1;
+            }
+
+            const baseOffset = toBaseOffset(viewModel.getLineStart(viewLine));
+
+            return baseOffset < 0 ? -1 : baseModel.getLineAtOffset(baseOffset);
+        };
+
+        // the line numbers are where a breakpoint is put, the same column the awt gutter takes the click in.
+        // delegated from the host: orion builds its rulers after this runs and rebuilds them as the view changes
+        element.addEventListener('click', domEvent => {
+            if (!domEvent.target.closest || !domEvent.target.closest('.textviewLeftRuler .ruler.lines')) {
+                return;
+            }
+
+            const line = lineAtPageY(domEvent.clientY);
+            if (line < 0) {
+                return;
+            }
+
+            // orion selects the whole line from its own ruler handler, which is not what the click was for
+            domEvent.stopPropagation();
+            domEvent.preventDefault();
+
+            element.dispatchEvent(new CustomEvent('arquill-gutter-line-click', {
+                detail: {
+                    line: line,
+                    altKey: domEvent.altKey,
+                    shiftKey: domEvent.shiftKey,
+                    ctrlKey: domEvent.ctrlKey,
+                    metaKey: domEvent.metaKey
+                }
+            }));
+        }, true);
+
+        // the pointer over the line numbers is what offers a breakpoint on the line under it, so the platform is
+        // told which line that is - only when it changes, the pointer crosses a row many times on its way down
+        let hoveredGutterLine = -1;
+
+        const setHoveredGutterLine = line => {
+            if (hoveredGutterLine === line) {
+                return;
+            }
+
+            hoveredGutterLine = line;
+
+            element.dispatchEvent(new CustomEvent('arquill-gutter-hover', { detail: { line: line } }));
+        };
+
+        element.addEventListener('mousemove', domEvent => {
+            const overLineNumbers = domEvent.target.closest
+                && domEvent.target.closest('.textviewLeftRuler .ruler.lines, .arquill-gutter-line-numbers');
+
+            setHoveredGutterLine(overLineNumbers ? lineAtPageY(domEvent.clientY) : -1);
+        }, true);
+
+        element.addEventListener('mouseleave', () => setHoveredGutterLine(-1));
+
+        // the gutter has a menu of its own, and the whole editor is one component to the browser - so which of the
+        // two the right click asked for is decided here and the server is told before it expands the group.
+        // the event is left alone: the menu is opened by the replay the context menu installs on this element
+        element.addEventListener('contextmenu', domEvent => {
+            const target = domEvent.target;
+            const overGutter = target.closest && target.closest('.textviewLeftRuler, .arquill-gutter');
+
+            const mark = target.closest && target.closest('.arquill-gutter-mark');
+
+            element.dispatchEvent(new CustomEvent('arquill-gutter-context-menu', {
+                detail: {
+                    line: overGutter ? lineAtPageY(domEvent.clientY) : -1,
+                    markId: mark && mark.$arquillMarkId !== undefined ? mark.$arquillMarkId : -1
+                }
+            }));
+        }, true);
 
         // the vcs change bars, a strip of its own - the awt gutter paints them in the free painters
         // area right of the icons, so they must not land in the marker column
@@ -1929,6 +2098,13 @@
             setGutterMarks: marksJson => {
                 element.$arquillGutterMarks = marksJson;
                 renderGutterMarks();
+            },
+
+            // its own channel: the pointer crossing the column would otherwise rebuild every mark of the document
+            // for one icon that moved a row
+            setGutterHoverMark: markJson => {
+                element.$arquillGutterHoverMark = markJson === 'null' ? null : markJson;
+                renderLineNumberColumn();
             },
 
             setAnalyzeStatus: statusJson => {

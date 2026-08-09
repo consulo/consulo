@@ -10,6 +10,7 @@ import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jspecify.annotations.Nullable;
@@ -52,6 +53,12 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @param point the relative point where the popup should be displayed.
      */
     void show(RelativePoint point);
+
+    /**
+     * Shows the popup at a point of a component, named in the types of the platform rather than of a frontend.
+     */
+    @RequiredUIAccess
+    void show(RelativePoint2D point);
 
     void showInScreenCoordinates(Component owner, Point point);
 
