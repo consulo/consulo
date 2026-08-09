@@ -301,7 +301,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     });
 
     vaadin.addCaretListener(event -> {
-      myCaretLocation = new CaretPixelLocation(event.getCaretX(), event.getCaretY(), event.getCaretHeight());
+      myCaretLocation =
+        new CaretPixelLocation(event.getCaretX(), event.getCaretY(), event.getCaretHeight(), event.getTextX());
 
       // where the caret is on screen always matters - a popup anchors to it - but only a move the user made is a
       // move. echoing back one the platform just made would look like the user left, and a lookup closes on that
@@ -309,6 +310,9 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         moveCaretFromClient(event.getOffset(), event.getSelectionStart(), event.getSelectionEnd());
       }
     });
+
+    vaadin.addViewportListener(event -> ((WebScrollingModelImpl) myScrollingModel)
+      .setVisibleAreaFromClient(new Rectangle(event.getX(), event.getY(), event.getWidth(), event.getHeight())));
 
     vaadin.addCtrlHoverListener(event -> highlightLinkAt(event.getOffset()));
 

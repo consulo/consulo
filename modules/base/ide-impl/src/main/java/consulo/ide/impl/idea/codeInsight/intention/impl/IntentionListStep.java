@@ -9,6 +9,7 @@ import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.internal.intention.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionPopupOwner;
 import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
 import consulo.language.editor.internal.intention.IntentionsInfo;
@@ -38,7 +39,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     private static final Logger LOG = Logger.getInstance(IntentionListStep.class);
 
     private final CachedIntentions myCachedIntentions;
-    private final @Nullable IntentionHintComponent myIntentionHintComponent;
+    private final @Nullable IntentionPopupOwner myIntentionHintComponent;
     private final Size2D myMaxIconSize;
 
     private Runnable myFinalRunnable;
@@ -46,7 +47,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     private final PsiFile myFile;
     private final @Nullable Editor myEditor;
 
-    public IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent,
+    public IntentionListStep(@Nullable IntentionPopupOwner intentionHintComponent,
                              @Nullable Editor editor,
                              PsiFile file,
                              Project project,

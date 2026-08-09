@@ -1,6 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.codeInsight.intention.impl;
+package consulo.desktop.awt.codeInsight.intention.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
@@ -14,6 +14,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionListStep;
 import consulo.ide.impl.idea.codeInsight.hint.PriorityQuestionAction;
 import consulo.ide.impl.idea.codeInsight.hint.ScrollAwareHint;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
@@ -29,6 +30,7 @@ import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.internal.intention.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionPopupOwner;
 import consulo.language.editor.internal.intention.IntentionActionWithTextCaching;
 import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -83,7 +85,7 @@ import java.util.List;
  * @author Eugene Belyaev
  * @author Konstantin Bulenkov
  */
-public class IntentionHintComponent implements Disposable, ScrollAwareHint {
+public class IntentionHintComponent implements Disposable, ScrollAwareHint, IntentionPopupOwner {
     private static final Logger LOG = Logger.getInstance(IntentionHintComponent.class);
 
     private static final Image ourInactiveArrowIcon =
@@ -564,7 +566,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @RequiredUIAccess
-    void canceled(ListPopupStep intentionListStep) {
+    @Override
+    public void canceled(ListPopupStep intentionListStep) {
         if (myPopup.getListStep() != intentionListStep || myDisposed) {
             return;
         }

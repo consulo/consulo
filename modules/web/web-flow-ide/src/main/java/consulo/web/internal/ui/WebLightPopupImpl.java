@@ -248,23 +248,32 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         Vaadin popover = getVaadinComponent();
         boolean open = !popover.isOpened();
 
+        // an element which is not on the page yet cannot be passed to a script, and the popover is one of the two
+        // the placement below needs
+        attachToUI();
+
         Div anchorToShow = anchor;
         // only the browser knows where the target ended up, and the popover has to be opened against an anchor
         // which is already in place - opening first would measure it at the top left of the page
+        // vaadin-overlay only re-measures its position target from scroll, resize and its own observeMove, and none
+        // of those see a target moved by a style change - PositionMixin leaves the overlay at the last place it
+        // computed, so an open popup has to be told to measure again
         TargetVaadin.to(target).getElement().executeJs(
             """
             const rect = this.getBoundingClientRect();
             $0.style.left = (rect.left + $1) + 'px';
             $0.style.top = (rect.top + $2) + 'px';
+            const overlay = $3.shadowRoot && $3.shadowRoot.querySelector('vaadin-popover-overlay');
+            if (overlay && overlay._updatePosition) {
+                overlay._updatePosition();
+            }
             return true;
             """,
-            anchorToShow.getElement(), x, y
+            anchorToShow.getElement(), x, y, popover.getElement()
         ).then(Boolean.class, positioned -> {
             if (myDisposed || !open) {
                 return;
             }
-
-            attachToUI();
 
             popover.setTarget(anchorToShow);
             popover.setOpened(true);

@@ -64,11 +64,6 @@ public class DesktopSwtCodeEditorScrollingModelImpl extends CodeEditorScrollingM
   }
 
   @Override
-  public void runActionOnScrollingFinished(Runnable action) {
-
-  }
-
-  @Override
   public void disableAnimation() {
 
   }

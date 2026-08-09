@@ -56,11 +56,6 @@ public class ImaginaryScrollingModel implements ScrollingModel {
     }
 
     @Override
-    public void runActionOnScrollingFinished(Runnable action) {
-        action.run();
-    }
-
-    @Override
     public void disableAnimation() {
         // no-op
     }

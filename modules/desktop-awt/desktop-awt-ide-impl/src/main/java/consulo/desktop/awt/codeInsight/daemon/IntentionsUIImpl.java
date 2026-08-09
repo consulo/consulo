@@ -5,10 +5,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.internal.intention.CachedIntentions;
-import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
+import consulo.desktop.awt.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,11 +30,6 @@ public class IntentionsUIImpl extends IntentionsUI {
   }
 
   @Override
-  public IntentionHintComponent getLastIntentionHint() {
-    return myLastIntentionHint;
-  }
-
-  @Override
   @RequiredUIAccess
   public void update(CachedIntentions cachedIntentions, boolean actionsChanged) {
     UIAccess.assertIsUIThread();
@@ -42,7 +38,6 @@ public class IntentionsUIImpl extends IntentionsUI {
     if (!ApplicationManager.getApplication().isUnitTestMode() && !editor.getContentComponent().hasFocus()) return;
     if (!actionsChanged) return;
 
-    Project project = cachedIntentions.getProject();
     LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
     Point xy = editor.logicalPositionToXY(caretPos);
@@ -53,8 +48,24 @@ public class IntentionsUIImpl extends IntentionsUI {
         editor.getSettings().isShowIntentionBulb() &&
         editor.getCaretModel().getCaretCount() == 1 &&
         cachedIntentions.showBulb()) {
-      myLastIntentionHint = IntentionHintComponent.showIntentionHint(project, cachedIntentions.getFile(), editor, false, cachedIntentions);
+      showHint(cachedIntentions.getFile(), editor, cachedIntentions);
     }
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void showHint(PsiFile file, Editor editor, CachedIntentions cachedIntentions) {
+    myLastIntentionHint = IntentionHintComponent.showIntentionHint(cachedIntentions.getProject(), file, editor, false, cachedIntentions);
+  }
+
+  /**
+   * The hint is what owns the list here - it is built with the bulb and expanded at once, so what is shown without
+   * a bulb having been pressed is still the same component.
+   */
+  @Override
+  @RequiredUIAccess
+  public void showPopup(PsiFile file, Editor editor, CachedIntentions cachedIntentions) {
+    myLastIntentionHint = IntentionHintComponent.showIntentionHint(cachedIntentions.getProject(), file, editor, true, cachedIntentions);
   }
 
   @Override

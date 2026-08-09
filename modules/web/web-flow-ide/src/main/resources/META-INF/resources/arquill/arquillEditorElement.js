@@ -104,8 +104,16 @@
                 caretY: 0,
                 caretHeight: 0,
                 textY: 0,
+                textX: 0,
                 rectOnly: false
             };
+
+            // the rulers rather than the text: the text is scrolled sideways and carries the inlays, so where it
+            // starts on screen is neither the gutter nor the same on two lines
+            const leftRuler = element.querySelector('.textviewLeftRuler');
+            if (leftRuler) {
+                detail.textX = Math.round(leftRuler.getBoundingClientRect().width);
+            }
 
             try {
                 const location = textView.getLocationAtOffset(viewOffset);
@@ -1445,11 +1453,28 @@
             renderGutterBands();
         };
 
+        const fireViewport = () => {
+            const area = textView.getClientArea();
+
+            element.dispatchEvent(new CustomEvent('arquill-viewport', {
+                detail: {
+                    x: Math.round(area.x),
+                    y: Math.round(area.y),
+                    width: Math.round(area.width),
+                    height: Math.round(area.height)
+                }
+            }));
+        };
+
         textView.addEventListener('Scroll', () => {
             onViewChanged();
             placeCaret();
+            fireViewport();
         });
-        textView.addEventListener('Resize', onViewChanged);
+        textView.addEventListener('Resize', () => {
+            onViewChanged();
+            fireViewport();
+        });
 
         renderFoldRegions();
 

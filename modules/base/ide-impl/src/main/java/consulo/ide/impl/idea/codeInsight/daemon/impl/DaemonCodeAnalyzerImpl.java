@@ -36,7 +36,6 @@ import consulo.fileEditor.impl.internal.text.TextEditorBackgroundHighlighter;
 import consulo.fileEditor.internal.AsyncEditorLoader;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
-import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
@@ -836,10 +835,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
             new CommonProcessors.CollectProcessor<>(result)
         );
         return result;
-    }
-
-    public @Nullable IntentionHintComponent getLastIntentionHint() {
-        return (IntentionHintComponent)IntentionsUI.getInstance(myProject).getLastIntentionHint();
     }
 
     @Override

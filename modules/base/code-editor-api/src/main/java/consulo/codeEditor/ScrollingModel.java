@@ -37,7 +37,9 @@ public interface ScrollingModel {
 
   void scrollTo(LogicalPosition pos, ScrollType scrollType);
 
-  void runActionOnScrollingFinished(@RequiredUIAccess  Runnable action);
+  default void runActionOnScrollingFinished(@RequiredUIAccess  Runnable action) {
+    action.run();
+  }
 
   void disableAnimation();
 

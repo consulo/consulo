@@ -18,6 +18,8 @@ package consulo.web.internal.ui.editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModelEx;
+import consulo.codeEditor.event.VisibleAreaEvent;
+import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 
@@ -28,8 +30,24 @@ import java.awt.*;
  * @since 06/12/2020
  */
 public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implements ScrollingModelEx {
+  private Rectangle myVisibleArea = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+
   public WebScrollingModelImpl(CodeEditorBase editor) {
     super(editor);
+  }
+
+  public void setVisibleAreaFromClient(Rectangle visibleArea) {
+    Rectangle oldArea = myVisibleArea;
+    if (oldArea.equals(visibleArea)) {
+      return;
+    }
+
+    myVisibleArea = visibleArea;
+
+    VisibleAreaEvent event = new VisibleAreaEvent(myEditor, oldArea, visibleArea);
+    for (VisibleAreaListener listener : myVisibleAreaListeners) {
+      listener.visibleAreaChanged(event);
+    }
   }
 
   @Override
@@ -42,18 +60,16 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   }
 
-  
+
   @Override
   public Rectangle getVisibleArea() {
-    // todo unsupported
-    return new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    return myVisibleArea;
   }
 
-  
+
   @Override
   public Rectangle getVisibleAreaOnScrollingFinished() {
-    // todo unsupported
-    return new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    return myVisibleArea;
   }
 
   @Override
@@ -63,11 +79,6 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   @Override
   public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
-
-  }
-
-  @Override
-  public void runActionOnScrollingFinished(Runnable action) {
 
   }
 
@@ -83,12 +94,12 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   @Override
   public int getVerticalScrollOffset() {
-    return 0;
+    return myVisibleArea.y;
   }
 
   @Override
   public int getHorizontalScrollOffset() {
-    return 0;
+    return myVisibleArea.x;
   }
 
   @Override

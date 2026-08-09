@@ -50,6 +50,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         Vaadin component = toVaadinComponent();
 
         WebInputDetails.addClickListener(component.getElement(), this::invoke);
+        myClickInstalled = true;
 
         myTextValue = text;
         component.setText(text.get());

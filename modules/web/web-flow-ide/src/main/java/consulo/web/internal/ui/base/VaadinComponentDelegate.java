@@ -31,6 +31,7 @@ import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.AttachEvent;
+import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.DetachEvent;
@@ -95,6 +96,12 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     private String myClassNamePrefix;
 
     private boolean myKeyPressedInstalled;
+
+    /**
+     * A component which raises the click itself - a button does - sets this so the dom listener below is not put on
+     * top of its own and the press does not arrive twice.
+     */
+    protected boolean myClickInstalled;
     private boolean myKeyReleasedInstalled;
 
     public VaadinComponentDelegate() {
@@ -219,6 +226,15 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
+        if (eventClass == ClickEvent.class && !myClickInstalled) {
+            myClickInstalled = true;
+
+            WebInputDetails.addClickListener(
+                toVaadinComponent().getElement(),
+                details -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details))
+            );
+        }
+
         if (eventClass == KeyPressedEvent.class && !myKeyPressedInstalled) {
             myKeyPressedInstalled = true;
 

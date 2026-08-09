@@ -25,6 +25,7 @@ import com.vaadin.flow.component.EventData;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.dom.DebouncePhase;
 import com.vaadin.flow.shared.Registration;
 
 import consulo.web.internal.ui.editor.gutter.GutterBand;
@@ -44,6 +45,8 @@ import java.util.Objects;
 @Tag("pre")
 @StyleSheet("/arquill/arquillEditor.css")
 public class ArquillEditorElement extends Component implements HasSize {
+    private static final int VIEWPORT_THROTTLE_MS = 50;
+
     /**
      * Fired when the user moves the caret in the browser, by clicking or by keyboard navigation.
      */
@@ -85,6 +88,7 @@ public class ArquillEditorElement extends Component implements HasSize {
         private final int myCaretX;
         private final int myCaretY;
         private final int myCaretHeight;
+        private final int myTextX;
         private final boolean myRectOnly;
 
         public ArquillCaretEvent(
@@ -96,6 +100,7 @@ public class ArquillEditorElement extends Component implements HasSize {
             @EventData("event.detail.caretX") int caretX,
             @EventData("event.detail.caretY") int caretY,
             @EventData("event.detail.caretHeight") int caretHeight,
+            @EventData("event.detail.textX") int textX,
             @EventData("event.detail.rectOnly") boolean rectOnly
         ) {
             super(source, fromClient);
@@ -106,6 +111,7 @@ public class ArquillEditorElement extends Component implements HasSize {
             myCaretX = caretX;
             myCaretY = caretY;
             myCaretHeight = caretHeight;
+            myTextX = textX;
         }
 
         public int getOffset() {
@@ -145,6 +151,10 @@ public class ArquillEditorElement extends Component implements HasSize {
          */
         public int getCaretHeight() {
             return myCaretHeight;
+        }
+
+        public int getTextX() {
+            return myTextX;
         }
 
         /**
@@ -329,6 +339,45 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         public boolean isCollapsed() {
             return myCollapsed;
+        }
+    }
+
+    @DomEvent("arquill-viewport")
+    public static class ArquillViewportEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myX;
+        private final int myY;
+        private final int myWidth;
+        private final int myHeight;
+
+        public ArquillViewportEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.x") int x,
+            @EventData("event.detail.y") int y,
+            @EventData("event.detail.width") int width,
+            @EventData("event.detail.height") int height
+        ) {
+            super(source, fromClient);
+            myX = x;
+            myY = y;
+            myWidth = width;
+            myHeight = height;
+        }
+
+        public int getX() {
+            return myX;
+        }
+
+        public int getY() {
+            return myY;
+        }
+
+        public int getWidth() {
+            return myWidth;
+        }
+
+        public int getHeight() {
+            return myHeight;
         }
     }
 
@@ -532,6 +581,19 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addFoldListener(ComponentEventListener<ArquillFoldEvent> listener) {
         return addListener(ArquillFoldEvent.class, listener);
+    }
+
+    public Registration addViewportListener(ComponentEventListener<ArquillViewportEvent> listener) {
+        return getEventBus().addListener(
+            ArquillViewportEvent.class,
+            listener,
+            registration -> registration.debounce(
+                VIEWPORT_THROTTLE_MS,
+                DebouncePhase.LEADING,
+                DebouncePhase.INTERMEDIATE,
+                DebouncePhase.TRAILING
+            )
+        );
     }
 
     /**

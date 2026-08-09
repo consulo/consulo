@@ -38,3 +38,33 @@ vaadin-popover.consulo-resizable-popup::part(overlay)
   max-width: none;
   max-height: none;
 }
+
+/* a popup which is only there to carry one icon - the bulb of the intentions - is not a surface of its own, and
+   the panel a popup draws would be a box around an icon which is meant to sit over the text */
+vaadin-popover.consulo-transparent-popup::part(overlay),
+vaadin-popover.consulo-transparent-popup::part(content)
+{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  /* aura frosts every overlay - the box stays see through but what is behind it is blurred and lightened, which
+     over the text of the editor is a plate around the icon that no background colour explains */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* the room around the icon is kept whether or not the panel is drawn, so what the pointer brings is the panel and
+   not a jump of the icon under it */
+vaadin-popover.consulo-transparent-popup::part(content)
+{
+  padding: var(--consulo-hint-padding, 3px);
+}
+
+/* the pointer over it is what says the icon is a button, so that is when it is given the panel of one - the awt
+   hint swaps to a bordered background the same way */
+vaadin-popover.consulo-transparent-popup.consulo-hovered-popup::part(overlay)
+{
+  background: var(--vaadin-background-color, #fff);
+  border: 1px solid var(--vaadin-contrast-10pct, rgba(0, 0, 0, 0.1));
+  border-radius: var(--consulo-popup-radius, 4px);
+}

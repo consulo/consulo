@@ -16,11 +16,16 @@
 package consulo.web.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.internal.intention.IntentionsUI;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.internal.intention.CachedIntentions;
+import consulo.language.editor.internal.intention.IntentionsUI;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.web.internal.codeInsight.intention.WebIntentionHintComponent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,23 +34,58 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class WebIntentionsUIImpl extends IntentionsUI {
+  private volatile @Nullable WebIntentionHintComponent myLastHint;
+
   @Inject
   public WebIntentionsUIImpl(Project project) {
     super(project);
   }
 
   @Override
-  public Object getLastIntentionHint() {
-    return null;
-  }
-
-  @Override
+  @RequiredUIAccess
   public void update(CachedIntentions cachedIntentions, boolean actionsChanged) {
+    Editor editor = cachedIntentions.getEditor();
+    if (editor == null || !actionsChanged) {
+      return;
+    }
 
+    hide();
+
+    if (editor.getSettings().isShowIntentionBulb()
+      && editor.getCaretModel().getCaretCount() == 1
+      && cachedIntentions.showBulb()) {
+      showHint(cachedIntentions.getFile(), editor, cachedIntentions);
+    }
   }
 
   @Override
+  @RequiredUIAccess
   public void hide() {
+    WebIntentionHintComponent hint = myLastHint;
+    myLastHint = null;
 
+    if (hint != null) {
+      hint.dispose();
+    }
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void showHint(PsiFile file, Editor editor, CachedIntentions cachedIntentions) {
+    WebIntentionHintComponent hint = new WebIntentionHintComponent(file, editor, cachedIntentions);
+    myLastHint = hint;
+
+    hint.showHint();
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void showPopup(PsiFile file, Editor editor, CachedIntentions cachedIntentions) {
+    hide();
+
+    WebIntentionHintComponent hint = new WebIntentionHintComponent(file, editor, cachedIntentions);
+    myLastHint = hint;
+
+    hint.showPopup();
   }
 }

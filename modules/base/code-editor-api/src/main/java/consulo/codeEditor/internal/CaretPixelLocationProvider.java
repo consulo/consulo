@@ -35,8 +35,9 @@ public interface CaretPixelLocationProvider {
      * @param x      distance from the left of the editor component
      * @param y      distance from its top, at the top of the caret line
      * @param height height of the caret line, so a popup with no room below it can go above the line
+     * @param textX  where the text of a line begins, for what is put beside the line rather than beside the caret
      */
-    record CaretPixelLocation(int x, int y, int height) {
+    record CaretPixelLocation(int x, int y, int height, int textX) {
     }
 
     /**

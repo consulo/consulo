@@ -104,7 +104,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         if (!intentions.isEmpty()) {
             editor.getScrollingModel().runActionOnScrollingFinished(() -> {
                 CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, file, editor, intentions);
-                IntentionHintComponent.showIntentionHint(project, file, editor, true, cachedIntentions);
+                IntentionsUI.getInstance(project).showPopup(file, editor, cachedIntentions);
             });
         }
         else if (showFeedbackOnEmptyMenu) {
