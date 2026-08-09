@@ -40,6 +40,12 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
     private HorizontalAlignment myHorizontalAlignment;
     private ColorValue myForegroundColor;
 
+    public VaadinLabelComponentBase() {
+        // a span wraps and nothing of the label api asks for more than one line - the status bar widget reporting a
+        // selection broke over four lines and pushed the whole bar taller
+        getStyle().set("white-space", "nowrap");
+    }
+
     public void setImage(Image image) {
         myImage = image;
 
