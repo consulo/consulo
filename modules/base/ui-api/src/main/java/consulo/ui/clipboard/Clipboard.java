@@ -43,7 +43,8 @@ public interface Clipboard {
     CompletableFuture<Void> clear();
 
     /**
-     * The half of the payload which never left this process.
+     * The whole payload this process wrote last, native representations included, or empty once another
+     * application took the clipboard.
      */
     DataTransfer getLocalContents();
 

@@ -34,9 +34,7 @@ import java.util.function.BiConsumer;
 public abstract class BaseClipboard implements Clipboard {
     private final List<BiConsumer<DataTransfer, DataTransfer>> myListeners = new CopyOnWriteArrayList<>();
 
-    private volatile DataTransfer myTransfer = DataTransfer.EMPTY;
     private volatile DataTransfer myLocalTransfer = DataTransfer.EMPTY;
-    private volatile @Nullable String myLocalOwnerText;
 
     protected abstract CompletableFuture<DataTransfer> readNative();
 
@@ -62,10 +60,8 @@ public abstract class BaseClipboard implements Clipboard {
 
     @Override
     public CompletableFuture<Void> setContents(DataTransfer transfer) {
-        DataTransfer old = myTransfer;
-        myTransfer = transfer;
-        myLocalTransfer = transfer.filter(type -> !type.isNative());
-        myLocalOwnerText = transfer.get(DataTransferType.TEXT);
+        DataTransfer old = myLocalTransfer;
+        myLocalTransfer = transfer;
 
         return writeNative(transfer.filter(DataTransferType::isNative))
             .thenRun(() -> fireContentChanged(old, transfer));
@@ -73,7 +69,7 @@ public abstract class BaseClipboard implements Clipboard {
 
     @Override
     public CompletableFuture<Void> clear() {
-        DataTransfer old = myTransfer;
+        DataTransfer old = myLocalTransfer;
         dropLocal();
 
         return clearNative().thenRun(() -> fireContentChanged(old, DataTransfer.EMPTY));
@@ -95,7 +91,7 @@ public abstract class BaseClipboard implements Clipboard {
      * until somebody reads.
      */
     protected void fireForeignChange() {
-        DataTransfer old = myTransfer;
+        DataTransfer old = myLocalTransfer;
         dropLocal();
         fireContentChanged(old, DataTransfer.EMPTY);
     }
@@ -113,7 +109,7 @@ public abstract class BaseClipboard implements Clipboard {
         }
 
         // another application took the clipboard, our objects no longer describe what will be pasted
-        if (!Objects.equals(myLocalOwnerText, nativeTransfer.get(DataTransferType.TEXT))) {
+        if (!Objects.equals(local.get(DataTransferType.TEXT), nativeTransfer.get(DataTransferType.TEXT))) {
             dropLocal();
             return nativeTransfer;
         }
@@ -122,8 +118,6 @@ public abstract class BaseClipboard implements Clipboard {
     }
 
     private void dropLocal() {
-        myTransfer = DataTransfer.EMPTY;
         myLocalTransfer = DataTransfer.EMPTY;
-        myLocalOwnerText = null;
     }
 }

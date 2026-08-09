@@ -52,7 +52,8 @@ public interface CopyPasteManager {
     CompletableFuture<DataTransfer> getContents();
 
     /**
-     * The half of the payload which never left this process, read synchronously.
+     * The whole payload this process wrote last, read synchronously. Empty once another application took
+     * the clipboard.
      */
     @RequiredUIAccess
     DataTransfer getLocalContents();
