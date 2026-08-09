@@ -107,7 +107,7 @@
                                 </pluginRoot>
                                 <!--web-->
                                 <pluginRoot>
-                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-awt-win/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                    ${project.build.directory}/consulo-bundle-${project.version}-web/Consulo/platform/buildSNAPSHOT/modules/consulo
                                 </pluginRoot>
                                 <pluginRoot>
                                     ${project.build.directory}/consulo-bundle-${project.version}-web/Consulo/platform/buildSNAPSHOT/modules/consulo.web
