@@ -423,7 +423,11 @@
   background-color: var(--arquill-editor-background, white);
 }
 
-.textviewSelection.textviewSelection
+/* orion swaps to its own grey plate whenever its content div does not hold the dom focus, which here is most of
+   the time - the caret is drawn by the ide and the focus is kept off it. the scheme has one selection colour and
+   the awt editor keeps it whether or not the editor is active, so both plates take it */
+.textviewSelection.textviewSelection,
+.textviewSelectionUnfocused.textviewSelectionUnfocused
 {
   background: var(--arquill-editor-selection-background, rgb(180, 213, 255));
 }
@@ -456,24 +460,26 @@
   color: var(--arquill-editor-line-number-caret-row-color, var(--arquill-editor-line-number-color, #767676));
 }
 
-/* the rulers sit on the panel background like the awt gutter and error panel, and their seams follow the
-   theme border */
+/* the rulers belong to the editor rather than to the frame around it, so they take the gutter colour of the
+   colour scheme - the awt gutter reads the same key and falls back to the editor background the same way.
+   the seam is the one EditorGutterComponentImpl draws down the gutter, in the indent guide colour of the
+   scheme rather than in the border colour of a control */
 .textviewLeftRuler.textviewLeftRuler
 {
-  border-right: 1px solid var(--consulo-component-border-color, #eaeaea);
-  background-color: var(--consulo-panel-background, white);
+  border-right: 1px solid var(--arquill-editor-gutter-separator, #ebecf0);
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
 }
 
 .textviewRightRuler.textviewRightRuler
 {
   border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
-  background-color: var(--consulo-panel-background, white);
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
 }
 
 .textviewInnerRightRuler.textviewInnerRightRuler
 {
   border-left: 1px solid var(--consulo-component-border-color, #eaeaea);
-  background-color: var(--consulo-panel-background, white);
+  background-color: var(--arquill-editor-gutter-background, var(--consulo-panel-background, white));
 }
 
 .textviewMarginRuler.textviewMarginRuler

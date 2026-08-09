@@ -488,6 +488,10 @@
         });
 
         textView.addEventListener('Selection', event => {
+            // the glyphs under the selection carry its foreground, so what is selected has to be restyled whoever
+            // moved it - a selection the platform set is on screen just the same
+            pushStyleRanges();
+
             // orion moves its own caret while the platform's text is written in, and the move it reports is a
             // consequence of that edit rather than the user going anywhere. taking it moved the platform caret to
             // wherever the replaced range left orion - the front of the document after a template was inserted -
@@ -635,7 +639,69 @@
                 mapped.sort((left, right) => left.start - right.start);
             }
 
-            element.$arquillEditor.setStyleRanges(mapped);
+            element.$arquillEditor.setStyleRanges(withSelectionForeground(mapped));
+        };
+
+        // orion draws the selection as plates behind the text and leaves the glyphs the colour the styler gave them,
+        // so a dark keyword over a dark selection stays dark. the platform has a selection foreground for exactly
+        // this, and the only way to reach a glyph is the range that already colours it - the selection is laid over
+        // the ranges as one more of them rather than being drawn
+        const withSelectionForeground = ranges => {
+            const color = element.$arquillSelectionForeground;
+            const selection = color ? textView.getSelection() : null;
+
+            const start = selection ? Math.min(selection.start, selection.end) : 0;
+            const end = selection ? Math.max(selection.start, selection.end) : 0;
+
+            if (start >= end) {
+                return ranges;
+            }
+
+            const recolour = range => ({
+                start: range.start,
+                end: range.end,
+                style: Object.assign({}, range.style, {
+                    style: Object.assign({}, range.style && range.style.style, { color: color })
+                })
+            });
+
+            const out = [];
+            // the ranges the styler gives are not allowed to overlap, so a range crossing an edge of the selection
+            // is cut at it rather than covered
+            let plain = start;
+
+            for (const range of ranges) {
+                if (range.end <= start || range.start >= end) {
+                    out.push(range);
+                    continue;
+                }
+
+                if (range.start > plain) {
+                    out.push({ start: plain, end: range.start, style: { style: { color: color } } });
+                }
+
+                if (range.start < start) {
+                    out.push({ start: range.start, end: start, style: range.style });
+                }
+
+                const inner = { start: Math.max(range.start, start), end: Math.min(range.end, end), style: range.style };
+                out.push(recolour(inner));
+
+                if (range.end > end) {
+                    out.push({ start: end, end: range.end, style: range.style });
+                }
+
+                plain = Math.min(range.end, end);
+            }
+
+            // what the styler left plain is still selected, and white on white is what it reads as otherwise
+            if (plain < end) {
+                out.push({ start: plain, end: end, style: { style: { color: color } } });
+            }
+
+            out.sort((left, right) => left.start - right.start);
+
+            return out;
         };
 
         // the gutter icons are drawn as an overlay column tracking the ruler, orion has no api to put
@@ -1841,7 +1907,7 @@
                 }
             },
 
-            setColors: (background, foreground, selectionBackground, caretRowBackground) => {
+            setColors: (background, foreground, selectionBackground, selectionForeground, caretRowBackground) => {
                 const set = (name, value) => {
                     if (value) {
                         element.style.setProperty(name, value);
@@ -1855,6 +1921,9 @@
                 set('--arquill-editor-foreground', foreground);
                 set('--arquill-editor-selection-background', selectionBackground);
                 set('--arquill-editor-caret-row-background', caretRowBackground);
+
+                element.$arquillSelectionForeground = selectionForeground || null;
+                pushStyleRanges();
             },
 
             setGutterMarks: marksJson => {

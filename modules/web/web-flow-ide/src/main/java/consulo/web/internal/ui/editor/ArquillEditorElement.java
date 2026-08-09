@@ -491,15 +491,22 @@ public class ArquillEditorElement extends Component implements HasSize {
         String background,
         String foreground,
         @Nullable String selectionBackground,
+        @Nullable String selectionForeground,
         @Nullable String caretRowBackground
     ) {
         getElement().executeJs(
-            "this.$arquillApi.setColors($0, $1, $2, $3);",
+            "this.$arquillApi.setColors($0, $1, $2, $3, $4);",
             background,
             foreground,
             selectionBackground,
+            selectionForeground,
             caretRowBackground
         );
+    }
+
+    public void setGutterColors(@Nullable String background, @Nullable String separator) {
+        setStyleProperty("--arquill-editor-gutter-background", background);
+        setStyleProperty("--arquill-editor-gutter-separator", separator);
     }
 
     /**

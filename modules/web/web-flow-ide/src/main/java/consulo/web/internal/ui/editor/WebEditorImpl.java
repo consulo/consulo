@@ -849,7 +849,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     String background = WebColors.toCssColor(scheme.getDefaultBackground());
     String foreground = WebColors.toCssColor(scheme.getDefaultForeground());
     String selectionBackground = WebColors.toCssColor(scheme.getColor(EditorColors.SELECTION_BACKGROUND_COLOR));
+    String selectionForeground = WebColors.toCssColor(scheme.getColor(EditorColors.SELECTION_FOREGROUND_COLOR));
     String caretRowBackground = WebColors.toCssColor(scheme.getColor(EditorColors.CARET_ROW_COLOR));
+
+    // EditorGutterComponentImpl#getBackgroundColorValue, and the seam it draws over the gutter in paintComponent
+    ColorValue gutterColor = scheme.getColor(EditorColors.EDITOR_GUTTER_BACKGROUND);
+    String gutterBackground = gutterColor == null ? background : WebColors.toCssColor(gutterColor);
+    String gutterSeparator = WebColors.toCssColor(scheme.getColor(EditorColors.INDENT_GUIDE_COLOR));
 
     // the gutter of the awt editor paints its line numbers with these two, so the ruler in the browser has to
     // be told about them as well - otherwise it keeps the colour the bundled orion stylesheet gives it
@@ -858,7 +864,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     giveUI(() -> {
       ArquillEditorElement vaadin = myEditorComponent.toVaadinComponent();
-      vaadin.setColors(background, foreground, selectionBackground, caretRowBackground);
+      vaadin.setColors(background, foreground, selectionBackground, selectionForeground, caretRowBackground);
+      vaadin.setGutterColors(gutterBackground, gutterSeparator);
       vaadin.setLineNumberColors(lineNumberColor, lineNumberCaretRowColor);
     });
   }
