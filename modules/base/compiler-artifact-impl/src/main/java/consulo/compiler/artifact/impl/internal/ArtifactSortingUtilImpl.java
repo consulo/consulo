@@ -65,12 +65,13 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
   @Override
   public List<String> getArtifactsSortedByInclusion() {
     if (mySortedArtifacts == null) {
-      mySortedArtifacts = CachedValuesManager.getManager(myProject)
-                                             .createCachedValue(() -> CachedValueProvider.Result.create(doGetSortedArtifacts(),
-                                                                                                        ArtifactManager.getInstance(
-                                                                                                          myProject)
-                                                                                                                       .getModificationTracker()),
-                                                                false);
+      mySortedArtifacts = CachedValuesManager.getManager(myProject).createCachedValue(
+        () -> CachedValueProvider.Result.create(
+          doGetSortedArtifacts(),
+          ArtifactManager.getInstance(myProject).getModificationTracker()
+        ),
+        false
+      );
     }
     return mySortedArtifacts.getValue();
   }
