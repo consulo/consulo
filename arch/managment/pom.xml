@@ -1066,6 +1066,13 @@
                 <updatePolicy>interval:60</updatePolicy>
             </snapshots>
         </pluginRepository>
+        <pluginRepository>
+            <id>consulo-proxy</id>
+            <url>https://maven.consulo.dev/repository/proxy/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -1073,7 +1080,7 @@
             <extension>
                 <groupId>org.apache.maven.extensions</groupId>
                 <artifactId>maven-build-cache-extension</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.3</version>
             </extension>
         </extensions>
 
