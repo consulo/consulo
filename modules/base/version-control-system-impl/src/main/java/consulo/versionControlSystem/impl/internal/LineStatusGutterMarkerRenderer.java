@@ -28,20 +28,20 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.PeekableIterator;
 import consulo.util.collection.PeekableIteratorWrapper;
+import consulo.versionControlSystem.internal.LineStatusMarkerPopupFactory;
 import consulo.versionControlSystem.internal.LineStatusTrackerListener;
+import consulo.versionControlSystem.internal.VcsChangePresentation;
 import consulo.versionControlSystem.internal.VcsRange;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -137,7 +137,6 @@ public class LineStatusGutterMarkerRenderer {
         h.setGreedyToLeft(true);
         h.setGreedyToRight(true);
         h.setLineMarkerPresentationProvider(new MyLineMarkerPresentationProvider());
-        h.setLineMarkerRenderer(new MyGutterMarkerRenderer());
         return h;
     }
 
@@ -312,49 +311,28 @@ public class LineStatusGutterMarkerRenderer {
             }
             return VcsLineMarkerBuilder.buildPresentations(ranges, context);
         }
-    }
-
-    /**
-     * Retained only for the click path — painting comes from
-     * {@link MyLineMarkerPresentationProvider}, so {@code paint} is deliberately not implemented.
-     * Showing the range popup still needs a platform mouse event, so this cannot move behind the
-     * declarative API until the action contract is designed.
-     */
-    private class MyGutterMarkerRenderer implements ActiveGutterRenderer {
-
-        // ActiveGutterRenderer has mutual recursion between getTooltipValue() ↔ getTooltipText().
-        // Break the cycle by overriding getTooltipValue() directly.
-        @Override
-        public LocalizeValue getTooltipValue() {
-            return LocalizeValue.empty();
-        }
 
         @Override
-        public boolean canDoAction(MouseEvent e) {
-            if (myDisposed) return false;
-            return LineStatusMarkerDrawUtil.isInsideMarkerArea(e);
+        public boolean canDoAction(LineMarkerPresentation presentation, InputDetails details) {
+            return !myDisposed && myTracker.isValid() && rangeOf(presentation) != null;
         }
 
         @Override
         @RequiredUIAccess
-        public void doAction(Editor editor, MouseEvent e) {
-            if (myDisposed) return;
-            VcsRange range = findRangeAtEvent(editor, e);
+        public void doAction(Editor editor, LineMarkerPresentation presentation, InputDetails details) {
+            if (myDisposed) {
+                return;
+            }
+            VcsRange range = rangeOf(presentation);
             if (range != null) {
-                new LineStatusTrackerDrawing.MyLineStatusMarkerPopup(myTracker, editor, range).showHint(e);
+                LineStatusMarkerPopupFactory.getInstance().create(myTracker, editor, range).showHintAt(details);
             }
         }
 
-        /** Finds the VCS range whose gutter area contains the click y-coordinate. */
-        private @Nullable VcsRange findRangeAtEvent(Editor editor, MouseEvent e) {
-            int line = editor.xyToLogicalPosition(e.getPoint()).line;
-            // First try the clicked line; for DELETED ranges (displayed as triangles between
-            // lines) also check the line below.
-            VcsRange range = myTracker.getRangeForLine(line);
-            if (range == null) {
-                range = myTracker.getRangeForLine(line + 1);
-            }
-            return range;
+        private @Nullable VcsRange rangeOf(LineMarkerPresentation presentation) {
+            return presentation instanceof VcsChangePresentation change && change.payload() instanceof VcsRange range
+                ? range
+                : null;
         }
     }
 

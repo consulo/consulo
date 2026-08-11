@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal;
+package consulo.desktop.awt.internal.versionControlSystem;
 
 import consulo.application.Application;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.application.util.registry.Registry;
-import consulo.codeEditor.*;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.diff.comparison.ByWord;
-import consulo.diff.comparison.ComparisonPolicy;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.LogicalPosition;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.internal.DiffInternal;
 import consulo.diff.internal.DiffLanguageUtil;
@@ -34,10 +32,13 @@ import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.internal.EditorFragmentComponent;
 import consulo.language.editor.ui.internal.HintManagerEx;
-import consulo.language.plain.PlainTextFileType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.hint.HintHint;
@@ -45,6 +46,8 @@ import consulo.ui.ex.awt.hint.HintListener;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.versionControlSystem.impl.internal.LineStatusMarkerPopupBase;
+import consulo.versionControlSystem.impl.internal.LineStatusTracker;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -55,74 +58,22 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import static consulo.diff.internal.DiffImplUtil.getDiffType;
-import static consulo.diff.internal.DiffImplUtil.getLineCount;
 
-public abstract class LineStatusMarkerPopup {
-    
-    public final LineStatusTracker myTracker;
-    
-    public final Editor myEditor;
-    
-    public final VcsRange myRange;
-
-    public LineStatusMarkerPopup(LineStatusTracker tracker, Editor editor, VcsRange range) {
-        myTracker = tracker;
-        myEditor = editor;
-        myRange = range;
+/**
+ * The desktop look of the range popup: a {@link LightweightHint} carrying the toolbar over an
+ * {@link EditorFragmentComponent} of the vcs lines.
+ */
+public class AWTLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
+    public AWTLineStatusMarkerPopup(LineStatusTracker tracker, Editor editor, VcsRange range) {
+        super(tracker, editor, range);
     }
 
-    
-    protected abstract ActionToolbar buildToolbar(@Nullable Point mousePosition, Disposable parentDisposable);
-
-    
-    protected FileType getFileType() {
-        return PlainTextFileType.INSTANCE;
-    }
-
-    protected boolean isShowInnerDifferences() {
-        return false;
-    }
-
-    public void scrollAndShow() {
-        if (!myTracker.isValid()) {
-            return;
-        }
-        Document document = myTracker.getDocument();
-        int line = Math.min(
-            myRange.getType() == VcsRange.DELETED ? myRange.getLine2() : myRange.getLine2() - 1,
-            getLineCount(document) - 1
-        );
-        int lastOffset = document.getLineStartOffset(line);
-        myEditor.getCaretModel().moveToOffset(lastOffset);
-        myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-
-        showAfterScroll();
-    }
-
-    public void showAfterScroll() {
-        myEditor.getScrollingModel().runActionOnScrollingFinished(() -> showHintAt(null));
-    }
-
+    @Override
     @RequiredUIAccess
-    public void showHint(MouseEvent e) {
-        JComponent comp = (JComponent) e.getComponent(); // shall be EditorGutterComponent, cast is safe.
-        JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
-        Point point = SwingUtilities.convertPoint(
-            comp,
-            ((EditorEx) myEditor).getGutterComponentEx().getComponent().getWidth(),
-            e.getY(),
-            layeredPane
-        );
-        showHintAt(point);
-        e.consume();
-    }
-
-    @RequiredUIAccess
-    public void showHintAt(@Nullable Point mousePosition) {
+    public void showHintAt(@Nullable InputDetails details) {
         if (!myTracker.isValid()) {
             return;
         }
@@ -134,12 +85,33 @@ public abstract class LineStatusMarkerPopup {
         installMasterEditorHighlighters(wordDiff, disposable);
         JComponent editorComponent = createEditorComponent(fileType, wordDiff);
 
-        ActionToolbar toolbar = buildToolbar(mousePosition, disposable);
+        Point mousePosition = toLayeredPanePoint(details);
+
+        ActionGroup group = buildActionGroup(details, disposable);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
         toolbar.setTargetComponent(myEditor.getComponent());
 
         toolbar.updateActionsAsync().whenCompleteAsync((actions, throwable) -> {
             show(toolbar, mousePosition, disposable, editorComponent);
         }, UIAccess.current());
+    }
+
+    /**
+     * The hint is placed in the layered pane, so a click reported against the gutter is carried over to it -
+     * at the gutter's right edge, which is where the popup lines up with the text.
+     */
+    private @Nullable Point toLayeredPanePoint(@Nullable InputDetails details) {
+        if (details == null) {
+            return null;
+        }
+
+        JComponent gutterComponent = ((EditorEx)myEditor).getGutterComponentEx().getComponent();
+        JRootPane rootPane = gutterComponent.getRootPane();
+        if (rootPane == null) {
+            return null;
+        }
+
+        return SwingUtilities.convertPoint(gutterComponent, gutterComponent.getWidth(), details.getY(), rootPane.getLayeredPane());
     }
 
     @RequiredUIAccess
@@ -150,7 +122,7 @@ public abstract class LineStatusMarkerPopup {
         HintListener closeListener = event -> Disposer.dispose(disposable);
         hint.addHintListener(closeListener);
 
-        HintManagerEx hintManagerEx = (HintManagerEx) HintManager.getInstance();
+        HintManagerEx hintManagerEx = (HintManagerEx)HintManager.getInstance();
 
         int line = myEditor.getCaretModel().getLogicalPosition().line;
         Point point = hintManagerEx.getHintPosition(hint, myEditor, new LogicalPosition(line, 0), HintManager.UNDER);
@@ -172,57 +144,12 @@ public abstract class LineStatusMarkerPopup {
         }
     }
 
-    @RequiredUIAccess
-    private @Nullable List<DiffFragment> computeWordDiff() {
-        if (!isShowInnerDifferences()) {
-            return null;
-        }
-        if (myRange.getType() != VcsRange.MODIFIED) {
-            return null;
-        }
-
-        CharSequence vcsContent = myTracker.getVcsContent(myRange);
-        CharSequence currentContent = myTracker.getCurrentContent(myRange);
-
-        return BackgroundTaskUtil.tryComputeFast(
-            indicator -> ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator),
-            Registry.intValue("diff.status.tracker.byword.delay")
-        );
-    }
-
-    private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, Disposable parentDisposable) {
-        if (wordDiff == null) {
-            return;
-        }
-        List<RangeHighlighter> highlighters = new ArrayList<>();
-
-        DiffInternal diffInternal = Application.get().getInstance(DiffInternal.class);
-
-        int currentStartShift = myTracker.getCurrentTextRange(myRange).getStartOffset();
-        for (DiffFragment fragment : wordDiff) {
-            int currentStart = currentStartShift + fragment.getStartOffset2();
-            int currentEnd = currentStartShift + fragment.getEndOffset2();
-            TextDiffType type = getDiffType(fragment);
-
-            highlighters.addAll(diffInternal.createInlineHighlighter(myEditor, currentStart, currentEnd, type));
-        }
-
-        Disposer.register(
-            parentDisposable,
-            () -> {
-                for (RangeHighlighter highlighter : highlighters) {
-                    highlighter.dispose();
-                }
-            }
-        );
-    }
-
     private @Nullable EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @Nullable List<DiffFragment> wordDiff) {
         if (myRange.getType() == VcsRange.INSERTED) {
             return null;
         }
 
-        EditorEx uEditor = (EditorEx) EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
+        EditorEx uEditor = (EditorEx)EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
         uEditor.setColorsScheme(myEditor.getColorsScheme());
 
         DiffLanguageUtil.setEditorCodeStyle(myTracker.getProject(), uEditor, fileType);
@@ -270,7 +197,7 @@ public abstract class LineStatusMarkerPopup {
             myEditorComponent = editorComponent;
             boolean isEditorVisible = myEditorComponent != null;
 
-            Color background = TargetAWT.to(((EditorEx) editor).getBackgroundColor());
+            Color background = TargetAWT.to(((EditorEx)editor).getBackgroundColor());
             Color borderColor = JBColor.border();
 
             JComponent toolbarComponent = toolbar.getComponent();

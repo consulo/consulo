@@ -33,6 +33,20 @@
 {
   font-family: var(--arquill-editor-font-family);
   font-size: var(--arquill-editor-font-size);
+  min-height: 0;
+}
+
+.arquill-editor-fit-content .textview
+{
+  height: auto !important;
+}
+
+.arquill-editor-fit-content .textviewScroll
+{
+  position: relative !important;
+  inset: auto !important;
+  height: auto !important;
+  overflow: hidden !important;
 }
 
 /* An inlay is projected into the view as text, so its box is drawn by the run itself rather than painted under
@@ -237,6 +251,16 @@
 {
   position: absolute;
   box-sizing: border-box;
+  left: var(--arquill-band-left);
+  width: var(--arquill-band-width);
+  border-radius: 2px;
+}
+
+.arquill-gutter-band-clickable:hover
+{
+  left: calc(var(--arquill-band-left) - 2px);
+  width: calc(var(--arquill-band-width) + 4px);
+  border-radius: 4px;
 }
 
 /* the error stripe, the counterpart of the awt error panel - the orion overview ruler, which ships at 14px and

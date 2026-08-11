@@ -186,15 +186,58 @@ public class WebInputDetails {
             return new KeyboardInputDetails(position, positionOnScreen, modifiers, KeyCode.ENTER);
         }
 
-        MouseInputDetails.MouseButton button = switch (data.path(BUTTON).asInt(0)) {
+        return mouse(
+            (int) data.path(OFFSET_X).asDouble(0),
+            (int) data.path(OFFSET_Y).asDouble(0),
+            (int) data.path(SCREEN_X).asDouble(0),
+            (int) data.path(SCREEN_Y).asDouble(0),
+            data.path(BUTTON).asInt(0),
+            modifiers
+        );
+    }
+
+    public static MouseInputDetails mouse(
+        int x,
+        int y,
+        int screenX,
+        int screenY,
+        int button,
+        boolean alt,
+        boolean ctrl,
+        boolean shift,
+        boolean meta
+    ) {
+        EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+        if (alt) {
+            modifiers.add(ModifiedInputDetails.Modifier.ALT);
+        }
+        if (ctrl) {
+            modifiers.add(ModifiedInputDetails.Modifier.CTRL);
+        }
+        if (shift) {
+            modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+        }
+        if (meta) {
+            modifiers.add(ModifiedInputDetails.Modifier.META);
+        }
+
+        return mouse(x, y, screenX, screenY, button, modifiers);
+    }
+
+    private static MouseInputDetails mouse(
+        int x,
+        int y,
+        int screenX,
+        int screenY,
+        int button,
+        EnumSet<ModifiedInputDetails.Modifier> modifiers
+    ) {
+        MouseInputDetails.MouseButton mouseButton = switch (button) {
             case 1 -> MouseInputDetails.MouseButton.MIDDLE;
             case 2 -> MouseInputDetails.MouseButton.RIGHT;
             default -> MouseInputDetails.MouseButton.LEFT;
         };
 
-        Point2D position = new Point2D((int) data.path(OFFSET_X).asDouble(0), (int) data.path(OFFSET_Y).asDouble(0));
-        Point2D positionOnScreen = new Point2D((int) data.path(SCREEN_X).asDouble(0), (int) data.path(SCREEN_Y).asDouble(0));
-
-        return new MouseInputDetails(position, positionOnScreen, modifiers, button);
+        return new MouseInputDetails(new Point2D(x, y), new Point2D(screenX, screenY), modifiers, mouseButton);
     }
 }

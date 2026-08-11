@@ -30,6 +30,7 @@ import org.jspecify.annotations.Nullable;
  * @param color     fill, or null for an outline only
  * @param borderColor outline, or null for a fill only
  * @param dotted    draw the outline dotted
+ * @param clickId   index of the band in the update it belongs to, or -1 when nothing answers a click on it
  *
  * @author VISTALL
  * @since 2026-08-01
@@ -40,9 +41,18 @@ public record GutterBand(
     int endLine,
     @Nullable String color,
     @Nullable String borderColor,
-    boolean dotted
+    boolean dotted,
+    int clickId
 ) {
+    public GutterBand(String area, int startLine, int endLine, @Nullable String color, @Nullable String borderColor, boolean dotted) {
+        this(area, startLine, endLine, color, borderColor, dotted, -1);
+    }
+
     public static GutterBand fill(EditorGutterArea area, int startLine, int endLine, String color) {
         return new GutterBand(area.name(), startLine, endLine, color, null, false);
+    }
+
+    public GutterBand withClickId(int clickId) {
+        return new GutterBand(area, startLine, endLine, color, borderColor, dotted, clickId);
     }
 }

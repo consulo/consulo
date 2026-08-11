@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,24 @@
  */
 package consulo.versionControlSystem.impl.internal;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.versionControlSystem.internal.LineStatusMarkerPopup;
 import consulo.versionControlSystem.internal.LineStatusMarkerPopupFactory;
+import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
+import jakarta.inject.Singleton;
 
-public class LineStatusTrackerDrawing {
-    private LineStatusTrackerDrawing() {
-    }
-
-    public static void moveToRange(VcsRange range, Editor editor, LineStatusTracker tracker) {
-        LineStatusMarkerPopupFactory.getInstance().create(tracker, editor, range).scrollAndShow();
-    }
-
-    public static void showHint(VcsRange range, Editor editor, LineStatusTracker tracker) {
-        LineStatusMarkerPopupFactory.getInstance().create(tracker, editor, range).showAfterScroll();
+/**
+ * @author VISTALL
+ * @since 2026-08-11
+ */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+public class UnifiedLineStatusMarkerPopupFactory implements LineStatusMarkerPopupFactory {
+    @Override
+    public LineStatusMarkerPopup create(LineStatusTrackerI tracker, Editor editor, VcsRange range) {
+        return new UnifiedLineStatusMarkerPopup((LineStatusTracker)tracker, editor, range);
     }
 }

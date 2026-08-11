@@ -2,7 +2,7 @@
  * The browser half of consulo.web.internal.ui.editor.ArquillEditorElement, built over the
  * window.arquillEditor.createEditor(options) the compiled arquill bundle exposes.
  *
- * install(element, contents, readonly) hangs $arquillApi onto the host element - the only thing the server ever
+ * install(element, contents, readonly, rulers) hangs $arquillApi onto the host element - the only thing the server ever
  * reaches for - and dispatches the custom events the @DomEvent classes bind to by name.
  */
 (function () {
@@ -15,6 +15,7 @@
 
     const BAND_WIDTH = 3;
     const DELETION_HEIGHT = 4;
+    const BAND_HIT_EXTRA = 6;
     const FOLDING_ANNOTATION_TYPE = 'orion.annotation.folding';
     const STRIPE_ANNOTATION_TYPE = 'arquill.annotation.errorStripe';
 
@@ -32,19 +33,27 @@
 
     const ANNOTATION_GAP = 5;
 
-    const install = (element, contents, readonly) => {
+    const install = (element, contents, readonly, rulers) => {
         if (element.$arquillEditor) {
             return;
         }
+
+        const shown = (name) => !rulers || rulers[name] !== false;
 
         // noComputeSize keeps the editor from shrinking the host down to the text height
         element.$arquillEditor = window.arquillEditor.createEditor({
             parent: element,
             contents: contents,
             readonly: readonly,
-            noComputeSize: true
+            noComputeSize: true,
+            showLinesRuler: shown('lines'),
+            showFoldingRuler: shown('folding'),
+            showAnnotationRuler: shown('annotations')
         });
-        element.style.height = '100%';
+
+        if (!element.style.height) {
+            element.style.height = '100%';
+        }
 
         const textView = element.$arquillEditor.getTextView();
 
@@ -153,12 +162,18 @@
         // face is laid out in
         let textBoxHeight = 0;
         let lineSpacing = 1;
+        let caretVisible = true;
 
         const caretElement = document.createElement('div');
         caretElement.className = 'arquill-caret arquill-caret-blinking arquill-caret-hidden';
         element.appendChild(caretElement);
 
         const placeCaret = () => {
+            if (!caretVisible) {
+                caretElement.classList.add('arquill-caret-hidden');
+                return;
+            }
+
             const selection = textView.getSelection();
             if (!selection || selection.start !== selection.end) {
                 // a caret is where there is nothing selected, and a selection draws itself
@@ -1239,6 +1254,49 @@
             }
         };
 
+        const bandHitArea = (band, boundary) => {
+            const hit = document.createElement('div');
+            hit.className = 'arquill-gutter-band-hit';
+            hit.style.position = 'absolute';
+            hit.style.left = -BAND_HIT_EXTRA + 'px';
+            hit.style.right = '0';
+            hit.style.pointerEvents = 'auto';
+            hit.style.cursor = 'pointer';
+
+            if (boundary) {
+                hit.style.top = DELETION_HEIGHT / 2 + 'px';
+                hit.style.height = textView.getLineHeight() + 'px';
+            }
+            else {
+                hit.style.top = '0';
+                hit.style.bottom = '0';
+            }
+
+            hit.addEventListener('click', domEvent => {
+                domEvent.stopPropagation();
+                domEvent.preventDefault();
+
+                const hostRect = element.getBoundingClientRect();
+
+                element.dispatchEvent(new CustomEvent('arquill-gutter-band-click', {
+                    detail: {
+                        id: band.clickId,
+                        x: Math.round(domEvent.clientX - hostRect.left),
+                        y: Math.round(domEvent.clientY - hostRect.top),
+                        screenX: Math.round(domEvent.screenX),
+                        screenY: Math.round(domEvent.screenY),
+                        button: domEvent.button,
+                        alt: domEvent.altKey,
+                        ctrl: domEvent.ctrlKey,
+                        shift: domEvent.shiftKey,
+                        meta: domEvent.metaKey
+                    }
+                }));
+            });
+
+            return hit;
+        };
+
         const renderGutterBands = () => {
             gutterBands.textContent = '';
 
@@ -1287,8 +1345,8 @@
                 bar.className = 'arquill-gutter-band';
                 bar.style.position = 'absolute';
                 bar.style.boxSizing = 'border-box';
-                bar.style.left = bounds.left + 'px';
-                bar.style.width = bounds.width + 'px';
+                bar.style.setProperty('--arquill-band-left', bounds.left + 'px');
+                bar.style.setProperty('--arquill-band-width', bounds.width + 'px');
                 bar.style.top = (boundary ? top - DELETION_HEIGHT / 2 : top) + 'px';
                 bar.style.height = height + 'px';
 
@@ -1297,6 +1355,11 @@
                 }
                 if (band.borderColor) {
                     bar.style.border = '1px ' + (band.dotted ? 'dotted ' : 'solid ') + band.borderColor;
+                }
+
+                if (band.clickId >= 0) {
+                    bar.classList.add('arquill-gutter-band-clickable');
+                    bar.appendChild(bandHitArea(band, boundary));
                 }
 
                 gutterBands.appendChild(bar);
@@ -2056,6 +2119,8 @@
                 ? JSON.parse(element.$arquillErrorStripeMarks)
                 : {};
 
+            element.$arquillEditor.setOverviewRulerVisible(model.visible !== false);
+
             const lineCount = baseModel.getLineCount();
             const wanted = new Map();
 
@@ -2186,6 +2251,11 @@
                         element.$arquillSuppressChange = false;
                     }
                 }
+            },
+
+            setCaretVisible: visible => {
+                caretVisible = visible;
+                placeCaret();
             },
 
             setCaretStyle: (width, blinkPeriod) => {

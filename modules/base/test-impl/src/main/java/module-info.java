@@ -17,6 +17,8 @@ module consulo.test.impl {
   requires consulo.language.impl;
   requires consulo.document.impl;
   requires consulo.platform.impl;
+  requires consulo.code.editor.api;
+  requires consulo.version.control.system.api;
   requires java.desktop;
 
   exports consulo.test.light;

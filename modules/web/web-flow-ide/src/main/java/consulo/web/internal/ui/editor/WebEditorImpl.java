@@ -64,7 +64,9 @@ import consulo.language.editor.impl.internal.markup.PassWrapper;
 import consulo.language.editor.impl.internal.markup.StatusItem;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.project.DumbService;
+import consulo.ui.Size2D;
 import consulo.ui.Point2D;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
@@ -159,12 +161,19 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   }
 
   private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements HasFocus {
-    
+
     @Override
     public Vaadin createVaadinComponent() {
       Vaadin vaadin = new Vaadin("");
       vaadin.setComponent(this);
       return vaadin;
+    }
+
+    @Override
+    public void setSize(Size2D size) {
+      super.setSize(size);
+
+      toVaadinComponent().setFitContentHeight(size.height() == -1);
     }
   }
 
@@ -177,6 +186,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   private final WebEditorGutterComponentImpl myGutterComponent;
 
   private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
+
+  private boolean myCaretVisible = true;
   private final AtomicBoolean myTextAnnotationsUpdateScheduled = new AtomicBoolean();
   private boolean myPushingTextAnnotations;
 
@@ -207,6 +218,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
   /** which lines already show a mark in place of their number, so the hovered offer is not drawn over one */
   private final java.util.Set<Integer> myLineNumberMarkLines = new java.util.HashSet<>();
+
+  private final List<BandHit> myGutterBandHits = new ArrayList<>();
 
   /** the line the last right click was over, or {@code -1} when it was not over the gutter */
   private int myGutterContextLine = -1;
@@ -283,6 +296,11 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     vaadin.setSizeFull();
     vaadin.setText(myDocument.getText());
     vaadin.setReadOnly(isViewer() || !myDocument.isWritable());
+    vaadin.setRulers(() -> new ArquillEditorElement.Rulers(
+      getSettings().isLineNumbersShown(),
+      getSettings().isFoldingOutlineShown(),
+      getSettings().isLineMarkerAreaShown()
+    ));
 
     updateFont();
     updateCaretStyle();
@@ -343,6 +361,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
 
     vaadin.addGutterClickListener(event -> performGutterClick(event.getId()));
+
+    vaadin.addGutterBandClickListener(event -> performGutterBandClick(event.getId(), event.getDetails()));
 
     vaadin.addGutterHoverListener(event -> performGutterHover(event.getLine()));
 
@@ -442,6 +462,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     vaadin.addAttachListener(attachEvent -> {
       updateFont();
       updateColors();
+      updateCaretVisible();
 
       update();
 
@@ -1756,6 +1777,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     subscribeToLineStatusTracker(LineStatusTrackerManagerI.getInstance(myProject).getLineStatusTracker(myDocument));
 
     List<GutterBand> bands = new ArrayList<>();
+    myGutterBandHits.clear();
 
     MarkupModel markupModel = DocumentMarkupModel.forDocument(myDocument, myProject, false);
     if (markupModel != null) {
@@ -1788,9 +1810,27 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
       GutterBand band = painter.paint(presentation, this);
       if (band != null) {
-        bands.add(band);
+        myGutterBandHits.add(new BandHit(provider, presentation));
+        bands.add(band.withClickId(myGutterBandHits.size() - 1));
       }
     }
+  }
+
+  private record BandHit(LineMarkerPresentationProvider provider, LineMarkerPresentation presentation) {
+  }
+
+  @RequiredUIAccess
+  private void performGutterBandClick(int id, InputDetails details) {
+    if (id < 0 || id >= myGutterBandHits.size()) {
+      return;
+    }
+
+    BandHit hit = myGutterBandHits.get(id);
+    if (!hit.provider().canDoAction(hit.presentation(), details)) {
+      return;
+    }
+
+    hit.provider().doAction(this, hit.presentation(), details);
   }
 
   private void subscribeToLineStatusTracker(@Nullable LineStatusTrackerI tracker) {
@@ -1816,8 +1856,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
    */
   @RequiredReadAction
   private void updateAnalyzeStatus() {
-    ErrorStripeRenderer renderer = ((WebEditorMarkupModelImpl)myMarkupModel).getErrorStripeRenderer();
-    if (renderer == null) {
+    WebEditorMarkupModelImpl markupModel = (WebEditorMarkupModelImpl)myMarkupModel;
+
+    ErrorStripeRenderer renderer = markupModel.getErrorStripeRenderer();
+    if (renderer == null || !markupModel.isErrorStripeVisible()) {
       myEditorComponent.toVaadinComponent().setAnalyzeStatus("{}");
       return;
     }
@@ -2673,7 +2715,19 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
   @Override
   public boolean setCaretVisible(boolean b) {
-    return false;
+    boolean old = myCaretVisible;
+
+    if (old != b) {
+      myCaretVisible = b;
+
+      updateCaretVisible();
+    }
+
+    return old;
+  }
+
+  private void updateCaretVisible() {
+    giveUI(() -> myEditorComponent.toVaadinComponent().setCaretVisible(myCaretVisible));
   }
 
   @Override

@@ -28,6 +28,8 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.dom.DebouncePhase;
 import com.vaadin.flow.shared.Registration;
 
+import consulo.ui.event.details.InputDetails;
+import consulo.web.internal.ui.base.WebInputDetails;
 import consulo.web.internal.ui.editor.gutter.GutterBand;
 import org.jspecify.annotations.Nullable;
 
@@ -35,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Wraps the compiled arquill editor bundle, which exposes window.arquillEditor.createEditor(options).
@@ -315,6 +318,39 @@ public class ArquillEditorElement extends Component implements HasSize {
         }
     }
 
+    @DomEvent("arquill-gutter-band-click")
+    public static class ArquillGutterBandClickEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myId;
+        private final InputDetails myDetails;
+
+        public ArquillGutterBandClickEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.id") int id,
+            @EventData("event.detail.x") int x,
+            @EventData("event.detail.y") int y,
+            @EventData("event.detail.screenX") int screenX,
+            @EventData("event.detail.screenY") int screenY,
+            @EventData("event.detail.button") int button,
+            @EventData("event.detail.alt") boolean alt,
+            @EventData("event.detail.ctrl") boolean ctrl,
+            @EventData("event.detail.shift") boolean shift,
+            @EventData("event.detail.meta") boolean meta
+        ) {
+            super(source, fromClient);
+            myId = id;
+            myDetails = WebInputDetails.mouse(x, y, screenX, screenY, button, alt, ctrl, shift, meta);
+        }
+
+        public int getId() {
+            return myId;
+        }
+
+        public InputDetails getDetails() {
+            return myDetails;
+        }
+    }
+
     /**
      * Fired when the user collapses or expands a region through the orion folding ruler. The offset is the
      * start of the region in document coordinates, which is what {@link #setFoldRegions(String)} sent.
@@ -522,9 +558,14 @@ public class ArquillEditorElement extends Component implements HasSize {
         }
     }
 
+    public record Rulers(boolean lines, boolean folding, boolean annotations) {
+    }
+
     private String myText;
 
     private boolean myReadOnly;
+
+    private Supplier<Rulers> myRulers = () -> new Rulers(true, true, true);
 
     /**
      * What each decoration channel last sent, keyed by the api call. The platform rebuilds every channel on
@@ -569,6 +610,14 @@ public class ArquillEditorElement extends Component implements HasSize {
                 get: (target, name) => (...args) => pending.push([name, args])
             });
             """);
+    }
+
+    public void setRulers(Supplier<Rulers> rulers) {
+        myRulers = rulers;
+    }
+
+    public void setFitContentHeight(boolean fit) {
+        getElement().getClassList().set("arquill-editor-fit-content", fit);
     }
 
     public void setText(String text) {
@@ -618,6 +667,10 @@ public class ArquillEditorElement extends Component implements HasSize {
      */
     public void setCaretStyle(int width, int blinkPeriod) {
         getElement().executeJs("this.$arquillApi.setCaretStyle($0, $1);", width, blinkPeriod);
+    }
+
+    public void setCaretVisible(boolean visible) {
+        getElement().executeJs("this.$arquillApi.setCaretVisible($0);", visible);
     }
 
     public void setFont(String fontName, int fontSize, double lineSpacing) {
@@ -725,6 +778,10 @@ public class ArquillEditorElement extends Component implements HasSize {
 
     public Registration addGutterClickListener(ComponentEventListener<ArquillGutterClickEvent> listener) {
         return addListener(ArquillGutterClickEvent.class, listener);
+    }
+
+    public Registration addGutterBandClickListener(ComponentEventListener<ArquillGutterBandClickEvent> listener) {
+        return addListener(ArquillGutterBandClickEvent.class, listener);
     }
 
     public Registration addGutterLineClickListener(ComponentEventListener<ArquillGutterLineClickEvent> listener) {
@@ -937,6 +994,8 @@ public class ArquillEditorElement extends Component implements HasSize {
         // ahead of the loader below, so that a push arriving while the scripts are on their way is collected
         installApiStub();
 
+        Rulers rulers = myRulers.get();
+
         // the bundle measures the parent, so the editor can only be created once the element is in the dom.
         // the scripts are injected by hand - flow drops @JavaScript pointing at a context absolute path
         getElement().executeJs("""
@@ -958,8 +1017,12 @@ public class ArquillEditorElement extends Component implements HasSize {
             Promise.all([
                 load('arquill-editor-script', '/arquill/arquillEditor.js', () => window.arquillEditor),
                 load('arquill-editor-element-script', '/arquill/arquillEditorElement.js', () => window.arquillEditorElement)
-            ]).then(() => window.arquillEditorElement.install(element, $0, $1));
-            """, myText, myReadOnly);
+            ]).then(() => window.arquillEditorElement.install(element, $0, $1, {
+                lines: $2,
+                folding: $3,
+                annotations: $4
+            }));
+            """, myText, myReadOnly, rulers.lines(), rulers.folding(), rulers.annotations());
     }
 
     @Override

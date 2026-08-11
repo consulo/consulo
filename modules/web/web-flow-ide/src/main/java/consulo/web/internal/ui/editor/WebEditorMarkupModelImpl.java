@@ -66,6 +66,7 @@ public class WebEditorMarkupModelImpl extends MarkupModelImpl implements EditorM
     myErrorStripeVisible = val;
 
     myWebEditor.scheduleErrorStripeUpdate();
+    myWebEditor.scheduleAnalyzeStatusUpdate();
   }
 
   @RequiredUIAccess
