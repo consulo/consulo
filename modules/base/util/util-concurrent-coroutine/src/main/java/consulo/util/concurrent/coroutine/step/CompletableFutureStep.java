@@ -20,6 +20,7 @@ import consulo.util.concurrent.coroutine.CoroutineStep;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -32,18 +33,27 @@ import java.util.function.Function;
  */
 public final class CompletableFutureStep<I extends @Nullable Object, O extends @Nullable Object> extends CoroutineStep<I, O> {
     public static <I, O> CompletableFutureStep<I, O> await(Function<I, CompletableFuture<O>> futureFactory) {
+        return new CompletableFutureStep<>((input, continuation) -> futureFactory.apply(input));
+    }
+
+    /**
+     * A variant whose factory is also given the {@link Continuation} of the execution, the way
+     * {@link CodeExecution#apply(BiFunction)} hands it over - for a future that is built from the
+     * configuration or the data the continuation carries.
+     */
+    public static <I, O> CompletableFutureStep<I, O> await(BiFunction<I, Continuation<?>, CompletableFuture<O>> futureFactory) {
         return new CompletableFutureStep<>(futureFactory);
     }
 
-    private final Function<I, CompletableFuture<O>> myFutureFactory;
+    private final BiFunction<I, Continuation<?>, CompletableFuture<O>> myFutureFactory;
 
-    private CompletableFutureStep(Function<I, CompletableFuture<O>> futureFactory) {
+    private CompletableFutureStep(BiFunction<I, Continuation<?>, CompletableFuture<O>> futureFactory) {
         myFutureFactory = futureFactory;
     }
 
     @Override
     public void runAsync(CompletableFuture<I> previousExecution, @Nullable CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
-        continuation.continueCompose(previousExecution, myFutureFactory, nextStep);
+        continuation.continueCompose(previousExecution, input -> myFutureFactory.apply(input, continuation), nextStep);
     }
 
     @Override
@@ -51,6 +61,6 @@ public final class CompletableFutureStep<I extends @Nullable Object, O extends @
     protected O execute(@Nullable I input, Continuation<?> continuation) {
         // NullAway problem: input and output are nullable by method contract but in actual usage
         // input can be null only if I is nullable. We cannot explain this to the static validator.
-        return myFutureFactory.apply(input).join();
+        return myFutureFactory.apply(input, continuation).join();
     }
 }

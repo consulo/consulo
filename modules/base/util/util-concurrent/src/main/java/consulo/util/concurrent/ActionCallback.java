@@ -26,6 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+@Deprecated
 public class ActionCallback {
     private static final Logger LOG = LoggerFactory.getLogger(ActionCallback.class);
 

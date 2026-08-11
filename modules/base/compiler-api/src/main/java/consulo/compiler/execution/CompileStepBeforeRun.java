@@ -34,10 +34,12 @@ import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import jakarta.inject.Inject;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author spleaner
@@ -89,7 +91,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
     }
 
     @Override
-    public AsyncResult<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeTaskAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,
@@ -99,7 +101,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
         return doMake(uiAccess, myProject, configuration, env, false);
     }
 
-    static AsyncResult<Void> doMake(
+    static CompletableFuture<Void> doMake(
         UIAccess uiAccess,
         Project myProject,
         RunConfiguration configuration,
@@ -107,21 +109,21 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
         boolean ignoreErrors
     ) {
         if (!(configuration instanceof RunProfileWithCompileBeforeLaunchOption runConfiguration)) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
         if (configuration instanceof RunConfigurationBase rcb && rcb.excludeCompileBeforeLaunchOption()) {
-            return AsyncResult.resolved();
+            return CompletableFuture.completedFuture(null);
         }
 
-        AsyncResult<Void> result = AsyncResult.undefined();
+        CompletableFuture<Void> result = new CompletableFuture<>();
         try {
             CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
                 if ((errors == 0 || ignoreErrors) && !aborted) {
-                    result.setDone();
+                    result.complete(null);
                 }
                 else {
-                    result.setRejected();
+                    result.completeExceptionally(new CancellationException());
                 }
             };
 
@@ -156,7 +158,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
                     scope = ReadAction.computeNotNull(() -> compilerManager.createProjectCompileScope(isTestCompile[0]));
                 }
                 else {
-                    result.setDone();
+                    result.complete(null);
                     return result;
                 }
             }
@@ -167,7 +169,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
             uiAccess.give(() -> compilerManager.make(scope, callback));
         }
         catch (Exception e) {
-            result.rejectWithThrowable(e);
+            result.completeExceptionally(e);
         }
 
         return result;

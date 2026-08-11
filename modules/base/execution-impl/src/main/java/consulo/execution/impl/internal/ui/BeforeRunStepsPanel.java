@@ -99,7 +99,7 @@ class BeforeRunStepsPanel {
             }
             BeforeRunTask task = selection.getFirst();
             BeforeRunTaskProvider<BeforeRunTask> provider = selection.getSecond();
-            provider.configureTask(myRunConfiguration, task).doWhenDone(() -> {
+            provider.configureTask(myRunConfiguration, task).thenRun(() -> {
                 myModel.setElementAt(task, index);
                 updateText();
             });
@@ -242,7 +242,7 @@ class BeforeRunStepsPanel {
                         return;
                     }
 
-                    provider.configureTask(myRunConfiguration, task).doWhenProcessed(() -> {
+                    provider.configureTask(myRunConfiguration, task).whenComplete((value, error) -> {
                         if (!provider.canExecuteTask(myRunConfiguration, task)) {
                             return;
                         }

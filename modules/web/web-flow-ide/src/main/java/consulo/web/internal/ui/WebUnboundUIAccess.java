@@ -24,7 +24,6 @@ import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.clipboard.MemoryClipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -95,20 +94,10 @@ public class WebUnboundUIAccess extends BaseUIAccess implements UIAccess {
     }
 
     @Override
-    public <T> AsyncResult<T> give(Supplier<T> supplier) {
+    public void give(Runnable runnable) {
         report();
 
-        AsyncResult<T> result = AsyncResult.undefined();
-        executor().execute(() -> {
-            try {
-                result.setDone(supplier.get());
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-                result.rejectWithThrowable(e);
-            }
-        });
-        return result;
+        executor().execute(runnable);
     }
 
     @Override

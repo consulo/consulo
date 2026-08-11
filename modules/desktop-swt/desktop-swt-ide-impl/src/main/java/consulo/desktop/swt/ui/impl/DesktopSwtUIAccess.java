@@ -17,14 +17,13 @@ package consulo.desktop.swt.ui.impl;
 
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.desktop.swt.ui.impl.clipboard.DesktopSwtClipboardImpl;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import consulo.desktop.swt.ui.impl.clipboard.DesktopSwtClipboardImpl;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 import org.eclipse.swt.widgets.Display;
 
 import java.util.concurrent.CompletableFuture;
@@ -36,131 +35,109 @@ import java.util.function.Supplier;
  * @since 29/04/2021
  */
 public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
-  public static final DesktopSwtUIAccess INSTANCE = new DesktopSwtUIAccess();
+    public static final DesktopSwtUIAccess INSTANCE = new DesktopSwtUIAccess();
 
-  private static final Logger LOG = Logger.getInstance(DesktopSwtUIAccess.class);
+    private static final Logger LOG = Logger.getInstance(DesktopSwtUIAccess.class);
 
-  private Display myDisplay;
+    private Display myDisplay;
 
-  public DesktopSwtUIAccess() {
-    CountDownLatch countDownLatch = new CountDownLatch(1);
-    Thread thread = new Thread("SWT Event Queue") {
-      @Override
-      public void run() {
-        myDisplay = new Display();
-        countDownLatch.countDown();
+    public DesktopSwtUIAccess() {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Thread thread = new Thread("SWT Event Queue") {
+            @Override
+            public void run() {
+                myDisplay = new Display();
+                countDownLatch.countDown();
 
-        while (true) {
-          if (myDisplay.isDisposed()) {
-            break;
-          }
+                while (true) {
+                    if (myDisplay.isDisposed()) {
+                        break;
+                    }
 
-          boolean readAndDispatch = false;
-          try {
-            readAndDispatch = myDisplay.readAndDispatch();
-          }
-          catch (Throwable e) {
-            e.printStackTrace();
-          }
+                    boolean readAndDispatch = false;
+                    try {
+                        readAndDispatch = myDisplay.readAndDispatch();
+                    }
+                    catch (Throwable e) {
+                        e.printStackTrace();
+                    }
 
-          if (!readAndDispatch) {
-            myDisplay.sleep();
-          }
+                    if (!readAndDispatch) {
+                        myDisplay.sleep();
+                    }
+                }
+            }
+        };
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
+
+        try {
+            countDownLatch.await();
         }
-      }
-    };
-    thread.setDaemon(true);
-    thread.setPriority(Thread.MAX_PRIORITY);
-    thread.start();
-
-    try {
-      countDownLatch.await();
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
-    catch (InterruptedException e) {
-      throw new RuntimeException(e);
+
+    public Display getDisplay() {
+        return myDisplay;
     }
-  }
 
-  public Display getDisplay() {
-    return myDisplay;
-  }
+    @Override
+    public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
+        CompletableFuture<T> result = new CompletableFuture<>();
+        myDisplay.asyncExec(() -> {
+            try {
+                result.complete(supplier.get());
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+                result.completeExceptionally(e);
+            }
+        });
+        return result;
+    }
 
-  
-  @Override
-  public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
-    CompletableFuture<T> result = new CompletableFuture<>();
-    myDisplay.asyncExec(() -> {
-      try {
-        result.complete(supplier.get());
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        result.completeExceptionally(e);
-      }
-    });
-    return result;
-  }
+    @Override
+    public void give(Runnable runnable) {
+        myDisplay.asyncExec(() -> {
+            try {
+                runnable.run();
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+            }
+        });
+    }
 
-  
-  @Override
-  public <T> AsyncResult<T> give(Supplier<T> supplier) {
-    AsyncResult<T> result = AsyncResult.undefined();
-    myDisplay.asyncExec(() -> {
-      try {
-        result.setDone(supplier.get());
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        result.rejectWithThrowable(e);
-      }
-    });
-    return result;
-  }
+    @Override
+    public void giveAndWait(Runnable runnable) {
+        myDisplay.syncExec(() -> {
+            try {
+                runnable.run();
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+            }
+        });
+    }
 
-  
-  @Override
-  public AsyncResult<Void> give(Runnable runnable) {
-    AsyncResult<Void> result = AsyncResult.undefined();
-    myDisplay.asyncExec(() -> {
-      try {
-        runnable.run();
-        result.setDone();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        result.rejectWithThrowable(e);
-      }
-    });
-    return result;
-  }
 
-  @Override
-  public void giveAndWait(Runnable runnable) {
-    myDisplay.syncExec(() -> {
-      try {
-        runnable.run();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    });
-  }
+    @Override
+    protected Clipboard createClipboard() {
+        return new DesktopSwtClipboardImpl();
+    }
 
-  
-  @Override
-  protected Clipboard createClipboard() {
-    return new DesktopSwtClipboardImpl();
-  }
-
-  @Override
-  protected SingleUIAccessScheduler createScheduler() {
-    Application application = Application.get();
-    ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
-    return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-      @Override
-      public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-        Application.get().invokeLater(runnable, modalityState);
-      }
-    };
-  }
+    @Override
+    protected SingleUIAccessScheduler createScheduler() {
+        Application application = Application.get();
+        ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
+            @Override
+            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
+                Application.get().invokeLater(runnable, modalityState);
+            }
+        };
+    }
 }

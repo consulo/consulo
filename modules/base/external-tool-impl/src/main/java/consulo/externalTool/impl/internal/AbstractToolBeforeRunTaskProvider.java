@@ -26,8 +26,10 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author traff
@@ -43,32 +45,23 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
   
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
+  public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
     ToolSelectDialog dialog = new ToolSelectDialog(runConfiguration.getProject(), task.getToolActionId(), createToolsPanel());
 
-    AsyncResult<Void> result = AsyncResult.undefined();
-
-    AsyncResult<Void> showAsync = dialog.showAsync();
-    showAsync.doWhenDone(() -> {
+    return dialog.showAsync().toCompletableFuture().thenCompose(ignored -> {
       boolean isModified = dialog.isModified();
       Tool selectedTool = dialog.getSelectedTool();
       LOG.assertTrue(selectedTool != null);
       String selectedToolId = selectedTool.getActionId();
       String oldToolId = task.getToolActionId();
       if (oldToolId != null && oldToolId.equals(selectedToolId)) {
-        if (isModified) {
-          result.setDone();
-        }
-        else {
-          result.setRejected();
-        }
-        return;
+        return isModified
+          ? CompletableFuture.completedFuture(null)
+          : CompletableFuture.failedFuture(new CancellationException());
       }
       task.setToolActionId(selectedToolId);
-      result.setDone();
+      return CompletableFuture.completedFuture(null);
     });
-    showAsync.doWhenRejected((Runnable)result::setRejected);
-    return result;
   }
 
   protected abstract BaseToolsPanel createToolsPanel();
@@ -102,9 +95,9 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
   
   @Override
   @SuppressWarnings("unchecked")
-  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
+  public CompletableFuture<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
     if (!task.isExecutable()) {
-      return AsyncResult.rejected();
+      return CompletableFuture.failedFuture(new CancellationException());
     }
     return task.execute(uiAccess, context, env.getExecutionId());
   }

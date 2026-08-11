@@ -27,7 +27,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.jdom.JDOMUtil;
 import org.jspecify.annotations.Nullable;
@@ -35,6 +34,8 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Eugene Zhuravlev
@@ -78,8 +79,8 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
     
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, UnknownTask task) {
-        return AsyncResult.rejected();
+    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, UnknownTask task) {
+        return CompletableFuture.failedFuture(new CancellationException());
     }
 
     @Override
@@ -89,8 +90,8 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
 
     
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, UnknownTask task) {
-        return AsyncResult.resolved();
+    public CompletableFuture<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, UnknownTask task) {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

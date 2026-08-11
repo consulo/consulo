@@ -26,7 +26,6 @@ import consulo.ui.clipboard.Clipboard;
 import consulo.web.internal.ui.clipboard.WebClipboardImpl;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -113,18 +112,16 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     }
 
     @Override
-    public <T> AsyncResult<T> give(Supplier<T> supplier) {
-        AsyncResult<T> result = AsyncResult.undefined();
+    public void give(Runnable runnable) {
         if (isValid()) {
             dispatcher().execute(() -> {
                 try {
                     myUI.access(() -> {
                         try {
-                            result.setDone(supplier.get());
+                            runnable.run();
                         }
                         catch (Throwable e) {
                             LOG.error(e);
-                            result.rejectWithThrowable(e);
                         }
                     });
                 }
@@ -132,7 +129,6 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
                     // the ui can detach between the isValid check and the access call - the result must not be
                     // left incomplete then, a caller waiting on it would park forever
                     LOG.warn("give lost, ui detached mid-flight", e);
-                    result.rejectWithThrowable(e);
                 }
             });
         }
@@ -140,9 +136,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
             // answering an empty result rather than a value the caller asked for is already a loss, and a
             // sequence that quietly carries on with nothing is impossible to tell from one that never ran
             LOG.warn("give skipped, ui detached", new Throwable());
-            result.setDone();
         }
-        return result;
     }
 
     @Override

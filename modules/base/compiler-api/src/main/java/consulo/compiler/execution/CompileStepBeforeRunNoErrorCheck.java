@@ -26,9 +26,10 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Vassiliy.Kudryashov
@@ -73,7 +74,7 @@ public class CompileStepBeforeRunNoErrorCheck extends CompileStepBeforeRunBase<C
 
     
     @Override
-    public AsyncResult<Void> executeTaskAsync(
+    public CompletableFuture<Void> executeTaskAsync(
         UIAccess uiAccess,
         DataContext context,
         RunConfiguration configuration,

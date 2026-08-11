@@ -548,7 +548,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             myDisposeActions.add(() -> Disposer.dispose(tb));
         }
 
-        uiAccess.give(() -> {
+        uiAccess.giveAsync(() -> {
             if (changeModalityState) {
                 commandProcessor.enterModal();
 
@@ -579,7 +579,14 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                     }
                 }
             }
-        }).notify(result);
+        }).whenComplete((value, error) -> {
+            if (error == null) {
+                result.setDone();
+            }
+            else {
+                result.rejectWithThrowable(error);
+            }
+        });
 
         return result;
     }

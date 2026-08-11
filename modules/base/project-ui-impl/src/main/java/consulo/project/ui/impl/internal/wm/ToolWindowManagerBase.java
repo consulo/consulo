@@ -49,7 +49,6 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
@@ -58,6 +57,7 @@ import org.jdom.Element;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -284,14 +284,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     
-    public AsyncResult<Void> registerToolWindowsFromBeans(UIAccess uiAccess) {
-        List<AsyncResult<Void>> results = new ArrayList<>();
+    public CompletableFuture<?> registerToolWindowsFromBeans(UIAccess uiAccess) {
+        List<CompletableFuture<?>> results = new ArrayList<>();
 
         myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
-            AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
-            results.add(toolWindowResult);
-
-            uiAccess.give(() -> {
+            results.add(uiAccess.giveAsync(() -> {
                 if (factory.validate(myProject)) {
                     try {
                         initToolWindow(factory);
@@ -303,10 +300,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                         LOG.error("failed to init toolwindow " + factory.getClass().getName(), t);
                     }
                 }
-            }).notify(toolWindowResult);
+            }));
         });
 
-        return AsyncResult.merge(results);
+        return CompletableFuture.allOf(results.toArray(CompletableFuture[]::new));
     }
 
     public void connectModuleExtensionListener() {

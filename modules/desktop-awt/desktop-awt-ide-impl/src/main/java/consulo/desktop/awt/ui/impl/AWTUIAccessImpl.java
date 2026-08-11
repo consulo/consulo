@@ -23,13 +23,12 @@ import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTClipboardImpl;
 import consulo.logging.Logger;
-import consulo.ui.clipboard.Clipboard;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,108 +41,92 @@ import java.util.function.Supplier;
  * @since 11-Jun-16
  */
 public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
-  public static UIAccess ourInstance = new AWTUIAccessImpl();
-  private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
+    public static UIAccess ourInstance = new AWTUIAccessImpl();
+    private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
 
-  @Override
-  public void execute(Runnable command) {
-    SwingUtilities.invokeLater(command);
-  }
-
-  @Override
-  public boolean isHeadless() {
-    return GraphicsEnvironment.isHeadless();
-  }
-
-  @Override
-  public boolean isInModalContext() {
-    return LaterInvocator.isInModalContext();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public int getEventCount() {
-    UIAccess.assertIsUIThread();
-    return IdeEventQueue.getInstance().getEventCount();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public Runnable markEventCount() {
-    int eventCount = getEventCount();
-    return () -> IdeEventQueue.getInstance().setEventCount(eventCount);
-  }
-
-  
-  @Override
-  public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
-    CompletableFuture<T> future = new CompletableFuture<>();
-    SwingUtilities.invokeLater(() -> {
-      try {
-        T result = supplier.get();
-        future.complete(result);
-      }
-      catch (ProcessCanceledException exception) {
-          future.cancel(false);
-      }
-      catch (Throwable e) {
-        LOGGER.error(e);
-        future.completeExceptionally(e);
-      }
-    });
-    return future;
-  }
-
-  
-  @Override
-  public <T> AsyncResult<T> give(Supplier<T> supplier) {
-    AsyncResult<T> asyncResult = AsyncResult.undefined();
-    SwingUtilities.invokeLater(() -> {
-      try {
-        T result = supplier.get();
-        asyncResult.setDone(result);
-      }
-      catch (ProcessCanceledException exception) {
-          asyncResult.rejectWithThrowable(exception);
-      }
-      catch (Throwable e) {
-        LOGGER.error(e);
-        asyncResult.rejectWithThrowable(e);
-      }
-    });
-    return asyncResult;
-  }
-
-  @Override
-  public void giveAndWait(Runnable runnable) {
-    ComponentStoreImpl.assertIfInsideSavingSession();
-    if (SwingUtilities.isEventDispatchThread()) {
-      runnable.run();
-      return;
+    @Override
+    public void execute(Runnable command) {
+        SwingUtilities.invokeLater(command);
     }
-    try {
-      SwingUtilities.invokeAndWait(runnable);
-    }
-    catch (InterruptedException | InvocationTargetException e) {
-      //
-    }
-  }
 
-  
-  @Override
-  protected Clipboard createClipboard() {
-    return new DesktopAWTClipboardImpl();
-  }
+    @Override
+    public void give(Runnable runnable) {
+        SwingUtilities.invokeLater(runnable);
+    }
 
-  @Override
-  protected SingleUIAccessScheduler createScheduler() {
-    Application application = Application.get();
-    ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
-    return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
-      @Override
-      public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
-        Application.get().invokeLater(runnable, modalityState);
-      }
-    };
-  }
+    @Override
+    public boolean isHeadless() {
+        return GraphicsEnvironment.isHeadless();
+    }
+
+    @Override
+    public boolean isInModalContext() {
+        return LaterInvocator.isInModalContext();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public int getEventCount() {
+        UIAccess.assertIsUIThread();
+        return IdeEventQueue.getInstance().getEventCount();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Runnable markEventCount() {
+        int eventCount = getEventCount();
+        return () -> IdeEventQueue.getInstance().setEventCount(eventCount);
+    }
+
+    @Override
+    public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        SwingUtilities.invokeLater(() -> {
+            try {
+                T result = supplier.get();
+                future.complete(result);
+            }
+            catch (ProcessCanceledException exception) {
+                future.cancel(false);
+            }
+            catch (Throwable e) {
+                LOGGER.error(e);
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
+    @Override
+    public void giveAndWait(Runnable runnable) {
+        ComponentStoreImpl.assertIfInsideSavingSession();
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+        try {
+            SwingUtilities.invokeAndWait(runnable);
+        }
+        catch (InterruptedException | InvocationTargetException e) {
+            //
+        }
+    }
+
+
+    @Override
+    protected Clipboard createClipboard() {
+        return new DesktopAWTClipboardImpl();
+    }
+
+    @Override
+    protected SingleUIAccessScheduler createScheduler() {
+        Application application = Application.get();
+        ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+        return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
+            @Override
+            public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
+                Application.get().invokeLater(runnable, modalityState);
+            }
+        };
+    }
 }

@@ -22,7 +22,6 @@ import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.clipboard.MemoryClipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -71,17 +70,8 @@ public final class HeadlessUIAccess extends BaseUIAccess {
     }
 
     @Override
-    public <T> AsyncResult<T> give(Supplier<T> supplier) {
-        AsyncResult<T> result = AsyncResult.undefined();
-        myExecutor.execute(() -> {
-            try {
-                result.setDone(supplier.get());
-            }
-            catch (Throwable e) {
-                result.rejectWithThrowable(e);
-            }
-        });
-        return result;
+    public void give(Runnable runnable) {
+        myExecutor.execute(runnable);
     }
 
     @Override

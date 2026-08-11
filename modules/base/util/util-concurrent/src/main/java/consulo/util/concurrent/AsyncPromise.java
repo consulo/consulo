@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Deprecated
 public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUtil.CompletablePromise<T> {
   private static final Logger LOG = LoggerFactory.getLogger(AsyncPromise.class);
 

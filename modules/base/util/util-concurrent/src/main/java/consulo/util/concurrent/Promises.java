@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
+@Deprecated
 public class Promises {
   private static final Supplier<Promise> REJECTED = new InternalPromiseUtil.LazyValue<>(() -> new DonePromise(InternalPromiseUtil.PromiseValue.createRejected(createError("rejected"))));
 

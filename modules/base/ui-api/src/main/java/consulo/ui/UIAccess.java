@@ -26,7 +26,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
 import java.util.Collection;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
@@ -113,17 +115,7 @@ public interface UIAccess extends Executor, UserDataHolder {
         return true;
     }
 
-    default AsyncResult<Void> give(@RequiredUIAccess Runnable runnable) {
-        return give(() -> {
-            runnable.run();
-            return null;
-        });
-    }
-
-    /**
-     * prefer {@link #giveAsync(Supplier)}
-     */
-    <T> AsyncResult<T> give(@RequiredUIAccess Supplier<T> supplier);
+    void give(@RequiredUIAccess Runnable runnable);
 
     default CompletableFuture<?> giveAsync(@RequiredUIAccess Runnable runnable) {
         return giveAsync(() -> {
@@ -135,7 +127,12 @@ public interface UIAccess extends Executor, UserDataHolder {
     <T> CompletableFuture<T> giveAsync(@RequiredUIAccess Supplier<T> supplier);
 
     default void giveAndWait(@RequiredUIAccess Runnable runnable) {
-        give(runnable).getResultSync();
+        try {
+            giveAsync(runnable).get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings("unchecked")

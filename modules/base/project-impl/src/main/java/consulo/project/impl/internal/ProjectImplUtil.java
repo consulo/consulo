@@ -15,31 +15,21 @@
  */
 package consulo.project.impl.internal;
 
-import consulo.application.util.concurrent.PooledAsyncResult;
+import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.application.Application;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
-
-import java.nio.file.Path;
-import consulo.project.internal.*;
-import consulo.project.localize.ProjectLocalize;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
-
-import java.util.concurrent.CompletableFuture;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author Eugene Belyaev
@@ -73,40 +63,7 @@ public class ProjectImplUtil {
         RecentProjectsManager.getInstance().setLastProjectCreationLocation(path.replace(File.separatorChar, '/'));
     }
 
-    private static AsyncResult<Integer> confirmOpenNewProjectAsync(Project projectToClose, UIAccess uiAccess, boolean isNewProject) {
-        ProjectOpenSetting settings = ProjectOpenSetting.getInstance();
-        int confirmOpenNewProject = settings.getConfirmOpenNewProject();
-        if (confirmOpenNewProject == ProjectOpenSetting.OPEN_PROJECT_ASK) {
-            Alert<Integer> alert = Alert.create();
-            alert.asQuestion();
-            alert.remember(ProjectNewWindowDoNotAskOption.INSTANCE);
-            alert.title(isNewProject ? ProjectLocalize.titleNewProject() : ProjectLocalize.titleOpenProject());
-            alert.text(ProjectLocalize.promptOpenProjectInNewFrame());
 
-            alert.button(ProjectLocalize.buttonExistingframe(), () -> ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW);
-            alert.asDefaultButton();
-
-            alert.button(ProjectLocalize.buttonNewframe(), () -> ProjectOpenSetting.OPEN_PROJECT_NEW_WINDOW);
-
-            alert.button(Alert.CANCEL, Alert.CANCEL);
-            alert.asExitButton();
-
-            AsyncResult<Integer> result = AsyncResult.undefined();
-            uiAccess.give(() -> {
-                if (projectToClose != null) {
-                    return alert.showAsync(projectToClose).notify(result);
-                }
-                else {
-                    return alert.showAsync().notify(result);
-                }
-            });
-            return result;
-        }
-
-        return AsyncResult.resolved(confirmOpenNewProject);
-    }
-
-    
     public static AsyncResult<Project> openAsync(String path,
                                                  @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,
@@ -114,7 +71,7 @@ public class ProjectImplUtil {
         return openAsync(path, projectToCloseFinal, forceOpenInNewFrame, uiAccess, new ProjectOpenContext());
     }
 
-    
+
     public static AsyncResult<Project> openAsync(String path,
                                                  @Nullable Project projectToCloseFinal,
                                                  boolean forceOpenInNewFrame,

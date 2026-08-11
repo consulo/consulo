@@ -43,7 +43,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
@@ -54,6 +53,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Vassiliy Kudryashov
@@ -127,14 +128,11 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
+    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
         SelectionDialog dialog = new SelectionDialog(task.getSettings(), getAvailableConfigurations(runConfiguration));
-        AsyncResult<Void> result = dialog.showAsync();
-        result.doWhenDone(() -> {
-            RunnerAndConfigurationSettings settings = dialog.getSelectedSettings();
-            task.setSettings(settings);
-        });
-        return result;
+        return dialog.showAsync()
+            .toCompletableFuture()
+            .thenRun(() -> task.setSettings(dialog.getSelectedSettings()));
     }
 
     
@@ -173,30 +171,30 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
 
     
     @Override
-    public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, RunConfigurableBeforeRunTask task) {
+    public CompletableFuture<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, RunConfigurableBeforeRunTask task) {
         RunnerAndConfigurationSettings settings = task.getSettings();
         if (settings == null) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
         Executor executor = DefaultRunExecutor.getRunExecutorInstance();
         String executorId = executor.getId();
         ProgramRunner runner = ProgramRunnerUtil.getRunner(executorId, settings);
         if (runner == null) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
         ExecutionEnvironment environment = new ExecutionEnvironment(executor, runner, settings, myProject);
         environment.setExecutionId(env.getExecutionId());
         if (!ExecutionTargetManager.canRun(settings, env.getExecutionTarget())) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
         if (!runner.canRun(executorId, environment.getRunProfile())) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
         else {
-            AsyncResult<Void> result = AsyncResult.undefined();
+            CompletableFuture<Void> result = new CompletableFuture<>();
 
-            uiAccess.give(() -> {
+            uiAccess.giveAsync(() -> {
                 try {
                     environment.setCallback(descriptor -> {
                         ProcessHandler processHandler = descriptor != null ? descriptor.getProcessHandler() : null;
@@ -205,10 +203,10 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
                                 @Override
                                 public void processTerminated(ProcessEvent event) {
                                     if (event.getExitCode() == 0) {
-                                        result.setDone();
+                                        result.complete(null);
                                     }
                                     else {
-                                        result.setRejected();
+                                        result.completeExceptionally(new CancellationException());
                                     }
                                 }
                             });
@@ -217,10 +215,13 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
                     runner.execute(environment);
                 }
                 catch (ExecutionException e) {
-                    result.setRejected();
+                    result.completeExceptionally(e);
                     LOG.error(e);
                 }
-            }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+            }).exceptionally(error -> {
+                result.completeExceptionally(error);
+                return null;
+            });
 
             return result;
         }

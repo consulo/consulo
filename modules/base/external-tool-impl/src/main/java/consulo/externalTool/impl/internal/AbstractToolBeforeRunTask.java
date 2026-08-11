@@ -21,13 +21,14 @@ import consulo.process.event.ProcessEvent;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author traff
@@ -73,9 +74,9 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
         return myToolActionId != null;
     }
 
-    public AsyncResult<Void> execute(UIAccess uiAccess, DataContext context, long executionId) {
-        AsyncResult<Void> result = AsyncResult.undefined();
-        uiAccess.give(() -> {
+    public CompletableFuture<Void> execute(UIAccess uiAccess, DataContext context, long executionId) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        uiAccess.giveAsync(() -> {
             boolean runToolResult = ToolAction.runTool(
                 myToolActionId,
                 context,
@@ -85,19 +86,22 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
                     @Override
                     public void processTerminated(ProcessEvent event) {
                         if (event.getExitCode() == 0) {
-                            result.setDone();
+                            result.complete(null);
                         }
                         else {
-                            result.setRejected();
+                            result.completeExceptionally(new CancellationException());
                         }
                     }
                 }
             );
 
             if (!runToolResult) {
-                result.setRejected();
+                result.completeExceptionally(new CancellationException());
             }
-        }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+        }).exceptionally(error -> {
+            result.completeExceptionally(error);
+            return null;
+        });
 
         return result;
     }

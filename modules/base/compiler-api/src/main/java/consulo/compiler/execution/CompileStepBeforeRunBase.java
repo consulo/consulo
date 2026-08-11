@@ -25,7 +25,9 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -40,8 +42,8 @@ public abstract class CompileStepBeforeRunBase<T extends BeforeRunTask<T>> exten
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
-        return AsyncResult.rejected();
+    public CompletableFuture<Void> configureTask(RunConfiguration runConfiguration, T task) {
+        return CompletableFuture.failedFuture(new CancellationException());
     }
 
     @Override

@@ -26,7 +26,7 @@ import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -94,14 +94,11 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
                 manager.initializeEditorComponent();
                 return o;
             }))
-            .then(CodeExecution.apply((o, c) -> {
-                UIAccess.assetIsNotUIThread();
-
+            .then(CompletableFutureStep.await((o, c) -> {
                 UIAccess uiAccess = c.getConfiguration(UIAccess.KEY);
 
                 ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
-                manager.registerToolWindowsFromBeans(uiAccess).getResultSync();
-                return o;
+                return manager.registerToolWindowsFromBeans(uiAccess).thenApply(ignored -> o);
             }))
             .then(UIAction.apply((o, c) -> {
                 ToolWindowManagerBase manager = c.getCopyableUserData(TOOL_WINDOW_MANAGER);
