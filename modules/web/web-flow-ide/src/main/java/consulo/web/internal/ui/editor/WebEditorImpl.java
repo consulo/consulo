@@ -84,7 +84,9 @@ import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationActio
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import java.util.function.Supplier;
 import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -175,6 +177,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
   private final WebEditorGutterComponentImpl myGutterComponent;
 
   private final AtomicBoolean myUpdateScheduled = new AtomicBoolean();
+  private final AtomicBoolean myTextAnnotationsUpdateScheduled = new AtomicBoolean();
+  private boolean myPushingTextAnnotations;
 
   private volatile boolean myCaretFromClient;
 
@@ -342,7 +346,15 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     vaadin.addGutterHoverListener(event -> performGutterHover(event.getLine()));
 
-    vaadin.addGutterContextMenuListener(event -> performGutterContextMenu(event.getLine(), event.getMarkId()));
+    vaadin.addGutterContextMenuListener(
+      event -> performGutterContextMenu(event.getLine(), event.getMarkId(), event.getAnnotationColumn())
+    );
+
+    vaadin.addAnnotationHoverListener(
+      event -> Application.get().runReadAction((Runnable)() -> performAnnotationHover(event.getLine()))
+    );
+
+    vaadin.addAnnotationClickListener(event -> performAnnotationClick(event.getLine(), event.getColumn()));
 
     vaadin.addGutterLineClickListener(event -> performGutterLineClick(
       event.getLine(),
@@ -404,6 +416,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         }
 
         scheduleUpdate();
+
+        if (getGutterComponentEx().isAnnotationsShown()) {
+          scheduleTextAnnotationsUpdate();
+        }
       }
 
       @Override
@@ -428,6 +444,12 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
       updateColors();
 
       update();
+
+      // the browser is a fresh one and holds none of what the last one was sent, so the annotations have to be
+      // pushed again even though they did not change
+      vaadin.invalidatePushed("textAnnotations");
+
+      Application.get().runReadAction((Runnable)this::updateTextAnnotations);
     });
 
 
@@ -857,6 +879,27 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     giveUI(this::updateHoverMark);
   }
 
+  void scheduleTextAnnotationsUpdate() {
+    // building the payload reads every line through the up to date line number provider, which touches the line
+    // status tracker - and the tracker answers a change by asking every editor of its document to revalidate,
+    // which lands back here. a push must not be what asks for the next one
+    if (myPushingTextAnnotations) {
+      return;
+    }
+
+    if (myTextAnnotationsUpdateScheduled.compareAndSet(false, true)) {
+      boolean scheduled = giveUI(() -> {
+        myTextAnnotationsUpdateScheduled.set(false);
+
+        Application.get().runReadAction((Runnable)this::updateTextAnnotations);
+      });
+
+      if (!scheduled) {
+        myTextAnnotationsUpdateScheduled.set(false);
+      }
+    }
+  }
+
   /** the stripe settings - visibility, mark height - are pushed from wherever the platform changes them */
   void scheduleErrorStripeUpdate() {
     giveUI(() -> Application.get().runReadAction((Runnable)this::updateErrorStripeMarks));
@@ -907,28 +950,28 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
    * {@code EditorGutterComponentImpl} publishes the same keys off its own last actionable click.
    */
   private DataContext gutterAwareDataContext(DataContext editorContext) {
+    SimpleDataContext.Builder builder = SimpleDataContext.builder()
+      .setParent(editorContext)
+      .add(Editor.KEY, this);
+
     int line = myGutterContextLine;
-    if (line < 0) {
-      return editorContext;
+    if (line >= 0) {
+      builder.add(EditorGutter.KEY, getGutterComponentEx())
+        .add(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR, line);
     }
 
-    return SimpleDataContext.builder()
-      .setParent(editorContext)
-      .add(EditorGutter.KEY, getGutterComponentEx())
-      .add(Editor.KEY, this)
-      .add(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR, line)
-      .build();
+    return builder.build();
   }
 
   /**
    * The gutter carries a menu of its own, and a mark standing on the line carries one more.
    */
-  private void performGutterContextMenu(int line, int markId) {
+  private void performGutterContextMenu(int line, int markId, int annotationColumn) {
     myGutterContextLine = line;
 
     WebActionContextMenu popupMenu = myPopupMenu;
     if (popupMenu != null) {
-      popupMenu.setOverrideGroup(line < 0 ? null : gutterPopupGroup(markId));
+      popupMenu.setOverrideGroup(line < 0 ? null : gutterPopupGroup(markId, line, annotationColumn));
 
       // the items are expanded off the pointer entering the target, which by the time a right click lands has
       // long since happened - so the group that just changed is expanded from here instead
@@ -936,7 +979,15 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
   }
 
-  private @Nullable ActionGroup gutterPopupGroup(int markId) {
+  private @Nullable ActionGroup gutterPopupGroup(int markId, int line, int annotationColumn) {
+    List<TextAnnotationGutterProvider> providers = myGutterComponent.getTextAnnotations();
+    if (annotationColumn >= 0 && annotationColumn < providers.size()) {
+      List<AnAction> actions = providers.get(annotationColumn).getPopupActions(line, this);
+      if (!actions.isEmpty()) {
+        return ActionGroup.newImmutableBuilder().addAll(actions).build();
+      }
+    }
+
     if (markId >= 0 && markId < myGutterMarks.size()
       && myGutterMarks.get(markId) instanceof GutterIconRenderer renderer) {
       ActionGroup renderetGroup = renderer.getPopupMenuActions();
@@ -1653,7 +1704,17 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
       }
     }
 
-    if (found == null || found.isExpanded() == expanded) {
+    if (found == null) {
+      return;
+    }
+
+    // the browser asked for the state it already has here, which means the two drifted apart - orion cannot
+    // hold a folded region inside another folded one, so it keeps the inner one open. answering with nothing
+    // leaves the click doing nothing forever, so what the platform holds is pushed again instead
+    if (found.isExpanded() == expanded) {
+      myEditorComponent.toVaadinComponent().invalidatePushed("foldRegions");
+
+      updateFoldRegions();
       return;
     }
 
@@ -1967,6 +2028,128 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     myEditorComponent.toVaadinComponent().setGutterMarks(marks.toString());
 
     updateHoverMark();
+  }
+
+  @RequiredReadAction
+  private void updateTextAnnotations() {
+    if (isReleased) {
+      return;
+    }
+
+    List<TextAnnotationGutterProvider> providers = getGutterComponentEx().getTextAnnotations();
+
+    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+
+    if (providers.isEmpty()) {
+      vaadin.setTextAnnotations("null");
+      return;
+    }
+
+    EditorColorsScheme scheme = getColorsScheme();
+    int lineCount = Math.max(myDocument.getLineCount(), 1);
+
+    StringBuilder json = new StringBuilder("{\"columns\":").append(providers.size()).append(",\"lines\":[");
+
+    myPushingTextAnnotations = true;
+    try {
+      for (int line = 0; line < lineCount; line++) {
+        if (line > 0) {
+          json.append(',');
+        }
+
+        appendAnnotationCells(json, providers, scheme, line);
+      }
+    }
+    finally {
+      myPushingTextAnnotations = false;
+    }
+
+    json.append("]}");
+
+    vaadin.setTextAnnotations(json.toString());
+  }
+
+  @RequiredReadAction
+  private void appendAnnotationCells(
+    StringBuilder json,
+    List<TextAnnotationGutterProvider> providers,
+    EditorColorsScheme scheme,
+    int line
+  ) {
+    StringBuilder cells = new StringBuilder();
+    boolean anyText = false;
+
+    for (TextAnnotationGutterProvider provider : providers) {
+      if (cells.length() > 0) {
+        cells.append(',');
+      }
+
+      String text = provider.getLineText(line, this);
+      if (text == null || text.isEmpty()) {
+        cells.append("null");
+        continue;
+      }
+
+      anyText = true;
+
+      cells.append("{\"t\":\"").append(escapeJson(text)).append('"');
+
+      EditorColorKey colorKey = provider.getColor(line, this);
+      String color = colorKey == null ? null : WebColors.toCssColor(scheme.getColor(colorKey));
+      if (color != null) {
+        cells.append(",\"c\":\"").append(color).append('"');
+      }
+
+      String background = WebColors.toCssColor(provider.getBgColor(line, this));
+      if (background != null) {
+        cells.append(",\"g\":\"").append(background).append('"');
+      }
+
+      if (provider.getStyle(line, this) == EditorFontType.BOLD) {
+        cells.append(",\"b\":true");
+      }
+
+      if (myGutterComponent.getTextAnnotationAction(provider) != null) {
+        cells.append(",\"a\":true");
+      }
+
+      cells.append('}');
+    }
+
+    json.append(anyText ? "[" + cells + "]" : "null");
+  }
+
+  @RequiredReadAction
+  private void performAnnotationHover(int line) {
+    if (isReleased || line < 0 || line >= myDocument.getLineCount()) {
+      myEditorComponent.toVaadinComponent().setAnnotationTooltip("null");
+      return;
+    }
+
+    String html = null;
+    for (TextAnnotationGutterProvider provider : myGutterComponent.getTextAnnotations()) {
+      html = toHtmlContent(provider.getToolTipValue(line, this).get());
+      if (html != null) {
+        break;
+      }
+    }
+
+    myEditorComponent.toVaadinComponent().setAnnotationTooltip(
+      html == null ? "null" : "{\"line\":" + line + ",\"html\":\"" + escapeJson(html) + "\"}"
+    );
+  }
+
+  @RequiredUIAccess
+  private void performAnnotationClick(int line, int column) {
+    List<TextAnnotationGutterProvider> providers = myGutterComponent.getTextAnnotations();
+    if (line < 0 || column < 0 || column >= providers.size()) {
+      return;
+    }
+
+    EditorGutterAction action = myGutterComponent.getTextAnnotationAction(providers.get(column));
+    if (action != null) {
+      action.doAction(line);
+    }
   }
 
   void updateHoverMark() {

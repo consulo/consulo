@@ -30,6 +30,8 @@
     // breathing room on each side of a marker, so two of them on one line do not read as a single wide glyph
     const MARK_GAP = 2;
 
+    const ANNOTATION_GAP = 5;
+
     const install = (element, contents, readonly) => {
         if (element.$arquillEditor) {
             return;
@@ -716,9 +718,19 @@
         lineNumberGutter.className = 'arquill-gutter arquill-gutter-line-numbers';
         element.appendChild(lineNumberGutter);
 
+        const annotations = document.createElement('div');
+        annotations.className = 'arquill-gutter arquill-gutter-annotations';
+        element.appendChild(annotations);
+
         // the widest group of markers the column has been sized for, so it is only resized when it has to be -
         // widening it makes orion measure the whole view again
         let markColumnWidth = 0;
+
+        let annotationColumnWidth = 0;
+
+        let annotationTooltipLine = -1;
+        let annotationTooltipHtml = null;
+        let annotationTooltipPoint = null;
 
         // the icon takes the whole width of the line number column and is painted on the gutter background, which
         // is how it hides the number underneath - the awt gutter simply leaves that number undrawn
@@ -828,8 +840,10 @@
             const fontHeight = contentDiv ? Math.round(parseFloat(getComputedStyle(contentDiv).fontSize)) : 0;
             const size = fontHeight > 0 ? fontHeight : 12;
 
-            gutter.style.left = (rulerRect.left - hostRect.left) + 'px';
-            gutter.style.width = rulerRect.width + 'px';
+            const iconColumnWidth = rulerRect.width - annotationColumnWidth;
+
+            gutter.style.left = (rulerRect.left - hostRect.left + annotationColumnWidth) + 'px';
+            gutter.style.width = iconColumnWidth + 'px';
             gutter.style.setProperty('--arquill-gutter-icon-size', size + 'px');
 
             // several markers can sit on one line - implemented interfaces and overridden methods both
@@ -920,13 +934,187 @@
                 // gap is inside the slot, so the icon sits at its centre rather than against its neighbour
                 icon.style.left = Math.max(
                     MARK_GAP,
-                    (rulerRect.width - countPerLine[mark.line] * slot) / 2 + column * slot + MARK_GAP
+                    (iconColumnWidth - countPerLine[mark.line] * slot) / 2 + column * slot + MARK_GAP
                 ) + 'px';
                 icon.addEventListener('click', () => {
                     hideTooltip();
                     element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: { id: mark.id } }));
                 });
                 gutter.appendChild(icon);
+            }
+        };
+
+        const annotationMetrics = document.createElement('canvas').getContext('2d');
+
+        const annotationFont = () => {
+            const content = element.querySelector('.textviewContent');
+            const style = content ? getComputedStyle(content) : null;
+
+            return style ? { size: style.fontSize, family: style.fontFamily } : { size: '12px', family: 'monospace' };
+        };
+
+        const measureAnnotations = payload => {
+            const font = annotationFont();
+            const widths = new Array(payload.columns).fill(0);
+
+            for (const cells of payload.lines) {
+                if (!cells) {
+                    continue;
+                }
+
+                for (let column = 0; column < cells.length; column++) {
+                    const cell = cells[column];
+                    if (!cell || !cell.t) {
+                        continue;
+                    }
+
+                    annotationMetrics.font = (cell.b ? 'bold ' : '') + font.size + ' ' + font.family;
+                    widths[column] = Math.max(widths[column], annotationMetrics.measureText(cell.t).width);
+                }
+            }
+
+            return widths.map(width => width > 0 ? Math.ceil(width) + ANNOTATION_GAP : 0);
+        };
+
+        const setAnnotationColumnWidth = width => {
+            if (annotationColumnWidth === width) {
+                return false;
+            }
+
+            annotationColumnWidth = width;
+            element.style.setProperty('--arquill-gutter-annotations-width', width + 'px');
+            textView.update(true);
+
+            return true;
+        };
+
+        // orion caches the ruler width while it measures the view, so a column that changed size has to send it
+        // back through _calculateMetrics. that must not happen from a scroll or a fold callback - orion is in the
+        // middle of its own projection there - so the width is settled here, when the payload arrives, and the
+        // render below only places cells at the width already in force
+        const applyAnnotationWidth = () => {
+            const payload = element.$arquillTextAnnotations;
+
+            if (!payload || !payload.columns) {
+                if (setAnnotationColumnWidth(0)) {
+                    renderGutterMarks();
+                }
+                return;
+            }
+
+            payload.widths = measureAnnotations(payload);
+
+            if (setAnnotationColumnWidth(payload.widths.reduce((sum, width) => sum + width, 0))) {
+                renderGutterMarks();
+            }
+        };
+
+        const renderTextAnnotations = () => {
+            annotations.textContent = '';
+
+            const payload = element.$arquillTextAnnotations;
+            if (!payload || !payload.columns || !payload.widths) {
+                return;
+            }
+
+            const ruler = element.querySelector('.textviewLeftRuler .ruler.annotations');
+            if (!ruler) {
+                return;
+            }
+
+            const hostRect = element.getBoundingClientRect();
+            const rulerRect = ruler.getBoundingClientRect();
+            const lineHeight = textView.getLineHeight();
+            const font = annotationFont();
+
+            annotations.style.left = (rulerRect.left - hostRect.left) + 'px';
+            annotations.style.width = annotationColumnWidth + 'px';
+
+            for (let line = 0; line < payload.lines.length; line++) {
+                const cells = payload.lines[line];
+                if (!cells) {
+                    continue;
+                }
+
+                const viewLine = toViewLine(line);
+                if (viewLine < 0) {
+                    continue;
+                }
+
+                const top = pageY(viewLine) - hostRect.top;
+                if (top < -lineHeight || top > element.clientHeight) {
+                    continue;
+                }
+
+                let left = 0;
+                for (let column = 0; column < payload.widths.length; column++) {
+                    const width = payload.widths[column];
+                    const cell = cells[column];
+
+                    if (width > 0 && cell) {
+                        const box = document.createElement('div');
+                        box.className = 'arquill-gutter-annotation';
+                        box.textContent = cell.t || '';
+                        box.style.left = left + 'px';
+                        box.style.width = width + 'px';
+                        box.style.top = top + 'px';
+                        box.style.height = lineHeight + 'px';
+                        box.style.fontSize = font.size;
+                        box.style.fontFamily = font.family;
+
+                        if (cell.b) {
+                            box.style.fontWeight = 'bold';
+                        }
+                        if (cell.c) {
+                            box.style.color = cell.c;
+                        }
+                        if (cell.g) {
+                            box.style.backgroundColor = cell.g;
+                        }
+
+                        box.$arquillAnnotationLine = line;
+                        box.$arquillAnnotationColumn = column;
+
+                        if (cell.a) {
+                            box.style.cursor = 'pointer';
+                            box.addEventListener('click', () => {
+                                hideTooltip();
+                                element.dispatchEvent(new CustomEvent('arquill-annotation-click', {
+                                    detail: { line: line, column: column }
+                                }));
+                            });
+                        }
+
+                        box.addEventListener('mousemove', domEvent => {
+                            domEvent.stopPropagation();
+                            annotationTooltipPoint = { x: domEvent.clientX, y: domEvent.clientY };
+
+                            if (annotationTooltipLine === line) {
+                                if (annotationTooltipHtml) {
+                                    showTooltip(annotationTooltipHtml, domEvent.clientX, domEvent.clientY);
+                                }
+                                return;
+                            }
+
+                            annotationTooltipLine = -1;
+                            annotationTooltipHtml = null;
+                            hideTooltip();
+
+                            element.dispatchEvent(new CustomEvent('arquill-annotation-hover', {
+                                detail: { line: line }
+                            }));
+                        });
+
+                        box.addEventListener('mouseleave', () => {
+                            annotationTooltipPoint = null;
+                            hideTooltip();
+                        });
+
+                        annotations.appendChild(box);
+                    }
+
+                    left += width;
+                }
             }
         };
 
@@ -1004,10 +1192,15 @@
 
             const mark = target.closest && target.closest('.arquill-gutter-mark');
 
+            const annotation = target.closest && target.closest('.arquill-gutter-annotation');
+
             element.dispatchEvent(new CustomEvent('arquill-gutter-context-menu', {
                 detail: {
                     line: overGutter ? lineAtPageY(domEvent.clientY) : -1,
-                    markId: mark && mark.$arquillMarkId !== undefined ? mark.$arquillMarkId : -1
+                    markId: mark && mark.$arquillMarkId !== undefined ? mark.$arquillMarkId : -1,
+                    annotationColumn: annotation && annotation.$arquillAnnotationColumn !== undefined
+                        ? annotation.$arquillAnnotationColumn
+                        : -1
                 }
             }));
         }, true);
@@ -1128,12 +1321,22 @@
             // projections may not overlap, so a region nested in the one being collapsed has to give
             // its own up - orion marks it and puts it back once the outer one is expanded again
             if (checkOverlapping) {
-                this._forEachOverlaping(function (other) {
-                    if (!other.expanded) {
-                        other._expandImpl(false);
-                        other._recollapse = true;
-                    }
-                });
+                // orion opens whatever was folded inside the region being collapsed and marks it to be folded
+                // again afterwards - its own projections balancing, not a fold the user asked for. the model
+                // reports those as ordinary changes, so the report is held off for the length of the pass
+                const suppressed = element.$arquillSuppressFold;
+                element.$arquillSuppressFold = true;
+                try {
+                    this._forEachOverlaping(function (other) {
+                        if (!other.expanded) {
+                            other._expandImpl(false);
+                            other._recollapse = true;
+                        }
+                    });
+                }
+                finally {
+                    element.$arquillSuppressFold = suppressed;
+                }
             }
 
             this._projection = {
@@ -1190,6 +1393,19 @@
             const line = viewModel.getLineAtOffset(last);
 
             return line === anchorLine(annotation) ? -1 : line;
+        };
+
+        const insideCollapsedRegion = annotation => {
+            for (const other of foldAnnotations.values()) {
+                if (other !== annotation
+                    && !other.expanded
+                    && other.start <= annotation.start
+                    && other.end >= annotation.end) {
+                    return true;
+                }
+            }
+
+            return false;
         };
 
         const foldingRuler = element.$arquillEditor.getFoldingRuler();
@@ -1283,26 +1499,30 @@
                 // the bundle looks for a region beginning on the row it was clicked on, and the foot of a bracket
                 // stands on the row its region ends on - it would find nothing there and the click would be lost.
                 // both ends are one anchor, so the foot closes what the head opened
+                let head = null;
                 let foot = null;
                 for (const annotation of foldAnnotations.values()) {
                     if (!isAnchored(annotation)) {
                         continue;
                     }
 
-                    if (anchorLine(annotation) === lineIndex) {
-                        foot = null;
-                        break;
+                    // the innermost of the regions anchored there, as the awt gutter answers a click with the
+                    // nearest anchor rather than the widest one
+                    if (anchorLine(annotation) === lineIndex && (!head || annotation.start > head.start)) {
+                        head = annotation;
                     }
 
-                    // the innermost of the regions ending there, as the awt gutter answers a click with the
-                    // nearest anchor rather than the widest one
                     if (anchorBottomLine(annotation) === lineIndex && (!foot || annotation.start > foot.start)) {
                         foot = annotation;
                     }
                 }
 
-                if (foot) {
-                    foot.collapse();
+                // the head is answered here rather than by the bundle: its own click maps the row through the
+                // view, and the projection of a collapsed region starts at the region rather than after it the
+                // way orion builds one, so every row below a folded region resolves to the wrong offset there
+                const anchor = head || foot;
+                if (anchor) {
+                    anchor.collapse();
                     return;
                 }
 
@@ -1612,6 +1832,13 @@
 
                     annotation.$arquillFold = region;
 
+                    // the platform can hold a region folded while it lies inside another folded one, which two
+                    // projections cannot express - orion keeps the inner one open and folds it again when the
+                    // outer opens. folding it here forces the outer one open and the two then take turns
+                    if (region.collapsed && annotation.expanded && insideCollapsedRegion(annotation)) {
+                        continue;
+                    }
+
                     // the projection holds a copy of the placeholder, a new one only reaches the view
                     // by being built again
                     if (!annotation.expanded && annotation._projection.text !== placeholderOf(region)) {
@@ -1644,10 +1871,30 @@
 
         // collapsing shifts every view offset after the region, so everything that was pushed in
         // document offsets has to be placed again
+        // the overlays are rebuilt from scratch, and the events that invalidate them - scroll, resize, a fold
+        // reconciliation - arrive in bursts of a dozen or more within the same millisecond. rebuilding on each
+        // one throws the columns away and builds them again several times per frame, which reads as flicker
+        let renderPending = false;
+
+        const scheduleOverlayRender = () => {
+            if (renderPending) {
+                return;
+            }
+
+            renderPending = true;
+
+            requestAnimationFrame(() => {
+                renderPending = false;
+
+                renderGutterMarks();
+                renderGutterBands();
+                renderTextAnnotations();
+            });
+        };
+
         const onProjectionChanged = () => {
             pushStyleRanges();
-            renderGutterMarks();
-            renderGutterBands();
+            scheduleOverlayRender();
 
             // the stripe is built after this, and the first fold pass already runs through here
             if (redrawErrorStripe) {
@@ -1684,8 +1931,7 @@
         }
 
         const onViewChanged = () => {
-            renderGutterMarks();
-            renderGutterBands();
+            scheduleOverlayRender();
         };
 
         const fireViewport = () => {
@@ -2098,6 +2344,31 @@
             setGutterMarks: marksJson => {
                 element.$arquillGutterMarks = marksJson;
                 renderGutterMarks();
+            },
+
+            setTextAnnotations: annotationsJson => {
+                element.$arquillTextAnnotations = annotationsJson === 'null' ? null : JSON.parse(annotationsJson);
+
+                annotationTooltipLine = -1;
+                annotationTooltipHtml = null;
+                applyAnnotationWidth();
+                renderTextAnnotations();
+            },
+
+            setAnnotationTooltip: tooltipJson => {
+                const tip = tooltipJson === 'null' ? null : JSON.parse(tooltipJson);
+                if (!tip) {
+                    annotationTooltipLine = -1;
+                    annotationTooltipHtml = null;
+                    return;
+                }
+
+                annotationTooltipLine = tip.line;
+                annotationTooltipHtml = tip.html;
+
+                if (annotationTooltipHtml && annotationTooltipPoint) {
+                    showTooltip(annotationTooltipHtml, annotationTooltipPoint.x, annotationTooltipPoint.y);
+                }
             },
 
             // its own channel: the pointer crossing the column would otherwise rebuild every mark of the document

@@ -348,16 +348,19 @@ public class ArquillEditorElement extends Component implements HasSize {
     public static class ArquillGutterContextMenuEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myLine;
         private final int myMarkId;
+        private final int myAnnotationColumn;
 
         public ArquillGutterContextMenuEvent(
             ArquillEditorElement source,
             boolean fromClient,
             @EventData("event.detail.line") int line,
-            @EventData("event.detail.markId") int markId
+            @EventData("event.detail.markId") int markId,
+            @EventData("event.detail.annotationColumn") int annotationColumn
         ) {
             super(source, fromClient);
             myLine = line;
             myMarkId = markId;
+            myAnnotationColumn = annotationColumn;
         }
 
         public int getLine() {
@@ -366,6 +369,53 @@ public class ArquillEditorElement extends Component implements HasSize {
 
         public int getMarkId() {
             return myMarkId;
+        }
+
+        public int getAnnotationColumn() {
+            return myAnnotationColumn;
+        }
+    }
+
+    @DomEvent("arquill-annotation-hover")
+    public static class ArquillAnnotationHoverEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myLine;
+
+        public ArquillAnnotationHoverEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.line") int line
+        ) {
+            super(source, fromClient);
+            myLine = line;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+    }
+
+    @DomEvent("arquill-annotation-click")
+    public static class ArquillAnnotationClickEvent extends ComponentEvent<ArquillEditorElement> {
+        private final int myLine;
+        private final int myColumn;
+
+        public ArquillAnnotationClickEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.line") int line,
+            @EventData("event.detail.column") int column
+        ) {
+            super(source, fromClient);
+            myLine = line;
+            myColumn = column;
+        }
+
+        public int getLine() {
+            return myLine;
+        }
+
+        public int getColumn() {
+            return myColumn;
         }
     }
 
@@ -693,6 +743,18 @@ public class ArquillEditorElement extends Component implements HasSize {
         );
     }
 
+    public Registration addAnnotationHoverListener(ComponentEventListener<ArquillAnnotationHoverEvent> listener) {
+        return getEventBus().addListener(
+            ArquillAnnotationHoverEvent.class,
+            listener,
+            registration -> registration.debounce(HOVER_THROTTLE_MS, DebouncePhase.LEADING, DebouncePhase.TRAILING)
+        );
+    }
+
+    public Registration addAnnotationClickListener(ComponentEventListener<ArquillAnnotationClickEvent> listener) {
+        return addListener(ArquillAnnotationClickEvent.class, listener);
+    }
+
     public Registration addFoldListener(ComponentEventListener<ArquillFoldEvent> listener) {
         return addListener(ArquillFoldEvent.class, listener);
     }
@@ -733,6 +795,20 @@ public class ArquillEditorElement extends Component implements HasSize {
             return;
         }
         getElement().executeJs("this.$arquillApi.setGutterMarks($0);", marksJson);
+    }
+
+    public void setTextAnnotations(String annotationsJson) {
+        if (isUnchanged("textAnnotations", annotationsJson)) {
+            return;
+        }
+        getElement().executeJs("this.$arquillApi.setTextAnnotations($0);", annotationsJson);
+    }
+
+    public void setAnnotationTooltip(String tooltipJson) {
+        if (isUnchanged("annotationTooltip", tooltipJson)) {
+            return;
+        }
+        getElement().executeJs("this.$arquillApi.setAnnotationTooltip($0);", tooltipJson);
     }
 
     /**
@@ -776,6 +852,15 @@ public class ArquillEditorElement extends Component implements HasSize {
             return;
         }
         getElement().executeJs("this.$arquillApi.setFoldRegions($0);", regionsJson);
+    }
+
+    /**
+     * Drops what the browser is known to hold, so the next push of a channel goes out even when it carries the
+     * same value. What the browser has can differ from the last push - orion cannot express two folded regions
+     * one inside the other - and then only a push it does not skip brings the two back together.
+     */
+    public void invalidatePushed(String channel) {
+        myLastPushed.remove(channel);
     }
 
     /**

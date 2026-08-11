@@ -105,7 +105,21 @@
 {
   /* the script widens the column when a line carries more markers than it can hold, and makes orion measure
      the view again - the value it sets is this property */
-  min-width: var(--arquill-gutter-marks-width, 32px);
+  min-width: calc(var(--arquill-gutter-annotations-width, 0px) + var(--arquill-gutter-marks-width, 32px));
+}
+
+.arquill-gutter-annotation
+{
+  position: absolute;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: clip;
+  pointer-events: auto;
+  cursor: default;
+  box-sizing: border-box;
+  padding-left: 2px;
+  display: flex;
+  align-items: center;
 }
 
 .arquill-gutter-mark
@@ -280,6 +294,14 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+}
+
+/* the icon width pinned by the variable over-constrains left and right, and left wins - the mark of a line
+   number belongs at the right edge instead, where the digits it stands in for end */
+.arquill-gutter-mark-line-number > *
+{
+  left: auto;
+  right: 0;
 }
 
 .arquill-status-icon

@@ -24,8 +24,13 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -36,8 +41,15 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
 
   private final JComponent myPropertyHolder = new JPanel();
 
+  private final List<TextAnnotationGutterProvider> myTextAnnotationGutters = new ArrayList<>();
+  private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
+
   public WebEditorGutterComponentImpl(WebEditorImpl editor) {
     myEditor = editor;
+  }
+
+  public @Nullable EditorGutterAction getTextAnnotationAction(TextAnnotationGutterProvider provider) {
+    return myProviderToListener.get(provider);
   }
 
   @Override
@@ -74,7 +86,7 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
 
   @Override
   public void revalidateMarkup() {
-
+    myEditor.scheduleTextAnnotationsUpdate();
   }
 
   @Override
@@ -154,32 +166,50 @@ public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
 
   @Override
   public void registerTextAnnotation(TextAnnotationGutterProvider provider) {
+    myTextAnnotationGutters.add(provider);
 
+    myEditor.scheduleTextAnnotationsUpdate();
   }
 
   @Override
   public void registerTextAnnotation(TextAnnotationGutterProvider provider, EditorGutterAction action) {
+    myProviderToListener.put(provider, action);
 
+    registerTextAnnotation(provider);
   }
 
   @Override
   public boolean isAnnotationsShown() {
-    return false;
+    return !myTextAnnotationGutters.isEmpty();
   }
 
-  
+
   @Override
   public List<TextAnnotationGutterProvider> getTextAnnotations() {
-    return null;
+    return List.copyOf(myTextAnnotationGutters);
   }
 
   @Override
   public void closeAllAnnotations() {
-
+    closeTextAnnotations(List.copyOf(myTextAnnotationGutters));
   }
 
   @Override
   public void closeTextAnnotations(Collection<? extends TextAnnotationGutterProvider> annotations) {
+    Set<TextAnnotationGutterProvider> closed = new HashSet<>();
 
+    for (TextAnnotationGutterProvider provider : annotations) {
+      if (myTextAnnotationGutters.remove(provider)) {
+        myProviderToListener.remove(provider);
+
+        closed.add(provider);
+      }
+    }
+
+    for (TextAnnotationGutterProvider provider : closed) {
+      provider.gutterClosed();
+    }
+
+    myEditor.scheduleTextAnnotationsUpdate();
   }
 }

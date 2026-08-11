@@ -15,8 +15,8 @@
  */
 package consulo.web.internal.ui.action;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.dom.DebouncePhase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
@@ -29,8 +29,10 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.web.internal.ui.WebMenuItemImpl;
 import org.jspecify.annotations.Nullable;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Popup menu of an action group, shown by the browser on right click. Web analog of
@@ -42,20 +44,18 @@ import java.util.List;
 public final class WebActionContextMenu {
     private static final Logger LOG = Logger.getInstance(WebActionContextMenu.class);
 
-    /**
-     * the browser opens the overlay on its own, there is no round trip left once the right click happened, so the
-     * items are expanded while the pointer is still travelling over the target - same trick the main menu uses
-     */
-    private static final int REFRESH_DEBOUNCE_MS = 300;
-
-    /**
-     * how long the browser waits before opening the overlay, so the refresh the right click asked for can land
-     */
-    private static final int REPLAY_DELAY_MS = 350;
-
-    private final ContextMenu myContextMenu = new ContextMenu();
+    private final ContextMenu myContextMenu;
+    private final com.vaadin.flow.component.Component myTarget;
     private final @Nullable String myGroupId;
     private final @Nullable ActionGroup myGroup;
+
+    /**
+     * The browser asked for the menu and waits for {@code openMenu}. The overlay is opened only after the items
+     * of this right click are applied - answering right away would show the items of the previous click, and a
+     * rebuild landing under an open overlay leaves it displaying items whose server side is gone, so every click
+     * on them is silently dropped.
+     */
+    private boolean myOpenRequested;
 
     /**
      * Set when the group the next open belongs to is decided by what was under the pointer rather than by the
@@ -99,55 +99,70 @@ public final class WebActionContextMenu {
     ) {
         myGroupId = groupId;
         myGroup = group;
+        myTarget = target;
         myPlace = place;
         myContextSupplier = contextSupplier;
+
+        // the browser reports the right click and waits for openMenu - see beforeOpenMenu
+        myContextMenu = new ContextMenu() {
+            @Override
+            protected boolean onBeforeOpenMenu(ObjectNode eventDetail) {
+                beforeOpenMenu();
+                return false;
+            }
+        };
 
         // created outside a VaadinComponentDelegate, so the small variant has to be added by hand here
         myContextMenu.getElement().getThemeList().add("small");
 
         myContextMenu.setTarget(target);
-
-        target.getElement()
-            .addEventListener("mouseover", event -> refresh())
-            .debounce(REFRESH_DEBOUNCE_MS, DebouncePhase.LEADING, DebouncePhase.TRAILING);
-
-        installContextMenuReplay(target);
     }
 
     /**
-     * The vaadin context menu listens for {@code contextmenu} on the target itself, and a component that handles the
-     * event on its own children - the orion editor does - never lets it get there. The event is taken in the capture
-     * phase instead, which runs before any descendant, and dispatched again on the target.
-     * <p>
-     * The replay is delayed on purpose: the items are expanded ahead of the click, off the pointer entering the
-     * target, and by then the right click has not yet moved the caret or the selection the group is expanded
-     * against. Asking for a refresh here and waiting for it is what makes the menu answer for the clicked row.
+     * A component that decides the group off what was under the pointer - the editor gutter does - reports it over
+     * its own event, which the browser sends in the same batch as the open request and which is processed first,
+     * so a refresh it already started is the right one and is only awaited here.
      */
-    private static void installContextMenuReplay(com.vaadin.flow.component.Component target) {
-        target.getElement().executeJs("""
-            const element = this;
-            element.addEventListener('contextmenu', event => {
-                if (event.$consuloMenuReplay) {
-                    return;
-                }
+    @RequiredUIAccess
+    private void beforeOpenMenu() {
+        myOpenRequested = true;
 
-                event.preventDefault();
-                event.stopPropagation();
+        if (myUpdateIndicator == null) {
+            refresh();
+        }
+    }
 
-                element.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+    /**
+     * The target connector holds the coordinates of the click the open was requested for, so the overlay still
+     * opens at the pointer even though the items were expanded in between.
+     * <p>
+     * The open is enqueued through {@code beforeClientResponse}: vaadin regenerates the client side items array
+     * the same way, and an open sent ahead of it shows the array of the previous build - items whose server side
+     * is already gone, every click on them silently dropped.
+     */
+    @RequiredUIAccess
+    private void openRequestedMenu() {
+        if (!myOpenRequested) {
+            return;
+        }
 
-                const replay = new MouseEvent('contextmenu', {
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: event.clientX,
-                    clientY: event.clientY,
-                    button: event.button
-                });
-                replay.$consuloMenuReplay = true;
+        myOpenRequested = false;
 
-                setTimeout(() => element.dispatchEvent(replay), $0);
-            }, { capture: true });
-            """, REPLAY_DELAY_MS);
+        Optional<UI> maybeUI = myTarget.getUI();
+        if (maybeUI.isEmpty()) {
+            return;
+        }
+        UI ui = maybeUI.get();
+
+        if (!myContextMenu.isAttached()) {
+            // vetoing onBeforeOpenMenu also skipped the overlay auto attach that vaadin does before its own open
+            ui.add(myContextMenu);
+        }
+
+        ui.beforeClientResponse(
+            myContextMenu,
+            context -> myTarget.getElement().callJsFunction("$contextMenuTargetConnector.openMenu", myContextMenu.getElement())
+        );
     }
 
     /**
@@ -164,6 +179,7 @@ public final class WebActionContextMenu {
             // the customization schema is what turns the id into the group the user actually configured
             AnAction correctedAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction(myGroupId);
             if (!(correctedAction instanceof ActionGroup corrected)) {
+                myOpenRequested = false;
                 return;
             }
             group = corrected;
@@ -191,10 +207,13 @@ public final class WebActionContextMenu {
                     if (!WebActionMenuExpander.isProcessCanceled(throwable)) {
                         LOG.warn("Failed to expand action group " + myGroupId, throwable);
                     }
+                    myOpenRequested = false;
                     return;
                 }
 
                 applyNodes(nodes);
+
+                openRequestedMenu();
             }, uiAccess);
     }
 

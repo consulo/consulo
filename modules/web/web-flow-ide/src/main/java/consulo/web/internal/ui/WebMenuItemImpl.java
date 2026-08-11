@@ -155,10 +155,9 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
         item.setEnabled(myEnabled);
         item.setVisible(myVisible);
 
-        if (myChecked != null && !(target instanceof MenuBar)) {
-            item.setCheckable(true);
-            item.setChecked(myChecked);
-        }
+        // vaadin-context-menu-item handles the click itself once it is checkable, and the element click listener
+        // installed above never runs - which left every ToggleAction of a menu dead. the checkmark of a checked
+        // item is drawn into the reserved slot below instead.
 
         if (target instanceof MenuBar && myIcon != null) {
             // a root item of a bar has no icon column - a tool window header shows its gear by the icon alone,
