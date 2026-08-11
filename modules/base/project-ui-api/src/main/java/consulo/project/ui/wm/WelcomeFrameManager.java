@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Size2D;
@@ -52,8 +53,6 @@ public abstract class WelcomeFrameManager {
     return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
   }
 
-  private IdeFrame myFrameInstance;
-
   protected final Application myApplication;
 
   protected WelcomeFrameManager(Application application) {
@@ -62,7 +61,14 @@ public abstract class WelcomeFrameManager {
     application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
-        uiAccess.give(() -> closeFrame());
+        closeFrame(uiAccess);
+
+        refreshFrames();
+      }
+
+      @Override
+      public void projectClosed(Project project, UIAccess uiAccess) {
+        refreshFrames();
       }
     });
   }
@@ -70,39 +76,85 @@ public abstract class WelcomeFrameManager {
   @RequiredUIAccess
   public @Nullable IdeFrame getCurrentFrame() {
     UIAccess.assertIsUIThread();
-    return myFrameInstance;
+    return UIAccess.current().getUserData(IdeFrame.KEY);
   }
 
+  @RequiredUIAccess
   protected void frameClosed() {
-    myFrameInstance = null;
+    UIAccess.current().putUserData(IdeFrame.KEY, null);
   }
 
   @RequiredUIAccess
   public void showFrame() {
     UIAccess.assertIsUIThread();
 
-    if (myFrameInstance == null) {
-      myFrameInstance = createFrame();
-      myFrameInstance.getWindow().show();
+    UIAccess uiAccess = UIAccess.current();
+    if (uiAccess.getUserData(IdeFrame.KEY) != null) {
+      return;
     }
+
+    // a refresh can ask while the close of this ui's frame is still on its way - what is on screen here is the
+    // project, and a welcome must not be drawn over it
+    for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+      if (project.getUserData(UIAccess.KEY) == uiAccess) {
+        return;
+      }
+    }
+
+    IdeFrame frame = createFrame();
+    uiAccess.putUserData(IdeFrame.KEY, frame);
+    frame.getWindow().show();
   }
 
   @RequiredUIAccess
   public void closeFrame() {
     UIAccess.assertIsUIThread();
-    IdeFrame frameInstance = myFrameInstance;
 
-    if (frameInstance == null) {
+    closeFrame(UIAccess.current());
+  }
+
+  /**
+   * The ui is named rather than taken from the caller, since a project is opened through steps which do not all
+   * run with the ui of that project as the current one.
+   */
+  public void closeFrame(@Nullable UIAccess uiAccess) {
+    IdeFrame frame = uiAccess == null ? null : uiAccess.getUserData(IdeFrame.KEY);
+    if (frame == null) {
       return;
     }
 
-    frameInstance.getWindow().close();
+    uiAccess.giveIfNeed(() -> frame.getWindow().close());
+  }
+
+  /**
+   * A welcome screen lists which projects are open, and that answer changed for every ui but the one which caused
+   * it. Rebuilt rather than repainted - the list is made of actions which read the state when they are created.
+   */
+  public void refreshFrames() {
+    for (UIAccess uiAccess : UIAccess.listAll()) {
+      if (uiAccess.getUserData(IdeFrame.KEY) == null) {
+        continue;
+      }
+
+      // give, not giveIfNeed - that one asks whether the caller is a ui thread, not whether it is this ui, and
+      // showFrame builds the frame for whichever ui it runs on
+      uiAccess.give(() -> {
+        closeFrame(uiAccess);
+        showFrame();
+      });
+    }
   }
 
   public void showIfNoProjectOpened() {
     myApplication.invokeLater((DumbAwareRunnable)() -> {
       WindowManagerEx windowManager = (WindowManagerEx)WindowManager.getInstance();
       windowManager.disposeRootFrame();
+
+      if (UIAccess.supportsMultipleUI()) {
+        showFrame();
+        return;
+      }
+
       IdeFrame[] frames = windowManager.getAllProjectFrames();
       if (frames.length == 0) {
         showFrame();

@@ -97,7 +97,15 @@ public class WebContainerStartup implements ContainerStartup {
 
     handler.setBaseResource(new ResourceCollection(ContainerUtil.map(urls, Resource::newResource)));
 
-    handler.addServletContainerInitializer(new JakartaWebSocketServletContainerInitializer());
+    // the defaults of the container kill the push channel: a text message is capped at 64k while one update of
+    // a whole ide frame is far past that - the socket is closed as 1009 with the message lost - and the idle
+    // timeout of 30 seconds runs out under the 60 second heartbeat, so the socket also dies in every quiet
+    // spell. a lost push is never resent, the client waits for the missing message and quietly defers every
+    // one after it, which reads as a frame that simply never appears
+    JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, serverContainer) -> {
+      serverContainer.setDefaultMaxTextMessageBufferSize(50 * 1024 * 1024);
+      serverContainer.setDefaultMaxSessionIdleTimeout(5 * 60 * 1000L);
+    });
     Set<Class<?>> classes = new HashSet<>();
     classes.addAll(LookupInitializer.getDefaultImplementations());
     classes.add(LookupInitializer.class);

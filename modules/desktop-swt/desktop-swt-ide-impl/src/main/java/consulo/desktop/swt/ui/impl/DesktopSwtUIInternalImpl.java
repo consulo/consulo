@@ -295,6 +295,11 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public Collection<UIAccess> _UIAccess_all() {
+        return List.of(DesktopSwtUIAccess.INSTANCE);
+    }
+
+    @Override
     public boolean _UIAccess_isUIThread() {
         return Thread.currentThread().equals(Display.getDefault().getThread());
     }

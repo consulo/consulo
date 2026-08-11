@@ -228,6 +228,22 @@ public abstract class UIInternal {
 
     public abstract boolean _UIAccess_isUIThread();
 
+    /**
+     * Backs {@link UIAccess#supportsMultipleUI()}. A frontend answers true only when it can show several uis of the
+     * same application at once, which makes every access - and everything kept on one - a per ui thing.
+     */
+    public boolean _UIAccess_supportsMultipleUI() {
+        return false;
+    }
+
+    /**
+     * Backs {@link UIAccess#listAll()}. A frontend with a single window answers with the one access it has, one
+     * which shows several answers with the access of each of them, and one without a ui answers with nothing.
+     */
+    public Collection<UIAccess> _UIAccess_all() {
+        return List.of();
+    }
+
     public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(
         @Nullable Image editButtonImage,
         String dialogTitle,

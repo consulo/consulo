@@ -27,7 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.util.lang.TimeoutUtil;
 import consulo.web.application.WebApplication;
-import consulo.web.application.WebSession;
+import consulo.web.internal.WebApplicationImpl;
 
 /**
  * @author VISTALL
@@ -82,22 +82,10 @@ public class RootUIBuilder implements UIBuilder {
 
     WelcomeFrameManager welcomeFrameManager = WelcomeFrameManager.getInstance();
 
-    UIAccess currentAccess = UIAccess.current();
-
-    WebSession previousSession = application.getCurrentSession();
-    if (previousSession != null) {
-      UIAccess previousAccess = previousSession.getAccess();
-
-      if (previousAccess != currentAccess) {
-        if (previousAccess != null) {
-          previousSession.close();
-        }
-
-        welcomeFrameManager.closeFrame();
-      }
+    UIAccess uiAccess = UIAccess.current();
+    if (application instanceof WebApplicationImpl webApplication) {
+      webApplication.registerUIAccess(uiAccess);
     }
-
-    application.setCurrentSession(new VaadinWebSessionImpl());
 
     welcomeFrameManager.showIfNoProjectOpened();
   }

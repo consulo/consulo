@@ -25,6 +25,7 @@ import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
@@ -72,6 +73,22 @@ public interface UIAccess extends Executor, UserDataHolder {
 
     static void addModalityStateListener(ModalityStateListener listener, Disposable parentDisposable) {
         UIInternal.get().addModalityStateListener(listener, parentDisposable);
+    }
+
+    /**
+     * Every ui the application is showing at the moment. A frontend which draws into a single window answers with
+     * the one access it has, the browser frontend with one per tab.
+     */
+    static Collection<UIAccess> listAll() {
+        return UIInternal.get()._UIAccess_all();
+    }
+
+    /**
+     * Whether more than one ui can be attached to the running application at the same time, as the browser
+     * frontend allows with its tabs. A frontend which says so must accept a project being moved between them.
+     */
+    static boolean supportsMultipleUI() {
+        return UIInternal.get()._UIAccess_supportsMultipleUI();
     }
 
     Clipboard getClipboard();

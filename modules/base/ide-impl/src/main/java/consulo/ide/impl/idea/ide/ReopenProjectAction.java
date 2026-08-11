@@ -22,10 +22,13 @@ import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.ProjectImplUtil;
+import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.localize.ProjectLocalize;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameState;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -84,7 +87,7 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
     public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (myOpened) {
-            presentation.setEnabled(false);
+            presentation.setEnabled(UIAccess.supportsMultipleUI());
             presentation.setText(ProjectLocalize.recentProject0OpenedActionText(myProjectText));
         }
         else {
@@ -112,6 +115,13 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
             || ActionPlaces.WELCOME_SCREEN.equals(e.getPlace());
 
         Project project = e.getData(Project.KEY);
+
+        Project opened = findOpenedProject();
+        if (opened != null) {
+            reattach(opened);
+            return;
+        }
+
         if (!new File(myProjectPath).exists()) {
             int result = Messages.showDialog(project,
                 "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
@@ -140,6 +150,31 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
         }
 
         ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current(), context);
+    }
+
+    private @Nullable Project findOpenedProject() {
+        if (!UIAccess.supportsMultipleUI()) {
+            return null;
+        }
+
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            if (myProjectPath.equals(RecentProjectsManagerImpl.getProjectPath(project))) {
+                return project;
+            }
+        }
+
+        return null;
+    }
+
+    @RequiredUIAccess
+    private static void reattach(Project project) {
+        WelcomeFrameManager.getInstance().closeFrame();
+
+        WindowManagerEx.getInstanceEx().reattachFrame(project, UIAccess.current());
+    }
+
+    public boolean isOpened() {
+        return myOpened;
     }
 
     public boolean isRemoved() {

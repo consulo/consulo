@@ -4,13 +4,18 @@ import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.logging.Logger;
+import com.vaadin.flow.component.UI;
 import consulo.ui.UIAccess;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.internal.ui.WebUnboundUIAccess;
 import consulo.web.application.WebApplication;
-import consulo.web.application.WebSession;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -22,7 +27,7 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
 
   private final WebUnboundUIAccess myUnboundUIAccess = new WebUnboundUIAccess();
 
-  private WebSession myCurrentSession;
+  private final Set<UIAccess> myUIAccesses = new LinkedHashSet<>();
 
   public WebApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splash) {
     super(componentBinding, splash);
@@ -38,45 +43,61 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
    */
   @Override
   public void invokeLater(Runnable runnable) {
-    WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    getLastUIAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(Runnable runnable, BooleanSupplier expired) {
-    WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    getLastUIAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(Runnable runnable, consulo.ui.ModalityState state) {
-    WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    getLastUIAccess().give(runnable);
   }
 
   @Override
   public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
-    WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    getLastUIAccess().give(runnable);
   }
 
   
+  /**
+   * The ui a caller already runs in is the one it means. Only a caller which has none - a background thread with
+   * no project to name - falls back to the ui which attached last.
+   */
   @Override
   public UIAccess getLastUIAccess() {
-    WebSession currentSession = getCurrentSession();
-    if (currentSession == null) {
-      return myUnboundUIAccess;
+    // not UIAccess#isUIThread, which also answers for a request which only holds the session lock - the access of
+    // a ui can only be taken while that ui is the current one
+    UI ui = UI.getCurrent();
+    if (ui != null) {
+      return VaadinComponentDelegate.getUIAccess(ui);
     }
-    return currentSession.getAccess();
+
+    Collection<UIAccess> uiAccesses = getUIAccesses();
+    return uiAccesses.isEmpty() ? myUnboundUIAccess : List.copyOf(uiAccesses).getLast();
   }
 
-  @Override
-  public void setCurrentSession(@Nullable WebSession session) {
-    myCurrentSession = session;
+  /**
+   * Adds a ui which has just been attached. Kept in the order they arrived, so the newest of them is what a caller
+   * without a ui of its own is answered with.
+   */
+  public void registerUIAccess(UIAccess uiAccess) {
+    synchronized (myUIAccesses) {
+      myUIAccesses.removeIf(access -> !access.isValid());
+      myUIAccesses.add(uiAccess);
+    }
   }
 
-  @Override
-  public @Nullable WebSession getCurrentSession() {
-    return myCurrentSession;
+  /**
+   * Every ui still attached. A tab which went away is dropped while answering, since a browser is not obliged to
+   * say goodbye.
+   */
+  public Collection<UIAccess> getUIAccesses() {
+    synchronized (myUIAccesses) {
+      myUIAccesses.removeIf(access -> !access.isValid());
+      return List.copyOf(myUIAccesses);
+    }
   }
 }

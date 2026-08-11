@@ -462,7 +462,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return null;
     }
 
-    private @Nullable String getProjectPath(Project project) {
+    static @Nullable String getProjectPath(Project project) {
         VirtualFile baseDirVFile = project.getBaseDir();
         return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
     }

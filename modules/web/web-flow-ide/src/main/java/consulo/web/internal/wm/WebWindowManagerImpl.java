@@ -22,11 +22,14 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.impl.wm.impl.UnifiedWindowManagerImpl;
 import consulo.project.Project;
+import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.util.collection.ContainerUtil;
+import consulo.web.internal.servlet.VaadinRootLayout;
+import consulo.web.internal.ui.WebUIAccessImpl;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
@@ -155,6 +158,55 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
     assert ideFrame == frame;
 
     ideFrame.close();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void reattachFrame(Project project, UIAccess uiAccess) {
+    UIAccess.assertIsUIThread();
+
+    WebIdeFrameImpl frame = myProject2Frame.get(project);
+    if (frame == null) {
+      return;
+    }
+
+    UIAccess previousAccess = project.getUserData(UIAccess.KEY);
+    if (previousAccess instanceof WebUIAccessImpl previousWebAccess && previousAccess != uiAccess && previousAccess.isValid()) {
+      VaadinRootLayout previousLayout = frame.getRootLayout();
+
+      previousAccess.giveAsync(() -> {
+        if (previousLayout != null) {
+          previousLayout.showClosed();
+        }
+
+        // the frame going away and the closed screen coming up belong to the client of this ui, and they must
+        // leave while the nodes are still its own. the detach of the frame root sits in the dirty list of this
+        // tree, and a dirty list holds objects, not ids - collected after the move, the entry answers for a
+        // node of the other tree by then, and the writer of this ui walks off with the initial state the other
+        // client was owed. that client then reads a reference to a node it was never given, and drops the
+        // whole message on the floor - which a push retry then repeats for good
+        previousWebAccess.getUI().push();
+
+        frame.removeFromTree();
+      }).whenComplete((o, e) -> uiAccess.give(() -> {
+        if (project instanceof ProjectEx projectEx) {
+          projectEx.setUIAccess(uiAccess);
+        }
+
+        frame.show();
+      }));
+      return;
+    }
+
+    if (project instanceof ProjectEx projectEx) {
+      projectEx.setUIAccess(uiAccess);
+    }
+
+    // the previous ui is gone or is this very ui, so nobody is told - but the component tree may still hang in
+    // the state tree of the dead ui, and vaadin refuses a tree which belongs to another ui
+    frame.removeFromTree();
+
+    frame.show();
   }
 
   @Override

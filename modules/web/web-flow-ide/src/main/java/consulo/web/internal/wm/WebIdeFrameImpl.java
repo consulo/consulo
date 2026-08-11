@@ -26,9 +26,9 @@ import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.web.application.WebApplication;
 import consulo.web.internal.servlet.VaadinRootLayout;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaadin;
@@ -73,9 +73,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     public void show() {
         UI ui = UI.getCurrent();
 
-        VaadinRootLayout view = (VaadinRootLayout) ui.getCurrentView();
-
-        myRootLayout = view;
+        myRootLayout = (VaadinRootLayout) ui.getCurrentView();
 
         String projectTitle = FrameTitleBuilder.getInstance().getProjectTitle(myProject);
 
@@ -84,6 +82,24 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
         myRootView.update();
 
         myRootLayout.update(TargetVaadin.to(myRootView.getRootPanel().getComponent()));
+    }
+
+    /**
+     * Takes the frame's component tree out of the state tree of the ui it is attached to. Vaadin refuses to attach
+     * a tree which still belongs to another ui, so this runs under the old ui before {@link #show()} runs under the
+     * new one.
+     * <p>
+     * {@code false} asks for the full reset. The keeping variant leaves every node remembering it was attached
+     * once, and a node which remembers fires no attach events when the new ui takes it in - the elements arrive,
+     * while everything a component sends from its attach listener does not: the grid never asks for rows, the
+     * editor never loads its scripts, and nothing says a word about it.
+     */
+    public void removeFromTree() {
+        TargetVaadin.to(myRootView.getRootPanel().getComponent()).getElement().removeFromTree(false);
+    }
+
+    public @Nullable VaadinRootLayout getRootLayout() {
+        return myRootLayout;
     }
 
     public WebRootPaneImpl getRootPanel() {
@@ -101,14 +117,17 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
      * layout is what the frame is, and taking it out is what closing means here.
      */
     public void close() {
-        WebApplication.invokeOnCurrentSession(() -> {
-            VaadinRootLayout rootLayout = myRootLayout;
-            if (rootLayout != null) {
-                rootLayout.removeAll();
+        VaadinRootLayout rootLayout = myRootLayout;
+        if (rootLayout == null) {
+            return;
+        }
 
-                myRootLayout = null;
-            }
-        });
+        myRootLayout = null;
+
+        UIAccess uiAccess = rootLayout.toUIComponent().getUIAccess();
+        if (uiAccess != null && uiAccess.isValid()) {
+            uiAccess.giveIfNeed(rootLayout::removeAll);
+        }
     }
 
     @Override

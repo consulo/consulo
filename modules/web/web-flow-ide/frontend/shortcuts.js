@@ -151,6 +151,18 @@
                 return;
             }
 
+            // an open menu of the toolkit owns its keys the way a swing popup dispatches ahead of the keymap -
+            // escape closes it, arrows walk it. its handlers hang on the document and run after this capture
+            // listener, so a key taken here never reaches them. asked by presence rather than by the target of
+            // the key: a popup raised by a right click does not always hold the focus, and the escape which
+            // should close it then targets whatever does
+            if (document.querySelector(
+                'vaadin-context-menu[opened], vaadin-menu-bar-submenu[opened], vaadin-context-menu-overlay[opened],'
+                + ' vaadin-menu-bar-overlay[opened], vaadin-select-overlay[opened], vaadin-combo-box-overlay[opened],'
+                + ' vaadin-popover[opened]')) {
+                return;
+            }
+
             const modifier = MODIFIERS[event.code];
 
             // left for the browser on purpose - see clipboardOf. the stroke still reaches the platform, but from
@@ -190,6 +202,21 @@
         // before the editor or a text field acts on it
         document.addEventListener('keydown', event => onKey(event, true), true);
         document.addEventListener('keyup', event => onKey(event, false), true);
+
+        // a context menu of the toolkit driven by a synthetic open binds no escape of its own, and the key
+        // seldom targets the menu anyway - the focus stays where the right click left it. one listener after
+        // the one above, so the guard there has already stepped aside, closes whichever menu is up
+        document.addEventListener('keydown', event => {
+            if (event.code !== 'Escape') {
+                return;
+            }
+            const open = document.querySelector('vaadin-context-menu[opened], vaadin-menu-bar-submenu[opened]');
+            if (open && open.close) {
+                event.preventDefault();
+                event.stopPropagation();
+                open.close();
+            }
+        }, true);
 
         /*
          * Capture, so the editor in the page does not also act on it - the orion client div is contenteditable

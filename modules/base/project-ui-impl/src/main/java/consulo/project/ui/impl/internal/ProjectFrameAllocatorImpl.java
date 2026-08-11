@@ -61,7 +61,7 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
                 continuation.putUserData(IdeFrame.KEY, frame);
 
                 // force close welcome frame after frame allocating, since its project open
-                myWelcomeFrameManager.closeFrame();
+                myWelcomeFrameManager.closeFrame(project.getUIAccess());
                 return project;
             }))
             .then(UIAction.apply((project, continuation) -> {

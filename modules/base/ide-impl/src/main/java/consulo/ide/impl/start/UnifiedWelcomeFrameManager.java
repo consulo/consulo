@@ -27,11 +27,13 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsChecker;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.event.details.InputDetails;
@@ -80,11 +82,13 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
         myDataManager = dataManager;
     }
 
-    @RequiredUIAccess
     @Override
-    public void closeFrame() {
-        super.closeFrame();
-        frameClosed();
+    public void closeFrame(@Nullable UIAccess uiAccess) {
+        super.closeFrame(uiAccess);
+
+        if (uiAccess != null) {
+            uiAccess.giveIfNeed(this::frameClosed);
+        }
     }
 
     @RequiredUIAccess
@@ -130,6 +134,11 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
         listSelect.setRender((renderer, renderItem) -> {
             var item = renderItem.getValue();
             ReopenProjectAction action = (ReopenProjectAction) item;
+            if (action.isOpened()) {
+                renderer.append(ProjectLocalize.recentProject0OpenedActionText(LocalizeValue.of(action.getProjectName())));
+                return;
+            }
+
             renderer.append(action.getProjectName());
             String branch = RecentProjectsChecker.getInstance().getBranch(action.getProjectPath());
             if (branch != null && !branch.isEmpty()) {

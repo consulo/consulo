@@ -42,6 +42,8 @@ import consulo.ui.model.LazyFlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
+import consulo.web.application.WebApplication;
+import consulo.web.internal.WebApplicationImpl;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.base.WebShowNotifier;
 import consulo.web.internal.ui.htmlView.WebHtmlViewImpl;
@@ -405,6 +407,17 @@ public class WebUIInternalImpl extends UIInternal {
         UI ui = UI.getCurrent();
         assert ui != null;
         return VaadinComponentDelegate.getUIAccess(ui);
+    }
+
+    @Override
+    public boolean _UIAccess_supportsMultipleUI() {
+        return true;
+    }
+
+    @Override
+    public Collection<UIAccess> _UIAccess_all() {
+        WebApplication application = WebApplication.getInstance();
+        return application instanceof WebApplicationImpl webApplication ? webApplication.getUIAccesses() : List.of();
     }
 
     @Override

@@ -109,6 +109,17 @@ public class WebIdeMenuBar {
         return myMenuBar;
     }
 
+    /**
+     * Forgets that the current items were ever sent. The signature exists to skip rebuilding a menu the client
+     * already has - after the frame moves to another ui the client has nothing, while the signature still says
+     * everything is on screen. Cleared, the next {@link #updateMenuActions()} sends the full menu again.
+     */
+    @RequiredUIAccess
+    public void reset() {
+        mySignature = "";
+        myMenuBar.clear();
+    }
+
     @RequiredUIAccess
     public void updateMenuActions() {
         UIAccess uiAccess = UIAccess.current();

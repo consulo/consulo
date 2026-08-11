@@ -110,8 +110,13 @@ public class WebIdeRootView {
         myRootPanel.setStatusBar(statusBar);
     }
 
+    /**
+     * Runs when the frame comes on screen, first time or after a move to another ui - a client which has not
+     * seen the frame yet holds none of its lazily sent state, so everything of that kind is sent anew.
+     */
     @RequiredUIAccess
     public void update() {
+        myMenuBar.reset();
         myMenuBar.updateMenuActions();
 
         myNavigationBar.update();

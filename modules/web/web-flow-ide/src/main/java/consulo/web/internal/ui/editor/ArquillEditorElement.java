@@ -616,6 +616,10 @@ public class ArquillEditorElement extends Component implements HasSize {
         myRulers = rulers;
     }
 
+    /**
+     * Lets the editor be as tall as the text in it, for a caller which asked for an automatic height. Only the
+     * browser knows what that is - the row the face is laid out in, and the inset the bundle keeps above it.
+     */
     public void setFitContentHeight(boolean fit) {
         getElement().getClassList().set("arquill-editor-fit-content", fit);
     }
@@ -669,6 +673,10 @@ public class ArquillEditorElement extends Component implements HasSize {
         getElement().executeJs("this.$arquillApi.setCaretStyle($0, $1);", width, blinkPeriod);
     }
 
+    /**
+     * Whether the caret is drawn at all. An editor which is only there to be read - the content of a popup - shows
+     * none, while a read only editor which can still be navigated keeps it.
+     */
     public void setCaretVisible(boolean visible) {
         getElement().executeJs("this.$arquillApi.setCaretVisible($0);", visible);
     }

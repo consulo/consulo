@@ -24,12 +24,24 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-11
  */
 public interface LineStatusMarkerPopup {
+    /**
+     * Shows the popup for the range it was created for.
+     *
+     * @param details where the pointer was when the range was asked about, or null when the request came from an
+     *                action rather than from a click - the popup is placed at the caret then
+     */
     @RequiredUIAccess
     void showHintAt(@Nullable InputDetails details);
 
+    /**
+     * Brings the range into view first, so the popup is not placed against a line which is off screen.
+     */
     @RequiredUIAccess
     void scrollAndShow();
 
+    /**
+     * Waits for a scroll which is already running to end and shows the popup then.
+     */
     @RequiredUIAccess
     void showAfterScroll();
 }

@@ -417,6 +417,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public Collection<UIAccess> _UIAccess_all() {
+        return List.of(AWTUIAccessImpl.ourInstance);
+    }
+
+    @Override
     public boolean _UIAccess_isUIThread() {
         return EDT.isCurrentThreadEdt();
     }

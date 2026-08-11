@@ -17,8 +17,6 @@ package consulo.web.application;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.UIAccess;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,21 +27,4 @@ public interface WebApplication extends Application {
   static @Nullable WebApplication getInstance() {
     return (WebApplication)ApplicationManager.getApplication();
   }
-
-  static void invokeOnCurrentSession(@RequiredUIAccess Runnable runnable) {
-    WebApplication webApplication = WebApplication.getInstance();
-    assert webApplication != null;
-    WebSession currentSession = webApplication.getCurrentSession();
-    UIAccess access = currentSession == null ? null : currentSession.getAccess();
-
-    if (access == null) {
-      return;
-    }
-
-    access.give(runnable);
-  }
-
-  @Nullable WebSession getCurrentSession();
-
-  void setCurrentSession(@Nullable WebSession session);
 }
