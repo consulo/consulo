@@ -723,15 +723,19 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
      * current status when it first appears.
      */
     private void refreshLoadedPresentations(@Nullable VirtualFile file) {
+        refreshLoadedPresentations(file, false);
+    }
+
+    private void refreshLoadedPresentations(@Nullable VirtualFile file, boolean refreshChildren) {
         Tree<AbstractTreeNode> tree = myTree;
         if (tree == null) {
             return;
         }
 
-        myProject.getApplication().getLastUIAccess().giveIfNeed(() -> {
+        myProject.getUIAccess().giveIfNeed(() -> {
             TreeNode<AbstractTreeNode> root = tree.getRootNode();
             if (root != null) {
-                refreshLoadedPresentations(tree, root, file);
+                refreshLoadedPresentations(tree, root, file, refreshChildren);
             }
         });
     }
@@ -739,15 +743,16 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     private static void refreshLoadedPresentations(
         Tree<AbstractTreeNode> tree,
         TreeNode<AbstractTreeNode> node,
-        @Nullable VirtualFile file
+        @Nullable VirtualFile file,
+        boolean refreshChildren
     ) {
         for (TreeNode<AbstractTreeNode> child : node.getLoadedChildren()) {
             if (file == null
                 || child.getValue() instanceof ProjectViewNode viewNode && file.equals(viewNode.getVirtualFile())) {
-                tree.refreshItem(child);
+                tree.refreshItem(child, refreshChildren);
             }
 
-            refreshLoadedPresentations(tree, child, file);
+            refreshLoadedPresentations(tree, child, file, refreshChildren);
         }
     }
 
@@ -1038,16 +1043,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     /**
-     * The order of a level is settled while its children are built, and they are held from then on - so the tree
-     * builds them again rather than laying the ones it has out anew. That replaces every node, which is what
-     * carries the open ones away, so the paths are taken first and walked again after - the awt view stores and
-     * restores them around {@code updateFromRoot} for the same reason.
-     */
-    /**
-     * {@code ProjectViewPsiTreeChangeListener} answers a change by queueing the subtree which holds it. There is no
-     * subtree to queue here - the model builds its levels from the structure and gives them out whole - so the
-     * change is answered by rebuilding, and the strokes of one edit are collapsed into a single rebuild by the psi
-     * modification count, which the awt listener reads for the same reason.
+     * {@code ProjectViewPsiTreeChangeListener} answers a change by queueing the subtree which holds it. A change
+     * inside one file is scoped the same way here - only the loaded nodes of that file are re-read, since typing
+     * cannot move any other row. Only a change with no file to point at - a file created or removed, a root
+     * changed - is answered by rebuilding, and the strokes of one edit are collapsed into a single answer by the
+     * psi modification count, which the awt listener reads for the same reason.
      */
     private class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
         private final PsiModificationTracker myModificationTracker = PsiManager.getInstance(myProject).getModificationTracker();
@@ -1057,32 +1057,32 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         @Override
         public void childAdded(PsiTreeChangeEvent event) {
             if (!(event.getNewChild() instanceof PsiWhiteSpace)) {
-                structureChanged();
+                structureChanged(event.getFile());
             }
         }
 
         @Override
         public void childRemoved(PsiTreeChangeEvent event) {
             if (!(event.getOldChild() instanceof PsiWhiteSpace)) {
-                structureChanged();
+                structureChanged(event.getFile());
             }
         }
 
         @Override
         public void childReplaced(PsiTreeChangeEvent event) {
             if (!(event.getOldChild() instanceof PsiWhiteSpace && event.getNewChild() instanceof PsiWhiteSpace)) {
-                structureChanged();
+                structureChanged(event.getFile());
             }
         }
 
         @Override
         public void childMoved(PsiTreeChangeEvent event) {
-            structureChanged();
+            structureChanged(event.getFile());
         }
 
         @Override
         public void childrenChanged(PsiTreeChangeEvent event) {
-            structureChanged();
+            structureChanged(event.getFile());
         }
 
         @Override
@@ -1094,16 +1094,22 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
                 || PsiTreeChangeEvent.PROP_DIRECTORY_NAME.equals(propertyName)
                 || PsiTreeChangeEvent.PROP_FILE_TYPES.equals(propertyName)
                 || PsiTreeChangeEvent.PROP_UNLOADED_PSI.equals(propertyName)) {
-                structureChanged();
+                structureChanged(null);
             }
         }
 
-        private void structureChanged() {
+        private void structureChanged(@Nullable PsiFile psiFile) {
             long newModificationCount = myModificationTracker.getModificationCount();
             if (newModificationCount == myModificationCount) {
                 return;
             }
             myModificationCount = newModificationCount;
+
+            VirtualFile file = psiFile != null ? psiFile.getVirtualFile() : null;
+            if (file != null) {
+                refreshLoadedPresentations(file, true);
+                return;
+            }
 
             scheduleStructureRefresh();
         }
@@ -1118,7 +1124,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             return;
         }
 
-        UIAccess uiAccess = myProject.getApplication().getLastUIAccess();
+        UIAccess uiAccess = myProject.getUIAccess();
 
         myStructureRefreshScheduled = true;
 
@@ -1129,6 +1135,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         });
     }
 
+    /**
+     * The order of a level is settled while its children are built, and they are held from then on - so the tree
+     * builds them again rather than laying the ones it has out anew. That replaces every node, which is what
+     * carries the open ones away, so the paths are taken first and walked again after - the awt view stores and
+     * restores them around {@code updateFromRoot} for the same reason.
+     */
     @RequiredUIAccess
     private void resortTree() {
         if (myTree == null) {
