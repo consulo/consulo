@@ -21,8 +21,6 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
@@ -136,12 +134,7 @@ public class ActionMenuItemEngine {
             try {
                 if (Presentation.PROP_VISIBLE.equals(name)) {
                     boolean visible = myPresentation.isVisible();
-                    if (!visible && TopApplicationMenuUtil.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
-                        myButton.setEnabled(false);
-                    }
-                    else {
-                        myButton.setVisible(visible);
-                    }
+                    myButton.setVisible(visible);
                 }
                 else if (Presentation.PROP_ENABLED.equals(name)) {
                     myButton.setEnabled(myPresentation.isEnabled());

@@ -22,11 +22,11 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.action.menu.ActionMenuItem;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
@@ -89,11 +89,6 @@ public final class ActionMenu extends JMenu {
         updateUI();
 
         init();
-
-        // addNotify won't be called for menus in MacOS system menu
-        if (TopApplicationMenuUtil.isMacSystemMenu) {
-            installSynchronizer();
-        }
     }
 
     public void updateContext(DataContext context) {
@@ -220,12 +215,7 @@ public final class ActionMenu extends JMenu {
     private class MenuListenerImpl implements MenuListener {
         @Override
         public void menuCanceled(MenuEvent e) {
-            if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
-                myMenuComponents = new Component[]{myStubItem};
-            }
-            else {
-                clearItems();
-            }
+            clearItems();
         }
 
         @Override
@@ -239,55 +229,12 @@ public final class ActionMenu extends JMenu {
 
         @Override
         public void menuSelected(MenuEvent e) {
-            if (myMnemonicUpdate) {
-                return;
-            }
-
-            if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
-                myMenuComponents = null;
-            }
-            // For non-Mac, fillMenu is called from setPopupMenuVisible()
         }
-    }
-
-    @Override
-    public Component[] getMenuComponents() {
-        if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
-            if (myMenuComponents == null) {
-                JMenu temp = new JMenu();
-                fillMenu(temp);
-                myMenuComponents = temp.getMenuComponents();
-            }
-            return myMenuComponents;
-        }
-        else {
-            return super.getMenuComponents();
-        }
-    }
-
-    @Override
-    public int getMenuComponentCount() {
-        if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
-            return getMenuComponents().length;
-        }
-        return super.getMenuComponentCount();
-    }
-
-    private boolean isTopMenuBar() {
-        return TopApplicationMenuUtil.isMacSystemMenu && isMainMenuPlace();
-    }
-
-    private boolean isTopMenuBarAfterOpenJDKMemLeakFix() {
-        if (isTopMenuBar()) {
-            // jdk 10 have initial change in screen menu
-            return true;
-        }
-        return false;
     }
 
     @Override
     public void setPopupMenuVisible(boolean visible) {
-        if (visible && !isTopMenuBarAfterOpenJDKMemLeakFix()) {
+        if (visible) {
             // Cancel any previous expansion
             if (myFillIndicator != null) {
                 myFillIndicator.cancel();
@@ -348,31 +295,11 @@ public final class ActionMenu extends JMenu {
             myFillIndicator = null;
         }
 
-        if (isTopMenuBar()) {
-            for (Component menuComponent : getMenuComponents()) {
-                if (menuComponent instanceof ActionMenu actionMenu) {
-                    actionMenu.clearItems();
-                    if (TopApplicationMenuUtil.isMacSystemMenu) {
-                        // hideNotify is not called on Macs
-                        actionMenu.uninstallSynchronizer();
-                    }
-                }
-                else if (menuComponent instanceof ActionMenuItem actionMenuItem) {
-                    actionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F24, 0));
-                }
-            }
-        }
-
         removeAll();
+
         addStubItem();
 
         validate();
-    }
-
-    private void fillMenu(JMenu menu) {
-        DataContext context = getDataContext();
-        boolean mayContextBeInvalid = myContext == null;
-        Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, mayContextBeInvalid, false, myEnableIcons);
     }
 
     private class MenuItemSynchronizer implements PropertyChangeListener {
@@ -381,9 +308,6 @@ public final class ActionMenu extends JMenu {
             String name = e.getPropertyName();
             if (Presentation.PROP_VISIBLE.equals(name)) {
                 setVisible(myPresentation.isVisible());
-                if (TopApplicationMenuUtil.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
-                    validate();
-                }
             }
             else if (Presentation.PROP_ENABLED.equals(name)) {
                 setEnabled(myPresentation.isEnabled());

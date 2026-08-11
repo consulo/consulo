@@ -3,26 +3,23 @@ package consulo.desktop.awt.action;
 
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.action.menu.ActionMenuItem;
 import consulo.desktop.awt.action.menu.ActionMenuItemImpl;
 import consulo.desktop.awt.action.menu.ActionToggleMenuItemImpl;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.ui.ex.impl.internal.action.ActionUpdater;
-import consulo.ui.ex.impl.internal.popup.action.NothingHereAction;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.impl.internal.action.ActionUpdater;
+import consulo.ui.ex.impl.internal.popup.action.NothingHereAction;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -46,28 +43,28 @@ public class Utils {
     }
 
     public static CompletableFuture<Void> fillMenu(ActionGroup group,
-                                                    JComponent component,
-                                                    boolean enableMnemonics,
-                                                    PresentationFactory presentationFactory,
-                                                    DataContext context,
-                                                    String place,
-                                                    boolean isWindowMenu,
-                                                    boolean isInModalContext,
-                                                    boolean enableIcons) {
+                                                   JComponent component,
+                                                   boolean enableMnemonics,
+                                                   PresentationFactory presentationFactory,
+                                                   DataContext context,
+                                                   String place,
+                                                   boolean isWindowMenu,
+                                                   boolean isInModalContext,
+                                                   boolean enableIcons) {
         return fillMenu(group, component, enableMnemonics, presentationFactory, context, place,
             isWindowMenu, isInModalContext, enableIcons, new EmptyProgressIndicator());
     }
 
     public static CompletableFuture<Void> fillMenu(ActionGroup group,
-                                                    JComponent component,
-                                                    boolean enableMnemonics,
-                                                    PresentationFactory presentationFactory,
-                                                    DataContext context,
-                                                    String place,
-                                                    boolean isWindowMenu,
-                                                    boolean isInModalContext,
-                                                    boolean enableIcons,
-                                                    ProgressIndicator indicator) {
+                                                   JComponent component,
+                                                   boolean enableMnemonics,
+                                                   PresentationFactory presentationFactory,
+                                                   DataContext context,
+                                                   String place,
+                                                   boolean isWindowMenu,
+                                                   boolean isInModalContext,
+                                                   boolean enableIcons,
+                                                   ProgressIndicator indicator) {
         boolean checked = group instanceof CheckedActionGroup;
 
         DataContext asyncContext = context instanceof AsyncDataContext
@@ -78,10 +75,6 @@ public class Utils {
             new ActionUpdater(ActionManager.getInstance(), presentationFactory, asyncContext, place, true, false, UIAccess.current());
 
         return updater.expandActionGroupAsync(group, group instanceof CompactActionGroup, indicator).thenAcceptAsync(list -> {
-            boolean fixMacScreenMenu =
-                TopApplicationMenuUtil.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
-            ArrayList<Component> children = new ArrayList<>();
-
             for (int i = 0, size = list.size(); i < size; i++) {
                 AnAction action = list.get(i);
                 Presentation presentation = presentationFactory.getPresentation(action);
@@ -124,18 +117,15 @@ public class Utils {
                             }
                         };
                         component.add(separator);
-                        children.add(separator);
                     }
                 }
                 else if (action instanceof ActionGroup && !Boolean.TRUE.equals(presentation.getClientProperty("actionGroup.perform.only"))) {
                     ActionMenu menu = new ActionMenu(context, place, (ActionGroup) action, presentationFactory, enableMnemonics, enableIcons);
                     component.add(menu);
-                    children.add(menu);
                 }
                 else {
-                    MenuElement each = createItem(action, presentation, place, context, enableMnemonics, !fixMacScreenMenu, checked, enableIcons);
+                    MenuElement each = createItem(action, presentation, place, context, enableMnemonics, true, checked, enableIcons);
                     component.add((Component) each);
-                    children.add((Component) each);
                 }
             }
 
@@ -145,23 +135,12 @@ public class Utils {
                     place,
                     context,
                     enableMnemonics,
-                    !fixMacScreenMenu,
+                    true,
                     checked,
                     enableIcons);
                 component.add((Component) each);
-                children.add((Component) each);
             }
 
-            if (fixMacScreenMenu) {
-                //noinspection SSBasedInspection
-                SwingUtilities.invokeLater(() -> {
-                    for (Component each : children) {
-                        if (each.getParent() != null && each instanceof ActionMenuItem) {
-                            ((ActionMenuItem) each).prepare();
-                        }
-                    }
-                });
-            }
         }, UIAccess.current());
     }
 

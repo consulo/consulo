@@ -27,7 +27,6 @@ import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.application.internal.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
@@ -378,7 +377,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                 ProjectManager projectManager = ProjectManager.getInstance();
 
                 Project[] openProjects = projectManager.getOpenProjects();
-                if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
+                if (openProjects.length > 1 || openProjects.length == 1 && Platform.current().os().isMac()) {
                     Runnable afterClose = () -> {
                         Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
                         WelcomeFrameManager.getInstance().showIfNoProjectOpened();

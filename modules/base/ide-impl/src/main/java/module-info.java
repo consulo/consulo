@@ -167,7 +167,6 @@ open module consulo.ide.impl {
 
     //opens consulo.ide.impl.presentationAssistant to consulo.util.xml.serializer;
 
-    exports consulo.ide.impl.actionSystem.ex;
     exports consulo.ide.impl.actions;
     exports consulo.ide.impl.actions.impl;
     exports consulo.ide.impl.application;
