@@ -32,7 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.DesktopCheckBoxImpl;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -207,20 +207,19 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
   @Override
   @RequiredUIAccess
- 
-  public AsyncResult<V> showAsync(@Nullable Component component) {
+  public CompletableFuture<V> showAsync(@Nullable Component component) {
     return showAsync(TargetAWT.to(component));
   }
 
   @RequiredUIAccess
- 
+
   @Override
-  public AsyncResult<V> showAsync(@Nullable Window component) {
+  public CompletableFuture<V> showAsync(@Nullable Window component) {
     return showAsync(TargetAWT.to(component));
   }
 
   @RequiredUIAccess
-  private AsyncResult<V> showAsync(java.awt.@Nullable Component component) {
+  private CompletableFuture<V> showAsync(java.awt.@Nullable Component component) {
     if (myButtons.isEmpty()) {
       throw new UnsupportedOperationException("Buttons empty");
     }
@@ -231,13 +230,12 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
     V value = myRemember != null ? myRemember.getValue() : null;
     if (value != null) {
-      return AsyncResult.resolved(value);
+      return CompletableFuture.completedFuture(value);
     }
 
-    AsyncResult<V> result = AsyncResult.undefined();
+    CompletableFuture<V> result = new CompletableFuture<>();
     DialogImpl dialog = component == null ? new DialogImpl() : new DialogImpl(component);
-    AsyncResult<Void> async = dialog.showAsync();
-    async.doWhenProcessed(() -> {
+    dialog.showAsync().whenComplete((ignored, error) -> {
       V selectValue = dialog.mySelectedValue;
       // null of if dialog closed via X button, not target buttons
       if(selectValue == null) {
@@ -250,7 +248,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
         }
       }
 
-      result.setDone(selectValue);
+      result.complete(selectValue);
     });
     return result;
   }

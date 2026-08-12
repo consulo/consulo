@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Deprecated
 class ExecutionCallback {
   private int myCurrentCount;
   private final int myCountToExecution;

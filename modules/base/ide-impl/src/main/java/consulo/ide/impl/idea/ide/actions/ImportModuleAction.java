@@ -29,9 +29,10 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyAnAction;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Dmitry Avdeev
@@ -52,10 +53,14 @@ public class ImportModuleAction extends LegacyAnAction {
 
     @RequiredUIAccess
     public static void executeImportAction(Project project, @Nullable FileChooserDescriptor descriptor) {
-        AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
+        CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
             ModuleImportProcessor.showFileChooser(project, descriptor);
 
-        chooser.doWhenDone(pair -> {
+        chooser.whenComplete((pair, error) -> {
+            if (error != null) {
+                return;
+            }
+
             ModuleImportContext context = pair.getFirst();
 
             ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();

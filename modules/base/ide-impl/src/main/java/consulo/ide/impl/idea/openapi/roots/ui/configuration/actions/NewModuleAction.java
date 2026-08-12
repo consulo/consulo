@@ -29,7 +29,8 @@ import consulo.ide.impl.module.creation.NewProjectDialog;
 import consulo.ide.impl.module.creation.NewProjectPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
-import consulo.util.concurrent.AsyncResult;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Eugene Zhuravlev
@@ -66,12 +67,20 @@ public class NewModuleAction extends LegacyDumbAwareAction {
         };
         fileChooserDescriptor.withTitle(ProjectLocalize.chooseModuleHome());
 
-        AsyncResult<VirtualFile> chooseAsync =
+        CompletableFuture<VirtualFile> chooseAsync =
             FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
-        chooseAsync.doWhenDone(moduleDir -> {
+        chooseAsync.whenComplete((moduleDir, error) -> {
+            if (error != null) {
+                return;
+            }
+
             NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
 
-            dialog.showAsync().doWhenDone(() -> {
+            dialog.showAsync().whenComplete((value, dialogError) -> {
+                if (dialogError != null) {
+                    return;
+                }
+
                 NewProjectPanel panel = dialog.getProjectPanel();
                 NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
             });

@@ -32,7 +32,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -45,6 +44,8 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -181,7 +182,7 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         SystemFileChooser fileChooser = new SystemFileChooser();
 
         if (toSelect != null && toSelect.getParent() != null) {
@@ -218,7 +219,7 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
 
         fileChooser.setMultiSelectionEnabled(myFileChooserDescriptor.isChooseMultiple());
 
-        AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+        CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
         SwingUtilities.invokeLater(() -> {
             CommandProcessorEx commandProcessor =
                 ApplicationManager.getApplication() != null ? (CommandProcessorEx) CommandProcessor.getInstance() : null;
@@ -262,16 +263,19 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
                         Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
                     }
 
-                    result.setRejected();
+                    result.completeExceptionally(e);
                     return;
                 }
 
                 if (!ArrayUtil.isEmpty(files)) {
-                    result.setDone(VirtualFileUtil.toVirtualFileArray(virtualFileList));
+                    result.complete(VirtualFileUtil.toVirtualFileArray(virtualFileList));
                 }
                 else {
-                    result.setRejected();
+                    result.completeExceptionally(new CancellationException());
                 }
+            }
+            else {
+                result.completeExceptionally(new CancellationException());
             }
         });
         return result;
@@ -279,7 +283,7 @@ public class NativeFileChooseDialog implements PathChooserDialog, FileChooserDia
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelectFiles) {
+    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelectFiles) {
         VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
         return chooseAsync(toSelect);
     }

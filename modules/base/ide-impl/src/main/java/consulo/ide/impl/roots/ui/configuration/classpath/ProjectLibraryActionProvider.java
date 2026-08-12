@@ -29,10 +29,10 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -84,7 +84,7 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
   @RequiredUIAccess
   
   @Override
-  public AsyncResult<List<Library>> invoke(ProjectLibraryContext context) {
+  public CompletableFuture<List<Library>> invoke(ProjectLibraryContext context) {
     return new ChooseLibrariesDialogImpl(context.getProject(), context.getLibrariesConfigurator(), context.getItems()).showAsync2();
   }
 }

@@ -349,7 +349,11 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
                 }
             }
 
-            FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).doWhenDone(this::onFileChosen);
+            FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).whenComplete((value, error) -> {
+                if (error == null) {
+                    this.onFileChosen(value);
+                }
+            });
         }
 
         protected @Nullable VirtualFile getInitialFile() {

@@ -39,7 +39,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.TreeTraversal;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
@@ -53,6 +52,8 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -613,23 +614,23 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         return null;
     }
 
-    public AsyncResult<TreeNode> selectNodeInTree(String displayName) {
-        MyNode nodeByName = findNodeByName(myRoot, displayName);
-        if (nodeByName == null) {
-            return AsyncResult.rejected();
-        }
-        AsyncResult<TreeNode> result = AsyncResult.undefined();
-        selectNodeInTree(nodeByName, true).doWhenDone(() -> result.setDone(nodeByName)).doWhenRejected((Runnable)result::setRejected);
-        return result;
+    public CompletableFuture<TreeNode> selectNodeInTree(String displayName) {
+        return selectNodeInTreeAsync(findNodeByName(myRoot, displayName));
     }
 
-    public AsyncResult<TreeNode> selectNodeInTree(Object object) {
-        MyNode nodeByName = findNodeByObject(myRoot, object);
-        if (nodeByName == null) {
-            return AsyncResult.rejected();
+    public CompletableFuture<TreeNode> selectNodeInTree(Object object) {
+        return selectNodeInTreeAsync(findNodeByObject(myRoot, object));
+    }
+
+    private CompletableFuture<TreeNode> selectNodeInTreeAsync(@Nullable MyNode nodeToSelect) {
+        if (nodeToSelect == null) {
+            return CompletableFuture.failedFuture(new CancellationException());
         }
-        AsyncResult<TreeNode> result = AsyncResult.rejected();
-        selectNodeInTree(nodeByName, true).doWhenDone(() -> result.setDone(nodeByName));
+
+        CompletableFuture<TreeNode> result = new CompletableFuture<>();
+        selectNodeInTree(nodeToSelect, true)
+            .doWhenDone(() -> result.complete(nodeToSelect))
+            .doWhenRejected((Runnable)() -> result.completeExceptionally(new CancellationException()));
         return result;
     }
 

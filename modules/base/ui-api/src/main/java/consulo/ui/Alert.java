@@ -20,10 +20,10 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.util.TraverseUtil;
-import consulo.util.concurrent.AsyncResult;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -107,7 +107,7 @@ public interface Alert<V> {
      * Does not block UI thread
      */
     @RequiredUIAccess
-    default AsyncResult<V> showAsync(@Nullable Component component) {
+    default CompletableFuture<V> showAsync(@Nullable Component component) {
         return showAsync(TraverseUtil.getWindowAncestor(component));
     }
 
@@ -115,7 +115,7 @@ public interface Alert<V> {
      * Does not block UI thread
      */
     @RequiredUIAccess
-    default AsyncResult<V> showAsync() {
+    default CompletableFuture<V> showAsync() {
         return showAsync((Window) null);
     }
 
@@ -123,13 +123,13 @@ public interface Alert<V> {
      * Does not block UI thread
      */
     @RequiredUIAccess
-    AsyncResult<V> showAsync(@Nullable Window component);
+    CompletableFuture<V> showAsync(@Nullable Window component);
 
     /**
      * Does not block UI thread
      */
     @RequiredUIAccess
-    default AsyncResult<V> showAsync(WindowOwner component) {
+    default CompletableFuture<V> showAsync(WindowOwner component) {
         return showAsync(component.getWindow());
     }
 }

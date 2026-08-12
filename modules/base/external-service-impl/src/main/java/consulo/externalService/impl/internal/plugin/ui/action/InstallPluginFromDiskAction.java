@@ -58,7 +58,11 @@ public class InstallPluginFromDiskAction extends DumbAwareAction {
         descriptor.setTitle("Choose Plugin File");
         descriptor.setDescription("'consulo-plugin' files are accepted");
 
-        FileChooser.chooseFile(descriptor, null, myPluginsPanel.getComponent(), null).doWhenDone(this::onFileSelect);
+        FileChooser.chooseFile(descriptor, null, myPluginsPanel.getComponent(), null).whenComplete((value, error) -> {
+            if (error == null) {
+                this.onFileSelect(value);
+            }
+        });
     }
 
     @RequiredUIAccess

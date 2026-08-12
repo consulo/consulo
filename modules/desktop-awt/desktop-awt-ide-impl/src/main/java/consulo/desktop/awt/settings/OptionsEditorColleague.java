@@ -16,24 +16,25 @@
 package consulo.desktop.awt.settings;
 
 import consulo.configurable.Configurable;
-import consulo.util.concurrent.AsyncResult;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface OptionsEditorColleague {
-  default AsyncResult<Void> onSelected(@Nullable Configurable configurable, Configurable oldConfigurable) {
-    return AsyncResult.resolved();
+  default CompletableFuture<Void> onSelected(@Nullable Configurable configurable, Configurable oldConfigurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
-  default AsyncResult<Void> onModifiedAdded(Configurable configurable) {
-    return AsyncResult.resolved();
+  default CompletableFuture<Void> onModifiedAdded(Configurable configurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
-  default AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
-    return AsyncResult.resolved();
+  default CompletableFuture<Void> onModifiedRemoved(Configurable configurable) {
+    return CompletableFuture.completedFuture(null);
   }
 
-  default AsyncResult<Void> onErrorsChanged() {
-    return AsyncResult.resolved();
+  default CompletableFuture<Void> onErrorsChanged() {
+    return CompletableFuture.completedFuture(null);
   }
 }

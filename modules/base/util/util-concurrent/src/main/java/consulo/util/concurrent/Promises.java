@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -190,6 +191,13 @@ public class Promises {
     AsyncResult<Void> result = AsyncResult.undefined();
     promise.onSuccess(o -> result.setDone());
     promise.onError(throwable -> result.setRejected());
+    return result;
+  }
+
+  public static CompletableFuture<Void> toCompletableFuture(Promise<?> promise) {
+    CompletableFuture<Void> result = new CompletableFuture<>();
+    promise.onSuccess(o -> result.complete(null));
+    promise.onError(result::completeExceptionally);
     return result;
   }
 

@@ -330,12 +330,20 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         uiAccess.give(() -> {
             Project projectToClose = openContext.projectToClose();
             if (projectToClose != null) {
-                alert.showAsync(projectToClose).doWhenDone(exitCode -> {
+                alert.showAsync(projectToClose).whenComplete((exitCode, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     handleDialogResult(exitCode, openContext, uiAccess, result);
                 });
             }
             else {
-                alert.showAsync().doWhenDone(exitCode -> {
+                alert.showAsync().whenComplete((exitCode, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     handleDialogResult(exitCode, openContext, uiAccess, result);
                 });
             }

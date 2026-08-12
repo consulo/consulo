@@ -21,7 +21,6 @@ import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -53,9 +52,9 @@ public interface ShowConfigurableService {
 
     @RequiredUIAccess
     @Deprecated
-    AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
+    CompletableFuture<?> editConfigurable(Component parent, Configurable configurable);
 
     @RequiredUIAccess
     @Deprecated
-    AsyncResult<Void> editConfigurable(Project project, Configurable configurable);
+    CompletableFuture<?> editConfigurable(Project project, Configurable configurable);
 }

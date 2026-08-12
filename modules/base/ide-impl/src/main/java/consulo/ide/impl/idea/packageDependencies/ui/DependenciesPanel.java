@@ -652,7 +652,11 @@ public class DependenciesPanel extends JPanel implements Disposable, UiDataProvi
         public void actionPerformed(AnActionEvent e) {
             ShowSettingsUtil.getInstance()
                 .editConfigurable(DependenciesPanel.this, new DependencyConfigurable(myProject))
-                .doWhenDone(DependenciesPanel.this::rebuild);
+                .whenComplete((value, error) -> {
+                    if (error == null) {
+                        DependenciesPanel.this.rebuild();
+                    }
+                });
         }
     }
 

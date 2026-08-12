@@ -22,7 +22,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
 import consulo.compiler.artifact.Artifact;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
@@ -36,35 +36,35 @@ public interface ProjectStructureSelector {
 
   
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus);
+  CompletableFuture<?> select(@Nullable Artifact artifact, boolean requestFocus);
 
   
   @RequiredUIAccess
-  AsyncResult<Void> select(Sdk sdk, boolean requestFocus);
+  CompletableFuture<?> select(Sdk sdk, boolean requestFocus);
 
   
   @RequiredUIAccess
-  default AsyncResult<Void> select(Module module, boolean requestFocus) {
+  default CompletableFuture<?> select(Module module, boolean requestFocus) {
     return select(module.getName(), null, requestFocus);
   }
 
   
   @RequiredUIAccess
-  AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus);
+  CompletableFuture<?> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus);
 
   
   @RequiredUIAccess
-  AsyncResult<Void> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus);
+  CompletableFuture<?> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus);
 
   
   @RequiredUIAccess
-  AsyncResult<Void> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry);
+  CompletableFuture<?> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry);
 
   
   @RequiredUIAccess
-  AsyncResult<Void> selectProjectOrGlobalLibrary(Library library, boolean requestFocus);
+  CompletableFuture<?> selectProjectOrGlobalLibrary(Library library, boolean requestFocus);
 
   
   @RequiredUIAccess
-  AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus);
+  CompletableFuture<?> selectProjectGeneralSettings(boolean requestFocus);
 }

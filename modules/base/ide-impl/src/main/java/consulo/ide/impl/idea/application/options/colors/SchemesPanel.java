@@ -128,7 +128,11 @@ public class SchemesPanel implements SkipSelfSearchComponent {
             selectedName
         );
 
-        dialog.showAsync().doWhenDone(() -> myOptions.saveSchemeAs(dialog.getSchemeName()));
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error == null) {
+                myOptions.saveSchemeAs(dialog.getSchemeName());
+            }
+        });
     }
 
     @RequiredUIAccess

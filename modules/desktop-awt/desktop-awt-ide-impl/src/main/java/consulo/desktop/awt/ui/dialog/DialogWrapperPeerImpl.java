@@ -69,7 +69,6 @@ import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
@@ -81,6 +80,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     private static final Logger LOG = Logger.getInstance(DialogWrapperPeerImpl.class);
@@ -519,7 +519,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> showAsync() {
+    public CompletableFuture<?> showAsync() {
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
         AnCancelAction anCancelAction = new AnCancelAction();
@@ -541,14 +541,12 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         UIAccess uiAccess = UIAccess.current();
 
-        AsyncResult<Void> result = AsyncResult.undefined();
-
         Disposable tb = TouchBarController.getInstance().showWindowActions(myDialog.getContentPane());
         if (tb != null) {
             myDisposeActions.add(() -> Disposer.dispose(tb));
         }
 
-        uiAccess.giveAsync(() -> {
+        return uiAccess.giveAsync(() -> {
             if (changeModalityState) {
                 commandProcessor.enterModal();
 
@@ -579,16 +577,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                     }
                 }
             }
-        }).whenComplete((value, error) -> {
-            if (error == null) {
-                result.setDone();
-            }
-            else {
-                result.rejectWithThrowable(error);
-            }
         });
-
-        return result;
     }
 
     //hopefully this whole code will go away

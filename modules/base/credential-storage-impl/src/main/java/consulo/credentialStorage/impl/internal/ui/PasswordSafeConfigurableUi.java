@@ -455,7 +455,11 @@ public class PasswordSafeConfigurableUi implements IdeaConfigurableUi<PasswordSa
 
             UIAccess uiAccess = UIAccess.current();
 
-            dialog.chooseAsync(project, VirtualFile.EMPTY_ARRAY).doWhenDone((v) -> {
+            dialog.chooseAsync(project, VirtualFile.EMPTY_ARRAY).whenComplete((v, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 if (v == null || v.length == 0) {
                     return;
                 }

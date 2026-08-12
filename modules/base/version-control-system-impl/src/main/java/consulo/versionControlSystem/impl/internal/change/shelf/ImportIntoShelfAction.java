@@ -59,7 +59,11 @@ public class ImportIntoShelfAction extends LegacyDumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
-        FileChooser.chooseFiles(descriptor, project, null).doWhenDone(files -> {
+        FileChooser.chooseFiles(descriptor, project, null).whenComplete((files, error) -> {
+            if (error != null) {
+                return;
+            }
+
             //gatherPatchFiles
             ProgressManager pm = ProgressManager.getInstance();
             ShelveChangesManagerImpl shelveChangesManager = ShelveChangesManagerImpl.getInstance(project);

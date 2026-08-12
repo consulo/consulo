@@ -29,7 +29,6 @@ import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineStep;
@@ -131,7 +130,11 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
       }
 
       CompletableFuture<ImportRequest> future = new CompletableFuture<>();
-      uiAccess.give(() -> createReimportAlert(request).showAsync().doWhenDone(threeState -> {
+      uiAccess.give(() -> createReimportAlert(request).showAsync().whenComplete((threeState, error) -> {
+        if (error != null) {
+          return;
+        }
+
         switch (threeState) {
           case YES:
             // Open existing project — resolve VirtualFile for the project directory
@@ -196,15 +199,16 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   private CompletableFuture<ImportTarget> showImportChooser(ImportRequest request, UIAccess uiAccess) {
     CompletableFuture<ImportTarget> future = new CompletableFuture<>();
     uiAccess.give(() -> {
-      AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = AsyncResult.undefined();
+      CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = new CompletableFuture<>();
       ModuleImportProcessor.showImportChooser(null, request.file, request.providers, result);
 
-      result.doWhenDone(pair -> future.complete(new ImportTarget(pair.getFirst(), pair.getSecond())));
-      result.doWhenRejected((pair, error) -> {
-        if (pair != null) {
-          pair.getFirst().dispose();
+      result.whenComplete((pair, error) -> {
+        if (error != null) {
+          future.complete(null);
         }
-        future.complete(null);
+        else {
+          future.complete(new ImportTarget(pair.getFirst(), pair.getSecond()));
+        }
       });
     });
     return future;

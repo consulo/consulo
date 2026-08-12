@@ -188,10 +188,6 @@ public class AsyncResult<T> extends ActionCallback {
     return result;
   }
 
-  /**
-   * The migration bridge to the standard future. A rejection which carries a throwable crosses as that
-   * throwable, one which only says no crosses as a {@link CancellationException} holding the error text.
-   */
   public CompletableFuture<T> toCompletableFuture() {
     CompletableFuture<T> future = new CompletableFuture<>();
     doWhenDone(() -> future.complete(myResult));

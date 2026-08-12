@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author dmitrylomov
  */
+@Deprecated
 public class AsyncUtil {
   private static final AsyncFuture<Boolean> TRUE = createConst(true);
   private static final AsyncFuture<Boolean> FALSE = createConst(false);

@@ -75,7 +75,11 @@ public class LoginAction extends LegacyDumbAwareAction implements RightAlignedTo
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
     if(configuration.getEmail() != null) {
-      Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().doWhenDone(value -> {
+      Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().whenComplete((value, error) -> {
+          if (error != null) {
+              return;
+          }
+
         if(value) {
           // call internal implementation
           ((ExternalServiceConfigurationImpl) configuration).reset();

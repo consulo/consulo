@@ -43,13 +43,13 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author spleaner
@@ -309,14 +309,14 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     }
 
     @Override
-    public AsyncResult<Void> showAsync() {
+    public CompletableFuture<?> showAsync() {
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
         hidePopupsIfNeeded();
 
         myDialog.setVisible(true);
 
-        return AsyncResult.resolved();
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

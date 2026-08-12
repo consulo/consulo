@@ -23,12 +23,12 @@ import consulo.module.creation.importing.ModuleImportContext;
 import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -39,7 +39,7 @@ import java.util.List;
 public class ModuleCreationHelperImpl implements ModuleCreationHelper {
     @RequiredUIAccess
     @Override
-    public <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showImportFileChooser(Project project,
+    public <C extends ModuleImportContext> CompletableFuture<Pair<C, ModuleImportProvider<C>>> showImportFileChooser(Project project,
                                                                                                                FileChooserDescriptor chooserDescriptor) {
         return ModuleImportProcessor.showFileChooser(project, chooserDescriptor);
     }
@@ -48,7 +48,7 @@ public class ModuleCreationHelperImpl implements ModuleCreationHelper {
     @Override
     public <C extends ModuleImportContext> void showImportChooser(Project project,
                                                                   VirtualFile file,
-                                                                  AsyncResult<Pair<C, ModuleImportProvider<C>>> result) {
+                                                                  CompletableFuture<Pair<C, ModuleImportProvider<C>>> result) {
         ModuleImportProcessor.showImportChooser(project, file, result);
     }
 
@@ -57,7 +57,7 @@ public class ModuleCreationHelperImpl implements ModuleCreationHelper {
     public <C extends ModuleImportContext> void showImportChooser(Project project,
                                                                   VirtualFile file,
                                                                   List<ModuleImportProvider> providers,
-                                                                  AsyncResult<Pair<C, ModuleImportProvider<C>>> result) {
+                                                                  CompletableFuture<Pair<C, ModuleImportProvider<C>>> result) {
         ModuleImportProcessor.showImportChooser(project, file, providers, result);
     }
 }

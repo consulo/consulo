@@ -906,14 +906,22 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
                 new EditInspectionToolsSettingsAction(key).editToolSettings(
                     myProject,
                     (InspectionProfileImpl) inspectionProfile, profileIsDefined
-                ).doWhenDone(() -> {
+                ).whenComplete((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     if (profileIsDefined) {
                         updateCurrentProfile();
                     }
                 });
             }
             else {
-                EditInspectionToolsSettingsAction.editToolSettings(myProject, inspectionProfile, profileIsDefined, null).doWhenDone(() -> {
+                EditInspectionToolsSettingsAction.editToolSettings(myProject, inspectionProfile, profileIsDefined, null).whenComplete((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     if (profileIsDefined) {
                         updateCurrentProfile();
                     }

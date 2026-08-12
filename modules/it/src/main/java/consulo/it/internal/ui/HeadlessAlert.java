@@ -17,8 +17,9 @@ package consulo.it.internal.ui;
 
 import consulo.ui.Window;
 import consulo.ui.impl.BaseAlert;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Dummy-but-creatable headless alert built on the shared {@link BaseAlert}.
@@ -27,7 +28,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class HeadlessAlert<V> extends BaseAlert<V> {
     @Override
-    public AsyncResult<V> showAsync(@Nullable Window component) {
-        return AsyncResult.undefined();
+    public CompletableFuture<V> showAsync(@Nullable Window component) {
+        return new CompletableFuture<>();
     }
 }

@@ -26,9 +26,11 @@ import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ScrollableLayout;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -39,11 +41,11 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
 
         private final Project myProject;
         private final FileChooserDescriptor myDescriptor;
-        private final AsyncResult<VirtualFile[]> myResult;
+        private final CompletableFuture<VirtualFile[]> myResult;
 
         private Tree<FileElement> myTree;
 
-        public DialogImpl(Project project, FileChooserDescriptor descriptor, AsyncResult<VirtualFile[]> result) {
+        public DialogImpl(Project project, FileChooserDescriptor descriptor, CompletableFuture<VirtualFile[]> result) {
             super("Select File");
             myProject = project;
             myDescriptor = descriptor;
@@ -83,7 +85,7 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
 
             super.doOKAction();
 
-            UIAccess.current().give(() -> myResult.setDone(new VirtualFile[]{file}));
+            UIAccess.current().give(() -> myResult.complete(new VirtualFile[]{file}));
         }
 
         @RequiredUIAccess
@@ -91,7 +93,7 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
         public void doCancelAction() {
             super.doCancelAction();
 
-            UIAccess.current().give((Runnable) myResult::setRejected);
+            UIAccess.current().give(() -> myResult.completeExceptionally(new CancellationException()));
         }
     }
 
@@ -107,15 +109,15 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
     
     @Override
     @RequiredUIAccess
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
         return chooseAsync(myProject, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
     }
 
     @RequiredUIAccess
-    
+
     @Override
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
-        AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+    public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
+        CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
         DialogImpl dialog = new DialogImpl((Project) project, myDescriptor, result);
         dialog.showAsync();
         return result;

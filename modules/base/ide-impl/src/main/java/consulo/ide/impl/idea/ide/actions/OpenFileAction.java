@@ -93,7 +93,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
         descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).doWhenDone(files -> {
+        FileChooser.chooseFiles(descriptor, project, VirtualFileUtil.getUserHomeDir()).whenComplete((files, error) -> {
+            if (error != null) {
+                return;
+            }
+
             for (VirtualFile file : files) {
                 if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
                     Messages.showInfoMessage(

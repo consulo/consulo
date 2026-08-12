@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 
 import org.jspecify.annotations.Nullable;
 
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author nik
@@ -134,12 +134,8 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
 
     
     @RequiredUIAccess
-    public AsyncResult<List<T>> showAsync2() {
-        AsyncResult<List<T>> result = AsyncResult.undefined();
-        AsyncResult<Void> showAsync = showAsync();
-        showAsync.doWhenDone(() -> result.setDone(getChosenElements()));
-        showAsync.doWhenRejected((Runnable)result::setRejected);
-        return result;
+    public CompletableFuture<List<T>> showAsync2() {
+        return showAsync().thenApply(ignored -> getChosenElements());
     }
 
     @Deprecated

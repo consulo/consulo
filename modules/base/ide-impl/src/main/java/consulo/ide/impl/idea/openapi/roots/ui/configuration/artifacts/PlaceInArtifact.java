@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 
 import org.jspecify.annotations.Nullable;
 
@@ -61,10 +61,14 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
   
   @Override
   @RequiredUIAccess
-  public AsyncResult<Void> navigate(Project project) {
+  public CompletableFuture<?> navigate(Project project) {
     Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);
     return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
-      projectStructureSelector.select(artifact, true).doWhenDone(() -> {
+      projectStructureSelector.select(artifact, true).whenComplete((value, error) -> {
+          if (error != null) {
+              return;
+          }
+
         ArtifactEditorEx artifactEditor = (ArtifactEditorEx)myContext.getOrCreateEditor(artifact);
         if (myParentPath != null && myPackagingElement != null) {
           artifactEditor.getLayoutTreeComponent().selectNode(myParentPath, myPackagingElement);

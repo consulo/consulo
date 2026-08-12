@@ -26,7 +26,6 @@ import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -124,8 +123,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     @Override
     public void showChangeOptionsDialog(ContentEntry contentEntry, ContentFolder contentFolder) {
         ContentFolderPropertiesDialog c = new ContentFolderPropertiesDialog(getModel().getProject(), contentFolder);
-        AsyncResult<Boolean> booleanAsyncResult = c.showAndGetOk();
-        if (Objects.equals(booleanAsyncResult.getResult(), Boolean.TRUE)) {
+        if (Objects.equals(c.showAndGetOk().getNow(null), Boolean.TRUE)) {
             update();
         }
     }

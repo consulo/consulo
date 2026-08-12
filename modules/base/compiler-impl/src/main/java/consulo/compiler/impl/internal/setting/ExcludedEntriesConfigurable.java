@@ -116,7 +116,11 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     }
 
     private void addPath(FileChooserDescriptor descriptor) {
-      FileChooser.chooseFiles(descriptor, myProject, null).doWhenDone(chosen -> {
+      FileChooser.chooseFiles(descriptor, myProject, null).whenComplete((chosen, error) -> {
+          if (error != null) {
+              return;
+          }
+
         int selected = -1 /*myExcludedTable.getSelectedRow() + 1*/;
         if (selected < 0) {
           selected = myExcludeEntryDescriptions.size();

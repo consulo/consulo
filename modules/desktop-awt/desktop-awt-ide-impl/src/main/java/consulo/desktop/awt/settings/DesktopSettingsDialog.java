@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
 
@@ -47,6 +46,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -128,21 +128,21 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
         myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
         myEditor.getContext().addColleague(new OptionsEditorColleague() {
             @Override
-            public AsyncResult<Void> onModifiedAdded(Configurable configurable) {
+            public CompletableFuture<Void> onModifiedAdded(Configurable configurable) {
                 updateStatus();
-                return AsyncResult.resolved();
+                return CompletableFuture.completedFuture(null);
             }
 
             @Override
-            public AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
+            public CompletableFuture<Void> onModifiedRemoved(Configurable configurable) {
                 updateStatus();
-                return AsyncResult.resolved();
+                return CompletableFuture.completedFuture(null);
             }
 
             @Override
-            public AsyncResult<Void> onErrorsChanged() {
+            public CompletableFuture<Void> onErrorsChanged() {
                 updateStatus();
-                return AsyncResult.resolved();
+                return CompletableFuture.completedFuture(null);
             }
         });
         Disposer.register(myDisposable, myEditor);

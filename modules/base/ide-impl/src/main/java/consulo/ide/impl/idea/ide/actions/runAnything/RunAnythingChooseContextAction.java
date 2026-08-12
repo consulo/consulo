@@ -124,7 +124,11 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
                     e.getData(UIExAWTDataKey.CONTEXT_COMPONENT)
                 );
 
-                chooser.chooseAsync(project.getBaseDir()).doWhenDone(virtualFiles -> {
+                chooser.chooseAsync(project.getBaseDir()).whenComplete((virtualFiles, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     List<String> recentDirectories = RunAnythingContextRecentDirectoryCacheImpl.getInstance(project).getPaths();
 
                     String path = ArrayUtil.getFirstElement(virtualFiles).getPath();

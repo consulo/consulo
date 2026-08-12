@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -42,7 +42,7 @@ public class FindApiInternalImpl implements FindApiInternal {
 
   @Override
   @RequiredUIAccess
-  public AsyncResult<Void> openScopeConfigurable(Project project, @Nullable String selection) {
+  public CompletableFuture<?> openScopeConfigurable(Project project, @Nullable String selection) {
     return myShowSettingsUtil.showAndSelect(project, ScopeChooserConfigurable.class, configurable -> {
       if (selection != null) {
         configurable.selectNodeInTree(selection);

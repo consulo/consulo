@@ -19,10 +19,11 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.util.collection.MultiValuesMap;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
-import consulo.util.concurrent.AsyncResult;
 
 import org.jspecify.annotations.Nullable;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 
@@ -42,48 +43,48 @@ public class OptionsEditorContext {
     myFilter = filter;
   }
 
-  AsyncResult<Void> fireSelected(@Nullable Configurable configurable, OptionsEditorColleague requestor) {
+  CompletableFuture<Void> fireSelected(@Nullable Configurable configurable, OptionsEditorColleague requestor) {
     Configurable old = myCurrentConfigurable;
     myCurrentConfigurable = configurable;
 
     return notify(colleague -> colleague.onSelected(configurable, old), requestor);
   }
 
-  AsyncResult<Void> fireModifiedAdded(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  CompletableFuture<Void> fireModifiedAdded(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if(myModified.contains(configurable)) {
-      return AsyncResult.rejected();
+      return CompletableFuture.failedFuture(new CancellationException());
     }
-    
+
     myModified.add(configurable);
 
     return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
   }
 
-  AsyncResult<Void> fireModifiedRemoved(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
-    if (!myModified.contains(configurable)) return AsyncResult.rejected();
+  CompletableFuture<Void> fireModifiedRemoved(Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+    if (!myModified.contains(configurable)) return CompletableFuture.failedFuture(new CancellationException());
 
     myModified.remove(configurable);
 
     return notify(colleague -> colleague.onModifiedRemoved(configurable), requestor);
   }
 
-  AsyncResult<Void> fireErrorsChanged(Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
-    if (myErrors.equals(errors)) return AsyncResult.rejected();
+  CompletableFuture<Void> fireErrorsChanged(Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
+    if (myErrors.equals(errors)) return CompletableFuture.failedFuture(new CancellationException());
 
     myErrors = errors != null ? errors : new HashMap<>();
 
     return notify(OptionsEditorColleague::onErrorsChanged, requestor);
   }
 
-  AsyncResult<Void> notify(Function<OptionsEditorColleague, AsyncResult<Void>> action, OptionsEditorColleague requestor) {
-    List<AsyncResult<Void>> all = new ArrayList<>();
+  CompletableFuture<Void> notify(Function<OptionsEditorColleague, CompletableFuture<Void>> action, OptionsEditorColleague requestor) {
+    List<CompletableFuture<Void>> all = new ArrayList<>();
     for (OptionsEditorColleague each : myColleagues) {
       if (each != requestor) {
         all.add(action.apply(each));
       }
     }
 
-    return AsyncResult.merge(all);
+    return CompletableFuture.allOf(all.toArray(CompletableFuture[]::new));
   }
 
   public void fireReset(Configurable configurable) {

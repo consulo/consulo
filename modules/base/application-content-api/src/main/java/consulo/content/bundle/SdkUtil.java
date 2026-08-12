@@ -239,7 +239,11 @@ public class SdkUtil {
     public static void selectSdkHome(Platform platform, PlatformAwareSdkType platformAwareSdkType, @RequiredUIAccess Consumer<Path> consumer) {
         FileChooserDescriptor descriptor = platformAwareSdkType.getHomeChooserDescriptor(platform);
 
-        FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(platformAwareSdkType)).doWhenDone(virtualFiles -> {
+        FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(platformAwareSdkType)).whenComplete((virtualFiles, error) -> {
+            if (error != null) {
+                return;
+            }
+
             Path path = virtualFiles[0].toNioPath();
             if (platformAwareSdkType.isValidSdkHome(platform, path)) {
                 consumer.accept(path);
@@ -257,7 +261,11 @@ public class SdkUtil {
     private static void selectLegacySdkHome(SdkType sdkType, @RequiredUIAccess Consumer<String> consumer) {
         FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
 
-        FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
+        FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).whenComplete((virtualFiles, error) -> {
+            if (error != null) {
+                return;
+            }
+
             String path = virtualFiles[0].getPath();
             if (sdkType.isValidSdkHome(path)) {
                 consumer.accept(path);

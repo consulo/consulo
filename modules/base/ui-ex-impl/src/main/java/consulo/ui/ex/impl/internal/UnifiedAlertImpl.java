@@ -31,9 +31,9 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -50,7 +50,7 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<V> showAsync(@Nullable Window owner) {
+    public CompletableFuture<V> showAsync(@Nullable Window owner) {
         if (myButtons.isEmpty()) {
             throw new UnsupportedOperationException("Buttons empty");
         }
@@ -61,7 +61,7 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
 
         V remembered = myRemember != null ? myRemember.getValue() : null;
         if (remembered != null) {
-            return AsyncResult.resolved(remembered);
+            return CompletableFuture.completedFuture(remembered);
         }
 
         Window window = Window.create(myTitle.get(), WindowOptions.builder().owner(owner).build());
@@ -77,7 +77,7 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
 
         window.setContent(buildContent(window, picked, rememberBox));
 
-        AsyncResult<V> result = AsyncResult.undefined();
+        CompletableFuture<V> result = new CompletableFuture<>();
 
         window.addCloseListener(event -> {
             Supplier<V> valueGetter = picked.get();
@@ -88,7 +88,7 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
                 myRemember.setValue(value);
             }
 
-            result.setDone(value);
+            result.complete(value);
         });
 
         window.show();

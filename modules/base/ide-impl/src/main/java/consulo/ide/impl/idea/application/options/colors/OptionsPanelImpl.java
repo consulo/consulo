@@ -30,7 +30,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Wrapper;
-import consulo.util.concurrent.AsyncResult;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -39,6 +38,7 @@ import javax.swing.text.Element;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class OptionsPanelImpl implements OptionsPanel {
     public static final String SELECTED_COLOR_OPTION_PROPERTY = "selected.color.option.type";
@@ -99,9 +99,15 @@ public class OptionsPanelImpl implements OptionsPanel {
                     SearchableConfigurable page = myOptions.findSubConfigurable(pageName);
                     if (page != null && settings != null) {
                         Runnable runnable = page.enableSearch(attrName);
-                        AsyncResult<Void> callback = settings.select(page);
+                        CompletableFuture<Void> callback = settings.select(page);
                         if (runnable != null) {
-                            callback.doWhenDone(runnable);
+                            callback.whenComplete((value, error) -> {
+                                if (error != null) {
+                                    return;
+                                }
+
+                                runnable.run();
+                            });
                         }
                     }
                 }

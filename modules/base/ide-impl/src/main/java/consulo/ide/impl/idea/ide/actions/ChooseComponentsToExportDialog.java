@@ -30,7 +30,6 @@ import consulo.ui.ex.awt.FieldPanel;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -44,6 +43,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class ChooseComponentsToExportDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(ChooseComponentsToExportDialog.class);
@@ -92,7 +92,11 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
                     getWindow(),
                     IdeLocalize.titleExportFileLocation(),
                     IdeLocalize.promptChooseExportSettingsFilePath()
-                ).doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
+                ).whenComplete((path, error) -> {
+                    if (error == null) {
+                        myPathPanel.setText(FileUtil.toSystemDependentName(path));
+                    }
+                });
             }
         };
 
@@ -175,7 +179,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
     
     @RequiredUIAccess
-    public static AsyncResult<String> chooseSettingsFile(
+    public static CompletableFuture<String> chooseSettingsFile(
         String oldPath,
         Component parent,
         LocalizeValue title,
@@ -197,19 +201,13 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
         else {
             initialDir = null;
         }
-        AsyncResult<String> result = AsyncResult.undefined();
-        AsyncResult<VirtualFile[]> fileAsyncResult = FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir);
-        fileAsyncResult.doWhenDone(files -> {
+        return FileChooser.chooseFiles(chooserDescriptor, null, parent, initialDir).thenApply(files -> {
             VirtualFile file = files[0];
             if (file.isDirectory()) {
-                result.setDone(file.getPath() + '/' + new File(DEFAULT_PATH).getName());
+                return file.getPath() + '/' + new File(DEFAULT_PATH).getName();
             }
-            else {
-                result.setDone(file.getPath());
-            }
+            return file.getPath();
         });
-        fileAsyncResult.doWhenRejected((Runnable)result::setRejected);
-        return result;
     }
 
     @RequiredUIAccess

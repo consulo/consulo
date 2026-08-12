@@ -30,7 +30,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -42,6 +41,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -57,7 +58,7 @@ public class ModuleImportProcessor {
      * @return
      */
     @RequiredUIAccess
-    public static <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showFileChooser(
+    public static <C extends ModuleImportContext> CompletableFuture<Pair<C, ModuleImportProvider<C>>> showFileChooser(
         @Nullable Project project,
         @Nullable FileChooserDescriptor chooserDescriptor
     ) {
@@ -71,16 +72,18 @@ public class ModuleImportProcessor {
             toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
         }
 
-        AsyncResult<Pair<C, ModuleImportProvider<C>>> result = AsyncResult.undefined();
+        CompletableFuture<Pair<C, ModuleImportProvider<C>>> result = new CompletableFuture<>();
 
-        AsyncResult<VirtualFile> fileChooseAsync = FileChooser.chooseFile(descriptor, project, toSelect);
-        fileChooseAsync.doWhenDone((f) -> {
+        FileChooser.chooseFile(descriptor, project, toSelect).whenComplete((f, error) -> {
+            if (error != null) {
+                result.completeExceptionally(error);
+                return;
+            }
+
             ApplicationPropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.getPath());
 
-            showImportChooser(project, f, AsyncResult.undefined());
+            showImportChooser(project, f, result);
         });
-
-        fileChooseAsync.doWhenRejected((Runnable) result::setRejected);
 
         return result;
     }
@@ -106,7 +109,7 @@ public class ModuleImportProcessor {
     public static <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
         VirtualFile file,
-        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {
         boolean isModuleImport = project != null;
 
@@ -116,7 +119,7 @@ public class ModuleImportProcessor {
         List<ModuleImportProvider> availableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
         if (availableProviders.isEmpty()) {
             Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").showAsync();
-            result.setRejected();
+            result.completeExceptionally(new CancellationException());
             return;
         }
 
@@ -129,19 +132,25 @@ public class ModuleImportProcessor {
         @Nullable Project project,
         VirtualFile file,
         List<ModuleImportProvider> providers,
-        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {
         if (providers.size() == 1) {
             showImportWizard(project, file, providers.get(0), result);
         }
         else {
-            AsyncResult<ModuleImportProvider> importResult = showImportTarget(providers);
-            importResult.doWhenDone((r) -> showImportWizard(project, file, r, result));
+            showImportTarget(providers).whenComplete((provider, error) -> {
+                if (error != null) {
+                    result.completeExceptionally(error);
+                }
+                else {
+                    showImportWizard(project, file, provider, result);
+                }
+            });
         }
     }
 
     @RequiredUIAccess
-    private static AsyncResult<ModuleImportProvider> showImportTarget(List<ModuleImportProvider> providers) {
+    private static CompletableFuture<ModuleImportProvider> showImportTarget(List<ModuleImportProvider> providers) {
         ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
         box.setRender((renderer, renderItem) -> {
             var item = renderItem.getValue();
@@ -157,12 +166,7 @@ public class ModuleImportProcessor {
         builder.setTitle("Import Target");
         builder.setCenterPanel((JComponent) TargetAWT.to(layout));
 
-        AsyncResult<ModuleImportProvider> result = AsyncResult.undefined();
-
-        AsyncResult<Void> showResult = builder.showAsync();
-        showResult.doWhenDone(() -> result.setDone(box.getValue()));
-        showResult.doWhenRejected((Runnable) result::setRejected);
-        return result;
+        return builder.showAsync().thenApply(ignored -> box.getValue());
     }
 
     @RequiredUIAccess
@@ -170,13 +174,19 @@ public class ModuleImportProcessor {
         @Nullable Project project,
         VirtualFile targetFile,
         ModuleImportProvider<C> moduleImportProvider,
-        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {
         ModuleImportDialog<C> dialog = new ModuleImportDialog<>(project, targetFile, moduleImportProvider);
 
-        AsyncResult<Void> showAsync = dialog.showAsync();
+        dialog.showAsync().whenComplete((value, error) -> {
+            if (error == null) {
+                result.complete(Pair.create(dialog.getContext(), moduleImportProvider));
+            }
+            else {
+                dialog.getContext().dispose();
 
-        showAsync.doWhenDone(() -> result.setDone(Pair.create(dialog.getContext(), moduleImportProvider)));
-        showAsync.doWhenRejected(() -> result.setRejected(Pair.create(dialog.getContext(), moduleImportProvider)));
+                result.completeExceptionally(error);
+            }
+        });
     }
 }

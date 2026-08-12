@@ -137,7 +137,11 @@ public class ApplyPatchAction extends LegacyDumbAwareAction {
                 ? null
                 : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(settings.PATCH_STORAGE_LOCATION));
 
-            FileChooser.chooseFile(descriptor, project, toSelect).doWhenDone(file -> {
+            FileChooser.chooseFile(descriptor, project, toSelect).whenComplete((file, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 VirtualFile parent = file.getParent();
                 if (parent != null) {
                     settings.PATCH_STORAGE_LOCATION = FileUtil.toSystemDependentName(parent.getPath());

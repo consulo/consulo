@@ -44,7 +44,6 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.style.StandardColors;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
@@ -216,7 +215,11 @@ public class SeverityEditorDialog extends DialogWrapper {
       assert colorAndFontOptions != null;
       SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
       LOG.assertTrue(javaPage != null);
-      optionsEditor.clearSearchAndSelect(javaPage).doWhenDone(() -> {
+      optionsEditor.clearSearchAndSelect(javaPage).whenComplete((value, error) -> {
+        if (error != null) {
+          return;
+        }
+
         Runnable runnable = javaPage.enableSearch(toConfigure);
         if (runnable != null) {
           SwingUtilities.invokeLater(runnable);
@@ -228,9 +231,7 @@ public class SeverityEditorDialog extends DialogWrapper {
       Configurable[] configurables = colorAndFontOptions.buildConfigurables();
       SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
       LOG.assertTrue(javaPage != null);
-      AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(Project.KEY), javaPage);
-
-      result.doWhenProcessed(() -> {
+      ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(Project.KEY), javaPage).whenComplete((value, error) -> {
         for (Configurable configurable : configurables) {
           configurable.disposeUIResources();
         }

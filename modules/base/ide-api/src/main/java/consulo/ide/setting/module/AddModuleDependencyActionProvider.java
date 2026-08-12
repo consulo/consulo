@@ -23,7 +23,9 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+
+import java.util.concurrent.CompletableFuture;
+
 
 /**
  * @author VISTALL
@@ -47,5 +49,5 @@ public interface AddModuleDependencyActionProvider<T, C extends AddModuleDepende
 
   
   @RequiredUIAccess
-  AsyncResult<T> invoke(C context);
+  CompletableFuture<T> invoke(C context);
 }

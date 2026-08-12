@@ -55,7 +55,8 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.TimeoutUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
@@ -1716,8 +1717,8 @@ public abstract class DialogWrapper {
      * @return result callback
      */
     @RequiredUIAccess
-    public AsyncResult<Boolean> showAndGetOk() {
-        AsyncResult<Boolean> result = new AsyncResult<>();
+    public CompletableFuture<Boolean> showAndGetOk() {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
 
         ensureEventDispatchThread();
         registerKeyboardShortcuts();
@@ -1727,31 +1728,28 @@ public abstract class DialogWrapper {
             Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
         }
 
-        Disposer.register(myDisposable, () -> result.setDone(isOK()));
+        Disposer.register(myDisposable, () -> result.complete(isOK()));
 
         myPeer.show();
 
         return result;
     }
 
-    
     @RequiredUIAccess
-    public AsyncResult<Void> showAsync() {
-        UIAccess uiAccess = UIAccess.current();
-
-        AsyncResult<Void> result = AsyncResult.undefined();
-        showInternal().doWhenProcessed(() -> {
+    public CompletableFuture<Void> showAsync() {
+        CompletableFuture<Void> result = new CompletableFuture<>();
+        showInternal().whenComplete((value, error) -> {
             if (isOK()) {
-                result.setDone();
+                result.complete(null);
             }
             else {
-                result.setRejected();
+                result.completeExceptionally(new CancellationException());
             }
         });
         return result;
     }
 
-    private AsyncResult<Void> showInternal() {
+    private CompletableFuture<?> showInternal() {
         ensureEventDispatchThread();
 
         registerKeyboardShortcuts();

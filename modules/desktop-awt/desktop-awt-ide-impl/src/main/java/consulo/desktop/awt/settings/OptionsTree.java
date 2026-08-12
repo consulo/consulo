@@ -39,7 +39,6 @@ import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
@@ -58,6 +57,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -204,7 +205,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     protected void onTreeKeyEvent(KeyEvent e) {
     }
 
-    AsyncResult<Void> select(@Nullable Configurable configurable) {
+    CompletableFuture<Void> select(@Nullable Configurable configurable) {
         return queueSelection(configurable);
     }
 
@@ -218,12 +219,12 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
     private Configurable myQueuedConfigurable;
 
-    AsyncResult<Void> queueSelection(final Configurable configurable) {
+    CompletableFuture<Void> queueSelection(final Configurable configurable) {
         if (myBuilder.isSelectionBeingAdjusted()) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
-        final AsyncResult<Void> callback = AsyncResult.undefined();
+        final CompletableFuture<Void> callback = new CompletableFuture<>();
 
         myQueuedConfigurable = configurable;
         Update update = new Update(this) {
@@ -262,15 +263,15 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             @Override
             public void setRejected() {
                 super.setRejected();
-                callback.setRejected();
+                callback.completeExceptionally(new CancellationException());
             }
         };
         mySelection.queue(update);
         return callback;
     }
 
-    private void fireSelected(Configurable configurable, AsyncResult<Void> callback) {
-        myContext.fireSelected(configurable, this).doWhenProcessed(callback.createSetDoneRunnable());
+    private void fireSelected(Configurable configurable, CompletableFuture<Void> callback) {
+        myContext.fireSelected(configurable, this).whenComplete((value, error) -> callback.complete(null));
     }
 
     public JTree getTree() {
@@ -515,25 +516,25 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     @Override
-    public AsyncResult<Void> onSelected(Configurable configurable, Configurable oldConfigurable) {
+    public CompletableFuture<Void> onSelected(Configurable configurable, Configurable oldConfigurable) {
         return queueSelection(configurable);
     }
 
     @Override
-    public AsyncResult<Void> onModifiedAdded(Configurable colleague) {
+    public CompletableFuture<Void> onModifiedAdded(Configurable colleague) {
         myTree.repaint();
-        return AsyncResult.resolved();
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
+    public CompletableFuture<Void> onModifiedRemoved(Configurable configurable) {
         myTree.repaint();
-        return AsyncResult.resolved();
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public AsyncResult<Void> onErrorsChanged() {
-        return AsyncResult.resolved();
+    public CompletableFuture<Void> onErrorsChanged() {
+        return CompletableFuture.completedFuture(null);
     }
 
     public void processTextEvent(KeyEvent e) {

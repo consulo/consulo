@@ -17,7 +17,7 @@ import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.xml.XmlStringUtil;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> modulesNavigator(Project project) {
+    private CompletableFuture<?> modulesNavigator(Project project) {
         return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
             projectStructureSelector.select(myModule.getName(), null, true);
         });

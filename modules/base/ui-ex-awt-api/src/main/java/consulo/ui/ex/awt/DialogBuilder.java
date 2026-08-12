@@ -24,7 +24,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AsyncResult;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -32,6 +31,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * The DialogBuilder is a simpler alternative to {@link DialogWrapper}.
@@ -62,7 +62,7 @@ public class DialogBuilder implements Disposable {
 
     
     @RequiredUIAccess
-    public AsyncResult<Void> showAsync() {
+    public CompletableFuture<Void> showAsync() {
         return showAsync(true);
     }
 
@@ -90,7 +90,7 @@ public class DialogBuilder implements Disposable {
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> showAsync(boolean isModal) {
+    private CompletableFuture<Void> showAsync(boolean isModal) {
         myDialogWrapper.setTitle(myTitle);
         myDialogWrapper.init();
         myDialogWrapper.setModal(isModal);

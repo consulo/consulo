@@ -18,6 +18,7 @@ package consulo.util.concurrent;
 /**
  * @author dmitrylomov
  */
+@Deprecated
 public interface ResultConsumer<V> {
   void onSuccess(V value);
 

@@ -179,34 +179,36 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
             runBeforeTask(beforeRunTasks, 0, environment, uiAccess, projectContext, runConfiguration, result);
 
-            if (onCancelRunnable != null) {
-                result.exceptionally(error -> {
-                    uiAccess.give(onCancelRunnable);
-                    return null;
-                });
-            }
-
-            result.thenRun(() -> uiAccess.give(() -> {
-                if (myProject.isDisposed()) {
+            result.whenComplete((value, error) -> {
+                if (error != null) {
+                    if (onCancelRunnable != null) {
+                        uiAccess.give(onCancelRunnable);
+                    }
                     return;
                 }
 
-                RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
-                ConfigurationType configurationType = settings == null ? null : settings.getType();
+                uiAccess.give(() -> {
+                    if (myProject.isDisposed()) {
+                        return;
+                    }
 
-                boolean canRunAnyway = configurationType == null
-                    || configurationType.isDumbAware()
-                    || !DumbService.isDumb(myProject);
+                    RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
+                    ConfigurationType configurationType = settings == null ? null : settings.getType();
 
-                if (canRunAnyway) {
-                    startRunnable.run();
-                }
-                else {
-                    // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
-                    // and execution of startRunnable could be skipped if modality state check fails
-                    DumbService.getInstance(myProject).runWhenSmart(startRunnable);
-                }
-            }));
+                    boolean canRunAnyway = configurationType == null
+                        || configurationType.isDumbAware()
+                        || !DumbService.isDumb(myProject);
+
+                    if (canRunAnyway) {
+                        startRunnable.run();
+                    }
+                    else {
+                        // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
+                        // and execution of startRunnable could be skipped if modality state check fails
+                        DumbService.getInstance(myProject).runWhenSmart(startRunnable);
+                    }
+                });
+            });
         }
     }
 

@@ -16,7 +16,7 @@
 package consulo.fileChooser;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -38,7 +38,7 @@ public interface PathChooserDialog {
 
   
   @RequiredUIAccess
-  default AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+  default CompletableFuture<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
     throw new AbstractMethodError();
   }
 }

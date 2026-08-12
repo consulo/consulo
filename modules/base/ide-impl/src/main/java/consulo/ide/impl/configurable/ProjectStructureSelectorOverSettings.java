@@ -40,7 +40,8 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MasterDetailsComponent;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -58,7 +59,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
+    public CompletableFuture<?> select(@Nullable Artifact artifact, boolean requestFocus) {
         return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
             artifactsStructureConfigurable.selectNodeInTree(artifact);
             runnable.run();
@@ -67,7 +68,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> select(Sdk sdk, boolean requestFocus) {
+    public CompletableFuture<?> select(Sdk sdk, boolean requestFocus) {
         return selectAsync(SdkListConfigurable.ID, SdkListConfigurable.class, (sdkListConfigurable, runnable) -> {
             sdkListConfigurable.selectNodeInTree(sdk);
             runnable.run();
@@ -76,14 +77,18 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus) {
+    public CompletableFuture<?> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
             // just select Modules
             if (moduleToSelect == null) {
                 runnable.run();
                 return;
             }
-            moduleStructureConfigurable.selectNodeInTree(moduleToSelect).doWhenDone((node) -> {
+            moduleStructureConfigurable.selectNodeInTree(moduleToSelect).whenComplete((node, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 MasterDetailsConfigurable configurable = ((MasterDetailsComponent.MyNode) node).getConfigurable();
                 if (configurable == null) {
                     return;
@@ -105,19 +110,23 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
+    public CompletableFuture<?> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
         Library library = libraryOrderEntry.getLibrary();
         if (library == null) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
         return selectProjectOrGlobalLibrary(library, requestFocus);
     }
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry) {
+    public CompletableFuture<?> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
-            moduleStructureConfigurable.selectNodeInTree(module).doWhenDone((node) -> {
+            moduleStructureConfigurable.selectNodeInTree(module).whenComplete((node, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 ModuleEditor moduleEditor = ((ModuleConfigurable) ((MasterDetailsComponent.MyNode) node).getConfigurable()).getModuleEditor();
 
                 moduleEditor.selectEditor(ProjectLocalize.moduleDependenciesTitle().get());
@@ -136,7 +145,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     @RequiredUIAccess
     
     @Override
-    public AsyncResult<Void> selectProjectOrGlobalLibrary(Library library, boolean requestFocus) {
+    public CompletableFuture<?> selectProjectOrGlobalLibrary(Library library, boolean requestFocus) {
         return selectAsync(ProjectLibrariesConfigurable.ID, ProjectLibrariesConfigurable.class, (projectLibrariesConfigurable, runnable) -> {
             projectLibrariesConfigurable.selectNodeInTree(library);
             runnable.run();
@@ -145,25 +154,33 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
 
     @Override
     @RequiredUIAccess
-    public AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus) {
+    public CompletableFuture<?> selectProjectGeneralSettings(boolean requestFocus) {
         return selectAsync(StandardConfigurableIds.PROJECT_GROUP, ProjectConfigurableGroup.class, (projectConfigurable, runnable) -> {
             runnable.run();
         });
     }
 
     @RequiredUIAccess
-    private <T extends UnnamedConfigurable> AsyncResult<Void> selectAsync(String id, Class<T> cls, BiConsumer<T, Runnable> consumer) {
-        AsyncResult<Void> result = AsyncResult.undefined();
+    private <T extends UnnamedConfigurable> CompletableFuture<?> selectAsync(String id, Class<T> cls, BiConsumer<T, Runnable> consumer) {
+        CompletableFuture<Void> result = new CompletableFuture<>();
 
         UIAccess.current().give(() -> {
             SearchableConfigurable configurable = mySettings.findConfigurableById(id);
             if (configurable == null) {
+                result.completeExceptionally(new CancellationException());
                 return;
             }
 
             T config = ConfigurableWrapper.cast(configurable, cls);
 
-            mySettings.select(configurable).doWhenDone(() -> consumer.accept(config, result::setDone));
+            mySettings.select(configurable).whenComplete((value, error) -> {
+                if (error != null) {
+                    result.completeExceptionally(error);
+                    return;
+                }
+
+                consumer.accept(config, () -> result.complete(null));
+            });
         });
 
         return result;

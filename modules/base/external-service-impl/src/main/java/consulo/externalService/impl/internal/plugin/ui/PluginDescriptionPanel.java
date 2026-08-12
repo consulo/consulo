@@ -86,7 +86,13 @@ public class PluginDescriptionPanel {
                 return;
             }
 
-            data.select(PluginsConfigurableImpl.class).doWhenDone((pluginConfigurable) -> pluginConfigurable.select(pluginId));
+            data.select(PluginsConfigurableImpl.class).whenComplete((pluginConfigurable, error) -> {
+                if (error != null) {
+                    return;
+                }
+
+                pluginConfigurable.select(pluginId);
+            });
         }
     }
 

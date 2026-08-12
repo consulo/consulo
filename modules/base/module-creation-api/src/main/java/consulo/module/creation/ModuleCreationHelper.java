@@ -23,12 +23,12 @@ import consulo.module.creation.importing.ModuleImportContext;
 import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -38,7 +38,7 @@ import java.util.List;
 public interface ModuleCreationHelper {
     @RequiredUIAccess
     @UsedInPlugin
-    <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showImportFileChooser(
+    <C extends ModuleImportContext> CompletableFuture<Pair<C, ModuleImportProvider<C>>> showImportFileChooser(
         @Nullable Project project,
         @Nullable FileChooserDescriptor chooserDescriptor
     );
@@ -48,7 +48,7 @@ public interface ModuleCreationHelper {
     <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
         VirtualFile file,
-        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     );
 
     @RequiredUIAccess
@@ -57,6 +57,6 @@ public interface ModuleCreationHelper {
         @Nullable Project project,
         VirtualFile file,
         List<ModuleImportProvider> providers,
-        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     );
 }

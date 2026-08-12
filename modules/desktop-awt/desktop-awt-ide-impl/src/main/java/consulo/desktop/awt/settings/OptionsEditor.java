@@ -59,7 +59,6 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import consulo.util.lang.ControlFlowException;
@@ -76,6 +75,8 @@ import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -354,32 +355,32 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
     private class MyColleague implements OptionsEditorColleague {
         @Override
         @RequiredUIAccess
-        public AsyncResult<Void> onSelected(Configurable configurable, Configurable oldConfigurable) {
+        public CompletableFuture<Void> onSelected(Configurable configurable, Configurable oldConfigurable) {
             return processSelected(configurable, oldConfigurable);
         }
 
         @Override
-        public AsyncResult<Void> onModifiedRemoved(Configurable configurable) {
+        public CompletableFuture<Void> onModifiedRemoved(Configurable configurable) {
             return updateIfCurrent(configurable);
         }
 
         @Override
-        public AsyncResult<Void> onModifiedAdded(Configurable configurable) {
+        public CompletableFuture<Void> onModifiedAdded(Configurable configurable) {
             return updateIfCurrent(configurable);
         }
 
         @Override
-        public AsyncResult<Void> onErrorsChanged() {
+        public CompletableFuture<Void> onErrorsChanged() {
             return updateIfCurrent(getContext().getCurrentConfigurable());
         }
 
-        private AsyncResult<Void> updateIfCurrent(Configurable configurable) {
+        private CompletableFuture<Void> updateIfCurrent(Configurable configurable) {
             if (getContext().getCurrentConfigurable() == configurable && configurable != null) {
                 updateContent();
-                return AsyncResult.resolved();
+                return CompletableFuture.completedFuture(null);
             }
             else {
-                return AsyncResult.rejected();
+                return CompletableFuture.failedFuture(new CancellationException());
             }
         }
     }
@@ -543,7 +544,7 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
     private final ContentWrapper myContentWrapper = new ContentWrapper();
 
     private final Map<Configurable, ConfigurableContext> myConfigurable2Content = new HashMap<>();
-    private final Map<Configurable, AsyncResult<Void>> myConfigurable2LoadCallback = new HashMap<>();
+    private final Map<Configurable, CompletableFuture<Void>> myConfigurable2LoadCallback = new HashMap<>();
 
     private final MergingUpdateQueue myModificationChecker;
     private JPanel myRootPanel;
@@ -764,61 +765,58 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
     }
 
     @Override
-    public AsyncResult<Void> clearSearchAndSelect(Configurable configurable) {
+    public CompletableFuture<Void> clearSearchAndSelect(Configurable configurable) {
         clearFilter();
         return select(configurable, "");
     }
 
     @Override
-    public AsyncResult<Void> select(Configurable configurable) {
+    public CompletableFuture<Void> select(Configurable configurable) {
         if (StringUtil.isEmpty(mySearch.getText())) {
             return select(configurable, "");
         }
         else {
-            return Promises.toAsyncResult(myFilter.refilterFor(mySearch.getText(), true, true));
+            return Promises.toCompletableFuture(myFilter.refilterFor(mySearch.getText(), true, true));
         }
     }
 
     @Override
-    public AsyncResult<Void> select(Configurable configurable, String text) {
-        AsyncResult<Void> callback = AsyncResult.undefined();
-        Promises.toActionCallback(myFilter.refilterFor(text, false, true)).doWhenDone(() -> myTree.select(configurable).notify(callback));
-        return callback;
+    public CompletableFuture<Void> select(Configurable configurable, String text) {
+        return refilterAndSelect(text, configurable).thenApply(ignored -> null);
     }
 
     @Override
-    public AsyncResult<Configurable> select(String configurableId) {
+    public CompletableFuture<Configurable> select(String configurableId) {
         Configurable configurableInfo = myTree.findConfigurableById(configurableId);
         if (configurableInfo == null) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
-        AsyncResult<Configurable> callback = AsyncResult.undefined();
-        Promises.toActionCallback(myFilter.refilterFor("", false, true))
-            .doWhenDone(() -> myTree.select(configurableInfo).doWhenDone(() -> callback.setDone(configurableInfo)));
-        return callback;
+        return refilterAndSelect("", configurableInfo).thenApply(ignored -> configurableInfo);
     }
 
     @Override
-    public <T extends UnnamedConfigurable> AsyncResult<T> select(Class<T> clazz) {
+    public <T extends UnnamedConfigurable> CompletableFuture<T> select(Class<T> clazz) {
         Pair<Configurable, T> configurableInfo = myTree.findConfigurableInfo(clazz);
         if (configurableInfo == null) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
-        AsyncResult<T> callback = AsyncResult.undefined();
-        Promises.toActionCallback(myFilter.refilterFor("", false, true))
-            .doWhenDone(() -> myTree.select(configurableInfo.getFirst()).doWhenDone(() -> callback.setDone(configurableInfo.getSecond())));
-        return callback;
+        return refilterAndSelect("", configurableInfo.getFirst()).thenApply(ignored -> configurableInfo.getSecond());
+    }
+
+    private CompletableFuture<Void> refilterAndSelect(String text, Configurable configurable) {
+        return Promises.toCompletableFuture(myFilter.refilterFor(text, false, true))
+            .thenCompose(ignored -> myTree.select(configurable));
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> processSelected(Configurable configurable, Configurable oldConfigurable) {
+    private CompletableFuture<Void> processSelected(Configurable configurable, Configurable oldConfigurable) {
         if (isShowing(configurable)) {
-            return AsyncResult.resolved();
+            return CompletableFuture.completedFuture(null);
         }
 
-        AsyncResult<Void> result = AsyncResult.undefined();
+        CompletableFuture<Void> result = new CompletableFuture<>();
 
         if (configurable == null) {
             myOwnDetails.setContent(null);
@@ -827,59 +825,73 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
             updateSpotlight(true);
             checkModified(oldConfigurable);
 
-            result.setDone();
+            result.complete(null);
 
         }
         else {
-            getUiFor(configurable).doWhenDone(() -> SwingUtilities.invokeLater(() -> {
-                if (myDisposed) {
+            getUiFor(configurable).whenComplete((uiValue, uiError) -> {
+                if (uiError != null) {
+                    result.completeExceptionally(uiError);
                     return;
                 }
 
-                Configurable current = getContext().getCurrentConfigurable();
-                if (current != configurable) {
-                    result.setRejected();
-                    return;
-                }
+                SwingUtilities.invokeLater(() -> {
+                    if (myDisposed) {
+                        return;
+                    }
 
-                updateContent();
+                    Configurable current = getContext().getCurrentConfigurable();
+                    if (current != configurable) {
+                        result.completeExceptionally(new CancellationException());
+                        return;
+                    }
 
-                String[] bannerText = getBannerText(configurable);
-                myOwnDetails.setText(bannerText);
+                    updateContent();
 
-                FullContentConfigurable fullContent = ConfigurableWrapper.cast(configurable, FullContentConfigurable.class);
-                if (fullContent != null) {
-                    myOwnDetails.setFullContent(myContentWrapper, fullContent::setBannerComponent);
-                }
-                else {
-                    myOwnDetails.setContent(myContentWrapper);
-                }
+                    String[] bannerText = getBannerText(configurable);
+                    myOwnDetails.setText(bannerText);
 
-                if (isProjectConfigurable(configurable) && myProject != null) {
-                    myOwnDetails.setProjectIconDescription(
-                        myProject.isDefault()
-                            ? ConfigurableLocalize.configurableDefaultProjectTooltip().get()
-                            : ConfigurableLocalize.configurableCurrentProjectTooltip().get()
-                    );
-                }
-                else {
-                    myOwnDetails.setProjectIconDescription(null);
-                }
+                    FullContentConfigurable fullContent = ConfigurableWrapper.cast(configurable, FullContentConfigurable.class);
+                    if (fullContent != null) {
+                        myOwnDetails.setFullContent(myContentWrapper, fullContent::setBannerComponent);
+                    }
+                    else {
+                        myOwnDetails.setContent(myContentWrapper);
+                    }
 
-                myLoadingDecorator.stopLoading();
+                    if (isProjectConfigurable(configurable) && myProject != null) {
+                        myOwnDetails.setProjectIconDescription(
+                            myProject.isDefault()
+                                ? ConfigurableLocalize.configurableDefaultProjectTooltip().get()
+                                : ConfigurableLocalize.configurableCurrentProjectTooltip().get()
+                        );
+                    }
+                    else {
+                        myOwnDetails.setProjectIconDescription(null);
+                    }
 
-                updateSpotlight(false);
+                    myLoadingDecorator.stopLoading();
 
-                checkModified(oldConfigurable);
-                checkModified(configurable);
+                    updateSpotlight(false);
 
-                if (myTree.myBuilder.getSelectedElements().size() == 0) {
-                    select(configurable).notify(result);
-                }
-                else {
-                    result.setDone();
-                }
-            }));
+                    checkModified(oldConfigurable);
+                    checkModified(configurable);
+
+                    if (myTree.myBuilder.getSelectedElements().size() == 0) {
+                        select(configurable).whenComplete((value, error) -> {
+                            if (error != null) {
+                                result.completeExceptionally(error);
+                                return;
+                            }
+
+                            result.complete(null);
+                        });
+                    }
+                    else {
+                        result.complete(null);
+                    }
+                });
+            });
         }
 
         return result;
@@ -890,24 +902,24 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> getUiFor(Configurable target) {
+    private CompletableFuture<Void> getUiFor(Configurable target) {
         UIAccess.assertIsUIThread();
 
         if (myDisposed) {
-            return AsyncResult.rejected();
+            return CompletableFuture.failedFuture(new CancellationException());
         }
 
         UIAccess uiAccess = UIAccess.current();
         if (!myConfigurable2Content.containsKey(target)) {
 
             return myConfigurable2LoadCallback.computeIfAbsent(target, configurable -> {
-                AsyncResult<Void> result = AsyncResult.undefined();
+                CompletableFuture<Void> result = new CompletableFuture<>();
 
                 myLoadingDecorator.startLoading(false);
 
                 uiAccess.give(() -> {
                     if (myProject.isDisposed()) {
-                        result.setRejected();
+                        result.completeExceptionally(new CancellationException());
                         return;
                     }
 
@@ -918,15 +930,15 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
             });
         }
 
-        return AsyncResult.resolved();
+        return CompletableFuture.completedFuture(null);
     }
 
     @RequiredUIAccess
-    private void initConfigurable(Configurable configurable, AsyncResult<Void> result) {
+    private void initConfigurable(Configurable configurable, CompletableFuture<Void> result) {
         UIAccess.assertIsUIThread();
 
         if (myDisposed) {
-            result.setRejected();
+            result.completeExceptionally(new CancellationException());
             return;
         }
 
@@ -940,11 +952,11 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
                     return content;
                 }
             );
-            result.setDone();
+            result.complete(null);
         }
         catch (Throwable e) {
             LOG.warn(e);
-            result.rejectWithThrowable(e);
+            result.completeExceptionally(e);
         }
     }
 
@@ -1020,9 +1032,13 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
                     if (myDisposed) {
                         return;
                     }
-                    AsyncResult<Void> result = AsyncResult.undefined();
+                    CompletableFuture<Void> result = new CompletableFuture<>();
                     initConfigurable(configurable, result);
-                    result.doWhenDone(() -> {
+                    result.whenComplete((value, error) -> {
+                        if (error != null) {
+                            return;
+                        }
+
                         if (myDisposed) {
                             return;
                         }
@@ -1228,9 +1244,9 @@ public class OptionsEditor implements UiDataProvider, Disposable, AWTEventListen
         visitRecursive(
             myBuildConfigurables,
             each -> {
-                AsyncResult<Void> loadCb = myConfigurable2LoadCallback.get(each);
+                CompletableFuture<Void> loadCb = myConfigurable2LoadCallback.get(each);
                 if (loadCb != null) {
-                    loadCb.doWhenProcessed(() -> {
+                    loadCb.whenComplete((value, error) -> {
                         UIAccess.assertIsUIThread();
                         each.disposeUIResources();
                     });

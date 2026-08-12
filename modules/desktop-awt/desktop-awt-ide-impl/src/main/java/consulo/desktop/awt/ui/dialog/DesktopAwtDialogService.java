@@ -42,7 +42,6 @@ import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -82,12 +81,7 @@ public class DesktopAwtDialogService implements DialogService {
         @Override
         @RequiredUIAccess
         public CompletableFuture<DialogValue> showAsync() {
-            CompletableFuture<DialogValue> result = new CompletableFuture<>();
-
-            AsyncResult<Void> showAsync = myDialogWrapper.showAsync();
-            showAsync.doWhenDone(() -> result.complete(myValue));
-            showAsync.doWhenRejected(() -> result.completeExceptionally(new IllegalArgumentException("reject")));
-            return result;
+            return myDialogWrapper.showAsync().thenApply(ignored -> myValue);
         }
 
         @Override

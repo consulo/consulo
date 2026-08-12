@@ -42,7 +42,11 @@ public class DesktopAWTMemberChooserBuilder<T extends ClassMember> extends Membe
   public void showAsync(Project project, Consumer<UserDataHolder> consumer) {
     MemberChooserImpl<T> dialog = new MemberChooserImpl<T>(myElements, myAllowEmptySelection, myAllowMultipleSelection, myOptions, project);
     dialog.setTitle(myTitle.get());
-    dialog.showAsync().doWhenDone(() -> {
+    dialog.showAsync().whenComplete((value, error) -> {
+        if (error != null) {
+            return;
+        }
+
       List<T> selectedElements = dialog.getSelectedElements();
 
       UnprotectedUserDataHolder result = new UnprotectedUserDataHolder();

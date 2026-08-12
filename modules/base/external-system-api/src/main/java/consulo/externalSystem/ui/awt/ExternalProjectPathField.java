@@ -273,7 +273,11 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
                 fileToStart = LocalFileSystem.getInstance().findFileByPath(pathToStart);
             }
 
-            FileChooser.chooseFile(myDescriptor, myProject, fileToStart).doWhenDone(file -> {
+            FileChooser.chooseFile(myDescriptor, myProject, fileToStart).whenComplete((file, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 String path = ExternalSystemApiUtil.getLocalFileSystemPath(file);
                 myPathField.setText(path);
                 component.setValue(PROJECT_FILE_TO_START_WITH_KEY, path);

@@ -53,7 +53,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import consulo.util.lang.Comparing;
@@ -63,6 +62,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -337,10 +337,15 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
         if (anImport) {
             AsyncPromise<List<Module>> asyncPromise = new AsyncPromise<>();
-            AsyncResult listAsyncResult = ModuleImportProcessor.showFileChooser(myProject, null);
+            CompletableFuture<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
+                ModuleImportProcessor.showFileChooser(myProject, null);
 
-            listAsyncResult.doWhenDone(o -> {
-                Pair<ModuleImportContext, ModuleImportProvider> pair = (Pair<ModuleImportContext, ModuleImportProvider>)o;
+            chooser.whenComplete((pair, error) -> {
+                if (error != null) {
+                    asyncPromise.setError("rejected");
+                    return;
+                }
+
                 ModuleImportProvider<ModuleImportContext> importProvider = pair.getSecond();
                 ModuleImportContext importContext = pair.getFirst();
                 assert importProvider != null;
@@ -357,7 +362,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
                 asyncPromise.setResult(modules);
             });
 
-            listAsyncResult.doWhenRejected(() -> asyncPromise.setError("rejected"));
+            return asyncPromise;
         }
         else {
             FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
@@ -380,12 +385,20 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
             AsyncPromise<List<Module>> promise = new AsyncPromise<>();
 
-            AsyncResult<VirtualFile> fileChooserAsync = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
-            fileChooserAsync.doWhenDone(moduleDir -> {
+            FileChooser.chooseFile(fileChooserDescriptor, myProject, null).whenComplete((moduleDir, chooserError) -> {
+                if (chooserError != null) {
+                    promise.setError("rejected from chooser");
+                    return;
+                }
+
                 NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
 
-                AsyncResult<Void> dialogAsync = dialog.showAsync();
-                dialogAsync.doWhenDone(() -> {
+                dialog.showAsync().whenComplete((value, dialogError) -> {
+                    if (dialogError != null) {
+                        promise.setError("dialog canceled");
+                        return;
+                    }
+
                     NewProjectPanel panel = dialog.getProjectPanel();
 
                     Module newModule =
@@ -399,13 +412,10 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
                     promise.setResult(Collections.singletonList(newModule));
                 });
-                dialogAsync.doWhenRejected(() -> promise.setError("dialog canceled"));
             });
-            fileChooserAsync.doWhenRejected(() -> promise.setError("rejected from chooser"));
 
             return promise;
         }
-        return Promises.rejectedPromise();
     }
 
     @RequiredUIAccess

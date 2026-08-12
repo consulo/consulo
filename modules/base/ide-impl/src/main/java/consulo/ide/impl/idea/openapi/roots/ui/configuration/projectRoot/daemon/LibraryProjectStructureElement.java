@@ -39,7 +39,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CompletableFuture;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
@@ -159,7 +159,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     }
 
     @RequiredUIAccess
-    private AsyncResult<Void> librariesNavigator(Project project) {
+    private CompletableFuture<?> librariesNavigator(Project project) {
         return ShowSettingsUtil.getInstance().showProjectStructureDialog(
             project,
             projectStructureSelector -> projectStructureSelector.selectProjectOrGlobalLibrary(myLibrary, true)
@@ -178,7 +178,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
             && getSourceOrThis() == that.getSourceOrThis();
     }
 
-    public AsyncResult<Void> navigate(Project project) {
+    public CompletableFuture<?> navigate(Project project) {
         return createPlace().navigate(project);
     }
 
@@ -265,7 +265,11 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
                 Settings settings = dataContext.getRequiredData(Settings.KEY);
                 ProjectLibrariesConfigurable librariesConfigurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
 
-                navigate(myProject).doWhenDone(() -> {
+                navigate(myProject).whenComplete((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+
                     if (librariesConfigurable.getSelectedConfigurable() instanceof LibraryConfigurable libConfigurable) {
                         libConfigurable.updateComponent();
                     }

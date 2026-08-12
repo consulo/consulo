@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -27,6 +26,7 @@ import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class DialogWrapperPeer {
   public static Object HAVE_INITIAL_SELECTION = new Object();
@@ -159,7 +159,7 @@ public abstract class DialogWrapperPeer {
 
   public abstract ActionCallback show();
 
-  public abstract AsyncResult<Void> showAsync();
+  public abstract CompletableFuture<?> showAsync();
 
   public abstract void setContentPane(JComponent content);
 

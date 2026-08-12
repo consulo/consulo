@@ -67,7 +67,11 @@ public class InsertPathAction extends AnAction {
     }
     //TODO use from openapi
     //FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.commandLine.insertPath");
-    FileChooser.chooseFile(myDescriptor, myTextField, e.getData(Project.KEY), virtualFile).doWhenDone((f) -> {
+    FileChooser.chooseFile(myDescriptor, myTextField, e.getData(Project.KEY), virtualFile).whenComplete((f, error) -> {
+        if (error != null) {
+            return;
+        }
+
       myTextField.replaceSelection(f.getPresentableUrl());
     });
   }

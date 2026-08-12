@@ -27,7 +27,8 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.style.ComponentColors;
-import consulo.util.concurrent.AsyncResult;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -44,7 +45,7 @@ public abstract class WindowWrapper {
 
   private Button myOkButton;
 
-  private AsyncResult<Void> myResult;
+  private CompletableFuture<Void> myResult;
 
   public WindowWrapper(String title) {
     myTitle = title;
@@ -62,12 +63,12 @@ public abstract class WindowWrapper {
    * Not block UI
    */
   @RequiredUIAccess
-  public AsyncResult<Void> showAsync() {
+  public CompletableFuture<Void> showAsync() {
     if (myWindow != null) {
       throw new IllegalArgumentException();
     }
 
-    myResult = AsyncResult.undefined();
+    myResult = new CompletableFuture<>();
 
     myWindow = Window.create(myTitle, WindowOptions.builder().owner(Window.getActiveWindow()).build());
     Size2D defaultSize = getDefaultSize();
@@ -140,10 +141,10 @@ public abstract class WindowWrapper {
       return;
     }
     if (isOk) {
-      myResult.setDone();
+      myResult.complete(null);
     }
     else {
-      myResult.setRejected();
+      myResult.completeExceptionally(new CancellationException());
     }
     myWindow.close();
     Disposer.dispose(myWindow);

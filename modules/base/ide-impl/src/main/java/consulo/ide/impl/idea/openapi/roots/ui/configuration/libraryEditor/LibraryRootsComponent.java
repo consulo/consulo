@@ -568,7 +568,11 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
                 }
             }
 
-            FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect).doWhenDone(files -> {
+            FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect).whenComplete((files, error) -> {
+                if (error != null) {
+                    return;
+                }
+
                 Application.get().runWriteAction(() -> {
                     for (VirtualFile file : files) {
                         getLibraryEditor().addExcludedRoot(file.getUrl());

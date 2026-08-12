@@ -16,9 +16,10 @@
 package consulo.configurable;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -35,17 +36,17 @@ public interface Settings {
 
     @Deprecated
     @DeprecationInfo("Use #select(Class)")
-    AsyncResult<Void> select(Configurable configurable);
+    CompletableFuture<Void> select(Configurable configurable);
 
     @Deprecated
     @DeprecationInfo("Use #select(Class)")
-    AsyncResult<Void> select(Configurable configurable, String text);
+    CompletableFuture<Void> select(Configurable configurable, String text);
 
     @Deprecated
     @DeprecationInfo("Use #select(Class)")
-    AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
+    CompletableFuture<Void> clearSearchAndSelect(Configurable configurable);
 
-    <T extends UnnamedConfigurable> AsyncResult<T> select(Class<T> clazz);
+    <T extends UnnamedConfigurable> CompletableFuture<T> select(Class<T> clazz);
 
-    AsyncResult<Configurable> select(String configurableId);
+    CompletableFuture<Configurable> select(String configurableId);
 }

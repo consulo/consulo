@@ -24,11 +24,12 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 import org.jspecify.annotations.Nullable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -44,31 +45,31 @@ public class DesktopSwtFileChooserDialog implements FileChooserDialog, PathChoos
   @RequiredUIAccess
   
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
+  public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
     return chooseAsync(null, new VirtualFile[]{toSelect});
   }
 
   @RequiredUIAccess
-  
+
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
+  public CompletableFuture<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
     Window focusedWindow = Window.getActiveWindow();
 
-    AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
+    CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
     DirectoryDialog directoryDialog = new DirectoryDialog(TargetSWT.to(focusedWindow));
     UIAccess.current().give(() -> {
       String path = directoryDialog.open();
       if (path != null) {
         VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(path);
         if (vf != null) {
-          result.setDone(new VirtualFile[]{vf});
+          result.complete(new VirtualFile[]{vf});
         }
         else {
-          result.setRejected();
+          result.completeExceptionally(new CancellationException());
         }
       }
       else {
-        result.setRejected();
+        result.completeExceptionally(new CancellationException());
       }
     }); return result;
   }
