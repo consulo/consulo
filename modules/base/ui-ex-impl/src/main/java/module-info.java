@@ -13,6 +13,8 @@ module consulo.ui.ex.impl {
     requires consulo.util.nodep;
     requires gnu.trove;
 
+    exports consulo.ui.ex.impl.internal to consulo.desktop.awt.ide.impl;
+
     exports consulo.ui.ex.impl.internal.clipboard to consulo.desktop.ide.impl;
     exports consulo.ui.ex.impl.internal.util to consulo.ide.impl;
 

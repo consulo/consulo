@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.actions.AboutManager;
+import consulo.ui.ex.internal.AboutManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

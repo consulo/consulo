@@ -35,6 +35,10 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
     public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
         private LocalizeValue myLabelText = LocalizeValue.empty();
 
+        public Vaadin() {
+            getStyle().set("white-space", "nowrap");
+        }
+
         public void setLabelText(LocalizeValue labelText) {
             myLabelText = labelText;
             updateLabelText();

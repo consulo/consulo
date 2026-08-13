@@ -41,6 +41,10 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButtonImpl.Vaadin> implements ToggleButton {
     public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
+        public Vaadin() {
+            getStyle().set("white-space", "nowrap");
+        }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebToggleButtonImpl.this;

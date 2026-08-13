@@ -45,6 +45,8 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
             myLabel = new NativeLabel();
             myLabel.setFor(myInput);
 
+            getStyle().set("white-space", "nowrap");
+
             add(myInput, myLabel);
         }
 

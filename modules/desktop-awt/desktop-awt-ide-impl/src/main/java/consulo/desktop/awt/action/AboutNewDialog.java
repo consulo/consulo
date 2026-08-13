@@ -27,6 +27,7 @@ import consulo.platform.Platform;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.impl.internal.AboutInfoBuilder;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 
@@ -42,22 +43,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2019-08-11
  */
 public class AboutNewDialog extends WholeWestDialogWrapper {
-  private static class AboutBuilder {
-    private StringBuilder myBuilder = new StringBuilder();
-
-    public void group(String name) {
-      myBuilder.append(" ").append(name).append(":\n");
-    }
-
-    public void item(String name, String value) {
-      myBuilder.append("  ").append(name).append(" = ").append(value).append("\n");
-    }
-
-    public String toString() {
-      return myBuilder.toString();
-    }
-  }
-
   public AboutNewDialog() {
     super(false);
     setTitle("About");
@@ -84,7 +69,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     JTextArea area = new JTextArea();
     area.setEditable(false);
-    area.setText(buildAboutInfo());
+    area.setText(AboutInfoBuilder.build());
 
     setOKButtonText(CommonLocalize.buttonClose());
 
@@ -105,51 +90,6 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     eastPanel.add(copyToClipboard);
 
     return Couple.of(ScrollPaneFactory.createScrollPane(area, true), eastPanel);
-  }
-
-  private String buildAboutInfo() {
-
-    ApplicationInfo info = ApplicationInfo.getInstance();
-
-    AboutBuilder builder = new AboutBuilder();
-    builder.group(Application.get().getName().get());
-    builder.item("version", info.getFullVersion());
-    builder.item("build number", String.valueOf(info.getBuild()));
-    builder.item("build date", DateFormatUtil.formatAboutDialogDate(info.getBuildDate().getTime()));
-
-    builder.group("Plugins");
-
-    Map<String, String> plugins = new TreeMap<>();
-    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
-      plugins.put(plugin.getPluginId().toString(), StringUtil.notNullize(plugin.getVersion(), info.getBuild().toString()));
-    }
-
-    for (Map.Entry<String, String> entry : plugins.entrySet()) {
-      builder.item(entry.getKey(), entry.getValue());
-    }
-
-    Platform platform = Platform.current();
-
-    builder.group("JVM");
-    builder.item("vendor", platform.jvm().vendor());
-    builder.item("version", platform.jvm().rawVersion());
-    builder.item("locale", Locale.getDefault().toString());
-    builder.group("JVM Env");
-    for (Map.Entry<String, String> entry : new TreeMap<>(platform.jvm().getRuntimeProperties()).entrySet()) {
-      builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
-    }
-
-    builder.group("OS");
-    builder.item("name", platform.os().name());
-    builder.item("version", platform.os().version());
-    builder.item("arch", platform.os().arch());
-
-    builder.group("Env");
-    for (Map.Entry<String, String> entry : new TreeMap<>(platform.os().environmentVariables()).entrySet()) {
-      builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
-    }
-
-    return StringUtil.trimTrailing(builder.toString());
   }
 
   @Override

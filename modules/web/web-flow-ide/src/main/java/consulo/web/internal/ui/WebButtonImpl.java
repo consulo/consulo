@@ -17,6 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.button.ButtonVariant;
 import consulo.localize.LocalizeValue;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
@@ -36,6 +37,12 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin> implements Button {
     public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
+        public Vaadin() {
+            // the label of a button is one line, as it is of a swing button - a narrow column broke "Copy to
+            // clipboard" over two lines and made the button twice as tall as the one beside it
+            getStyle().set("white-space", "nowrap");
+        }
+
         @Override
         public @Nullable Component toUIComponent() {
             return WebButtonImpl.this;
@@ -53,7 +60,15 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         myClickInstalled = true;
 
         myTextValue = text;
-        component.setText(text.get());
+        component.setText(plainText(text));
+    }
+
+    /**
+     * The browser draws no mnemonic, so a text which carries one has to be stripped of the marker rather than
+     * show it - a close button of a dialog reads "&Close" otherwise.
+     */
+    private static String plainText(LocalizeValue text) {
+        return TextWithMnemonic.parse(text.get()).getText();
     }
 
     @Override
@@ -80,7 +95,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     @RequiredUIAccess
     public void setText(LocalizeValue text) {
         myTextValue = text;
-        toVaadinComponent().setText(text.get());
+        toVaadinComponent().setText(plainText(text));
     }
 
     @Override

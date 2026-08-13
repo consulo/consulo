@@ -17,7 +17,7 @@ package consulo.desktop.awt.action;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.ide.impl.actions.AboutManager;
+import consulo.ui.ex.internal.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.util.lang.SemVer;

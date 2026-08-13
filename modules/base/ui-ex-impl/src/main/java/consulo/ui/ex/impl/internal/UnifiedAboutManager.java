@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.actions;
+package consulo.ui.ex.impl.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.ui.ex.internal.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
+import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-15
+ * @since 2019-05-09
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface AboutManager {
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+public class UnifiedAboutManager implements AboutManager {
   @RequiredUIAccess
-  void showAsync(@Nullable Window parentWindow);
+  @Override
+  public void showAsync(@Nullable Window parentWindow) {
+    new UnifiedAboutDialog(parentWindow).show();
+  }
 }

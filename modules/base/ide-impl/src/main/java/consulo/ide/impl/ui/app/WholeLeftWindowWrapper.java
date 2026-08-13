@@ -37,7 +37,7 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
     @RequiredUIAccess
     protected Layout buildRootLayout(Disposable uiDisposable) {
         TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-        layout.setProportion(30);
+        layout.setProportion(getSplitterProportion());
 
         Couple<Component> components = createComponents(uiDisposable);
 
@@ -49,6 +49,10 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
 
         layout.setSecondComponent(baseRoot);
         return layout;
+    }
+
+    protected int getSplitterProportion() {
+        return 30;
     }
 
     @RequiredUIAccess
