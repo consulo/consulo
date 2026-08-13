@@ -114,7 +114,17 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     @Override
     public void setPrefixComponent(@Nullable Component prefixComponent) {
         myPrefixComponent = prefixComponent;
-        toVaadinComponent().setPrefixComponent(prefixComponent == null ? null : TargetVaadin.to(prefixComponent));
+        toVaadinComponent().setPrefixComponent(prefixComponent == null ? null : toStripComponent(prefixComponent));
+    }
+
+    /**
+     * What sits beside the tabs takes the size of its content. A layout is 100% wide by default, which on the strip
+     * eats the room of the tabs themselves until they fall behind the overflow arrow.
+     */
+    private static com.vaadin.flow.component.Component toStripComponent(Component component) {
+        com.vaadin.flow.component.Component vaadinComponent = TargetVaadin.to(component);
+        vaadinComponent.getElement().getStyle().set("width", "auto");
+        return vaadinComponent;
     }
 
     @Override
@@ -125,7 +135,7 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     @Override
     public void setSuffixComponent(@Nullable Component suffixComponent) {
         mySuffixComponent = suffixComponent;
-        toVaadinComponent().setSuffixComponent(suffixComponent == null ? null : TargetVaadin.to(suffixComponent));
+        toVaadinComponent().setSuffixComponent(suffixComponent == null ? null : toStripComponent(suffixComponent));
     }
 
     @Override

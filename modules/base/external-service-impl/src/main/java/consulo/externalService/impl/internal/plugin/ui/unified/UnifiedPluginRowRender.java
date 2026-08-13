@@ -55,6 +55,20 @@ public class UnifiedPluginRowRender {
 
     @RequiredUIAccess
     public static Component render(RenderItem<PluginDescriptor> item) {
+        return render(item, null, null);
+    }
+
+    /**
+     * @param nameColor  the colour of the name, for a list which tells its rows apart by a status of its own
+     *                   rather than by the one of the plugin in the platform
+     * @param secondLine what is drawn under the name in place of the tags
+     */
+    @RequiredUIAccess
+    public static Component render(
+        RenderItem<PluginDescriptor> item,
+        @Nullable ColorValue nameColor,
+        @Nullable LocalizeValue secondLine
+    ) {
         PluginDescriptor descriptor = item.getValue();
 
         DockLayout row = DockLayout.create(0);
@@ -74,23 +88,25 @@ public class UnifiedPluginRowRender {
                 row.setBackgroundColor(background);
             }
 
-            ColorValue nameColor = getNameColor(descriptor);
-            if (nameColor != null) {
-                nameLabel.setForegroundColor(nameColor);
+            ColorValue foreground = nameColor != null ? nameColor : getNameColor(descriptor);
+            if (foreground != null) {
+                nameLabel.setForegroundColor(foreground);
             }
         }
 
         VerticalLayout text = VerticalLayout.create(0);
         text.add(nameLabel);
 
-        String tags = descriptor.getTags()
-            .stream()
-            .map(tag -> PluginTab.getTagLocalizeValue(tag).get().toUpperCase(Locale.ROOT))
-            .collect(Collectors.joining(", "));
-        if (!tags.isEmpty()) {
-            Label tagsLabel = Label.create(LocalizeValue.of(tags));
-            tagsLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
-            text.add(tagsLabel);
+        String under = secondLine != null
+            ? secondLine.get()
+            : descriptor.getTags()
+                .stream()
+                .map(tag -> PluginTab.getTagLocalizeValue(tag).get().toUpperCase(Locale.ROOT))
+                .collect(Collectors.joining(", "));
+        if (!under.isEmpty()) {
+            Label underLabel = Label.create(LocalizeValue.of(under));
+            underLabel.setForegroundColor(ComponentColors.DISABLED_TEXT);
+            text.add(underLabel);
         }
 
         row.left(iconLabel);

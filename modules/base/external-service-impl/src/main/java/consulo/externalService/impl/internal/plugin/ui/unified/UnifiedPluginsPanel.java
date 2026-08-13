@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.plugin.ui.unified;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalService.impl.internal.plugin.ui.action.PluginsOptionGroup;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -26,6 +27,10 @@ import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.layout.TabbedLayout;
 
 /**
@@ -65,6 +70,19 @@ public class UnifiedPluginsPanel implements Disposable {
                 myInstalledTab.reload();
             }
         });
+
+        PluginsOptionGroup optionGroup = new PluginsOptionGroup();
+        optionGroup.add(new UnifiedInstallPluginFromDiskAction(this));
+        optionGroup.add(AnSeparator.create());
+        optionGroup.add(new UnifiedReloadAllAction(myRepositoryTab, myInstalledTab));
+
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(
+            "UnifiedPluginsPanelToolbar",
+            ActionGroup.newImmutableBuilder().add(optionGroup).build(),
+            true
+        );
+        toolbar.setTargetUIComponent(myTabbedLayout);
+        myTabbedLayout.setSuffixComponent(toolbar.getUIComponent());
 
         myRepositoryTab.reload();
     }

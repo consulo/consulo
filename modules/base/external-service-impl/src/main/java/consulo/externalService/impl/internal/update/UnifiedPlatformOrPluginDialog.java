@@ -18,8 +18,8 @@ package consulo.externalService.impl.internal.update;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.externalService.impl.internal.PluginIconHolder;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
+import consulo.externalService.impl.internal.plugin.ui.unified.UnifiedPluginRowRender;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeValue;
@@ -27,17 +27,16 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.Button;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.ListBox;
+import consulo.ui.RenderItem;
 import consulo.ui.Size2D;
-import consulo.ui.TextAttribute;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.color.ColorValue;
-import consulo.ui.font.Font;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.ScrollableLayout;
@@ -135,37 +134,8 @@ public class UnifiedPlatformOrPluginDialog {
         });
 
         ListBox<PluginDescriptor> list = ListBox.create(toShowPluginList);
-        list.setRender((presentation, item) -> {
-            PluginDescriptor descriptor = item.getValue();
-            if (descriptor == null) {
-                return;
-            }
-
-            PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(descriptor.getPluginId()));
-            assert node != null;
-
-            presentation.withIcon(PluginIconHolder.get(descriptor));
-
-            FileStatus status = FileStatus.MODIFIED;
-            if (myGreenStrategy.test(descriptor.getPluginId())) {
-                status = FileStatus.ADDED;
-            }
-            if (node.getFutureDescriptor() == null) {
-                status = FileStatus.UNKNOWN;
-            }
-
-            ColorValue color = status.getColor();
-            presentation.append(
-                LocalizeValue.of(StringUtil.notNullize(descriptor.getName())),
-                new TextAttribute(Font.STYLE_PLAIN, color, null)
-            );
-
-            PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
-            String versions = currentDescriptor != null
-                ? currentDescriptor.getVersion() + " \u2192 " + (node.getFutureDescriptor() == null ? "??" : descriptor.getVersion())
-                : StringUtil.notNullize(descriptor.getVersion());
-            presentation.append(LocalizeValue.of("  " + versions), TextAttribute.GRAYED);
-        });
+        list.setRender(this::renderRow);
+        list.setItemHeightGetter(item -> UnifiedPluginRowRender.ROW_HEIGHT);
 
         Button okButton = Button.create(CommonLocalize.buttonOk(), event -> {
             close();
@@ -194,6 +164,32 @@ public class UnifiedPlatformOrPluginDialog {
         );
         myWindow.setSize(new Size2D(600, 300));
         myWindow.setContent(root);
+    }
+
+    @RequiredUIAccess
+    private Component renderRow(RenderItem<PluginDescriptor> item) {
+        PluginDescriptor descriptor = item.getValue();
+        if (descriptor == null) {
+            return UnifiedPluginRowRender.render(item);
+        }
+
+        PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(descriptor.getPluginId()));
+        assert node != null;
+
+        FileStatus status = FileStatus.MODIFIED;
+        if (myGreenStrategy.test(descriptor.getPluginId())) {
+            status = FileStatus.ADDED;
+        }
+        if (node.getFutureDescriptor() == null) {
+            status = FileStatus.UNKNOWN;
+        }
+
+        PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
+        String versions = currentDescriptor != null
+            ? currentDescriptor.getVersion() + " \u2192 " + (node.getFutureDescriptor() == null ? "??" : descriptor.getVersion())
+            : StringUtil.notNullize(descriptor.getVersion());
+
+        return UnifiedPluginRowRender.render(item, status.getColor(), LocalizeValue.of(versions));
     }
 
     @RequiredUIAccess
