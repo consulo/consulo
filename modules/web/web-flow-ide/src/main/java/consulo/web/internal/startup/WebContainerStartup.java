@@ -35,11 +35,7 @@ import consulo.container.util.StatCollector;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
-import consulo.web.internal.servlet.RootUIBuilder;
-import consulo.web.internal.servlet.UIIconServlet;
-import consulo.web.internal.servlet.UIServlet;
-import consulo.web.internal.servlet.VaadinRootLayout;
-import consulo.web.internal.servlet.WebFontServlet;
+import consulo.web.internal.servlet.*;
 import consulo.web.main.WebApplicationStarter;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletContextEvent;
@@ -60,143 +56,149 @@ import java.util.*;
  * @since 2019-08-08
  */
 public class WebContainerStartup implements ContainerStartup {
-  @WebServlet(urlPatterns = "/*")
-  public static class RootUIServlet extends UIServlet {
-    public RootUIServlet() {
-      super(RootUIBuilder::new, "/");
-    }
-  }
-
-  
-  @Override
-  public ContainerPathManager createPathManager(Map<String, Object> args) {
-    return new WebContainerPathManager();
-  }
-
-  @Override
-  public void run(Map<String, Object> map) {
-    StatCollector stat = (StatCollector)map.get(STAT_COLLECTOR);
-    String[] args = (String[])map.get(ARGS);
-
-    StartupUtil.initializeLogger();
-
-    Server server = new Server(Integer.getInteger("consulo.web.port", 8080));
-
-    ServletContextHandler handler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
-    handler.setClassLoader(getClass().getClassLoader());
-    handler.getSessionHandler().setMaxInactiveInterval(Integer.MAX_VALUE);
-
-    List<URL> urls = new ArrayList<>();
-    try {
-      Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/resources/");
-      while (resources.hasMoreElements()) {
-        urls.add(resources.nextElement());
-      }
-    }
-    catch (IOException ignored) {
-    }
-
-    handler.setBaseResource(new ResourceCollection(ContainerUtil.map(urls, Resource::newResource)));
-
-    // the defaults of the container kill the push channel: a text message is capped at 64k while one update of
-    // a whole ide frame is far past that - the socket is closed as 1009 with the message lost - and the idle
-    // timeout of 30 seconds runs out under the 60 second heartbeat, so the socket also dies in every quiet
-    // spell. a lost push is never resent, the client waits for the missing message and quietly defers every
-    // one after it, which reads as a frame that simply never appears
-    JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, serverContainer) -> {
-      serverContainer.setDefaultMaxTextMessageBufferSize(50 * 1024 * 1024);
-      serverContainer.setDefaultMaxSessionIdleTimeout(5 * 60 * 1000L);
-    });
-    Set<Class<?>> classes = new HashSet<>();
-    classes.addAll(LookupInitializer.getDefaultImplementations());
-    classes.add(LookupInitializer.class);
-    classes.add(ConsuloAppShellConfigurator.class);
-    classes.add(VaadinRootLayout.class);
-
-    boolean enableDevMode = false;// ApplicationProperties.isInSandbox()
-    if (enableDevMode) {
-      classes.add(DevModeHandlerManagerImpl.class);
-      classes.add(BrowserLiveReloadAccessorImpl.class);
-    }
-
-    handler.addServletContainerInitializer(new LookupServletContainerInitializer(), classes.toArray(Class[]::new));
-    handler.addEventListener(new VaadinAppShellInitializer() {
-      @Override
-      public void contextInitialized(ServletContextEvent sce) {
-        initialize(classes, new VaadinServletContext(sce.getServletContext()));
-      }
-    });
-
-    if (enableDevMode) {
-      handler.addEventListener(new DevModeStartupListener() {
-        @Override
-        public void contextInitialized(ServletContextEvent ctx) {
-          try {
-            initialize(classes, new VaadinServletContext(ctx.getServletContext()));
-          }
-          catch (VaadinInitializerException e) {
-            throw new RuntimeException(e);
-          }
+    @WebServlet(urlPatterns = "/*")
+    public static class RootUIServlet extends UIServlet {
+        public RootUIServlet() {
+            super(RootUIBuilder::new, "/");
         }
-      });
-    }
-    server.setHandler(handler);
-
-    registerServlets(handler);
-
-    try {
-      server.start();
-
-      new Thread(() -> startApplication(stat, args), "Consulo App Start").start();
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void startApplication(StatCollector stat, String[] args) {
-    ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(WebContainerStartup.class));
-
-    try {
-      StartupActionScriptManager.executeActionScript();
-    }
-    catch (IOException e) {
-      Logger.getInstance(WebContainerStartup.class).error(e);
-      return;
     }
 
-    Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
-
-    StartupUtil.prepareAndStart(args, stat, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter starter = new WebApplicationStarter(commandLineArgs, stat);
-
-      AppExecutorUtil.getAppExecutorService().execute(() -> starter.run(stat, appInitializeMark, newConfigFolder));
-    });
-  }
-
-  private void registerServlets(ServletContextHandler handler) {
-    List<Class<? extends Servlet>> classes = List.of(RootUIServlet.class, UIIconServlet.class, WebFontServlet.class);
-
-    for (Class<? extends Servlet> servletClass : classes) {
-      WebServlet declaredAnnotation = servletClass.getDeclaredAnnotation(WebServlet.class);
-
-      String[] urls = declaredAnnotation.urlPatterns();
-
-      int i = 0;
-      for (String url : urls) {
-        ServletHolder servletHolder = handler.addServlet(servletClass, url);
-        servletHolder.setInitOrder(++i);
-      }
-
-      System.out.println(servletClass.getName() + " registered to: " + Arrays.asList(urls));
+    @Override
+    public ContainerPathManager createPathManager(Map<String, Object> args) {
+        return new WebContainerPathManager();
     }
-  }
 
-  @Override
-  public void destroy() {
-    Application application = ApplicationManager.getApplication();
-    if (application != null) {
-      Disposer.dispose(application);
+    @Override
+    public void run(Map<String, Object> map) {
+        StatCollector stat = (StatCollector) map.get(STAT_COLLECTOR);
+        String[] args = (String[]) map.get(ARGS);
+
+        StartupUtil.initializeLogger();
+
+        Integer port = Integer.getInteger("consulo.web.port", 8080);
+
+        Server server = new Server(port);
+
+        ServletContextHandler handler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
+        handler.setClassLoader(getClass().getClassLoader());
+        handler.getSessionHandler().setMaxInactiveInterval(Integer.MAX_VALUE);
+
+        List<URL> urls = new ArrayList<>();
+        try {
+            Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/resources/");
+            while (resources.hasMoreElements()) {
+                urls.add(resources.nextElement());
+            }
+        }
+        catch (IOException ignored) {
+        }
+
+        handler.setBaseResource(new ResourceCollection(ContainerUtil.map(urls, Resource::newResource)));
+
+        // the defaults of the container kill the push channel: a text message is capped at 64k while one update of
+        // a whole ide frame is far past that - the socket is closed as 1009 with the message lost - and the idle
+        // timeout of 30 seconds runs out under the 60 second heartbeat, so the socket also dies in every quiet
+        // spell. a lost push is never resent, the client waits for the missing message and quietly defers every
+        // one after it, which reads as a frame that simply never appears
+        JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, serverContainer) -> {
+            serverContainer.setDefaultMaxTextMessageBufferSize(50 * 1024 * 1024);
+            serverContainer.setDefaultMaxSessionIdleTimeout(5 * 60 * 1000L);
+        });
+        Set<Class<?>> classes = new HashSet<>();
+        classes.addAll(LookupInitializer.getDefaultImplementations());
+        classes.add(LookupInitializer.class);
+        classes.add(ConsuloAppShellConfigurator.class);
+        classes.add(VaadinRootLayout.class);
+
+        boolean enableDevMode = false;// ApplicationProperties.isInSandbox()
+        if (enableDevMode) {
+            classes.add(DevModeHandlerManagerImpl.class);
+            classes.add(BrowserLiveReloadAccessorImpl.class);
+        }
+
+        handler.addServletContainerInitializer(new LookupServletContainerInitializer(), classes.toArray(Class[]::new));
+        handler.addEventListener(new VaadinAppShellInitializer() {
+            @Override
+            public void contextInitialized(ServletContextEvent sce) {
+                initialize(classes, new VaadinServletContext(sce.getServletContext()));
+            }
+        });
+
+        if (enableDevMode) {
+            handler.addEventListener(new DevModeStartupListener() {
+                @Override
+                public void contextInitialized(ServletContextEvent ctx) {
+                    try {
+                        initialize(classes, new VaadinServletContext(ctx.getServletContext()));
+                    }
+                    catch (VaadinInitializerException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
+        server.setHandler(handler);
+
+        registerServlets(handler);
+
+        Logger logger = Logger.getInstance(WebContainerStartup.class);
+
+        try {
+            server.start();
+
+            new Thread(() -> {
+                logger.info("Starting at port: " + port);
+                startApplication(stat, args);
+            }, "Consulo App Start").start();
+        }
+        catch (Exception e) {
+           logger.error(e);
+        }
     }
-  }
+
+    private void startApplication(StatCollector stat, String[] args) {
+        ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(WebContainerStartup.class));
+
+        try {
+            StartupActionScriptManager.executeActionScript();
+        }
+        catch (IOException e) {
+            Logger.getInstance(WebContainerStartup.class).error(e);
+            return;
+        }
+
+        Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
+
+        StartupUtil.prepareAndStart(args, stat, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
+            ApplicationStarter starter = new WebApplicationStarter(commandLineArgs, stat);
+
+            AppExecutorUtil.getAppExecutorService().execute(() -> starter.run(stat, appInitializeMark, newConfigFolder));
+        });
+    }
+
+    private void registerServlets(ServletContextHandler handler) {
+        List<Class<? extends Servlet>> classes = List.of(RootUIServlet.class, UIIconServlet.class, WebFontServlet.class);
+
+        for (Class<? extends Servlet> servletClass : classes) {
+            WebServlet declaredAnnotation = servletClass.getDeclaredAnnotation(WebServlet.class);
+
+            String[] urls = declaredAnnotation.urlPatterns();
+
+            int i = 0;
+            for (String url : urls) {
+                ServletHolder servletHolder = handler.addServlet(servletClass, url);
+                servletHolder.setInitOrder(++i);
+            }
+
+            System.out.println(servletClass.getName() + " registered to: " + Arrays.asList(urls));
+        }
+    }
+
+    @Override
+    public void destroy() {
+        Application application = ApplicationManager.getApplication();
+        if (application != null) {
+            Disposer.dispose(application);
+        }
+    }
 }
