@@ -27,7 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
-import consulo.ui.Size2D;
+import consulo.ui.HasSize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -47,6 +47,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 
@@ -54,8 +55,10 @@ import java.util.Map;
  * @author VISTALL
  * @since 27-Oct-17
  */
-public abstract class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
+public abstract class SwingComponentDelegate<T extends java.awt.Component> implements Component, HasSize, ToSwingComponentWrapper {
     private T myInitializedComponent;
+
+    private @Nullable ColorValue myBackgroundColor;
 
     /** the desktop frontend draws into a single ui, so every component of it answers the same access */
     @Override
@@ -186,8 +189,34 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @RequiredUIAccess
     @Override
-    public void setSize(Size2D size) {
-        toAWTComponent().setPreferredSize(TargetAWT.to(size));
+    public void setWidth(int widthInPixels) {
+        T component = toAWTComponent();
+        Dimension size = component.getPreferredSize();
+        component.setPreferredSize(new Dimension(JBUI.scale(widthInPixels), size.height));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setHeight(int heightInPixels) {
+        T component = toAWTComponent();
+        Dimension size = component.getPreferredSize();
+        component.setPreferredSize(new Dimension(size.width, JBUI.scale(heightInPixels)));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinWidth(int widthInPixels) {
+        T component = toAWTComponent();
+        Dimension size = component.getMinimumSize();
+        component.setMinimumSize(new Dimension(JBUI.scale(widthInPixels), size.height));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinHeight(int heightInPixels) {
+        T component = toAWTComponent();
+        Dimension size = component.getMinimumSize();
+        component.setMinimumSize(new Dimension(size.width, JBUI.scale(heightInPixels)));
     }
 
     @Override
@@ -245,6 +274,27 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         dataObject().removeBorder(borderPosition);
 
         bordersChanged();
+    }
+
+    @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myBackgroundColor;
+    }
+
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myBackgroundColor = background;
+
+        T component = toAWTComponent();
+        if (background == null) {
+            component.setBackground(null);
+        }
+        else {
+            component.setBackground(TargetAWT.to(background));
+            if (component instanceof JComponent jComponent) {
+                jComponent.setOpaque(true);
+            }
+        }
     }
 
     @Override

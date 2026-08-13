@@ -35,9 +35,9 @@ import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.HasSize;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
-import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
@@ -167,7 +167,9 @@ public class UnifiedLineStatusMarkerPopup extends LineStatusMarkerPopupBase {
         }
 
         Component component = viewer.getUIComponent();
-        component.setSize(new Size2D(previewWidth(document), -1));
+        if (component instanceof HasSize hasSize) {
+            hasSize.setWidth(previewWidth(document));
+        }
         return component;
     }
 

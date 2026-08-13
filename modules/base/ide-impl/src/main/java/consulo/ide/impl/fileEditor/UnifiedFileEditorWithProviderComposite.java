@@ -22,7 +22,12 @@ import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
 import consulo.ui.ex.ComponentContainer;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
@@ -39,6 +44,7 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   private FileEditorManagerEx myFileEditorManager;
 
   private final Component[] myComponents;
+  private final VerticalLayout[] myTopLayouts;
 
   public UnifiedFileEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     myFile = file;
@@ -53,6 +59,7 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     }
 
     myComponents = new Component[editors.length];
+    myTopLayouts = new VerticalLayout[editors.length];
     for (int i = 0; i < editors.length; i++) {
       FileEditor editor = editors[i];
 
@@ -64,7 +71,8 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
           "File editor " + editor.getClass().getName() + " of " + file.getPath() + " has no unified component");
       }
 
-      myComponents[i] = component;
+      myTopLayouts[i] = VerticalLayout.create(0);
+      myComponents[i] = DockLayout.create(0).top(myTopLayouts[i]).center(component);
     }
   }
 
@@ -116,10 +124,19 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     return List.of();
   }
 
-  
   @Override
+  @RequiredUIAccess
   public Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
-    return () -> {};
+    int index = ArrayUtil.indexOf(myEditors, editor);
+    if (index == -1) {
+      throw new IllegalArgumentException("File editor " + editor.getClass().getName() + " is not part of composite of " + myFile.getPath());
+    }
+
+    VerticalLayout topLayout = myTopLayouts[index];
+    Component uiComponent = component.getUIComponent();
+    uiComponent.addBorder(BorderPosition.BOTTOM);
+    topLayout.add(uiComponent);
+    return () -> topLayout.remove(uiComponent);
   }
 
   @Override

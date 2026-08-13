@@ -141,15 +141,6 @@ public interface Component extends UserDataHolder {
     @Nullable
     Component getParent();
 
-    @RequiredUIAccess
-    void setSize(Size2D size);
-
-    @RequiredUIAccess
-    default Component withSize(Size2D size) {
-        setSize(size);
-        return this;
-    }
-
     Font getFont();
 
     void setFont(Font font);
@@ -170,6 +161,19 @@ public interface Component extends UserDataHolder {
 
     default Component withForegroundColor(@Nullable ColorValue foreground) {
         setForegroundColor(foreground);
+        return this;
+    }
+
+    default @Nullable ColorValue getBackgroundColor() {
+        throw new AbstractMethodError("not supported");
+    }
+
+    default void setBackgroundColor(@Nullable ColorValue background) {
+        throw new AbstractMethodError("not supported");
+    }
+
+    default Component withBackgroundColor(@Nullable ColorValue background) {
+        setBackgroundColor(background);
         return this;
     }
 

@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-06-14
  */
-public interface Window extends Component, Disposable {
+public interface Window extends Component, Disposable, HasSize {
     static Window create(String title, WindowOptions options) {
         return UIInternal.get()._Window_create(title, options);
     }

@@ -24,7 +24,6 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -45,6 +44,7 @@ import consulo.util.dataholder.Key;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import consulo.ui.UIAccess;
+import consulo.web.internal.ui.WebColors;
 import consulo.web.internal.ui.WebFontImpl;
 import consulo.web.internal.ui.WebUIAccessImpl;
 import consulo.web.internal.ui.vaadin.AuraUtility;
@@ -60,12 +60,14 @@ import java.util.Optional;
  * @since 2019-02-17
  */
 public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.component.Component & FromVaadinComponentWrapper>
-    implements Component, DataObjectHolder, ToVaadinComponentWrapper {
+    implements Component, consulo.ui.HasSize, DataObjectHolder, ToVaadinComponentWrapper {
     private T myVaadinComponent;
 
     private Font myFont = FontManager.get().createFont("?", 12);
 
     private Cursor myCursor;
+
+    private @Nullable ColorValue myBackgroundColor;
 
     /**
      * The web frontend has one ui per browser session, so the access is the one of the ui this component is
@@ -189,22 +191,26 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void setSize(Size2D size) {
-        HasSize vaadinComponent = (HasSize) getVaadinComponent();
-        if (size.height() == -1) {
-            vaadinComponent.setHeight(null);
-        }
-        else {
-            vaadinComponent.setHeight(size.height(), Unit.PIXELS);
-        }
+    public void setWidth(int widthInPixels) {
+        ((HasSize) getVaadinComponent()).setWidth(widthInPixels, Unit.PIXELS);
+    }
 
-        if (size.width() == -1) {
-            vaadinComponent.setWidth(null);
-        }
-        else {
-            vaadinComponent.setWidth(size.width(), Unit.PIXELS);
-        }
-        // TODO vaadinComponent.markAsDirty();
+    @RequiredUIAccess
+    @Override
+    public void setHeight(int heightInPixels) {
+        ((HasSize) getVaadinComponent()).setHeight(heightInPixels, Unit.PIXELS);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinWidth(int widthInPixels) {
+        ((HasSize) getVaadinComponent()).setMinWidth(widthInPixels, Unit.PIXELS);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMinHeight(int heightInPixels) {
+        ((HasSize) getVaadinComponent()).setMinHeight(heightInPixels, Unit.PIXELS);
     }
 
     @Override
@@ -322,6 +328,25 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public void setEnabled(boolean value) {
         ((HasEnabled) myVaadinComponent).setEnabled(value);
+    }
+
+    @Override
+    public @Nullable ColorValue getBackgroundColor() {
+        return myBackgroundColor;
+    }
+
+    @Override
+    public void setBackgroundColor(@Nullable ColorValue background) {
+        myBackgroundColor = background;
+
+        Style style = myVaadinComponent.getStyle();
+        String cssColor = WebColors.toCssColor(background);
+        if (cssColor == null) {
+            style.remove("background-color");
+        }
+        else {
+            style.set("background-color", cssColor);
+        }
     }
 
     @Override

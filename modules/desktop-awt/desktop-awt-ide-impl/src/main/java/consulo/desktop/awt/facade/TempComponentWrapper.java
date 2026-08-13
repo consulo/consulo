@@ -18,6 +18,7 @@ package consulo.desktop.awt.facade;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
+import consulo.ui.HasSize;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -34,7 +35,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 16/08/2021
  */
-class TempComponentWrapper implements Component, ToSwingComponentWrapper, HasFocus {
+class TempComponentWrapper implements Component, HasSize, ToSwingComponentWrapper, HasFocus {
     private final java.awt.Component myComponent;
 
     TempComponentWrapper(java.awt.Component component) {

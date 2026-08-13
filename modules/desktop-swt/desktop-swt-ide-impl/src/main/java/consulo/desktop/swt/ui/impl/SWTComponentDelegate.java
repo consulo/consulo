@@ -20,6 +20,7 @@ import consulo.desktop.swt.ui.impl.layout.data.LayoutDataWithSize;
 import consulo.disposer.Disposable;
 
 import consulo.ui.Component;
+import consulo.ui.HasSize;
 import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,7 +41,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author VISTALL
  * @since 2021-04-29
  */
-public abstract class SWTComponentDelegate<SWT extends Widget> implements Component {
+public abstract class SWTComponentDelegate<SWT extends Widget> implements Component, HasSize {
     public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
 
     /** the desktop frontend draws into a single ui, so every component of it answers the same access */

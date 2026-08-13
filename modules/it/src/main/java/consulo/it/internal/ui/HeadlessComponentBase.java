@@ -17,6 +17,7 @@ package consulo.it.internal.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.HasSize;
 import consulo.ui.Size2D;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -39,7 +40,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author VISTALL
  */
-public abstract class HeadlessComponentBase implements Component {
+public abstract class HeadlessComponentBase implements Component, HasSize {
     private final UIDataObject myDataObject = new UIDataObject();
 
     private boolean myVisible = true;
