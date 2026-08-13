@@ -21,11 +21,15 @@ import com.vaadin.flow.component.tabs.TabSheetVariant;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.TabSelectEvent;
 import consulo.ui.layout.TabbedLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaadin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -43,6 +47,17 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         public @Nullable Component toUIComponent() {
             return WebTabbedLayoutImpl.this;
         }
+    }
+
+    private final Map<com.vaadin.flow.component.tabs.Tab, WebTabImpl> myTabs = new LinkedHashMap<>();
+
+    public WebTabbedLayoutImpl() {
+        toVaadinComponent().addSelectedChangeListener(event -> {
+            WebTabImpl tab = myTabs.get(event.getSelectedTab());
+            if (tab != null) {
+                getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, tab));
+            }
+        });
     }
 
     @Override
@@ -75,6 +90,7 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         boolean first = toVaadinComponent().getTabCount() == 0;
 
         toVaadinComponent().add(vaadinTab, vaadinContent);
+        myTabs.put(vaadinTab, webTab);
 
         webTab.setContent(component);
 
@@ -100,6 +116,7 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         if (vaadinTab != null) {
             // the sheet drops the content of the tab along with it
             toVaadinComponent().remove(vaadinTab);
+            myTabs.remove(vaadinTab);
         }
     }
 }

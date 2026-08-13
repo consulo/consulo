@@ -15,10 +15,13 @@
  */
 package consulo.ui.layout;
 
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.TabSelectEvent;
 import consulo.ui.internal.UIInternal;
 
 /**
@@ -54,4 +57,8 @@ public interface TabbedLayout extends Layout<LayoutConstraint> {
     Tab addTab(String tabName, Component component);
 
     void removeTab(Tab tab);
+
+    default Disposable addSelectListener(ComponentEventListener<Component, TabSelectEvent> listener) {
+        return addListener(TabSelectEvent.class, listener);
+    }
 }

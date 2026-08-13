@@ -21,19 +21,38 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.TabSelectEvent;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.tab.TabInfo;
+import consulo.ui.ex.awt.tab.TabsListener;
 import consulo.ui.layout.TabbedLayout;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2016-06-14
  */
 public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs> implements TabbedLayout {
+    private final Map<TabInfo, Tab> myTabs = new LinkedHashMap<>();
+
     class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
         public MyJTabbedPane() {
             super(null, ActionManager.getInstance(), null, null);
 
             setFirstTabOffset(10);
+
+            addListener(new TabsListener() {
+                @Override
+                public void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
+                    Tab tab = myTabs.get(newSelection);
+                    if (tab != null) {
+                        getListenerDispatcher(TabSelectEvent.class)
+                            .onEvent(new TabSelectEvent(DesktopTabbedLayoutImpl.this, tab));
+                    }
+                }
+            });
         }
 
         @Override
@@ -72,6 +91,7 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
         desktopTab.update();
 
         toAWTComponent().addTab(desktopTab.getTabInfo());
+        myTabs.put(desktopTab.getTabInfo(), desktopTab);
 
         return tab;
     }
@@ -88,5 +108,6 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
     public void removeTab(Tab tab) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
         toAWTComponent().removeTab(desktopTab.getTabInfo());
+        myTabs.remove(desktopTab.getTabInfo());
     }
 }

@@ -110,6 +110,8 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     private Map<FileEditorWithProviderComposite, TabInfo> myEditors = new LinkedHashMap<>();
 
+    private @Nullable FileEditorWithProviderComposite mySelectedEditor;
+
     @RequiredUIAccess
     public UnifiedFileEditorWindow(
         Project project,
@@ -125,6 +127,15 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         myTabbedLayout.putUserData(UiDataProvider.KEY, sink -> {
             sink.set(Project.KEY, myProject);
             sink.set(FileEditorWindow.DATA_KEY, this);
+        });
+
+        myTabbedLayout.addSelectListener(event -> {
+            for (Map.Entry<FileEditorWithProviderComposite, TabInfo> entry : myEditors.entrySet()) {
+                if (entry.getValue().myTab == event.getTab()) {
+                    mySelectedEditor = entry.getKey();
+                    return;
+                }
+            }
         });
 
         myOwner.addWindow(this);
@@ -235,6 +246,10 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public @Nullable FileEditorWithProviderComposite getSelectedEditor() {
+        if (mySelectedEditor != null && myEditors.containsKey(mySelectedEditor)) {
+            return mySelectedEditor;
+        }
+
         if (myEditors.isEmpty()) {
             return null;
         }
@@ -370,6 +385,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     @Override
     public void clear() {
         myEditors.clear();
+        mySelectedEditor = null;
     }
 
     @Override
@@ -428,6 +444,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 // a file opened into a tab which was already there comes to the front, and one opening a tab of
                 // its own has no more reason to stay behind whatever was selected before it
                 if (selectEditor) {
+                    mySelectedEditor = editor;
                     tabInfo.select();
                 }
 
@@ -441,6 +458,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
             else {
                 TabInfo tab = myEditors.get(fileComposite);
                 assert tab != null;
+                if (selectEditor) {
+                    mySelectedEditor = fileComposite;
+                }
                 tab.select();
             }
         }

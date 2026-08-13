@@ -80,11 +80,16 @@ public class WebIdeMenuBar {
         }
     }
 
+    private record BuiltItem(consulo.ui.MenuItem item, List<BuiltItem> children) {
+    }
+
     private final consulo.ui.Component myContextComponent;
     private final WebMenuBarImpl myMenuBar = new WebMenuBarImpl();
     private final MenuItemPresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
 
     private String mySignature = "";
+    private String myStructuralSignature = "";
+    private List<BuiltItem> myBuiltItems = List.of();
     private @Nullable ProgressIndicator myUpdateIndicator;
 
     @RequiredUIAccess
@@ -117,6 +122,8 @@ public class WebIdeMenuBar {
     @RequiredUIAccess
     public void reset() {
         mySignature = "";
+        myStructuralSignature = "";
+        myBuiltItems = List.of();
         myMenuBar.clear();
     }
 
@@ -254,7 +261,7 @@ public class WebIdeMenuBar {
     @RequiredUIAccess
     private void applyNodes(List<MenuNode> nodes) {
         StringBuilder builder = new StringBuilder();
-        appendSignature(nodes, builder);
+        appendSignature(nodes, builder, true);
         String signature = builder.toString();
 
         if (signature.equals(mySignature)) {
@@ -263,21 +270,59 @@ public class WebIdeMenuBar {
 
         mySignature = signature;
 
+        StringBuilder structuralBuilder = new StringBuilder();
+        appendSignature(nodes, structuralBuilder, false);
+        String structuralSignature = structuralBuilder.toString();
+
+        List<MenuNode> rootNodes = nodes.stream().filter(node -> node.children() != null).toList();
+
+        // a rebuild replaces the items of a menu the user may hold open, and a click on a replaced item is
+        // dropped as inert - when only the enabled state moved, the live items are updated in place instead
+        if (structuralSignature.equals(myStructuralSignature)) {
+            refreshItems(rootNodes, myBuiltItems);
+            return;
+        }
+
+        myStructuralSignature = structuralSignature;
+
+        // the client may hold a submenu of the previous structure open - the rebuild replaces its items with
+        // ones the overlay does not know, and every click into it is dropped as inert. closed here, the next
+        // open shows the rebuilt, live items
+        myMenuBar.toVaadinComponent().close();
+
         myMenuBar.clear();
 
-        for (MenuNode node : nodes) {
-            if (node.children() == null) {
+        List<BuiltItem> builtItems = new ArrayList<>();
+        for (MenuNode node : rootNodes) {
+            BuiltItem builtItem = createMenuItem(node);
+            builtItems.add(builtItem);
+            myMenuBar.add(builtItem.item());
+        }
+        myBuiltItems = builtItems;
+    }
+
+    @RequiredUIAccess
+    private static void refreshItems(List<MenuNode> nodes, List<BuiltItem> builtItems) {
+        for (int i = 0; i < nodes.size() && i < builtItems.size(); i++) {
+            MenuNode node = nodes.get(i);
+            if (node.isSeparator()) {
                 continue;
             }
 
-            myMenuBar.add(createMenuItem(node));
+            BuiltItem builtItem = builtItems.get(i);
+            builtItem.item().setEnabled(node.enabled());
+
+            List<MenuNode> children = node.children();
+            if (children != null) {
+                refreshItems(children, builtItem.children());
+            }
         }
     }
 
     @RequiredUIAccess
-    private consulo.ui.MenuItem createMenuItem(MenuNode node) {
+    private BuiltItem createMenuItem(MenuNode node) {
         if (node.isSeparator()) {
-            return MenuSeparator.create();
+            return new BuiltItem(MenuSeparator.create(), List.of());
         }
 
         List<MenuNode> children = node.children();
@@ -286,11 +331,14 @@ public class WebIdeMenuBar {
             menu.setIcon(UnifiedActionMenuExpander.toDisplayIcon(node.icon(), node.disabledIcon(), node.enabled()));
             menu.setEnabled(node.enabled());
 
+            List<BuiltItem> builtChildren = new ArrayList<>();
             for (MenuNode child : children) {
-                menu.add(createMenuItem(child));
+                BuiltItem builtChild = createMenuItem(child);
+                builtChildren.add(builtChild);
+                menu.add(builtChild.item());
             }
 
-            return menu;
+            return new BuiltItem(menu, builtChildren);
         }
 
         WebMenuItemImpl item = new WebMenuItemImpl(node.text());
@@ -304,7 +352,7 @@ public class WebIdeMenuBar {
             item.addClickListener(event -> performAction(action, event.getInputDetails()));
         }
 
-        return item;
+        return new BuiltItem(item, List.of());
     }
 
     @RequiredUIAccess
@@ -337,7 +385,7 @@ public class WebIdeMenuBar {
         }, uiAccess);
     }
 
-    private static void appendSignature(List<MenuNode> nodes, StringBuilder builder) {
+    private static void appendSignature(List<MenuNode> nodes, StringBuilder builder, boolean withEnabled) {
         for (MenuNode node : nodes) {
             if (node.isSeparator()) {
                 builder.append("|-");
@@ -346,14 +394,14 @@ public class WebIdeMenuBar {
 
             builder.append('|')
                 .append(node.text().get())
-                .append(node.enabled() ? '+' : '-')
+                .append(withEnabled ? node.enabled() ? '+' : '-' : ' ')
                 .append(node.checked() == null ? "" : node.checked() ? "x" : "o")
                 .append(node.shortcutText().get());
 
             List<MenuNode> children = node.children();
             if (children != null) {
                 builder.append('{');
-                appendSignature(children, builder);
+                appendSignature(children, builder, withEnabled);
                 builder.append('}');
             }
         }

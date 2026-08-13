@@ -121,7 +121,7 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     }
     setEnabled(toShow && !window.isPlaceholderMode());
 
-    toVaadinComponent().update(window.getDisplayName(), window.isSplitMode(), window.getIcon());
+    toVaadinComponent().update(window.getDisplayName(), getWindowInfo().isSplit(), window.getIcon());
   }
 
   public boolean isSelected() {

@@ -21,6 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -34,6 +35,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaadin;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 
@@ -42,6 +44,8 @@ import org.jspecify.annotations.Nullable;
  * @since 2017-09-11
  */
 class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
+    private final VaadinRootLayout myRouterLayout;
+
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
     private Font myFont = FontManager.get().createFont("?", 12);
@@ -50,7 +54,13 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     @RequiredUIAccess
     public UIWindowOverRouterLayout(VaadinRootLayout routerLayout) {
+        myRouterLayout = routerLayout;
         routerLayout.add(TargetVaadin.to(myRootPanel.getComponent()));
+    }
+
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        return myRouterLayout.getUI().map(VaadinComponentDelegate::getUIAccess).orElse(null);
     }
 
     @Override

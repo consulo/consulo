@@ -762,7 +762,14 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
         }
 
         UITreeState treeState = UITreeState.createOn(myTree);
-        myReadTreeState = treeState.isEmpty() ? null : treeState;
+        if (treeState.isEmpty()) {
+            // an empty snapshot cannot tell a deliberately collapsed tree from one whose restore has not run
+            // yet - dumb mode holds the walk back - and writing it over the read state is what carried a saved
+            // layout away on close
+            return;
+        }
+
+        myReadTreeState = treeState;
     }
 
     private void restoreExpandedPaths() {
