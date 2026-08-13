@@ -17,63 +17,46 @@ package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TabSelectEvent;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.awt.tab.TabInfo;
-import consulo.ui.ex.awt.tab.TabsListener;
+import consulo.ui.ex.awt.JBTabbedPane;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.TabbedLayout;
+import org.jspecify.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2016-06-14
  */
-public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs> implements TabbedLayout {
-    private final Map<TabInfo, Tab> myTabs = new LinkedHashMap<>();
-
-    class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
-        public MyJTabbedPane() {
-            super(null, ActionManager.getInstance(), null, null);
-
-            setFirstTabOffset(10);
-
-            addListener(new TabsListener() {
-                @Override
-                public void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
-                    Tab tab = myTabs.get(newSelection);
-                    if (tab != null) {
-                        getListenerDispatcher(TabSelectEvent.class)
-                            .onEvent(new TabSelectEvent(DesktopTabbedLayoutImpl.this, tab));
-                    }
-                }
-            });
-        }
-
-        @Override
-        public boolean isAlphabeticalMode() {
-            return false;
-        }
-
-        @Override
-        public boolean supportsCompression() {
-            return false;
-        }
-
+public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout {
+    class MyTabbedPane extends JBTabbedPane implements FromSwingComponentWrapper {
         @Override
         public Component toUIComponent() {
             return DesktopTabbedLayoutImpl.this;
         }
     }
 
+    private final List<DesktopTabImpl> myTabs = new ArrayList<>();
+
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
+
     @Override
-    protected JBEditorTabs createComponent() {
-        return new MyJTabbedPane();
+    protected JTabbedPane createComponent() {
+        JTabbedPane pane = new MyTabbedPane();
+        pane.addChangeListener(event -> {
+            int index = pane.getSelectedIndex();
+            if (index >= 0 && index < myTabs.size()) {
+                getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, myTabs.get(index)));
+            }
+        });
+        return pane;
     }
 
     @Override
@@ -88,10 +71,14 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
 
         desktopTab.setComponent(component);
 
-        desktopTab.update();
+        JTabbedPane pane = toAWTComponent();
+        pane.addTab("", TargetAWT.to(component));
 
-        toAWTComponent().addTab(desktopTab.getTabInfo());
-        myTabs.put(desktopTab.getTabInfo(), desktopTab);
+        int index = pane.getTabCount() - 1;
+        pane.setTabComponentAt(index, desktopTab.getTabComponent());
+        myTabs.add(desktopTab);
+
+        desktopTab.update();
 
         return tab;
     }
@@ -107,7 +94,41 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
     @Override
     public void removeTab(Tab tab) {
         DesktopTabImpl desktopTab = (DesktopTabImpl) tab;
-        toAWTComponent().removeTab(desktopTab.getTabInfo());
-        myTabs.remove(desktopTab.getTabInfo());
+
+        int index = myTabs.indexOf(desktopTab);
+        if (index == -1) {
+            return;
+        }
+
+        toAWTComponent().removeTabAt(index);
+        myTabs.remove(index);
+    }
+
+    int indexOf(DesktopTabImpl tab) {
+        return myTabs.indexOf(tab);
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+        JComponent pane = toAWTComponent();
+        pane.putClientProperty("JTabbedPane.leadingComponent", prefixComponent == null ? null : TargetAWT.to(prefixComponent));
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+        JComponent pane = toAWTComponent();
+        pane.putClientProperty("JTabbedPane.trailingComponent", suffixComponent == null ? null : TargetAWT.to(suffixComponent));
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 }

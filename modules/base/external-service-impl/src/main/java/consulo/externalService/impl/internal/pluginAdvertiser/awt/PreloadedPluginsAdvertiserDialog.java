@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.impl.internal.pluginAdvertiser;
+package consulo.externalService.impl.internal.pluginAdvertiser.awt;
 
 import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.impl.internal.plugin.ui.PluginDescriptionPanel;

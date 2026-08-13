@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.TabbedLayout;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Dummy-but-creatable headless {@link TabbedLayout}.
@@ -26,9 +27,32 @@ import consulo.ui.layout.TabbedLayout;
  * @author VISTALL
  */
 public class HeadlessTabbedLayout extends HeadlessLayoutBase<LayoutConstraint> implements TabbedLayout {
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
+
     @Override
     public Tab createTab() {
         return new HeadlessTab();
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     @Override

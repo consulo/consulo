@@ -270,25 +270,24 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
         int count = myModel.getSize();
         int rowHeight = rowHeight();
 
-        // the height is set here rather than left to the content. the scroll layout around the list calls
-        // setSizeFull, which is height 100% against parents that have no height of their own - so the intrinsic
-        // height the scroll area would have given collapsed to nothing and the list was 0px tall. both numbers are
-        // known on this side, so it is said outright
-        int visible = myVisibleRowCount > 0 ? Math.min(count, myVisibleRowCount) : count;
+        // a count caps the height at that many rows - what a popup asks for. without one the element fills
+        // whatever the parent gives and scrolls inside it, the way a list of a split panel is expected to - an
+        // intrinsic height of every row would leave the clipped parent nothing to scroll
+        int heightInPixels = myVisibleRowCount > 0 ? Math.min(count, myVisibleRowCount) * rowHeight : -1;
 
         toVaadinComponent().getElement().executeJs(
             // waited on rather than guarded - a push dropped because the definition had not landed yet never came
             // back, and the list stayed on whatever it was built with
             """
             window.customElements.whenDefined('consulo-virtual-list').then(() => {
-                this.style.height = $2 + 'px';
+                this.style.height = $2 < 0 ? '100%' : $2 + 'px';
                 this.setRowHeight($1);
                 this.setItemCount($0);
             });
             """,
             count,
             rowHeight,
-            visible * rowHeight
+            heightInPixels
         );
     }
 
@@ -362,6 +361,15 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
 
         if (render instanceof ReusableComponentItemRender<E, ?> reusable) {
             myReusableRender = reusable;
+        }
+        else {
+            // a plain render builds a fresh component per item and has nothing to rebind, so it is held the way
+            // a text render is - in a kept row whose content is replaced. without this the pool had no way to
+            // make rows at all and the list stayed empty
+            myReusableRender = (ReusableComponentItemRender<E, ?>) ComponentItemRender.<E, TextRow>reusable(
+                TextRow::new,
+                (row, item) -> row.setContent(((ToVaadinComponentWrapper) render.render(item)).toVaadinComponent())
+            );
         }
 
         // the pool was made by the render that came before, so it goes and is built again on the next range

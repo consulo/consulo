@@ -151,6 +151,17 @@
                 return;
             }
 
+            // a plain key typed into a field is text - backspace erases a character rather than running whatever
+            // the keymap put on it, while a combo with a real modifier is still a command wherever it is typed.
+            // asked on the innermost composed target, because a vaadin field retargets the event at its host and
+            // only the path still names the input inside. the editor is a contenteditable div, not a field, so
+            // its keys keep going to the keymap
+            const inner = event.composedPath ? event.composedPath()[0] : target;
+            if (inner && (inner.tagName === 'INPUT' || inner.tagName === 'TEXTAREA')
+                && !event.ctrlKey && !event.altKey && !event.metaKey) {
+                return;
+            }
+
             // an open menu of the toolkit owns its keys the way a swing popup dispatches ahead of the keymap -
             // escape closes it, arrows walk it. its handlers hang on the document and run after this capture
             // listener, so a key taken here never reaches them. asked by presence rather than by the target of

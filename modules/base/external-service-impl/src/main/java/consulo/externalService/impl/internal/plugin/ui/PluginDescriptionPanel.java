@@ -50,9 +50,6 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
  * @since 2021-11-08
  */
 public class PluginDescriptionPanel {
-    private static final float mgByte = 1024.0f * 1024.0f;
-    private static final float kByte = 1024.0f;
-
     private static class MyHyperlinkListener implements HyperlinkListener {
         @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -96,10 +93,8 @@ public class PluginDescriptionPanel {
         }
     }
 
-    private static final String PLUGIN_PREFIX = "plugin://";
+    private static final String PLUGIN_PREFIX = PluginDescriptionMarkup.PLUGIN_PREFIX;
     private static final String TEXT_SUFFIX = "</body></html>";
-    private static final String HTML_PREFIX = "<a href=\"";
-    private static final String HTML_SUFFIX = "</a>";
 
     private final PluginHeaderPanel myPluginHeaderPanel;
     private final JEditorPane myDescriptionTextArea;
@@ -137,179 +132,9 @@ public class PluginDescriptionPanel {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
         myPluginHeaderPanel.update(plugin, installedTab, allPlugins, forceInstall);
 
-        sb.append("<h3>Version:</h3>").append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A"));
-
-        if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-            setTextValue(sb, filter, myDescriptionTextArea);
-            return;
-        }
-
-        sb.append("<h3>Permissions:</h3>");
-        boolean noPermissions = true;
-        for (PluginPermissionType type : PluginPermissionType.values()) {
-            PluginPermissionDescriptor pluginPermissionDescriptor = plugin.getPermissionDescriptor(type);
-            if (pluginPermissionDescriptor != null) {
-                noPermissions = false;
-
-                sb.append("&nbsp;&nbsp;").append(type.name()).append("<br>");
-            }
-        }
-
-        if (noPermissions) {
-            sb.append("&nbsp;&nbsp;<span style=\"color: gray\">");
-            XmlStringUtil.escapeText("<no special permissions>", sb);
-            sb.append("</span><br>");
-        }
-
-        sb.append("<br>");
-
-        String description = plugin.getDescription();
-        if (!isEmptyOrSpaces(description)) {
-            sb.append(description);
-        }
-        else {
-            sb.append("<span style=\"color: gray\">");
-            XmlStringUtil.escapeText("<description not provided>", sb);
-            sb.append("</span>");
-        }
-
-        String changeNotes = plugin.getChangeNotes();
-        if (!isEmptyOrSpaces(changeNotes)) {
-            sb.append("<h3>Change Notes</h3>");
-            sb.append(changeNotes);
-        }
-
-        String vendor = plugin.getVendor();
-        String vendorEmail = plugin.getVendorEmail();
-        String vendorUrl = plugin.getVendorUrl();
-        if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-            sb.append("<h3>Vendor</h3>");
-
-            if (!isEmptyOrSpaces(vendor)) {
-                sb.append("&nbsp;&nbsp;").append(vendor);
-            }
-            if (!isEmptyOrSpaces(vendorEmail)) {
-                sb.append("&nbsp;")
-                    .append(HTML_PREFIX)
-                    .append("mailto:")
-                    .append(vendorEmail)
-                    .append("\">")
-                    .append(vendorEmail)
-                    .append(HTML_SUFFIX);
-            }
-            if (!isEmptyOrSpaces(vendorUrl)) {
-                sb.append("&nbsp;").append(composeHref(vendorUrl));
-            }
-        }
-
-        String pluginDescriptorUrl = plugin.getUrl();
-        if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-            sb.append("<h3>Plugin homepage</h3>").append(composeHref(pluginDescriptorUrl));
-        }
-
-        String size = plugin instanceof PluginNode pluginNode ? pluginNode.getSize() : null;
-        if (!isEmptyOrSpaces(size)) {
-            sb.append("<h3>Size</h3>").append(getFormattedSize(size));
-        }
-
-        Map<PluginDescriptor, Boolean> depends = new LinkedHashMap<>();
-        for (PluginId pluginId : plugin.getDependentPluginIds()) {
-            if (PluginIds.isPlatformPlugin(pluginId)) {
-                continue;
-            }
-
-            PluginDescriptor temp = findPlugin(allPlugins, pluginId);
-            if (temp != null) {
-                depends.put(temp, Boolean.FALSE);
-            }
-        }
-
-        for (PluginId pluginId : plugin.getOptionalDependentPluginIds()) {
-            if (PluginIds.isPlatformPlugin(pluginId)) {
-                continue;
-            }
-            PluginDescriptor temp = findPlugin(allPlugins, pluginId);
-            if (temp != null) {
-                depends.put(temp, Boolean.TRUE);
-            }
-        }
-
-        if (!depends.isEmpty()) {
-            sb.append("<h3>Depends on plugins:</h3>");
-
-            for (Map.Entry<PluginDescriptor, Boolean> entry : depends.entrySet()) {
-                PluginDescriptor key = entry.getKey();
-                Boolean optional = entry.getValue();
-
-                sb.append("&nbsp;&nbsp;");
-                sb.append("<a href=\"").append(PLUGIN_PREFIX).append(key.getPluginId()).append("\">").append(key.getName());
-                if (optional) {
-                    sb.append("&nbsp;(optional)");
-                }
-                sb.append("</a>");
-
-                sb.append("<br>");
-            }
-        }
-
-        Map<PluginId, PluginDescriptor> dependentPlugins = new TreeMap<>();
-        for (PluginDescriptor descriptor : allPlugins) {
-            if (ArrayUtil.contains(plugin.getPluginId(), descriptor.getDependentPluginIds())) {
-                dependentPlugins.put(descriptor.getPluginId(), descriptor);
-            }
-
-            if (ArrayUtil.contains(plugin.getPluginId(), descriptor.getOptionalDependentPluginIds())) {
-                dependentPlugins.put(descriptor.getPluginId(), descriptor);
-            }
-        }
-
-        if (!dependentPlugins.isEmpty()) {
-            sb.append("<h3>Dependent plugins:</h3>");
-
-            for (PluginDescriptor pluginDescriptor : dependentPlugins.values()) {
-                sb.append("&nbsp;&nbsp;");
-                sb.append("<a href=\"")
-                    .append("plugin://")
-                    .append(pluginDescriptor.getPluginId())
-                    .append("\">")
-                    .append(pluginDescriptor.getName());
-                sb.append("</a>");
-                sb.append("<br>");
-            }
-        }
-
-        Set<String> tags = plugin.getTags();
-        if (!tags.isEmpty()) {
-            sb.append("<h3>Tags:</h3>");
-            for (String tag : tags) {
-                sb.append("&nbsp;&nbsp;").append(PluginTab.getTagLocalizeValue(tag).get()).append("<br>");
-            }
-        }
-
-        setTextValue(sb, filter, myDescriptionTextArea);
-    }
-
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    public static String getFormattedSize(String size) {
-        if (size.equals("-1")) {
-            return ExternalServiceLocalize.pluginInfoUnknown().get();
-        }
-        else if (size.length() >= 4) {
-            if (size.length() < 7) {
-                size = String.format("%.1f", (float) Integer.parseInt(size) / kByte) + " K";
-            }
-            else {
-                size = String.format("%.1f", (float) Integer.parseInt(size) / mgByte) + " M";
-            }
-        }
-        return size;
-    }
-
-    private static @Nullable PluginDescriptor findPlugin(List<PluginDescriptor> allPlugins, PluginId pluginId) {
-        return ContainerUtil.find(allPlugins, it -> it.getPluginId() == pluginId);
+        setTextValue(PluginDescriptionMarkup.buildBody(plugin, allPlugins), filter, myDescriptionTextArea);
     }
 
     private static void setTextValue(@Nullable StringBuilder text, @Nullable String filter, JEditorPane pane) {
@@ -324,10 +149,6 @@ public class PluginDescriptionPanel {
         else {
             pane.setText(getTextPrefix() + TEXT_SUFFIX);
         }
-    }
-
-    private static String composeHref(String vendorUrl) {
-        return HTML_PREFIX + vendorUrl + "\">" + vendorUrl + HTML_SUFFIX;
     }
 
     private static String getTextPrefix() {

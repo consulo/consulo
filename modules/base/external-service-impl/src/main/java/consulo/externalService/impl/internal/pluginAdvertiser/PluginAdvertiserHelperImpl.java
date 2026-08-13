@@ -70,14 +70,13 @@ public class PluginAdvertiserHelperImpl implements PluginAdvertiserHelper {
     @Override
     @RequiredUIAccess
     public void showDialog(PluginsInfo pluginsInfo) {
-        PreloadedPluginsAdvertiserDialog advertiserDialog =
-            new PreloadedPluginsAdvertiserDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
-        advertiserDialog.show();
+        PluginAdvertiserDialogFactory.getInstance()
+            .showDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
     }
 
     @RequiredUIAccess
     @Override
     public void showDialogForExtension(ExtensionPreview preview) {
-        new WaitingPluginsAdvertiserDialog(null, preview, this).showAsync();
+        PluginAdvertiserDialogFactory.getInstance().showDialogForExtension(preview, this);
     }
 }

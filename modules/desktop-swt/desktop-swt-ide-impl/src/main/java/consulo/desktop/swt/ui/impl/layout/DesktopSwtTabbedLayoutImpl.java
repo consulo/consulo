@@ -21,6 +21,7 @@ import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TabbedLayout;
 import org.eclipse.swt.SWT;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
 
@@ -33,6 +34,29 @@ import java.util.List;
  */
 public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder> implements TabbedLayout {
     private final List<DesktopSwtTabImpl> myTabs = new ArrayList<>();
+
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
+    }
 
     @Override
     protected CTabFolder createSWT(Composite parent) {

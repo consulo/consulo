@@ -36,6 +36,7 @@ public enum StandardColors implements StyleColorValue {
     RED(new RGBColor(255, 0, 0)),
     LIGHT_RED(new RGBColor(255, 204, 204)),
     GREEN(new RGBColor(0, 255, 0)),
+    LIGHT_GREEN(new RGBColor(238, 255, 238)),
     BLUE(new RGBColor(0, 0, 255)),
 
     GRAY(new RGBColor(128, 128, 128)),

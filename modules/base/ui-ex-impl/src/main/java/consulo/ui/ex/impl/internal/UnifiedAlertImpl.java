@@ -31,6 +31,7 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.util.TextWithMnemonic;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -127,7 +128,9 @@ public class UnifiedAlertImpl<V> extends BaseAlert<V> {
         HorizontalLayout buttons = HorizontalLayout.create(BUTTON_GAP);
 
         for (ButtonImpl button : myButtons) {
-            Button uiButton = Button.create(getText(button), event -> {
+            LocalizeValue text = getText(button).map((manager, value) -> TextWithMnemonic.parse(value).getText());
+
+            Button uiButton = Button.create(text, event -> {
                 picked.set(button.myValue);
 
                 window.close();

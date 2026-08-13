@@ -13,8 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.impl.internal.update;
+package consulo.externalService.impl.internal.update.awt;
 
+import consulo.externalService.impl.internal.update.PlatformOrPluginInstallProcess;
+import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
+import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecker;
+import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
+import consulo.externalService.impl.internal.update.UpdateBusyLocker;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
@@ -218,139 +223,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
             }
         }
 
-        UIAccess uiAccess = UIAccess.current();
-
-        Consumer<ProgressIndicator> processor = indicator -> {
-            List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
-
-            int installCount = (int) myNodes
-                .stream()
-                .filter(it -> it.getFutureDescriptor() != null)
-                .count();
-
-            List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
-            int i = 0;
-            for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
-                PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
-                // update list contains broken plugins
-                if (pluginDescriptor == null) {
-                    continue;
-                }
-
-                try {
-                    PluginDownloader downloader = PluginDownloader.createDownloader(
-                        pluginDescriptor,
-                        myPlatformVersion,
-                        myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL
-                    );
-
-                    forInstall.add(downloader);
-
-                    downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
-                }
-                catch (PluginDownloadFailedException e) {
-                    uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
-                    return;
-                }
-            }
-
-            indicator.setText(ExternalServiceLocalize.progressInstallingPlugins());
-
-            UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
-
-            InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
-            for (PluginDownloader downloader : forInstall) {
-                try {
-                    // already was installed
-                    if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
-                        continue;
-                    }
-
-                    installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
-
-                    downloader.install(indicator, true);
-
-                    PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
-
-                    if (pluginDescriptor instanceof PluginNode pluginNode) {
-                        pluginNode.setInstallStatus(PluginNode.STATUS_DOWNLOADED);
-
-                        if (myType == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
-                            updateHistory.setShowExperimentalWarning(true);
-                        }
-                    }
-
-                    installed.add(pluginDescriptor);
-                }
-                catch (IOException e) {
-                    uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
-                    return;
-                }
-            }
-
-            application.getMessageBus().syncPublisher(PluginActionListener.class).pluginsInstalled(
-                installed.stream()
-                    .filter(it -> it instanceof PluginNode)
-                    .map(PluginDescriptor::getPluginId)
-                    .toArray(PluginId[]::new)
-            );
-
-            Map<String, String> pluginHistory = new HashMap<>();
-            for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-                if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-                    continue;
-                }
-
-                pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
-            }
-
-            pluginHistory.put(
-                PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
-                ApplicationInfo.getInstance().getBuild().toString()
-            );
-
-            updateHistory.replaceHistory(pluginHistory);
-
-            if (myAfterCallback != null) {
-                myAfterCallback.accept(installed);
-            }
-
-            if (myType != PlatformOrPluginUpdateResultType.PLUGIN_INSTALL) {
-                SwingUtilities.invokeLater(() -> {
-                    UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
-                    updateSettings.setLastCheckResult(PlatformOrPluginUpdateResultType.RESTART_REQUIRED);
-
-                    if (PluginInstallUtil.showRestartDialog() == Messages.YES) {
-                        application.restart(true);
-                    }
-                });
-            }
-        };
-
-        if (myModalProgress) {
-            Task.Modal.queue(
-                myProject,
-                ExternalServiceLocalize.progressDownloadPlugins(),
-                true,
-                progressIndicator -> {
-                    try (AccessToken ignored = UpdateBusyLocker.block()) {
-                        processor.accept(progressIndicator);
-                    }
-                }
-            );
-        }
-        else {
-            Task.Backgroundable.queue(
-                myProject,
-                ExternalServiceLocalize.progressDownloadPlugins(),
-                true,
-                progressIndicator -> {
-                    try (AccessToken ignored = UpdateBusyLocker.block()) {
-                        processor.accept(progressIndicator);
-                    }
-                }
-            );
-        }
+        PlatformOrPluginInstallProcess.run(myProject, myNodes, myType, myPlatformVersion, myAfterCallback, myModalProgress);
     }
 
     @Override

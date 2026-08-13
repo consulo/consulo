@@ -15,6 +15,7 @@
  */
 package consulo.externalService.impl.internal.plugin.ui;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
@@ -37,7 +38,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2020-06-26
  */
-@ExtensionImpl
+@ExtensionImpl(profiles = ComponentProfiles.AWT)
 public class PluginsConfigurableImpl implements SearchableConfigurable,
     Configurable.NoScroll,
     Configurable.NoMargin,

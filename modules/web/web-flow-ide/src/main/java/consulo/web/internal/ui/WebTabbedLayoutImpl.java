@@ -51,6 +51,9 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
 
     private final Map<com.vaadin.flow.component.tabs.Tab, WebTabImpl> myTabs = new LinkedHashMap<>();
 
+    private @Nullable Component myPrefixComponent;
+    private @Nullable Component mySuffixComponent;
+
     public WebTabbedLayoutImpl() {
         toVaadinComponent().addSelectedChangeListener(event -> {
             WebTabImpl tab = myTabs.get(event.getSelectedTab());
@@ -106,6 +109,28 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         WebTabImpl tab = new WebTabImpl(this);
         tab.setRenderer((t, p) -> p.append(tabName));
         return addTab(tab, component);
+    }
+
+    @Override
+    public void setPrefixComponent(@Nullable Component prefixComponent) {
+        myPrefixComponent = prefixComponent;
+        toVaadinComponent().setPrefixComponent(prefixComponent == null ? null : TargetVaadin.to(prefixComponent));
+    }
+
+    @Override
+    public @Nullable Component getPrefixComponent() {
+        return myPrefixComponent;
+    }
+
+    @Override
+    public void setSuffixComponent(@Nullable Component suffixComponent) {
+        mySuffixComponent = suffixComponent;
+        toVaadinComponent().setSuffixComponent(suffixComponent == null ? null : TargetVaadin.to(suffixComponent));
+    }
+
+    @Override
+    public @Nullable Component getSuffixComponent() {
+        return mySuffixComponent;
     }
 
     @Override

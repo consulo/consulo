@@ -27,6 +27,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
@@ -155,6 +156,14 @@ public class WebContainerStartup implements ContainerStartup {
 
   private void startApplication(StatCollector stat, String[] args) {
     ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(WebContainerStartup.class));
+
+    try {
+      StartupActionScriptManager.executeActionScript();
+    }
+    catch (IOException e) {
+      Logger.getInstance(WebContainerStartup.class).error(e);
+      return;
+    }
 
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 

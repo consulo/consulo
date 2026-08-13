@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-class DesktopTextItemPresentationImpl implements TextItemPresentation {
+public class DesktopTextItemPresentationImpl implements TextItemPresentation {
   private final SimpleColoredComponent mySimpleColoredComponent;
 
   public DesktopTextItemPresentationImpl(SimpleColoredComponent simpleColoredComponent) {

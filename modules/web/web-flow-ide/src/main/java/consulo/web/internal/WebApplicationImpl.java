@@ -37,6 +37,58 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
     return (WebStartupProgressImpl)mySplashRef.get();
   }
 
+  @Override
+  public boolean isRestartCapable() {
+    return getRestartCode() != 0;
+  }
+
+  @Override
+  public void restart(boolean exitConfirmed) {
+    shutdown(getRestartCode());
+  }
+
+  @Override
+  public void exit(boolean force, boolean exitConfirmed) {
+    shutdown(0);
+  }
+
+  @Override
+  public void exit() {
+    shutdown(0);
+  }
+
+  /**
+   * The linux desktop restarts through its launcher: the jvm exits with the code named by
+   * {@code consulo.restart.code} and the script around it starts it again. The web frontend restarts the same
+   * way - whatever launched it, a container entrypoint among them, owns the loop.
+   */
+  private static int getRestartCode() {
+    Integer code = Integer.getInteger("consulo.restart.code");
+    return code == null ? 0 : code;
+  }
+
+  private void shutdown(int exitCode) {
+    try {
+      saveSettings();
+    }
+    catch (Throwable e) {
+      LOG.warn(e);
+    }
+
+    // off the ui thread, and a beat later - the click which asked for this still owes the browser a response,
+    // and an exit inside the request would drop it
+    Thread thread = new Thread(() -> {
+      try {
+        Thread.sleep(500L);
+      }
+      catch (InterruptedException ignored) {
+      }
+      System.exit(exitCode);
+    }, "consulo-shutdown");
+    thread.setDaemon(true);
+    thread.start();
+  }
+
   /**
    * Always defers, even when the caller already is the ui thread - running inline would let a service constructor
    * that posts an initializer re-enter itself before the container finished binding it.
