@@ -41,10 +41,10 @@
         <junit.version>4.13.2</junit.version>
         <junit.jupiter.version>5.10.3</junit.jupiter.version>
         <gwt.version>2.9.0</gwt.version>
-        <servlet.version>5.0.0</servlet.version>
-        <websocket.version>2.0.0</websocket.version>
+        <servlet.version>6.1.0</servlet.version>
+        <websocket.version>2.2.0</websocket.version>
         <jaxb.version>4.0.0</jaxb.version>
-        <jetty.version>11.0.15</jetty.version>
+        <jetty.version>12.1.8</jetty.version>
         <swt.version>3.120.0</swt.version>
         <flatlaf.version>3.7.2.1</flatlaf.version>
         <protobuf.version>4.33.4</protobuf.version>
@@ -469,16 +469,15 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee11</groupId>
+                <artifactId>jetty-ee11-servlet</artifactId>
+                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlet</artifactId>
+                <artifactId>jetty-session</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
@@ -507,69 +506,39 @@
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-servlet</artifactId>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-servlet</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-jakarta-client</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-jakarta-common</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jakarta-client</artifactId>
-                <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-websocket-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jakarta-common</artifactId>
-                <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-websocket-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-core-client</artifactId>
+                <artifactId>jetty-websocket-core-client</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-core-server</artifactId>
+                <artifactId>jetty-websocket-core-server</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-core-common</artifactId>
+                <artifactId>jetty-websocket-core-common</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jakarta-server</artifactId>
+                <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                <artifactId>jetty-ee11-websocket-jakarta-server</artifactId>
                 <version>${jetty.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty.toolchain</groupId>
-                        <artifactId>jetty-jakarta-websocket-api</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>jakarta.servlet</groupId>

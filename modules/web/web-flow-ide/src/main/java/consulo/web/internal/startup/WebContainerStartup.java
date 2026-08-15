@@ -40,12 +40,11 @@ import consulo.web.main.WebApplicationStarter;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.annotation.WebServlet;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHolder;
+import org.eclipse.jetty.ee11.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -79,7 +78,7 @@ public class WebContainerStartup implements ContainerStartup {
 
         Server server = new Server(port);
 
-        ServletContextHandler handler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
+        ServletContextHandler handler = new ServletContextHandler("/", ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
         handler.setClassLoader(getClass().getClassLoader());
         handler.getSessionHandler().setMaxInactiveInterval(Integer.MAX_VALUE);
 
@@ -93,7 +92,8 @@ public class WebContainerStartup implements ContainerStartup {
         catch (IOException ignored) {
         }
 
-        handler.setBaseResource(new ResourceCollection(ContainerUtil.map(urls, Resource::newResource)));
+        ResourceFactory resourceFactory = ResourceFactory.of(handler);
+        handler.setBaseResource(ResourceFactory.combine(ContainerUtil.map(urls, resourceFactory::newResource)));
 
         // the defaults of the container kill the push channel: a text message is capped at 64k while one update of
         // a whole ide frame is far past that - the socket is closed as 1009 with the message lost - and the idle

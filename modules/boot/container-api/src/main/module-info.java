@@ -30,6 +30,7 @@ module consulo.container.api {
         consulo.project.impl,
         consulo.desktop.awt.bootstrap,
         consulo.desktop.swt.bootstrap,
+        consulo.web.bootstrap,
         consulo.desktop.swt.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.external.service.impl,
@@ -51,6 +52,7 @@ module consulo.container.api {
         consulo.component.api,
         consulo.desktop.awt.bootstrap,
         consulo.desktop.swt.bootstrap,
+        consulo.web.bootstrap,
         consulo.proxy;
 
     uses consulo.container.boot.ContainerStartup;

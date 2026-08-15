@@ -20,5 +20,6 @@ module consulo.platform.api {
     consulo.desktop.awt.ide.impl,
     consulo.test.impl,
     consulo.desktop.swt.ide.impl,
-    consulo.it;
+    consulo.it,
+    consulo.web.ide;
 }

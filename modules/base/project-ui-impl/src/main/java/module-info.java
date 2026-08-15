@@ -19,7 +19,8 @@ module consulo.project.ui.impl {
         consulo.ide.impl,
         consulo.desktop.swt.ide.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 
     exports consulo.project.ui.impl.internal.wm.statusBar to
         consulo.ide.impl;

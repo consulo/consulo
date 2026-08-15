@@ -59,7 +59,8 @@ module consulo.component.api {
         consulo.desktop.awt.ide.impl,
         consulo.desktop.swt.ide.impl,
         consulo.test.impl,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 
     exports consulo.component.internal.inject to consulo.component.impl,
         consulo.ui.ex.impl,

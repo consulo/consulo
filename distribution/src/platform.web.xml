@@ -25,23 +25,13 @@
         <include>org.jsoup:jsoup</include>
         <include>ar.com.hjg:pngj</include>
 
-        <include>org.eclipse.jetty:jetty-server</include>
-        <include>org.eclipse.jetty:jetty-servlet</include>
-        <include>org.eclipse.jetty:jetty-util</include>
-        <include>org.eclipse.jetty:jetty-http</include>
-        <include>org.eclipse.jetty:jetty-io</include>
-        <include>org.eclipse.jetty:jetty-security</include>
-        <include>org.eclipse.jetty:jetty-client</include>
-        <include>org.eclipse.jetty.websocket:websocket-servlet</include>
-        <include>org.eclipse.jetty.websocket:websocket-jakarta-server</include>
-        <include>org.eclipse.jetty.websocket:websocket-jakarta-client</include>
-        <include>org.eclipse.jetty.websocket:websocket-jakarta-common</include>
-        <include>org.eclipse.jetty.websocket:websocket-core-client</include>
-        <include>org.eclipse.jetty.websocket:websocket-core-server</include>
-        <include>org.eclipse.jetty.websocket:websocket-core-common</include>
+        <include>org.eclipse.jetty:*</include>
+        <include>org.eclipse.jetty.ee11:*</include>
+        <include>org.eclipse.jetty.ee11.websocket:*</include>
+        <include>org.eclipse.jetty.websocket:*</include>
 
         <include>jakarta.servlet:jakarta.servlet-api</include>
-        <include>jakarta.websocket:jakarta.websocket-api</include>
+        <include>jakarta.websocket:*</include>
 
         <include>commons-io:commons-io</include>
         <include>com.vaadin:flow-server</include>

@@ -48,7 +48,8 @@ module consulo.application.api {
         consulo.ide.impl,
         consulo.external.service.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.swt.ide.impl,
+        consulo.web.ide;
 
     exports consulo.application.internal to
         consulo.ui.ex.impl,
@@ -84,7 +85,8 @@ module consulo.application.api {
         consulo.virtual.file.system.api,
         consulo.credential.storage.impl,
         consulo.file.editor.impl,
-        consulo.desktop.awt.os.mac;
+        consulo.desktop.awt.os.mac,
+        consulo.web.ide;
 
     exports consulo.application.internal.plugin to
         consulo.application.impl,

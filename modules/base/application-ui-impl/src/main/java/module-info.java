@@ -9,7 +9,8 @@ module consulo.application.ui.impl {
   exports consulo.application.ui.impl.internal to
                                         consulo.ide.impl,
                                         consulo.desktop.awt.ide.impl,
-                                        consulo.desktop.swt.ide.impl;
+                                        consulo.desktop.swt.ide.impl,
+                                        consulo.web.ide;
 
   opens consulo.application.ui.impl.internal to consulo.util.xml.serializer;
 }

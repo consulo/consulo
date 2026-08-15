@@ -42,7 +42,8 @@ module consulo.ui.api {
         consulo.color.scheme.ui.api,
         consulo.ide.impl,
         consulo.test.impl,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 
     uses consulo.ui.image.IconLibraryDescriptor;
     uses consulo.ui.internal.UIInternal;

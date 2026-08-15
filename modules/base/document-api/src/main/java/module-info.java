@@ -30,5 +30,6 @@ module consulo.document.api {
         consulo.language.impl,
         consulo.execution.debug.impl,
         consulo.version.control.system.impl,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 }

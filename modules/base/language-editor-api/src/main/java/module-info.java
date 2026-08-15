@@ -84,7 +84,8 @@ module consulo.language.editor.api {
         consulo.desktop.swt.ide.impl,
         consulo.execution.debug.impl,
         consulo.build.ui.api,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 
     exports consulo.language.editor.internal.inspection to
         consulo.ide.impl,
@@ -94,7 +95,8 @@ module consulo.language.editor.api {
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.execution.impl,
-        consulo.language.editor.impl;
+        consulo.language.editor.impl,
+        consulo.web.ide;
     
     exports consulo.language.editor.internal.postfixTemplate to
         consulo.ide.impl,

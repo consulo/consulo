@@ -70,17 +70,20 @@ module consulo.ui.ex.api {
         consulo.module.content.api,
         consulo.external.tool.impl,
         consulo.desktop.awt.os.mac,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 
     exports consulo.ui.ex.keymap.internal to
         consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.swt.ide.impl,
+        consulo.web.ide;
 
     exports consulo.ui.ex.awtUnsafe.internal to
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.swt.ide.impl,
+        consulo.web.ide;
 
     uses TargetAWTFacade;
 }

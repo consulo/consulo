@@ -43,5 +43,6 @@ module consulo.project.api {
         consulo.external.service.impl,
         consulo.module.content.impl,
         consulo.file.editor.impl,
-        consulo.it;
+        consulo.it,
+        consulo.web.ide;
 }

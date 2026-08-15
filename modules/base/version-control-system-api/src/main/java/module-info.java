@@ -57,7 +57,8 @@ module consulo.version.control.system.api {
       consulo.version.control.system.distributed.impl,
       consulo.local.history.impl,
       consulo.desktop.awt.ide.impl,
-      consulo.test.impl;
+      consulo.test.impl,
+      consulo.web.ide;
 
   requires com.google.common;
   requires it.unimi.dsi.fastutil;
