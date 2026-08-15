@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -99,7 +100,12 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
             throw new IllegalArgumentException("Window already disposed");
         }
 
-        toVaadinComponent().open();
+        Vaadin vaadin = toVaadinComponent();
+        if (!vaadin.isAttached()) {
+            UI.getCurrent().add(vaadin);
+        }
+
+        vaadin.open();
     }
 
     @Override

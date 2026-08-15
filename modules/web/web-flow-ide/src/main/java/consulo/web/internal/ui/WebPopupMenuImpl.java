@@ -113,7 +113,12 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
                 return;
             }
 
-            ui.get().add(menu);
+            if (ui.get().hasModalComponent()) {
+                ui.get().addToModalComponent(menu);
+            }
+            else {
+                ui.get().add(menu);
+            }
         }
 
         // the overlay is opened by the client and the flow api exposes no way to open it at a point - the
