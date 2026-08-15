@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.util.StringHtmlUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.SystemProperties;
-import org.intellij.lang.annotations.JdkConstants;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -71,15 +70,15 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     setFontColor(fontColor);
   }
 
-  public JBLabel(String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(String text, @AWTConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
 
-  public JBLabel(@Nullable Image image, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(@Nullable Image image, @AWTConstants.HorizontalAlignment int horizontalAlignment) {
     super(TargetAWT.to(image), horizontalAlignment);
   }
 
-  public JBLabel(@Nullable String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(@Nullable String text, @Nullable Image icon, @AWTConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, TargetAWT.to(icon), horizontalAlignment);
   }
 

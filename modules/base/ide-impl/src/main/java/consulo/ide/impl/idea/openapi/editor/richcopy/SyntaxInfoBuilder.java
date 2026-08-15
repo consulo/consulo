@@ -9,7 +9,7 @@ import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.FontPreferences;
+import consulo.colorScheme.internal.FontPreferences;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.MarkupIterator;

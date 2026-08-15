@@ -29,6 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
@@ -51,7 +52,6 @@ import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -528,7 +528,7 @@ public abstract class ChangesTreeListImpl<T> extends Tree implements UiDataProvi
         return actions;
     }
 
-    public void setSelectionMode(@JdkConstants.TreeSelectionMode int mode) {
+    public void setSelectionMode(@AWTConstants.TreeSelectionMode int mode) {
         getSelectionModel().setSelectionMode(mode);
     }
 

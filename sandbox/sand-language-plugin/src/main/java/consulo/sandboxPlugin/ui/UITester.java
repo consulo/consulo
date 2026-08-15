@@ -135,7 +135,7 @@ public class UITester {
                 presentation.append(LocalizeValue.of("Advanced "), TextAttribute.REGULAR_BOLD);
                 presentation.append(
                     LocalizeValue.of("Label"),
-                    new TextAttribute(Font.STYLE_PLAIN, StandardColors.RED, StandardColors.BLACK)
+                    new TextAttribute(Font.PLAIN, StandardColors.RED, StandardColors.BLACK)
                 );
             }));
 

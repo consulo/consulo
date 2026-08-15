@@ -19,23 +19,34 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2020-06-04
  */
 public class WebFontManagerImpl implements FontManager {
-  public static final WebFontManagerImpl ourInstance = new WebFontManagerImpl();
+    public static final WebFontManagerImpl ourInstance = new WebFontManagerImpl();
 
-  @Override
-  public Set<String> getAvailableFontNames() {
-    // the browser has no api to enumerate what it can render, so only the bundled faces are offered - they
-    // are the only ones the page ships a @font-face for
-    return WebFontRegistry.getFamilyNames();
-  }
+    @Override
+    public boolean isRequiredPermission() {
+        return true;
+    }
 
-  @Override
-  public Font createFont(String fontName, int fontSize, int fontStyle) {
-    return new WebFontImpl(fontName, fontSize, fontStyle);
-  }
+    @Override
+    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
+        return CompletableFuture.completedFuture(Set.of());
+    }
+
+    @Override
+    public Set<String> getAvailableFontNames() {
+        // the browser has no api to enumerate what it can render, so only the bundled faces are offered - they
+        // are the only ones the page ships a @font-face for
+        return WebFontRegistry.getFamilyNames();
+    }
+
+    @Override
+    public Font createFont(String fontName, int fontSize, int fontStyle) {
+        return new WebFontImpl(fontName, fontSize, fontStyle);
+    }
 }

@@ -220,16 +220,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     }
 
     @Override
-    public Font getFont() {
-        return new DesktopFontImpl(toAWTComponent().getFont());
-    }
-
-    @Override
-    public void setFont(Font font) {
-        toAWTComponent().setFont(TargetAWT.to(font));
-    }
-
-    @Override
     public <T> void putUserData(Key<T> key, @Nullable T value) {
         dataObject().putUserData(key, value);
     }

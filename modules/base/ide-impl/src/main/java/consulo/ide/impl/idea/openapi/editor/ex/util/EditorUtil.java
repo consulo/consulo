@@ -45,6 +45,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Couple;
@@ -52,7 +53,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -146,7 +146,7 @@ public final class EditorUtil {
         }
     }
 
-    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
+    public static FontInfo fontForChar(char c, @AWTConstants.FontStyle int style, Editor editor) {
         return EditorImplUtil.fontForChar(c, style, editor);
     }
 
@@ -160,11 +160,11 @@ public final class EditorUtil {
         return icon;
     }
 
-    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int charWidth(char c, @AWTConstants.FontStyle int fontType, Editor editor) {
         return EditorImplUtil.charWidth(c, fontType, editor);
     }
 
-    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int getSpaceWidth(@AWTConstants.FontStyle int fontType, Editor editor) {
         return EditorImplUtil.getSpaceWidth(fontType, editor);
     }
 
@@ -255,7 +255,7 @@ public final class EditorUtil {
                                 CharSequence text,
                                 int start,
                                 int end,
-                                @JdkConstants.FontStyle int fontType,
+                                @AWTConstants.FontStyle int fontType,
                                 int x) {
         int result = 0;
         for (int i = start; i < end; i++) {

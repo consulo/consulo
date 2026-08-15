@@ -141,16 +141,6 @@ public interface Component extends UserDataHolder {
     @Nullable
     Component getParent();
 
-    Font getFont();
-
-    void setFont(Font font);
-
-    @RequiredUIAccess
-    default Component withFont(Font font) {
-        setFont(font);
-        return this;
-    }
-
     default @Nullable ColorValue getForegroundColor() {
         throw new AbstractMethodError("not supported");
     }

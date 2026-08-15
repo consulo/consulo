@@ -18,7 +18,9 @@ package consulo.it.internal.ui;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 
+import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Dummy-but-creatable headless {@link FontManager}.
@@ -27,8 +29,23 @@ import java.util.Set;
  */
 public class HeadlessFontManager implements FontManager {
     @Override
+    public boolean isRequiredPermission() {
+        return false;
+    }
+
+    @Override
+    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
+        return CompletableFuture.completedFuture(Set.of());
+    }
+
+    @Override
     public Set<String> getAvailableFontNames() {
         return Set.of();
+    }
+
+    @Override
+    public Font createFont(String fontName, int fontSize, EnumSet<Font.Style> styles) {
+        return null;
     }
 
     @Override

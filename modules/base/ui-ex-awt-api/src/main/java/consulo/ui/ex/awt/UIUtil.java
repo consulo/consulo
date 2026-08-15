@@ -54,7 +54,6 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
@@ -2465,7 +2464,7 @@ public class UIUtil {
         return getFontWithFallback(font.getFamily(), font.getStyle(), font.getSize());
     }
 
-    public static FontUIResource getFontWithFallback(String familyName, @JdkConstants.FontStyle int style, int size) {
+    public static FontUIResource getFontWithFallback(String familyName, @AWTConstants.FontStyle int style, int size) {
         Font fontWithFallback = StyleContext.getDefaultStyleContext().getFont(familyName, style, size);
         return fontWithFallback instanceof FontUIResource fontUIRes ? fontUIRes : new FontUIResource(fontWithFallback);
     }

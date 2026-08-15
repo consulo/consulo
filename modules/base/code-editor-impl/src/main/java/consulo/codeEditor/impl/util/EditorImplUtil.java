@@ -34,10 +34,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.ex.CopyPasteManager;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -375,7 +375,7 @@ public class EditorImplUtil {
         return (nTabs + 1) * tabSize;
     }
 
-    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int getSpaceWidth(@AWTConstants.FontStyle int fontType, Editor editor) {
         int width = charWidth(' ', fontType, editor);
         return width > 0 ? width : 1;
     }
@@ -384,12 +384,12 @@ public class EditorImplUtil {
         return getSpaceWidth(Font.PLAIN, editor);
     }
 
-    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, Editor editor) {
+    public static int charWidth(char c, @AWTConstants.FontStyle int fontType, Editor editor) {
         return fontForChar(c, fontType, editor).charWidth(c);
     }
 
     
-    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
+    public static FontInfo fontForChar(char c, @AWTConstants.FontStyle int style, Editor editor) {
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         return ComplementaryFontsRegistry.getFontAbleToDisplay(c,
             style,

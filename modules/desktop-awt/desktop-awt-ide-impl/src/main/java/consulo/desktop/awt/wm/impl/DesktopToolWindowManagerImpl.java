@@ -89,7 +89,6 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -352,7 +351,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return false;
     }
 
-    private static boolean areAllModifiersPressed(@JdkConstants.InputEventMask int modifiers, Set<Integer> modifierCodes) {
+    private static boolean areAllModifiersPressed(@AWTConstants.InputEventMask int modifiers, Set<Integer> modifierCodes) {
         int mask = 0;
         for (Integer each : modifierCodes) {
             if (each == KeyEvent.VK_SHIFT) {

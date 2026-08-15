@@ -14,7 +14,6 @@ import consulo.ui.RelativePoint2D;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -220,7 +219,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
         setAdText(s, SwingConstants.LEFT);
     }
 
-    void setAdText(String s, @JdkConstants.HorizontalAlignment int alignment);
+    void setAdText(String s, int alignment);
 
     void setDataProvider(DataProvider dataProvider);
 
@@ -242,7 +241,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
         return !isDisposed();
     }
 
-    default void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+    default void registerAction(String aActionName, int aKeyCode, int aModifier, Action aAction) {
         throw new UnsupportedOperationException();
     }
 

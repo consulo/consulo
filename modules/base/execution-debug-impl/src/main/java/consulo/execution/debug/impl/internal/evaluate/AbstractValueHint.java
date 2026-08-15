@@ -39,6 +39,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.HintListener;
@@ -46,7 +47,6 @@ import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -282,7 +282,7 @@ public abstract class AbstractValueHint {
         return myCurrentRange;
     }
 
-    private static boolean isAltMask(@JdkConstants.InputEventMask int modifiers) {
+    private static boolean isAltMask(@AWTConstants.InputEventMask int modifiers) {
         return KeymapUtil.matchActionMouseShortcutsModifiers(KeymapManager.getInstance().getActiveKeymap(),
             modifiers,
             XDebuggerActions.QUICK_EVALUATE_EXPRESSION);

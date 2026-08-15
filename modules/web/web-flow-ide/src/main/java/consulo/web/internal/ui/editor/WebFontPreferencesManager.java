@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.web.internal.ui.editor;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.codeEditor.impl.ComplementaryFontsRegistry;
-import consulo.ui.ex.awt.AWTConstants;
-import consulo.ui.ex.awt.SuitableFontProvider;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferencesManager;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
 import jakarta.inject.Singleton;
-
-import java.awt.*;
+import org.jspecify.annotations.Nullable;
 
 /**
- * @author egor
+ * @author VISTALL
+ * @since 2026-08-14
  */
-@Singleton
 @ServiceImpl
-public class SuitableFontProviderImpl implements SuitableFontProvider {
-  @Override
-  public Font getFontAbleToDisplay(char c, int size, @AWTConstants.FontStyle int style, String defaultFontFamily) {
-    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, size, style, defaultFontFamily, null).getFont();
-  }
+@Singleton
+public class WebFontPreferencesManager implements FontPreferencesManager {
+    @Override
+    public @Nullable String getFallbackName(String fontName, int fontSize, EditorColorsScheme fallbackScheme) {
+        return null;
+    }
 }

@@ -28,7 +28,6 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -192,7 +191,7 @@ public abstract class AnAction implements PossiblyDumbAware {
         registerCustomShortcutSet(shortcutSet, component, (Disposable) null);
     }
 
-    public final void registerCustomShortcutSet(int keyCode, @JdkConstants.InputEventMask int modifiers, @Nullable JComponent component) {
+    public final void registerCustomShortcutSet(int keyCode, int modifiers, @Nullable JComponent component) {
         registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
     }
 

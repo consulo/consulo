@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.logging.Logger;
 import consulo.ui.ex.PrevNextActionsDescriptor;
@@ -25,7 +26,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.TabbedPane;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class TabbedPaneImpl extends JBTabbedPane implements TabbedPane {
     private AnAction myPreviousTabAction = null;
     public PrevNextActionsDescriptor myInstallKeyboardNavigation = null;
 
-    public TabbedPaneImpl(@JdkConstants.TabPlacement int tabPlacement) {
+    public TabbedPaneImpl(@AWTConstants.TabPlacement int tabPlacement) {
         super(tabPlacement);
         setFocusable(false);
         setTabComponentInsets(JBUI.emptyInsets());

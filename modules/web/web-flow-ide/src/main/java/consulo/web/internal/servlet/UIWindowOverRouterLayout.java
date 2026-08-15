@@ -48,8 +48,6 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
-    private Font myFont = FontManager.get().createFont("?", 12);
-
     private boolean myDisposed;
 
     @RequiredUIAccess
@@ -119,16 +117,6 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Font getFont() {
-        return myFont;
-    }
-
-    @Override
-    public void setFont(Font font) {
-        myFont = font;
     }
 
     @RequiredUIAccess

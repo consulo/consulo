@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.colorScheme.*;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.internal.EditorColorsManagerInternal;
+import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
@@ -35,11 +36,11 @@ import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -63,17 +64,19 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         ComponentTreeEventDispatcher.create(EditorColorsListener.class);
 
     private final SchemeManager<EditorColorsScheme, EditorColorsSchemeImpl> mySchemeManager;
+    private final FontPreferencesManager myFontPreferencesManager;
     private State myState = new State();
     private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<>();
 
     @Inject
-    public EditorColorsManagerImpl(Application application, SchemeManagerFactory schemeManagerFactory) {
+    public EditorColorsManagerImpl(Application application, SchemeManagerFactory schemeManagerFactory, FontPreferencesManager fontPreferencesManager) {
+        myFontPreferencesManager = fontPreferencesManager;
         mySchemeManager =
             schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsScheme, EditorColorsSchemeImpl>() {
-                
+
                 @Override
                 public EditorColorsSchemeImpl readScheme(Element element) {
-                    EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this);
+                    EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this, myFontPreferencesManager);
                     scheme.readExternal(element);
                     return scheme;
                 }
@@ -91,7 +94,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                     return root;
                 }
 
-                
+
                 @Override
                 public State getState(EditorColorsSchemeImpl scheme) {
                     return scheme instanceof ReadOnlyColorsScheme ? State.NON_PERSISTENT : State.POSSIBLY_CHANGED;
@@ -102,7 +105,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                     fireChanges(mySchemeManager.getCurrentScheme());
                 }
 
-                
+
                 @Override
                 public String getSchemeExtension() {
                     return ".icls";
@@ -113,7 +116,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                     return true;
                 }
 
-                
+
                 @Override
                 public String getName(EditorColorsScheme immutableElement) {
                     return immutableElement.getName();
@@ -131,7 +134,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                 }
 
                 mySchemeManager.loadBundledScheme(resource, element -> {
-                    DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
+                    DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this, myFontPreferencesManager);
                     defaultColorsScheme.readExternal(element);
 
                     myDefaultColorsSchemes.put(defaultColorsScheme.getName(), defaultColorsScheme);
@@ -232,7 +235,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
     }
 
     @Override
-    
+
     public Map<String, EditorColorsScheme> getBundledSchemes() {
         return myDefaultColorsSchemes;
     }
@@ -243,7 +246,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         }
     }
 
-    
+
     @Override
     public EditorColorsScheme[] getAllSchemes() {
         List<EditorColorsScheme> schemes = mySchemeManager.getAllSchemes();
@@ -290,13 +293,12 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         mySchemeManager.setCurrentSchemeName(scheme == null ? getDefaultSchemeFromStyle().getName() : scheme.getName());
     }
 
-    
+
     private EditorColorsScheme getDefaultSchemeFromStyle() {
         Style style = StyleManager.get().getCurrentStyle();
         return getScheme(style.isDark() ? EditorColorsScheme.DARCULA_SCHEME_NAME : EditorColorsScheme.DEFAULT_SCHEME_NAME);
     }
 
-    
     @Override
     public EditorColorsScheme getGlobalScheme() {
         EditorColorsScheme scheme = mySchemeManager.getCurrentScheme();

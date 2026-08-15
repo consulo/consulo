@@ -21,14 +21,15 @@ import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
+import consulo.colorScheme.internal.FontPreferencesManager;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
 public class DesktopSwtCodeEditorSoftWrapModelImpl extends CodeEditorSoftWrapModelBase {
-  public DesktopSwtCodeEditorSoftWrapModelImpl(CodeEditorBase editor) {
-    super(editor);
+  public DesktopSwtCodeEditorSoftWrapModelImpl(CodeEditorBase editor, FontPreferencesManager fontPreferencesManager) {
+    super(editor, fontPreferencesManager);
   }
 
   @Override

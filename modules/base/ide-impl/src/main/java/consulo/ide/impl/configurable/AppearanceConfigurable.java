@@ -218,7 +218,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
                     renderer.withFont(FontManager.get().createFont(
                         scheme.getEditorFontName(),
                         scheme.getEditorFontSize(),
-                        Font.STYLE_PLAIN
+                        Font.PLAIN
                     ));
                 }
 

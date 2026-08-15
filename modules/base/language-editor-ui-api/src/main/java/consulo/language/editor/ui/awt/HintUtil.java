@@ -8,6 +8,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.ColoredSideBorder;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
@@ -17,7 +18,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -192,7 +192,7 @@ public class HintUtil {
     }
 
     
-    public static JLabel createAdComponent(String bottomText, Border border, @JdkConstants.HorizontalAlignment int alignment) {
+    public static JLabel createAdComponent(String bottomText, Border border, @AWTConstants.HorizontalAlignment int alignment) {
         JLabel label = new JLabel();
         label.setText(bottomText);
         label.setHorizontalAlignment(alignment);

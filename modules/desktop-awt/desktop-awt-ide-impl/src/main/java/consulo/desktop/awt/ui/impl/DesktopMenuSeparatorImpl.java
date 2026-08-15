@@ -87,16 +87,6 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
     }
 
     @Override
-    public Font getFont() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setFont(Font font) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         throw new UnsupportedOperationException();
     }

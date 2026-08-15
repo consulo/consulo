@@ -15,12 +15,14 @@
  */
 package consulo.web.internal.ui.editor;
 
+import consulo.application.Application;
 import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
+import consulo.colorScheme.internal.FontPreferencesManager;
 
 /**
  * @author VISTALL
@@ -28,7 +30,7 @@ import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
  */
 public class WebSoftWrapModelImpl extends CodeEditorSoftWrapModelBase {
   public WebSoftWrapModelImpl(CodeEditorBase editor) {
-    super(editor);
+    super(editor, Application.get().getInstance(FontPreferencesManager.class));
   }
 
   @Override

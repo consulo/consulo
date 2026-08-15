@@ -33,9 +33,9 @@ public final class DesktopFontImpl implements Font {
     myFontStyle = fontStyle;
 
     int style = 0;
-    style = BitUtil.set(style, java.awt.Font.PLAIN, BitUtil.isSet(fontStyle, Font.STYLE_PLAIN));
-    style = BitUtil.set(style, java.awt.Font.BOLD, BitUtil.isSet(fontStyle, Font.STYLE_BOLD));
-    style = BitUtil.set(style, java.awt.Font.ITALIC, BitUtil.isSet(fontStyle, Font.STYLE_ITALIC));
+    style = BitUtil.set(style, java.awt.Font.PLAIN, BitUtil.isSet(fontStyle, Font.PLAIN));
+    style = BitUtil.set(style, java.awt.Font.BOLD, BitUtil.isSet(fontStyle, Font.BOLD));
+    style = BitUtil.set(style, java.awt.Font.ITALIC, BitUtil.isSet(fontStyle, Font.ITALIC));
 
     myFont = new java.awt.Font(fontName, style, JBUI.scaleFontSize(fontSize));
   }
@@ -44,31 +44,27 @@ public final class DesktopFontImpl implements Font {
     myFont = font;
 
     int result = 0;
-    result = BitUtil.set(result, Font.STYLE_PLAIN, BitUtil.isSet(font.getStyle(), java.awt.Font.PLAIN));
-    result = BitUtil.set(result, Font.STYLE_BOLD, BitUtil.isSet(font.getStyle(), java.awt.Font.BOLD));
-    result = BitUtil.set(result, Font.STYLE_ITALIC, BitUtil.isSet(font.getStyle(), java.awt.Font.ITALIC));
+    result = BitUtil.set(result, Font.PLAIN, BitUtil.isSet(font.getStyle(), java.awt.Font.PLAIN));
+    result = BitUtil.set(result, Font.BOLD, BitUtil.isSet(font.getStyle(), java.awt.Font.BOLD));
+    result = BitUtil.set(result, Font.ITALIC, BitUtil.isSet(font.getStyle(), java.awt.Font.ITALIC));
 
     myFontStyle = result;
   }
 
-  
   public java.awt.Font getFont() {
     return myFont;
   }
 
-  
   @Override
   public String getName() {
     return myFont.getFontName();
   }
 
-  
   @Override
   public String getFontName() {
     return myFont.getFontName();
   }
 
-  
   @Override
   public String getFamily() {
     return myFont.getFamily();
@@ -84,7 +80,6 @@ public final class DesktopFontImpl implements Font {
     return myFont.getSize();
   }
 
-  
   @Override
   public Font buildNewFont(int newSize) {
     java.awt.Font newFont = myFont.deriveFont((float)newSize);

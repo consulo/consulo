@@ -732,7 +732,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
                                 placeToShow.x += R * 3 / 2;
                                 placeToShow.y -= myCacheStartLine * myEditor.getLineHeight() - 1;
 
-                                Font font = myEditor.getColorsScheme().getFont(EditorFontType.PLAIN);
+                                Font font = TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN));
                                 g2d.setFont(font.deriveFont(font.getSize() * .8F));
                                 int w = g2d.getFontMetrics().stringWidth(s);
 

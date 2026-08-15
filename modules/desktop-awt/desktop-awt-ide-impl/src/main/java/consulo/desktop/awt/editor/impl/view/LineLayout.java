@@ -18,10 +18,10 @@ import consulo.language.ast.TokenType;
 import consulo.language.editor.bidi.BidiRegionsSeparator;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.CharArrayUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -54,7 +54,7 @@ abstract class LineLayout {
     /**
      * Creates a layout for an arbitrary piece of text (using a common font style).
      */
-    static LineLayout create(EditorViewImpl view, CharSequence text, @JdkConstants.FontStyle int fontStyle) {
+    static LineLayout create(EditorViewImpl view, CharSequence text, @AWTConstants.FontStyle int fontStyle) {
         List<BidiRun> runs = createFragments(view, text, fontStyle);
         LineLayout delegate = createLayout(view, runs, text, 0);
         return new WithSize(delegate);
@@ -111,7 +111,7 @@ abstract class LineLayout {
     }
 
     private static List<BidiRun> createFragments(EditorViewImpl view, CharSequence text,
-                                                 @JdkConstants.FontStyle int fontStyle) {
+                                                 @AWTConstants.FontStyle int fontStyle) {
         if (text.isEmpty()) return Collections.emptyList();
 
         FontFallbackIterator ffi = new FontFallbackIterator()

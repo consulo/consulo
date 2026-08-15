@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.colorScheme.ModifiableFontPreferences;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
 
 /**
  * @author anna

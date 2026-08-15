@@ -7,12 +7,12 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import consulo.document.util.TextRange;
-import consulo.language.editor.parameterInfo.ParameterInfoUIContextEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
+import consulo.language.editor.parameterInfo.ParameterInfoUIContextEx;
 import consulo.language.psi.PsiElement;
 import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
@@ -25,15 +25,15 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,7 +44,7 @@ public class ParameterInfoComponent extends JPanel {
 
     private PsiElement myParameterOwner;
     private Object myHighlighted;
-    
+
     private final ParameterInfoHandler myHandler;
 
     private final JPanel myMainPanel;
@@ -122,10 +122,13 @@ public class ParameterInfoComponent extends JPanel {
             myWidthLimit = layeredPane.getWidth();
         }
 
-        NORMAL_FONT = editor != null && Registry.is("parameter.info.editor.font") ? editor.getColorsScheme()
-            .getFont(EditorFontType.PLAIN) : UIUtil.getLabelFont();
-        BOLD_FONT = editor != null && Registry.is("parameter.info.editor.font") ? editor.getColorsScheme()
-            .getFont(EditorFontType.BOLD) : NORMAL_FONT.deriveFont(Font.BOLD);
+        NORMAL_FONT = editor != null && Registry.is("parameter.info.editor.font")
+            ? TargetAWT.to(editor.getColorsScheme().getFont(EditorFontType.PLAIN))
+            : UIUtil.getLabelFont();
+        
+        BOLD_FONT = editor != null && Registry.is("parameter.info.editor.font")
+            ? TargetAWT.to(editor.getColorsScheme().getFont(EditorFontType.BOLD))
+            : NORMAL_FONT.deriveFont(Font.BOLD);
 
         myObjects = objects;
 

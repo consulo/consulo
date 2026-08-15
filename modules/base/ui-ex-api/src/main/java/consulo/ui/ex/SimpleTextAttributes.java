@@ -18,7 +18,6 @@ package consulo.ui.ex;
 import consulo.ui.ex.util.LafProperty;
 import consulo.util.lang.Comparing;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.awt.*;
@@ -174,7 +173,6 @@ public final class SimpleTextAttributes {
         return (myStyle & STYLE_OPAQUE) != 0;
     }
 
-    @JdkConstants.FontStyle
     public int getFontStyle() {
         return myStyle & FONT_MASK;
     }

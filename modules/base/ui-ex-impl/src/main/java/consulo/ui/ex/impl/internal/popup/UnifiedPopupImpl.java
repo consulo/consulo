@@ -27,6 +27,7 @@ import consulo.ui.RelativePoint2D;
 import consulo.ui.PopupOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.AnchoredPopup;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,7 +36,6 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import org.jspecify.annotations.Nullable;
 
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -273,7 +273,7 @@ public abstract class UnifiedPopupImpl implements JBPopup, AnchoredPopup {
     // TODO accelerators of a popup are not bound yet, and the interface default throws rather than ignoring them -
     // which took down every caller that offers one, the breakpoint variant chooser among them
     @Override
-    public void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+    public void registerAction(String aActionName, int aKeyCode, @AWTConstants.InputEventMask int aModifier, Action aAction) {
     }
 
     @Override

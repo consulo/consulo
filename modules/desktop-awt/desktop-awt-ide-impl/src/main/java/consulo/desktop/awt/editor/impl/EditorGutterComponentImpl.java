@@ -526,7 +526,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
         try {
             ColorValue color = myEditor.getColorsScheme().getColor(EditorColors.ANNOTATIONS_COLOR);
             g.setColor(color != null ? TargetAWT.to(color) : JBColor.blue);
-            g.setFont(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN));
+            g.setFont(TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN)));
 
             for (int i = 0; i < myTextAnnotationGutters.size(); i++) {
                 TextAnnotationGutterProvider gutterProvider = myTextAnnotationGutters.get(i);
@@ -612,7 +612,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     private Font getFontForText(String text, EditorFontType style) {
         Font font = ExperimentalUI.isNewUI()
             ? JBFont.regular().deriveFont((float) myEditor.getFontSize())
-            : myEditor.getColorsScheme().getFont(style);
+            : TargetAWT.to(myEditor.getColorsScheme().getFont(style));
         return UIUtil.getFontWithFallbackIfNeeded(font, text);
     }
 
@@ -690,7 +690,7 @@ public class EditorGutterComponentImpl extends JComponent implements EditorGutte
     }
 
     private Font getFontForLineNumbers() {
-        Font editorFont = myEditor.getColorsScheme().getFont(EditorFontType.PLAIN);
+        Font editorFont = TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN));
         float editorFontSize = editorFont.getSize2D();
         return editorFont.deriveFont(Math.max(1f, editorFontSize - 1f));
     }

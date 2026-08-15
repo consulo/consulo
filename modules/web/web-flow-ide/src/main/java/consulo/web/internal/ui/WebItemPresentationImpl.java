@@ -18,6 +18,7 @@ package consulo.web.internal.ui;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.dom.Style;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.web.internal.ui.vaadin.AuraUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
@@ -125,16 +126,16 @@ public class WebItemPresentationImpl implements TextItemPresentation {
         }
 
         int fontStyle = textAttribute.getStyle();
-        if ((fontStyle & Font.STYLE_BOLD) != 0) {
+        if ((fontStyle & Font.BOLD) != 0) {
             style.set("font-weight", "bold");
         }
-        if ((fontStyle & Font.STYLE_ITALIC) != 0) {
+        if ((fontStyle & Font.ITALIC) != 0) {
             style.set("font-style", "italic");
         }
 
         // one css property covers both, so a fragment carrying the two has to ask for them together
-        boolean strikeout = (fontStyle & Font.STYLE_STRIKEOUT) != 0;
-        boolean underline = (fontStyle & Font.STYLE_UNDERLINE) != 0;
+        boolean strikeout = (fontStyle & SimpleTextAttributes.STYLE_STRIKEOUT) != 0;
+        boolean underline = (fontStyle & SimpleTextAttributes.STYLE_UNDERLINE) != 0;
         if (strikeout || underline) {
             style.set("text-decoration", strikeout && underline ? "line-through underline" : strikeout ? "line-through" : "underline");
         }

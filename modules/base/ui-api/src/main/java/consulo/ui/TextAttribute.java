@@ -28,11 +28,11 @@ import org.jspecify.annotations.Nullable;
  */
 public final class TextAttribute {
     @Deprecated
-    public static final int STYLE_PLAIN = Font.STYLE_PLAIN;
+    public static final int STYLE_PLAIN = Font.PLAIN;
     @Deprecated
-    public static final int STYLE_BOLD = Font.STYLE_BOLD;
+    public static final int STYLE_BOLD = Font.BOLD;
     @Deprecated
-    public static final int STYLE_ITALIC = Font.STYLE_ITALIC;
+    public static final int STYLE_ITALIC = Font.ITALIC;
 
     public static final TextAttribute REGULAR = new TextAttribute(STYLE_PLAIN, null, null);
     public static final TextAttribute REGULAR_BOLD = new TextAttribute(STYLE_BOLD, null);

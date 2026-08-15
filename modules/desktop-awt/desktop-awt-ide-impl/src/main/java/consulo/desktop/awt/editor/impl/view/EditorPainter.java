@@ -12,6 +12,7 @@ import consulo.codeEditor.impl.IterationState;
 import consulo.codeEditor.impl.internal.VisualLinesIterator;
 import consulo.codeEditor.internal.FoldingKeys;
 import consulo.codeEditor.markup.*;
+import consulo.colorScheme.internal.FontPreferences;
 import consulo.desktop.awt.editor.impl.LineMarkerPresentationContextImpl;
 import consulo.desktop.awt.editor.impl.gutter.AwtLineSeparatorBounds;
 import consulo.desktop.awt.editor.impl.gutter.AwtLineSeparatorPresentationPainter;
@@ -284,7 +285,7 @@ public final class EditorPainter implements TextDrawingCallback {
             }
             myGraphics.setColor(color);
             String hintString = hintText.toString();
-            myGraphics.setFont(UIUtil.getFontWithFallbackIfNeeded(myEditor.getColorsScheme().getFont(fontType), hintString));
+            myGraphics.setFont(UIUtil.getFontWithFallbackIfNeeded(TargetAWT.to(myEditor.getColorsScheme().getFont(fontType)), hintString));
             String toDisplay = SwingUtilities.layoutCompoundLabel(myGraphics.getFontMetrics(), hintString, null, 0, 0, 0, 0,
                 SwingUtilities.calculateInnerArea(editorComponent, null), // account for insets
                 new Rectangle(), new Rectangle(), 0
@@ -951,27 +952,27 @@ public final class EditorPainter implements TextDrawingCallback {
             int xEnd = (int) xTo;
             if (effectType == EffectType.LINE_UNDERSCORE) {
                 EffectPainter.LINE_UNDERSCORE.paint(myGraphics, xStart, y, xEnd - xStart, myDescent,
-                    myEditor.getColorsScheme().getFont(EditorFontType.PLAIN)
+                    TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN))
                 );
             }
             else if (effectType == EffectType.BOLD_LINE_UNDERSCORE) {
                 EffectPainter.BOLD_LINE_UNDERSCORE.paint(myGraphics, xStart, y, xEnd - xStart, myDescent,
-                    myEditor.getColorsScheme().getFont(EditorFontType.PLAIN)
+                    TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN))
                 );
             }
             else if (effectType == EffectType.STRIKEOUT) {
                 EffectPainter.STRIKE_THROUGH.paint(myGraphics, xStart, y, xEnd - xStart, myView.getCharHeight(),
-                    myEditor.getColorsScheme().getFont(EditorFontType.PLAIN)
+                    TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN))
                 );
             }
             else if (effectType == EffectType.WAVE_UNDERSCORE) {
                 EffectPainter.WAVE_UNDERSCORE.paint(myGraphics, xStart, y, xEnd - xStart, myDescent,
-                    myEditor.getColorsScheme().getFont(EditorFontType.PLAIN)
+                    TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN))
                 );
             }
             else if (effectType == EffectType.BOLD_DOTTED_LINE) {
                 EffectPainter.BOLD_DOTTED_UNDERSCORE.paint(myGraphics, xStart, y, xEnd - xStart, myDescent,
-                    myEditor.getColorsScheme().getFont(EditorFontType.PLAIN)
+                    TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN))
                 );
             }
             else if (allowBorder && (effectType == EffectType.BOXED || effectType == EffectType.ROUNDED_BOX)) {

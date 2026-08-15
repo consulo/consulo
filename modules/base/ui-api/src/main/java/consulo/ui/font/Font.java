@@ -22,15 +22,9 @@ package consulo.ui.font;
  * @since 2020-06-04
  */
 public interface Font {
-    int STYLE_PLAIN = 1 << 0;
-    int STYLE_BOLD = 1 << 1;
-    int STYLE_ITALIC = 1 << 2;
-    /**
-     * Not a font style anywhere below - awt draws the line itself and the browser has it as a text decoration - but
-     * it is asked for the same way the others are, so it is carried with them.
-     */
-    int STYLE_STRIKEOUT = 1 << 3;
-    int STYLE_UNDERLINE = 1 << 4;
+    int PLAIN = 0;
+    int BOLD = 1;
+    int ITALIC = 2;
 
     String getName();
 

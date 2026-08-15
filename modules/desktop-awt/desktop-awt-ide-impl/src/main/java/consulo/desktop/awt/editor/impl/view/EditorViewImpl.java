@@ -26,9 +26,10 @@ import consulo.document.internal.DocumentEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -507,7 +508,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
             return;
         }
 
-        Font font = myEditor.getColorsScheme().getFont(EditorFontType.PLAIN);
+        Font font = TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN));
         FontMetrics fm = FontInfo.getFontMetrics(font, myFontRenderContext);
 
         float width = FontLayoutService.getInstance().charWidth2D(fm, ' ');
@@ -554,7 +555,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         myBottomOverhang = descent - myDescent;
 
         // assuming that bold italic 'W' gives a good approximation of font's widest character
-        FontMetrics fmBI = FontInfo.getFontMetrics(myEditor.getColorsScheme().getFont(EditorFontType.BOLD_ITALIC), myFontRenderContext);
+        FontMetrics fmBI = FontInfo.getFontMetrics(TargetAWT.to(myEditor.getColorsScheme().getFont(EditorFontType.BOLD_ITALIC)), myFontRenderContext);
         myMaxCharWidth = FontLayoutService.getInstance().charWidth2D(fmBI, 'W');
 
         myCapHeight = (int) font.createGlyphVector(myFontRenderContext, "H").getVisualBounds().getHeight();
@@ -667,7 +668,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         region.putUserData(FOLD_REGION_TEXT_LAYOUT, null);
     }
 
-    float getCodePointWidth(int codePoint, @JdkConstants.FontStyle int fontStyle) {
+    float getCodePointWidth(int codePoint, @AWTConstants.FontStyle int fontStyle) {
         return myCharWidthCache.getCodePointWidth(codePoint, fontStyle);
     }
 

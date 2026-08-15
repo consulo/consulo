@@ -23,7 +23,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
-import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -40,15 +39,8 @@ public class ColoredTextItemPresentation implements TextItemPresentation {
     public static SimpleTextAttributes toSimpleTextAttributes(TextAttribute textAttribute) {
         int style = textAttribute.getStyle();
 
-        int mask = 0;
-        mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_PLAIN, BitUtil.isSet(style, TextAttribute.STYLE_PLAIN));
-        mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_BOLD, BitUtil.isSet(style, TextAttribute.STYLE_BOLD));
-        mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_ITALIC, BitUtil.isSet(style, TextAttribute.STYLE_ITALIC));
-        mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_STRIKEOUT, BitUtil.isSet(style, Font.STYLE_STRIKEOUT));
-        mask = BitUtil.set(mask, SimpleTextAttributes.STYLE_UNDERLINE, BitUtil.isSet(style, Font.STYLE_UNDERLINE));
-
         return new SimpleTextAttributes(
-            mask,
+            style,
             TargetAWT.to(textAttribute.getForegroundColor()),
             TargetAWT.to(textAttribute.getBackgroundColor())
         );

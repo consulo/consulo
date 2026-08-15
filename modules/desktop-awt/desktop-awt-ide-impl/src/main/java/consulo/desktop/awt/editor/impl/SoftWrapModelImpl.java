@@ -8,6 +8,7 @@ import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
+import consulo.colorScheme.internal.FontPreferencesManager;
 
 /**
  * Default {@link SoftWrapModelEx} implementation.
@@ -20,8 +21,8 @@ import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
  * @author Denis Zhdanov
  */
 public class SoftWrapModelImpl extends CodeEditorSoftWrapModelBase {
-  SoftWrapModelImpl(CodeEditorBase editor) {
-    super(editor);
+  SoftWrapModelImpl(CodeEditorBase editor, FontPreferencesManager fontPreferencesManager) {
+    super(editor, fontPreferencesManager);
   }
 
   @Override

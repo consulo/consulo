@@ -180,16 +180,6 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
     }
 
     @Override
-    public Font getFont() {
-        return null;
-    }
-
-    @Override
-    public void setFont(Font font) {
-
-    }
-
-    @Override
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return myDataObject.getDispatcher(eventClass);
     }

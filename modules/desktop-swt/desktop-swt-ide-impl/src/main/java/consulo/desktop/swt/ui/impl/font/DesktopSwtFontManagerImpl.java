@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.FontData;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -29,18 +30,30 @@ import java.util.stream.Collectors;
  * @since 10/07/2021
  */
 public class DesktopSwtFontManagerImpl implements FontManager {
-  public static final DesktopSwtFontManagerImpl INSTANCE = new DesktopSwtFontManagerImpl();
+    public static final DesktopSwtFontManagerImpl INSTANCE = new DesktopSwtFontManagerImpl();
 
-  
-  @Override
-  public Set<String> getAvailableFontNames() {
-    FontData[] fontList = DesktopSwtUIAccess.INSTANCE.getDisplay().getFontList(null, true);
-    return Arrays.stream(fontList).map(FontData::getName).collect(Collectors.toSet());
-  }
+    @Override
+    public boolean isRequiredPermission() {
+        return false;
+    }
 
-  
-  @Override
-  public Font createFont(String fontName, int fontSize, int fontStyle) {
-    return new DesktopSwtFontImpl(fontName, fontSize, fontStyle);
-  }
+    @Override
+    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            FontData[] fontList = DesktopSwtUIAccess.INSTANCE.getDisplay().getFontList(null, true);
+            return Arrays.stream(fontList).map(FontData::getName).collect(Collectors.toSet());
+        });
+    }
+
+    @Override
+    public Set<String> getAvailableFontNames() {
+        FontData[] fontList = DesktopSwtUIAccess.INSTANCE.getDisplay().getFontList(null, true);
+        return Arrays.stream(fontList).map(FontData::getName).collect(Collectors.toSet());
+    }
+
+
+    @Override
+    public Font createFont(String fontName, int fontSize, int fontStyle) {
+        return new DesktopSwtFontImpl(fontName, fontSize, fontStyle);
+    }
 }

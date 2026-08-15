@@ -63,8 +63,6 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     implements Component, consulo.ui.HasSize, DataObjectHolder, ToVaadinComponentWrapper {
     private T myVaadinComponent;
 
-    private Font myFont = FontManager.get().createFont("?", 12);
-
     private Cursor myCursor;
 
     private @Nullable ColorValue myBackgroundColor;
@@ -136,20 +134,6 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     @Override
     public void setToolTipText(LocalizeValue value) {
         Tooltip.forComponent(toVaadinComponent()).setText(value.get());
-    }
-
-    @Override
-    public void setFont(Font font) {
-        if (!(font instanceof WebFontImpl)) {
-            throw new IllegalArgumentException("not web font");
-        }
-
-        myFont = font;
-    }
-
-    @Override
-    public Font getFont() {
-        return myFont;
     }
 
     protected T getVaadinComponent() {

@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.ui.popup.util.MnemonicsSearch;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
@@ -18,7 +19,6 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.ui.ex.popup.*;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -297,7 +297,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     }
 
     @Override
-    public final void registerAction(String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
+    public final void registerAction(String aActionName, int aKeyCode, @AWTConstants.InputEventMask int aModifier, Action aAction) {
         myInputMap.put(KeyStroke.getKeyStroke(aKeyCode, aModifier), aActionName);
         myActionMap.put(aActionName, aAction);
     }

@@ -5,13 +5,11 @@ import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.codeInsight.codeVision.ui.model.RangeCodeVisionModel;
 import consulo.language.editor.codeVision.CodeVisionEntry;
 import consulo.project.Project;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.Icon;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.function.BiFunction;
+import javax.swing.*;
+import java.awt.*;
 
 public class DefaultCodeVisionPainter<T> implements ICodeVisionEntryBasePainter<T> {
     /**
@@ -20,7 +18,8 @@ public class DefaultCodeVisionPainter<T> implements ICodeVisionEntryBasePainter<
      */
     @FunctionalInterface
     public interface IconProvider<T> {
-        @Nullable Icon getIcon(Project project, T value, RangeCodeVisionModel.InlayState state);
+        @Nullable
+        Icon getIcon(Project project, T value, RangeCodeVisionModel.InlayState state);
     }
 
     private final IconProvider<T> iconProvider;
@@ -91,8 +90,7 @@ public class DefaultCodeVisionPainter<T> implements ICodeVisionEntryBasePainter<
     @Override
     public Dimension size(Editor editor, RangeCodeVisionModel.InlayState state, T value) {
         Dimension size = pureSize(editor, state, value);
-        java.awt.FontMetrics editorMetrics =
-            editor.getComponent().getFontMetrics(CodeVisionTheme.editorFont(editor));
+        FontMetrics editorMetrics = editor.getComponent().getFontMetrics(TargetAWT.to(CodeVisionTheme.editorFont(editor)));
         return new Dimension(
             size.width + theme.left + theme.right,
             size.height + theme.top + theme.bottom + (editorMetrics.getHeight() - size.height)

@@ -2,8 +2,8 @@
 package consulo.desktop.awt.editor.impl.view;
 
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
+import consulo.ui.ex.awt.AWTConstants;
 import gnu.trove.TIntFloatHashMap;
-import org.intellij.lang.annotations.JdkConstants;
 
 /**
  * Cache of char widths for different font styles
@@ -23,7 +23,7 @@ class CharWidthCache {
     myCache.clear();
   }
 
-  float getCodePointWidth(int codePoint, @JdkConstants.FontStyle int fontStyle) {
+  float getCodePointWidth(int codePoint, @AWTConstants.FontStyle int fontStyle) {
     int key = createKey(codePoint, fontStyle);
     float width = getCachedValue(key);
     if (width < 0) {
@@ -48,7 +48,7 @@ class CharWidthCache {
     myCache.put(key, value + SHIFT);
   }
 
-  private static int createKey(int codePoint, @JdkConstants.FontStyle int fontStyle) {
+  private static int createKey(int codePoint, @AWTConstants.FontStyle int fontStyle) {
     return (fontStyle << 21) | codePoint;
   }
 }

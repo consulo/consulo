@@ -20,6 +20,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ui.color.ColorValue;
@@ -33,8 +34,10 @@ import java.util.Objects;
 public class EditorColorsSchemeImpl extends AbstractColorsScheme implements ExternalizableScheme {
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, EditorColorsManager editorColorsManager) {
-    super(parentScheme, editorColorsManager);
+  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme,
+                                EditorColorsManager editorColorsManager,
+                                FontPreferencesManager fontPreferencesManager) {
+    super(parentScheme, editorColorsManager, fontPreferencesManager);
   }
 
   @Override
@@ -80,7 +83,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
 
   @Override
   public EditorColorsScheme clone() {
-    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme, myEditorColorsManager);
+    EditorColorsSchemeImpl newScheme = new EditorColorsSchemeImpl(myParentScheme, myEditorColorsManager, myFontPreferencesManager);
     copyTo(newScheme);
     newScheme.setName(getName());
     return newScheme;

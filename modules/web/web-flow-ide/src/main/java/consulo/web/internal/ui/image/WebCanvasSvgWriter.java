@@ -233,10 +233,10 @@ public class WebCanvasSvgWriter implements Canvas2D {
         if (font != null) {
             myBody.append(" font-family=\"").append(escape(font.getFamily())).append('"')
                 .append(" font-size=\"").append(font.getFontSize()).append('"');
-            if ((font.getFontStyle() & Font.STYLE_BOLD) != 0) {
+            if ((font.getFontStyle() & Font.BOLD) != 0) {
                 myBody.append(" font-weight=\"bold\"");
             }
-            if ((font.getFontStyle() & Font.STYLE_ITALIC) != 0) {
+            if ((font.getFontStyle() & Font.ITALIC) != 0) {
                 myBody.append(" font-style=\"italic\"");
             }
         }

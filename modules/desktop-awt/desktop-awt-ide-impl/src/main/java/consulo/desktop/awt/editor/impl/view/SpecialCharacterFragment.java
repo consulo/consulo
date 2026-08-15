@@ -5,6 +5,7 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.FontLayoutService;
 import consulo.colorScheme.EditorFontType;
 import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jspecify.annotations.Nullable;
@@ -160,6 +161,6 @@ final class SpecialCharacterFragment implements LineFragment {
     }
 
     private Font getFont() {
-        return myView.getEditor().getColorsScheme().getFont(EditorFontType.PLAIN);
+        return TargetAWT.to(myView.getEditor().getColorsScheme().getFont(EditorFontType.PLAIN));
     }
 }

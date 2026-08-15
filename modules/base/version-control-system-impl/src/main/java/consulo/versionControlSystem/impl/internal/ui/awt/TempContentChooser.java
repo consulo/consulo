@@ -100,7 +100,7 @@ public abstract class TempContentChooser<Data> extends DialogWrapper {
         myList.setSelectionMode(selectionMode);
         if (myUseIdeaEditor) {
             EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-            myList.setFont(scheme.getFont(EditorFontType.PLAIN));
+            myList.setFont(TargetAWT.to(scheme.getFont(EditorFontType.PLAIN)));
             Color fg = ObjectUtil.chooseNotNull(TargetAWT.to(scheme.getDefaultForeground()), UIUtil.getListForeground());
             Color bg = ObjectUtil.chooseNotNull(TargetAWT.to(scheme.getDefaultBackground()), UIUtil.getListBackground());
             myList.setForeground(fg);

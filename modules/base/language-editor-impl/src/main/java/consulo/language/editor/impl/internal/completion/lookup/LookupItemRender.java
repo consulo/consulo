@@ -28,6 +28,7 @@ import consulo.ui.RenderItem;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.font.Font;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
@@ -186,7 +187,7 @@ public class LookupItemRender {
 
         int style = styleOf(presentation);
         for (LookupElementPresentation.TextFragment fragment : fragments) {
-            int fragmentStyle = fragment.isItalic() ? style | Font.STYLE_ITALIC : style;
+            int fragmentStyle = fragment.isItalic() ? style | Font.ITALIC : style;
             ColorValue foreground = fragment.getForegroundColor();
             if (foreground == null && fragment.isGrayed()) {
                 foreground = ComponentColors.DISABLED_TEXT;
@@ -206,20 +207,20 @@ public class LookupItemRender {
 
         target.append(
             LocalizeValue.of(text),
-            new TextAttribute(Font.STYLE_PLAIN, presentation.isTypeGrayed() ? ComponentColors.DISABLED_TEXT : null)
+            new TextAttribute(Font.PLAIN, presentation.isTypeGrayed() ? ComponentColors.DISABLED_TEXT : null)
         );
     }
 
     private static int styleOf(LookupElementPresentation presentation) {
-        int style = presentation.isItemTextBold() ? Font.STYLE_BOLD : Font.STYLE_PLAIN;
+        int style = presentation.isItemTextBold() ? Font.BOLD : Font.PLAIN;
         if (presentation.isStrikeout()) {
-            style |= Font.STYLE_STRIKEOUT;
+            style |= SimpleTextAttributes.STYLE_STRIKEOUT;
         }
         if (presentation.isItemTextUnderlined()) {
-            style |= Font.STYLE_UNDERLINE;
+            style |= SimpleTextAttributes.STYLE_UNDERLINE;
         }
         if (presentation.isItemTextItalic()) {
-            style |= Font.STYLE_ITALIC;
+            style |= SimpleTextAttributes.STYLE_ITALIC;
         }
         return style;
     }

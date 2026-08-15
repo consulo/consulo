@@ -30,6 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -47,7 +48,6 @@ import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -457,7 +457,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         myDataIsDirty = dataIsDirty;
     }
 
-    public void setSelectionMode(@JdkConstants.TreeSelectionMode int mode) {
+    public void setSelectionMode(@AWTConstants.TreeSelectionMode int mode) {
         myViewer.setSelectionMode(mode);
     }
 

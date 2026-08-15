@@ -26,6 +26,7 @@ import consulo.colorScheme.DelegateColorScheme;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.stickyLine.StickyLineShadowPainter;
@@ -106,7 +107,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
-import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
@@ -502,10 +502,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     protected CodeEditorSoftWrapModelBase createSoftWrapModel() {
-        return new SoftWrapModelImpl(this);
+        return new SoftWrapModelImpl(this, Application.get().getInstance(FontPreferencesManager.class));
     }
 
-   
     @Override
     protected DataContext getComponentContext() {
         return DataManager.getInstance().getDataContext(getContentComponent());
@@ -1746,7 +1745,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     @Override
-    public FontMetrics getFontMetrics(@JdkConstants.FontStyle int fontType) {
+    public FontMetrics getFontMetrics(@AWTConstants.FontStyle int fontType) {
         EditorFontType ft;
         if (fontType == Font.PLAIN) {
             ft = EditorFontType.PLAIN;
@@ -1765,7 +1764,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             ft = EditorFontType.PLAIN;
         }
 
-        return myEditorComponent.getFontMetrics(myScheme.getFont(ft));
+        return myEditorComponent.getFontMetrics(TargetAWT.to(myScheme.getFont(ft)));
     }
 
     public int getPreferredHeight() {

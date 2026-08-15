@@ -46,7 +46,6 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     private boolean myVisible = true;
     private boolean myEnabled = true;
     private @Nullable Size2D mySize;
-    private @Nullable Font myFont;
     private @Nullable Component myParent;
 
     protected void setParentComponent(@Nullable Component parent) {
@@ -101,19 +100,6 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     @Override
     public void setSize(Size2D size) {
         mySize = size;
-    }
-
-    @Override
-    public Font getFont() {
-        if (myFont == null) {
-            myFont = FontManager.get().createFont("Default", 12);
-        }
-        return myFont;
-    }
-
-    @Override
-    public void setFont(Font font) {
-        myFont = font;
     }
 
     @Override

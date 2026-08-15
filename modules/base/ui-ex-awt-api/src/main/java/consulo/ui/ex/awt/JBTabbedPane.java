@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -39,11 +38,11 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
   public JBTabbedPane() {
   }
 
-  public JBTabbedPane(@JdkConstants.TabPlacement int tabPlacement) {
+  public JBTabbedPane(@AWTConstants.TabPlacement int tabPlacement) {
     super(tabPlacement);
   }
 
-  public JBTabbedPane(@JdkConstants.TabPlacement int tabPlacement, @JdkConstants.TabLayoutPolicy int tabLayoutPolicy) {
+  public JBTabbedPane(@AWTConstants.TabPlacement int tabPlacement, @AWTConstants.TabLayoutPolicy int tabLayoutPolicy) {
     super(tabPlacement, tabLayoutPolicy);
   }
 

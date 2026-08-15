@@ -21,6 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -39,7 +40,6 @@ import consulo.versionControlSystem.log.ui.VcsLogColorManager;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -320,7 +320,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
             }
         }
 
-        @JdkConstants.InputEventMask
+        @AWTConstants.InputEventMask
         private int getMask() {
             return Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK;
         }

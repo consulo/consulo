@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.colorScheme;
+package consulo.desktop.awt.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.colorScheme.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferencesManager;
+import consulo.colorScheme.internal.ModifiableFontPreferences;
+import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.List;
 
-public interface FontPreferences {
-    
-    String DEFAULT_FONT_NAME = "Jetbrains Mono";
-    int DEFAULT_FONT_SIZE = 13;
-
-    float DEFAULT_LINE_SPACING = 1.2f;
-
-    
-    List<String> getEffectiveFontFamilies();
-
-    
-    List<String> getRealFontFamilies();
-
-    
-    String getFontFamily();
-
-    int getSize(String fontFamily);
-
-    void copyTo(FontPreferences preferences);
-
-    boolean useLigatures();
-
-    boolean hasSize(String fontName);
-
-    float getLineSpacing();
-
-    void setLineSpacing(float lineSpacing);
-
+/**
+ * @author VISTALL
+ * @since 2026-08-14
+ */
+@ServiceImpl
+@Singleton
+public class DesktopAWTFontPreferencesManager implements FontPreferencesManager {
     /**
      * There is a possible case that particular font family is not available at particular environment (e.g. Monaco under *nix).
      * However, java environment tries to mask that via 'Dialog' fonts, i.e. when we try to create font like
@@ -61,10 +46,11 @@ public interface FontPreferences {
      * @return fallback font family to use if font family with the given name is not registered at current environment;
      * <code>null</code> if font family with the given name is registered at the current environment
      */
-    static @Nullable String getFallbackName(String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
+    @Override
+    public @Nullable String getFallbackName(String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
         Font plainFont = new Font(fontName, Font.PLAIN, fontSize);
         if (plainFont.getFamily().equals("Dialog") && !("Dialog".equals(fontName) || fontName.startsWith("Dialog."))) {
-            return fallbackScheme == null ? DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();
+            return fallbackScheme == null ? FontPreferences.DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();
         }
         return null;
     }

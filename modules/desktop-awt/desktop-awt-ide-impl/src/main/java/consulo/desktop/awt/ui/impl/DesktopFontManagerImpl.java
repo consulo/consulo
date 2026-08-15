@@ -22,36 +22,58 @@ import consulo.ui.font.FontManager;
 import java.awt.*;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 2020-06-04
  */
 public class DesktopFontManagerImpl implements FontManager {
-  public static final DesktopFontManagerImpl ourInstance = new DesktopFontManagerImpl();
+    public static final DesktopFontManagerImpl ourInstance = new DesktopFontManagerImpl();
 
-  private static final Logger LOG = Logger.getInstance(DesktopFontManagerImpl.class);
+    private static final Logger LOG = Logger.getInstance(DesktopFontManagerImpl.class);
 
-  
-  @Override
-  public Set<String> getAvailableFontNames() {
-    GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    Set<String> fontNames = new TreeSet<>();
-    try {
-      java.awt.Font[] fonts = environment.getAllFonts();
-      for (java.awt.Font font : fonts) {
-        fontNames.add(font.getFontName());
-      }
+    @Override
+    public boolean isRequiredPermission() {
+        return false;
     }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    return fontNames;
-  }
 
-  
-  @Override
-  public Font createFont(String fontName, int fontSize, int fontStyle) {
-    return new DesktopFontImpl(fontName, fontSize, fontStyle);
-  }
+    @Override
+    public CompletableFuture<Set<String>> getAvailableFontNamesAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            Set<String> fontNames = new TreeSet<>();
+            try {
+                java.awt.Font[] fonts = environment.getAllFonts();
+                for (java.awt.Font font : fonts) {
+                    fontNames.add(font.getFontName());
+                }
+            }
+            catch (Exception e) {
+                LOG.error(e);
+            }
+            return fontNames;
+        });
+    }
+
+    @Override
+    public Set<String> getAvailableFontNames() {
+        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Set<String> fontNames = new TreeSet<>();
+        try {
+            java.awt.Font[] fonts = environment.getAllFonts();
+            for (java.awt.Font font : fonts) {
+                fontNames.add(font.getFontName());
+            }
+        }
+        catch (Exception e) {
+            LOG.error(e);
+        }
+        return fontNames;
+    }
+
+    @Override
+    public Font createFont(String fontName, int fontSize, int fontStyles) {
+        return new DesktopFontImpl(fontName, fontSize, fontStyles);
+    }
 }

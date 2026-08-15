@@ -15,6 +15,7 @@ import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.language.editor.impl.internal.inlay.param.HintUtils;
 import consulo.language.editor.inlay.HintWidthAdjustment;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
@@ -22,7 +23,6 @@ import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -179,7 +179,7 @@ public class HintRenderer implements EditorCustomElementRenderer {
             int xStart = r.x;
             int xEnd = r.x + r.width;
             int y = r.y + ascent;
-            Font font = editor.getColorsScheme().getFont(EditorFontType.PLAIN);
+            Font font = TargetAWT.to(editor.getColorsScheme().getFont(EditorFontType.PLAIN));
             switch (effectType) {
                 case LINE_UNDERSCORE:
                     EffectPainter.LINE_UNDERSCORE.paint(g2d, xStart, y, xEnd - xStart, descent, font);
@@ -238,7 +238,7 @@ public class HintRenderer implements EditorCustomElementRenderer {
         public final FontMetrics metrics;
         public final int lineHeight;
 
-        public MyFontMetrics(Editor editor, int size, @JdkConstants.FontStyle int fontStyle, boolean useEditorFont) {
+        public MyFontMetrics(Editor editor, int size, @AWTConstants.FontStyle int fontStyle, boolean useEditorFont) {
             Font font;
             if (useEditorFont) {
                 font = EditorUtil.getEditorFont().deriveFont(fontStyle, size);

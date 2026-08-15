@@ -53,6 +53,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
@@ -69,7 +70,6 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
@@ -96,7 +96,7 @@ public final class CtrlMouseHandler {
     private final Project myProject;
 
     private HighlightersSet myHighlighter;
-    @JdkConstants.InputEventMask
+    @AWTConstants.InputEventMask
     private int myStoredModifiers;
     private TooltipProvider myTooltipProvider;
     private @Nullable Point myPrevMouseLocation;
@@ -241,7 +241,7 @@ public final class CtrlMouseHandler {
         return new Rectangle(hintComponent.getLocationOnScreen(), hintComponent.getSize());
     }
 
-    private static BrowseMode getBrowseMode(@JdkConstants.InputEventMask int modifiers) {
+    private static BrowseMode getBrowseMode(@AWTConstants.InputEventMask int modifiers) {
         if (modifiers != 0) {
             Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
             if (KeymapUtil.matchActionMouseShortcutsModifiers(activeKeymap, modifiers, IdeActions.ACTION_GOTO_DECLARATION)) {

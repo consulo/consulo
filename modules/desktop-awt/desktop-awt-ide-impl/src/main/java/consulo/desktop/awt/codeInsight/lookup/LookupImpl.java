@@ -9,8 +9,9 @@ import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.*;
-import consulo.colorScheme.FontPreferences;
-import consulo.colorScheme.impl.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferences;
+import consulo.colorScheme.internal.FontPreferencesImpl;
+import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;
@@ -121,7 +122,7 @@ public class LookupImpl extends LightweightHintImpl implements LookupEx, Disposa
     private final List<PrefixChangeListener> myPrefixChangeListeners = Lists.newLockFreeCopyOnWriteList();
     private final LookupPreview myPreview = new LookupPreview(this);
     // keeping our own copy of editor's font preferences, which can be used in non-EDT threads (to avoid race conditions)
-    private final FontPreferences myFontPreferences = new FontPreferencesImpl();
+    private final FontPreferences myFontPreferences = Application.get().getInstance(FontPreferencesManager.class).newFontPreferences();
 
     private long myStampShown = 0;
     private boolean myShown = false;

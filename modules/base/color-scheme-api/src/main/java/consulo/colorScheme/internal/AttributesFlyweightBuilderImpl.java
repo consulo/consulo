@@ -19,10 +19,10 @@ import consulo.colorScheme.AttributesFlyweight;
 import consulo.colorScheme.AttributesFlyweightBuilder;
 import consulo.colorScheme.EffectType;
 import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import consulo.util.lang.BitUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

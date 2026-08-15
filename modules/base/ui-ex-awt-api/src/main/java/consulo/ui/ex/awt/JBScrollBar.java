@@ -4,7 +4,6 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.IdeGlassPane.TopComponent;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,11 +46,11 @@ public class JBScrollBar extends JScrollBar implements TopComponent {
         this(VERTICAL);
     }
 
-    public JBScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
+    public JBScrollBar(@AWTConstants.AdjustableOrientation int orientation) {
         this(orientation, 0, 10, 0, 100);
     }
 
-    public JBScrollBar(@JdkConstants.AdjustableOrientation int orientation, int value, int extent, int min, int max) {
+    public JBScrollBar(@AWTConstants.AdjustableOrientation int orientation, int value, int extent, int min, int max) {
         super(orientation, value, extent, min, max);
         setModel(new DefaultBoundedRangeModel(value, extent, min, max));
     }

@@ -36,10 +36,10 @@ import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import consulo.language.editor.util.UsedColors;
 import consulo.localize.LocalizeValue;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -328,7 +328,7 @@ public class SimpleEditorPreview implements PreviewPanel {
         stopBlinking();
     }
 
-    private void setCursor(@JdkConstants.CursorType int type) {
+    private void setCursor(@AWTConstants.CursorType int type) {
         Cursor cursor = type == Cursor.TEXT_CURSOR ? UIUtil.getTextCursor(TargetAWT.to(myEditor.getBackgroundColor()))
             : Cursor.getPredefinedCursor(type);
         myEditor.getContentComponent().setCursor(cursor);

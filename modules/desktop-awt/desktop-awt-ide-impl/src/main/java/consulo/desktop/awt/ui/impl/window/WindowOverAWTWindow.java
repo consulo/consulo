@@ -112,16 +112,6 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
         return myWindow.isVisible();
     }
 
-    @Override
-    public Font getFont() {
-        return new DesktopFontImpl(myWindow.getFont());
-    }
-
-    @Override
-    public void setFont(Font font) {
-        myWindow.setFont(TargetAWT.to(font));
-    }
-
     @RequiredUIAccess
     @Override
     public void setVisible(boolean value) {

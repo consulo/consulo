@@ -18,7 +18,7 @@ package consulo.ui.ex.impl.internal.keymap;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.ex.awt.AWTConstants;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -70,8 +70,8 @@ public class MacOSDefaultKeymap extends DefaultKeymapImpl {
                              macShortcut.getClickCount());
   }
 
-  @JdkConstants.InputEventMask
-  private static int mapModifiers(@JdkConstants.InputEventMask int modifiers) {
+  @AWTConstants.InputEventMask
+  private static int mapModifiers(@AWTConstants.InputEventMask int modifiers) {
     boolean meta = false;
 
     if ((modifiers & InputEvent.META_MASK) != 0) {

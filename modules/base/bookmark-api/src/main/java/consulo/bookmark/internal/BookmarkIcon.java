@@ -74,7 +74,7 @@ public class BookmarkIcon {
             EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
             int editorFontSize = scheme.getEditorFontSize();
 
-            c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), editorFontSize - 2, Font.STYLE_PLAIN));
+            c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), editorFontSize - 2, Font.PLAIN));
             c.setTextAlign(Canvas2D.TextAlign.center);
             c.setTextBaseline(Canvas2D.TextBaseline.middle);
 

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.colorScheme;
+package consulo.colorScheme.internal;
+
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,4 +39,7 @@ public interface ModifiableFontPreferences extends FontPreferences {
     void resetFontSizes();
 
     void setFontSize(String fontFamily, int size);
+
+    default void setChangeListener(@Nullable Runnable changeListener) {
+    }
 }

@@ -17,7 +17,9 @@ package consulo.ui.font;
 
 import consulo.ui.internal.UIInternal;
 
+import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -28,11 +30,18 @@ public interface FontManager {
         return UIInternal.get()._FontManager_get();
     }
 
+    /**
+     * Env can't return font and sync call, also require ask user for permission before call {@link #getAvailableFontNames()}
+     */
+    boolean isRequiredPermission();
+
+    /**
+     * Return list of fonts which is installed in env, but can return if not checked {@link #isRequiredPermission()}
+     */
+    CompletableFuture<Set<String>> getAvailableFontNamesAsync();
+
+    @Deprecated
     Set<String> getAvailableFontNames();
 
-    default Font createFont(String fontName, int fontSize) {
-        return createFont(fontName, fontSize, 0);
-    }
-
-    Font createFont(String fontName, int fontSize, int fontStyle);
+    Font createFont(String fontName, int fontSize, int fontStyles);
 }

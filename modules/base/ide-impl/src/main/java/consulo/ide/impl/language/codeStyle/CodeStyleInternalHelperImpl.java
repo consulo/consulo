@@ -39,9 +39,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.CharTable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.AWTConstants;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -323,12 +323,12 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
     }
 
     @Override
-    public int charWidth(char c, @JdkConstants.FontStyle int fontType, Object editor) {
+    public int charWidth(char c, @AWTConstants.FontStyle int fontType, Object editor) {
         return EditorUtil.charWidth(c, fontType, (Editor) editor);
     }
 
     @Override
-    public int getSpaceWidth(@JdkConstants.FontStyle int fontType, Object editor) {
+    public int getSpaceWidth(@AWTConstants.FontStyle int fontType, Object editor) {
         return EditorUtil.getSpaceWidth(fontType, (Editor) editor);
     }
 

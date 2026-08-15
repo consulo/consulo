@@ -158,6 +158,11 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
     }
 
     @Override
+    public int getAscent() {
+        return 0;
+    }
+
+    @Override
     public int logicalPositionToOffset(LogicalPosition pos) {
         int lineCount = myDocument.getLineCount();
         if (lineCount == 0) {

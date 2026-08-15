@@ -19,6 +19,7 @@ import consulo.ui.ex.action.OptionDescription;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.UIAccess;
@@ -42,7 +43,6 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -82,7 +82,7 @@ public class GotoActionAction extends SearchEverywhereBaseAction implements Dumb
         String enteredText,
         @Nullable Project project,
         Component component,
-        @JdkConstants.InputEventMask int modifiers
+        @AWTConstants.InputEventMask int modifiers
     ) {
         if (element instanceof OptionDescription optionDescription) {
             String configurableId = optionDescription.getConfigurableId();
@@ -109,7 +109,7 @@ public class GotoActionAction extends SearchEverywhereBaseAction implements Dumb
         Object element,
         @Nullable Component component,
         @Nullable AnActionEvent e,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         @Nullable Runnable callback
     ) {
         // element could be AnAction (SearchEverywhere)

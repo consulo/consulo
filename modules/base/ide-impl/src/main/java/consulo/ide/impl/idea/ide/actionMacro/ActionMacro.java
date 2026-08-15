@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,7 +33,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -180,7 +180,7 @@ public class ActionMacro implements JDOMExternalizable {
     myActions.add(new ShortcutActionDesciption(text));
   }
 
-  public void appendKeytyped(char c, int keyCode, @JdkConstants.InputEventMask int modifiers) {
+  public void appendKeytyped(char c, int keyCode, @AWTConstants.InputEventMask int modifiers) {
     ActionDescriptor lastAction = myActions.size() > 0 ? myActions.get(myActions.size() - 1) : null;
     if (lastAction instanceof TypedDescriptor typedDescriptor) {
       typedDescriptor.addChar(c, keyCode, modifiers);
@@ -217,13 +217,13 @@ public class ActionMacro implements JDOMExternalizable {
       assert myKeyCodes.size() == myModifiers.size() : "codes=" + myKeyCodes.toString() + " modifiers=" + myModifiers.toString();
     }
 
-    public TypedDescriptor(char c, int keyCode, @JdkConstants.InputEventMask int modifiers) {
+    public TypedDescriptor(char c, int keyCode, @AWTConstants.InputEventMask int modifiers) {
       myText = String.valueOf(c);
       myKeyCodes.add(keyCode);
       myModifiers.add(modifiers);
     }
 
-    public void addChar(char c, int keyCode, @JdkConstants.InputEventMask int modifier) {
+    public void addChar(char c, int keyCode, @AWTConstants.InputEventMask int modifier) {
       myText += c;
       myKeyCodes.add(keyCode);
       myModifiers.add(modifier);

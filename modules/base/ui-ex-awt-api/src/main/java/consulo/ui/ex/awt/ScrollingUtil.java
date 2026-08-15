@@ -22,7 +22,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.Couple;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -246,14 +245,14 @@ public class ScrollingUtil {
         return list.getLastVisibleIndex() - list.getFirstVisibleIndex() + 1;
     }
 
-    public static void moveDown(JList list, @JdkConstants.InputEventMask int modifiers) {
+    public static void moveDown(JList list, @AWTConstants.InputEventMask int modifiers) {
         _moveDown(list, list.getSelectionModel(), modifiers, list.getModel().getSize(), UISettings.getInstance().CYCLE_SCROLLING);
     }
 
     private static void selectOrAddSelection(
         ListSelectionModel selectionModel,
         int indexToSelect,
-        @JdkConstants.InputEventMask int modifiers
+        @AWTConstants.InputEventMask int modifiers
     ) {
         if (selectionModel.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) {
             selectionModel.setSelectionInterval(indexToSelect, indexToSelect);
@@ -487,22 +486,22 @@ public class ScrollingUtil {
         return table.rowAtPoint(trailingPoint);
     }
 
-    public static void moveDown(JTable table, @JdkConstants.InputEventMask int modifiers, boolean cycleScrolling) {
+    public static void moveDown(JTable table, @AWTConstants.InputEventMask int modifiers, boolean cycleScrolling) {
         _moveDown(table, table.getSelectionModel(), modifiers, table.getRowCount(), cycleScrolling);
     }
 
-    public static void moveUp(JList list, @JdkConstants.InputEventMask int modifiers) {
+    public static void moveUp(JList list, @AWTConstants.InputEventMask int modifiers) {
         _moveUp(list, list.getSelectionModel(), list.getModel().getSize(), modifiers, UISettings.getInstance().CYCLE_SCROLLING);
     }
 
-    public static void moveUp(JTable table, @JdkConstants.InputEventMask int modifiers, boolean cycleScrolling) {
+    public static void moveUp(JTable table, @AWTConstants.InputEventMask int modifiers, boolean cycleScrolling) {
         _moveUp(table, table.getSelectionModel(), table.getModel().getRowCount(), modifiers, cycleScrolling);
     }
 
     private static void _moveDown(
         JComponent c,
         ListSelectionModel selectionModel,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         int size,
         boolean cycleScrolling
     ) {
@@ -512,7 +511,7 @@ public class ScrollingUtil {
     private static void _move(
         JComponent c,
         ListSelectionModel selectionModel,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         int size,
         boolean cycleScrolling,
         int direction
@@ -538,7 +537,7 @@ public class ScrollingUtil {
         JComponent c,
         ListSelectionModel selectionModel,
         int size,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         boolean cycleScrolling
     ) {
         _move(c, selectionModel, modifiers, size, cycleScrolling, -1);
@@ -767,7 +766,7 @@ public class ScrollingUtil {
             }
         }
 
-        private void doMoveUp(@JdkConstants.InputEventMask int modifiers) {
+        private void doMoveUp(@AWTConstants.InputEventMask int modifiers) {
             if (myComponent instanceof JList) {
                 moveUp((JList) myComponent, modifiers);
             }
@@ -779,7 +778,7 @@ public class ScrollingUtil {
             }
         }
 
-        private void doMoveDown(@JdkConstants.InputEventMask int modifiers) {
+        private void doMoveDown(@AWTConstants.InputEventMask int modifiers) {
             if (myComponent instanceof JList) {
                 moveDown((JList) myComponent, modifiers);
             }

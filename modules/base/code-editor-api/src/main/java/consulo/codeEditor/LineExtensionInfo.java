@@ -4,7 +4,6 @@ package consulo.codeEditor;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
-import org.intellij.lang.annotations.JdkConstants;
 
 import org.jspecify.annotations.Nullable;
 
@@ -18,10 +17,9 @@ public class LineExtensionInfo {
   private final @Nullable EffectType myEffectType;
   private final @Nullable ColorValue myEffectColor;
   private final @Nullable ColorValue myBgColor;
-  @JdkConstants.FontStyle
   private final int myFontType;
 
-  public LineExtensionInfo(String text, @Nullable ColorValue color, @Nullable EffectType effectType, @Nullable ColorValue effectColor, @JdkConstants.FontStyle int fontType) {
+  public LineExtensionInfo(String text, @Nullable ColorValue color, @Nullable EffectType effectType, @Nullable ColorValue effectColor, int fontType) {
     myText = text;
     myColor = color;
     myEffectType = effectType;
@@ -60,7 +58,6 @@ public class LineExtensionInfo {
     return myEffectColor;
   }
 
-  @JdkConstants.FontStyle
   public int getFontType() {
     return myFontType;
   }

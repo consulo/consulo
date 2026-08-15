@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public class MultiRowFlowPanel extends JPanel {
                                    : GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds().width / 2;
   private int myForcedWidth;
 
-  public MultiRowFlowPanel(@JdkConstants.FlowLayoutAlignment int align, int hGap, int vGap) {
+  public MultiRowFlowPanel(@AWTConstants.FlowLayoutAlignment int align, int hGap, int vGap) {
     super(new FlowLayout(align, hGap, vGap));
   }
 

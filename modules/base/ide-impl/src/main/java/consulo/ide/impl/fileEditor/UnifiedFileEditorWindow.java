@@ -84,7 +84,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                     p.append(myText);
                 }
                 else {
-                    p.append(myText, new TextAttribute(consulo.ui.font.Font.STYLE_PLAIN, myForeground, null));
+                    p.append(myText, new TextAttribute(consulo.ui.font.Font.PLAIN, myForeground, null));
                 }
 
                 if (myImage != null) {

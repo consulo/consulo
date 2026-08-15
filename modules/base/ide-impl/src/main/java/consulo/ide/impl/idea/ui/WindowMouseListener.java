@@ -2,8 +2,8 @@
 
 package consulo.ide.impl.idea.ui;
 
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.UIUtil;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -17,7 +17,7 @@ import static java.awt.Cursor.*;
  */
 abstract class WindowMouseListener extends MouseAdapter implements MouseInputListener {
   protected final Component myContent;
-  @JdkConstants.CursorType
+  @AWTConstants.CursorType
   int myCursorType;
   protected static boolean ourIsResizing;
   private Point myLocation;
@@ -36,7 +36,7 @@ abstract class WindowMouseListener extends MouseAdapter implements MouseInputLis
    * @param location the current mouse position on a screen
    * @return cursor type for the specified location on the specified view or CUSTOM_CURSOR if cursor type is not supported
    */
-  @JdkConstants.CursorType
+  @AWTConstants.CursorType
   abstract int getCursorType(Component view, Point location);
 
   /**

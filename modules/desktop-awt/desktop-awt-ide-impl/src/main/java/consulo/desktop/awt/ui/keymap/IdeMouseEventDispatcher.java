@@ -20,6 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.FocusManagerImpl;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
@@ -38,7 +39,6 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,9 +61,9 @@ public final class IdeMouseEventDispatcher {
     private final ArrayList<AnAction> myActions = new ArrayList<>(1);
     private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
     private boolean myPressedModifiersStored;
-    @JdkConstants.InputEventMask
+    @AWTConstants.InputEventMask
     private int myModifiers;
-    @JdkConstants.InputEventMask
+    @AWTConstants.InputEventMask
     private int myModifiersEx;
 
     private static boolean myForceTouchIsAllowed = true;
@@ -187,8 +187,8 @@ public final class IdeMouseEventDispatcher {
             ignore = true;
         }
 
-        @JdkConstants.InputEventMask int modifiers = e.getModifiers();
-        @JdkConstants.InputEventMask int modifiersEx = e.getModifiersEx();
+        @AWTConstants.InputEventMask int modifiers = e.getModifiers();
+        @AWTConstants.InputEventMask int modifiersEx = e.getModifiersEx();
         if (e.getID() == MOUSE_PRESSED) {
             myPressedModifiersStored = true;
             myModifiers = modifiers;
@@ -301,7 +301,7 @@ public final class IdeMouseEventDispatcher {
         return e.getButton() > 3;
     }
 
-    private static ActionProcessor newMouseActionProcessor(@JdkConstants.InputEventMask int modifiers) {
+    private static ActionProcessor newMouseActionProcessor(@AWTConstants.InputEventMask int modifiers) {
         return new ActionProcessor() {
             @Override
             public AnActionEvent createEvent(InputEvent inputEvent, DataContext context, String place, Presentation presentation, ActionManager manager) {

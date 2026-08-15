@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action.util;
 
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +56,7 @@ public class MacKeymapUtil {
     public static final String POWER3 = "\u233D";
     public static final String NUM_PAD = "\u2328";
 
-    public static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
+    public static String getModifiersText(int modifiers) {
         StringBuilder buf = new StringBuilder();
         if ((modifiers & InputEvent.CTRL_MASK) != 0) {
             buf.append(CONTROL);

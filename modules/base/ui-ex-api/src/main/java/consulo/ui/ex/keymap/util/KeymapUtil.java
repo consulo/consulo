@@ -30,7 +30,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -217,7 +216,7 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    public static LocalizeValue getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
+    public static LocalizeValue getMouseShortcutText(int button, int modifiers, int clickCount) {
         if (clickCount < 3) {
             return clickCount == 1
                 ? KeyMapLocalize.mouseClickShortcutText(getModifiersText(mapNewModifiers(modifiers)), button)
@@ -228,8 +227,7 @@ public class KeymapUtil {
         }
     }
 
-    @JdkConstants.InputEventMask
-    private static int mapNewModifiers(@JdkConstants.InputEventMask int modifiers) {
+    private static int mapNewModifiers(int modifiers) {
         if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0) {
             modifiers |= InputEvent.SHIFT_MASK;
         }
@@ -268,7 +266,7 @@ public class KeymapUtil {
         return false;
     }
 
-    private static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
+    private static String getModifiersText(int modifiers) {
         if (Platform.current().os().isMac()) {
             return MacKeymapUtil.getModifiersText(modifiers);
         }
@@ -285,7 +283,7 @@ public class KeymapUtil {
     /**
      * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided
      */
-    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, @JdkConstants.InputEventMask int modifiers, String actionId) {
+    public static boolean matchActionMouseShortcutsModifiers(Keymap activeKeymap, int modifiers, String actionId) {
         MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);
         for (Shortcut shortcut : activeKeymap.getShortcuts(actionId)) {
             if (shortcut instanceof MouseShortcut mouseShortcut && mouseShortcut.getModifiers() == syntheticShortcut.getModifiers()) {

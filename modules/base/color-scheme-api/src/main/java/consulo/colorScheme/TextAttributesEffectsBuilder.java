@@ -7,7 +7,6 @@ import consulo.ui.color.ColorValue;
 
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;

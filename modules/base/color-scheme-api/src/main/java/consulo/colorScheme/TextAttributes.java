@@ -18,12 +18,11 @@ package consulo.colorScheme;
 import com.uber.nullaway.annotations.Contract;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import org.intellij.lang.annotations.JdkConstants;
+import consulo.ui.font.Font;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -98,7 +97,7 @@ public class TextAttributes implements Cloneable {
         @Nullable ColorValue backgroundColor,
         @Nullable ColorValue effectColor,
         @Nullable EffectType effectType,
-        @JdkConstants.FontStyle int fontType
+        int fontType
     ) {
         myAttrs = AttributesFlyweight.create(foregroundColor, backgroundColor, fontType, effectColor, effectType, null);
     }
@@ -113,7 +112,7 @@ public class TextAttributes implements Cloneable {
         @Nullable ColorValue effectColor,
         @Nullable ColorValue errorStripeColor,
         @Nullable EffectType effectType,
-        @JdkConstants.FontStyle int fontType
+        int fontType
     ) {
         setAttributes(foregroundColor, backgroundColor, effectColor, errorStripeColor, effectType, Collections.emptyMap(), fontType);
     }
@@ -125,7 +124,7 @@ public class TextAttributes implements Cloneable {
         @Nullable ColorValue errorStripeColor,
         @Nullable EffectType effectType,
         Map<EffectType, ColorValue> additionalEffects,
-        @JdkConstants.FontStyle int fontType
+        int fontType
     ) {
         myAttrs = AttributesFlyweight.create(
             foregroundColor,
@@ -144,7 +143,7 @@ public class TextAttributes implements Cloneable {
         @Nullable ColorValue effectColor,
         @Nullable ColorValue errorStripeColor,
         @Nullable EffectType effectType,
-        @JdkConstants.FontStyle int fontType
+        int fontType
     ) {
         myAttrs = AttributesFlyweight.createNoCache(
             foregroundColor,
@@ -261,16 +260,11 @@ public class TextAttributes implements Cloneable {
         myAttrs = myAttrs.withEffectType(effectType);
     }
 
-    @JdkConstants.FontStyle
     public int getFontType() {
         return myAttrs.getFontType();
     }
 
-    public void setFontType(@JdkConstants.FontStyle int type) {
-        if (type < 0 || type > 3) {
-            LOG.error("Wrong font type: " + type);
-            type = Font.PLAIN;
-        }
+    public void setFontType(int type) {
         myAttrs = myAttrs.withFontType(type);
     }
 

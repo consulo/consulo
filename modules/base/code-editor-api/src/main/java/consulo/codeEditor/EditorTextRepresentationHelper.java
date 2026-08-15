@@ -15,8 +15,7 @@
  */
 package consulo.codeEditor;
 
-import org.intellij.lang.annotations.JdkConstants;
 
 public interface EditorTextRepresentationHelper {
-  int charWidth(int c, @JdkConstants.FontStyle int fontType);
+  int charWidth(int c, int fontType);
 }

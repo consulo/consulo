@@ -18,7 +18,6 @@ package consulo.ui.ex.awt;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
 
@@ -32,5 +31,5 @@ public interface SuitableFontProvider {
     return Application.get().getInstance(SuitableFontProvider.class);
   }
 
-  Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, String defaultFontFamily);
+  Font getFontAbleToDisplay(char c, int size, @AWTConstants.FontStyle int style, String defaultFontFamily);
 }

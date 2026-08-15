@@ -180,7 +180,7 @@ public class ConsoleGutterComponent extends JComponent implements MouseMotionLis
     if (!atLineStart) {
       g.setColor(JBColor.BLUE);
     }
-    g.setFont(editor.getColorsScheme().getFont(EditorFontType.PLAIN));
+    g.setFont(TargetAWT.to(editor.getColorsScheme().getFont(EditorFontType.PLAIN)));
 
     int y = ((startLine + 1) * lineHeight) - editor.getDescent();
     FontMetrics fontMetrics = editor.getFontMetrics(Font.PLAIN);

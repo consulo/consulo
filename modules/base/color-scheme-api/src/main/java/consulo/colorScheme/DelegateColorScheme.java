@@ -15,12 +15,11 @@
  */
 package consulo.colorScheme;
 
+import consulo.colorScheme.internal.FontPreferences;
 import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-
-import java.awt.*;
-import java.util.Map;
 
 /**
  * @author spLeaner

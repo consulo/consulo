@@ -25,6 +25,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.impl.internal.DefaultColorsScheme;
 import consulo.colorScheme.impl.internal.EditorColorsSchemeImpl;
+import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.colorScheme.internal.ReadOnlyColorsScheme;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
@@ -302,7 +303,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         scheme.apply(clone);
 
         clone.setName(name);
-        MyColorScheme newScheme = new MyColorScheme(clone, EditorColorsManager.getInstance());
+        MyColorScheme newScheme = new MyColorScheme(clone, EditorColorsManager.getInstance(), Application.get().getInstance(FontPreferencesManager.class));
         initScheme(newScheme);
 
         newScheme.setIsNew();
@@ -314,7 +315,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     @RequiredUIAccess
     public void addImportedScheme(EditorColorsScheme imported) {
-        MyColorScheme newScheme = new MyColorScheme(imported, EditorColorsManager.getInstance());
+        MyColorScheme newScheme = new MyColorScheme(imported, EditorColorsManager.getInstance(), Application.get().getInstance(FontPreferencesManager.class));
         initScheme(newScheme);
 
         mySchemes.put(imported.getName(), newScheme);
@@ -568,7 +569,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
         mySchemes = new HashMap<>();
         for (EditorColorsScheme allScheme : allSchemes) {
-            MyColorScheme schemeDelegate = new MyColorScheme(allScheme, colorsManager);
+            MyColorScheme schemeDelegate = new MyColorScheme(allScheme, colorsManager, Application.get().getInstance(FontPreferencesManager.class));
             initScheme(schemeDelegate);
             mySchemes.put(schemeDelegate.getName(), schemeDelegate);
         }
@@ -1109,8 +1110,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         private String myName;
         private boolean myIsNew = false;
 
-        private MyColorScheme(EditorColorsScheme parentScheme, EditorColorsManager manager) {
-            super(parentScheme, manager);
+        private MyColorScheme(EditorColorsScheme parentScheme, EditorColorsManager manager, FontPreferencesManager fontPreferencesManager) {
+            super(parentScheme, manager, fontPreferencesManager);
 
             parentScheme.getFontPreferences().copyTo(getFontPreferences());
             setLineSpacing(parentScheme.getLineSpacing());

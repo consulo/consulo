@@ -19,9 +19,9 @@ import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
@@ -570,7 +570,7 @@ public final class IterationState {
 
         ColorValue fore = null;
         ColorValue back = isInGuardedBlock ? myReadOnlyColor : null;
-        @JdkConstants.FontStyle int fontType = Font.PLAIN;
+        @AWTConstants.FontStyle int fontType = Font.PLAIN;
 
         TextAttributesEffectsBuilder effectsBuilder = null;
         for (int i = 0; i < cachedAttributes.size(); i++) {

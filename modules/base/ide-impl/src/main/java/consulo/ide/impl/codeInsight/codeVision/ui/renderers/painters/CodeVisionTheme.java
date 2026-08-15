@@ -3,9 +3,9 @@ package consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.font.Font;
 
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.*;
 
 public class CodeVisionTheme {
     public int iconGap;

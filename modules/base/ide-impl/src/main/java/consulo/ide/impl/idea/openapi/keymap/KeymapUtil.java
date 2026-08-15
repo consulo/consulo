@@ -21,12 +21,12 @@ import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
+import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jspecify.annotations.Nullable;
-import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,7 @@ public class KeymapUtil {
      * @param clickCount target clicks count
      * @return string representation of passed mouse shortcut.
      */
-    public static String getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
+    public static String getMouseShortcutText(int button, @AWTConstants.InputEventMask int modifiers, int clickCount) {
         return consulo.ui.ex.keymap.util.KeymapUtil.getMouseShortcutText(button, modifiers, clickCount).get();
     }
 
@@ -149,7 +149,7 @@ public class KeymapUtil {
         }
     }
 
-    public static String getKeyModifiersTextForMacOSLeopard(@JdkConstants.InputEventMask int modifiers) {
+    public static String getKeyModifiersTextForMacOSLeopard(@AWTConstants.InputEventMask int modifiers) {
         StringBuilder buf = new StringBuilder();
         if ((modifiers & InputEvent.META_MASK) != 0) {
             buf.append("\u2318");
@@ -263,7 +263,7 @@ public class KeymapUtil {
      */
     public static boolean matchActionMouseShortcutsModifiers(
         Keymap activeKeymap,
-        @JdkConstants.InputEventMask int modifiers,
+        @AWTConstants.InputEventMask int modifiers,
         String actionId
     ) {
         MouseShortcut syntheticShortcut = new MouseShortcut(MouseEvent.BUTTON1, modifiers, 1);

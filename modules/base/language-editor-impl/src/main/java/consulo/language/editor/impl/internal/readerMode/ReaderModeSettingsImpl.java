@@ -27,7 +27,7 @@ public class ReaderModeSettingsImpl implements ReaderModeSettings, PersistentSta
         public SchemeState visualFormattingChosenScheme = new SchemeState();
         public boolean enableVisualFormatting = true;
         public boolean useActiveSchemeForVisualFormatting = true;
-        public boolean showLigatures = EditorColorsManager.getInstance().getGlobalScheme().getFontPreferences().useLigatures();
+        public boolean showLigatures = false;
         public boolean increaseLineSpacing = false;
         public boolean enabled = true;
         public boolean showRenderedDocs = true;
