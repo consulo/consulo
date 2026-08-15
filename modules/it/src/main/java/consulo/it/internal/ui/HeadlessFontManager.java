@@ -44,11 +44,6 @@ public class HeadlessFontManager implements FontManager {
     }
 
     @Override
-    public Font createFont(String fontName, int fontSize, EnumSet<Font.Style> styles) {
-        return null;
-    }
-
-    @Override
     public Font createFont(String fontName, int fontSize, int fontStyle) {
         return new HeadlessFont(fontName, fontSize, fontStyle);
     }
