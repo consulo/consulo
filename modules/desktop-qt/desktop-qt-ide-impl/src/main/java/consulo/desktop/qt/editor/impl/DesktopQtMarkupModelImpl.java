@@ -24,6 +24,7 @@ import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererPro
 import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.PopupHandler;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,18 +43,38 @@ public class DesktopQtMarkupModelImpl extends MarkupModelImpl implements EditorM
         return myEditor;
     }
 
+    private boolean myErrorStripeVisible;
+
+    private @Nullable ErrorStripeRenderer myErrorStripeRenderer;
+
+    /**
+     * Whether the strip is wanted. The editor is created before its widget exists, and this is set during that
+     * creation, so the answer is kept here and the surface reads it back when it is bound.
+     */
     @Override
     public void setErrorStripeVisible(boolean val) {
+        myErrorStripeVisible = val;
+
+        DesktopQtEditorWidget surface = myEditor.getSurface();
+        if (surface != null) {
+            surface.getErrorStripe().setStripeVisible(val);
+        }
     }
 
     @RequiredUIAccess
     @Override
     public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
+        myErrorStripeRenderer = renderer;
+
+        DesktopQtEditorWidget surface = myEditor.getSurface();
+        if (surface != null) {
+            surface.getStatusPanel().refresh();
+        }
     }
 
     @Override
-    public ErrorStripeRenderer getErrorStripeRenderer() {
-        return null;
+    public @Nullable ErrorStripeRenderer getErrorStripeRenderer() {
+        return myErrorStripeRenderer;
     }
 
     @Override
@@ -85,6 +106,6 @@ public class DesktopQtMarkupModelImpl extends MarkupModelImpl implements EditorM
 
     @Override
     public boolean isErrorStripeVisible() {
-        return false;
+        return myErrorStripeVisible;
     }
 }

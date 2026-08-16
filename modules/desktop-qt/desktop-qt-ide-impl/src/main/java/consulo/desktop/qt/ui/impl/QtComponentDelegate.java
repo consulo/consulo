@@ -31,13 +31,18 @@ import consulo.ui.cursor.Cursor;
 import consulo.ui.cursor.StandardCursors;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.KeyPressedEvent;
+import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
+import io.qt.core.QEvent;
 import io.qt.core.QMargins;
+import io.qt.core.QObject;
 import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
+import io.qt.gui.QKeyEvent;
 import io.qt.gui.QPalette;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -70,6 +75,8 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     protected T myComponent;
 
     private Component myParent;
+
+    private boolean myKeyDispatchInstalled;
 
     private boolean myEnabled = true;
     private boolean myVisible = true;
@@ -404,7 +411,55 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         Class<? extends E> eventClass,
         ComponentEventListener<C, E> listener
     ) {
+        if (eventClass == KeyPressedEvent.class || eventClass == KeyReleasedEvent.class) {
+            installKeyDispatch();
+        }
+
         return myDataObject.addListener(eventClass, listener);
+    }
+
+    /**
+     * Starts passing key presses on to the api, which is what the awt delegate does for every component it makes
+     * by hanging its key adapters off it.
+     * <p>
+     * A filter rather than an override, since the widget of each component is built by that component and they
+     * cannot all be made to override {@code keyPressEvent} - and it is installed only once something has asked
+     * for the keys, so widgets nobody listens to pay nothing per keystroke.
+     */
+    private void installKeyDispatch() {
+        if (myKeyDispatchInstalled) {
+            return;
+        }
+
+        myKeyDispatchInstalled = true;
+
+        whenBound(widget -> widget.installEventFilter(new QObject(widget) {
+            @Override
+            public boolean eventFilter(QObject watched, QEvent event) {
+                if (event instanceof QKeyEvent keyEvent) {
+                    if (event.type() == QEvent.Type.KeyPress) {
+                        fireKeyEvent(KeyPressedEvent.class, new KeyPressedEvent(
+                            QtComponentDelegate.this,
+                            DesktopQtInputDetails.keyboard(widget, keyEvent)
+                        ));
+                    }
+                    else if (event.type() == QEvent.Type.KeyRelease) {
+                        fireKeyEvent(KeyReleasedEvent.class, new KeyReleasedEvent(
+                            QtComponentDelegate.this,
+                            DesktopQtInputDetails.keyboard(widget, keyEvent)
+                        ));
+                    }
+                }
+
+                // never swallowed here - the widget still does whatever the key normally does to it
+                return false;
+            }
+        }));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <E extends ComponentEvent<Component>> void fireKeyEvent(Class<E> eventClass, E event) {
+        ((ComponentEventListener<Component, E>) getListenerDispatcher(eventClass)).onEvent(event);
     }
 
     @Override
@@ -463,25 +518,20 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         QPalette palette = new QPalette(myComponent.palette());
 
         if (myForegroundColor != null) {
-            palette.setColor(QPalette.ColorRole.WindowText, toQColor(myForegroundColor));
-            palette.setColor(QPalette.ColorRole.Text, toQColor(myForegroundColor));
-            palette.setColor(QPalette.ColorRole.ButtonText, toQColor(myForegroundColor));
+            palette.setColor(QPalette.ColorRole.WindowText, TargetQt.to(myForegroundColor));
+            palette.setColor(QPalette.ColorRole.Text, TargetQt.to(myForegroundColor));
+            palette.setColor(QPalette.ColorRole.ButtonText, TargetQt.to(myForegroundColor));
         }
 
         if (myBackgroundColor != null) {
-            palette.setColor(QPalette.ColorRole.Window, toQColor(myBackgroundColor));
-            palette.setColor(QPalette.ColorRole.Base, toQColor(myBackgroundColor));
+            palette.setColor(QPalette.ColorRole.Window, TargetQt.to(myBackgroundColor));
+            palette.setColor(QPalette.ColorRole.Base, TargetQt.to(myBackgroundColor));
 
             // a widget only paints its Window role when it is told to fill its own background
             myComponent.setAutoFillBackground(true);
         }
 
         myComponent.setPalette(palette);
-    }
-
-    protected static QColor toQColor(ColorValue colorValue) {
-        RGBColor rgb = colorValue.toRGB();
-        return new QColor(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha());
     }
 
     @Override

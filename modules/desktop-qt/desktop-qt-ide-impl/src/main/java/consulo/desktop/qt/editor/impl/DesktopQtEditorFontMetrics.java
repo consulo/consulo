@@ -16,11 +16,17 @@
 package consulo.desktop.qt.editor.impl;
 
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.logging.Logger;
 import io.qt.gui.QFont;
+import io.qt.gui.QFontInfo;
 import io.qt.gui.QFontMetricsF;
+import io.qt.gui.QGlyphRun;
+import io.qt.gui.QTextLayout;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Line geometry of the editor font.
@@ -36,6 +42,8 @@ import java.awt.Font;
  * @since 2026-08-16
  */
 public class DesktopQtEditorFontMetrics {
+    private static final Logger LOG = Logger.getInstance(DesktopQtEditorFontMetrics.class);
+
     private final DesktopQtEditorImpl myEditor;
 
     /**
@@ -111,6 +119,14 @@ public class DesktopQtEditorFontMetrics {
         QFont font = new QFont(scheme.getEditorFontName());
         font.setPixelSize(scheme.getEditorFontSize());
 
+        // the scheme decides, not the typeface - leaving it to the default would ligate under a font which
+        // ships them on and not under one which does not. all three are named because a coding ligature is as
+        // often a contextual alternate as it is a standard one
+        int ligatures = scheme.isUseLigatures() ? 1 : 0;
+        font.setFeature("liga", ligatures);
+        font.setFeature("clig", ligatures);
+        font.setFeature("calt", ligatures);
+
         QFontMetricsF metrics = new QFontMetricsF(font);
 
         double fontHeight = metrics.height();
@@ -133,5 +149,44 @@ public class DesktopQtEditorFontMetrics {
 
         myMetrics = metrics;
         myFont = font;
+
+        // TODO temporary - says whether the scheme asked for ligatures and which font qt actually resolved,
+        // then whether shaping actually acts on the feature: the same text under liga on and off
+        QFontInfo info = new QFontInfo(font);
+        LOG.info("qt editor font: requested=%s resolved=%s pixelSize=%d exactMatch=%s ligatures=%s liga=%d plainLiga=%d".formatted(
+            scheme.getEditorFontName(),
+            info.family(),
+            info.pixelSize(),
+            info.exactMatch(),
+            scheme.isUseLigatures(),
+            font.featureValue("liga"),
+            myFonts[0].featureValue("liga")
+        ));
+
+        QFont off = new QFont(font);
+        off.setFeature("liga", 0);
+        off.setFeature("clig", 0);
+        off.setFeature("calt", 0);
+
+        LOG.info("qt editor shaping: '->' styled=%s plain=%s ligaOff=%s || '==' styled=%s ligaOff=%s".formatted(
+            glyphIndexes("->", font),
+            glyphIndexes("->", myFonts[0]),
+            glyphIndexes("->", off),
+            glyphIndexes("==", font),
+            glyphIndexes("==", off)
+        ));
+    }
+
+    private static String glyphIndexes(String text, QFont font) {
+        QTextLayout layout = new QTextLayout(text, font, null);
+        layout.beginLayout();
+        layout.createLine();
+        layout.endLayout();
+
+        List<Integer> indexes = new ArrayList<>();
+        for (QGlyphRun run : layout.glyphRuns(-1, -1)) {
+            indexes.addAll(run.glyphIndexes());
+        }
+        return indexes.toString();
     }
 }

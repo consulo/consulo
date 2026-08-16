@@ -136,6 +136,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(L innerLayout, Disposable parent) {
+        return new DesktopQtLoadingLayoutImpl<>(innerLayout, parent);
+    }
+
+    @Override
     public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
         return new DesktopQtHorizontalLayoutImpl(gapInPixels);
     }

@@ -32,6 +32,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -86,6 +88,10 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
 
         DesktopQtWindowImpl qtWindow = (DesktopQtWindowImpl) window;
         qtWindow.markAsMainFrame();
+
+        // the header of the frame is a strip of its own and holds the room it needs, so nothing the decorator
+        // answers is owed by the content here - what this call is for is the header itself
+        TitlelessDecoratorService.getInstance().of(qtWindow, TitlelessDecorator.MAIN_WINDOW);
 
         applyState(qtWindow);
 

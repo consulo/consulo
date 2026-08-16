@@ -15,7 +15,7 @@
  */
 package consulo.web.internal.servlet;
 
-import consulo.web.internal.ui.WebFontRegistry;
+import consulo.ide.impl.ui.BundledFontRegistry;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +47,7 @@ public class WebFontServlet extends HttpServlet {
             return;
         }
 
-        String resourcePath = WebFontRegistry.findResourcePath(pathInfo.substring(1));
+        String resourcePath = BundledFontRegistry.findResourcePath(pathInfo.substring(1));
         if (resourcePath == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;

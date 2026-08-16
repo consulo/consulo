@@ -29,9 +29,10 @@
 
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}/../../distribution/boot/linux/</directory>
+            <!--consulo.sandbox.boot.directory is set by the os profiles of arch/managment/pom.xml-->
+            <directory>${project.basedir}/../../distribution/boot/${consulo.sandbox.boot.directory}/</directory>
             <includes>
-                <include>**</include>
+                <include>*</include>
             </includes>
             <outputDirectory>Consulo/</outputDirectory>
         </fileSet>
@@ -52,6 +53,24 @@
     </fileSets>
 
     <dependencySets>
+        <dependencySet>
+            <!--qtjambi.native.artifactId is set by the os profiles of arch/managment/pom.xml. The native
+                libraries are unpacked into the plugin native directory instead of being shipped as a jar:
+                qtjambi picks them up off io.qt.library-path-override and skips extracting 100+ mb into a temp
+                directory on every start, only to delete it again on exit. Windows ships them under bin-->
+            <useStrictFiltering>true</useStrictFiltering>
+            <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.qt/native</outputDirectory>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <includes>
+                    <include>lib/**</include>
+                    <include>bin/**</include>
+                </includes>
+            </unpackOptions>
+            <includes>
+                <include>io.qtjambi:${qtjambi.native.artifactId}</include>
+            </includes>
+        </dependencySet>
         <dependencySet>
             <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.sandbox.plugin/lib</outputDirectory>
             <unpack>false</unpack>

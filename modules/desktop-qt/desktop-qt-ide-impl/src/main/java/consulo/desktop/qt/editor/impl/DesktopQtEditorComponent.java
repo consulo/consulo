@@ -16,6 +16,7 @@
 package consulo.desktop.qt.editor.impl;
 
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import io.qt.widgets.QWidget;
 
 /**
@@ -38,6 +39,12 @@ public class DesktopQtEditorComponent extends QtComponentDelegate<DesktopQtEdito
     protected void initialize(DesktopQtEditorWidget component) {
         super.initialize(component);
 
+        // the editor was asked for these before it had a widget to answer with, so the widget catches up here
+        component.getErrorStripe().setStripeVisible(((EditorMarkupModel) myEditor.getMarkupModel()).isErrorStripeVisible());
+        component.getErrorStripe().listenToMarkup();
+        component.getStatusPanel().refresh();
+
+        component.updateSideAreas();
         component.updateScrollRanges();
     }
 }

@@ -14,6 +14,8 @@
   - limitations under the License.
   -->
 <component>
+  <!--FIXME [VISTALL] if you update this file - update _mac file too-->
+  <!--the qtjambi native artifact is OS specific, it is added by each desktop-qt-* assembly descriptor-->
   <dependencySets>
     <dependencySet>
       <useStrictFiltering>true</useStrictFiltering>
@@ -22,6 +24,10 @@
       <includes>
         <include>consulo:consulo-desktop-ide-impl</include>
         <include>consulo:consulo-desktop-qt-ide-impl</include>
+
+        <!--qtjambi is not booted, it belongs to this module and has to sit next to the os native jar that
+            each desktop-qt-* assembly descriptor adds here-->
+        <include>io.qtjambi:qtjambi</include>
       </includes>
     </dependencySet>
 
@@ -36,9 +42,6 @@
         <include>consulo:consulo-desktop-qt-bootstrap</include>
         <include>consulo:consulo-bootstrap</include>
         <include>consulo:consulo-util-nodep</include>
-
-        <include>io.qtjambi:qtjambi</include>
-        <include>io.qtjambi:qtjambi-native-linux-x64</include>
       </includes>
     </dependencySet>
   </dependencySets>

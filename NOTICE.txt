@@ -1,5 +1,6 @@
  * Initial code from https://github.com/JetBrains/intellij-community - Apache 2
  * Some icons from Kotlin repo - Apache 2.
+ * Linux window control icons (ICON-LIB linux/kde, linux/gnome) from https://github.com/JetBrains/intellij-community - Apache 2.
  * Web impl contains sources from ContextMenu https://github.com/vaadin/context-menu
  * coroutines https://github.com/esoco/coroutines - Apache 2
  * objectrelations https://github.com/esoco/objectrelations - Apache 2

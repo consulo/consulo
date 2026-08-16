@@ -75,7 +75,7 @@
         </dependency>
         <dependency>
             <groupId>io.qtjambi</groupId>
-            <artifactId>qtjambi-native-linux-x64</artifactId>
+            <artifactId>${qtjambi.native.artifactId}</artifactId>
             <version>${qtjambi.version}</version>
             <scope>runtime</scope>
         </dependency>

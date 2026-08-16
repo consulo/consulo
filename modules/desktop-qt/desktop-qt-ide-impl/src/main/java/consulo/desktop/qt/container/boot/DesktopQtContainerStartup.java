@@ -23,12 +23,14 @@ import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.internal.ShowErrorCaller;
+import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.desktop.qt.starter.DesktopQtApplicationStarter;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.logging.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -46,6 +48,8 @@ public class DesktopQtContainerStartup implements ContainerStartup {
     public void run(Map<String, Object> map) {
         StatCollector stat = (StatCollector) map.get(ContainerStartup.STAT_COLLECTOR);
         String[] args = (String[]) map.get(ContainerStartup.ARGS);
+
+        useBundledQtJambiLibraries();
 
         IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
@@ -68,6 +72,32 @@ public class DesktopQtContainerStartup implements ContainerStartup {
 
     @Override
     public void destroy() {
+    }
+
+    /**
+     * The distribution ships the qtjambi libraries unpacked under the native directory of this module. Left to
+     * itself qtjambi would instead unpack them out of qtjambi-native-&lt;os&gt;.jar into a temp directory on every
+     * start - over 100 mb - and delete them again on exit. Pointing it at the bundled copy skips all of that,
+     * and has to happen before any io.qt class initializes, since the search path is read once from a class
+     * initializer.
+     */
+    private static void useBundledQtJambiLibraries() {
+        File pluginPath = PluginManager.getPluginPath(DesktopQtContainerStartup.class);
+        if (pluginPath == null) {
+            return;
+        }
+
+        File nativePath = new File(pluginPath, "native");
+        // unix builds carry the libraries in lib, windows ones in bin. The override replaces the search path
+        // rather than extending it, so java.library.path has to be carried over - qt itself is not bundled and
+        // is picked up from wherever the system keeps it
+        String searchPath = new File(nativePath, "lib").getAbsolutePath()
+            + File.pathSeparator
+            + new File(nativePath, "bin").getAbsolutePath()
+            + File.pathSeparator
+            + System.getProperty("java.library.path", "");
+
+        System.setProperty("io.qt.library-path-override", searchPath);
     }
 
     private static void start(StatCollector stat, Runnable appInitializeMark, String[] args) {

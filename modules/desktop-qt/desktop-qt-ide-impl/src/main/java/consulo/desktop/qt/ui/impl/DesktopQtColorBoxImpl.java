@@ -108,7 +108,7 @@ public class DesktopQtColorBoxImpl extends QtComponentDelegate<QPushButton> impl
             return;
         }
 
-        QColor current = myValue == null ? new QColor(255, 255, 255) : toQColor(myValue);
+        QColor current = myValue == null ? new QColor(255, 255, 255) : TargetQt.to(myValue);
 
         QColor selected = QColorDialog.getColor(
             current,

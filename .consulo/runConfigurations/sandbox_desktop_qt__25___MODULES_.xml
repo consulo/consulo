@@ -8,6 +8,7 @@
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop-qt/target/consulo-sandbox-desktop-qt-3-SNAPSHOT-main/Consulo" />
     <java-sdk name="25" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
+    <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <method>
       <option name="Make" enabled="false" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="-T 1C -Dmaven.test.skip=true package -pl :consulo-sandbox-desktop-qt -am" />

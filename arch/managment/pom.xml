@@ -62,6 +62,8 @@
         <dev.mode>true</dev.mode>
 
         <maven.assembly.plugin>3.8.0</maven.assembly.plugin>
+        <!--the version maven-assembly-plugin 3.8.0 resolves for itself-->
+        <commons.compress.version>1.28.0</commons.compress.version>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
         <maven.consulo.plugin>3.29</maven.consulo.plugin>
@@ -992,6 +994,92 @@
     </dependencyManagement>
 
     <profiles>
+        <!--
+          - QtJambi splits its native libraries into per OS/arch artifacts. The profiles below select the one
+          - matching the machine which runs the build, so modules and the sandbox can be compiled and started
+          - on any supported platform. The per OS distributions do not use this property - they name every
+          - native artifact explicitly, see distribution/src/assembly/desktop-qt-*.xml
+          -->
+        <profile>
+            <id>qtjambi-native-linux-x64</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-linux-x64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>linux</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-linux-arm64</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-linux-arm64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>linux</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-windows-x64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-windows-x64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>win</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-windows-arm64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-windows-arm64</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>win</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <!--macOS native artifact is universal - there is no x64/arm64 split-->
+            <id>qtjambi-native-macos-x64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>x86_64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-macos</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>mac64/Contents</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+        <profile>
+            <id>qtjambi-native-macos-arm64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <qtjambi.native.artifactId>qtjambi-native-macos</qtjambi.native.artifactId>
+                <consulo.sandbox.boot.directory>macA64/Contents</consulo.sandbox.boot.directory>
+            </properties>
+        </profile>
+
         <profile>
             <id>build-number-is-set</id>
             <activation>

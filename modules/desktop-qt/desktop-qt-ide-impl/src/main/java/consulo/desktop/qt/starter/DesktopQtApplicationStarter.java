@@ -24,8 +24,12 @@ import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.desktop.qt.application.impl.DesktopQtApplicationImpl;
+import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -67,6 +71,26 @@ public class DesktopQtApplicationStarter extends ApplicationStarter {
 
         stat.dump("Startup statistics", LOG::info);
 
-        app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any());
+        app.invokeLater(() -> openProjectFromCommandLine(app, args), IdeaModalityState.any());
+    }
+
+    @RequiredUIAccess
+    private void openProjectFromCommandLine(ApplicationEx app, CommandLineArgs args) {
+        AsyncResult<Project> project = AsyncResult.rejected();
+
+        if (isPerformProjectLoad() && !args.isNoRecentProjects() && args.getFile() != null) {
+            try {
+                project = CommandLineProcessor.processExternalCommandLine(args, null);
+            }
+            catch (Throwable e) {
+                LOG.warn("Failed to open project from command line: " + args.getFile(), e);
+                project = AsyncResult.rejected();
+            }
+        }
+
+        // the open can reject from whatever thread finished it, while a welcome frame may only be built on the ui one
+        project.doWhenRejected(
+            () -> app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any())
+        );
     }
 }

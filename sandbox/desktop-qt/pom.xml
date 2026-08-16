@@ -46,6 +46,14 @@
                         <artifactId>maven-consulo-plugin</artifactId>
                         <version>${maven.consulo.plugin}</version>
                     </dependency>
+                    <!--maven-consulo-plugin, which is here for the dirHardlink format, pins commons-compress to
+                        1.14 and that wins over the one the assembly plugin itself resolves. Unpacking a
+                        dependency then fails on ZipFile.builder(), which only exists since 1.26-->
+                    <dependency>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-compress</artifactId>
+                        <version>${commons.compress.version}</version>
+                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
@@ -204,6 +212,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-external-service-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-file-chooser-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -493,7 +506,7 @@
         </dependency>
         <dependency>
             <groupId>io.qtjambi</groupId>
-            <artifactId>qtjambi-native-linux-x64</artifactId>
+            <artifactId>${qtjambi.native.artifactId}</artifactId>
             <version>${qtjambi.version}</version>
         </dependency>
 

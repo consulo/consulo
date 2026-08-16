@@ -105,8 +105,8 @@ public class DesktopQtButtonImpl extends QtComponentDelegate<QPushButton> implem
 
         updateStyleSheet();
 
-        component.clicked.connect(() ->
-            getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(DesktopQtButtonImpl.this))
+        component.clicked.connect(() -> getListenerDispatcher(ClickEvent.class)
+            .onEvent(new ClickEvent(DesktopQtButtonImpl.this, DesktopQtInputDetails.mouseAtCursor(component)))
         );
     }
 

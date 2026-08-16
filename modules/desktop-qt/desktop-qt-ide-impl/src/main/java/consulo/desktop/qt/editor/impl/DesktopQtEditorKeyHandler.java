@@ -18,6 +18,7 @@ package consulo.desktop.qt.editor.impl;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.UIAccess;
+import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.ActionManager;
@@ -28,9 +29,7 @@ import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import io.qt.core.Qt;
 import io.qt.gui.QKeyEvent;
-import org.jspecify.annotations.Nullable;
 
 import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Turns qt key presses into platform actions and typed characters.
@@ -53,33 +51,6 @@ import java.util.Map;
  * @since 2026-08-16
  */
 public class DesktopQtEditorKeyHandler {
-    /**
-     * Qt numbers letters, digits and space by their character code, which is what the key codes of those keys are
-     * too. Every other key qt and the platform number differently and has to be named here.
-     * <p>
-     * Punctuation is deliberately absent. Qt reports the character the key produces, so shift and nine arrive as
-     * {@code Key_ParenLeft}, whose code collides with the code of the down arrow - which is how typing a bracket
-     * used to move the caret instead. Punctuation reaches the keymap only through {@link #shiftedKeyCode}, which
-     * works from the unshifted character rather than from the qt key.
-     */
-    private static final Map<Integer, KeyCode> QT_KEY_CODES = Map.ofEntries(
-        Map.entry(Qt.Key.Key_Escape.value(), KeyCode.ESCAPE),
-        Map.entry(Qt.Key.Key_Tab.value(), KeyCode.TAB),
-        Map.entry(Qt.Key.Key_Backtab.value(), KeyCode.TAB),
-        Map.entry(Qt.Key.Key_Return.value(), KeyCode.ENTER),
-        Map.entry(Qt.Key.Key_Enter.value(), KeyCode.ENTER),
-        Map.entry(Qt.Key.Key_Home.value(), KeyCode.HOME),
-        Map.entry(Qt.Key.Key_End.value(), KeyCode.END),
-        Map.entry(Qt.Key.Key_Left.value(), KeyCode.LEFT),
-        Map.entry(Qt.Key.Key_Up.value(), KeyCode.UP),
-        Map.entry(Qt.Key.Key_Right.value(), KeyCode.RIGHT),
-        Map.entry(Qt.Key.Key_Down.value(), KeyCode.DOWN),
-        Map.entry(Qt.Key.Key_Backspace.value(), KeyCode.of(0x08, "VK_BACK_SPACE")),
-        Map.entry(Qt.Key.Key_Delete.value(), KeyCode.of(0x7F, "VK_DELETE")),
-        Map.entry(Qt.Key.Key_Insert.value(), KeyCode.of(0x9B, "VK_INSERT")),
-        Map.entry(Qt.Key.Key_PageUp.value(), KeyCode.of(0x21, "VK_PAGE_UP")),
-        Map.entry(Qt.Key.Key_PageDown.value(), KeyCode.of(0x22, "VK_PAGE_DOWN"))
-    );
 
     private final DesktopQtEditorImpl myEditor;
 
@@ -88,7 +59,7 @@ public class DesktopQtEditorKeyHandler {
     }
 
     public boolean handle(QKeyEvent event) {
-        EnumSet<Modifier> modifiers = toModifiers(event.modifiers());
+        EnumSet<Modifier> modifiers = DesktopQtInputDetails.modifiers(event.modifiers());
 
         // a printable character held down with nothing but shift is text, and asking the keymap about it first is
         // what turned shift and nine into a caret move - no shortcut is a bare character, so none is missed here
@@ -96,7 +67,7 @@ public class DesktopQtEditorKeyHandler {
             return typeCharacter(event);
         }
 
-        KeyCode keyCode = toKeyCode(event, modifiers);
+        KeyCode keyCode = DesktopQtInputDetails.keyCode(event, modifiers);
 
         return keyCode != null && performKeymapAction(keyCode, modifiers) || typeCharacter(event);
     }
@@ -176,48 +147,6 @@ public class DesktopQtEditorKeyHandler {
         return true;
     }
 
-    private static @Nullable KeyCode toKeyCode(QKeyEvent event, EnumSet<Modifier> modifiers) {
-        KeyCode named = QT_KEY_CODES.get(event.key());
-        if (named != null) {
-            return named;
-        }
-
-        int key = event.key();
-        if (key >= 'A' && key <= 'Z' || key >= '0' && key <= '9' || key == ' ') {
-            return KeyCode.of(key);
-        }
-
-        return modifiers.contains(Modifier.SHIFT) ? shiftedKeyCode(event) : null;
-    }
-
-    /**
-     * The key a shifted punctuation character was produced by. A shortcut is bound to the key, not to the character
-     * on it - ctrl shift slash is written that way even though the key press carries a question mark.
-     */
-    private static @Nullable KeyCode shiftedKeyCode(QKeyEvent event) {
-        int unshifted = switch (event.key()) {
-            case 0x21 -> '1'; // Key_Exclam
-            case 0x40 -> '2'; // Key_At
-            case 0x23 -> '3'; // Key_NumberSign
-            case 0x24 -> '4'; // Key_Dollar
-            case 0x25 -> '5'; // Key_Percent
-            case 0x5E -> '6'; // Key_AsciiCircum
-            case 0x26 -> '7'; // Key_Ampersand
-            case 0x2A -> '8'; // Key_Asterisk
-            case 0x28 -> '9'; // Key_ParenLeft
-            case 0x29 -> '0'; // Key_ParenRight
-            case 0x3F -> '/'; // Key_Question
-            case 0x3A -> ';'; // Key_Colon
-            case 0x2B -> '='; // Key_Plus
-            case 0x5F -> '-'; // Key_Underscore
-            case 0x3C -> ','; // Key_Less
-            case 0x3E -> '.'; // Key_Greater
-            default -> -1;
-        };
-
-        return unshifted < 0 ? null : KeyCode.of(unshifted);
-    }
-
     private static KeyStroke toKeyStroke(KeyCode keyCode, EnumSet<Modifier> modifiers) {
         int awtModifiers = 0;
         if (modifiers.contains(Modifier.SHIFT)) {
@@ -236,20 +165,4 @@ public class DesktopQtEditorKeyHandler {
         return KeyStroke.getKeyStroke(keyCode.key(), awtModifiers);
     }
 
-    private static EnumSet<Modifier> toModifiers(Qt.KeyboardModifiers modifiers) {
-        EnumSet<Modifier> result = EnumSet.noneOf(Modifier.class);
-        if (modifiers.testFlag(Qt.KeyboardModifier.ShiftModifier)) {
-            result.add(Modifier.SHIFT);
-        }
-        if (modifiers.testFlag(Qt.KeyboardModifier.ControlModifier)) {
-            result.add(Modifier.CTRL);
-        }
-        if (modifiers.testFlag(Qt.KeyboardModifier.AltModifier)) {
-            result.add(Modifier.ALT);
-        }
-        if (modifiers.testFlag(Qt.KeyboardModifier.MetaModifier)) {
-            result.add(Modifier.META);
-        }
-        return result;
-    }
 }

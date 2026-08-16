@@ -24,6 +24,7 @@ import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.TextDrawingCallback;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
@@ -32,33 +33,44 @@ import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
+import consulo.desktop.qt.ui.impl.base.DesktopQtAwtBridgeComponent;
 import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.JComponent;
 import java.awt.Cursor;
+import java.util.List;
 import java.awt.Point;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor {
+public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, CaretPixelLocationProvider {
     private final DesktopQtEditorComponent myComponent;
 
     private final DesktopQtEditorGutterComponentImpl myGutterComponent;
 
     private final DesktopQtEditorFontMetrics myFontMetrics = new DesktopQtEditorFontMetrics(this);
 
-    private final DesktopQtEditorCoordinateMapper myCoordinateMapper = new DesktopQtEditorCoordinateMapper(this);
+    private final DesktopQtEditorVisualLines myVisualLines = new DesktopQtEditorVisualLines(this);
+
+    private final DesktopQtEditorCoordinateMapper myCoordinateMapper = new DesktopQtEditorCoordinateMapper(this, myVisualLines);
 
     private boolean myCaretVisible = true;
 
@@ -72,28 +84,115 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor {
         super(document, viewer, project, kind);
 
         myComponent = new DesktopQtEditorComponent(this);
-        myGutterComponent = new DesktopQtEditorGutterComponentImpl();
+        myGutterComponent = new DesktopQtEditorGutterComponentImpl(this);
 
-        // the caret and the selection are painted, so moving either is a visual change the surface has to hear about
+        // the caret and the selection are painted, so moving either is a visual change the surface has to hear
+        // about - but only the rows either of them left or arrived at, never the whole document
         getCaretModel().addCaretListener(new CaretListener() {
             @Override
             public void caretPositionChanged(CaretEvent event) {
-                repaintSurface();
+                repaintLines(event.getOldPosition().line, event.getNewPosition().line);
             }
         });
         getSelectionModel().addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(SelectionEvent event) {
-                repaintSurface();
+                repaintRange(event.getOldRange());
+                repaintRange(event.getNewRange());
             }
         });
+
+        DesktopQtActionContextMenu.install(myComponent, this::getContextMenuGroup, ActionPlaces.EDITOR_POPUP, this::getDataContext);
     }
 
-    private void repaintSurface() {
-        DesktopQtEditorWidget widget = myComponent.toQtComponent();
+    /**
+     * The group is looked up per click rather than kept, since a plugin may replace what the id stands for and
+     * the editor may be pointed at a group of its own at any time.
+     */
+    private @Nullable ActionGroup getContextMenuGroup() {
+        String groupId = getContextMenuGroupId();
+        if (groupId == null) {
+            return null;
+        }
+
+        return ActionManager.getInstance().getAction(groupId) instanceof ActionGroup group ? group : null;
+    }
+
+    private void repaintRange(@Nullable TextRange range) {
+        if (range == null) {
+            return;
+        }
+
+        Document document = getDocument();
+        int length = document.getTextLength();
+
+        repaintLines(
+            document.getLineNumber(Math.max(0, Math.min(range.getStartOffset(), length))),
+            document.getLineNumber(Math.max(0, Math.min(range.getEndOffset(), length)))
+        );
+    }
+
+    /**
+     * Redraws the given rows and shows the caret again, which is what every move of the caret or the selection
+     * amounts to on screen.
+     */
+    private void repaintLines(int startLine, int endLine) {
+        DesktopQtEditorWidget widget = getSurface();
         if (widget != null) {
             widget.restartCaretBlink();
+
+            // callers speak in lines of the file, the surface draws rows - folding makes the two disagree
+            widget.repaintLines(myVisualLines.logicalToVisualLine(startLine), myVisualLines.logicalToVisualLine(endLine));
         }
+    }
+
+    /**
+     * Where the caret is inside the surface, which is what the completion lookup and everything else anchored to
+     * the caret opens against. Without it the platform has nowhere to put them and falls back to the top left of
+     * the editor.
+     * <p>
+     * The coordinates are relative to the surface widget, so the gutter has to be added and the scroll offset
+     * taken off - {@link #visualPositionToXY} answers in document space, which is a different thing.
+     */
+    @Override
+    public @Nullable CaretPixelLocation getCaretPixelLocation() {
+        DesktopQtEditorWidget widget = getSurface();
+        if (widget == null) {
+            return null;
+        }
+
+        Point point = visualPositionToXY(getCaretModel().getVisualPosition());
+
+        int gutterWidth = widget.getGutter().width();
+        int x = gutterWidth + point.x - widget.horizontalScrollBar().value();
+        int y = point.y - widget.verticalScrollBar().value();
+
+        return new CaretPixelLocation(x, y, getLineHeight(), gutterWidth);
+    }
+
+    /**
+     * The surface, or null when there is nothing to draw on.
+     * <p>
+     * A qt object outlives the native one it stands for - a widget torn down by qt itself, as a closed tab is, is
+     * still a live java reference whose every call throws {@link io.qt.QNoNativeResourcesException}. The editor is
+     * asked for its geometry after that happens (the history manager reads the scroll position of a tab being
+     * closed), so nothing may reach the widget without going through here.
+     */
+    public @Nullable DesktopQtEditorWidget getSurface() {
+        DesktopQtEditorWidget widget = myComponent.toQtComponent();
+        return widget != null && !widget.isDisposed() ? widget : null;
+    }
+
+    /**
+     * The listeners the platform registered for clicks on the editor. The base keeps them protected, and the
+     * widgets which actually receive the clicks live outside it, so they reach them through here.
+     */
+    public List<EditorMouseListener> getEditorMouseListeners() {
+        return myMouseListeners;
+    }
+
+    public DesktopQtEditorVisualLines getVisualLines() {
+        return myVisualLines;
     }
 
     public DesktopQtEditorFontMetrics getFontMetrics() {
@@ -115,6 +214,21 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor {
     @Override
     public Component getContentUIComponent() {
         return myComponent;
+    }
+
+    /**
+     * Platform code which has not been migrated off swing - brace highlighting, word selection, parameter info -
+     * asks the editor for a {@link JComponent} and throws away every frontend that has none. The bridge is that
+     * component, and it still carries the qt widget back, so nothing is lost on the round trip.
+     */
+    @Override
+    public JComponent getComponent() {
+        return DesktopQtAwtBridgeComponent.of(myComponent);
+    }
+
+    @Override
+    public JComponent getContentComponent() {
+        return DesktopQtAwtBridgeComponent.of(myComponent);
     }
 
     @Override
@@ -206,14 +320,49 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor {
     public void setHorizontalScrollbarVisible(boolean b) {
     }
 
+    /**
+     * The hook the platform uses to say what changed, and the reason highlighting has to be cheap: the daemon
+     * calls it once per highlighter it adds or removes. Redrawing the whole surface here - and worse, throwing
+     * the measured width away, which costs a pass over every line of the document - is what made selecting and
+     * highlighting crawl. Only the lines named are repainted, the way the awt {@code doRepaint} does it.
+     */
     @Override
     public void repaint(int startOffset, int endOffset, boolean invalidateTextLayout) {
-        myDocumentWidth = -1;
+        Document document = getDocument();
+        if (document.isInBulkUpdate()) {
+            return;
+        }
 
-        DesktopQtEditorWidget widget = myComponent.toQtComponent();
-        if (widget != null) {
+        DesktopQtEditorWidget widget = getSurface();
+        if (widget == null) {
+            return;
+        }
+
+        int end = Math.max(0, Math.min(endOffset, document.getTextLength()));
+        int start = Math.max(0, Math.min(startOffset, end));
+
+        // only a change to the text itself can change how wide the document is or how many digits the gutter
+        // needs; markup laid over unchanged text cannot
+        if (invalidateTextLayout) {
+            widenDocumentWidth(start, end);
+
+            widget.updateSideAreas();
             widget.updateScrollRanges();
-            widget.viewport().update();
+        }
+
+        widget.repaintLines(document.getLineNumber(start), document.getLineNumber(end));
+    }
+
+    /**
+     * Grows the measured width by what the changed lines now need, instead of measuring the document again.
+     * <p>
+     * It never shrinks, so deleting the longest line leaves the horizontal scroll bar longer than it has to be
+     * until something resets the measurement. That is the trade for not walking the whole document on every
+     * keystroke; the layout cache which would make it exact is the next piece of the view layer.
+     */
+    private void widenDocumentWidth(int startOffset, int endOffset) {
+        if (myDocumentWidth >= 0) {
+            myDocumentWidth = Math.max(myDocumentWidth, getMaxWidthInRange(startOffset, endOffset));
         }
     }
 
@@ -222,8 +371,9 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor {
         myFontMetrics.reset();
         myDocumentWidth = -1;
 
-        DesktopQtEditorWidget widget = myComponent.toQtComponent();
+        DesktopQtEditorWidget widget = getSurface();
         if (widget != null) {
+            widget.updateSideAreas();
             widget.updateScrollRanges();
             widget.viewport().update();
         }
@@ -255,9 +405,10 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor {
         boolean old = myCaretVisible;
         myCaretVisible = b;
 
-        DesktopQtEditorWidget widget = myComponent.toQtComponent();
+        DesktopQtEditorWidget widget = getSurface();
         if (widget != null) {
             widget.restartCaretBlink();
+            widget.repaintCarets();
         }
 
         return old;

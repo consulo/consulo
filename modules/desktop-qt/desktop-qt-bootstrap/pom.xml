@@ -48,17 +48,5 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
-
-    <dependency>
-      <groupId>io.qtjambi</groupId>
-      <artifactId>qtjambi</artifactId>
-      <version>${qtjambi.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.qtjambi</groupId>
-      <artifactId>qtjambi-native-linux-x64</artifactId>
-      <version>${qtjambi.version}</version>
-      <scope>runtime</scope>
-    </dependency>
   </dependencies>
 </project>

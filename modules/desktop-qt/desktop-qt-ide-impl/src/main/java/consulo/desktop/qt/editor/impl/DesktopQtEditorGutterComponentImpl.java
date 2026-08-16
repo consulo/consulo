@@ -34,6 +34,17 @@ import java.util.List;
  * @since 2026-08-16
  */
 public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponentEx {
+    private final DesktopQtEditorImpl myEditor;
+
+    public DesktopQtEditorGutterComponentImpl(DesktopQtEditorImpl editor) {
+        myEditor = editor;
+    }
+
+    private @Nullable DesktopQtEditorGutterWidget getWidget() {
+        DesktopQtEditorWidget surface = myEditor.getSurface();
+        return surface == null ? null : surface.getGutter();
+    }
+
     @Override
     public @Nullable FoldRegion findFoldingAnchorAt(int x, int y) {
         return null;
@@ -46,16 +57,25 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public int getWhitespaceSeparatorOffset() {
-        return 0;
+        DesktopQtEditorGutterWidget widget = getWidget();
+        return widget == null ? 0 : widget.separatorOffset();
     }
 
     @Override
     public void revalidateMarkup() {
+        DesktopQtEditorGutterWidget widget = getWidget();
+        if (widget != null) {
+            widget.update();
+        }
     }
 
+    /**
+     * Line markers would start where the numbers end, and nothing draws them yet - so the whole gutter is the
+     * number area and the marker area is empty at its right edge.
+     */
     @Override
     public int getLineMarkerAreaOffset() {
-        return 0;
+        return getWhitespaceSeparatorOffset();
     }
 
     @Override

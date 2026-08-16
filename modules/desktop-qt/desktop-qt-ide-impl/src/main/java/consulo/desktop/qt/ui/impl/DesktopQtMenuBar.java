@@ -222,12 +222,12 @@ public class DesktopQtMenuBar implements MenuBar {
         QPalette palette = new QPalette(menuBar.palette());
 
         if (myForegroundColor != null) {
-            palette.setColor(QPalette.ColorRole.WindowText, QtComponentDelegate.toQColor(myForegroundColor));
-            palette.setColor(QPalette.ColorRole.ButtonText, QtComponentDelegate.toQColor(myForegroundColor));
+            palette.setColor(QPalette.ColorRole.WindowText, TargetQt.to(myForegroundColor));
+            palette.setColor(QPalette.ColorRole.ButtonText, TargetQt.to(myForegroundColor));
         }
 
         if (myBackgroundColor != null) {
-            palette.setColor(QPalette.ColorRole.Window, QtComponentDelegate.toQColor(myBackgroundColor));
+            palette.setColor(QPalette.ColorRole.Window, TargetQt.to(myBackgroundColor));
 
             menuBar.setAutoFillBackground(true);
         }

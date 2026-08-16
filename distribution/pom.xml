@@ -55,6 +55,13 @@
                                 <descriptor>${project.basedir}/src/assembly/desktop-awt-mac-x86-64.xml</descriptor>
                                 <descriptor>${project.basedir}/src/assembly/desktop-awt-mac-aarch64.xml</descriptor>
 
+                                <descriptor>${project.basedir}/src/assembly/desktop-qt-win-x86-64.xml</descriptor>
+                                <descriptor>${project.basedir}/src/assembly/desktop-qt-win-aarch64.xml</descriptor>
+                                <descriptor>${project.basedir}/src/assembly/desktop-qt-linux-x86-64.xml</descriptor>
+                                <descriptor>${project.basedir}/src/assembly/desktop-qt-linux-aarch64.xml</descriptor>
+                                <descriptor>${project.basedir}/src/assembly/desktop-qt-mac-x86-64.xml</descriptor>
+                                <descriptor>${project.basedir}/src/assembly/desktop-qt-mac-aarch64.xml</descriptor>
+
                                 <descriptor>${project.basedir}/src/assembly/web.xml</descriptor>
                             </descriptors>
                         </configuration>
@@ -104,6 +111,48 @@
                                 </pluginRoot>
                                 <pluginRoot>
                                     ${project.build.directory}/consulo-bundle-${project.version}-desktop-awt-win/Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.awt
+                                </pluginRoot>
+                                <!--desktop-qt-linux-aarch64-->
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-linux-aarch64/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-linux-aarch64/Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.qt
+                                </pluginRoot>
+                                <!--desktop-qt-linux-x86-64-->
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-linux-x86-64/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-linux-x86-64/Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.qt
+                                </pluginRoot>
+                                <!--desktop-qt-mac-aarch64-->
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-mac-aarch64/Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-mac-aarch64/Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.qt
+                                </pluginRoot>
+                                <!--desktop-qt-mac-x86-64-->
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-mac-x86-64/Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-mac-x86-64/Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.qt
+                                </pluginRoot>
+                                <!--desktop-qt-win-aarch64-->
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-win-aarch64/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-win-aarch64/Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.qt
+                                </pluginRoot>
+                                <!--desktop-qt-win-x86-64-->
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-win-x86-64/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-bundle-${project.version}-desktop-qt-win-x86-64/Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.qt
                                 </pluginRoot>
                                 <!--web-->
                                 <pluginRoot>
@@ -200,6 +249,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-desktop-ide-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-qt-bootstrap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-qt-ide-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -531,6 +590,42 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-welcome-screen-impl</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- Qt -->
+        <!--
+          - every OS/arch native is declared here, since one build produces the distributions for all of them.
+          - each desktop-qt-* assembly descriptor picks the natives it needs
+          -->
+        <dependency>
+            <groupId>io.qtjambi</groupId>
+            <artifactId>qtjambi</artifactId>
+            <version>${qtjambi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qtjambi</groupId>
+            <artifactId>qtjambi-native-linux-x64</artifactId>
+            <version>${qtjambi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qtjambi</groupId>
+            <artifactId>qtjambi-native-linux-arm64</artifactId>
+            <version>${qtjambi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qtjambi</groupId>
+            <artifactId>qtjambi-native-windows-x64</artifactId>
+            <version>${qtjambi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qtjambi</groupId>
+            <artifactId>qtjambi-native-windows-arm64</artifactId>
+            <version>${qtjambi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qtjambi</groupId>
+            <artifactId>qtjambi-native-macos</artifactId>
+            <version>${qtjambi.version}</version>
         </dependency>
 
         <!-- FlatLAF -->

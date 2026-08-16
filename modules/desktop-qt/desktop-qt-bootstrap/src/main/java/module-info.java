@@ -6,7 +6,5 @@ module consulo.desktop.qt.bootstrap {
   requires java.sql;
   requires jdk.unsupported;
 
-  requires qtjambi;
-
   exports consulo.desktop.qt.boot.main;
 }

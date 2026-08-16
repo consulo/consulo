@@ -26,12 +26,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.model.FlatDataModel;
 import io.qt.core.QMargins;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QKeyEvent;
+import io.qt.gui.QMouseEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QListWidget;
@@ -95,6 +97,21 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             );
         }
 
+        /**
+         * {@code itemClicked} is emitted from inside the release and carries only the row, so the event which
+         * drove it is held for as long as the signal it raises is being answered.
+         */
+        @Override
+        protected void mouseReleaseEvent(QMouseEvent event) {
+            myClickEvent = event;
+            try {
+                super.mouseReleaseEvent(event);
+            }
+            finally {
+                myClickEvent = null;
+            }
+        }
+
         @Override
         protected void keyPressEvent(QKeyEvent event) {
             int key = event.key();
@@ -124,6 +141,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     // clearing the widget takes the selection down to nothing on its way, which is not a value the caller chose
     private boolean myRebuilding;
+
+    private @Nullable QMouseEvent myClickEvent;
 
     public DesktopQtListBoxImpl(FlatDataModel<E> model) {
         myModel = model;
@@ -253,7 +272,13 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
         mySelectedIndex = row;
 
-        getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, null));
+        QMouseEvent clickEvent = myClickEvent;
+
+        InputDetails inputDetails = clickEvent != null
+            ? DesktopQtInputDetails.mouse(myComponent, clickEvent)
+            : DesktopQtInputDetails.mouseAtCursor(myComponent);
+
+        getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, inputDetails));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

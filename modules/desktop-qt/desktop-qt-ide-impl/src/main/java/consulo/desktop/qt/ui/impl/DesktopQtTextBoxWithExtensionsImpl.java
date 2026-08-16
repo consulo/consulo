@@ -80,7 +80,9 @@ public class DesktopQtTextBoxWithExtensionsImpl extends DesktopQtTextBoxImpl imp
             // an extension without a listener is a plain marker - a magnifier of a search field - and stays
             // enabled, since a disabled action is drawn greyed out by qt
             if (clickListener != null) {
-                action.triggered.connect(() -> clickListener.onEvent(new ClickEvent(this, null)));
+                action.triggered.connect(() ->
+                    clickListener.onEvent(new ClickEvent(this, DesktopQtInputDetails.mouseAtCursor(component)))
+                );
             }
 
             myActions.add(action);

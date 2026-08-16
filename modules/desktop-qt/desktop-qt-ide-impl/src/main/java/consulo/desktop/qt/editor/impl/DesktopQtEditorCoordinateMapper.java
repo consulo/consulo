@@ -17,6 +17,7 @@ package consulo.desktop.qt.editor.impl;
 
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
+import consulo.desktop.qt.editor.impl.DesktopQtEditorVisualLines.Segment;
 import consulo.document.Document;
 
 import java.awt.Point;
@@ -35,9 +36,11 @@ import java.awt.Point;
  */
 public class DesktopQtEditorCoordinateMapper {
     private final DesktopQtEditorImpl myEditor;
+    private final DesktopQtEditorVisualLines myVisualLines;
 
-    public DesktopQtEditorCoordinateMapper(DesktopQtEditorImpl editor) {
+    public DesktopQtEditorCoordinateMapper(DesktopQtEditorImpl editor, DesktopQtEditorVisualLines visualLines) {
         myEditor = editor;
+        myVisualLines = visualLines;
     }
 
     public LogicalPosition offsetToLogicalPosition(int offset) {
@@ -59,18 +62,27 @@ public class DesktopQtEditorCoordinateMapper {
         return Math.min(lineStart + Math.max(0, position.column), lineEnd);
     }
 
+    /**
+     * A logical position sits on the visual line of whatever is actually shown for it: a position inside a
+     * collapsed region is not on screen at all, so it answers the line the placeholder is on.
+     */
     public VisualPosition logicalToVisualPosition(LogicalPosition position) {
-        return new VisualPosition(position.line, position.column);
+        int offset = logicalPositionToOffset(position);
+        int visualLine = myVisualLines.logicalToVisualLine(position.line);
+
+        return new VisualPosition(visualLine, offsetToVisualColumn(visualLine, offset));
     }
 
     public LogicalPosition visualToLogicalPosition(VisualPosition position) {
-        return new LogicalPosition(position.line, position.column);
+        return offsetToLogicalPosition(visualPositionToOffset(position));
     }
 
     public int offsetToVisualLine(int offset) {
         Document document = myEditor.getDocument();
 
-        return document.getLineNumber(Math.max(0, Math.min(offset, document.getTextLength())));
+        int clamped = Math.max(0, Math.min(offset, document.getTextLength()));
+
+        return myVisualLines.logicalToVisualLine(document.getLineNumber(clamped));
     }
 
     public int visualLineStartOffset(int visualLine) {
@@ -79,10 +91,57 @@ public class DesktopQtEditorCoordinateMapper {
         if (visualLine < 0) {
             return 0;
         }
-        if (visualLine >= document.getLineCount()) {
+        if (visualLine >= myVisualLines.getVisualLineCount()) {
             return document.getTextLength();
         }
-        return document.getLineStartOffset(visualLine);
+        return myVisualLines.visualLineStartOffset(visualLine);
+    }
+
+    /**
+     * Columns are counted along what is drawn, so a collapsed region costs the length of its placeholder rather
+     * than the length of the text it hides.
+     */
+    private int offsetToVisualColumn(int visualLine, int offset) {
+        int column = 0;
+
+        for (Segment segment : myVisualLines.getSegments(visualLine)) {
+            if (offset < segment.endOffset()) {
+                // an offset buried inside a collapsed region has no column of its own - the placeholder is one
+                // thing, so the caret goes to its near end
+                return segment.isFold() ? column : column + (offset - segment.startOffset());
+            }
+
+            column += segmentLength(segment);
+        }
+
+        return column;
+    }
+
+    private int visualPositionToOffset(VisualPosition position) {
+        int line = Math.max(0, Math.min(position.line, myVisualLines.getVisualLineCount() - 1));
+        int column = 0;
+
+        int offset = myVisualLines.visualLineStartOffset(line);
+
+        for (Segment segment : myVisualLines.getSegments(line)) {
+            int length = segmentLength(segment);
+
+            if (position.column < column + length) {
+                return segment.isFold() ? segment.startOffset() : segment.startOffset() + (position.column - column);
+            }
+
+            column += length;
+            offset = segment.endOffset();
+        }
+
+        // past the last piece of the line, so the columns beyond it are virtual space after its end
+        return offset;
+    }
+
+    private int segmentLength(Segment segment) {
+        return segment.isFold()
+            ? segment.fold().getPlaceholderText().length()
+            : segment.endOffset() - segment.startOffset();
     }
 
     public Point visualPositionToXY(VisualPosition position) {
@@ -92,52 +151,68 @@ public class DesktopQtEditorCoordinateMapper {
     }
 
     public LogicalPosition xyToLogicalPosition(Point p) {
-        Document document = myEditor.getDocument();
-
         int lineHeight = myEditor.getLineHeight();
-        int line = Math.max(0, Math.min(p.y / lineHeight, document.getLineCount() - 1));
+        int visualLine = Math.max(0, Math.min(p.y / lineHeight, myVisualLines.getVisualLineCount() - 1));
 
-        return new LogicalPosition(line, xToColumn(line, p.x));
+        return visualToLogicalPosition(new VisualPosition(visualLine, xToColumn(visualLine, p.x)));
     }
 
-    private double columnToX(int line, int column) {
-        Document document = myEditor.getDocument();
-
-        if (column <= 0 || line < 0 || line >= document.getLineCount()) {
+    /**
+     * Measured along the pieces the line is drawn from, so a placeholder is as wide as the text of it rather than
+     * as wide as what it hides.
+     */
+    private double columnToX(int visualLine, int column) {
+        if (column <= 0 || visualLine < 0 || visualLine >= myVisualLines.getVisualLineCount()) {
             return 0;
         }
 
-        int lineStart = document.getLineStartOffset(line);
-        int lineEnd = document.getLineEndOffset(line);
-        int end = Math.min(lineStart + column, lineEnd);
+        CharSequence text = myEditor.getDocument().getCharsSequence();
+        DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
 
-        double x = myEditor.getFontMetrics().getTextWidth(document.getCharsSequence().subSequence(lineStart, end));
+        double x = 0;
+        int consumed = 0;
 
-        // a caret past the line end still has to land somewhere, so the missing columns are billed as spaces
-        int overshoot = lineStart + column - end;
-        return x + overshoot * myEditor.getFontMetrics().getSpaceWidth();
+        for (Segment segment : myVisualLines.getSegments(visualLine)) {
+            int length = segmentLength(segment);
+            CharSequence segmentText = segment.text(text);
+
+            if (column < consumed + length) {
+                return x + metrics.getTextWidth(segmentText.subSequence(0, column - consumed));
+            }
+
+            x += metrics.getTextWidth(segmentText);
+            consumed += length;
+        }
+
+        // a caret past the end of the line still has to land somewhere, so the columns beyond it are spaces
+        return x + (column - consumed) * metrics.getSpaceWidth();
     }
 
-    private int xToColumn(int line, int x) {
-        Document document = myEditor.getDocument();
-
-        int lineStart = document.getLineStartOffset(line);
-        int lineLength = document.getLineEndOffset(line) - lineStart;
-
+    private int xToColumn(int visualLine, int x) {
         if (x <= 0) {
             return 0;
         }
 
+        int length = visualLineLength(visualLine);
+
         // the column whose glyph midpoint the click passed - the caret snaps to the nearer character boundary
         double previous = 0;
-        for (int column = 1; column <= lineLength; column++) {
-            double current = columnToX(line, column);
+        for (int column = 1; column <= length; column++) {
+            double current = columnToX(visualLine, column);
             if (x < (previous + current) / 2) {
                 return column - 1;
             }
             previous = current;
         }
 
-        return lineLength + (int) Math.round((x - previous) / myEditor.getFontMetrics().getSpaceWidth());
+        return length + (int) Math.round((x - previous) / myEditor.getFontMetrics().getSpaceWidth());
+    }
+
+    private int visualLineLength(int visualLine) {
+        int length = 0;
+        for (Segment segment : myVisualLines.getSegments(visualLine)) {
+            length += segmentLength(segment);
+        }
+        return length;
     }
 }

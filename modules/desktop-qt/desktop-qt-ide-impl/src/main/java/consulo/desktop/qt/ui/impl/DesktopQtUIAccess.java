@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.desktop.qt.ui.impl.clipboard.DesktopQtClipboardImpl;
+import consulo.desktop.qt.ui.impl.font.DesktopQtFontRegistry;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
@@ -74,6 +75,10 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
                 QGuiApplication.setDesktopFileName(applicationId);
 
                 myContext = QCoreApplication.instance();
+
+                // before anything measures a font, since the metrics of an editor are cached against whatever
+                // the family resolved to the first time it was asked for
+                DesktopQtFontRegistry.registerBundledFonts();
 
                 DesktopQtStyleManagerImpl.INSTANCE.syncWithPlatform();
                 QGuiApplication.styleHints().colorSchemeChanged.connect(

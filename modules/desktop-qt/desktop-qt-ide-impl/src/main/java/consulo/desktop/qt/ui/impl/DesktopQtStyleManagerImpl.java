@@ -38,11 +38,12 @@ import java.util.List;
 public class DesktopQtStyleManagerImpl extends StyleManagerImpl {
     private static final Logger LOG = Logger.getInstance(DesktopQtStyleManagerImpl.class);
 
-    public static final DesktopQtStyleManagerImpl INSTANCE = new DesktopQtStyleManagerImpl();
 
     private static final Style LIGHT = new DesktopQtStyleImpl(Style.LIGHT_ID);
     private static final Style SEMI_DARK = new DesktopQtStyleImpl(Style.SEMI_DARK);
     private static final Style DARK = new DesktopQtStyleImpl(Style.DARK_ID);
+
+    public static final DesktopQtStyleManagerImpl INSTANCE = new DesktopQtStyleManagerImpl();
 
     private static final List<Style> ourStyles = List.of(LIGHT, SEMI_DARK, DARK);
 

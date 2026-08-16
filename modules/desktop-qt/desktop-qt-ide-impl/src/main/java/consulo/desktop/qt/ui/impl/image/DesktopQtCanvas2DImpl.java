@@ -15,8 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl.image;
 
+import consulo.desktop.qt.ui.impl.TargetQt;
 import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
@@ -106,13 +106,13 @@ public class DesktopQtCanvas2DImpl implements Canvas2D {
 
     @Override
     public void setFillStyle(@Nullable ColorValue value) {
-        myState.myFillColor = toQColor(value);
+        myState.myFillColor = TargetQt.toNullable(value);
         myState.myGradient = null;
     }
 
     @Override
     public void setStrokeStyle(@Nullable ColorValue value) {
-        myState.myStrokeColor = toQColor(value);
+        myState.myStrokeColor = TargetQt.toNullable(value);
     }
 
     @Override
@@ -393,8 +393,8 @@ public class DesktopQtCanvas2DImpl implements Canvas2D {
         }
 
         QLinearGradient gradient = new QLinearGradient(x1, y1, x2, y2);
-        gradient.setColorAt(0, withAlpha(toQColor(color1), alpha1));
-        gradient.setColorAt(1, withAlpha(toQColor(color2), alpha2));
+        gradient.setColorAt(0, withAlpha(TargetQt.toNullable(color1), alpha1));
+        gradient.setColorAt(1, withAlpha(TargetQt.toNullable(color2), alpha2));
 
         myState.myGradient = gradient;
         myState.myFillColor = null;
@@ -407,7 +407,7 @@ public class DesktopQtCanvas2DImpl implements Canvas2D {
 
     @Override
     public void setShadowColor(ColorValue value) {
-        QColor color = toQColor(value);
+        QColor color = TargetQt.toNullable(value);
         if (color != null) {
             myState.myShadowColor = color;
         }
@@ -538,15 +538,6 @@ public class DesktopQtCanvas2DImpl implements Canvas2D {
         }
 
         return new QColor(color.red(), color.green(), color.blue(), clamp((int) Math.round(color.alpha() * alpha)));
-    }
-
-    private static @Nullable QColor toQColor(@Nullable ColorValue value) {
-        if (value == null) {
-            return null;
-        }
-
-        RGBColor color = value.toRGB();
-        return new QColor(clamp(color.getRed()), clamp(color.getGreen()), clamp(color.getBlue()), clamp(color.getAlpha()));
     }
 
     private static int clamp(int value) {

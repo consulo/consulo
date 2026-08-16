@@ -17,6 +17,7 @@ module consulo.desktop.qt.ide.impl {
     requires consulo.language.editor.impl;
     requires consulo.navigation.bar.api;
     requires consulo.navigation.bar.impl;
+    requires consulo.base.icon.library;
 
     // TargetAWTFacade is typed against java.awt even on a frontend which never draws with it
     requires java.desktop;

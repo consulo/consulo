@@ -88,6 +88,9 @@ public final class DesktopQtActionContextMenu {
     private void showMenu(QPoint position) {
         ActionGroup group = myGroupSupplier.get();
         if (group == null) {
+            // a right click that produces nothing is indistinguishable from one that never arrived, and the two
+            // are fixed in different places - so say which it was
+            LOG.warn("No action group registered for " + myPlace);
             return;
         }
 
@@ -127,6 +130,11 @@ public final class DesktopQtActionContextMenu {
     @RequiredUIAccess
     private void popupMenu(List<UnifiedActionMenuExpander.MenuNode> nodes, QPoint globalPosition) {
         if (myWidget.isDisposed()) {
+            return;
+        }
+
+        if (nodes.isEmpty()) {
+            LOG.warn("Action group of " + myPlace + " expanded to nothing");
             return;
         }
 

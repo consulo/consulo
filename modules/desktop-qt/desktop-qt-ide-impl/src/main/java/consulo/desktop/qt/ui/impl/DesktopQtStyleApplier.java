@@ -57,6 +57,13 @@ public final class DesktopQtStyleApplier {
     private static final int ourProgressArc = 4;
 
     /**
+     * What an item of the menu bar in the header of a titleless window is padded by, which is what decides how
+     * tall the menu bar asks to be.
+     */
+    private static final int ourMenuBarItemVerticalPadding = 3;
+    private static final int ourMenuBarItemHorizontalPadding = 8;
+
+    /**
      * The last style applied, so a popup built after a theme change is bordered with the colors of that theme
      * rather than of the one which happened to be up when the class was loaded.
      */
@@ -185,7 +192,43 @@ public final class DesktopQtStyleApplier {
             tabHover,
             tabUnderline,
             separator
-        ) + buildCornerStyleSheet(style);
+        ) + buildCornerStyleSheet(style) + buildTitleBarStyleSheet(style);
+    }
+
+    /**
+     * The header a titleless window is decorated with. It is one of the few widgets named here as a whole rather
+     * than by its parts - the header is drawn by consulo and not by fusion, so there is nothing of the style to be
+     * taken over. Keeping the rules in the application style sheet is also what repaints a header in the colors of
+     * a theme picked while the window is already up.
+     */
+    private static String buildTitleBarStyleSheet(Style style) {
+        String layout = css(style, ComponentColors.LAYOUT);
+        String border = css(style, ComponentColors.BORDER);
+        String text = css(style, ComponentColors.TEXT_FOREGROUND);
+        String menuSelection = css(style, ComponentColors.MENU_SELECTION_BACKGROUND);
+        String selectionForeground = css(style, ComponentColors.SELECTION_FOREGROUND);
+
+        // the padding of an item is what a menu bar asks its height for, and the header is one row of a height of
+        // its own - breeze pads an item enough to push the menu text off the line the title is drawn on
+        return """
+
+            #consuloTitleBar { background: %s; border-bottom: 1px solid %s; }
+            #consuloTitleBar QMenuBar { background: transparent; border: none; padding: 0px; }
+            #consuloTitleBar QMenuBar::item { background: transparent; color: %s; padding: %dpx %dpx; margin: 0px; border-radius: %dpx; }
+            #consuloTitleBar QMenuBar::item:selected { background: %s; color: %s; }
+            #consuloTitleBar QMenuBar::item:pressed { background: %s; color: %s; }
+            """.formatted(
+            layout,
+            border,
+            text,
+            ourMenuBarItemVerticalPadding,
+            ourMenuBarItemHorizontalPadding,
+            ourButtonArc,
+            menuSelection,
+            selectionForeground,
+            menuSelection,
+            selectionForeground
+        );
     }
 
     /**
@@ -268,6 +311,19 @@ public final class DesktopQtStyleApplier {
             cornerRadius,
             background
         );
+    }
+
+    /**
+     * A color of the theme for whatever is painted rather than styled - the decoration a titleless window draws
+     * itself is, and none of it belongs to a role of the qt palette.
+     *
+     * @param fallback what the color is before a theme has been applied, which is the case while the application
+     *                 is still coming up
+     */
+    public static QColor themeColor(StyleColorValue colorValue, QColor fallback) {
+        Style style = ourStyle;
+
+        return style == null ? fallback : color(style, colorValue);
     }
 
     /**

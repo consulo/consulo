@@ -100,8 +100,8 @@ public class DesktopQtMenuItemImpl implements MenuItem, DesktopQtIconOwner {
     protected QAction createAction(@Nullable QWidget parent) {
         QAction action = new QAction(parent);
 
-        action.triggered.connect(() ->
-            getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(DesktopQtMenuItemImpl.this, null))
+        action.triggered.connect(() -> getListenerDispatcher(ClickEvent.class)
+            .onEvent(new ClickEvent(DesktopQtMenuItemImpl.this, DesktopQtInputDetails.mouseAtCursor(parent)))
         );
 
         return action;
