@@ -16,30 +16,28 @@
 package consulo.desktop.qt.editor.impl;
 
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
-import consulo.document.Document;
-import io.qt.widgets.QPlainTextEdit;
 import io.qt.widgets.QWidget;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtEditorComponent extends QtComponentDelegate<QPlainTextEdit> {
-    private final Document myDocument;
+public class DesktopQtEditorComponent extends QtComponentDelegate<DesktopQtEditorWidget> {
+    private final DesktopQtEditorImpl myEditor;
 
-    public DesktopQtEditorComponent(Document document) {
-        myDocument = document;
+    public DesktopQtEditorComponent(DesktopQtEditorImpl editor) {
+        myEditor = editor;
     }
 
     @Override
-    protected QPlainTextEdit createQt(QWidget parent) {
-        return new QPlainTextEdit(parent);
+    protected DesktopQtEditorWidget createQt(QWidget parent) {
+        return new DesktopQtEditorWidget(parent, myEditor);
     }
 
     @Override
-    protected void initialize(QPlainTextEdit component) {
+    protected void initialize(DesktopQtEditorWidget component) {
         super.initialize(component);
 
-        component.setPlainText(myDocument.getText());
+        component.updateScrollRanges();
     }
 }

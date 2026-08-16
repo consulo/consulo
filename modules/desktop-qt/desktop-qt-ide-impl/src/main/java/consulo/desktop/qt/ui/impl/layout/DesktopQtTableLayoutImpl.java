@@ -78,7 +78,7 @@ public class DesktopQtTableLayoutImpl extends DesktopQtLayoutComponent<TableLayo
     protected void detach(QtComponentDelegate<?> child) {
         super.detach(child);
 
-        if (myComponent != null && myComponent.layout() instanceof QGridLayout layout) {
+        if (isAlive(myComponent) && myComponent.layout() instanceof QGridLayout layout) {
             updateFiller(layout);
         }
     }

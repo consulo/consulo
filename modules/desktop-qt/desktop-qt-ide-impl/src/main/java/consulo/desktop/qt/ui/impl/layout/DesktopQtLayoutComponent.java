@@ -77,6 +77,10 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
      * widget; containers which manage children on their own - a splitter or a scroll area - answer differently.
      */
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
+        if (!isAlive(myComponent)) {
+            return;
+        }
+
         QLayout layout = myComponent.layout();
         if (layout != null) {
             layout.addWidget(child.toQtComponent());
@@ -100,7 +104,7 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
      */
     protected void detach(QtComponentDelegate<?> child) {
         QWidget widget = child.toQtComponent();
-        if (widget == null || myComponent == null) {
+        if (!isAlive(widget) || !isAlive(myComponent)) {
             return;
         }
 
@@ -108,6 +112,16 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
         if (layout != null) {
             layout.removeWidget(widget);
         }
+    }
+
+    /**
+     * A qt object outlives the native one it stands for: the widget of a container torn down by qt itself -
+     * a closed window disposing its whole tree - is still a live java reference, and every call on it throws
+     * {@link io.qt.QNoNativeResourcesException}. Anything reaching a widget after a disposal it did not
+     * perform has to ask first.
+     */
+    protected static boolean isAlive(@Nullable QWidget widget) {
+        return widget != null && !widget.isDisposed();
     }
 
     @Override

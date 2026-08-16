@@ -22,8 +22,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
+import io.qt.core.QRectF;
 import io.qt.core.Qt;
 import io.qt.gui.QAction;
+import io.qt.gui.QPainterPath;
+import io.qt.gui.QRegion;
+import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QMenu;
 import io.qt.widgets.QWidget;
@@ -45,11 +49,39 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
      * of the entry, so the selection it used to draw is taken from the palette here.
      */
     private static final String STYLE_SHEET = """
-        QMenu { padding: 4px 0px; }
+        QMenu { padding: 4px 0px; border: 1px solid palette(mid); border-radius: %dpx; background: palette(window); }
         QMenu::item { padding: 4px 12px 4px 6px; }
         QMenu::item:selected { background-color: palette(highlight); color: palette(highlighted-text); }
         QMenu::icon { margin-left: 6px; }
-        """;
+        """.formatted(DesktopQtPopupImpl.ourCornerRadius);
+
+    /**
+     * A menu detached onto an ungrabbed {@code xdg_popup} is never the active window, so qt would resolve the
+     * {@code palette(highlight)} of the sheet out of the Inactive group and draw the highlighted entry with the
+     * washed out selection of a window nobody is working in. The rounded corners of the sheet need the same mask
+     * the popups do - nothing else takes the square window behind the arc away.
+     */
+    private static class QtMenu extends QMenu {
+        QtMenu(@Nullable QWidget parent) {
+            super(parent);
+
+            setPalette(DesktopQtStyleApplier.alwaysActive(palette()));
+        }
+
+        @Override
+        protected void resizeEvent(QResizeEvent event) {
+            super.resizeEvent(event);
+
+            QPainterPath path = new QPainterPath();
+            path.addRoundedRect(
+                new QRectF(0, 0, width(), height()),
+                DesktopQtPopupImpl.ourCornerRadius,
+                DesktopQtPopupImpl.ourCornerRadius
+            );
+
+            setMask(new QRegion(path.toFillPolygon().toPolygon()));
+        }
+    }
 
     /**
      * Watches for a click which lands outside the menu and takes it down, doing by hand what the mouse grab of a
@@ -214,7 +246,7 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
     @RequiredUIAccess
     @Override
     protected QAction createAction(@Nullable QWidget parent) {
-        QMenu menu = new QMenu(parent);
+        QMenu menu = new QtMenu(parent);
         menu.setStyleSheet(STYLE_SHEET);
 
         myMenu = menu;

@@ -22,6 +22,7 @@ import consulo.ui.style.StyleColorValue;
 import io.qt.gui.QColor;
 import io.qt.gui.QPalette;
 import io.qt.widgets.QApplication;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -45,6 +46,23 @@ public final class DesktopQtStyleApplier {
         List.of(QPalette.ColorGroup.Active, QPalette.ColorGroup.Inactive, QPalette.ColorGroup.Disabled);
 
     /**
+     * The corner radii of the awt look and feel, which is where the shape of consulo is decided - flatlaf defaults
+     * for {@code Button.arc}, {@code ProgressBar.arc} and {@code Popup.borderCornerRadius}, and the
+     * {@code TextComponent.arc} of {@code ConsuloLightLaf}/{@code ConsuloDarkLaf} over the flatlaf default of 0.
+     * {@code Component.arc} is what a combo box and a spinner are drawn with.
+     */
+    private static final int ourTextArc = 8;
+    private static final int ourComponentArc = 5;
+    private static final int ourButtonArc = 6;
+    private static final int ourProgressArc = 4;
+
+    /**
+     * The last style applied, so a popup built after a theme change is bordered with the colors of that theme
+     * rather than of the one which happened to be up when the class was loaded.
+     */
+    private static volatile @Nullable Style ourStyle;
+
+    /**
      * An application style sheet wraps the style of the application into a proxy, so once one is written the style
      * asked for cannot be read back off {@code QApplication.style()} any more.
      */
@@ -54,6 +72,8 @@ public final class DesktopQtStyleApplier {
     }
 
     public static void apply(Style style) {
+        ourStyle = style;
+
         if (!ourStyleForced) {
             ourStyleForced = true;
 
@@ -165,7 +185,111 @@ public final class DesktopQtStyleApplier {
             tabHover,
             tabUnderline,
             separator
+        ) + buildCornerStyleSheet(style);
+    }
+
+    /**
+     * The corners. Qt only rounds what a style sheet draws, so every rule here has to state the border and the fill
+     * the widget would otherwise have had from fusion - and the states with them, or a field would keep the frame of
+     * an idle one while it has the focus.
+     * <p/>
+     * A combo box and a spinner reach their arrow through a subcontrol, and the moment the widget is styled qt stops
+     * asking fusion for it. Both arrows are therefore drawn again here as a css triangle - a box of no size whose
+     * borders meet in a point - which is what keeps them once the frame is ours.
+     * <p/>
+     * A list, a tree and a scroll pane are left square on purpose: {@code ScrollPane.arc} is 0 in the awt look and
+     * feel, so a rounded frame around one would be a shape consulo does not have.
+     */
+    private static String buildCornerStyleSheet(Style style) {
+        String border = css(style, ComponentColors.BORDER);
+        String disabledBorder = css(style, ComponentColors.DISABLED_BORDER);
+        String focus = css(style, ComponentColors.FOCUS_COLOR);
+        String componentBackground = css(style, ComponentColors.COMPONENT_BACKGROUND);
+        String layout = css(style, ComponentColors.LAYOUT);
+        String hover = css(style, ComponentColors.HOVER_BACKGROUND);
+        String text = css(style, ComponentColors.TEXT_FOREGROUND);
+        String disabledText = css(style, ComponentColors.DISABLED_TEXT);
+        String accent = css(style, ComponentColors.TABBED_PANE_UNDERLINE);
+
+        return """
+
+            QLineEdit, QPlainTextEdit { border: 1px solid %s; border-radius: %dpx; background: %s; padding: 3px 6px; }
+            QLineEdit:focus, QPlainTextEdit:focus { border: 1px solid %s; }
+            QLineEdit:disabled, QPlainTextEdit:disabled { border: 1px solid %s; }
+
+            QPushButton { border: 1px solid %s; border-radius: %dpx; background: %s; padding: 4px 14px; }
+            QPushButton:hover { background: %s; }
+            QPushButton:focus { border: 1px solid %s; }
+            QPushButton:disabled { border: 1px solid %s; color: %s; }
+
+            QProgressBar { border: 1px solid %s; border-radius: %dpx; background: %s; text-align: center; }
+            QProgressBar::chunk { background: %s; border-radius: %dpx; }
+
+            QComboBox, QAbstractSpinBox { border: 1px solid %s; border-radius: %dpx; background: %s; padding: 3px 6px; }
+            QComboBox:focus, QAbstractSpinBox:focus { border: 1px solid %s; }
+            QComboBox:disabled, QAbstractSpinBox:disabled { border: 1px solid %s; color: %s; }
+            QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: center right; width: 16px; border: none; background: transparent; }
+            QComboBox::down-arrow { width: 0px; height: 0px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid %s; }
+            QAbstractSpinBox::up-button { subcontrol-origin: border; subcontrol-position: top right; width: 16px; border: none; background: transparent; }
+            QAbstractSpinBox::down-button { subcontrol-origin: border; subcontrol-position: bottom right; width: 16px; border: none; background: transparent; }
+            QAbstractSpinBox::up-arrow { width: 0px; height: 0px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-bottom: 4px solid %s; }
+            QAbstractSpinBox::down-arrow { width: 0px; height: 0px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 4px solid %s; }
+            """.formatted(
+            border, ourTextArc, componentBackground,
+            focus,
+            disabledBorder,
+            border, ourButtonArc, layout,
+            hover,
+            focus,
+            disabledBorder, disabledText,
+            border, ourProgressArc, componentBackground,
+            accent, ourProgressArc,
+            border, ourComponentArc, componentBackground,
+            focus,
+            disabledBorder, disabledText,
+            text,
+            text,
+            text
         );
+    }
+
+    /**
+     * The border of a frameless popup, written against the object name so it reaches the frame and none of the
+     * widgets inside it.
+     */
+    public static String popupFrameStyleSheet(String objectName, int cornerRadius) {
+        Style style = ourStyle;
+        String border = style == null ? "palette(mid)" : css(style, ComponentColors.BORDER);
+        String background = style == null ? "palette(window)" : css(style, ComponentColors.LAYOUT);
+
+        return "#%s { border: 1px solid %s; border-radius: %dpx; background: %s; }".formatted(
+            objectName,
+            border,
+            cornerRadius,
+            background
+        );
+    }
+
+    /**
+     * A palette which paints the same whether the window holding it is the active one. Wayland never hands an
+     * ungrabbed popup the keyboard, so a popup is never active and qt would draw every selection of it out of the
+     * Inactive group.
+     */
+    public static QPalette alwaysActive(QPalette source) {
+        QPalette palette = new QPalette(source);
+
+        for (QPalette.ColorRole role : List.of(
+            QPalette.ColorRole.Highlight,
+            QPalette.ColorRole.HighlightedText,
+            QPalette.ColorRole.Text,
+            QPalette.ColorRole.WindowText,
+            QPalette.ColorRole.Base,
+            QPalette.ColorRole.Window
+        )) {
+            palette.setColor(QPalette.ColorGroup.Inactive, role, palette.color(QPalette.ColorGroup.Active, role));
+        }
+
+        return palette;
     }
 
     private static QColor color(Style style, StyleColorValue colorValue) {

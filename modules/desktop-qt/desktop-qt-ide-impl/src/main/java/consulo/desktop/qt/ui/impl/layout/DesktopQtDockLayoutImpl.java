@@ -55,6 +55,10 @@ public class DesktopQtDockLayoutImpl extends DesktopQtLayoutComponent<StaticPosi
 
     @Override
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
+        if (!isAlive(myComponent)) {
+            return;
+        }
+
         QGridLayout layout = (QGridLayout) myComponent.layout();
 
         QWidget widget = child.toQtComponent();

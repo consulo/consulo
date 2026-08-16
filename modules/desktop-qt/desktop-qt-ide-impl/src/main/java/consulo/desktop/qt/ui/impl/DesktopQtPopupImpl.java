@@ -26,11 +26,15 @@ import io.qt.core.QEvent;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
+import io.qt.core.QRectF;
 import io.qt.core.QSize;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QCloseEvent;
 import io.qt.gui.QKeyEvent;
+import io.qt.gui.QPainterPath;
+import io.qt.gui.QRegion;
+import io.qt.gui.QResizeEvent;
 import io.qt.gui.QScreen;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QFrame;
@@ -64,9 +68,30 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-16
  */
 public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> implements Disposable {
+    /** what the border rule of the popup is written against, so it reaches the frame and none of its children */
+    private static final String ourObjectName = "consuloQtPopup";
+
+    /** {@code Popup.borderCornerRadius} of the awt look and feel */
+    static final int ourCornerRadius = 4;
+
     private class QtPopup extends QFrame {
         QtPopup() {
             super(null, Qt.WindowType.ToolTip, Qt.WindowType.FramelessWindowHint, Qt.WindowType.WindowStaysOnTopHint);
+        }
+
+        /**
+         * A rounded border of a style sheet is only drawn by the widget which carries it - a child of it keeps its
+         * own square corners and covers the arc, and the window behind the arc stays opaque. Masking the window to
+         * the same shape is what takes both away, since a mask clips the whole subtree and the window with it.
+         */
+        @Override
+        protected void resizeEvent(QResizeEvent event) {
+            super.resizeEvent(event);
+
+            QPainterPath path = new QPainterPath();
+            path.addRoundedRect(new QRectF(0, 0, width(), height()), ourCornerRadius, ourCornerRadius);
+
+            setMask(new QRegion(path.toFillPolygon().toPolygon()));
         }
 
         @Override
@@ -140,11 +165,20 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         QtPopup popup = new QtPopup();
 
-        // a frameless window carries no chrome of its own, and without a border of some kind the content bleeds
-        // into whatever the popup floats over
-        popup.setFrameShape(QFrame.Shape.StyledPanel);
+        popup.setObjectName(ourObjectName);
 
         myComponent = popup;
+
+        // a frameless window carries no chrome of its own, and without a border of some kind the content bleeds
+        // into whatever the popup floats over. the rule draws it rather than the frame shape, since only a style
+        // sheet can round the corners
+        setOwnStyleSheet(DesktopQtStyleApplier.popupFrameStyleSheet(ourObjectName, ourCornerRadius));
+
+        // an ungrabbed xdg_popup is never the active window on wayland - measured on kwin, a shown popup answers
+        // isActiveWindow() false - and qt then paints every selection of it out of the Inactive group, so a list
+        // in a popup came out with the washed out selection of a window nobody is working in
+        popup.setPalette(DesktopQtStyleApplier.alwaysActive(popup.palette()));
+
         myComponent.setFocusPolicy(options.isRequestFocus() ? Qt.FocusPolicy.StrongFocus : Qt.FocusPolicy.NoFocus);
 
         // a popup which reports on what the user is doing somewhere else - the lookup is driven from the editor -
@@ -154,7 +188,9 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         myLayout = new QVBoxLayout();
-        myLayout.setContentsMargins(0, 0, 0, 0);
+        // the rule draws the border inside the rect of the widget, and a child placed at the very corner covers it
+        myLayout.setContentsMargins(1, 1, 1, 1);
+        myLayout.setSpacing(0);
         myComponent.setLayout(myLayout);
 
         if (options.isResizable()) {
@@ -189,6 +225,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         if (label == null) {
             label = new QLabel(myComponent);
+            label.setContentsMargins(8, 4, 8, 4);
             myLayout.insertWidget(0, label);
             myTitleLabel = label;
         }
@@ -216,7 +253,21 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         delegate.setParent(this);
         delegate.bind(myComponent, null);
 
-        myLayout.insertWidget(myTitleLabel == null ? 0 : 1, delegate.toQtComponent());
+        QWidget contentWidget = delegate.toQtComponent();
+
+        // the popup already draws a border of its own, and a list or a tree brings a sunken frame with it - two
+        // rules around the same rectangle is what made every popup look double walled
+        if (contentWidget instanceof QFrame frame) {
+            frame.setFrameShape(QFrame.Shape.NoFrame);
+        }
+
+        // the palette of the popup does not reach a widget which was bound with one of its own, and the content is
+        // where the selection is actually drawn
+        if (contentWidget != null) {
+            contentWidget.setPalette(DesktopQtStyleApplier.alwaysActive(contentWidget.palette()));
+        }
+
+        myLayout.insertWidget(myTitleLabel == null ? 0 : 1, contentWidget);
 
         myContent = delegate;
 
@@ -270,16 +321,44 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
      * What a key carried over from the frame is handed to - the content itself where it has no inner focus of its
      * own, since a list answers the arrows and the return key from the view inside it.
      */
-    private @Nullable QWidget keyboardTarget() {
+    protected @Nullable QWidget contentWidget() {
         QtComponentDelegate<?> content = myContent;
-        QWidget contentWidget = content == null ? null : content.toQtComponent();
+        return content == null ? null : content.toQtComponent();
+    }
+
+    private @Nullable QWidget keyboardTarget() {
+        QWidget contentWidget = contentWidget();
         if (contentWidget == null) {
             return null;
         }
 
         QWidget focused = contentWidget.focusWidget();
+        if (focused != null) {
+            return focused;
+        }
 
-        return focused == null ? contentWidget : focused;
+        // the content is not always the widget which answers the keys - a list put inside a layout leaves the
+        // layout widget on top, and that one takes no keys at all
+        return contentWidget.focusPolicy() == Qt.FocusPolicy.NoFocus ? firstFocusable(contentWidget) : contentWidget;
+    }
+
+    private static @Nullable QWidget firstFocusable(QWidget widget) {
+        for (QObject child : widget.children()) {
+            if (!(child instanceof QWidget childWidget) || !childWidget.isVisible()) {
+                continue;
+            }
+
+            if (childWidget.focusPolicy() != Qt.FocusPolicy.NoFocus) {
+                return childWidget;
+            }
+
+            QWidget nested = firstFocusable(childWidget);
+            if (nested != null) {
+                return nested;
+            }
+        }
+
+        return null;
     }
 
     private boolean ownsWidget(@Nullable QWidget widget) {

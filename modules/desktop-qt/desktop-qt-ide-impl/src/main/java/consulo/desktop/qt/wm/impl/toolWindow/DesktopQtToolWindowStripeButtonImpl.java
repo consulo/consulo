@@ -107,6 +107,15 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         }
     }
 
+    /**
+     * Qt tears the stripe button down with the frame, and the tool window manager still applies window info
+     * to it while the project closes - the java reference outlives the native widget and every call on it
+     * throws {@link io.qt.QNoNativeResourcesException}.
+     */
+    private boolean isAlive() {
+        return myComponent != null && !myComponent.isDisposed();
+    }
+
     @Override
     public WindowInfo getWindowInfo() {
         return myDecorator.getWindowInfo();
@@ -136,7 +145,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
         myText = window.getDisplayName().get();
         setIcon(window.getIcon());
 
-        if (myComponent != null) {
+        if (isAlive()) {
             myComponent.updateGeometry();
             myComponent.update();
         }
@@ -162,7 +171,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
     public void refreshIcons() {
         updateIconPixmap();
 
-        if (myComponent != null) {
+        if (isAlive()) {
             myComponent.update();
         }
     }
@@ -174,7 +183,7 @@ public class DesktopQtToolWindowStripeButtonImpl extends QtComponentDelegate<QWi
     public void setSelected(boolean selected) {
         mySelected = selected;
 
-        if (myComponent != null) {
+        if (isAlive()) {
             myComponent.update();
         }
     }

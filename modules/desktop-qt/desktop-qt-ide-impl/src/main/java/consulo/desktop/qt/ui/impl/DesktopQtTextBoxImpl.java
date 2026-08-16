@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,6 +38,10 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
 
     private boolean myFireListeners = true;
 
+    private LocalizeValue myPlaceholder = LocalizeValue.empty();
+
+    private int myVisibleLength = -1;
+
     public DesktopQtTextBoxImpl(String text) {
         myText = StringUtil.notNullize(text);
     }
@@ -53,6 +58,9 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
         component.setText(myText);
         component.setReadOnly(!myEditable);
 
+        applyPlaceholder();
+        applyVisibleLength();
+
         component.textChanged.connect(text -> {
             myText = StringUtil.notNullize(text);
 
@@ -63,9 +71,58 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
     }
 
     @Override
+    public void setPlaceholder(LocalizeValue text) {
+        myPlaceholder = text == null ? LocalizeValue.empty() : text;
+
+        applyPlaceholder();
+    }
+
+    private void applyPlaceholder() {
+        if (myComponent != null) {
+            myComponent.setPlaceholderText(myPlaceholder.get());
+        }
+    }
+
+    @Override
+    public void setVisibleLength(int columns) {
+        myVisibleLength = columns;
+
+        applyVisibleLength();
+    }
+
+    /**
+     * The api asks for a width in characters, which qt has no notion of - the average advance of the font is what
+     * the awt text field measures a column by, and the frame the style draws around the text is added on top.
+     */
+    private void applyVisibleLength() {
+        if (myComponent == null || myVisibleLength <= 0) {
+            return;
+        }
+
+        int columnWidth = myComponent.fontMetrics().horizontalAdvance("m");
+
+        myComponent.setMinimumWidth(columnWidth * myVisibleLength + myComponent.textMargins().left()
+            + myComponent.textMargins().right() + 8);
+    }
+
+    @Override
     public void selectAll() {
         if (myComponent != null) {
             myComponent.selectAll();
+        }
+    }
+
+    @Override
+    public void select(int from, int to) {
+        if (myComponent != null) {
+            myComponent.setSelection(from, to - from);
+        }
+    }
+
+    @Override
+    public void moveCaretTo(int index) {
+        if (myComponent != null) {
+            myComponent.setCursorPosition(index);
         }
     }
 

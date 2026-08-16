@@ -52,6 +52,10 @@ public abstract class DesktopQtBoxLayoutComponent<C extends LayoutConstraint> ex
 
     @Override
     protected void attach(QtComponentDelegate<?> child, @Nullable Object layoutData) {
+        if (!isAlive(myComponent)) {
+            return;
+        }
+
         QBoxLayout layout = (QBoxLayout) myComponent.layout();
 
         layout.insertWidget(Math.max(0, layout.count() - 1), child.toQtComponent(), 0, itemAlignment());

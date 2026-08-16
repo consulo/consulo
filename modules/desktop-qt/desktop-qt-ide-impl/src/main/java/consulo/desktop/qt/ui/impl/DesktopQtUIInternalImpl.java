@@ -17,6 +17,7 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
+import consulo.desktop.qt.ui.impl.htmlView.DesktopQtHtmlViewImpl;
 import consulo.desktop.qt.ui.impl.image.*;
 import consulo.desktop.qt.ui.impl.layout.*;
 import consulo.disposer.Disposable;
@@ -146,7 +147,12 @@ public class DesktopQtUIInternalImpl extends UIInternal {
 
     @Override
     public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions options) {
-        return null;
+        return new DesktopQtHtmlLabelImpl(html);
+    }
+
+    @Override
+    public HtmlView _Components_htmlView() {
+        return new DesktopQtHtmlViewImpl();
     }
 
     @Override
@@ -206,7 +212,7 @@ public class DesktopQtUIInternalImpl extends UIInternal {
 
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
-        return null;
+        return new DesktopQtColorBoxImpl(colorValue);
     }
 
     @Override
@@ -375,17 +381,17 @@ public class DesktopQtUIInternalImpl extends UIInternal {
         Function<String, List<String>> parser,
         Function<List<String>, String> joiner
     ) {
-        return null;
+        return new DesktopQtTextBoxWithExpandActionImpl(editButtonImage, dialogTitle, parser, joiner);
     }
 
     @Override
     public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
-        return null;
+        return new DesktopQtTextBoxWithExtensionsImpl(text);
     }
 
     @Override
     public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
-        return null;
+        return new DesktopQtFoldoutLayoutImpl(titleValue, component, show);
     }
 
     @Override
