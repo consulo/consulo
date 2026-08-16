@@ -83,6 +83,8 @@ module consulo.web.ide {
     requires vaadin.text.field.flow;
     requires vaadin.virtual.list.flow;
     requires html.table;
+    requires colorpicker;
+    requires vaadin.custom.field.flow;
 
     requires jakarta.inject;
     requires jakarta.servlet;

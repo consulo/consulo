@@ -78,6 +78,16 @@
             <artifactId>flow-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.vaadin.addons.tatu</groupId>
+            <artifactId>colorpicker</artifactId>
+        </dependency>
+        <!-- the colorpicker addon carries every dependency of a standalone app, so it is taken bare - this is
+             the one component of the toolkit it actually reaches for -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-custom-field-flow</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-ide-impl</artifactId>
             <version>${project.version}</version>

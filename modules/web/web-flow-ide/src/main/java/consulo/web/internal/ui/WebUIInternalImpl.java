@@ -231,7 +231,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
-        throw notSupported();
+        return new WebColorBoxImpl(colorValue);
     }
 
     @Override

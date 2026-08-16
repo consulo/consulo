@@ -62,6 +62,8 @@
         <include>com.vaadin:vaadin-combo-box-flow</include>
         <include>com.vaadin:vaadin-select-flow</include>
         <include>org.vaadin.stefan:html-table</include>
+        <include>org.vaadin.addons.tatu:colorpicker</include>
+        <include>com.vaadin:vaadin-custom-field-flow</include>
         <include>com.vaadin:vaadin-progress-bar-flow</include>
         <include>org.parttio:canvas-java</include>
         <include>com.vaadin:vaadin-menu-bar-flow</include>

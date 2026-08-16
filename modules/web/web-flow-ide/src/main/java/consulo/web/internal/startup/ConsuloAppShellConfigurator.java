@@ -59,6 +59,7 @@ import consulo.web.internal.ui.WebFontRegistry;
 import consulo.web.internal.ui.WebStyleCssRegistry;
 import consulo.web.internal.ui.vaadin.carousel.Carousel;
 import consulo.web.internal.ui.vaadin.carousel.Slide;
+import org.vaadin.addons.tatu.ColorPicker;
 import org.vaadin.stefan.table.Table;
 
 /**
@@ -85,6 +86,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(Dialog.class)
 @Uses(Carousel.class)
 @Uses(Slide.class)
+@Uses(ColorPicker.class)
 @Uses(ConsuloPtyTerm.class)
 @Uses(Popover.class)
 @Uses(HorizontalLayout.class)

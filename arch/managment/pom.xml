@@ -710,6 +710,11 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-custom-field-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-progress-bar-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
@@ -803,6 +808,17 @@
                     <exclusion>
                         <groupId>com.vaadin</groupId>
                         <artifactId>flow-server</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.vaadin.addons.tatu</groupId>
+                <artifactId>colorpicker</artifactId>
+                <version>2.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
