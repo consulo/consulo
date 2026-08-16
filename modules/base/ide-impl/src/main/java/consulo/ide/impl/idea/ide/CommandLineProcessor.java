@@ -119,7 +119,7 @@ public class CommandLineProcessor {
     File target = new File(path);
 
     while (target != null) {
-      ProjectOpenProcessor processor = ProjectOpenProcessors.getInstance().findProcessor(target);
+      ProjectOpenProcessor processor = ProjectOpenProcessors.getInstance().findProcessor(target.toPath());
       if (processor != null) {
         return target;
       }

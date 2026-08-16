@@ -42,6 +42,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -56,12 +57,12 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
     private static final Key<ModifiableRootModel> ROOT_MODEL = Key.create("FolderProjectOpenProcessor.rootModel");
 
     @Override
-    public @Nullable Image getIcon(VirtualFile file) {
+    public @Nullable Image getIcon(Path file) {
         return PlatformIconGroup.nodesFolder();
     }
 
     @Override
-    public boolean canOpenProject(File file) {
+    public boolean canOpenProject(Path file) {
         return true;
     }
 

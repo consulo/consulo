@@ -327,6 +327,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public Separator _Separator_create(SeparatorStyle style) {
+        return new WebSeparatorImpl(style);
+    }
+
+    @Override
     public ValueGroup<Boolean> _ValueGroups_boolGroup() {
         return new ValueGroup<>() {
             @Override

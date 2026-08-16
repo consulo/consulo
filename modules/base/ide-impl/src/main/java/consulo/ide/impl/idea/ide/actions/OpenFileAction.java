@@ -43,10 +43,15 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
@@ -70,6 +75,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
             @RequiredUIAccess
             public boolean isFileSelectable(VirtualFile file) {
                 return super.isFileSelectable(file) || (!file.isDirectory() && showFiles && !FileElement.isArchive(file));
+            }
+
+            @Override
+            public boolean isPathSelectable(Path path) {
+                return super.isPathSelectable(path) || showFiles && !Files.isDirectory(path) && !isArchive(path);
             }
 
             @Override
@@ -148,6 +158,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
                 openFile(file, project);
             }
         }
+    }
+
+    private static boolean isArchive(Path path) {
+        Path fileName = path.getFileName();
+        return fileName != null && FileTypeRegistry.getInstance().getFileTypeByFileName(fileName.toString()) instanceof ArchiveFileType;
     }
 
     @RequiredUIAccess

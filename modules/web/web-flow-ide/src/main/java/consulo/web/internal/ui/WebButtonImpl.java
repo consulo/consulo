@@ -86,7 +86,19 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
             case INPLACE:
                 applyInplaceStyle(toVaadinComponent());
                 break;
+            case TOOLBAR:
+                applyToolbarStyle(toVaadinComponent());
+                break;
         }
+    }
+
+    /**
+     * The geometry lives in {@code webButton.css} rather than in inline properties, because a toolbar button is
+     * square only while it carries no label - and whether it will is not known when the style is added.
+     */
+    static void applyToolbarStyle(com.vaadin.flow.component.button.Button button) {
+        button.addThemeVariants(ButtonVariant.TERTIARY);
+        button.addClassName("consulo-toolbar-button");
     }
 
     static void applyInplaceStyle(com.vaadin.flow.component.button.Button button) {

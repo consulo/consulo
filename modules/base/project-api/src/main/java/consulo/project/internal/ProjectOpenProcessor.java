@@ -22,15 +22,15 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author max
  */
 public abstract class ProjectOpenProcessor {
-    public abstract @Nullable Image getIcon(VirtualFile file);
+    public abstract @Nullable Image getIcon(Path file);
 
-    public abstract boolean canOpenProject(File file);
+    public abstract boolean canOpenProject(Path file);
 
     /**
      * Extend the coroutine chain with preparation steps for opening a project.

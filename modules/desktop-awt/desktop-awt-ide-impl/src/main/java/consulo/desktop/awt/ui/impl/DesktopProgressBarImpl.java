@@ -23,22 +23,70 @@ import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
 
 import javax.swing.*;
+import java.awt.Graphics;
+import java.awt.Insets;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
 class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implements ProgressBar {
+    /**
+     * A layout is free to make the component as tall as it likes, but the line drawn in it keeps the height of a
+     * line - {@link com.formdev.flatlaf.ui.FlatProgressBarUI} takes the track from the insets, so the leftover is
+     * handed to them while the painting runs, and the line ends up centered in the space the layout gave.
+     * Sizing is left alone, or the inflated insets would grow the preferred height they were computed from.
+     */
     private class BaseProgressBar extends JProgressBar implements FromSwingComponentWrapper {
-        
+        private int myLineHeight;
+        private boolean myPainting;
+
         @Override
         public Component toUIComponent() {
             return DesktopProgressBarImpl.this;
         }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Insets insets = super.getInsets();
+            myLineHeight = getPreferredSize().height - (insets.top + insets.bottom);
+
+            myPainting = true;
+            try {
+                super.paintComponent(g);
+            }
+            finally {
+                myPainting = false;
+            }
+        }
+
+        @Override
+        public Insets getInsets() {
+            return inflate(super.getInsets());
+        }
+
+        @Override
+        public Insets getInsets(Insets insets) {
+            return inflate(super.getInsets(insets));
+        }
+
+        private Insets inflate(Insets insets) {
+            if (!myPainting) {
+                return insets;
+            }
+
+            Insets inflated = new Insets(insets.top, insets.left, insets.bottom, insets.right);
+            int leftover = getHeight() - (inflated.top + inflated.bottom) - myLineHeight;
+            if (leftover > 0) {
+                inflated.top += leftover / 2;
+                inflated.bottom += leftover - leftover / 2;
+            }
+            return inflated;
+        }
     }
 
     private class SpinnerProgressBar extends SpinnerProgress implements FromSwingComponentWrapper {
-        
+
         @Override
         public Component toUIComponent() {
             return DesktopProgressBarImpl.this;
@@ -46,13 +94,20 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
     }
 
     private boolean mySpinner;
+    private boolean myTransparent;
 
     @Override
     protected JProgressBar createComponent() {
+        JProgressBar component;
         if (mySpinner) {
-            return new SpinnerProgressBar();
+            component = new SpinnerProgressBar();
+        } else {
+            component = new BaseProgressBar();
         }
-        return new BaseProgressBar();
+        if (myTransparent) {
+            component.setOpaque(false);
+        }
+        return component;
     }
 
     @Override
@@ -66,7 +121,10 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
                 mySpinner = true;
                 break;
             case TRANSPARENT_BACKGROUND:
-                toAWTComponent().setOpaque(false);
+                myTransparent = true;
+                if (isInitialized()) {
+                    toAWTComponent().setOpaque(false);
+                }
                 break;
         }
     }

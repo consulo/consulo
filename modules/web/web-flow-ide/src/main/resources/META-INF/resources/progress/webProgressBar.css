@@ -3,6 +3,21 @@
  * theme - the theme goes through the vite bundle, which skips rebuilding it on css only changes.
  */
 
+/* a layout which stretches its content, like the center of a dock, gives the bar the height of the whole cell,
+   and the track of the bar is drawn over the full height of it - the element takes the size it is given and the
+   line keeps the height of a line, centered in the space */
+vaadin-progress-bar
+{
+  display: flex;
+  align-items: center;
+}
+
+vaadin-progress-bar::part(bar)
+{
+  flex: 1 1 auto;
+  height: var(--vaadin-progress-bar-height, 0.5lh);
+}
+
 /* the status bar shows a running task as a spinner, and the aura bar is a full width track - the track becomes
    the ring and the value part the arc that turns in it */
 vaadin-progress-bar.consulo-progress-spinner

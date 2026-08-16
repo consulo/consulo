@@ -19,9 +19,9 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.image.Image;
-import consulo.virtualFileSystem.VirtualFile;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author max
@@ -34,12 +34,12 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     @Override
-    public boolean canOpenProject(File file) {
-        return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
+    public boolean canOpenProject(Path file) {
+        return Files.isDirectory(file) && Files.exists(file.resolve(Project.DIRECTORY_STORE_FOLDER).resolve("modules.xml"));
     }
 
     @Override
-    public Image getIcon(VirtualFile file) {
+    public Image getIcon(Path file) {
         return Application.get().getIcon();
     }
 }

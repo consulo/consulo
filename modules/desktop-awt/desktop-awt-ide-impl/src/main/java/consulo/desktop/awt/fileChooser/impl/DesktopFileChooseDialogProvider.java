@@ -21,49 +21,45 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
-import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.project.Project;
-
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 2018-06-28
  */
-@ExtensionImpl(id = FileOperateDialogProvider.APPLICATION_ID, order = "last")
+@ExtensionImpl(id = "application-old")
 public class DesktopFileChooseDialogProvider implements FileChooseDialogProvider {
-  
-  @Override
-  public String getId() {
-    return APPLICATION_ID;
-  }
 
-  
-  @Override
-  public String getName() {
-    return "application";
-  }
+    @Override
+    public String getId() {
+        return "appication-old";
+    }
 
-  
-  @Override
-  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    if (parent != null) {
-      return new FileChooserDialogImpl(descriptor, parent, (Project)project);
+    @Override
+    public String getName() {
+        return "application-old";
     }
-    else {
-      return new FileChooserDialogImpl(descriptor, (Project)project);
-    }
-  }
 
-  
-  @Override
-  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    if (parent != null) {
-      return new FileChooserDialogImpl(descriptor, parent, (Project)project);
+    @Override
+    public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+        if (parent != null) {
+            return new FileChooserDialogImpl(descriptor, parent, (Project) project);
+        }
+        else {
+            return new FileChooserDialogImpl(descriptor, (Project) project);
+        }
     }
-    else {
-      return new FileChooserDialogImpl(descriptor, (Project)project);
+
+    @Override
+    public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+        if (parent != null) {
+            return new FileChooserDialogImpl(descriptor, parent, (Project) project);
+        }
+        else {
+            return new FileChooserDialogImpl(descriptor, (Project) project);
+        }
     }
-  }
 }

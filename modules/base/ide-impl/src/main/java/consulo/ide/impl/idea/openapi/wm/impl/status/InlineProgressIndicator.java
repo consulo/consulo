@@ -75,6 +75,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         ActionToolbar.Style style = myCompact ? ActionToolbar.Style.INPLACE : ActionToolbar.Style.HORIZONTAL;
 
         myToolbar = ActionToolbarFactory.getInstance().createActionToolbar("InlineProgressBar", group, style);
+        myToolbar.setTargetUIComponent(null);
         myToolbar.updateActionsAsync();
 
         Component toolbar = myToolbar.getUIComponent();
@@ -116,7 +117,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
             DockLayout root = DockLayout.create();
             root.top(myProcessName);
             root.center(content);
-            root.addBorders(BorderStyle.LINE, ComponentColors.BORDER, 1);
+            root.addBorders(BorderStyle.LINE_ROUNDED, ComponentColors.BORDER, 1);
 
             myComponent = root;
         }
