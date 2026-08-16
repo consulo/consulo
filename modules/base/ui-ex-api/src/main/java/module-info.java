@@ -55,7 +55,7 @@ module consulo.ui.ex.api {
         consulo.language.inject.advanced.impl,
         consulo.language.editor.refactoring.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.ui.ex.awt.api,
         consulo.execution.api,
         consulo.execution.impl,
@@ -77,12 +77,12 @@ module consulo.ui.ex.api {
         consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.web.ide;
 
     exports consulo.ui.ex.awtUnsafe.internal to
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.web.ide;
 
     uses TargetAWTFacade;

@@ -143,7 +143,9 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
         PopupOptions built = options.build();
 
-        Popup popup = nested ? LightPopup.create(built) : HeavyPopup.create(built);
+        // a step which has something to hang off is a light popup, whether that is the step which owns it or
+        // whatever raised the popup - only a popup with no target at all is placed
+        Popup popup = nested || myAnchor != null ? LightPopup.create(built) : HeavyPopup.create(built);
 
         popup.setTitle(step.getTitle());
         popup.setContent(buildList(step));

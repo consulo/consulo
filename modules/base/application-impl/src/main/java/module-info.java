@@ -34,7 +34,7 @@ module consulo.application.impl {
         consulo.logging.logback.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.proxy,
         consulo.test.impl,
         consulo.module.impl,
@@ -59,7 +59,7 @@ module consulo.application.impl {
         consulo.project.impl,
         consulo.desktop.ide.impl,
         consulo.virtual.file.system.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.it;
 
     exports consulo.application.impl.internal.performance to
@@ -72,14 +72,14 @@ module consulo.application.impl {
         consulo.desktop.awt.os.mac,
         consulo.web.ide;
 
-    exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
+    exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl;
 
     exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl,
         consulo.ide.impl,
         consulo.language.index.impl,
         consulo.logging.logback.impl,
         consulo.desktop.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.builtin.web.server.impl,
         consulo.web.ide;
 

@@ -35,7 +35,7 @@ module consulo.file.editor.api {
         consulo.proxy,
         consulo.file.editor.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.language.editor.impl,
         consulo.configuration.editor.api,
         consulo.version.control.system.impl,

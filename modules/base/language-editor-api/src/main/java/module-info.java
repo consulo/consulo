@@ -81,7 +81,7 @@ module consulo.language.editor.api {
         consulo.language.editor.ui.api,
         consulo.version.control.system.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.execution.debug.impl,
         consulo.build.ui.api,
         consulo.it,
@@ -94,6 +94,7 @@ module consulo.language.editor.api {
     exports consulo.language.editor.internal.intention to
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
+        consulo.desktop.qt.ide.impl,
         consulo.execution.impl,
         consulo.language.editor.impl,
         consulo.web.ide;

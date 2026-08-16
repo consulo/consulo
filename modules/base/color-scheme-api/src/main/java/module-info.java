@@ -19,7 +19,7 @@ module consulo.color.scheme.api {
         consulo.execution.debug.impl,
         consulo.language.editor.impl,
         consulo.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.web.ide;
 }

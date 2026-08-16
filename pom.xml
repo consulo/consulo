@@ -22,6 +22,7 @@
 
     <module>sandbox/desktop-awt</module>
     <module>sandbox/desktop-swt</module>
+    <module>sandbox/desktop-qt</module>
     <module>sandbox/web</module>
     <module>sandbox/sand-language-plugin</module>
 
@@ -36,6 +37,9 @@
 
     <module>modules/desktop-swt/desktop-swt-bootstrap</module>
     <module>modules/desktop-swt/desktop-swt-ide-impl</module>
+
+    <module>modules/desktop-qt/desktop-qt-bootstrap</module>
+    <module>modules/desktop-qt/desktop-qt-ide-impl</module>
 
     <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-flow-ide</module>

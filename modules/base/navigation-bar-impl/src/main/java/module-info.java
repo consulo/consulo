@@ -9,5 +9,5 @@ module consulo.navigation.bar.impl {
     requires consulo.language.editor.api;
     requires consulo.language.ui.api;
 
-    exports consulo.navigationBar.impl.internal to consulo.desktop.awt.ide.impl, consulo.web.ide;
+    exports consulo.navigationBar.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.qt.ide.impl, consulo.web.ide;
 }

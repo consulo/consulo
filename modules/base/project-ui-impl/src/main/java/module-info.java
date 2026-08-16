@@ -17,7 +17,7 @@ module consulo.project.ui.impl {
 
     exports consulo.project.ui.impl.internal.wm to
         consulo.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.it,
         consulo.web.ide;

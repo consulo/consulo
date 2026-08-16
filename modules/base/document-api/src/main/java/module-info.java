@@ -26,7 +26,7 @@ module consulo.document.api {
         consulo.language.code.style.ui.api,
         consulo.language.code.style.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.language.impl,
         consulo.execution.debug.impl,
         consulo.version.control.system.impl,

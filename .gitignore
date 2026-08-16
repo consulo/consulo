@@ -1,6 +1,7 @@
 .consulo/libraries
 .consulo/workspace.xml
 .consulo/sandbox
+.consulo/sandbox-qt
 .consulo/misc.xml
 .consulo/compiler.xml
 .consulo/encodings.xml
@@ -18,6 +19,7 @@ target/
 
 .sandbox/
 .claude/
+build-query.txt
 
 .idea/
 *.iml

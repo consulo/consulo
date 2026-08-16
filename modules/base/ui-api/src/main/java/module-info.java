@@ -38,7 +38,7 @@ module consulo.ui.api {
     exports consulo.ui.internal to
         consulo.ui.ex.api,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.color.scheme.ui.api,
         consulo.ide.impl,
         consulo.test.impl,

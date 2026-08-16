@@ -48,7 +48,7 @@ module consulo.application.api {
         consulo.ide.impl,
         consulo.external.service.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.web.ide;
 
     exports consulo.application.internal to
@@ -56,7 +56,7 @@ module consulo.application.api {
         consulo.ide.impl,
         consulo.desktop.ide.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.external.system.impl,
         consulo.document.impl,
         consulo.language.impl,
@@ -93,7 +93,7 @@ module consulo.application.api {
         consulo.external.service.impl,
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
-        consulo.desktop.swt.ide.impl;
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl;
 
     exports consulo.application.internal.util to
         consulo.language.api,

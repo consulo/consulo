@@ -1,5 +1,6 @@
 package consulo.ide.impl.wm.impl.status;
 
+import consulo.application.Application;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.internal.ProgressSuspender;
 import consulo.application.localize.ApplicationLocalize;
@@ -265,6 +266,16 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
         return myLayout;
     }
 
+    /**
+     * A progress indicator reports from whatever thread the task runs on, so the access can not be taken from
+     * the current one. The panel asks its own component first - the browser frontend has one ui per session,
+     * and only the component knows which of them this panel belongs to.
+     */
+    private UIAccess uiAccess() {
+        UIAccess uiAccess = myLayout.getUIAccess();
+        return uiAccess != null ? uiAccess : Application.get().getLastUIAccess();
+    }
+
     @Override
     public void dispose() {
         myDisposed = true;
@@ -356,11 +367,21 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
         public void finish(TaskInfo task) {
             super.finish(task);
 
-            UIAccess.current().give(() -> {
+            queueRunningUpdate(() -> {
                 if (!myDisposed) {
                     removeProgress(this);
                 }
             });
+        }
+
+        @Override
+        protected void queueProgressUpdate() {
+            uiAccess().giveIfNeed(this::updateAndRepaint);
+        }
+
+        @Override
+        protected void queueRunningUpdate(@RequiredUIAccess Runnable update) {
+            uiAccess().give(update);
         }
 
         @Override

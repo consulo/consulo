@@ -26,7 +26,7 @@ module consulo.project.ui.api {
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.swt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
         consulo.external.system.impl,
         consulo.desktop.ide.impl,
         consulo.ui.ex.awt.api,

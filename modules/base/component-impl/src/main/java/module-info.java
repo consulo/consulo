@@ -21,7 +21,7 @@ module consulo.component.impl {
     consulo.module.impl,
     consulo.project.impl,
     consulo.desktop.awt.ide.impl,
-    consulo.desktop.swt.ide.impl,
+    consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
     consulo.it;
 
   exports consulo.component.impl.internal.messagebus to consulo.ide.impl, consulo.test.impl;

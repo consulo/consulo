@@ -19,6 +19,9 @@ import consulo.component.ComponentManager;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
 import consulo.ui.HeavyPopup;
+import consulo.ui.LightPopup;
+import consulo.ui.Point2D;
+import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
@@ -38,7 +41,7 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     private final @Nullable Supplier<Boolean> myCancelCallback;
 
     private @Nullable String myTitle;
-    private @Nullable HeavyPopup myPopup;
+    private @Nullable Popup myPopup;
 
     public UnifiedComponentPopupImpl(
         Component content,
@@ -57,28 +60,29 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     @Override
     @RequiredUIAccess
     public void showCenteredInCurrentWindow(ComponentManager project) {
-        show();
+        show(null, null, 0);
     }
 
     @Override
     @RequiredUIAccess
     public void showBy(Component component, @Nullable InputDetails inputDetails) {
-        show();
+        show(component, null, 0);
     }
 
     @Override
     @RequiredUIAccess
     public void showAtPoint(Component target, int x, int y, int anchorHeight) {
-        show();
+        show(target, new Point2D(x, y), anchorHeight);
     }
 
     @RequiredUIAccess
-    private void show() {
+    private void show(@Nullable Component anchor, @Nullable Point2D anchorPoint, int anchorHeight) {
         if (isDisposed() || myPopup != null) {
             return;
         }
 
-        HeavyPopup popup = HeavyPopup.create(myOptions);
+        // a popup which was given something to hang off is a light popup - only one with no target at all is placed
+        Popup popup = anchor != null ? LightPopup.create(myOptions) : HeavyPopup.create(myOptions);
         popup.setTitle(myTitle);
         popup.setContent(myContent);
         popup.addCloseListener(event -> cancel(null));
@@ -87,7 +91,15 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
 
         fireBeforeShown();
 
-        popup.showInCenterOf(null);
+        if (anchor != null && anchorPoint != null) {
+            popup.showAt(anchor, anchorPoint.x(), anchorPoint.y(), anchorHeight);
+        }
+        else if (anchor != null && popup instanceof LightPopup light) {
+            light.showBy(anchor);
+        }
+        else if (popup instanceof HeavyPopup heavy) {
+            heavy.showInCenterOf(null);
+        }
 
         if (myPreferableFocusComponent instanceof HasFocus hasFocus) {
             hasFocus.focus();
@@ -101,7 +113,7 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
             return;
         }
 
-        HeavyPopup popup = myPopup;
+        Popup popup = myPopup;
         myPopup = null;
 
         if (popup != null && popup.isVisible()) {
@@ -119,7 +131,7 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
 
     @Override
     public boolean isVisible() {
-        HeavyPopup popup = myPopup;
+        Popup popup = myPopup;
         return popup != null && popup.isVisible();
     }
 
@@ -127,7 +139,7 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     public void setCaption(String title) {
         myTitle = title;
 
-        HeavyPopup popup = myPopup;
+        Popup popup = myPopup;
         if (popup != null) {
             popup.setTitle(title);
         }

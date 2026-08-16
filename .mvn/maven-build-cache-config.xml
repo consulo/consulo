@@ -26,7 +26,9 @@
     </configuration>
     <input>
         <global>
-            <glob>{*.java,*.groovy,*.yaml,*.svcd,*.proto,*.trift,*assembly.xml,assembly*.xml,*logback.xml,*.vm,*.ini,*.jks,*.properties,*.sh,*.bat,*.svg,*.png,*.yaml,*.yml,*.xml,*.html,*.css,*.ts,*.js,*.json}</glob>
+            <!-- the trailing extension-less patterns catch META-INF/services entries, which are named after
+                 the service interface and so would otherwise never invalidate the cache -->
+            <glob>{*.java,*.groovy,*.yaml,*.svcd,*.proto,*.trift,*assembly.xml,assembly*.xml,*logback.xml,*.vm,*.ini,*.jks,*.properties,*.sh,*.bat,*.svg,*.png,*.yaml,*.yml,*.xml,*.html,*.css,*.ts,*.js,*.json,com.*,consulo.*,org.*}</glob>
             <includes>
                 <include>src/</include>
                 <!-- vaadin themes and client assets live outside src/, without this they never invalidate the cache -->
