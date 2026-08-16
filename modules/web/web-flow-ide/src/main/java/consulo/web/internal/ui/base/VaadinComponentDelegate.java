@@ -403,8 +403,13 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         ClassList classList = myVaadinComponent.getElement().getClassList();
 
         switch (info.getBorderStyle()) {
+            case LINE_ROUNDED:
             case LINE: {
                 classList.add(AuraUtility.BorderColor.CONTRAST_10); // TODO support color
+
+                if (info.getBorderStyle() == BorderStyle.LINE_ROUNDED) {
+                    myVaadinComponent.getStyle().set("border-radius", BorderStyle.DEFAULT_ARC + "px");
+                }
 
                 switch (info.getBorderPosition()) {
                     case TOP:

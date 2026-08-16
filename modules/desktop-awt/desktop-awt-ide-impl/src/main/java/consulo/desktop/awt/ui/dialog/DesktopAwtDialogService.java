@@ -225,6 +225,8 @@ public class DesktopAwtDialogService implements DialogService {
 
             toolbar.setTargetComponent(panel);
 
+            myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
+
             toolbar.updateActionsAsync();
 
             panel.add(toolbar.getComponent(), BorderLayout.EAST);

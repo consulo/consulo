@@ -27,6 +27,8 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.PopupMenu;
+import consulo.ui.Separator;
+import consulo.ui.SeparatorStyle;
 import consulo.ui.ToggleButton;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,6 +61,11 @@ import java.util.function.Supplier;
  */
 public class UnifiedActionRow {
     private static final Logger LOG = Logger.getInstance(UnifiedActionRow.class);
+
+    private static final int GAP = 2;
+    // a labeled button is as wide as its text, and two of them standing 2px apart read as one control - the gap
+    // which suits a band of 24x24 icons is not enough for the ok/cancel row of a dialog
+    private static final int BUTTON_GAP = 8;
 
     private final Supplier<ActionGroup> myGroupSupplier;
     private final Supplier<DataContext> myContextSupplier;
@@ -102,7 +109,9 @@ public class UnifiedActionRow {
         myPopupPlace = popupPlace;
         myPresentationFactory = presentationFactory;
         myStyle = style;
-        myLayout = style.isHorizontal() ? HorizontalLayout.create(0) : VerticalLayout.create(0);
+
+        int gap = style == ActionToolbar.Style.BUTTON ? BUTTON_GAP : GAP;
+        myLayout = style.isHorizontal() ? HorizontalLayout.create(gap) : VerticalLayout.create(gap);
 
         myLayout.addAttachListener(event -> startTicking());
         myLayout.addDetachListener(event -> stopTicking());
@@ -221,6 +230,7 @@ public class UnifiedActionRow {
 
         for (UnifiedActionMenuExpander.MenuNode node : nodes) {
             if (node.isSeparator()) {
+                add(Separator.create(myLayout instanceof HorizontalLayout ? SeparatorStyle.VERTICAL : SeparatorStyle.HORIZONTAL));
                 continue;
             }
 
@@ -338,7 +348,7 @@ public class UnifiedActionRow {
             button.addStyle(ButtonStyle.INPLACE);
         }
         else if (myStyle != ActionToolbar.Style.BUTTON) {
-            button.addStyle(ButtonStyle.BORDERLESS);
+            button.addStyle(ButtonStyle.TOOLBAR);
         }
 
         return button;

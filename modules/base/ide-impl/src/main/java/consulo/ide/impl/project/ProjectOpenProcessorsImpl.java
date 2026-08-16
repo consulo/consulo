@@ -25,7 +25,7 @@ import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
     }
 
     @Override
-    public @Nullable ProjectOpenProcessor findProcessor(File file) {
+    public @Nullable ProjectOpenProcessor findProcessor(Path file) {
         for (ProjectOpenProcessor processor : getProcessors()) {
             if (processor.canOpenProject(file)) {
                 return processor;

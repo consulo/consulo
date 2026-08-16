@@ -40,6 +40,7 @@ import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.LeafState;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
@@ -65,7 +66,9 @@ import java.util.Arrays;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
@@ -109,26 +112,94 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;
 
-        private final K myValue;
-        private final Object myParentElement;
+        private K myValue;
+        private final MyTreeNodeImpl<K> myParent;
         private final MyStructureWrapper<K> myStructure;
+
+        private @Nullable List<MyTreeNodeImpl<K>> myChildren;
+        private boolean myChildrenOutdated;
 
         private BiConsumer<K, TextItemPresentation> myRenderer = (e, t) -> t.append(e == null ? "null" : e.toString());
 
-        private MyTreeNodeImpl(K value, Object parentElement, MyStructureWrapper<K> structure) {
+        private MyTreeNodeImpl(K value, MyTreeNodeImpl<K> parent, MyStructureWrapper<K> structure) {
             myValue = value;
-            myParentElement = parentElement;
+            myParent = parent;
             myStructure = structure;
+        }
+
+        /**
+         * A node stands for a place in the tree, so the same one is handed out for the same place every time -
+         * a level built anew on each call would give a caller nodes the tree does not hold, and selecting or
+         * opening one of those finds nothing.
+         */
+        private synchronized List<MyTreeNodeImpl<K>> getChildren() {
+            List<MyTreeNodeImpl<K>> children = myChildren;
+            if (children == null) {
+                children = myStructure.buildChildren(this);
+            }
+            else if (myChildrenOutdated) {
+                children = reuse(children, myStructure.buildChildren(this));
+            }
+            else {
+                return children;
+            }
+
+            myChildren = children;
+            myChildrenOutdated = false;
+            return children;
+        }
+
+        /**
+         * A node the model built again for the same value keeps the place the old one had - what
+         * {@link StructureTreeModel} does with its own nodes - so what was open below it stays open. The value
+         * itself is the one just built, since a refresh is there to show what changed about it.
+         */
+        private List<MyTreeNodeImpl<K>> reuse(List<MyTreeNodeImpl<K>> oldChildren, List<MyTreeNodeImpl<K>> newChildren) {
+            Map<K, MyTreeNodeImpl<K>> byValue = new HashMap<>();
+            for (MyTreeNodeImpl<K> child : oldChildren) {
+                if (child.myValue != null) {
+                    byValue.put(child.myValue, child);
+                }
+            }
+
+            List<MyTreeNodeImpl<K>> children = new ArrayList<>(newChildren.size());
+            for (MyTreeNodeImpl<K> child : newChildren) {
+                MyTreeNodeImpl<K> old = child.myValue == null ? null : byValue.get(child.myValue);
+                if (old != null) {
+                    old.myValue = child.myValue;
+                    old.myLeaf = child.myLeaf;
+                    old.myRenderer = child.myRenderer;
+                    children.add(old);
+                }
+                else {
+                    children.add(child);
+                }
+            }
+            return children;
+        }
+
+        /**
+         * The level is marked rather than dropped, so a refresh of a branch nobody opened costs nothing and the
+         * nodes which are on screen live until the model asks for them again.
+         */
+        private synchronized void outdateChildren() {
+            List<MyTreeNodeImpl<K>> children = myChildren;
+            if (children == null) {
+                return;
+            }
+
+            myChildrenOutdated = true;
+            for (MyTreeNodeImpl<K> child : children) {
+                child.outdateChildren();
+            }
         }
 
         /**
          * The structure builds the level below on demand, so the children exist by the time they are walked.
          */
         @Override
-        @SuppressWarnings("unchecked")
         public CompletableFuture<TreeNode<K>> findChild(Predicate<K> predicate) {
-            for (Object element : myStructure.getChildElements(this)) {
-                MyTreeNodeImpl<K> child = (MyTreeNodeImpl<K>) element;
+            for (MyTreeNodeImpl<K> child : getChildren()) {
                 if (predicate.test(child.getValue())) {
                     return CompletableFuture.completedFuture(child);
                 }
@@ -137,10 +208,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public CompletableFuture<TreeNode<K>> findChildDeep(Predicate<K> predicate) {
-            for (Object element : myStructure.getChildElements(this)) {
-                MyTreeNodeImpl<K> child = (MyTreeNodeImpl<K>) element;
+            for (MyTreeNodeImpl<K> child : getChildren()) {
                 if (predicate.test(child.getValue())) {
                     return CompletableFuture.completedFuture(child);
                 }
@@ -151,6 +220,13 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                 }
             }
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public synchronized List<TreeNode<K>> getLoadedChildren() {
+            List<MyTreeNodeImpl<K>> children = myChildren;
+            return children == null ? List.of() : List.copyOf((List) children);
         }
 
         @Override
@@ -226,14 +302,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         @Override
-        public boolean isWasDeclaredAlwaysLeaf() {
-            if (myElement instanceof MyTreeNodeImpl k) {
-                return k.isLeaf();
-            }
-            return false;
-        }
-
-        @Override
         public Object getElement() {
             return myElement;
         }
@@ -258,24 +326,50 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             return myRootNode;
         }
 
-        
+
         @Override
         @SuppressWarnings("unchecked")
         public Object[] getChildElements(Object element) {
-            K targetParent = element instanceof MyTreeNodeImpl node ? (K) node.getValue() : null;
+            if (!(element instanceof MyTreeNodeImpl node)) {
+                return new Object[0];
+            }
+            return ((MyTreeNodeImpl<K>) node).getChildren().toArray();
+        }
 
+        /**
+         * {@link StructureTreeModel.Node} takes {@link LeafState#DEFAULT} for "build the level and see whether
+         * it came out empty", and {@link AsyncTreeModel} asks this of every sibling of a node it opens - so a
+         * structure which cannot answer without building lists the whole tree to walk one path down it. The
+         * node carries what the model said of it when it was built, and only a model which asks for the level
+         * to be built first is given the answer that costs one.
+         */
+        @Override
+        @SuppressWarnings("unchecked")
+        public LeafState getLeafState(Object element) {
+            if (!(element instanceof MyTreeNodeImpl)) {
+                return super.getLeafState(element);
+            }
+
+            MyTreeNodeImpl<K> node = (MyTreeNodeImpl<K>) element;
+            if (myModel.isNeedBuildChildrenBeforeOpen(node)) {
+                return LeafState.DEFAULT;
+            }
+            return node.isLeaf() ? LeafState.ALWAYS : LeafState.NEVER;
+        }
+
+        private List<MyTreeNodeImpl<K>> buildChildren(MyTreeNodeImpl<K> parent) {
             List<MyTreeNodeImpl<K>> nodes = new ArrayList<>();
             myModel.buildChildren(k -> {
-                MyTreeNodeImpl<K> node = new MyTreeNodeImpl<>(k, element, this);
+                MyTreeNodeImpl<K> node = new MyTreeNodeImpl<>(k, parent, this);
                 nodes.add(node);
                 return node;
-            }, targetParent);
+            }, parent.getValue());
 
             Comparator<TreeNode<K>> comparator = myModel.getNodeComparator();
             if (comparator != null) {
                 nodes.sort(comparator);
             }
-            return nodes.toArray(MyTreeNodeImpl[]::new);
+            return nodes;
         }
 
         /**
@@ -284,7 +378,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
          */
         @Override
         public @Nullable Object getParentElement(Object element) {
-            return element instanceof MyTreeNodeImpl node ? node.myParentElement : null;
+            return element instanceof MyTreeNodeImpl node ? node.myParent : null;
         }
 
         
@@ -333,6 +427,9 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     protected MyTree createComponent() {
         MyTree tree = new MyTree(myStructureTreeModel, myDisposable);
         tree.setRootVisible(false);
+        // the root is hidden, so without this the rows which stand for its children - the top level of the
+        // tree - are drawn with no expand control at all, see BasicTreeUI#shouldPaintExpandControl
+        tree.setShowsRootHandles(true);
         tree.setCellRenderer(wrapWithItemHeight(new NodeRenderer()));
         if (myItemHeightGetter != null) {
             tree.setRowHeight(0);
@@ -514,8 +611,16 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         return CompletableFuture.completedFuture(null);
     }
 
+    /**
+     * The nodes are held between calls, so the model is asked for the level again only once the cached one is
+     * marked - otherwise a refresh would show what the tree already had.
+     */
     @Override
     public void refreshItem(TreeNode<E> node, boolean refreshChildren) {
+        if (refreshChildren && node instanceof MyTreeNodeImpl<E> impl) {
+            impl.outdateChildren();
+        }
+
         myStructureTreeModel.invalidate(node, refreshChildren);
     }
 
@@ -525,6 +630,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
         List<TreeNode<E>> expanded = expandedNodes(tree);
         TreeNode<E> selected = getSelectedNode();
+
+        myStructure.getRootNode().outdateChildren();
 
         return toFuture(myStructureTreeModel.invalidate())
             .thenCompose(ignored -> restoreExpanded(tree, expanded))

@@ -91,6 +91,7 @@
     <module>modules/base/module-content-api</module>
     <module>modules/base/module-content-impl</module>
     <module>modules/base/file-chooser-api</module>
+    <module>modules/base/file-chooser-impl</module>
     <module>modules/base/language-api</module>
     <module>modules/base/language-ui-api</module>
     <module>modules/base/language-ignore-api</module>

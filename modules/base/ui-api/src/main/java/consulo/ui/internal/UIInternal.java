@@ -125,6 +125,10 @@ public abstract class UIInternal {
         throw new UnsupportedOperationException();
     }
 
+    public Separator _Separator_create(SeparatorStyle style) {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract ImageBox _Components_imageBox(Image image);
 
     public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);

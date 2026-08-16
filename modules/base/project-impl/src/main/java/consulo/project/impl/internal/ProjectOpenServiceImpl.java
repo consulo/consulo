@@ -46,7 +46,6 @@ import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -126,7 +125,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                 VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
                 ProjectOpenProcessor processor = virtualFile == null
                     ? null
-                    : myProjectOpenProcessors.findProcessor(VirtualFileUtil.virtualToIoFile(virtualFile));
+                    : myProjectOpenProcessors.findProcessor(filePath);
 
                 Coroutine<?, OpenContext> baseChain = Coroutine
                     .first(CodeExecution.<Void, OpenContext>apply((input, continuation) -> {

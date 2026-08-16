@@ -396,6 +396,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public Separator _Separator_create(SeparatorStyle style) {
+        return new DesktopSeparatorImpl(style);
+    }
+
+    @Override
     public HorizontalLayout _Layouts_horizontal(int gapInPixels) {
         return new DesktopHorizontalLayoutImpl(gapInPixels);
     }

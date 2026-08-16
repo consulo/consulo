@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
@@ -40,6 +41,9 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-07
  */
 public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButtonImpl.Vaadin> implements ToggleButton {
+    // the styles a toggle takes come from the same sheet the plain button uses, and a toolbar of toggles only
+    // would never bring the sheet in
+    @StyleSheet("/button/webButton.css")
     public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
         public Vaadin() {
             getStyle().set("white-space", "nowrap");
@@ -128,6 +132,9 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
                 break;
             case INPLACE:
                 WebButtonImpl.applyInplaceStyle(toVaadinComponent());
+                break;
+            case TOOLBAR:
+                WebButtonImpl.applyToolbarStyle(toVaadinComponent());
                 break;
         }
     }

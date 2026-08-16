@@ -120,6 +120,8 @@ public class UnifiedDialogServiceImpl implements DialogService {
             // snapshot, so it needs no wrapping
             toolbar.setDataContextSupplier(() -> DataContext.builder().add(Dialog.KEY, this).build());
 
+            myDescriptor.setOkButtonStateUpdater(toolbar::updateActionsAsync);
+
             toolbar.updateActionsAsync();
 
             DockLayout buttons = DockLayout.create();

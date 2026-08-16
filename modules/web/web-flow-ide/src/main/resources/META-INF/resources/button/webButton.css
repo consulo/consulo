@@ -1,3 +1,30 @@
+/* the aura theme writes the horizontal padding of a tertiary button as a longhand rather than through
+   --vaadin-button-padding, so the box of a toolbar button is spelled out here and the selectors carry the theme
+   attribute the theme rules are keyed on to outweigh them */
+vaadin-button.consulo-toolbar-button[theme~='tertiary'] {
+    height: 24px;
+    min-width: 24px;
+    margin: 0;
+    padding: 0 4px;
+    border-width: 0;
+    border-radius: 7px;
+}
+
+/* vaadin marks a button which carries an icon and no label as an icon button - that is the one the awt toolbar
+   draws as a square with the icon in the middle, while a labeled one keeps the width of its text */
+vaadin-button.consulo-toolbar-button[theme~='icon'] {
+    aspect-ratio: 1 / 1;
+    padding: 0;
+}
+
+/* the icon is an inline box, so the label keeps room under it for the descender of a line of text it does not
+   carry, and the icon ends up sitting above the middle of the button */
+vaadin-button.consulo-toolbar-button::part(label) {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
 .consulo-inplace-button::part(label) {
     display: flex;
     align-items: center;

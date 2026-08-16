@@ -46,6 +46,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -63,8 +64,11 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Override
-  public @Nullable Image getIcon(VirtualFile file) {
-    File ioFile = VirtualFileUtil.virtualToIoFile(file);
+  public @Nullable Image getIcon(Path file) {
+    File ioFile = toIoFile(file);
+    if (ioFile == null) {
+      return null;
+    }
     for (ModuleImportProvider provider : myProviders) {
       if (provider.canImport(ioFile)) {
         return provider.getIcon();
@@ -74,14 +78,27 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Override
-  public boolean canOpenProject(File file) {
+  public boolean canOpenProject(Path file) {
+    File ioFile = toIoFile(file);
+    if (ioFile == null) {
+      return false;
+    }
     for (ModuleImportProvider provider : myProviders) {
-      if (provider.canImport(file)) {
+      if (provider.canImport(ioFile)) {
         return true;
       }
     }
 
     return false;
+  }
+
+  private static @Nullable File toIoFile(Path path) {
+    try {
+      return path.toFile();
+    }
+    catch (UnsupportedOperationException e) {
+      return null;
+    }
   }
 
   @Override
@@ -125,7 +142,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   private CoroutineStep<ImportRequest, ImportRequest> askOpenOrReimport(UIAccess uiAccess) {
     return CompletableFutureStep.await(request -> {
       // Headless or no existing project — go straight to import
-      if (uiAccess.isHeadless() || !DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(request.expectedProjectPath))) {
+      if (uiAccess.isHeadless() || !DefaultProjectOpenProcessor.getInstance().canOpenProject(Path.of(request.expectedProjectPath))) {
         return CompletableFuture.completedFuture(request);
       }
 
