@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.wm.navigationToolbar;
-
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.ui.ex.TitlelessDecorator;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 2024-11-27
+ * @since 2026-08-16
  */
-public interface IdeRootPaneNorthExtensionWithDecorator extends IdeRootPaneNorthExtension {
-    void setTitlelessDecorator(TitlelessDecorator titlelessDecorator);
+public enum TreeStyle implements ComponentStyle {
+    TRANSPARENT_BACKGROUND,
+
+    FONT_XX_SMALL,
+    FONT_X_SMALL,
+    FONT_SMALL,
+    FONT_MEDIUM,
+    FONT_LARGE,
+    FONT_X_LARGE,
+    FONT_XX_LARGE
 }

@@ -20,9 +20,9 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -36,7 +36,7 @@ import java.awt.event.WindowEvent;
  * @since 2014-06-04
  */
 public class NewProjectDialog extends DialogWrapper {
-    private NewProjectPanel myProjectPanel;
+    private UnifiedNewProjectPanel myProjectPanel;
 
     private Runnable myOkAction;
     private Runnable myCancelAction;
@@ -46,27 +46,27 @@ public class NewProjectDialog extends DialogWrapper {
         super(project, true);
         setResizable(false);
 
-        TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane());
-
-        myProjectPanel = new NewProjectPanel(getDisposable(), project, moduleHome, titlelessDecorator) {
-            
+        myProjectPanel = new UnifiedNewProjectPanel(getDisposable(), moduleHome) {
             @Override
             @RequiredUIAccess
-            protected JComponent createSouthPanel() {
-                return NewProjectDialog.this.createSouthPanel();
+            protected @Nullable Component buildSouthPanel() {
+                return null;
             }
 
             @Override
+            @RequiredUIAccess
             public void setOKActionEnabled(boolean enabled) {
                 NewProjectDialog.this.setOKActionEnabled(enabled);
             }
 
             @Override
+            @RequiredUIAccess
             public void setOKActionText(LocalizeValue text) {
                 NewProjectDialog.this.setOKButtonText(text);
             }
 
             @Override
+            @RequiredUIAccess
             public void setCancelText(LocalizeValue text) {
                 NewProjectDialog.this.setCancelButtonText(text);
             }
@@ -86,15 +86,12 @@ public class NewProjectDialog extends DialogWrapper {
 
         setOKActionEnabled(false);
         init();
-
-        titlelessDecorator.install(getWindow());
     }
 
-    public NewProjectPanel getProjectPanel() {
+    public UnifiedNewProjectPanel getProjectPanel() {
         return myProjectPanel;
     }
 
-    
     @Override
     protected Action[] createActions() {
         return new Action[]{getCancelAction(), getOKAction()};
@@ -139,8 +136,9 @@ public class NewProjectDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void initRootPanel(JPanel root) {
-        root.add(myProjectPanel, BorderLayout.CENTER);
+        root.add((JComponent) TargetAWT.to(myProjectPanel.getLayout()), BorderLayout.CENTER);
     }
 
     @Override
@@ -148,12 +146,6 @@ public class NewProjectDialog extends DialogWrapper {
         Dimension defaultWindowSize = TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize());
         setSize(defaultWindowSize.width, defaultWindowSize.height);
         return "NewProjectDialog";
-    }
-
-    @RequiredUIAccess
-    @Override
-    public @Nullable JComponent getPreferredFocusedComponent() {
-        return myProjectPanel.getLeftComponent();
     }
 
     @Override

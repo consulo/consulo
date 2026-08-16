@@ -22,7 +22,6 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -48,6 +47,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.RowsDnDSupport;
@@ -62,7 +62,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
@@ -651,12 +650,20 @@ public class RunConfigurable extends BaseConfigurable {
         });
 
         JPanel leftPanel = createLeftPanel();
-        myTitlelessDecorator.makeLeftComponentLower(leftPanel);
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.makeLeftComponentLower(leftPanel);
+        }
 
         mySplitter.setFirstComponent(leftPanel);
 
         myRightPanel.setBorder(JBUI.Borders.empty(8));
-        mySplitter.setSecondComponent(myTitlelessDecorator.modifyRightComponent(myWholePanel, myRightPanel));
+
+        if (mySplitter instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            mySplitter.setSecondComponent(awtTitlelessDecorator.modifyRightComponent(myWholePanel, myRightPanel));
+        } else {
+            mySplitter.setSecondComponent(myRightPanel);
+        }
+
         myWholePanel.add(mySplitter, BorderLayout.CENTER);
 
         updateDialog();

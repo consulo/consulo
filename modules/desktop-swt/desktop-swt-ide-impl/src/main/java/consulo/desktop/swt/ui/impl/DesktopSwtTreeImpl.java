@@ -19,6 +19,7 @@ import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.TreeStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
@@ -30,6 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.ToIntFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -320,5 +323,13 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   @Override
   public @Nullable TransferHandler<TreeNode<E>> getTransferHandler() {
       return myTransferHandler;
+  }
+
+  @Override
+  public void addStyle(TreeStyle style) {
+  }
+
+  @Override
+  public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
   }
 }

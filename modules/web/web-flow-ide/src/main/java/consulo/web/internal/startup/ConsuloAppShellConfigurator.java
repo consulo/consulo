@@ -57,6 +57,8 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.aura.Aura;
 import consulo.web.internal.ui.WebFontRegistry;
 import consulo.web.internal.ui.WebStyleCssRegistry;
+import consulo.web.internal.ui.vaadin.carousel.Carousel;
+import consulo.web.internal.ui.vaadin.carousel.Slide;
 import org.vaadin.stefan.table.Table;
 
 /**
@@ -81,6 +83,8 @@ import org.vaadin.stefan.table.Table;
 @JsModule("./treeToggle.js")
 @Push(PushMode.AUTOMATIC)
 @Uses(Dialog.class)
+@Uses(Carousel.class)
+@Uses(Slide.class)
 @Uses(ConsuloPtyTerm.class)
 @Uses(Popover.class)
 @Uses(HorizontalLayout.class)

@@ -28,7 +28,7 @@ import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ide.impl.module.creation.NewProjectDialog;
-import consulo.ide.impl.module.creation.NewProjectPanel;
+import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.ide.impl.module.importing.ModuleImportProcessor;
 import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.module.creation.importing.ModuleImportContext;
@@ -399,7 +399,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
                         return;
                     }
 
-                    NewProjectPanel panel = dialog.getProjectPanel();
+                    NewProjectWizardData panel = dialog.getProjectPanel();
 
                     Module newModule =
                         NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), myModuleModel, moduleDir, false);

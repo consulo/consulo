@@ -1,7 +1,8 @@
 package consulo.ide.impl.welcomeScreen;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.awt.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.util.dataholder.Key;
 
 import javax.swing.*;
@@ -10,6 +11,8 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2019-08-02
  */
+@Deprecated
+@DeprecationInfo("AWT version")
 public interface WelcomeScreenSlider {
     Key<WelcomeScreenSlider> KEY = Key.create(WelcomeScreenSlider.class);
 

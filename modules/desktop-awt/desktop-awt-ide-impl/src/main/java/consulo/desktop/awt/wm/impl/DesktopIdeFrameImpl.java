@@ -44,6 +44,8 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.awt.*;
@@ -52,7 +54,6 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -267,7 +268,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         // we need cpy decorate style from original root, in case frame is decorated by laf
         myRootPane.setWindowDecorationStyle(rootPane.getWindowDecorationStyle());
         myJFrame.setRootPane(myRootPane);
-        myTitlelessDecorator = TitlelessDecorator.of(myRootPane, TitlelessDecorator.MAIN_WINDOW);
+        myTitlelessDecorator = TitlelessDecoratorService.getInstance().of(myRootPane, AWTTitlelessDecorator.MAIN_WINDOW);
         myJFrame.setBackground(UIUtil.getPanelBackground());
         AppIconUtil.updateWindowIcon(myJFrame);
         Dimension size = ScreenUtil.getMainScreenBounds().getSize();
@@ -280,7 +281,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
         myJFrame.setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
 
-        myTitlelessDecorator.install(myJFrame);
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.install(myJFrame);
+        }
 
         setupCloseAction();
         MnemonicHelper.init(myJFrame);

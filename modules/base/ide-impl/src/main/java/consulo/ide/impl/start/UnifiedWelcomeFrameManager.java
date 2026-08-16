@@ -19,42 +19,42 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.ide.impl.welcomeScreen.BaseUnifiedWelcomeScreenPanel;
 import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectManager;
 import consulo.project.internal.RecentProjectsChecker;
-import consulo.project.localize.ProjectLocalize;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.ListBox;
+import consulo.ui.Size2D;
+import consulo.ui.UIAccess;
+import consulo.ui.Window;
+import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jspecify.annotations.Nullable;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
-import consulo.ui.event.details.InputDetails;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ui.ex.internal.LogoImage;
-import consulo.ui.image.Image;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.layout.Layout;
 import consulo.ui.model.FlatDataModel;
-import consulo.ui.style.ComponentColors;
-import consulo.ui.style.StandardColors;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -68,18 +68,21 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     // read its stored state - while the application is still coming up, and it answers no recent project at all
     private final Provider<RecentProjectsManager> myRecentProjectsManager;
     private final DataManager myDataManager;
+    private final ActionManager myActionManager;
 
     @Inject
     public UnifiedWelcomeFrameManager(
         Application application,
         Provider<ProjectManager> projectManager,
         Provider<RecentProjectsManager> recentProjectsManager,
-        DataManager dataManager
+        DataManager dataManager,
+        ActionManager actionManager
     ) {
         super(application);
         myProjectManager = projectManager;
         myRecentProjectsManager = recentProjectsManager;
         myDataManager = dataManager;
+        myActionManager = actionManager;
     }
 
     @Override
@@ -95,12 +98,15 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     @Override
     public IdeFrame createFrame() {
         WindowOptions.Builder builder = WindowOptions.builder();
-        String welcomeTitle = FrameTitleUtil.buildTitle();
 
+        String welcomeTitle;
         // disable close and resize, and remove title, we not allow it in web mode
         if (Platform.current().isInBrowser()) {
             builder.disableClose().disableResize();
             welcomeTitle = "";
+        }
+        else {
+            welcomeTitle = FrameTitleUtil.buildTitle();
         }
 
         Window welcomeFrame = Window.create(
@@ -108,7 +114,6 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
             builder.build()
         );
         welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
-        welcomeFrame.setContent(Label.create("Loading..."));
 
         AnAction[] recentProjectsActions = myRecentProjectsManager.get().getRecentProjectsActions(false);
 
@@ -123,17 +128,51 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
         Runnable checkerCallback = () -> {
         };
         checker.addCallback(checkerCallback, pathsToCheck);
+
+        Disposable uiDisposable = Disposable.newDisposable("welcome screen panel");
+
         welcomeFrame.addCloseListener(event -> {
             checker.removeCallback(checkerCallback);
+            Disposer.dispose(uiDisposable);
             frameClosed();
         });
 
+        TitlelessDecorator titlelessDecorator = TitlelessDecorator.NOTHING;
+
+        BaseUnifiedWelcomeScreenPanel panel =
+            new BaseUnifiedWelcomeScreenPanel(uiDisposable, myDataManager, myActionManager, titlelessDecorator) {
+            @Override
+            public void setTitle(LocalizeValue title) {
+                welcomeFrame.setTitle(title.get());
+            }
+
+            @Override
+            @RequiredUIAccess
+            public void removeSlide(Layout target) {
+                super.removeSlide(target);
+
+                welcomeFrame.setTitle(welcomeTitle);
+            }
+
+            @Override
+            @RequiredUIAccess
+            protected Component createLeftComponent(Disposable parentDisposable) {
+                return createRecentProjectsList(recentProjectsActions, welcomeFrame);
+            }
+        };
+
+        welcomeFrame.setContent(panel.getComponent());
+
+        return new UnifiedWelcomeIdeFrame(welcomeFrame, myProjectManager.get().getDefaultProject());
+    }
+
+    @RequiredUIAccess
+    private ListBox<AnAction> createRecentProjectsList(AnAction[] recentProjectsActions, Window welcomeFrame) {
         FlatDataModel<AnAction> model = FlatDataModel.of(Arrays.asList(recentProjectsActions));
 
         ListBox<AnAction> listSelect = ListBox.create(model);
         listSelect.setRender((renderer, renderItem) -> {
-            var item = renderItem.getValue();
-            ReopenProjectAction action = (ReopenProjectAction) item;
+            ReopenProjectAction action = (ReopenProjectAction) renderItem.getValue();
             if (action.isOpened()) {
                 renderer.append(ProjectLocalize.recentProject0OpenedActionText(LocalizeValue.of(action.getProjectName())));
                 return;
@@ -153,143 +192,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
             value.actionPerformed(e);
         });
-        listSelect.addBorder(BorderPosition.RIGHT, BorderStyle.LINE, ComponentColors.BORDER, 1);
         listSelect.setSize(new Size2D(300, -1));
-
-        DockLayout layout = DockLayout.create();
-        layout.left(listSelect);
-
-        // the awt screen stacks the logo and every entry in a single column and centres each of them on the
-        // width of the widest, rather than stretching them
-        VerticalLayout rightLayout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
-
-        ImageBox logo = ImageBox.create(LogoImage.create(8, StandardColors.GRAY));
-        // the insets the awt screen keeps around its logo
-        logo.addBorder(BorderPosition.TOP, BorderStyle.EMPTY, null, 53);
-        logo.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, null, 45);
-        rightLayout.add(logo);
-
-        VerticalLayout actionLayout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
-        rightLayout.add(actionLayout);
-
-        // quick start is filled once the platform has answered which of its actions are visible, so it is a
-        // layout of its own - otherwise it would land after the two group entries
-        VerticalLayout quickStartLayout = VerticalLayout.create(0, HorizontalAlignment.CENTER);
-        actionLayout.add(quickStartLayout);
-
-        UIAccess uiAccess = UIAccess.current();
-
-        addActionGroup(quickStartLayout, IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART, welcomeFrame, uiAccess);
-
-        // the awt screen keeps these two as groups behind a single entry rather than listing what is in them
-        actionLayout.add(createGroupButton(
-            LocalizeValue.localizeTODO("Configure"),
-            IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE,
-            PlatformIconGroup.welcomePreferences()
-        ));
-
-        actionLayout.add(createGroupButton(
-            LocalizeValue.localizeTODO("Get Help"),
-            IdeActions.GROUP_WELCOME_SCREEN_DOC,
-            PlatformIconGroup.welcomeHelp()
-        ));
-
-        DockLayout rightDock = DockLayout.create();
-        rightDock.top(rightLayout);
-
-        layout.center(rightDock);
-
-        welcomeFrame.setContent(layout);
-
-        return new UnifiedWelcomeIdeFrame(welcomeFrame, myProjectManager.get().getDefaultProject());
-    }
-
-    /**
-     * A group stays a group - the entry opens it as a popup, the way the awt welcome screen does.
-     */
-    @RequiredUIAccess
-    private Button createGroupButton(LocalizeValue text, String groupId, Image icon) {
-        Button button = Button.create(text, event -> {
-            ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction(groupId);
-            if (group == null) {
-                return;
-            }
-
-            InputDetails inputDetails = Objects.requireNonNull(event.getInputDetails());
-
-            ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group);
-            menu.show(event.getComponent(), inputDetails.getX(), inputDetails.getY());
-        });
-        button.addStyle(ButtonStyle.BORDERLESS);
-        button.setIcon(icon);
-        return button;
-    }
-
-    /**
-     * Every action of the group as a link, once the platform has told which of them are visible.
-     */
-    @RequiredUIAccess
-    private void addActionGroup(VerticalLayout target, String groupId, Window welcomeFrame, UIAccess uiAccess) {
-        ActionGroup actionGroup = (ActionGroup) ActionManager.getInstance().getAction(groupId);
-        if (actionGroup == null) {
-            return;
-        }
-
-        List<AnAction> group = new ArrayList<>();
-        collectAllActions(group, actionGroup);
-
-        List<AnActionEvent> events = new ArrayList<>(group.size());
-        List<CompletableFuture<?>> updates = new ArrayList<>(group.size());
-        for (AnAction action : group) {
-            AnActionEvent e =
-                AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
-            events.add(e);
-            updates.add(ActionRunnerAsync.performDumbAwareUpdateAsync(action, e));
-        }
-
-        CompletableFuture.allOf(updates.toArray(new CompletableFuture[0])).whenCompleteAsync((r, throwable) -> {
-            for (int i = 0; i < group.size(); i++) {
-                AnAction action = group.get(i);
-                AnActionEvent e = events.get(i);
-
-                Presentation presentation = e.getPresentation();
-                if (presentation.isVisible()) {
-                    // the event above answered whether the action is shown at all, it says nothing about the click
-                    // which follows - an action opening a popup reads the position out of the event it is given,
-                    // and it is only the click that has one
-                    Button component = Button.create(presentation.getTextValue(), event -> {
-                        AnActionEvent clickEvent = new AnActionEvent(
-                            null,
-                            myDataManager.getDataContext(event.getComponent()),
-                            ActionPlaces.WELCOME_SCREEN,
-                            presentation,
-                            ActionManager.getInstance(),
-                            0,
-                            false,
-                            false,
-                            event.getInputDetails()
-                        );
-                        clickEvent.setInjectedContext(action.isInInjectedContext());
-
-                        action.actionPerformed(clickEvent);
-                    });
-                    component.addStyle(ButtonStyle.BORDERLESS);
-                    component.setIcon(presentation.getIcon());
-
-                    target.add(component);
-                }
-            }
-        }, uiAccess);
-    }
-
-    public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
-        for (AnAction action : actionGroup.getChildren(null)) {
-            if (action instanceof ActionGroup && !((ActionGroup) action).isPopup()) {
-                collectAllActions(group, (ActionGroup) action);
-            }
-            else {
-                group.add(action);
-            }
-        }
+        return listSelect;
     }
 }

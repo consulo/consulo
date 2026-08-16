@@ -26,7 +26,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.module.creation.NewProjectDialog;
-import consulo.ide.impl.module.creation.NewProjectPanel;
+import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
 
@@ -81,7 +81,7 @@ public class NewModuleAction extends LegacyDumbAwareAction {
                     return;
                 }
 
-                NewProjectPanel panel = dialog.getProjectPanel();
+                NewProjectWizardData panel = dialog.getProjectPanel();
                 NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
             });
         });

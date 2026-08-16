@@ -46,12 +46,21 @@ public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutIm
             myChildren.put(component, cell);
 
             com.vaadin.flow.component.Component vComponent = TargetVaadin.to(component);
-            if (cell.isFill() && vComponent instanceof HasSize hasSize) {
-                hasSize.setWidthFull();
-            }
 
             TableDataCell dataCell = validate(cell);
-            dataCell.getStyle().set("vertical-align", "top");
+            // the awt layout anchors west, which is centred down the row - a label beside a taller control
+            // sits level with it rather than above it
+            dataCell.getStyle().set("vertical-align", "middle");
+
+            if (cell.isFill()) {
+                if (vComponent instanceof HasSize hasSize) {
+                    hasSize.setWidthFull();
+                }
+
+                dataCell.getStyle().set("width", "100%");
+                getStyle().set("width", "100%");
+            }
+
             dataCell.add(vComponent);
 
             updateFiller();

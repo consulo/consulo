@@ -88,7 +88,13 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
     }
 
     private static com.vaadin.flow.component.@Nullable Component toVaadinOrNull(@Nullable Component component) {
-        return component == null ? null : ((ToVaadinComponentWrapper) component).toVaadinComponent();
+        if (component == null) {
+            return null;
+        }
+
+        com.vaadin.flow.component.Component vaadinComponent = ((ToVaadinComponentWrapper) component).toVaadinComponent();
+        vaadinComponent.getElement().getStyle().set("width", "auto");
+        return vaadinComponent;
     }
 
     @Override

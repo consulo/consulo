@@ -16,42 +16,31 @@
 package consulo.ide.impl.newProject.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.disposer.Disposable;
 import consulo.ide.impl.module.creation.NewProjectDialog;
-import consulo.ide.impl.module.creation.NewProjectPanel;
-import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
+import consulo.ide.impl.module.creation.NewProjectWizardData;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.creation.NewModuleWizardContext;
 import consulo.module.creation.NewOrImportModuleUtil;
 import consulo.module.creation.scratch.NewModuleBuilderProcessor;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.application.Application;
 import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.RecentProjectsManager;
-import consulo.ui.Button;
-import consulo.ui.ButtonStyle;
+import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.TitlelessDecorator;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
@@ -71,95 +60,6 @@ public class NewProjectAction extends DumbAwareAction {
         super(text, description, icon);
     }
 
-    static class SlideNewProjectPanel extends NewProjectPanel {
-        private final WelcomeScreenSlider owner;
-        private Button myOkButton;
-        private Button myCancelButton;
-
-        private Runnable myOkAction;
-        private Runnable myCancelAction;
-
-        @RequiredUIAccess
-        public SlideNewProjectPanel(
-            Disposable parentDisposable,
-            WelcomeScreenSlider owner,
-            @Nullable Project project,
-            @Nullable VirtualFile virtualFile,
-            TitlelessDecorator titlelessDecorator
-        ) {
-            super(parentDisposable, project, virtualFile, titlelessDecorator);
-            this.owner = owner;
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setOKActionEnabled(boolean enabled) {
-            myOkButton.setEnabled(enabled);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setOKActionText(LocalizeValue text) {
-            myOkButton.setText(text);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void setCancelText(LocalizeValue text) {
-            myCancelButton.setText(text);
-        }
-
-        @Override
-        public void setCancelAction(Runnable backAction) {
-            myCancelAction = backAction;
-        }
-
-        @Override
-        public void setOKAction(@Nullable Runnable action) {
-            myOkAction = action;
-        }
-
-        @RequiredUIAccess
-        
-        @Override
-        protected JComponent createSouthPanel() {
-            HorizontalLayout buttonsPanel = HorizontalLayout.create();
-
-            myCancelButton = Button.create(CommonLocalize.buttonCancel());
-            myCancelButton.addClickListener(e -> doCancelAction());
-
-            buttonsPanel.add(myCancelButton);
-
-            myOkButton = Button.create(CommonLocalize.buttonOk());
-            myOkButton.addStyle(ButtonStyle.PRIMARY);
-            myOkButton.setEnabled(false);
-
-            myOkButton.addClickListener(e -> doOkAction());
-            buttonsPanel.add(myOkButton);
-
-            return (JComponent) TargetAWT.to(DockLayout.create().right(buttonsPanel));
-        }
-
-        private void doCancelAction() {
-            if (myCancelAction != null) {
-                myCancelAction.run();
-            }
-            else {
-                owner.removeSlide(this);
-            }
-        }
-
-        @RequiredUIAccess
-        private void doOkAction() {
-            if (myOkAction != null) {
-                myOkAction.run();
-            }
-            else {
-                generateProject(null, this);
-            }
-        }
-    }
-
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
@@ -172,7 +72,7 @@ public class NewProjectAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    protected static void generateProject(Project project, NewProjectPanel projectPanel) {
+    protected static void generateProject(Project project, NewProjectWizardData projectPanel) {
         NewModuleWizardContext context = projectPanel.getWizardContext();
         NewModuleBuilderProcessor<NewModuleWizardContext> processor = projectPanel.getProcessor();
         if (processor == null || context == null) {
@@ -180,11 +80,11 @@ public class NewProjectAction extends DumbAwareAction {
             return;
         }
 
-        generateProjectAsync(project, projectPanel);
+        generateProjectAsync(projectPanel);
     }
 
     @RequiredUIAccess
-    private static void generateProjectAsync(Project project, NewProjectPanel panel) {
+    private static void generateProjectAsync(NewProjectWizardData panel) {
         // leave current step
         panel.finish();
 
@@ -193,7 +93,7 @@ public class NewProjectAction extends DumbAwareAction {
         File location = new File(context.getPath());
         int childCount = location.exists() ? location.list().length : 0;
         if (!location.exists() && !location.mkdirs()) {
-            Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
+            Alerts.okError(LocalizeValue.localizeTODO("Cannot create directory '" + location + "'")).showAsync();
             return;
         }
 
@@ -201,24 +101,29 @@ public class NewProjectAction extends DumbAwareAction {
 
         VirtualFile baseDir = LocalFileSystem.getInstance().findFileByIoFile(location);
         if (baseDir == null) {
-            Messages.showErrorDialog("Directory '" + location + "' is not resolved.", "Create New Project");
+            Alerts.okError(LocalizeValue.localizeTODO("Directory '" + location + "' is not resolved.")).showAsync();
             return;
         }
 
         baseDir.refresh(false, true);
 
         if (childCount > 0) {
-            int rc = Messages.showYesNoDialog(
-                project,
-                "The directory '" + location + "' is not empty. Continue?",
-                "Create New Project",
-                UIUtil.getQuestionIcon()
-            );
-            if (rc == Messages.NO) {
-                return;
-            }
+            Alerts.yesNo()
+                .text(LocalizeValue.localizeTODO("The directory '" + location + "' is not empty. Continue?"))
+                .showAsync()
+                .whenComplete((confirmed, error) -> {
+                    if (Boolean.TRUE.equals(confirmed)) {
+                        openProject(panel, location, baseDir);
+                    }
+                });
+            return;
         }
 
+        openProject(panel, location, baseDir);
+    }
+
+    @RequiredUIAccess
+    private static void openProject(NewProjectWizardData panel, File location, VirtualFile baseDir) {
         RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
 
         UIAccess uiAccess = UIAccess.current();

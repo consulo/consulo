@@ -350,6 +350,8 @@ tree.view.expand.all.action.name:
     text: Expand All
 treenode.loading:
     text: loading…
+welcome.screen.configure.action.group.name:
+    text: Configure
 welcome.screen.disabled.plugins.description:
     text: (disabled)
 welcome.screen.documentation.action.group.name:
@@ -358,6 +360,8 @@ welcome.screen.get.from.vcs.action.checkout.from.list.popup.title:
     text: Checkout from
 welcome.screen.get.from.vcs.action.no.vcs.plugins.with.check.out.action.installed.action.name:
     text: No VCS plugins with Check-out action installed.
+welcome.screen.get.help.action.group.name:
+    text: Get Help
 welcome.screen.incompatible.plugins.description:
     text: (incompatible)
 welcome.screen.jetbrains.tv.action.description:

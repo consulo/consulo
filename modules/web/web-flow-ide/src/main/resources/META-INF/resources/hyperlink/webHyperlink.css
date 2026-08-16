@@ -1,0 +1,17 @@
+.consulo-hyperlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.consulo-hyperlink:hover {
+    text-decoration: underline;
+}
+
+.consulo-hyperlink[disabled] {
+    cursor: default;
+    text-decoration: none;
+    color: var(--consulo-label-disabled-foreground);
+}

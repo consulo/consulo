@@ -15,8 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,39 +28,8 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2024-11-26
  */
-public interface TitlelessDecorator {
-    String MAIN_WINDOW = "MainWindow";
-    String WELCOME_WINDOW = "WelcomeWindow";
-
-    
-    static TitlelessDecorator of(JRootPane pane) {
-        return of(pane, "");
-    }
-
-    
-    static TitlelessDecorator of(JRootPane pane, String windowId) {
-        PlatformOperatingSystem os = Platform.current().os();
-        if (os.isMac()) {
-            return new MacFrameDecorator(pane);
-        }
-
-        if (os.isWindows() || os.isLinux()) {
-            // no sense for it - we already without title
-            if (MAIN_WINDOW.equals(windowId)) {
-                return NOTHING;
-            }
-
-            if (WELCOME_WINDOW.equals(windowId)) {
-                return new WindowsFameDecorator(pane);
-            }
-
-            // FIXME for now we not support other titleless - due bug with moving
-        }
-
-        return NOTHING;
-    }
-
-    class WindowsFameDecorator implements TitlelessDecorator {
+public interface AWTTitlelessDecorator extends TitlelessDecorator {
+    class WindowsFameDecorator implements AWTTitlelessDecorator {
         private final JRootPane myRootPane;
 
         public WindowsFameDecorator(JRootPane rootPane) {
@@ -74,10 +43,8 @@ public interface TitlelessDecorator {
 
         @Override
         public void makeLeftComponentLower(JComponent component) {
-
         }
 
-        
         @Override
         public JComponent modifyRightComponent(JComponent rootPanel, JComponent rightComponent) {
             JPanel panel = new JPanel(new BorderLayout());
@@ -110,7 +77,7 @@ public interface TitlelessDecorator {
         }
     }
 
-    class MacFrameDecorator implements TitlelessDecorator {
+    class MacFrameDecorator implements AWTTitlelessDecorator {
         private final JRootPane myRootPane;
 
         public MacFrameDecorator(JRootPane rootPane) {
@@ -145,36 +112,25 @@ public interface TitlelessDecorator {
         }
     }
 
-    TitlelessDecorator NOTHING = new TitlelessDecorator() {
-        @Override
-        public void install(Window window) {
-        }
-
-        @Override
-        public void makeLeftComponentLower(JComponent component) {
-        }
-
-        @Override
-        public int getExtraTopLeftPadding(boolean fullScreen) {
-            return 0;
-        }
-
-        @Override
-        public int getExtraTopTopPadding() {
-            return 0;
-        }
-    };
-
     void install(Window window);
 
     void makeLeftComponentLower(JComponent component);
 
-    
     default JComponent modifyRightComponent(JComponent parent, JComponent rightComponent) {
         return rightComponent;
     }
 
-    int getExtraTopLeftPadding(boolean fullScreen);
+    @Override
+    default void makeLeftComponentLower(consulo.ui.Component component) {
+        makeLeftComponentLower((JComponent) TargetAWT.to(component));
+    }
 
-    int getExtraTopTopPadding();
+    @Override
+    default consulo.ui.Component modifyRightComponent(consulo.ui.Component parent, consulo.ui.Component rightComponent) {
+        JComponent right = (JComponent) TargetAWT.to(rightComponent);
+
+        JComponent modified = modifyRightComponent((JComponent) TargetAWT.to(parent), right);
+
+        return modified == right ? rightComponent : TargetAWT.wrap(modified);
+    }
 }

@@ -334,7 +334,10 @@ public class UnifiedActionRow {
         button.setToolTipText(node.text());
         button.setEnabled(node.enabled());
 
-        if (myStyle != ActionToolbar.Style.BUTTON) {
+        if (myStyle == ActionToolbar.Style.INPLACE) {
+            button.addStyle(ButtonStyle.INPLACE);
+        }
+        else if (myStyle != ActionToolbar.Style.BUTTON) {
             button.addStyle(ButtonStyle.BORDERLESS);
         }
 

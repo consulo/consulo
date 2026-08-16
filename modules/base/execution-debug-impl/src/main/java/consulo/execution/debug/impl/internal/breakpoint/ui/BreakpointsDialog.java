@@ -102,7 +102,9 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
         init();
         setOKButtonText(XDebuggerLocalize.doneActionText());
 
-        myTitlelessDecorator.install(getWindow());
+        if (myTitlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.install(getWindow());
+        }
     }
 
     @Override

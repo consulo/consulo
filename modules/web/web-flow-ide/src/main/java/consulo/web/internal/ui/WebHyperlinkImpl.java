@@ -16,16 +16,19 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.ClickNotifier;
-import com.vaadin.flow.component.HasText;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.image.WebImageConverter;
 import consulo.web.internal.ui.vaadin.SimpleComponent;
 import org.jspecify.annotations.Nullable;
 
@@ -35,15 +38,28 @@ import org.jspecify.annotations.Nullable;
  */
 public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.Vaadin> implements Hyperlink {
     @Tag("a")
-    public class Vaadin extends SimpleComponent implements ClickNotifier<Vaadin>, HasText, FromVaadinComponentWrapper {
+    @StyleSheet("/hyperlink/webHyperlink.css")
+    public class Vaadin extends SimpleComponent implements ClickNotifier<Vaadin>, FromVaadinComponentWrapper {
         @Override
         public @Nullable Component toUIComponent() {
             return WebHyperlinkImpl.this;
         }
     }
 
+    private final Span myTextLabel = new Span();
+
+    private LocalizeValue myText = LocalizeValue.empty();
+    private @Nullable Image myIcon;
+    private com.vaadin.flow.component.@Nullable Component myIconComponent;
+
     public WebHyperlinkImpl() {
-        toVaadinComponent().addClickListener(
+        Vaadin vaadin = getVaadinComponent();
+        vaadin.addClassName("consulo-hyperlink");
+        vaadin.getStyle().set("color", WebColors.toCssColor(ComponentColors.LINK_FOREGROUND));
+
+        vaadin.getElement().appendChild(myTextLabel.getElement());
+
+        vaadin.addClickListener(
             event -> getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""))
         );
     }
@@ -55,23 +71,36 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
 
     @Override
     public LocalizeValue getText() {
-        return LocalizeValue.of(getVaadinComponent().getText());
+        return myText;
     }
 
     @Override
     @RequiredUIAccess
     public void setText(LocalizeValue text) {
-        getVaadinComponent().setText(text.get());
+        myText = text;
+        myTextLabel.setText(text.get());
     }
 
     @Override
     public void setIcon(@Nullable Image icon) {
-        // TODO getVaadinComponent().setImage(icon);
+        myIcon = icon;
+
+        com.vaadin.flow.component.@Nullable Component oldIconComponent = myIconComponent;
+        if (oldIconComponent != null) {
+            oldIconComponent.getElement().removeFromParent();
+            myIconComponent = null;
+        }
+
+        if (icon != null) {
+            com.vaadin.flow.component.Component iconComponent = WebImageConverter.getImage(icon);
+            myIconComponent = iconComponent;
+
+            getVaadinComponent().getElement().insertChild(0, iconComponent.getElement());
+        }
     }
 
     @Override
     public @Nullable Image getIcon() {
-        return null;
-        // TODO return getVaadinComponent().myImage;
+        return myIcon;
     }
 }

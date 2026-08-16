@@ -369,11 +369,14 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
 
         if (!borders.isEmpty()) {
+            myVaadinComponent.getStyle().set("box-sizing", "border-box");
+        }
+
+        if (!borders.isEmpty() && myVaadinComponent instanceof com.vaadin.flow.component.shared.InputField) {
             // swing answers the same borders by replacing the one the look and feel gave the component, and its
             // insets are counted inside the size. a vaadin field keeps its own border in the shadow dom, where a
             // class on the host cannot reach it, so it is turned off through the properties it reads
             Style style = myVaadinComponent.getStyle();
-            style.set("box-sizing", "border-box");
             style.set("--vaadin-input-field-border-width", "0");
             style.set("--vaadin-input-field-border-radius", "0");
             style.set("--vaadin-input-field-background", "transparent");

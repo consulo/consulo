@@ -127,7 +127,7 @@ public class WebToggleButtonImpl extends VaadinComponentDelegate<WebToggleButton
                 toVaadinComponent().addThemeVariants(ButtonVariant.TERTIARY);
                 break;
             case INPLACE:
-                toVaadinComponent().addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                WebButtonImpl.applyInplaceStyle(toVaadinComponent());
                 break;
         }
     }

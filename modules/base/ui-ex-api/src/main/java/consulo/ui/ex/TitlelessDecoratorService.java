@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.wm.navigationToolbar;
+package consulo.ui.ex;
 
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.ui.ex.TitlelessDecorator;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 
 /**
  * @author VISTALL
- * @since 2024-11-27
+ * @since 2026-08-16
  */
-public interface IdeRootPaneNorthExtensionWithDecorator extends IdeRootPaneNorthExtension {
-    void setTitlelessDecorator(TitlelessDecorator titlelessDecorator);
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface TitlelessDecoratorService {
+    static TitlelessDecoratorService getInstance() {
+        return Application.get().getInstance(TitlelessDecoratorService.class);
+    }
+
+    default TitlelessDecorator of(Object pane) {
+        return of(pane, "");
+    }
+
+    TitlelessDecorator of(Object pane, String windowId);
 }

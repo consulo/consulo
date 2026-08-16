@@ -95,9 +95,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public SwipeLayout _Layouts_swipe() {
-        throw notSupported();
-
-        //return new WebSwipeLayoutImpl();
+        return new WebSwipeLayoutImpl();
     }
 
     @Override

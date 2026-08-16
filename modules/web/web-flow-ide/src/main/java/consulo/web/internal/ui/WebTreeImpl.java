@@ -30,8 +30,10 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import com.vaadin.flow.dom.Style;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
+import consulo.ui.TreeStyle;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
@@ -51,6 +53,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -61,6 +64,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     private static final List CANCELED_RESULT = new ArrayList<>();
 
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
+    private @Nullable ToIntFunction<TreeNode<NODE>> myItemHeightGetter;
 
     /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
     private volatile @Nullable Point2D myPopupPosition;
@@ -176,6 +180,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 if (background != null) {
                     toggle.getElement().getStyle().set("--consulo-tree-row-background", WebColors.toCssColor(background));
                 }
+
+                applyItemHeight(node);
 
                 toggle.add(item.toComponent());
                 return toggle;
@@ -881,6 +887,61 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         public List<TreeNode<NODE>> getItems() {
             return myItems;
         }
+    }
+
+    /**
+     * The grid lays every row out on one measurement of its own, so a height belongs to the whole body rather
+     * than to a row - webTree.css reads it off this property, and the toggle is already stretched over it. A
+     * height written on the toggle instead leaves it short of the row, which is where the selection is drawn.
+     */
+    void applyItemHeight(@Nullable TreeNode<NODE> node) {
+        ToIntFunction<TreeNode<NODE>> getter = myItemHeightGetter;
+        if (getter == null || node == null) {
+            return;
+        }
+
+        getVaadinComponent().getStyle().set("--consulo-tree-row-height", getter.applyAsInt(node) + "px");
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<NODE>> getter) {
+        myItemHeightGetter = getter;
+
+        if (getter == null) {
+            getVaadinComponent().getStyle().remove("--consulo-tree-row-height");
+        }
+
+        getVaadinComponent().getDataProvider().refreshAll();
+    }
+
+    @Override
+    public void addStyle(TreeStyle style) {
+        Style vaadinStyle = getVaadinComponent().getStyle();
+
+        if (style == TreeStyle.TRANSPARENT_BACKGROUND) {
+            vaadinStyle.set("background", "transparent");
+            vaadinStyle.set("--vaadin-grid-background", "transparent");
+            return;
+        }
+
+        vaadinStyle.set("font-size", fontSize(style));
+    }
+
+    /**
+     * The ladder jetbrains gives a label - h4/h3/h2 are one, three and five points above it, and medium and
+     * small one and two below. The css keywords are absolute sizes and step far wider than that, so the size
+     * is written against the one inherited, where {@code em} is the size of the parent.
+     */
+    private static String fontSize(TreeStyle style) {
+        return switch (style) {
+            case FONT_XX_SMALL -> "calc(1em - 3px)";
+            case FONT_X_SMALL -> "calc(1em - 2px)";
+            case FONT_SMALL -> "calc(1em - 1px)";
+            case FONT_LARGE -> "calc(1em + 1px)";
+            case FONT_X_LARGE -> "calc(1em + 3px)";
+            case FONT_XX_LARGE -> "calc(1em + 5px)";
+            default -> "1em";
+        };
     }
 
     @Override

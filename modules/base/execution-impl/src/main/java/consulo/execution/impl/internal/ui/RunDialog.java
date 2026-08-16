@@ -25,6 +25,8 @@ import consulo.execution.executor.Executor;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
+import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
@@ -47,7 +49,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
         myProject = project;
         myExecutor = executor;
 
-        TitlelessDecorator titlelessDecorator = TitlelessDecorator.of(getRootPane());
+        TitlelessDecorator titlelessDecorator = TitlelessDecoratorService.getInstance().of(getRootPane());
 
         setTitle(executor.getActionName());
 
@@ -58,7 +60,9 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
 
         init();
 
-        titlelessDecorator.install(getWindow());
+        if (titlelessDecorator instanceof AWTTitlelessDecorator awtTitlelessDecorator) {
+            awtTitlelessDecorator.install(getWindow());
+        }
 
         myConfigurable.reset();
     }

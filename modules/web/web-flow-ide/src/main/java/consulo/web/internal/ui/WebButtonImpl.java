@@ -16,6 +16,8 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.dom.Style;
 import consulo.localize.LocalizeValue;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.Button;
@@ -36,6 +38,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-02-18
  */
 public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin> implements Button {
+    @StyleSheet("/button/webButton.css")
     public class Vaadin extends com.vaadin.flow.component.button.Button implements FromVaadinComponentWrapper {
         public Vaadin() {
             // the label of a button is one line, as it is of a swing button - a narrow column broke "Copy to
@@ -81,9 +84,21 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
                 toVaadinComponent().addThemeVariants(ButtonVariant.TERTIARY);
                 break;
             case INPLACE:
-                toVaadinComponent().addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                applyInplaceStyle(toVaadinComponent());
                 break;
         }
+    }
+
+    static void applyInplaceStyle(com.vaadin.flow.component.button.Button button) {
+        button.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        button.addClassName("consulo-inplace-button");
+
+        Style style = button.getStyle();
+        style.set("--vaadin-button-height", "auto");
+        style.set("--vaadin-button-margin", "0");
+        style.set("--vaadin-button-padding", "0");
+        style.set("--vaadin-button-border-width", "0");
+        style.set("--vaadin-button-background", "transparent");
     }
 
     @Override

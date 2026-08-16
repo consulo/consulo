@@ -29,6 +29,9 @@ import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.MorphColor;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
@@ -50,9 +53,13 @@ import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
 
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.Arrays;
 import java.awt.event.MouseEvent;
@@ -63,6 +70,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -96,6 +104,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
+    private @Nullable ToIntFunction<TreeNode<E>> myItemHeightGetter;
+
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;
 
@@ -323,7 +333,10 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     protected MyTree createComponent() {
         MyTree tree = new MyTree(myStructureTreeModel, myDisposable);
         tree.setRootVisible(false);
-        tree.setCellRenderer(new NodeRenderer());
+        tree.setCellRenderer(wrapWithItemHeight(new NodeRenderer()));
+        if (myItemHeightGetter != null) {
+            tree.setRowHeight(0);
+        }
 
         new DoubleClickListener() {
             @Override
@@ -549,6 +562,69 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         return toFuture(myStructureTreeModel.promiseVisitor(node).thenAsync(visitor -> TreeUtil.promiseSelect(tree, visitor)));
+    }
+
+    /**
+     * JTree asks the renderer for the height of each row only while its own row height is zero, so a getter
+     * turns the fixed height off and gives the rendered component the height it answered.
+     */
+    private TreeCellRenderer wrapWithItemHeight(TreeCellRenderer delegate) {
+        return (tree, value, selected, expanded, leaf, row, hasFocus) -> {
+            java.awt.Component component =
+                delegate.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+
+            ToIntFunction<TreeNode<E>> getter = myItemHeightGetter;
+            TreeNode<E> node = nodeOfComponent(value);
+            if (getter != null && component != null && node != null) {
+                Dimension size = component.getPreferredSize();
+                component.setPreferredSize(new Dimension(size.width, getter.applyAsInt(node)));
+            }
+
+            return component;
+        };
+    }
+
+    @Override
+    public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
+        myItemHeightGetter = getter;
+
+        if (isRealized()) {
+            toAWTComponent().setRowHeight(getter == null ? UIManager.getInt("Tree.rowHeight") : 0);
+        }
+    }
+
+    @Override
+    public void addStyle(TreeStyle style) {
+        MyTree tree = toAWTComponent();
+
+        if (style == TreeStyle.TRANSPARENT_BACKGROUND) {
+            tree.setOpaque(false);
+            tree.setBackground(MorphColor.of(UIUtil::getPanelBackground));
+            return;
+        }
+
+        Font font = tree.getFont();
+        if (font == null) {
+            font = UIUtil.getLabelFont();
+        }
+
+        tree.setFont(font.deriveFont(font.getSize2D() + JBUI.scale(fontDelta(style))));
+    }
+
+    /**
+     * The ladder {@link consulo.ui.ex.awt.JBFont} gives a label - h4/h3/h2 are one, three and five points
+     * above it, and medium and small one and two below.
+     */
+    private static float fontDelta(TreeStyle style) {
+        return switch (style) {
+            case FONT_XX_SMALL -> -3f;
+            case FONT_X_SMALL -> -2f;
+            case FONT_SMALL -> -1f;
+            case FONT_LARGE -> 1f;
+            case FONT_X_LARGE -> 3f;
+            case FONT_XX_LARGE -> 5f;
+            default -> 0f;
+        };
     }
 
     @Override

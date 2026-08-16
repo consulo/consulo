@@ -1,0 +1,19 @@
+.consulo-inplace-button::part(label) {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.consulo-inplace-button {
+    border-radius: 3px;
+}
+
+.consulo-inplace-button:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.consulo-inplace-button:active {
+    background: color-mix(in srgb, currentColor 22%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent);
+}

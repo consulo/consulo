@@ -2,6 +2,7 @@
   "name": "consulo.web.ide",
   "license": "APACHE 2",
   "dependencies": {
+    "@polymer/iron-a11y-keys-behavior": "3.0.1",
     "@vaadin/aura": "25.2.6",
     "@vaadin/common-frontend": "0.0.23",
     "@vaadin/react-components": "25.2.6",
@@ -93,6 +94,7 @@
     "@vaadin/message-list": "25.2.6",
     "@vaadin/breadcrumbs": "25.2.6",
     "@vaadin/custom-field": "25.2.6",
+    "@polymer/iron-a11y-keys-behavior": "$@polymer/iron-a11y-keys-behavior",
     "@vaadin/lit-renderer": "25.2.6",
     "@vaadin/date-picker": "25.2.6",
     "@vaadin/field-highlighter": "25.2.6",
@@ -120,6 +122,7 @@
   "type": "module",
   "vaadin": {
     "dependencies": {
+      "@polymer/iron-a11y-keys-behavior": "3.0.1",
       "@vaadin/aura": "25.2.6",
       "@vaadin/common-frontend": "0.0.23",
       "@vaadin/react-components": "25.2.6",
@@ -157,6 +160,6 @@
       "vite": "8.0.16",
       "vite-plugin-checker": "0.14.4"
     },
-    "hash": "cc95ce1b7c711242088eb76789e3d714b36e88d3d08a816fc940eb8ee372252e"
+    "hash": "c08e1800ec1b3bd931847f3bfbc5c61ad66896368b2ab9c54f8952277450ea5a"
   }
 }
