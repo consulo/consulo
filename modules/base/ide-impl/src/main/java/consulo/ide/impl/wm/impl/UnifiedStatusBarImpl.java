@@ -112,7 +112,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     Disposer.register(this, myInfoAndProgressPanel);
 
     centerPanel().add(myInfoAndProgressPanel.getUIComponent());
-    myInfoAndProgressPanel.setProgressTarget(centerPanel());
 
     myComponent.putUserData(UiDataProvider.KEY, sink -> {
         sink.set(Project.KEY, getProject());
@@ -418,11 +417,15 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
   @Override
   public boolean isProcessWindowOpen() {
-    return false;
+    return myInfoAndProgressPanel != null && myInfoAndProgressPanel.isProcessWindowOpen();
   }
 
   @Override
+  @RequiredUIAccess
   public void setProcessWindowOpen(boolean open) {
+    if (myInfoAndProgressPanel != null) {
+      myInfoAndProgressPanel.setProcessWindowOpen(open);
+    }
   }
 
   @Override

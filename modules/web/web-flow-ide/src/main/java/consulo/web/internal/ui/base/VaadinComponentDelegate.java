@@ -305,13 +305,15 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @Override
     public boolean isEnabled() {
-        return ((HasEnabled) myVaadinComponent).isEnabled();
+        return myVaadinComponent.getElement().isEnabled();
     }
 
     @RequiredUIAccess
     @Override
     public void setEnabled(boolean value) {
-        ((HasEnabled) myVaadinComponent).setEnabled(value);
+        // HasEnabled is a mixin over the element's own state, and not every component carries it - a progress
+        // bar has none, and asking one for it used to end the request rather than the call
+        myVaadinComponent.getElement().setEnabled(value);
     }
 
     @Override
