@@ -20,6 +20,13 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TabbedLayout;
+import consulo.dataContext.DataManager;
+import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.CustomActionsSchema;
+import io.qt.core.QPoint;
+import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -60,7 +67,7 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
 
     @Override
     protected QTabWidget createQt(QWidget parent) {
-        QTabWidget tabWidget = new QTabWidget();
+        QTabWidget tabWidget = new QTabWidget(parent);
         tabWidget.setDocumentMode(true);
         tabWidget.setTabPosition(QTabWidget.TabPosition.North);
         return tabWidget;
@@ -71,17 +78,62 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
         super.initialize(component);
 
         for (DesktopQtTabImpl tab : myTabs) {
-            tab.initialize(component);
+            tab.initialize(component, this);
         }
 
         component.setCurrentIndex(myTabs.size() - 1);
+
+        installTabPopupMenu(component);
+    }
+
+    /**
+     * One handler on the bar rather than one per tab: the bar is a single widget, so every tab installing its own
+     * would leave the last one to overwrite the policy and the rest to fire alongside it. The tab under the
+     * pointer is resolved from the position of the click instead.
+     */
+    private void installTabPopupMenu(QTabWidget tabWidget) {
+        QTabBar tabBar = tabWidget.tabBar();
+
+        DesktopQtActionContextMenu.installOn(
+            tabBar,
+            position -> {
+                DesktopQtTabImpl tab = tabAt(tabBar, position);
+                if (tab == null || tab.getPopupGroupId() == null) {
+                    return null;
+                }
+
+                return CustomActionsSchema.getInstance().getCorrectedAction(tab.getPopupGroupId()) instanceof ActionGroup group
+                    ? group
+                    : null;
+            },
+            ActionPlaces.EDITOR_TAB_POPUP,
+            position -> {
+                DesktopQtTabImpl tab = tabAt(tabBar, position);
+                return tab == null ? DataManager.getInstance().getDataContext() : tab.createDataContext();
+            }
+        );
+    }
+
+    private @Nullable DesktopQtTabImpl tabAt(QTabBar tabBar, QPoint position) {
+        int index = tabBar.tabAt(position);
+        if (index == -1) {
+            return null;
+        }
+
+        for (DesktopQtTabImpl tab : myTabs) {
+            if (tab.getIndex() == index) {
+                return tab;
+            }
+        }
+
+        return null;
     }
 
     private void init(DesktopQtTabImpl tab) {
         QTabWidget tabWidget = toQtComponent();
 
         if (tabWidget != null) {
-            tab.initialize(tabWidget);
+            tab.initialize(tabWidget, this);
 
             tabWidget.setCurrentIndex(tab.getIndex());
         }

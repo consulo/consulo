@@ -25,7 +25,12 @@ import consulo.codeEditor.markup.GutterMark;
 import consulo.ui.ex.action.ActionGroup;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.JComponent;
 import java.awt.Point;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,8 +41,33 @@ import java.util.List;
 public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponentEx {
     private final DesktopQtEditorImpl myEditor;
 
+    /**
+     * The platform hangs the state of the gutter off client properties of a swing component - the breakpoint
+     * promoter puts the icon it wants drawn on the hovered line there, and the awt gutter is itself that
+     * component. Nothing here is ever shown, so it stands in purely as the bag those properties live in.
+     */
+    private final JComponent myProperties = new JComponent() {
+    };
+
+    private @Nullable ActionGroup myGutterPopupGroup;
+
+    private boolean myShowDefaultGutterPopup = true;
+
     public DesktopQtEditorGutterComponentImpl(DesktopQtEditorImpl editor) {
         myEditor = editor;
+    }
+
+    @Override
+    public JComponent getComponent() {
+        return myProperties;
+    }
+
+    @Override
+    public void repaint() {
+        DesktopQtEditorGutterWidget widget = getWidget();
+        if (widget != null) {
+            widget.update();
+        }
     }
 
     private @Nullable DesktopQtEditorGutterWidget getWidget() {
@@ -50,9 +80,36 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
         return null;
     }
 
+    /**
+     * Everything the markup wants an icon drawn for on a row - a breakpoint above all. Both models carry them:
+     * the editor's own, and the document's, which is where the debugger puts its marks.
+     *
+     * @param line a visual line, as the awt gutter keys its cache by
+     */
     @Override
     public List<GutterMark> getGutterRenderers(int line) {
-        return List.of();
+        List<GutterMark> renderers = new ArrayList<>();
+
+        collectRenderers(myEditor.getFilteredDocumentMarkupModel(), line, renderers);
+        collectRenderers(myEditor.getMarkupModel(), line, renderers);
+
+        return renderers;
+    }
+
+    private void collectRenderers(@Nullable MarkupModel model, int visualLine, List<GutterMark> into) {
+        if (model == null) {
+            return;
+        }
+
+        for (RangeHighlighter highlighter : model.getAllHighlighters()) {
+            GutterMark renderer = highlighter.getGutterIconRenderer();
+
+            if (renderer != null
+                && highlighter.isValid()
+                && myEditor.offsetToVisualLine(highlighter.getStartOffset()) == visualLine) {
+                into.add(renderer);
+            }
+        }
     }
 
     @Override
@@ -114,6 +171,11 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public void setShowDefaultGutterPopup(boolean show) {
+        myShowDefaultGutterPopup = show;
+    }
+
+    public boolean isShowDefaultGutterPopup() {
+        return myShowDefaultGutterPopup;
     }
 
     @Override
@@ -122,6 +184,11 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public void setGutterPopupGroup(@Nullable ActionGroup group) {
+        myGutterPopupGroup = group;
+    }
+
+    public @Nullable ActionGroup getGutterPopupGroup() {
+        return myGutterPopupGroup;
     }
 
     @Override

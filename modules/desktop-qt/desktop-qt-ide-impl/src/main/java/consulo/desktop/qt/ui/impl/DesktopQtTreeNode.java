@@ -59,6 +59,8 @@ public class DesktopQtTreeNode<E> implements TreeNode<E> {
      */
     private volatile boolean myExpanded;
 
+    private volatile int myEpoch;
+
     public DesktopQtTreeNode(@Nullable DesktopQtTreeNode<E> parent, E value) {
         myParent = parent;
         myValue = value;
@@ -125,9 +127,18 @@ public class DesktopQtTreeNode<E> implements TreeNode<E> {
      * never be asked again.
      */
     public synchronized void resetChildren() {
+        myEpoch++;
         myChildrenFuture = null;
         myChildren = List.of();
         myLeaf = false;
+    }
+
+    /**
+     * Which build of the level below this node is the current one, so that a build started before the level was
+     * thrown away does not add its rows on top of the ones the build after it produced.
+     */
+    public int getEpoch() {
+        return myEpoch;
     }
 
     public void render() {

@@ -97,10 +97,29 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     public final void bind(QWidget parent, @Nullable Object layoutData) {
         if (myComponent != null) {
-            return;
+            if (!myComponent.isDisposed()) {
+                return;
+            }
+
+            // qt took the widget down along with the tree it stood in - a dialog which was closed - without this
+            // component being told. The java object outlived the native one, so what is held is a widget every
+            // call on which throws, and the component has to be given a new one instead of handing that one out
+            myComponent = null;
+            myOwnStyleSheet = "";
+            myBorderStyleSheet = "";
         }
 
         myComponent = createQt(parent);
+
+        // qt destroys a widget along with the parent it was given to, and the component is not told. Everything
+        // here asks whether it has a widget by whether this field is set, so the field is cleared the moment the
+        // widget behind it goes - otherwise what is held is a widget every call on which throws
+        T bound = myComponent;
+        bound.destroyed.connect(() -> {
+            if (myComponent == bound) {
+                myComponent = null;
+            }
+        });
 
         TargetQt.register(myComponent, this);
 
@@ -125,8 +144,6 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
         List<Consumer<QWidget>> bindListeners = myBindListeners;
         if (bindListeners != null) {
-            myBindListeners = null;
-
             for (Consumer<QWidget> bindListener : bindListeners) {
                 bindListener.accept(myComponent);
             }
@@ -136,18 +153,21 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     /**
      * The qt widget of a component only exists once the component is bound to a parent, and whoever needs the
      * widget - a context menu installed on it - may well arrive before that.
+     * <p/>
+     * A component is bound more than once: hiding a tool window disposes the widget of everything in it and
+     * showing it again builds a fresh one. What was hung off the widget belonged to the widget and went with it,
+     * so every listener is kept and run again against the new one rather than dropped after the first bind.
      */
     public void whenBound(Consumer<QWidget> consumer) {
-        if (myComponent != null) {
-            consumer.accept(myComponent);
-            return;
-        }
-
         if (myBindListeners == null) {
             myBindListeners = new ArrayList<>();
         }
 
         myBindListeners.add(consumer);
+
+        if (myComponent != null) {
+            consumer.accept(myComponent);
+        }
     }
 
     public @Nullable T toQtComponent() {

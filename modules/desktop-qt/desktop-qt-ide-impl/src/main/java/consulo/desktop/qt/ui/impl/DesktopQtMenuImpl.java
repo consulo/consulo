@@ -43,19 +43,6 @@ import java.util.Objects;
  */
 public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
     /**
-     * Qt keeps a column down the left of a menu for the icon and the check mark of every entry and paints the
-     * check as a framed box, where awt reserves nothing for an entry without an icon and paints a bare check
-     * mark. Giving the entry its own padding hands that column back to the text; the sheet then owns the whole
-     * of the entry, so the selection it used to draw is taken from the palette here.
-     */
-    private static final String STYLE_SHEET = """
-        QMenu { padding: 4px 0px; border: 1px solid palette(mid); border-radius: %dpx; background: palette(window); }
-        QMenu::item { padding: 4px 12px 4px 6px; }
-        QMenu::item:selected { background-color: palette(highlight); color: palette(highlighted-text); }
-        QMenu::icon { margin-left: 6px; }
-        """.formatted(DesktopQtPopupImpl.ourCornerRadius);
-
-    /**
      * A menu detached onto an ungrabbed {@code xdg_popup} is never the active window, so qt would resolve the
      * {@code palette(highlight)} of the sheet out of the Inactive group and draw the highlighted entry with the
      * washed out selection of a window nobody is working in. The rounded corners of the sheet need the same mask
@@ -169,9 +156,23 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
             myHideConnected = true;
 
             menu.aboutToHide.connect(this::uninstallOutsideClickWatcher);
+
+            // a menu closes itself over the entry which was chosen, and a detached one is no longer the popup that
+            // behaviour belongs to - so it is closed by hand. The signal of the menu carries the entries of its
+            // submenus too, which are as much a part of it
+            menu.triggered.connect(action -> hideDetached());
         }
 
         menu.popup(globalPosition);
+
+        QMenu shown = menu;
+        io.qt.core.QTimer.singleShot(120, () -> consulo.logging.Logger.getInstance(DesktopQtMenuImpl.class).info(
+            "POSPROBE asked=" + globalPosition
+                + " sizeHint=" + shown.sizeHint()
+                + " geometry=" + shown.geometry()
+                + " frame=" + shown.frameGeometry()
+                + " transientParent=" + (shown.windowHandle() == null ? "no-handle" : shown.windowHandle().transientParent())
+        ));
 
         OutsideClickWatcher watcher = myOutsideClickWatcher;
         if (watcher == null) {
@@ -247,7 +248,6 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
     @Override
     protected QAction createAction(@Nullable QWidget parent) {
         QMenu menu = new QtMenu(parent);
-        menu.setStyleSheet(STYLE_SHEET);
 
         myMenu = menu;
 

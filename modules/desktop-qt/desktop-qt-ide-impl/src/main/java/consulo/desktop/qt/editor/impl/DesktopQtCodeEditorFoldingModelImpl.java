@@ -26,4 +26,17 @@ public class DesktopQtCodeEditorFoldingModelImpl extends CodeEditorFoldingModelB
     public DesktopQtCodeEditorFoldingModelImpl(CodeEditorBase editor) {
         super(editor);
     }
+
+    @Override
+    protected void notifyBatchFoldingProcessingDoneToEditor() {
+        DesktopQtEditorWidget widget = ((DesktopQtEditorImpl) myEditor).getSurface();
+        if (widget == null) {
+            return;
+        }
+
+        widget.updateSideAreas();
+        widget.updateScrollRanges();
+        widget.viewport().update();
+        widget.getGutter().update();
+    }
 }

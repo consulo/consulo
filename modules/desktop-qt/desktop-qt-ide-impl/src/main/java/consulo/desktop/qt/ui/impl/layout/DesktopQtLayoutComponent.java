@@ -20,17 +20,14 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
-import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import io.qt.widgets.QLayout;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -41,9 +38,13 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
     implements Layout<C> {
     private static final String ourNullMapper = "____null____";
 
-    private final List<Pair<QtComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
-
-    private final MultiMap<String, Pair<QtComponentDelegate<?>, Object>> myMappedComponents = new MultiMap<>();
+    /**
+     * What this container holds, in the order it was filled, bound or not. The children are kept rather than
+     * handed over to the widget once: a container is bound more than once - closing a dialog takes the whole tree
+     * of widgets under it down and reopening builds a new one - and children remembered only until the first bind
+     * would leave every later one empty.
+     */
+    private final List<Pair<QtComponentDelegate<?>, Object>> myChildren = new ArrayList<>();
 
     @Override
     protected QWidget createQt(QWidget parent) {
@@ -60,14 +61,9 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
 
     @Override
     protected void initialize(QWidget component) {
-        for (Pair<QtComponentDelegate<?>, Object> pair : myComponents) {
+        for (Pair<QtComponentDelegate<?>, Object> pair : myChildren) {
             attachChild(pair.getFirst(), pair.getSecond());
-
-            String key = pair.getSecond() == null ? ourNullMapper : pair.getSecond().toString();
-            myMappedComponents.putValue(key, pair);
         }
-
-        myComponents.clear();
     }
 
     protected abstract @Nullable QLayout createLayout();
@@ -127,15 +123,11 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
     @Override
     @RequiredUIAccess
     public void removeAll() {
-        for (Pair<QtComponentDelegate<?>, Object> pair : myComponents) {
+        for (Pair<QtComponentDelegate<?>, Object> pair : myChildren) {
             pair.getFirst().disposeQt();
         }
-        myComponents.clear();
 
-        for (Pair<QtComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
-            pair.getFirst().disposeQt();
-        }
-        myMappedComponents.clear();
+        myChildren.clear();
     }
 
     @Override
@@ -145,20 +137,7 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
             return;
         }
 
-        boolean found = myComponents.removeIf(pair -> pair.getFirst() == delegate);
-
-        for (Iterator<Map.Entry<String, Collection<Pair<QtComponentDelegate<?>, Object>>>> it =
-             myMappedComponents.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<String, Collection<Pair<QtComponentDelegate<?>, Object>>> entry = it.next();
-
-            found |= entry.getValue().removeIf(pair -> pair.getFirst() == delegate);
-
-            if (entry.getValue().isEmpty()) {
-                it.remove();
-            }
-        }
-
-        if (!found) {
+        if (!myChildren.removeIf(pair -> pair.getFirst() == delegate)) {
             return;
         }
 
@@ -169,23 +148,20 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
 
     @Override
     public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
-        for (Pair<QtComponentDelegate<?>, Object> pair : new ArrayList<>(myComponents)) {
-            consumer.accept(pair.getFirst());
-        }
-
-        for (Pair<QtComponentDelegate<?>, Object> pair : new ArrayList<>(myMappedComponents.values())) {
+        for (Pair<QtComponentDelegate<?>, Object> pair : new ArrayList<>(myChildren)) {
             consumer.accept(pair.getFirst());
         }
     }
 
+    /**
+     * The widgets go, the children stay: what this container holds is the same list of components afterwards, and
+     * binding it again is what gives each of them a widget over.
+     */
     @Override
     public void disposeQt() {
-        for (Pair<QtComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
+        for (Pair<QtComponentDelegate<?>, Object> pair : myChildren) {
             pair.getFirst().disposeQt();
         }
-
-        myComponents.addAll(myMappedComponents.values());
-        myMappedComponents.clear();
 
         super.disposeQt();
     }
@@ -211,40 +187,44 @@ public abstract class DesktopQtLayoutComponent<C extends LayoutConstraint, Layou
     protected void addImpl(@Nullable Component component, @Nullable Object layoutData) {
         QtComponentDelegate<?> delegate = (QtComponentDelegate<?>) component;
 
-        String key = layoutData == null ? ourNullMapper : layoutData.toString();
+        String key = mapperOf(layoutData);
 
         // a layout which names its slots replaces whatever sat in the one being filled, and so does a layout
         // holding a single child. A stacking layout files every child under the same mapper and must keep
         // them all - evicting by key there would drop everything added before
         boolean replaces = layoutData != null || isSingleChild();
 
-        if (myComponent != null) {
-            if (replaces) {
-                Collection<Pair<QtComponentDelegate<?>, Object>> old = myMappedComponents.remove(key);
-                if (old != null) {
-                    for (Pair<QtComponentDelegate<?>, Object> oldPair : old) {
-                        detach(oldPair.getFirst());
-
-                        oldPair.getFirst().setParent(null);
-                    }
+        if (replaces) {
+            for (Iterator<Pair<QtComponentDelegate<?>, Object>> iterator = myChildren.iterator(); iterator.hasNext(); ) {
+                Pair<QtComponentDelegate<?>, Object> oldPair = iterator.next();
+                if (!key.equals(mapperOf(oldPair.getSecond()))) {
+                    continue;
                 }
+
+                iterator.remove();
+
+                if (myComponent != null) {
+                    detach(oldPair.getFirst());
+                }
+
+                oldPair.getFirst().setParent(null);
             }
+        }
 
-            // a null child empties the slot - a splitter of the tool window panel is cleared this way when the
-            // window at the anchor is hidden, and the status bar drops its progress the same way
-            if (delegate == null) {
-                return;
-            }
+        // a null child empties the slot - a splitter of the tool window panel is cleared this way when the
+        // window at the anchor is hidden, and the status bar drops its progress the same way
+        if (delegate == null) {
+            return;
+        }
 
-            myMappedComponents.putValue(key, Pair.create(delegate, layoutData));
+        myChildren.add(Pair.create(delegate, layoutData));
 
+        if (myComponent != null) {
             attachChild(delegate, layoutData);
         }
-        else if (delegate != null) {
-            myComponents.add(Pair.create(delegate, layoutData));
-        }
-        else if (replaces) {
-            myComponents.removeIf(pair -> key.equals(pair.getSecond() == null ? ourNullMapper : pair.getSecond().toString()));
-        }
+    }
+
+    private static String mapperOf(@Nullable Object layoutData) {
+        return layoutData == null ? ourNullMapper : layoutData.toString();
     }
 }

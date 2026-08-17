@@ -29,12 +29,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
+import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.Qt;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -43,14 +45,18 @@ import java.util.function.Supplier;
  *
  * @author VISTALL
  * @since 2026-08-16
+ * @implNote The menu is the object the signal of the widget is answered by, and nothing else holds it: a connection made to
+ * a method of a java object does not keep that object alive, so one left to itself is collected and the right
+ * click stops opening anything, with the policy still set and the signal still emitted. Handing it to the widget
+ * as a child is what makes it live exactly as long as the widget whose menu it is.
  */
-public final class DesktopQtActionContextMenu {
+public final class DesktopQtActionContextMenu extends QObject {
     private static final Logger LOG = Logger.getInstance(DesktopQtActionContextMenu.class);
 
     private final QWidget myWidget;
-    private final Supplier<ActionGroup> myGroupSupplier;
+    private final Function<QPoint, ActionGroup> myGroupSupplier;
     private final String myPlace;
-    private final Supplier<DataContext> myContextSupplier;
+    private final Function<QPoint, DataContext> myContextSupplier;
     private final MenuItemPresentationFactory myPresentationFactory = new MenuItemPresentationFactory();
 
     private @Nullable DesktopQtMenuImpl myMenu;
@@ -63,18 +69,36 @@ public final class DesktopQtActionContextMenu {
         Supplier<DataContext> contextSupplier
     ) {
         if (!(component instanceof QtComponentDelegate<?> delegate)) {
+            // a component of another frontend cannot be given a qt context menu, and a right click on it would
+            // otherwise do nothing at all with nothing said about why
+            LOG.warn("Can't install " + place + " on " + component);
             return;
         }
 
-        delegate.whenBound(widget -> new DesktopQtActionContextMenu(widget, groupSupplier, place, contextSupplier));
+        delegate.whenBound(widget -> installOn(widget, position -> groupSupplier.get(), place, position -> contextSupplier.get()));
+    }
+
+    /**
+     * For a widget standing for several things at once - a tab bar, where the group belongs to the tab under the
+     * pointer rather than to the bar - so the position of the click decides what is shown.
+     */
+    public static void installOn(
+        QWidget widget,
+        Function<QPoint, ActionGroup> groupSupplier,
+        String place,
+        Function<QPoint, DataContext> contextSupplier
+    ) {
+        new DesktopQtActionContextMenu(widget, groupSupplier, place, contextSupplier);
     }
 
     private DesktopQtActionContextMenu(
         QWidget widget,
-        Supplier<ActionGroup> groupSupplier,
+        Function<QPoint, ActionGroup> groupSupplier,
         String place,
-        Supplier<DataContext> contextSupplier
+        Function<QPoint, DataContext> contextSupplier
     ) {
+        super(widget);
+
         myWidget = widget;
         myGroupSupplier = groupSupplier;
         myPlace = place;
@@ -86,7 +110,7 @@ public final class DesktopQtActionContextMenu {
 
     @RequiredUIAccess
     private void showMenu(QPoint position) {
-        ActionGroup group = myGroupSupplier.get();
+        ActionGroup group = myGroupSupplier.apply(position);
         if (group == null) {
             // a right click that produces nothing is indistinguishable from one that never arrived, and the two
             // are fixed in different places - so say which it was
@@ -108,7 +132,7 @@ public final class DesktopQtActionContextMenu {
         myUpdateIndicator = indicator;
 
         UnifiedActionMenuExpander
-            .expandAsync(group, myContextSupplier.get(), myPlace, myPresentationFactory, uiAccess, indicator, false)
+            .expandAsync(group, myContextSupplier.apply(position), myPlace, myPresentationFactory, uiAccess, indicator, false)
             .whenCompleteAsync((nodes, throwable) -> {
                 if (myUpdateIndicator != indicator) {
                     return;
@@ -123,12 +147,16 @@ public final class DesktopQtActionContextMenu {
                     return;
                 }
 
-                popupMenu(nodes, globalPosition);
+                popupMenu(nodes, globalPosition, () -> myContextSupplier.apply(position));
             }, uiAccess);
     }
 
     @RequiredUIAccess
-    private void popupMenu(List<UnifiedActionMenuExpander.MenuNode> nodes, QPoint globalPosition) {
+    private void popupMenu(
+        List<UnifiedActionMenuExpander.MenuNode> nodes,
+        QPoint globalPosition,
+        Supplier<DataContext> contextSupplier
+    ) {
         if (myWidget.isDisposed()) {
             return;
         }
@@ -147,7 +175,7 @@ public final class DesktopQtActionContextMenu {
         myMenu = menu;
 
         for (UnifiedActionMenuExpander.MenuNode node : nodes) {
-            MenuItem item = UnifiedActionMenuExpander.createMenuItem(node, myContextSupplier, myPlace, myPresentationFactory);
+            MenuItem item = UnifiedActionMenuExpander.createMenuItem(node, contextSupplier, myPlace, myPresentationFactory);
 
             menu.add(item);
         }

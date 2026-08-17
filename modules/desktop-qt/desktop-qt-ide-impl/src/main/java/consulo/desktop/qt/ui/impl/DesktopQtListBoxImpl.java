@@ -129,6 +129,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     private TextItemRender<E> myRenderer = TextItemRender.defaultRender();
 
+    private @Nullable ComponentItemRender<E> myComponentRender;
+
     private Predicate<E> mySeparatorPredicate = item -> false;
 
     private @Nullable ToIntFunction<E> myItemHeightGetter;
@@ -210,6 +212,11 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
                     continue;
                 }
 
+                if (myComponentRender != null) {
+                    addRenderedItem(component, element, i);
+                    continue;
+                }
+
                 component.addItem(createItem(element, i));
             }
         }
@@ -221,7 +228,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     private void addSeparatorItem(QListWidget component) {
         QListWidgetItem item = new QListWidgetItem();
         item.setFlags(Qt.ItemFlag.NoItemFlags);
-        item.setSizeHint(new QSize(-1, ourSeparatorHeight));
+        // a hint of a negative width is not a valid size and qt drops it whole, height and all
+        item.setSizeHint(new QSize(0, ourSeparatorHeight));
 
         component.addItem(item);
 
@@ -231,6 +239,41 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
         line.setFrameShadow(QFrame.Shadow.Sunken);
 
         component.setItemWidget(item, line);
+    }
+
+    /**
+     * A row drawn by a component of its own rather than by a text and an icon - what the plugin list is built of.
+     * The component is asked for one row at a time and each answer is a component of its own, so unlike the reuse
+     * the api allows for it cannot be bound again for the next row.
+     */
+    private void addRenderedItem(QListWidget component, E element, int index) {
+        ComponentItemRender<E> render = myComponentRender;
+        if (render == null) {
+            return;
+        }
+
+        consulo.ui.Component rendered = render.render(RenderItem.of(element, index == mySelectedIndex));
+        if (!(rendered instanceof QtComponentDelegate<?> delegate)) {
+            return;
+        }
+
+        QListWidgetItem item = new QListWidgetItem();
+
+        component.addItem(item);
+
+        delegate.setParent(this);
+        delegate.bind(component, null);
+
+        QWidget widget = delegate.toQtComponent();
+        if (widget == null) {
+            return;
+        }
+
+        ToIntFunction<E> heightGetter = myItemHeightGetter;
+        int height = heightGetter != null ? heightGetter.applyAsInt(element) : widget.sizeHint().height();
+        item.setSizeHint(new QSize(0, height));
+
+        component.setItemWidget(item, widget);
     }
 
     private QListWidgetItem createItem(E element, int index) {
@@ -247,7 +290,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
         ToIntFunction<E> heightGetter = myItemHeightGetter;
         if (heightGetter != null) {
-            item.setSizeHint(new QSize(-1, heightGetter.applyAsInt(element)));
+            item.setSizeHint(new QSize(0, heightGetter.applyAsInt(element)));
         }
 
         return item;
@@ -328,6 +371,9 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     @Override
     public void setRender(ComponentItemRender<E> render) {
+        myComponentRender = render;
+
+        rebuildIfBound();
     }
 
     @Override

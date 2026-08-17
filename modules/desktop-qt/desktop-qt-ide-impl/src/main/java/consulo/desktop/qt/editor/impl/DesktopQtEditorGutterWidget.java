@@ -16,31 +16,58 @@
 package consulo.desktop.qt.editor.impl;
 
 import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutter;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterMark;
+import consulo.execution.debug.internal.breakpoint.BreakpointEditorUtil;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingGroup;
 import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.ui.color.ColorValue;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.desktop.qt.ui.impl.TargetQt;
+import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.CustomActionsSchema;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
+import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import io.qt.core.QEvent;
+import io.qt.core.QPoint;
 import io.qt.core.QPointF;
+import io.qt.core.QRect;
 import io.qt.core.Qt;
-import io.qt.gui.QBrush;
 import io.qt.gui.QColor;
+import io.qt.gui.QCursor;
+import io.qt.gui.QEnterEvent;
 import io.qt.gui.QMouseEvent;
-import io.qt.gui.QPolygon;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QPainter;
 import io.qt.widgets.QWidget;
 
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -65,21 +92,176 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      */
     private static final int SEPARATOR_AREA_WIDTH = 3;
 
-    /**
-     * Room for the fold anchors and for whatever hangs an icon in the gutter - a breakpoint above all. The awt
-     * gutter sizes this from the widest icon it holds; a fixed square is enough while only anchors are drawn.
-     */
-    private static final int MARKER_AREA_WIDTH = 14;
+    private static final int MARKER_AREA_PADDING = 2;
 
-    private static final int ANCHOR_SIZE = 8;
+    /**
+     * The row height the icons of the gutter are drawn at scale 1, as awt's {@code getScale} measures it.
+     */
+    private static final double STANDARD_LINE_HEIGHT = 16.0;
+
+    private static final double HOVER_MARK_OPACITY = 0.5;
+
+    // EditorMouseEvent still carries an awt event, and nothing downstream reads it when input details are given
+    private static final MouseEvent FAKE_MOUSE_EVENT = new MouseEvent(new JLabel("fake"), 0, 0, 0, 0, 0, 1, false);
 
     private final DesktopQtEditorWidget mySurface;
     private final DesktopQtEditorImpl myEditor;
+
+    private boolean myHovered;
+
+    private int myPressedLine = -1;
 
     public DesktopQtEditorGutterWidget(DesktopQtEditorWidget surface, DesktopQtEditorImpl editor) {
         super(surface);
         mySurface = surface;
         myEditor = editor;
+
+        // without this qt only reports moves while a button is held, and the anchors have to answer a bare hover
+        setMouseTracking(true);
+
+        installPopupMenu();
+    }
+
+    /**
+     * The menu of the gutter itself. Which group it is depends on where the click landed, and so does the line the
+     * actions in it answer for - a breakpoint is set on the line under the pointer, not on the one holding the
+     * caret - so both are resolved from the position rather than fixed when the handler is installed.
+     */
+    private void installPopupMenu() {
+        DesktopQtActionContextMenu.installOn(
+            this,
+            this::gutterPopupGroup,
+            ActionPlaces.EDITOR_GUTTER_POPUP,
+            this::gutterDataContext
+        );
+    }
+
+    /**
+     * A mark standing on the line carries a menu of its own and it wins - right clicking a breakpoint asks the
+     * breakpoint, not the gutter. Only when nothing on the row answers does the menu of the gutter itself apply,
+     * which is the order the web frontend resolves it in.
+     */
+    private @Nullable ActionGroup gutterPopupGroup(QPoint position) {
+        for (GutterMark mark : myEditor.getGutterComponentEx().getGutterRenderers(visualLineAt(position.y()))) {
+            if (mark instanceof GutterIconRenderer renderer) {
+                ActionGroup rendererGroup = renderer.getPopupMenuActions();
+
+                if (rendererGroup != null) {
+                    return rendererGroup;
+                }
+            }
+        }
+
+        DesktopQtEditorGutterComponentImpl gutter = (DesktopQtEditorGutterComponentImpl) myEditor.getGutterComponentEx();
+
+        ActionGroup custom = gutter.getGutterPopupGroup();
+        if (custom != null) {
+            return custom;
+        }
+
+        if (!gutter.isShowDefaultGutterPopup()) {
+            return null;
+        }
+
+        return CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER) instanceof ActionGroup group
+            ? group
+            : null;
+    }
+
+    /**
+     * What the actions of the menu read. The two keys the awt gutter publishes off its last actionable click are
+     * the line under the pointer and the point to hang a further popup from; an action which cannot find them
+     * falls back to the caret, which is the wrong line as soon as the two differ.
+     */
+    private DataContext gutterDataContext(QPoint position) {
+        DataManager dataManager = DataManager.getInstance();
+
+        SimpleDataContext.Builder builder = SimpleDataContext.builder()
+            .setParent(dataManager.getDataContext(myEditor.getUIComponent()))
+            .add(Editor.KEY, myEditor);
+
+        int logicalLine = myEditor.getVisualLines().visualToLogicalLine(visualLineAt(position.y()));
+
+        if (logicalLine >= 0 && logicalLine < myEditor.getDocument().getLineCount()) {
+            builder.add(EditorGutter.KEY, myEditor.getGutterComponentEx())
+                .add(EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR, logicalLine)
+                .add(EditorGutterComponentEx.ICON_CENTER_POSITION, new Point(position.x(), position.y()));
+        }
+
+        // the group is expanded off the ui thread, the providers have to be snapshotted before that
+        return dataManager.createAsyncDataContext(builder.build());
+    }
+
+    private int markerAreaWidth() {
+        int widest = Math.max(scaledIconSize(PlatformIconGroup.gutterFold()), scaledIconSize(PlatformIconGroup.gutterUnfold()));
+
+        return widest + 2 * MARKER_AREA_PADDING;
+    }
+
+    @Override
+    protected void enterEvent(QEnterEvent event) {
+        myHovered = true;
+        update();
+    }
+
+    @Override
+    protected void mouseMoveEvent(QMouseEvent event) {
+        int x = event.pos().x();
+        int visualLine = visualLineAt(event.pos().y());
+
+        FoldRegion region = x >= markerAreaOffset() ? foldRegionAt(visualLine) : null;
+
+        setCursor(new QCursor(region != null ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.ArrowCursor));
+
+        fireMouseMoved(event, visualLine, x < markerAreaOffset()
+            ? EditorMouseEventArea.LINE_NUMBERS_AREA
+            : EditorMouseEventArea.LINE_MARKERS_AREA);
+
+        event.accept();
+    }
+
+    /**
+     * Tells the platform which line of the gutter the pointer is over. The breakpoint promoter listens for this
+     * and answers by putting the icon it wants drawn on the component below, so a gutter which never reports a
+     * move shows nothing on hover no matter what it paints.
+     */
+    private void fireMouseMoved(QMouseEvent event, int visualLine, EditorMouseEventArea area) {
+        Document document = myEditor.getDocument();
+
+        int logicalLine = myEditor.getVisualLines().visualToLogicalLine(visualLine);
+        if (logicalLine < 0 || logicalLine >= document.getLineCount()) {
+            return;
+        }
+
+        LogicalPosition logicalPosition = new LogicalPosition(logicalLine, 0);
+
+        EditorMouseEvent editorEvent = new EditorMouseEvent(
+            myEditor,
+            FAKE_MOUSE_EVENT,
+            DesktopQtInputDetails.mouse(this, event),
+            false,
+            area,
+            document.getLineStartOffset(logicalLine),
+            logicalPosition,
+            myEditor.logicalToVisualPosition(logicalPosition),
+            false,
+            null,
+            null,
+            null
+        );
+
+        myEditor.fireMouseMoved(editorEvent);
+    }
+
+    private int visualLineAt(int y) {
+        return (y + mySurface.verticalScrollBar().value()) / myEditor.getLineHeight();
+    }
+
+    @Override
+    protected void leaveEvent(QEvent event) {
+        myHovered = false;
+        setCursor(new QCursor(Qt.CursorShape.ArrowCursor));
+        update();
     }
 
     /**
@@ -97,7 +279,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         return LEFT_PADDING
             + (int) Math.ceil(myEditor.getFontMetrics().getTextWidth(widest))
             + RIGHT_PADDING
-            + MARKER_AREA_WIDTH
+            + markerAreaWidth()
             + SEPARATOR_AREA_WIDTH;
     }
 
@@ -106,7 +288,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * as the platform is concerned, which is the area a breakpoint is toggled in.
      */
     public int markerAreaOffset() {
-        return Math.max(0, separatorOffset() - MARKER_AREA_WIDTH);
+        return Math.max(0, separatorOffset() - markerAreaWidth());
     }
 
     /**
@@ -175,7 +357,21 @@ public class DesktopQtEditorGutterWidget extends QWidget {
         int right = markerAreaOffset() - RIGHT_PADDING;
         int baselineOffset = metrics.getAscent();
 
+        int hoverLine = hoverMarkLine();
+
         for (int line = firstLine; line <= lastLine; line++) {
+            // a breakpoint standing on the line takes the place of its number, and one merely being offered
+            // under the pointer does the same but faintly - the number is only drawn when neither is there
+            Image lineNumberIcon = lineNumbersIcon(line);
+            if (lineNumberIcon != null) {
+                paintLineNumberIcon(painter, lineNumberIcon, line, scrollY, lineHeight, 1.0);
+                continue;
+            }
+
+            if (line == hoverLine && paintHoverMark(painter, line, scrollY, lineHeight)) {
+                continue;
+            }
+
             // rows are numbered by the line of the file they show, so a collapsed region makes the numbers jump
             // rather than run on - and the strip counts from one while the editor counts from zero
             String number = String.valueOf(visualLines.visualToLogicalLine(line) + 1);
@@ -185,19 +381,101 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             painter.drawText(new QPointF(x, line * lineHeight - scrollY + baselineOffset), number);
         }
 
-        paintFoldAnchors(painter, firstLine, lastLine, scrollY, lineHeight, plain);
+        paintFoldAnchors(painter, firstLine, lastLine, scrollY, lineHeight);
     }
 
     /**
-     * A triangle per foldable row, pointing down when the region is open and right when it is collapsed - the
-     * same shorthand every editor uses, and the only way to fold with the mouse.
+     * How much bigger or smaller than the standard row every icon in the gutter is drawn, so they follow the
+     * editor font rather than staying at whatever size the svg happens to declare. Ported from awt's
+     * {@code getEditorScaleFactor}, and it applies to every icon here rather than to one of them.
      */
-    private void paintFoldAnchors(QPainter painter, int firstLine, int lastLine, int scrollY, int lineHeight, QColor color) {
-        painter.setBrush(new QBrush(color));
-        painter.setPen(color);
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+    private double iconScale() {
+        float lineSpacing = myEditor.getColorsScheme().getLineSpacing();
+        double normalizedLineHeight = myEditor.getLineHeight() / (lineSpacing <= 0 ? 1f : lineSpacing);
 
-        int centerX = markerAreaOffset() + MARKER_AREA_WIDTH / 2;
+        return normalizedLineHeight / STANDARD_LINE_HEIGHT;
+    }
+
+    private int scaledIconSize(Image image) {
+        return Math.max(1, (int) Math.round(image.getWidth() * iconScale()));
+    }
+
+    /**
+     * The row the platform is offering a breakpoint on, or -1. Only while the pointer is in the gutter: the
+     * offer belongs to the hover, and awt gates it on the same thing.
+     */
+    private int hoverMarkLine() {
+        if (!myHovered) {
+            return -1;
+        }
+
+        JComponent properties = myEditor.getGutterComponentEx().getComponent();
+
+        return properties.getClientProperty("active.line.number") instanceof Integer logicalLine
+            ? myEditor.getVisualLines().logicalToVisualLine(logicalLine)
+            : -1;
+    }
+
+    /**
+     * The icon of a mark which asked to stand where the line number goes - which is where a breakpoint sits once
+     * it is set, while the setting to show them over the numbers is on.
+     */
+    private @Nullable Image lineNumbersIcon(int visualLine) {
+        if (!BreakpointEditorUtil.isBreakPointsOnLineNumbers()) {
+            return null;
+        }
+
+        for (GutterMark mark : myEditor.getGutterComponentEx().getGutterRenderers(visualLine)) {
+            if (mark instanceof GutterIconRenderer renderer
+                && renderer.getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS) {
+                return renderer.getIcon();
+            }
+        }
+
+        return null;
+    }
+
+    private boolean paintHoverMark(QPainter painter, int visualLine, int scrollY, int lineHeight) {
+        JComponent properties = myEditor.getGutterComponentEx().getComponent();
+
+        if (!(properties.getClientProperty("line.number.hover.icon") instanceof Image image)) {
+            return false;
+        }
+
+        // the breakpoint is only being offered, not set, so it is drawn faint the way awt draws it
+        return paintLineNumberIcon(painter, image, visualLine, scrollY, lineHeight, HOVER_MARK_OPACITY);
+    }
+
+    private boolean paintLineNumberIcon(
+        QPainter painter,
+        Image image,
+        int visualLine,
+        int scrollY,
+        int lineHeight,
+        double opacity
+    ) {
+        if (!(image instanceof DesktopQtImage qtImage)) {
+            return false;
+        }
+
+        int size = scaledIconSize(image);
+        int y = visualLine * lineHeight - scrollY + (lineHeight - size) / 2;
+
+        painter.save();
+        painter.setOpacity(opacity);
+        qtImage.toQIcon().paint(painter, new QRect(Math.max(0, markerAreaOffset() - RIGHT_PADDING - size), y, size, size));
+        painter.restore();
+
+        return true;
+    }
+
+    private void paintFoldAnchors(QPainter painter, int firstLine, int lastLine, int scrollY, int lineHeight) {
+        if (!myHovered) {
+            return;
+        }
+
+        int areaOffset = markerAreaOffset();
+        int areaWidth = markerAreaWidth();
 
         for (int line = firstLine; line <= lastLine; line++) {
             FoldRegion region = foldRegionAt(line);
@@ -205,17 +483,19 @@ public class DesktopQtEditorGutterWidget extends QWidget {
                 continue;
             }
 
-            int centerY = line * lineHeight - scrollY + lineHeight / 2;
-            int half = ANCHOR_SIZE / 2;
+            Image image = region.isExpanded() ? PlatformIconGroup.gutterFold() : PlatformIconGroup.gutterUnfold();
+            if (!(image instanceof DesktopQtImage qtImage)) {
+                continue;
+            }
 
-            QPolygon triangle = region.isExpanded()
-                ? new QPolygon(centerX - half, centerY - half / 2, centerX + half, centerY - half / 2, centerX, centerY + half)
-                : new QPolygon(centerX - half / 2, centerY - half, centerX + half, centerY, centerX - half / 2, centerY + half);
+            int iconWidth = Math.min(scaledIconSize(image), areaWidth - 2 * MARKER_AREA_PADDING);
+            int iconHeight = Math.min(iconWidth, lineHeight);
 
-            painter.drawPolygon(triangle);
+            int x = areaOffset + (areaWidth - iconWidth) / 2;
+            int y = line * lineHeight - scrollY + (lineHeight - iconHeight) / 2;
+
+            qtImage.toQIcon().paint(painter, new QRect(x, y, iconWidth, iconHeight));
         }
-
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing, false);
     }
 
     /**
@@ -230,15 +510,63 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             return null;
         }
 
-        int logicalLine = myEditor.getVisualLines().visualToLogicalLine(visualLine);
+        DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
 
         for (FoldRegion region : regions) {
-            if (region.isValid() && document.getLineNumber(region.getStartOffset()) == logicalLine) {
+            if (!region.isValid() || region.shouldNeverExpand()) {
+                continue;
+            }
+
+            int startOffset = region.getStartOffset();
+
+            // a region living inside one line carries no anchor unless it asked for one
+            if (document.getLineNumber(startOffset) == document.getLineNumber(region.getEndOffset())
+                && !region.isGutterMarkEnabledForSingleLine()) {
+                continue;
+            }
+
+            // the row the region opens on, which is not the row of its start line once folding moved it
+            if (visualLines.offsetToVisualLine(startOffset) == visualLine && leadsGroup(region, regions)) {
                 return region;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Whether this is the region an anchor should be drawn for. A one line method is folded by several regions
+     * banded into a group - one hiding the break after the brace, another the break before the closing one - and
+     * they open and close as a unit, so the group answers with one anchor rather than one per region.
+     */
+    private static boolean leadsGroup(FoldRegion region, FoldRegion[] regions) {
+        FoldingGroup group = region.getGroup();
+        if (group == null) {
+            return true;
+        }
+
+        for (FoldRegion other : regions) {
+            if (other != region && group.equals(other.getGroup()) && other.getStartOffset() < region.getStartOffset()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void toggleFold(FoldRegion region) {
+        FoldingModelEx foldingModel = (FoldingModelEx) myEditor.getFoldingModel();
+
+        FoldingGroup group = region.getGroup();
+        List<FoldRegion> grouped = group == null ? List.of(region) : foldingModel.getGroupedRegions(group);
+
+        boolean expanded = !region.isExpanded();
+
+        foldingModel.runBatchFoldingOperation(() -> {
+            for (FoldRegion grouping : grouped) {
+                grouping.setExpanded(expanded);
+            }
+        });
     }
 
     /**
@@ -249,37 +577,81 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     @Override
     protected void mousePressEvent(QMouseEvent event) {
         int x = event.pos().x();
-        int visualLine = (event.pos().y() + mySurface.verticalScrollBar().value()) / myEditor.getLineHeight();
+        int visualLine = visualLineAt(event.pos().y());
 
         // an anchor takes the click for itself, since folding is the gutter's own business
         if (x >= markerAreaOffset() && event.button() == Qt.MouseButton.LeftButton) {
             FoldRegion region = foldRegionAt(visualLine);
             if (region != null) {
-                myEditor.getFoldingModel().runBatchFoldingOperation(() -> region.setExpanded(!region.isExpanded()));
+                toggleFold(region);
 
                 event.accept();
                 return;
             }
         }
 
-        fireEditorMouseEvent(event, x < markerAreaOffset()
-            ? EditorMouseEventArea.LINE_NUMBERS_AREA
-            : EditorMouseEventArea.LINE_MARKERS_AREA);
+        myPressedLine = visualLine;
+
+        EditorMouseEvent editorEvent = gutterMouseEvent(event, visualLine, areaAt(x));
+        if (editorEvent != null) {
+            myEditor.fireMousePressed(editorEvent);
+        }
 
         event.accept();
     }
 
-    private void fireEditorMouseEvent(QMouseEvent event, EditorMouseEventArea area) {
-        EditorMouseEvent editorEvent = new EditorMouseEvent(
+    /**
+     * The event the platform listeners read. It has to carry the real logical position: the short constructor of
+     * {@link EditorMouseEvent} fills a zero one, and everything reading a line off a gutter click - toggling a
+     * breakpoint above all - takes it from there whenever input details are present.
+     */
+    private @Nullable EditorMouseEvent gutterMouseEvent(QMouseEvent event, int visualLine, EditorMouseEventArea area) {
+        Document document = myEditor.getDocument();
+
+        int logicalLine = myEditor.getVisualLines().visualToLogicalLine(visualLine);
+        if (logicalLine < 0 || logicalLine >= document.getLineCount()) {
+            return null;
+        }
+
+        LogicalPosition logicalPosition = new LogicalPosition(logicalLine, 0);
+
+        return new EditorMouseEvent(
             myEditor,
+            FAKE_MOUSE_EVENT,
             DesktopQtInputDetails.mouse(this, event),
             event.button() == Qt.MouseButton.RightButton,
-            area
+            area,
+            document.getLineStartOffset(logicalLine),
+            logicalPosition,
+            myEditor.logicalToVisualPosition(logicalPosition),
+            false,
+            null,
+            null,
+            null
         );
+    }
 
-        for (EditorMouseListener listener : myEditor.getEditorMouseListeners()) {
-            listener.mousePressed(editorEvent);
+    private EditorMouseEventArea areaAt(int x) {
+        return x < markerAreaOffset() ? EditorMouseEventArea.LINE_NUMBERS_AREA : EditorMouseEventArea.LINE_MARKERS_AREA;
+    }
+
+    @Override
+    protected void mouseReleaseEvent(QMouseEvent event) {
+        int visualLine = visualLineAt(event.pos().y());
+
+        EditorMouseEvent editorEvent = gutterMouseEvent(event, visualLine, areaAt(event.pos().x()));
+        if (editorEvent != null) {
+            myEditor.fireMouseReleased(editorEvent);
+
+            // a press followed by a release over the same row is the click the platform is waiting for
+            if (visualLine == myPressedLine) {
+                myEditor.fireMouseClicked(editorEvent);
+            }
         }
+
+        myPressedLine = -1;
+
+        event.accept();
     }
 
     private Set<Integer> caretRows() {

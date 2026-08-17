@@ -22,14 +22,19 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.impl.CaretData;
 import consulo.codeEditor.impl.IterationState;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.ui.color.ColorValue;
 import consulo.desktop.qt.ui.impl.TargetQt;
 import io.qt.core.QPointF;
+import io.qt.core.Qt;
 import io.qt.core.QRect;
 import io.qt.core.QRectF;
+import io.qt.gui.QBrush;
 import io.qt.gui.QColor;
+import io.qt.gui.QPainterPath;
+import io.qt.gui.QPen;
 import io.qt.gui.QPainter;
 import org.jspecify.annotations.Nullable;
 
@@ -136,6 +141,92 @@ public class DesktopQtEditorPainter {
 
             x += metrics.getTextWidth(chunk, fontType);
         }
+
+        // effects last: an error is drawn as an underline and nothing else, so it has to survive the glyphs
+        x = startX;
+        for (Run run : runs) {
+            double width = metrics.getTextWidth(run.text(text), run.fontType());
+
+            paintEffect(painter, x, x + width, baseline, run.effectColor(), run.effectType());
+
+            x += width;
+        }
+    }
+
+    private void paintEffect(
+        QPainter painter,
+        double xFrom,
+        double xTo,
+        int baseline,
+        @Nullable ColorValue color,
+        @Nullable EffectType type
+    ) {
+        if (color == null || type == null || xTo <= xFrom) {
+            return;
+        }
+
+        DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
+
+        QColor qColor = TargetQt.to(color);
+        int descent = Math.max(1, metrics.getDescent());
+
+        switch (type) {
+            case LINE_UNDERSCORE -> fillLine(painter, xFrom, xTo, baseline + 1, 1, qColor);
+            case BOLD_LINE_UNDERSCORE -> fillLine(painter, xFrom, xTo, baseline + 1, Math.min(2, descent), qColor);
+            case STRIKEOUT -> fillLine(painter, xFrom, xTo, baseline - metrics.getAscent() / 3, 1, qColor);
+            case BOLD_DOTTED_LINE -> paintDotted(painter, xFrom, xTo, baseline + 1, qColor);
+            case WAVE_UNDERSCORE -> paintWave(painter, xFrom, xTo, baseline + 1, descent, qColor);
+            case BOXED, ROUNDED_BOX, SLIGHTLY_WIDER_BOX -> paintBox(painter, xFrom, xTo, baseline, qColor);
+            default -> {
+            }
+        }
+    }
+
+    private static void fillLine(QPainter painter, double xFrom, double xTo, double y, int thickness, QColor color) {
+        painter.fillRect(new QRectF(xFrom, y, xTo - xFrom, thickness), color);
+    }
+
+    private static void paintDotted(QPainter painter, double xFrom, double xTo, double y, QColor color) {
+        for (double x = xFrom; x < xTo; x += 4) {
+            painter.fillRect(new QRectF(x, y, Math.min(2, xTo - x), 2), color);
+        }
+    }
+
+    /**
+     * The squiggle an error is drawn with. The wave is kept inside the descent so it cannot reach into the line
+     * below, and its period is fixed in pixels rather than derived from the font, the way awt's effect painter
+     * does it.
+     */
+    private static void paintWave(QPainter painter, double xFrom, double xTo, double y, int descent, QColor color) {
+        double height = Math.max(2, Math.min(3, descent));
+        double period = 4;
+
+        QPainterPath path = new QPainterPath();
+        path.moveTo(xFrom, y + height);
+
+        boolean up = true;
+        for (double x = xFrom; x < xTo; x += period / 2) {
+            double next = Math.min(x + period / 2, xTo);
+            path.lineTo(next, up ? y : y + height);
+            up = !up;
+        }
+
+        painter.save();
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, true);
+        painter.setBrush(new QBrush(Qt.BrushStyle.NoBrush));
+        painter.setPen(new QPen(color, 1.0));
+        painter.drawPath(path);
+        painter.restore();
+    }
+
+    private void paintBox(QPainter painter, double xFrom, double xTo, int baseline, QColor color) {
+        DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
+
+        painter.save();
+        painter.setBrush(new QBrush(Qt.BrushStyle.NoBrush));
+        painter.setPen(new QPen(color, 1.0));
+        painter.drawRect(new QRectF(xFrom, baseline - metrics.getAscent(), xTo - xFrom - 1, metrics.getLineHeight() - 1));
+        painter.restore();
     }
 
     /**
@@ -147,7 +238,9 @@ public class DesktopQtEditorPainter {
         @Nullable ColorValue foreground,
         @Nullable ColorValue background,
         int fontType,
-        @Nullable String placeholder
+        @Nullable String placeholder,
+        @Nullable ColorValue effectColor,
+        @Nullable EffectType effectType
     ) {
         CharSequence text(CharSequence documentText) {
             return placeholder != null ? placeholder : documentText.subSequence(startOffset, endOffset);
@@ -184,6 +277,8 @@ public class DesktopQtEditorPainter {
             ColorValue foreground = attributes.getForegroundColor();
             ColorValue background = attributes.getBackgroundColor();
             int fontType = attributes.getFontType();
+            ColorValue effectColor = attributes.getEffectColor();
+            EffectType effectType = effectColor == null ? null : attributes.getEffectType();
 
             FoldRegion fold = state.getCurrentFold();
             if (fold != null) {
@@ -193,7 +288,9 @@ public class DesktopQtEditorPainter {
                     foreground,
                     background,
                     fontType,
-                    fold.getPlaceholderText()
+                    fold.getPlaceholderText(),
+                    effectColor,
+                    effectType
                 ));
                 continue;
             }
@@ -204,11 +301,18 @@ public class DesktopQtEditorPainter {
                 && last.endOffset() == state.getStartOffset()
                 && last.fontType() == fontType
                 && Objects.equals(last.foreground(), foreground)
-                && Objects.equals(last.background(), background)) {
-                runs.set(runs.size() - 1, new Run(last.startOffset(), state.getEndOffset(), foreground, background, fontType, null));
+                && Objects.equals(last.background(), background)
+                && Objects.equals(last.effectColor(), effectColor)
+                && last.effectType() == effectType) {
+                runs.set(
+                    runs.size() - 1,
+                    new Run(last.startOffset(), state.getEndOffset(), foreground, background, fontType, null, effectColor, effectType)
+                );
             }
             else {
-                runs.add(new Run(state.getStartOffset(), state.getEndOffset(), foreground, background, fontType, null));
+                runs.add(new Run(
+                    state.getStartOffset(), state.getEndOffset(), foreground, background, fontType, null, effectColor, effectType
+                ));
             }
         }
 

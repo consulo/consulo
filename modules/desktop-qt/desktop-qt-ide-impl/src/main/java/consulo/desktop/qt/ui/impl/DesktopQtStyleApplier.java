@@ -34,27 +34,15 @@ import java.util.List;
  * @since 2026-08-16
  */
 public final class DesktopQtStyleApplier {
-    /**
-     * Every desktop style of qt - breeze on kde, windowsvista, macos - draws part of its widgets with colors of the
-     * desktop rather than of the palette handed to it, so a theme applied over one of them shows through only where
-     * the style happens to ask. Fusion is the one style qt ships which takes all of its colors from the palette, and
-     * it is what makes a consulo theme rather than the desktop decide the look.
-     */
-    private static final String STYLE_NAME = "Fusion";
-
     private static final List<QPalette.ColorGroup> ourGroups =
         List.of(QPalette.ColorGroup.Active, QPalette.ColorGroup.Inactive, QPalette.ColorGroup.Disabled);
 
     /**
-     * The corner radii of the awt look and feel, which is where the shape of consulo is decided - flatlaf defaults
-     * for {@code Button.arc}, {@code ProgressBar.arc} and {@code Popup.borderCornerRadius}, and the
-     * {@code TextComponent.arc} of {@code ConsuloLightLaf}/{@code ConsuloDarkLaf} over the flatlaf default of 0.
-     * {@code Component.arc} is what a combo box and a spinner are drawn with.
+     * The {@code Button.arc} of the awt look and feel, which the header of a titleless window rounds its menu
+     * entries with. Nothing of qt is shaped here - the style of the desktop decides whether a widget is rounded,
+     * and the header is drawn by consulo rather than by that style.
      */
-    private static final int ourTextArc = 8;
-    private static final int ourComponentArc = 5;
     private static final int ourButtonArc = 6;
-    private static final int ourProgressArc = 4;
 
     /**
      * What an item of the menu bar in the header of a titleless window is padded by, which is what decides how
@@ -69,25 +57,11 @@ public final class DesktopQtStyleApplier {
      */
     private static volatile @Nullable Style ourStyle;
 
-    /**
-     * An application style sheet wraps the style of the application into a proxy, so once one is written the style
-     * asked for cannot be read back off {@code QApplication.style()} any more.
-     */
-    private static boolean ourStyleForced;
-
     private DesktopQtStyleApplier() {
     }
 
     public static void apply(Style style) {
         ourStyle = style;
-
-        if (!ourStyleForced) {
-            ourStyleForced = true;
-
-            // setStyle rebuilds the application palette out of the standard palette of the new style, so the theme
-            // has to be written after it
-            QApplication.setStyle(STYLE_NAME);
-        }
 
         QApplication.setPalette(buildPalette(style));
 
@@ -146,60 +120,19 @@ public final class DesktopQtStyleApplier {
     }
 
     /**
-     * The keys the palette of qt has no role for. Only widget parts are named here, never a widget as a whole - a
-     * rule which fills a widget would take over the drawing of it from fusion, and would also outrank whatever style
-     * sheet the component wrote for itself.
+     * Only the widgets consulo draws itself are named here. A rule naming a widget of qt takes over the drawing of
+     * that widget from the style of the desktop, which decides how everything of it looks - whether it is rounded
+     * among the rest - and the theme reaches it through the palette instead.
      */
     private static String buildStyleSheet(Style style) {
-        String border = css(style, ComponentColors.BORDER);
-        String thumb = css(style, ComponentColors.SCROLL_BAR_THUMB);
-        String hoverThumb = css(style, ComponentColors.SCROLL_BAR_HOVER_THUMB);
-        String tabBackground = css(style, ComponentColors.TABBED_PANE_BACKGROUND);
-        String tabForeground = css(style, ComponentColors.TABBED_PANE_FOREGROUND);
-        String tabHover = css(style, ComponentColors.TABBED_PANE_HOVER);
-        String tabUnderline = css(style, ComponentColors.TABBED_PANE_UNDERLINE);
-        String separator = css(style, ComponentColors.SEPARATOR);
-        String toolTipBackground = css(style, ComponentColors.TOOLTIP_BACKGROUND);
-        String toolTipForeground = css(style, ComponentColors.TOOLTIP_FOREGROUND);
-
-        return """
-            QToolTip { background-color: %s; color: %s; border: 1px solid %s; }
-
-            QScrollBar:vertical { background: transparent; width: 12px; margin: 0px; }
-            QScrollBar:horizontal { background: transparent; height: 12px; margin: 0px; }
-            QScrollBar::handle:vertical { background: %s; border-radius: 4px; min-height: 24px; margin: 2px; }
-            QScrollBar::handle:horizontal { background: %s; border-radius: 4px; min-width: 24px; margin: 2px; }
-            QScrollBar::handle:hover { background: %s; }
-            QScrollBar::add-line, QScrollBar::sub-line { width: 0px; height: 0px; }
-            QScrollBar::add-page, QScrollBar::sub-page { background: transparent; }
-
-            QTabWidget::pane { border: 1px solid %s; }
-            QTabBar::tab { background: %s; color: %s; padding: 4px 10px; border: none; border-bottom: 2px solid transparent; }
-            QTabBar::tab:hover { background: %s; }
-            QTabBar::tab:selected { border-bottom: 2px solid %s; }
-
-            QMenu::separator { height: 1px; background: %s; margin: 4px 0px; }
-            """.formatted(
-            toolTipBackground,
-            toolTipForeground,
-            border,
-            thumb,
-            thumb,
-            hoverThumb,
-            border,
-            tabBackground,
-            tabForeground,
-            tabHover,
-            tabUnderline,
-            separator
-        ) + buildCornerStyleSheet(style) + buildTitleBarStyleSheet(style);
+        return buildTitleBarStyleSheet(style);
     }
 
     /**
-     * The header a titleless window is decorated with. It is one of the few widgets named here as a whole rather
-     * than by its parts - the header is drawn by consulo and not by fusion, so there is nothing of the style to be
-     * taken over. Keeping the rules in the application style sheet is also what repaints a header in the colors of
-     * a theme picked while the window is already up.
+     * The header a titleless window is decorated with. It is the one widget named as a whole - the header is drawn
+     * by consulo rather than by the style of the desktop, so there is nothing of that style to be taken over.
+     * Keeping the rules in the application style sheet is also what repaints a header in the colors of a theme
+     * picked while the window is already up.
      */
     private static String buildTitleBarStyleSheet(Style style) {
         String layout = css(style, ComponentColors.LAYOUT);
@@ -231,70 +164,6 @@ public final class DesktopQtStyleApplier {
         );
     }
 
-    /**
-     * The corners. Qt only rounds what a style sheet draws, so every rule here has to state the border and the fill
-     * the widget would otherwise have had from fusion - and the states with them, or a field would keep the frame of
-     * an idle one while it has the focus.
-     * <p/>
-     * A combo box and a spinner reach their arrow through a subcontrol, and the moment the widget is styled qt stops
-     * asking fusion for it. Both arrows are therefore drawn again here as a css triangle - a box of no size whose
-     * borders meet in a point - which is what keeps them once the frame is ours.
-     * <p/>
-     * A list, a tree and a scroll pane are left square on purpose: {@code ScrollPane.arc} is 0 in the awt look and
-     * feel, so a rounded frame around one would be a shape consulo does not have.
-     */
-    private static String buildCornerStyleSheet(Style style) {
-        String border = css(style, ComponentColors.BORDER);
-        String disabledBorder = css(style, ComponentColors.DISABLED_BORDER);
-        String focus = css(style, ComponentColors.FOCUS_COLOR);
-        String componentBackground = css(style, ComponentColors.COMPONENT_BACKGROUND);
-        String layout = css(style, ComponentColors.LAYOUT);
-        String hover = css(style, ComponentColors.HOVER_BACKGROUND);
-        String text = css(style, ComponentColors.TEXT_FOREGROUND);
-        String disabledText = css(style, ComponentColors.DISABLED_TEXT);
-        String accent = css(style, ComponentColors.TABBED_PANE_UNDERLINE);
-
-        return """
-
-            QLineEdit, QPlainTextEdit { border: 1px solid %s; border-radius: %dpx; background: %s; padding: 3px 6px; }
-            QLineEdit:focus, QPlainTextEdit:focus { border: 1px solid %s; }
-            QLineEdit:disabled, QPlainTextEdit:disabled { border: 1px solid %s; }
-
-            QPushButton { border: 1px solid %s; border-radius: %dpx; background: %s; padding: 4px 14px; }
-            QPushButton:hover { background: %s; }
-            QPushButton:focus { border: 1px solid %s; }
-            QPushButton:disabled { border: 1px solid %s; color: %s; }
-
-            QProgressBar { border: 1px solid %s; border-radius: %dpx; background: %s; text-align: center; }
-            QProgressBar::chunk { background: %s; border-radius: %dpx; }
-
-            QComboBox, QAbstractSpinBox { border: 1px solid %s; border-radius: %dpx; background: %s; padding: 3px 6px; }
-            QComboBox:focus, QAbstractSpinBox:focus { border: 1px solid %s; }
-            QComboBox:disabled, QAbstractSpinBox:disabled { border: 1px solid %s; color: %s; }
-            QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: center right; width: 16px; border: none; background: transparent; }
-            QComboBox::down-arrow { width: 0px; height: 0px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid %s; }
-            QAbstractSpinBox::up-button { subcontrol-origin: border; subcontrol-position: top right; width: 16px; border: none; background: transparent; }
-            QAbstractSpinBox::down-button { subcontrol-origin: border; subcontrol-position: bottom right; width: 16px; border: none; background: transparent; }
-            QAbstractSpinBox::up-arrow { width: 0px; height: 0px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-bottom: 4px solid %s; }
-            QAbstractSpinBox::down-arrow { width: 0px; height: 0px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 4px solid %s; }
-            """.formatted(
-            border, ourTextArc, componentBackground,
-            focus,
-            disabledBorder,
-            border, ourButtonArc, layout,
-            hover,
-            focus,
-            disabledBorder, disabledText,
-            border, ourProgressArc, componentBackground,
-            accent, ourProgressArc,
-            border, ourComponentArc, componentBackground,
-            focus,
-            disabledBorder, disabledText,
-            text,
-            text,
-            text
-        );
-    }
 
     /**
      * The border of a frameless popup, written against the object name so it reaches the frame and none of the

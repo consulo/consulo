@@ -20,10 +20,16 @@ import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.TextDrawingCallback;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
@@ -42,22 +48,22 @@ import consulo.codeEditor.event.SelectionListener;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
 import consulo.desktop.qt.ui.impl.base.DesktopQtAwtBridgeComponent;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JComponent;
+import javax.swing.border.Border;
+import java.awt.Insets;
+import java.awt.event.MouseEvent;
 import java.awt.Cursor;
 import java.util.List;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  * @author VISTALL
@@ -65,6 +71,10 @@ import java.awt.Point;
  */
 public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, CaretPixelLocationProvider {
     private final DesktopQtEditorComponent myComponent;
+
+    private @Nullable JComponent myHeaderComponent;
+
+    private boolean myContextMenuInstalled;
 
     private final DesktopQtEditorGutterComponentImpl myGutterComponent;
 
@@ -103,21 +113,52 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
                 repaintRange(event.getNewRange());
             }
         });
-
-        DesktopQtActionContextMenu.install(myComponent, this::getContextMenuGroup, ActionPlaces.EDITOR_POPUP, this::getDataContext);
     }
 
     /**
-     * The group is looked up per click rather than kept, since a plugin may replace what the id stands for and
-     * the editor may be pointed at a group of its own at any time.
+     * The menu of the text itself. Installed from here rather than from the constructor because the group is only
+     * known once the file editor has configured the editor, which is how the web frontend does it.
+     * <p>
+     * The platform would raise this menu itself through {@code invokePopupIfNeeded}, but that builds it with a
+     * different expander and a presentation factory which is not the one menus use, so the entries come out unlike
+     * every other menu in the frontend. The qt menu is built here instead, off the same expander as the rest.
      */
-    private @Nullable ActionGroup getContextMenuGroup() {
+    @Override
+    public void setContextMenuGroupId(@Nullable String groupId) {
+        super.setContextMenuGroupId(groupId);
+
+        if (groupId == null || myContextMenuInstalled) {
+            return;
+        }
+
+        myContextMenuInstalled = true;
+
+        myComponent.whenBound(widget -> {
+            DesktopQtEditorWidget surface = getSurface();
+            if (surface == null) {
+                return;
+            }
+
+            DesktopQtActionContextMenu.installOn(
+                surface.viewport(),
+                position -> contextMenuGroup(),
+                ActionPlaces.EDITOR_POPUP,
+                position -> getDataContext()
+            );
+        });
+    }
+
+    /**
+     * Looked up per click rather than kept: a plugin may replace what the id stands for, and the corrected action
+     * is what honours a menu the user has customised - the raw action would ignore that.
+     */
+    private @Nullable ActionGroup contextMenuGroup() {
         String groupId = getContextMenuGroupId();
         if (groupId == null) {
             return null;
         }
 
-        return ActionManager.getInstance().getAction(groupId) instanceof ActionGroup group ? group : null;
+        return CustomActionsSchema.getInstance().getCorrectedAction(groupId) instanceof ActionGroup group ? group : null;
     }
 
     private void repaintRange(@Nullable TextRange range) {
@@ -181,8 +222,13 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      * closed), so nothing may reach the widget without going through here.
      */
     public @Nullable DesktopQtEditorWidget getSurface() {
-        DesktopQtEditorWidget widget = myComponent.toQtComponent();
+        DesktopQtEditorWidget widget = myComponent.getSurface();
         return widget != null && !widget.isDisposed() ? widget : null;
+    }
+
+    public @Nullable DesktopQtEditorErrorStripeWidget getErrorStripe() {
+        DesktopQtEditorErrorStripeWidget stripe = myComponent.getErrorStripe();
+        return stripe != null && !stripe.isDisposed() ? stripe : null;
     }
 
     /**
@@ -194,22 +240,28 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
     }
 
     /**
-     * Hands a press to everything the platform hung off the editor, then lets the popup handlers have it. That
-     * second step is how the editor context menu is meant to open: {@code invokePopupIfNeeded} runs the handlers
-     * registered for the editing area when the press is a popup trigger, and it can only run if the frontend
-     * reports the press at all - which the qt surface did not until now.
+     * Hands a press to everything the platform hung off the editor. The context menu is not raised from here -
+     * it is a qt menu installed on the surface, so that it is expanded the same way every other menu is.
      */
     public void fireMousePressed(EditorMouseEvent event) {
         for (EditorMouseListener listener : myMouseListeners) {
             listener.mousePressed(event);
         }
-
-        invokePopupIfNeeded(event);
     }
 
     public void fireMouseReleased(EditorMouseEvent event) {
         for (EditorMouseListener listener : myMouseListeners) {
             listener.mouseReleased(event);
+        }
+    }
+
+    /**
+     * A press and a release on the same spot. Qt has no event of its own for it, and the platform hangs real
+     * behaviour off it - toggling a breakpoint is a click on the gutter, not a press on it - so it is raised here.
+     */
+    public void fireMouseClicked(EditorMouseEvent event) {
+        for (EditorMouseListener listener : myMouseListeners) {
+            listener.mouseClicked(event);
         }
     }
 
@@ -378,7 +430,48 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
             widget.updateScrollRanges();
         }
 
-        widget.repaintLines(document.getLineNumber(start), document.getLineNumber(end));
+        repaintOffsets(widget, start, end);
+    }
+
+    /**
+     * Repaints the rows a range of the document is shown on. The surface counts in rows, so the offsets are taken
+     * into visual space here - passing the lines of the file straight through paints the wrong band as soon as
+     * anything above them is folded.
+     */
+    private void repaintOffsets(DesktopQtEditorWidget widget, int startOffset, int endOffset) {
+        widget.repaintLines(myVisualLines.offsetToVisualLine(startOffset), myVisualLines.offsetToVisualLine(endOffset));
+    }
+
+    /**
+     * Markup laid over the text changes nothing about the text itself, so nothing else will repaint for it - a
+     * breakpoint is added and removed without the document ever changing, and the row it marks would keep
+     * whatever it was last painted with.
+     */
+    @Override
+    protected void onHighlighterChanged(
+        RangeHighlighterEx highlighter,
+        boolean canImpactGutterSize,
+        boolean fontStyleChanged,
+        boolean foregroundColorChanged
+    ) {
+        Document document = getDocument();
+        if (document.isInBulkUpdate()) {
+            return;
+        }
+
+        DesktopQtEditorWidget widget = getSurface();
+        if (widget == null) {
+            return;
+        }
+
+        if (canImpactGutterSize) {
+            widget.updateSideAreas();
+        }
+
+        int end = Math.max(0, Math.min(highlighter.getAffectedAreaEndOffset(), document.getTextLength()));
+        int start = Math.max(0, Math.min(highlighter.getAffectedAreaStartOffset(), end));
+
+        repaintOffsets(widget, start, end);
     }
 
     /**
@@ -528,7 +621,56 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         return myCoordinateMapper.xyToLogicalPosition(p);
     }
 
+    public VisualPosition xyToVisualPosition(Point p) {
+        return myCoordinateMapper.xyToVisualPosition(p);
+    }
+
+    @Override
+    public VisualPosition xyToVisualPosition(Point2D p) {
+        return myCoordinateMapper.xyToVisualPosition(new Point((int) Math.round(p.getX()), (int) Math.round(p.getY())));
+    }
+
+    @Override
+    public Point logicalPositionToXY(LogicalPosition pos) {
+        return myCoordinateMapper.logicalPositionToXY(pos);
+    }
+
+    @Override
+    public Point2D visualPositionToPoint2D(VisualPosition pos) {
+        return myCoordinateMapper.visualPositionToPoint2D(pos);
+    }
+
+    @Override
     public Point visualPositionToXY(VisualPosition visible) {
         return myCoordinateMapper.visualPositionToXY(visible);
+    }
+
+    /**
+     * The rest of the swing shaped surface of the editor. Nothing here can be honoured by a qt widget, but the
+     * defaults throw, and a caller reaching for a border or a header should get a quiet answer rather than take
+     * the whole action down with it.
+     */
+    @Override
+    public void setBorder(@Nullable Border border) {
+    }
+
+    @Override
+    public Insets getInsets() {
+        return new Insets(0, 0, 0, 0);
+    }
+
+    @Override
+    public @Nullable EditorMouseEventArea getMouseEventArea(MouseEvent e) {
+        return null;
+    }
+
+    @Override
+    public void setHeaderComponent(@Nullable JComponent header) {
+        myHeaderComponent = header;
+    }
+
+    @Override
+    public @Nullable JComponent getHeaderComponent() {
+        return myHeaderComponent;
     }
 }

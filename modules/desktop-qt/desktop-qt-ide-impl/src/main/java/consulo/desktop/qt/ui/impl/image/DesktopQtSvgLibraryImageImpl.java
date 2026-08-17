@@ -25,6 +25,10 @@ import io.qt.gui.QImageReader;
 import io.qt.gui.QPixmap;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 2026-08-16
@@ -33,6 +37,26 @@ public class DesktopQtSvgLibraryImageImpl implements DesktopQtImageReference {
     private static final Logger LOG = Logger.getInstance(DesktopQtSvgLibraryImageImpl.class);
 
     private static final String FORMAT = "svg";
+
+    private static final int ourCacheSize = 512;
+
+    /**
+     * Rasterized icons, held against the bytes they were drawn from rather than against the image which asked for
+     * them: a theme change hands every icon owner in the ide a new pixmap at once, and rasterizing each svg again
+     * on every change - and again on the way back - is what makes picking a theme take a visible while. The bytes
+     * of a library are what a theme swaps, so an entry cannot outlive the library it belongs to.
+     */
+    private static final Map<CacheKey, QPixmap> ourCache = Collections.synchronizedMap(
+        new LinkedHashMap<>(64, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<CacheKey, QPixmap> eldest) {
+                return size() > ourCacheSize;
+            }
+        }
+    );
+
+    private record CacheKey(byte[] data, int width, int height, double ratio) {
+    }
 
     private final byte[] myX1Data;
     private final byte @Nullable [] myX2Data;
@@ -51,6 +75,15 @@ public class DesktopQtSvgLibraryImageImpl implements DesktopQtImageReference {
         int physicalWidth = DesktopQtImage.toPhysical(width, ratio);
         int physicalHeight = DesktopQtImage.toPhysical(height, ratio);
 
+        CacheKey key = new CacheKey(data, physicalWidth, physicalHeight, ratio);
+
+        QPixmap cached = ourCache.get(key);
+        // a pixmap of qt outlives the java object standing for it only as long as nothing disposed it, and one
+        // handed to a widget which has since been torn down is of no use to the next asker
+        if (cached != null && !cached.isDisposed()) {
+            return cached;
+        }
+
         // the svg is rasterized straight at the physical size, so it stays sharp at any fractional scale instead
         // of being rendered once at its own size and stretched afterwards
         QImage image = render(data, physicalWidth, physicalHeight);
@@ -64,6 +97,9 @@ public class DesktopQtSvgLibraryImageImpl implements DesktopQtImageReference {
         }
 
         pixmap.setDevicePixelRatio(ratio);
+
+        ourCache.put(key, pixmap);
+
         return pixmap;
     }
 

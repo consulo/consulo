@@ -15,7 +15,10 @@
  */
 package consulo.desktop.qt.editor.impl;
 
+import consulo.application.Application;
 import consulo.codeEditor.DocumentMarkupModel;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
@@ -23,9 +26,18 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.desktop.qt.ui.impl.TargetQt;
+import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.document.Document;
 import consulo.codeEditor.markup.MarkupModel;
+import consulo.language.editor.impl.internal.markup.AnalyzerStatus;
+import consulo.language.editor.impl.internal.markup.AnalyzingType;
+import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
+import consulo.language.editor.impl.internal.markup.PassWrapper;
+import consulo.language.editor.impl.internal.markup.StatusItem;
 import consulo.ui.color.ColorValue;
+import consulo.ui.image.Image;
+import io.qt.core.QRect;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QCursor;
 import io.qt.gui.QMouseEvent;
@@ -36,6 +48,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * The strip of marks down the right of the editor - the map of everything the analyser found in the file, not just
@@ -51,7 +64,7 @@ import java.util.List;
  * @since 2026-08-16
  */
 public class DesktopQtEditorErrorStripeWidget extends QWidget {
-    private static final int STRIPE_WIDTH = 14;
+    private static final int STRIPE_WIDTH = 21;
 
     /**
      * A single line is a fraction of a pixel in a long file, so a mark is drawn at least this tall to stay
@@ -61,24 +74,111 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
 
     private static final int MARK_INSET = 3;
 
-    private final DesktopQtEditorWidget mySurface;
+    private static final int ICON_SIZE = 12;
+
+    private static final int ICON_PADDING = 2;
+
+    private static final int REFRESH_DELAY = 50;
+
     private final DesktopQtEditorImpl myEditor;
 
     private boolean myVisible;
 
-    public DesktopQtEditorErrorStripeWidget(DesktopQtEditorWidget surface, DesktopQtEditorImpl editor) {
-        super(surface);
-        mySurface = surface;
+    private @Nullable Image myStatusIcon;
+
+    private final QTimer myStatusRefreshQueue;
+
+    public DesktopQtEditorErrorStripeWidget(QWidget parent, DesktopQtEditorImpl editor) {
+        super(parent);
         myEditor = editor;
 
         setCursor(new QCursor(Qt.CursorShape.ArrowCursor));
+
+        myStatusRefreshQueue = new QTimer(this);
+        myStatusRefreshQueue.setSingleShot(true);
+        myStatusRefreshQueue.setInterval(REFRESH_DELAY);
+        myStatusRefreshQueue.timeout.connect(this::refreshStatus);
+    }
+
+    /**
+     * The room the icon takes at the top, which the marks then start below.
+     */
+    private int iconPanelSize() {
+        return myStatusIcon == null ? ICON_PADDING : ICON_SIZE + 2 * ICON_PADDING;
+    }
+
+    public void refresh() {
+        myStatusRefreshQueue.start();
+    }
+
+    private void refreshStatus() {
+        AnalyzerStatus status = readStatus();
+
+        Image icon = status == null ? null : status.getIcon();
+        String tooltip = status == null ? "" : buildTooltip(status);
+
+        if (myStatusIcon != icon) {
+            myStatusIcon = icon;
+        }
+
+        setToolTip(tooltip);
+        update();
+    }
+
+    private @Nullable AnalyzerStatus readStatus() {
+        DesktopQtMarkupModelImpl markupModel = (DesktopQtMarkupModelImpl) myEditor.getMarkupModel();
+
+        ErrorStripeRenderer renderer = markupModel.getErrorStripeRenderer();
+        if (renderer == null || !markupModel.isErrorStripeVisible()) {
+            return null;
+        }
+
+        return Application.get().runReadAction((Supplier<AnalyzerStatus>) () -> renderer.getStatus(myEditor));
+    }
+
+    private String buildTooltip(AnalyzerStatus status) {
+        List<String> lines = new ArrayList<>();
+
+        if (status.getTitle() != null && !status.getTitle().isEmpty()) {
+            lines.add(status.getTitle());
+        }
+        if (status.getDetails() != null && !status.getDetails().isEmpty()) {
+            lines.add(status.getDetails());
+        }
+
+        for (PassWrapper pass : status.getPasses()) {
+            lines.add(pass.getPresentableName() + ": " + pass.toPercent() + "%");
+        }
+
+        if (lines.isEmpty()) {
+            StringBuilder summary = new StringBuilder();
+            for (StatusItem item : status.getExpandedStatus()) {
+                if (!summary.isEmpty()) {
+                    summary.append(", ");
+                }
+
+                summary.append(item.getText());
+
+                if (item.getType() != null) {
+                    summary.append(' ').append(item.getType());
+                }
+            }
+
+            if (status.getAnalyzingType() != AnalyzingType.COMPLETE) {
+                summary.append(" so far");
+            }
+
+            lines.add(summary.toString());
+        }
+
+        return String.join("\n", lines);
     }
 
     public void setStripeVisible(boolean visible) {
         if (myVisible != visible) {
             myVisible = visible;
 
-            mySurface.updateSideAreas();
+            applyWidth();
         }
     }
 
@@ -86,8 +186,13 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
         return myVisible;
     }
 
+    private void applyWidth() {
+        setFixedWidth(preferredWidth());
+        setVisible(myVisible);
+    }
+
     public int preferredWidth() {
-        return myVisible ? STRIPE_WIDTH : 0;
+        return myVisible ? Math.max(STRIPE_WIDTH, ICON_SIZE + 2 * ICON_PADDING) : 0;
     }
 
     @Override
@@ -118,28 +223,46 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
 
             painter.fillRect(MARK_INSET, top, width() - 2 * MARK_INSET, markHeight, TargetQt.to(color));
         }
+
+        paintStatusIcon(painter);
+    }
+
+    /**
+     * The analyser's verdict for the whole file, at the top of the strip where awt paints it.
+     */
+    private void paintStatusIcon(QPainter painter) {
+        if (!(myStatusIcon instanceof DesktopQtImage qtImage)) {
+            return;
+        }
+
+        int x = Math.max(0, (width() - ICON_SIZE) / 2);
+
+        qtImage.toQIcon().paint(painter, new QRect(x, ICON_PADDING, ICON_SIZE, ICON_SIZE));
     }
 
     /**
      * Where an offset falls on the strip. The strip stands for the whole document, so this is a proportion of the
-     * text length rather than anything to do with the scroll offset.
+     * text length rather than anything to do with the scroll offset - taken below the icon, which is not part of
+     * the map.
      */
     private int offsetToY(int offset) {
         Document document = myEditor.getDocument();
 
         int length = Math.max(1, document.getTextLength());
-        int usable = Math.max(1, height() - MIN_MARK_HEIGHT);
+        int top = iconPanelSize();
+        int usable = Math.max(1, height() - top - MIN_MARK_HEIGHT);
 
-        return (int) ((long) Math.max(0, Math.min(offset, length)) * usable / length);
+        return top + (int) ((long) Math.max(0, Math.min(offset, length)) * usable / length);
     }
 
     private int yToOffset(int y) {
         Document document = myEditor.getDocument();
 
         int length = document.getTextLength();
-        int usable = Math.max(1, height() - MIN_MARK_HEIGHT);
+        int top = iconPanelSize();
+        int usable = Math.max(1, height() - top - MIN_MARK_HEIGHT);
 
-        return (int) Math.max(0, Math.min((long) y * length / usable, length));
+        return (int) Math.max(0, Math.min((long) Math.max(0, y - top) * length / usable, length));
     }
 
     private List<RangeHighlighter> collectHighlighters() {
@@ -184,12 +307,20 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
      * reports something new.
      */
     public void listenToMarkup() {
+        // the strip outlives none of this: the editor keeps its markup models while the widget is thrown away and
+        // built again whenever the component is bound anew, so a listener tied to the editor would go on calling
+        // a widget qt has already destroyed. It is tied to the widget instead, and taken off when that goes.
+        Disposable lifetime = Disposable.newDisposable("qt editor error stripe markup");
+        Disposer.register(myEditor.getDisposable(), lifetime);
+
+        destroyed.connect(() -> Disposer.dispose(lifetime));
+
         MarkupModelEx editorMarkup = (MarkupModelEx) myEditor.getMarkupModel();
-        editorMarkup.addMarkupModelListener(myEditor.getDisposable(), new RepaintOnMarkupChange());
+        editorMarkup.addMarkupModelListener(lifetime, new RepaintOnMarkupChange());
 
         MarkupModelEx documentMarkup = DocumentMarkupModel.forDocument(myEditor.getDocument(), myEditor.getProject(), true);
         if (documentMarkup != null) {
-            documentMarkup.addMarkupModelListener(myEditor.getDisposable(), new RepaintOnMarkupChange());
+            documentMarkup.addMarkupModelListener(lifetime, new RepaintOnMarkupChange());
         }
     }
 
@@ -210,12 +341,17 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
         }
 
         /**
-         * The counters are read off the same analysis the marks come from, so they are refreshed together.
+         * The icon is read off the same analysis the marks come from, so they are refreshed together.
          */
         private void markupChanged() {
+            // the markup can change inside the same event the widget is destroyed in
+            if (isDisposed()) {
+                return;
+            }
+
             update();
 
-            mySurface.getStatusPanel().refresh();
+            myStatusRefreshQueue.start();
         }
     }
 }

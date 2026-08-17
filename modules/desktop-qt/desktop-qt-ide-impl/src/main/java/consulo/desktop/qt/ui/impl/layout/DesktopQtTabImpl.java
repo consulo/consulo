@@ -15,6 +15,8 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.desktop.qt.ui.impl.DesktopQtTextItemPresentation;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
@@ -39,8 +41,35 @@ public class DesktopQtTabImpl implements Tab {
 
     private @Nullable QWidget myContent;
 
+    private @Nullable String myPopupGroupId;
+
+    private @Nullable String myPopupPlace;
+
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+    }
+
+    @Override
+    public void setPopupGroup(String groupId, String place) {
+        myPopupGroupId = groupId;
+        myPopupPlace = place;
+    }
+
+    public @Nullable String getPopupGroupId() {
+        return myPopupGroupId;
+    }
+
+    public @Nullable String getPopupPlace() {
+        return myPopupPlace;
+    }
+
+    public DataContext createDataContext() {
+        DataManager dataManager = DataManager.getInstance();
+
+        // the group is expanded off the ui thread, the providers have to be snapshotted before that
+        return dataManager.createAsyncDataContext(
+            myComponent == null ? dataManager.getDataContext() : dataManager.getDataContext(myComponent)
+        );
     }
 
     @Override
@@ -85,10 +114,13 @@ public class DesktopQtTabImpl implements Tab {
         return myTabWidget == null || myContent == null ? -1 : myTabWidget.indexOf(myContent);
     }
 
-    public void initialize(QTabWidget tabWidget) {
+    public void initialize(QTabWidget tabWidget, Component parent) {
         QWidget content = null;
 
         if (myComponent != null) {
+            // the consulo.ui parent, not the qt one: everything that walks up from a component to its window
+            // reads this chain, and an editor whose window cannot be found is never registered as active
+            myComponent.setParent(parent);
             myComponent.bind(tabWidget, null);
 
             content = myComponent.toQtComponent();

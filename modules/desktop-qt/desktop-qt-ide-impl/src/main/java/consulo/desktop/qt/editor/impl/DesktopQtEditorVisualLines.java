@@ -72,22 +72,28 @@ public class DesktopQtEditorVisualLines {
     public int logicalToVisualLine(int logicalLine) {
         Document document = myEditor.getDocument();
 
-        int line = visibleLineOf(Math.max(0, Math.min(logicalLine, document.getLineCount() - 1)));
+        int line = Math.max(0, Math.min(logicalLine, document.getLineCount() - 1));
 
-        return line - myEditor.getFoldingModel().getFoldedLinesCountBefore(document.getLineStartOffset(line));
+        return offsetToVisualLine(document.getLineStartOffset(line));
     }
 
-    private int visibleLineOf(int logicalLine) {
+    /**
+     * The row an offset is shown on. A line the folding hid answers the row of the region covering it, and the
+     * count of hidden lines is taken at that region's own offset rather than at the start of its line - a line
+     * can carry the end of one collapsed region and the start of the next, and measuring from the line start
+     * would drop the first of them.
+     */
+    public int offsetToVisualLine(int offset) {
         Document document = myEditor.getDocument();
 
-        int lineStart = document.getLineStartOffset(logicalLine);
+        int position = Math.max(0, Math.min(offset, document.getTextLength()));
 
-        FoldRegion region = myEditor.getFoldingModel().getCollapsedRegionAtOffset(lineStart);
-        if (region == null || region.getStartOffset() >= lineStart) {
-            return logicalLine;
+        FoldRegion region = myEditor.getFoldingModel().getCollapsedRegionAtOffset(position);
+        if (region != null && position > region.getStartOffset()) {
+            position = region.getStartOffset();
         }
 
-        return document.getLineNumber(region.getStartOffset());
+        return document.getLineNumber(position) - myEditor.getFoldingModel().getFoldedLinesCountBefore(position);
     }
 
     /**

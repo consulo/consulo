@@ -21,6 +21,7 @@ import consulo.desktop.qt.editor.impl.DesktopQtEditorVisualLines.Segment;
 import consulo.document.Document;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  * Translation between the four coordinate spaces the platform speaks: character offset, logical position,
@@ -78,11 +79,7 @@ public class DesktopQtEditorCoordinateMapper {
     }
 
     public int offsetToVisualLine(int offset) {
-        Document document = myEditor.getDocument();
-
-        int clamped = Math.max(0, Math.min(offset, document.getTextLength()));
-
-        return myVisualLines.logicalToVisualLine(document.getLineNumber(clamped));
+        return myVisualLines.offsetToVisualLine(offset);
     }
 
     public int visualLineStartOffset(int visualLine) {
@@ -150,11 +147,23 @@ public class DesktopQtEditorCoordinateMapper {
         return new Point(x, position.line * myEditor.getLineHeight());
     }
 
-    public LogicalPosition xyToLogicalPosition(Point p) {
+    public Point2D visualPositionToPoint2D(VisualPosition position) {
+        return new Point2D.Double(columnToX(position.line, position.column), (double) position.line * myEditor.getLineHeight());
+    }
+
+    public Point logicalPositionToXY(LogicalPosition position) {
+        return visualPositionToXY(logicalToVisualPosition(position));
+    }
+
+    public VisualPosition xyToVisualPosition(Point p) {
         int lineHeight = myEditor.getLineHeight();
         int visualLine = Math.max(0, Math.min(p.y / lineHeight, myVisualLines.getVisualLineCount() - 1));
 
-        return visualToLogicalPosition(new VisualPosition(visualLine, xToColumn(visualLine, p.x)));
+        return new VisualPosition(visualLine, xToColumn(visualLine, p.x));
+    }
+
+    public LogicalPosition xyToLogicalPosition(Point p) {
+        return visualToLogicalPosition(xyToVisualPosition(p));
     }
 
     /**

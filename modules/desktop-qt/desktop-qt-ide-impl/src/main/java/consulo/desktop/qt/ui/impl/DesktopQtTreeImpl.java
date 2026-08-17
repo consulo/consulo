@@ -19,6 +19,8 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.disposer.Disposable;
+import consulo.ui.Point2D;
+import consulo.ui.PopupOwner;
 import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
@@ -30,9 +32,12 @@ import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.ex.localize.UILocalize;
+import io.qt.core.QPoint;
+import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.Qt;
 import io.qt.gui.QFont;
+import io.qt.gui.QMouseEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QTreeWidget;
@@ -55,7 +60,7 @@ import java.util.function.ToIntFunction;
  * @since 2026-08-16
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> implements Tree<E>, DesktopQtIconOwner {
+public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> implements Tree<E>, PopupOwner, DesktopQtIconOwner {
     /**
      * Levels of rows an expand all opens, counting the top level ones.
      */
@@ -82,6 +87,13 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
     private @Nullable ToIntFunction<TreeNode<E>> myItemHeightGetter;
 
+    /**
+     * Which tree the levels being built belong to. Rebuilding the tree throws away every row and starts again
+     * from a fresh root, while the builds started for the previous one are still running - and a build which
+     * came back late would otherwise add its rows a second time, in whatever order the two builds finished.
+     */
+    private volatile int myGeneration;
+
     public DesktopQtTreeImpl(E rootValue, TreeModel<E> model, Disposable disposable) {
         myRootValue = rootValue;
         myModel = model;
@@ -101,12 +113,40 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         return root;
     }
 
+    /**
+     * A view emits its double click for whichever button was struck, while the api means the left one by it -
+     * the right button opens the context menu, and answering it with the action of a double click as well would
+     * run that action every time the menu is asked for.
+     */
+    private static class QtTree extends QTreeWidget {
+        private QtTree(QWidget parent) {
+            super(parent);
+        }
+
+        @Override
+        protected void mouseDoubleClickEvent(QMouseEvent event) {
+            if (event.button() != Qt.MouseButton.LeftButton) {
+                // the second click of a pair arrives as a double click rather than as a press, so it has to be
+                // handled as the press it stands for - dropping it would swallow every other right click
+                mousePressEvent(event);
+                return;
+            }
+
+            super.mouseDoubleClickEvent(event);
+        }
+    }
+
     @Override
     protected QTreeWidget createQt(QWidget parent) {
-        QTreeWidget tree = new QTreeWidget(parent);
+        QTreeWidget tree = new QtTree(parent);
         tree.setColumnCount(1);
         tree.setHeaderHidden(true);
         tree.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection);
+
+        // a view opens and closes the row of a double click by itself, and here that is the answer of the model -
+        // leaving it to both means the two undo each other and the row never moves
+        tree.setExpandsOnDoubleClick(false);
+
         return tree;
     }
 
@@ -115,6 +155,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         // hiding a tool window disposes the widget, and showing it again binds a fresh empty one - the nodes
         // of the previous widget are gone with it, so the level below the root has to be built once more
         myNodes.clear();
+        myGeneration++;
         myRootNode = createRootNode();
 
         tree.itemSelectionChanged.connect(() ->
@@ -123,10 +164,16 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
         tree.itemDoubleClicked.connect((item, column) -> UIAccess.current().give(() -> {
             TreeNode<E> selectedNode = getSelectedNode();
-            if (selectedNode != null) {
-                getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(DesktopQtTreeImpl.this, selectedNode));
+            if (selectedNode == null) {
+                return;
+            }
 
-                myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode);
+            getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(DesktopQtTreeImpl.this, selectedNode));
+
+            // the answer is the contract - a model which took the double click for itself, opening the file it
+            // stands for, says false, and true asks the tree to open or close the row the way the awt trees do
+            if (myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode) && !item.isDisposed()) {
+                item.setExpanded(!item.isExpanded());
             }
         }));
 
@@ -156,10 +203,17 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     private CompletableFuture<List<DesktopQtTreeNode<E>>> buildAsync(DesktopQtTreeNode<E> node) {
         QTreeWidgetItem parent = node.getTreeItem();
 
+        int generation = myGeneration;
+        int epoch = node.getEpoch();
+
         return DesktopQtUIAccess.INSTANCE.giveAsync(() -> showLoading(parent))
             .thenCompose(loading -> CompletableFuture.supplyAsync(() -> fetchChildren(node), myExecutor)
                 .thenCompose(children -> DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
                     hideLoading(loading);
+
+                    if (generation != myGeneration || epoch != node.getEpoch()) {
+                        return List.<DesktopQtTreeNode<E>>of();
+                    }
 
                     attach(node, parent, children);
                     return children;
@@ -487,6 +541,33 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         }
     }
 
+    /**
+     * Where a popup raised over the tree hangs off - the bottom left of the row which is current, which is what the
+     * awt trees anchor to. The rectangle of a row is measured against the viewport, while a popup is placed against
+     * the component, so the two are the same point only once the frame and the header are counted in.
+     */
+    @Override
+    public @Nullable Point2D getBestPopupPosition() {
+        QTreeWidget tree = myComponent;
+        if (tree == null || tree.isDisposed()) {
+            return null;
+        }
+
+        QTreeWidgetItem item = tree.currentItem();
+        if (item == null) {
+            return null;
+        }
+
+        QRect rect = tree.visualItemRect(item);
+        if (rect.isEmpty()) {
+            return null;
+        }
+
+        QPoint bottomLeft = tree.viewport().mapTo(tree, new QPoint(rect.x(), rect.bottom()));
+
+        return new Point2D(bottomLeft.x() + 2, bottomLeft.y() - 1);
+    }
+
     @Override
     public void refreshIcons() {
         for (DesktopQtTreeNode<E> node : myNodes.values()) {
@@ -502,6 +583,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
             }
 
             myNodes.clear();
+            myGeneration++;
             myRootNode = createRootNode();
             return null;
         }).thenCompose(v -> myRootNode.loadChildren());
@@ -518,7 +600,8 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
             return;
         }
 
-        item.setSizeHint(0, new QSize(item.sizeHint(0).width(), getter.applyAsInt(node)));
+        // the width is -1 until something sets one, and a negative width makes the whole hint invalid
+        item.setSizeHint(0, new QSize(Math.max(0, item.sizeHint(0).width()), getter.applyAsInt(node)));
     }
 
     @Override

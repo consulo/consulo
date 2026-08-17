@@ -55,9 +55,9 @@ public class DesktopQtMarkupModelImpl extends MarkupModelImpl implements EditorM
     public void setErrorStripeVisible(boolean val) {
         myErrorStripeVisible = val;
 
-        DesktopQtEditorWidget surface = myEditor.getSurface();
-        if (surface != null) {
-            surface.getErrorStripe().setStripeVisible(val);
+        DesktopQtEditorErrorStripeWidget stripe = myEditor.getErrorStripe();
+        if (stripe != null) {
+            stripe.setStripeVisible(val);
         }
     }
 
@@ -66,9 +66,9 @@ public class DesktopQtMarkupModelImpl extends MarkupModelImpl implements EditorM
     public void setErrorStripeRenderer(ErrorStripeRenderer renderer) {
         myErrorStripeRenderer = renderer;
 
-        DesktopQtEditorWidget surface = myEditor.getSurface();
-        if (surface != null) {
-            surface.getStatusPanel().refresh();
+        DesktopQtEditorErrorStripeWidget stripe = myEditor.getErrorStripe();
+        if (stripe != null) {
+            stripe.refresh();
         }
     }
 

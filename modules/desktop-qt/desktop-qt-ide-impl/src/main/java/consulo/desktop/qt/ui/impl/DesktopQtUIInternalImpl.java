@@ -410,6 +410,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public void _ShowNotifier_once(Component component, Runnable action) {
+        consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier.once(component, action);
+    }
+
+    @Override
     public ModalityState _ModalityState_any() {
         return ModalityStateImpl.ANY;
     }

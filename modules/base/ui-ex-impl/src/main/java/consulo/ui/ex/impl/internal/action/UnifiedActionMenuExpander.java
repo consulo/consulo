@@ -168,7 +168,7 @@ public final class UnifiedActionMenuExpander {
                 continue;
             }
 
-            if (action instanceof ActionGroup actionGroup && !Boolean.TRUE.equals(presentation.getClientProperty(PERFORM_ONLY))) {
+            if (action instanceof ActionGroup actionGroup && !isPerformOnly(action, presentation)) {
                 int nextIndex = i + 1;
 
                 return expandGroupAsync(actionGroup, context, place, presentationFactory, uiAccess, indicator, depth + 1, toolbar)
@@ -203,6 +203,21 @@ public final class UnifiedActionMenuExpander {
         }
 
         return CompletableFuture.completedFuture(result);
+    }
+
+    /**
+     * Whether a group stands in the menu as an entry to invoke rather than as a submenu to open. A group which is
+     * performed and is also opened is done twice over - the submenu of {@code CopyReferencePopup} is the list it
+     * raises itself, and choosing an entry of the submenu leaves the second one standing.
+     *
+     * @see AlwaysPerformingActionGroup
+     */
+    private static boolean isPerformOnly(AnAction action, Presentation presentation) {
+        if (Boolean.TRUE.equals(presentation.getClientProperty(PERFORM_ONLY))) {
+            return true;
+        }
+
+        return presentation.isPerformGroup() && action instanceof AlwaysPerformingActionGroup;
     }
 
     private static MenuNode createActionNode(AnAction action, Presentation presentation) {

@@ -22,7 +22,10 @@ import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.document.Document;
+import consulo.document.DocCommandGroupId;
 import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.QTimer;
@@ -56,8 +59,6 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
     private final DesktopQtEditorPainter myPainter;
     private final DesktopQtEditorKeyHandler myKeyHandler;
     private final DesktopQtEditorGutterWidget myGutter;
-    private final DesktopQtEditorErrorStripeWidget myErrorStripe;
-    private final DesktopQtEditorStatusPanelWidget myStatusPanel;
     private final DesktopQtEditorLinkNavigation myLinkNavigation;
     private final QTimer myCaretBlinkTimer;
 
@@ -75,8 +76,6 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         myPainter = new DesktopQtEditorPainter(editor);
         myKeyHandler = new DesktopQtEditorKeyHandler(editor);
         myGutter = new DesktopQtEditorGutterWidget(this, editor);
-        myErrorStripe = new DesktopQtEditorErrorStripeWidget(this, editor);
-        myStatusPanel = new DesktopQtEditorStatusPanelWidget(this, editor);
         myLinkNavigation = new DesktopQtEditorLinkNavigation(editor);
 
         viewport().setAutoFillBackground(false);
@@ -98,14 +97,6 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         return myGutter;
     }
 
-    public DesktopQtEditorErrorStripeWidget getErrorStripe() {
-        return myErrorStripe;
-    }
-
-    public DesktopQtEditorStatusPanelWidget getStatusPanel() {
-        return myStatusPanel;
-    }
-
     /**
      * Takes the room the gutter and the error strip need out of the viewport and puts them in it. Called whenever
      * anything either width depends on moves - the line count growing a digit widens the gutter, and the text has
@@ -113,10 +104,9 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
      */
     public void updateSideAreas() {
         int gutterWidth = myGutter.preferredWidth();
-        int stripeWidth = myErrorStripe.preferredWidth();
 
-        if (viewportMargins().left() != gutterWidth || viewportMargins().right() != stripeWidth) {
-            setViewportMargins(gutterWidth, 0, stripeWidth, 0);
+        if (viewportMargins().left() != gutterWidth) {
+            setViewportMargins(gutterWidth, 0, 0, 0);
         }
 
         QRect viewportRect = viewport().geometry();
@@ -124,18 +114,6 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         myGutter.setGeometry(viewportRect.left() - gutterWidth, viewportRect.top(), gutterWidth, viewportRect.height());
         myGutter.setVisible(gutterWidth > 0);
         myGutter.update();
-
-        myErrorStripe.setGeometry(viewportRect.right() + 1, viewportRect.top(), stripeWidth, viewportRect.height());
-        myErrorStripe.setVisible(stripeWidth > 0);
-        myErrorStripe.update();
-
-        int statusWidth = myStatusPanel.preferredWidth();
-        if (statusWidth > 0) {
-            int statusHeight = myStatusPanel.preferredHeight();
-
-            myStatusPanel.setGeometry(viewportRect.right() + 1 - statusWidth, viewportRect.top(), statusWidth, statusHeight);
-            myStatusPanel.raise();
-        }
     }
 
     public void updateScrollRanges() {
@@ -365,7 +343,7 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
 
         EditorSettings settings = myEditor.getSettings();
 
-        myEditor.getCaretModel().moveToOffset(offsetAt(event));
+        moveCaretInCommand(() -> myEditor.getCaretModel().moveToOffset(offsetAt(event)));
         myEditor.getCaretModel().getCurrentCaret()
             .selectWordAtCaret(settings.isMouseClickSelectionHonorsCamelWords() && settings.isCamelWords());
 
@@ -389,12 +367,31 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         selectionModel.removeSelection();
         mySelectionAnchor = offset;
 
-        myEditor.getCaretModel().moveToOffset(offset);
+        moveCaretInCommand(() -> myEditor.getCaretModel().moveToOffset(offset));
 
         restartCaretBlink();
     }
 
+    /**
+     * Moving the caret inside a command is what tells the daemon to run again: it restarts on the command
+     * finishing, and the pass which highlights the symbol under the caret reads the offset when it is built. A
+     * caret moved outside a command leaves that highlight on whatever it was over before.
+     */
+    private void moveCaretInCommand(Runnable move) {
+        Project project = myEditor.getProject();
+
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .document(myEditor.getDocument())
+            .groupId(DocCommandGroupId.noneGroupId(myEditor.getDocument()))
+            .run(move);
+    }
+
     private void moveCaretTo(int offset) {
+        moveCaretInCommand(() -> doMoveCaretTo(offset));
+    }
+
+    private void doMoveCaretTo(int offset) {
         myEditor.getCaretModel().moveToOffset(offset);
 
         if (mySelectionAnchor >= 0 && mySelectionAnchor != offset) {

@@ -36,7 +36,7 @@ public class DesktopQtScrollableLayoutImpl extends DesktopQtLayoutComponent<Layo
 
     @Override
     protected QWidget createQt(QWidget parent) {
-        QScrollArea scrollArea = new QScrollArea();
+        QScrollArea scrollArea = new QScrollArea(parent);
         scrollArea.setWidgetResizable(true);
         scrollArea.setFrameShape(QFrame.Shape.NoFrame);
         return scrollArea;
