@@ -19,6 +19,7 @@ import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.awt.AWTConstants;
@@ -276,6 +277,33 @@ public class KeymapUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks that one of the mouse shortcuts assigned to the provided action has the same modifiers as provided.
+     * {@link MouseShortcut} normalizes the mask, so the extended form built here compares equal to a keymap entry
+     * however it was written.
+     */
+    public static boolean matchActionMouseShortcutsModifiers(
+        Keymap activeKeymap,
+        Set<ModifiedInputDetails.Modifier> modifiers,
+        String actionId
+    ) {
+        return matchActionMouseShortcutsModifiers(activeKeymap, toInputEventMask(modifiers), actionId);
+    }
+
+    @AWTConstants.InputEventMask
+    private static int toInputEventMask(Set<ModifiedInputDetails.Modifier> modifiers) {
+        int mask = 0;
+        for (ModifiedInputDetails.Modifier modifier : modifiers) {
+            mask |= switch (modifier) {
+                case ALT -> InputEvent.ALT_DOWN_MASK;
+                case CTRL -> InputEvent.CTRL_DOWN_MASK;
+                case SHIFT -> InputEvent.SHIFT_DOWN_MASK;
+                case META -> InputEvent.META_DOWN_MASK;
+            };
+        }
+        return mask;
     }
 
     /**

@@ -60,10 +60,18 @@ public class EditorMouseEvent extends EventObject {
     private final @Nullable GutterIconRenderer myGutterIconRenderer;
 
     public EditorMouseEvent(Editor editor, MouseEvent mouseEvent, EditorMouseEventArea area) {
+        this(editor, mouseEvent, null, area);
+    }
+
+    /**
+     * Carries the input details over to another editor without the editor coordinates. A re-dispatching editor
+     * knows the pointer state but not the offset - the source offset belongs to the editor the event came from.
+     */
+    public EditorMouseEvent(Editor editor, MouseEvent mouseEvent, @Nullable InputDetails inputDetails, EditorMouseEventArea area) {
         this(
             editor,
             mouseEvent,
-            null,
+            inputDetails,
             mouseEvent.isPopupTrigger(),
             area,
             0,

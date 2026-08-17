@@ -23,6 +23,8 @@ import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
@@ -299,7 +301,7 @@ public class PresentationFactory implements InlayPresentationFactory {
         );
         return new WithCursorOnHoverPresentation(
             new ChangeOnHoverPresentation(base, () -> hovered),
-            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR),
+            StandardCursors.HAND,
             editor
         );
     }

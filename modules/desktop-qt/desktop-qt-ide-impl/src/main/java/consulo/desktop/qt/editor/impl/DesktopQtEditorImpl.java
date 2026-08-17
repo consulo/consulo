@@ -16,54 +16,33 @@
 package consulo.desktop.qt.editor.impl;
 
 import consulo.application.Application;
-import consulo.codeEditor.EditorGutter;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.EditorKind;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.event.EditorMouseEventArea;
-import consulo.codeEditor.RealEditor;
-import consulo.codeEditor.TextDrawingCallback;
-import consulo.codeEditor.VisualPosition;
-import consulo.codeEditor.impl.CodeEditorBase;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.CustomActionsSchema;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.*;
 import consulo.codeEditor.internal.CaretPixelLocationProvider;
-import consulo.codeEditor.impl.CodeEditorCaretModelBase;
-import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
-import consulo.codeEditor.impl.CodeEditorInlayModelBase;
-import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
-import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
-import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseListener;
-import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.event.SelectionEvent;
-import consulo.codeEditor.event.SelectionListener;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.internal.FontPreferencesManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.qt.ui.impl.action.DesktopQtActionContextMenu;
 import consulo.desktop.qt.ui.impl.base.DesktopQtAwtBridgeComponent;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.CustomActionsSchema;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.Cursor;
-import java.util.List;
-import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 /**
  * @author VISTALL

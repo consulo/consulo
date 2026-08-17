@@ -24,6 +24,7 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.cursor.Cursor;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
 

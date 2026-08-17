@@ -56,6 +56,8 @@ import consulo.ui.*;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
@@ -190,6 +192,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private final List<InlayClickTarget> myInlayClickTargets = new ArrayList<>();
 
     private boolean myLinkHovered;
+
+    private final Map<Object, Cursor> myCustomCursors = new LinkedHashMap<>();
 
     private @Nullable WebActionContextMenu myPopupMenu;
 
@@ -613,13 +617,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             return true;
         });
 
-        // the browser cannot tell a resolvable reference from plain text, the hand cursor is switched on from here.
-        // the hover fires once per character offset, so only a real change is worth a round trip
-        if (myLinkHovered != navigatable) {
-            myLinkHovered = navigatable;
-
-            myEditorComponent.toVaadinComponent().setLinkHovered(navigatable);
-        }
+        // the browser cannot tell a resolvable reference from plain text, the hand cursor is switched on from here
+        setCustomCursor(WebEditorImpl.class, navigatable ? StandardCursors.HAND : null);
     }
 
     private void clearLinkHighlighters() {
@@ -2735,7 +2734,24 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
     @Override
     public void setCustomCursor(Object requestor, @Nullable Cursor cursor) {
+        if (cursor == null) {
+            myCustomCursors.remove(requestor);
+        }
+        else {
+            myCustomCursors.put(requestor, cursor);
+        }
 
+        // the browser exposes no cursor api beyond the link affordance, so only the hand shape is representable
+        setLinkHovered(myCustomCursors.containsValue(StandardCursors.HAND));
+    }
+
+    private void setLinkHovered(boolean linkHovered) {
+        // the hover fires once per character offset, so only a real change is worth a round trip
+        if (myLinkHovered != linkHovered) {
+            myLinkHovered = linkHovered;
+
+            myEditorComponent.toVaadinComponent().setLinkHovered(linkHovered);
+        }
     }
 
     @Override

@@ -28,7 +28,6 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHintImpl;
 import consulo.language.editor.TargetElementUtil;
@@ -51,9 +50,13 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.Point2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.cursor.StandardCursors;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.KeyboardInputDetails;
+import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
@@ -77,13 +80,10 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
@@ -96,10 +96,9 @@ public final class CtrlMouseHandler {
     private final Project myProject;
 
     private HighlightersSet myHighlighter;
-    @AWTConstants.InputEventMask
-    private int myStoredModifiers;
+    private Set<ModifiedInputDetails.Modifier> myStoredModifiers = Set.of();
     private TooltipProvider myTooltipProvider;
-    private @Nullable Point myPrevMouseLocation;
+    private @Nullable Point2D myPrevMouseLocation;
     private LightweightHintImpl myHint;
 
     public enum BrowseMode {
@@ -109,43 +108,37 @@ public final class CtrlMouseHandler {
         Implementation
     }
 
-    private final KeyListener myEditorKeyListener = new KeyAdapter() {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            handleKey(e);
+    @RequiredUIAccess
+    private void handleKeyEvent(consulo.ui.event.KeyEvent event) {
+        KeyboardInputDetails inputDetails = event.getInputDetails();
+        handleModifiers(inputDetails == null ? Set.of() : inputDetails.getModifiers());
+    }
+
+    @RequiredUIAccess
+    private void handleModifiers(Set<ModifiedInputDetails.Modifier> modifiers) {
+        if (modifiers.equals(myStoredModifiers)) {
+            return;
         }
 
-        @Override
-        public void keyReleased(KeyEvent e) {
-            handleKey(e);
+        BrowseMode browseMode = getBrowseMode(modifiers);
+
+        if (browseMode == BrowseMode.None) {
+            disposeHighlighter();
+            cancelPreviousTooltip();
         }
-
-        private void handleKey(KeyEvent e) {
-            int modifiers = e.getModifiers();
-            if (modifiers == myStoredModifiers) {
-                return;
-            }
-
-            BrowseMode browseMode = getBrowseMode(modifiers);
-
-            if (browseMode == BrowseMode.None) {
-                disposeHighlighter();
-                cancelPreviousTooltip();
-            }
-            else {
-                TooltipProvider tooltipProvider = myTooltipProvider;
-                if (tooltipProvider != null) {
-                    if (browseMode != tooltipProvider.getBrowseMode()) {
-                        disposeHighlighter();
-                    }
-                    myStoredModifiers = modifiers;
-                    cancelPreviousTooltip();
-                    myTooltipProvider = new TooltipProvider(tooltipProvider);
-                    myTooltipProvider.execute(browseMode);
+        else {
+            TooltipProvider tooltipProvider = myTooltipProvider;
+            if (tooltipProvider != null) {
+                if (browseMode != tooltipProvider.getBrowseMode()) {
+                    disposeHighlighter();
                 }
+                myStoredModifiers = modifiers;
+                cancelPreviousTooltip();
+                myTooltipProvider = new TooltipProvider(tooltipProvider);
+                myTooltipProvider.execute(browseMode);
             }
         }
-    };
+    }
 
     private final VisibleAreaListener myVisibleAreaListener = __ -> {
         disposeHighlighter();
@@ -167,16 +160,20 @@ public final class CtrlMouseHandler {
             if (e.isConsumed() || !myProject.isInitialized() || myProject.isDisposed()) {
                 return;
             }
-            MouseEvent mouseEvent = e.getMouseEvent();
+            InputDetails inputDetails = e.getInputDetails();
+            if (inputDetails == null) {
+                return;
+            }
 
-            Point prevLocation = myPrevMouseLocation;
-            myPrevMouseLocation = mouseEvent.getLocationOnScreen();
-            if (isMouseOverTooltip(mouseEvent.getLocationOnScreen()) || ScreenUtil.isMovementTowards(prevLocation, mouseEvent.getLocationOnScreen(), getHintBounds())) {
+            Point2D prevLocation = myPrevMouseLocation;
+            Point2D location = inputDetails.getPositionOnScreen();
+            myPrevMouseLocation = location;
+            if (isMouseOverTooltip(location) || isMovementTowardsHint(prevLocation, location)) {
                 return;
             }
             cancelPreviousTooltip();
 
-            myStoredModifiers = mouseEvent.getModifiers();
+            myStoredModifiers = inputDetails instanceof ModifiedInputDetails modified ? modified.getModifiers() : Set.of();
             BrowseMode browseMode = getBrowseMode(myStoredModifiers);
 
             if (browseMode == BrowseMode.None || e.getArea() != EditorMouseEventArea.EDITING_AREA) {
@@ -188,12 +185,11 @@ public final class CtrlMouseHandler {
             if (!(editor instanceof EditorEx) || editor.getProject() != null && editor.getProject() != myProject) {
                 return;
             }
-            Point point = new Point(mouseEvent.getPoint());
-            if (!EditorUtil.isPointOverText(editor, point)) {
+            if (!e.isOverText()) {
                 disposeHighlighter();
                 return;
             }
-            myTooltipProvider = new TooltipProvider((EditorEx) editor, editor.xyToLogicalPosition(point));
+            myTooltipProvider = new TooltipProvider((EditorEx) editor, e.getOffset());
             myTooltipProvider.execute(browseMode);
         }
     };
@@ -224,9 +220,22 @@ public final class CtrlMouseHandler {
         }
     }
 
-    private boolean isMouseOverTooltip(Point mouseLocationOnScreen) {
+    private boolean isMouseOverTooltip(Point2D mouseLocationOnScreen) {
         Rectangle bounds = getHintBounds();
-        return bounds != null && bounds.contains(mouseLocationOnScreen);
+        return bounds != null && bounds.contains(mouseLocationOnScreen.x(), mouseLocationOnScreen.y());
+    }
+
+    /**
+     * Keeps the hint up while the pointer heads for it. The hint is still a swing component, so the geometry
+     * stays in awt here - it moves behind the tooltip service together with the hint itself.
+     */
+    private boolean isMovementTowardsHint(@Nullable Point2D prevLocation, Point2D location) {
+        Rectangle bounds = getHintBounds();
+        if (bounds == null) {
+            return false;
+        }
+        Point prevPoint = prevLocation == null ? null : new Point(prevLocation.x(), prevLocation.y());
+        return ScreenUtil.isMovementTowards(prevPoint, new Point(location.x(), location.y()), bounds);
     }
 
     private @Nullable Rectangle getHintBounds() {
@@ -241,8 +250,8 @@ public final class CtrlMouseHandler {
         return new Rectangle(hintComponent.getLocationOnScreen(), hintComponent.getSize());
     }
 
-    private static BrowseMode getBrowseMode(@AWTConstants.InputEventMask int modifiers) {
-        if (modifiers != 0) {
+    private static BrowseMode getBrowseMode(Set<ModifiedInputDetails.Modifier> modifiers) {
+        if (!modifiers.isEmpty()) {
             Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
             if (KeymapUtil.matchActionMouseShortcutsModifiers(activeKeymap, modifiers, IdeActions.ACTION_GOTO_DECLARATION)) {
                 return BrowseMode.Declaration;
@@ -676,9 +685,9 @@ public final class CtrlMouseHandler {
         private boolean myDisposed;
         private CancellablePromise<?> myExecutionProgress;
 
-        TooltipProvider(EditorEx hostEditor, LogicalPosition hostPos) {
+        TooltipProvider(EditorEx hostEditor, int hostOffset) {
             myHostEditor = hostEditor;
-            myHostOffset = hostEditor.logicalPositionToOffset(hostPos);
+            myHostOffset = hostOffset;
         }
 
         @SuppressWarnings("CopyConstructorMissesField")
@@ -779,7 +788,7 @@ public final class CtrlMouseHandler {
                 else {
                     // highlighter already set
                     if (info.isNavigatable()) {
-                        editor.setCustomCursor(CtrlMouseHandler.class, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                        editor.setCustomCursor(CtrlMouseHandler.class, StandardCursors.HAND);
                     }
                     return;
                 }
@@ -878,10 +887,12 @@ public final class CtrlMouseHandler {
     }
 
     private HighlightersSet installHighlighterSet(Info info, EditorEx editor, boolean highlighterOnly) {
-        editor.getContentComponent().addKeyListener(myEditorKeyListener);
+        consulo.ui.Component contentComponent = editor.getContentUIComponent();
+        Disposable keyPressedDisposable = contentComponent.addKeyPressedListener(this::handleKeyEvent);
+        Disposable keyReleasedDisposable = contentComponent.addKeyReleasedListener(this::handleKeyEvent);
         editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
         if (info.isNavigatable()) {
-            editor.setCustomCursor(CtrlMouseHandler.class, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            editor.setCustomCursor(CtrlMouseHandler.class, StandardCursors.HAND);
         }
 
         List<RangeHighlighter> highlighters = new ArrayList<>();
@@ -898,7 +909,7 @@ public final class CtrlMouseHandler {
             }
         }
 
-        return new HighlightersSet(highlighters, editor, info);
+        return new HighlightersSet(highlighters, editor, info, keyPressedDisposable, keyReleasedDisposable);
     }
 
     @TestOnly
@@ -916,15 +927,25 @@ public final class CtrlMouseHandler {
 
     private final class HighlightersSet {
         private final List<? extends RangeHighlighter> myHighlighters;
-        
-        private final EditorEx myHighlighterView;
-        
-        private final Info myStoredInfo;
 
-        private HighlightersSet(List<? extends RangeHighlighter> highlighters, EditorEx highlighterView, Info storedInfo) {
+        private final EditorEx myHighlighterView;
+
+        private final Info myStoredInfo;
+        private final Disposable myKeyPressedDisposable;
+        private final Disposable myKeyReleasedDisposable;
+
+        private HighlightersSet(
+            List<? extends RangeHighlighter> highlighters,
+            EditorEx highlighterView,
+            Info storedInfo,
+            Disposable keyPressedDisposable,
+            Disposable keyReleasedDisposable
+        ) {
             myHighlighters = highlighters;
             myHighlighterView = highlighterView;
             myStoredInfo = storedInfo;
+            myKeyPressedDisposable = keyPressedDisposable;
+            myKeyReleasedDisposable = keyReleasedDisposable;
         }
 
         public void uninstall() {
@@ -933,7 +954,8 @@ public final class CtrlMouseHandler {
             }
 
             myHighlighterView.setCustomCursor(CtrlMouseHandler.class, null);
-            myHighlighterView.getContentComponent().removeKeyListener(myEditorKeyListener);
+            myKeyPressedDisposable.dispose();
+            myKeyReleasedDisposable.dispose();
             myHighlighterView.getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener);
         }
 

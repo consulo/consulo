@@ -25,6 +25,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;

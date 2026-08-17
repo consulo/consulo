@@ -25,6 +25,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
@@ -346,9 +347,14 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  
+
   public JComponent getContentComponent() {
     return myDelegate.getContentComponent();
+  }
+
+  @Override
+  public consulo.ui.Component getContentUIComponent() {
+    return myDelegate.getContentUIComponent();
   }
 
   
@@ -480,9 +486,14 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  
+
   public JComponent getComponent() {
     return myDelegate.getComponent();
+  }
+
+  @Override
+  public consulo.ui.Component getUIComponent() {
+    return myDelegate.getUIComponent();
   }
 
   private final ListenerWrapperMap<EditorMouseListener> myEditorMouseListeners = new ListenerWrapperMap<>();
@@ -493,27 +504,27 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     EditorMouseListener wrapper = new EditorMouseListener() {
       @Override
       public void mousePressed(EditorMouseEvent e) {
-        listener.mousePressed(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mousePressed(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
 
       @Override
       public void mouseClicked(EditorMouseEvent e) {
-        listener.mouseClicked(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mouseClicked(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
 
       @Override
       public void mouseReleased(EditorMouseEvent e) {
-        listener.mouseReleased(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mouseReleased(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
 
       @Override
       public void mouseEntered(EditorMouseEvent e) {
-        listener.mouseEntered(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mouseEntered(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
 
       @Override
       public void mouseExited(EditorMouseEvent e) {
-        listener.mouseExited(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mouseExited(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
     };
     myEditorMouseListeners.registerWrapper(listener, wrapper);
@@ -539,13 +550,13 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
       @RequiredUIAccess
       @Override
       public void mouseMoved(EditorMouseEvent e) {
-        listener.mouseMoved(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mouseMoved(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
 
       @RequiredUIAccess
       @Override
       public void mouseDragged(EditorMouseEvent e) {
-        listener.mouseDragged(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
+        listener.mouseDragged(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getInputDetails(), e.getArea()));
       }
     };
     myEditorMouseMotionListeners.registerWrapper(listener, wrapper);

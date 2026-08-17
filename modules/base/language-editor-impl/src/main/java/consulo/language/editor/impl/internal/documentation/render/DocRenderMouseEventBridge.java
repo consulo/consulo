@@ -11,6 +11,7 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.Point;
@@ -37,7 +38,7 @@ final class DocRenderMouseEventBridge implements EditorMouseListener, EditorMous
             restoreCursor();
         }
         else {
-            ((EditorEx) event.getEditor()).setCustomCursor(DocRenderMouseEventBridge.class, currentPane.getCursor());
+            ((EditorEx) event.getEditor()).setCustomCursor(DocRenderMouseEventBridge.class, TargetAWT.from(currentPane.getCursor()));
             if (currentPane != myMouseOverPane) {
                 if (myMouseOverPane != null) {
                     dispatchMouseExitEvent(myMouseOverPane);

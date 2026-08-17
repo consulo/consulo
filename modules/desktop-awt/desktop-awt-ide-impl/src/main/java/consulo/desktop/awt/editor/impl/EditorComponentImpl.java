@@ -28,6 +28,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
+import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -75,11 +76,14 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class EditorComponentImpl extends JTextComponent
-    implements EditorHolder, Scrollable, UiDataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
+    implements EditorHolder, Scrollable, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent,
+    FromSwingComponentWrapper {
     private final DesktopEditorImpl myEditor;
+    private final DesktopEditorContentUIComponent myUIComponent;
 
-    public EditorComponentImpl(DesktopEditorImpl editor) {
+    public EditorComponentImpl(DesktopEditorImpl editor, DesktopEditorContentUIComponent uiComponent) {
         myEditor = editor;
+        myUIComponent = uiComponent;
         enableEvents(AWTEvent.KEY_EVENT_MASK | AWTEvent.INPUT_METHOD_EVENT_MASK);
         enableInputMethods(true);
         // Note: Ideally, we should always set "FocusCycleRoot" to "false", but,
@@ -128,24 +132,8 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    public void uiDataSnapshot(DataSink sink) {
-        if (myEditor.isDisposed() || myEditor.isRendererMode()) {
-            return;
-        }
-
-        sink.set(Editor.KEY, myEditor);
-        sink.lazy(Caret.KEY, () -> myEditor.getCaretModel().getCurrentCaret());
-        sink.lazy(DeleteProvider.KEY, () -> myEditor.getDeleteProvider());
-        sink.lazy(CutProvider.KEY, () -> myEditor.getCutProvider());
-        sink.lazy(CopyProvider.KEY, () -> myEditor.getCopyProvider());
-        sink.lazy(PasteProvider.KEY, () -> myEditor.getPasteProvider());
-        sink.lazy(EditorKeys.EDITOR_VIRTUAL_SPACE, () -> {
-            LogicalPosition location = myEditor.myLastMousePressedLocation;
-            if (location == null) {
-                location = myEditor.getCaretModel().getLogicalPosition();
-            }
-            return EditorUtil.inVirtualSpace(myEditor, location);
-        });
+    public consulo.ui.Component toUIComponent() {
+        return myUIComponent;
     }
 
     @Override
@@ -326,8 +314,8 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     private void setupJTextComponentContext() {
-        setDocument(new EditorAccessibilityDocument());
-        setCaret(new EditorAccessibilityCaret());
+        setDocument(new EditorAccessibilityDocument(myUIComponent));
+        setCaret(new EditorAccessibilityCaret(myEditor));
     }
 
     /**
@@ -351,7 +339,7 @@ public class EditorComponentImpl extends JTextComponent
         // Don't use the default TextUI, BaseTextUI, which does a lot of unnecessary
         // work. We do however need to provide a TextUI implementation since some
         // screen reader support code will invoke it
-        setUI(new EditorAccessibilityTextUI());
+        setUI(new EditorAccessibilityTextUI(myEditor));
         UISettingsUtil.setupEditorAntialiasing(this);
         invalidate();
     }
@@ -441,428 +429,14 @@ public class EditorComponentImpl extends JTextComponent
         }
     }
 
-    private static void notSupported() {
-        throw new RuntimeException("Not supported for this text implementation");
-    }
-
-    /**
-     * {@linkplain javax.swing.text.PlainDocument} does a lot of work we don't need.
-     * This exists simply to be able to send editing events to the screen reader.
-     */
-    @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    private class EditorAccessibilityDocument implements javax.swing.text.Document, javax.swing.text.Element {
-        private List<javax.swing.event.DocumentListener> myListeners;
-
-        public @Nullable List<javax.swing.event.DocumentListener> getListeners() {
-            return myListeners;
-        }
-
-        @Override
-        public int getLength() {
-            return myEditor.getDocument().getTextLength();
-        }
-
-        @Override
-        public void addDocumentListener(javax.swing.event.DocumentListener documentListener) {
-            if (myListeners == null) {
-                myListeners = new ArrayList<>(2);
-            }
-            myListeners.add(documentListener);
-        }
-
-        @Override
-        public void removeDocumentListener(javax.swing.event.DocumentListener documentListener) {
-            if (myListeners != null) {
-                myListeners.remove(documentListener);
-            }
-        }
-
-        @Override
-        public void addUndoableEditListener(UndoableEditListener undoableEditListener) {
-        }
-
-        @Override
-        public void removeUndoableEditListener(UndoableEditListener undoableEditListener) {
-        }
-
-        @Override
-        public @Nullable Object getProperty(Object o) {
-            return null;
-        }
-
-        @Override
-        public void putProperty(Object o, Object o1) {
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void remove(int offset, int length) throws BadLocationException {
-            editDocumentSafely(offset, length, null);
-        }
-
-        @Override
-        @RequiredUIAccess
-        public void insertString(int offset, String text, AttributeSet attributeSet) throws BadLocationException {
-            editDocumentSafely(offset, 0, text);
-        }
-
-        @Override
-        public String getText(int offset, int length) throws BadLocationException {
-            return Application.get().runReadAction(
-                (Supplier<String>)() -> myEditor.getDocument().getText(new TextRange(offset, offset + length))
-            );
-        }
-
-        @Override
-        public void getText(int offset, int length, Segment segment) throws BadLocationException {
-            char[] s = getText(offset, length).toCharArray();
-            segment.array = s;
-            segment.offset = 0;
-            segment.count = s.length;
-        }
-
-        @Override
-        public @Nullable Position getStartPosition() {
-            notSupported();
-            return null;
-        }
-
-        @Override
-        public @Nullable Position getEndPosition() {
-            notSupported();
-            return null;
-        }
-
-        @Override
-        public @Nullable Position createPosition(int i) throws BadLocationException {
-            notSupported();
-            return null;
-        }
-
-        @Override
-        public Element[] getRootElements() {
-            return new Element[]{this};
-        }
-
-        @Override
-        public Element getDefaultRootElement() {
-            return this;
-        }
-
-        @Override
-        public void render(Runnable runnable) {
-            Application.get().runReadAction(runnable);
-        }
-
-        // ---- Implements Element for the root element ----
-        //
-        // This is here because the accessibility code ends up calling some JTextComponent
-        // methods; in particular, CAccessibleText calls root.getElementIndex(index)
-        // to map an offset to a line number, and getRangeForLine calls root.getElement(lineIndex)
-        // to get a range object for a given line, and then getStartOffset() and getEndOffset()
-        // on the result.
-
-        @Override
-        public javax.swing.text.Document getDocument() {
-            return this;
-        }
-
-        @Override
-        public @Nullable Element getParentElement() {
-            return null;
-        }
-
-        @Override
-        public @Nullable String getName() {
-            return null;
-        }
-
-        @Override
-        public @Nullable AttributeSet getAttributes() {
-            return null;
-        }
-
-        @Override
-        public int getStartOffset() {
-            return 0;
-        }
-
-        @Override
-        public int getEndOffset() {
-            return getLength();
-        }
-
-        @Override
-        public int getElementIndex(int i) {
-            // For the root element this asks for the index of the offset, which
-            // means the line number
-            Document document = myEditor.getDocument();
-            return document.getLineNumber(i);
-        }
-
-        @Override
-        public int getElementCount() {
-            Document document = myEditor.getDocument();
-            return document.getLineCount();
-        }
-
-        @Override
-        public Element getElement(final int i) {
-            return new Element() {
-                @Override
-                public javax.swing.text.Document getDocument() {
-                    return EditorAccessibilityDocument.this;
-                }
-
-                @Override
-                public Element getParentElement() {
-                    return EditorAccessibilityDocument.this;
-                }
-
-                @Override
-                public @Nullable String getName() {
-                    return null;
-                }
-
-                @Override
-                public @Nullable AttributeSet getAttributes() {
-                    return null;
-                }
-
-                @Override
-                public int getStartOffset() {
-                    Document document = myEditor.getDocument();
-                    return document.getLineStartOffset(i);
-                }
-
-                @Override
-                public int getEndOffset() {
-                    Document document = myEditor.getDocument();
-                    return document.getLineEndOffset(i);
-                }
-
-                @Override
-                public int getElementIndex(int i) {
-                    return 0;
-                }
-
-                @Override
-                public int getElementCount() {
-                    return 0;
-                }
-
-                @Override
-                public @Nullable Element getElement(int i) {
-                    return null;
-                }
-
-                @Override
-                public boolean isLeaf() {
-                    return true;
-                }
-            };
-        }
-
-        @Override
-        public boolean isLeaf() {
-            return false;
-        }
-    }
-
     @Override
     @RequiredUIAccess
     public void setText(String text) {
-        editDocumentSafely(0, myEditor.getDocument().getTextLength(), text);
+        myUIComponent.editDocumentSafely(0, myEditor.getDocument().getTextLength(), text);
     }
 
-    /**
-     * Inserts, removes or replaces the given text at the given offset
-     */
-    @RequiredUIAccess
-    private void editDocumentSafely(int offset, int length, @Nullable String text) {
-        Project project = myEditor.getProject();
-        Document document = myEditor.getDocument();
-        if (!FileDocumentManager.getInstance().requestWriting(document, project)) {
-            return;
-        }
-        CommandProcessor.getInstance().newCommand()
-            .project(project)
-            .document(document)
-            .groupId(document)
-            .inWriteAction()
-            .run(() -> {
-                document.startGuardedBlockChecking();
-                try {
-                    if (text == null) {
-                        // remove
-                        document.deleteString(offset, offset + length);
-                    }
-                    else if (length == 0) {
-                        // insert
-                        document.insertString(offset, text);
-                    }
-                    else {
-                        document.replaceString(offset, offset + length, text);
-                    }
-                }
-                catch (ReadOnlyFragmentModificationException e) {
-                    EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
-                }
-                finally {
-                    document.stopGuardedBlockChecking();
-                }
-            });
-    }
 
-    /**
-     * {@linkplain DefaultCaret} does a lot of work we don't want (listening
-     * for focus events etc). This exists simply to be able to send caret events to the screen reader.
-     */
-    private class EditorAccessibilityCaret implements javax.swing.text.Caret {
-        @Override
-        public void install(JTextComponent jTextComponent) {
-        }
 
-        @Override
-        public void deinstall(JTextComponent jTextComponent) {
-        }
-
-        @Override
-        public void paint(Graphics graphics) {
-        }
-
-        @Override
-        public void addChangeListener(ChangeListener changeListener) {
-        }
-
-        @Override
-        public void removeChangeListener(ChangeListener changeListener) {
-        }
-
-        @Override
-        public boolean isVisible() {
-            return true;
-        }
-
-        @Override
-        public void setVisible(boolean visible) {
-        }
-
-        @Override
-        public boolean isSelectionVisible() {
-            return true;
-        }
-
-        @Override
-        public void setSelectionVisible(boolean visible) {
-        }
-
-        @Override
-        public void setMagicCaretPosition(Point point) {
-        }
-
-        @Override
-        public @Nullable Point getMagicCaretPosition() {
-            return null;
-        }
-
-        @Override
-        public void setBlinkRate(int rate) {
-        }
-
-        @Override
-        public int getBlinkRate() {
-            return 250;
-        }
-
-        @Override
-        public int getDot() {
-            return myEditor.getCaretModel().getOffset();
-        }
-
-        @Override
-        public int getMark() {
-            return myEditor.getSelectionModel().getSelectionStart();
-        }
-
-        @Override
-        public void setDot(int offset) {
-            if (!myEditor.isDisposed()) {
-                myEditor.getCaretModel().moveToOffset(offset);
-            }
-        }
-
-        @Override
-        public void moveDot(int offset) {
-            if (!myEditor.isDisposed()) {
-                myEditor.getCaretModel().moveToOffset(offset);
-            }
-        }
-    }
-
-    /**
-     * Specialized TextUI intended *only* for accessibility usage. Not all the methods are called; only viewToModel, not modelToView.
-     */
-    private class EditorAccessibilityTextUI extends TextUI {
-        @Override
-        public @Nullable Rectangle modelToView(JTextComponent tc, int offset) throws BadLocationException {
-            LogicalPosition pos = myEditor.offsetToLogicalPosition(offset);
-            Point point = myEditor.logicalPositionToXY(pos);
-            FontMetrics fontMetrics = myEditor.getFontMetrics(Font.PLAIN);
-            char c = myEditor.getDocument().getCharsSequence().subSequence(offset, offset + 1).charAt(0);
-            return new Rectangle(point.x, point.y, fontMetrics.charWidth(c), fontMetrics.getHeight());
-        }
-
-        @Override
-        public int viewToModel(JTextComponent tc, Point pt) {
-            LogicalPosition logicalPosition = myEditor.xyToLogicalPosition(pt);
-            return myEditor.logicalPositionToOffset(logicalPosition);
-        }
-
-        @Override
-        public @Nullable Rectangle modelToView(JTextComponent tc, int pos, Position.Bias ignored) throws BadLocationException {
-            return modelToView(tc, pos);
-        }
-
-        @Override
-        public int viewToModel(JTextComponent tc, Point pt, Position.Bias[] ignored) {
-            return viewToModel(tc, pt);
-        }
-
-        @Override
-        public int getNextVisualPositionFrom(
-            JTextComponent t,
-            int pos,
-            Position.Bias b,
-            int direction,
-            Position.Bias[] biasRet
-        ) throws BadLocationException {
-            notSupported();
-            return 0;
-        }
-
-        @Override
-        public void damageRange(JTextComponent t, int p0, int p1) {
-            myEditor.repaint(p0, p1);
-        }
-
-        @Override
-        public void damageRange(JTextComponent t, int p0, int p1, Position.Bias ignored1, Position.Bias ignored2) {
-            damageRange(t, p0, p1);
-        }
-
-        @Override
-        public @Nullable EditorKit getEditorKit(JTextComponent t) {
-            notSupported();
-            return null;
-        }
-
-        @Override
-        public @Nullable View getRootView(JTextComponent t) {
-            notSupported();
-            return null;
-        }
-    }
 
     private static class TextAccessibleRole extends AccessibleRole {
         // Can't use AccessibleRole.TEXT: The screen reader verbally refers to it as a text field
@@ -1097,7 +671,7 @@ public class EditorComponentImpl extends JTextComponent
         @Override
         @RequiredUIAccess
         public void insertTextAtIndex(int index, String s) {
-            editDocumentSafely(index, 0, s);
+            myUIComponent.editDocumentSafely(index, 0, s);
         }
 
         @Override
@@ -1108,7 +682,7 @@ public class EditorComponentImpl extends JTextComponent
         @Override
         @RequiredUIAccess
         public void delete(int startIndex, int endIndex) {
-            editDocumentSafely(startIndex, endIndex - startIndex, null);
+            myUIComponent.editDocumentSafely(startIndex, endIndex - startIndex, null);
         }
 
         @Override
@@ -1134,7 +708,7 @@ public class EditorComponentImpl extends JTextComponent
         @Override
         @RequiredUIAccess
         public void replaceText(int startIndex, int endIndex, String s) {
-            editDocumentSafely(startIndex, endIndex, s);
+            myUIComponent.editDocumentSafely(startIndex, endIndex, s);
         }
 
         @Override

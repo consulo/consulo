@@ -40,6 +40,7 @@ import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.keymap.keyGesture.MacGestureSupportForEditor;
 import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
@@ -77,6 +78,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -155,12 +157,14 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private static final Key<BufferedImage> BUFFER = Key.create("buffer");
     static final Key<Boolean> CONTAINS_BIDI_TEXT = Key.create("contains.bidi.text");  // TODO BidiContentNotificationProvider
 
+    private final DesktopEditorUIComponent myUIComponent;
     private final JPanel myPanel;
-   
+
     private final JScrollPane myScrollPane;
-   
+
+    private final DesktopEditorContentUIComponent myContentUIComponent;
     private final EditorComponentImpl myEditorComponent;
-   
+
     private final EditorGutterComponentImpl myGutterComponent;
     private final @Nullable StickyLinesManager myStickyLinesManager;
     private final FocusModeModelImpl myFocusModeModel;
@@ -169,7 +173,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     private final LatencyListener myLatencyPublisher;
 
     private static final Cursor EMPTY_CURSOR;
-    private final Map<Object, Cursor> myCustomCursors = new LinkedHashMap<>();
+    private final Map<Object, consulo.ui.cursor.Cursor> myCustomCursors = new LinkedHashMap<>();
     private Cursor myDefaultCursor;
     boolean myCursorSetExternally;
 
@@ -396,9 +400,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         new FoldingPopupManager(this);
 
-        myEditorComponent = new EditorComponentImpl(this);
+        myContentUIComponent = new DesktopEditorContentUIComponent(this);
+        myEditorComponent = myContentUIComponent.toAWTComponent();
         myVerticalScrollBar = myScrollPane.getVerticalScrollBar();
-        myPanel = new JPanel(new BorderLayout());
+        myUIComponent = new DesktopEditorUIComponent();
+        myPanel = myUIComponent.toAWTComponent();
 
         getMarkupModel().updateUI();
 
@@ -685,12 +691,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
         myView.setPrefix(prefixText, attributes);
     }
 
-    private @Nullable Cursor getCustomCursor() {
+    private consulo.ui.cursor.@Nullable Cursor getCustomCursor() {
         return ContainerUtil.getFirstItem(myCustomCursors.values());
     }
 
     @Override
-    public void setCustomCursor(Object requestor, @Nullable Cursor cursor) {
+    public void setCustomCursor(Object requestor, consulo.ui.cursor.@Nullable Cursor cursor) {
         if (cursor == null) {
             myCustomCursors.remove(requestor);
         }
@@ -1114,7 +1120,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     public consulo.ui.Component getContentUIComponent() {
-        return TargetAWT.wrap(myEditorComponent);
+        return myContentUIComponent;
     }
 
     @Override
@@ -1523,7 +1529,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     public consulo.ui.Component getUIComponent() {
-        return TargetAWT.wrap(myPanel);
+        return myUIComponent;
     }
 
     public void setHorizontalTextAlignment(@MagicConstant(intValues = {TEXT_ALIGNMENT_LEFT, TEXT_ALIGNMENT_RIGHT}) int alignment) {
@@ -2035,7 +2041,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
     }
 
     private void updateEditorCursor() {
-        Cursor customCursor = getCustomCursor();
+        consulo.ui.cursor.Cursor customCursor = getCustomCursor();
         if (customCursor == null && myCursorSetExternally && myEditorComponent.isCursorSet()) {
             Cursor cursor = myEditorComponent.getCursor();
             if (cursor != Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
@@ -2047,7 +2053,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
         }
 
-        UIUtil.setCursor(myEditorComponent, customCursor == null ? myDefaultCursor : customCursor);
+        UIUtil.setCursor(myEditorComponent, customCursor == null ? myDefaultCursor : TargetAWT.to(customCursor));
         myCursorSetExternally = false;
     }
 
@@ -2880,7 +2886,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
         boolean overText = inlayCandidate == null &&
             (foldRegionCandidate == null || foldRegion != null) &&
             offsetToLogicalPosition(offset).equals(logicalPosition);
-        return new EditorMouseEvent(this, e, null, e.isPopupTrigger(), area, offset, logicalPosition, visualPosition,
+        InputDetails inputDetails = DesktopAWTInputDetails.convert(myEditorComponent, e);
+        return new EditorMouseEvent(this, e, inputDetails, e.isPopupTrigger(), area, offset, logicalPosition, visualPosition,
             overText, foldRegion, inlay, gutterIconRenderer);
     }
 

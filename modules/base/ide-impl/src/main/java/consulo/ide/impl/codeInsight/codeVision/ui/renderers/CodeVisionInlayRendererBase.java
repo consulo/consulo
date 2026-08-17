@@ -17,13 +17,13 @@ import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.language.editor.codeVision.ClickableTextCodeVisionEntry;
 import consulo.language.editor.codeVision.CodeVisionEntry;
 import consulo.language.editor.codeVision.TextCodeVisionEntry;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.RelativePoint;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -217,8 +217,7 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
             // cursor-arbitration system and is not silently overridden by other listeners.
             // Passing null restores the editor's default cursor management (same pattern as
             // DeclarativeInlayHintsMouseMotionListener in Consulo).
-            editorEx.setCustomCursor(CodeVisionInlayRendererBase.class,
-                hasHoveredEntry ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : null);
+            editorEx.setCustomCursor(CodeVisionInlayRendererBase.class, hasHoveredEntry ? StandardCursors.HAND : null);
         }
     }
 
