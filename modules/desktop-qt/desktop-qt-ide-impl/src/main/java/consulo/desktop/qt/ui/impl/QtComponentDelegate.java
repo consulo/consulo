@@ -29,8 +29,10 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.event.AttachEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.DetachEvent;
 import consulo.ui.event.KeyPressedEvent;
 import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.impl.BorderInfo;
@@ -77,6 +79,7 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     private Component myParent;
 
     private boolean myKeyDispatchInstalled;
+    private boolean myAttachDispatchInstalled;
 
     private boolean myEnabled = true;
     private boolean myVisible = true;
@@ -415,6 +418,10 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             installKeyDispatch();
         }
 
+        if (eventClass == AttachEvent.class || eventClass == DetachEvent.class) {
+            installAttachDispatch();
+        }
+
         return myDataObject.addListener(eventClass, listener);
     }
 
@@ -438,13 +445,13 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             public boolean eventFilter(QObject watched, QEvent event) {
                 if (event instanceof QKeyEvent keyEvent) {
                     if (event.type() == QEvent.Type.KeyPress) {
-                        fireKeyEvent(KeyPressedEvent.class, new KeyPressedEvent(
+                        fireComponentEvent(KeyPressedEvent.class, new KeyPressedEvent(
                             QtComponentDelegate.this,
                             DesktopQtInputDetails.keyboard(widget, keyEvent)
                         ));
                     }
                     else if (event.type() == QEvent.Type.KeyRelease) {
-                        fireKeyEvent(KeyReleasedEvent.class, new KeyReleasedEvent(
+                        fireComponentEvent(KeyReleasedEvent.class, new KeyReleasedEvent(
                             QtComponentDelegate.this,
                             DesktopQtInputDetails.keyboard(widget, keyEvent)
                         ));
@@ -457,8 +464,38 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
         }));
     }
 
+    /**
+     * Starts reporting whether the component is on screen. A widget is bound to its parent long before the window
+     * holding it is shown, and what the api calls an attach is that moment of becoming visible - a toolbar hangs
+     * the expansion of its action group off it, so a toolbar which is never told stays empty.
+     * <p>
+     * Qt shows and hides the whole tree under a window along with it, so the events of the widget itself are
+     * enough and no ancestor has to be watched.
+     */
+    private void installAttachDispatch() {
+        if (myAttachDispatchInstalled) {
+            return;
+        }
+
+        myAttachDispatchInstalled = true;
+
+        whenBound(widget -> widget.installEventFilter(new QObject(widget) {
+            @Override
+            public boolean eventFilter(QObject watched, QEvent event) {
+                if (event.type() == QEvent.Type.Show) {
+                    fireComponentEvent(AttachEvent.class, new AttachEvent(QtComponentDelegate.this));
+                }
+                else if (event.type() == QEvent.Type.Hide) {
+                    fireComponentEvent(DetachEvent.class, new DetachEvent(QtComponentDelegate.this));
+                }
+
+                return false;
+            }
+        }));
+    }
+
     @SuppressWarnings("unchecked")
-    private <E extends ComponentEvent<Component>> void fireKeyEvent(Class<E> eventClass, E event) {
+    private <E extends ComponentEvent<Component>> void fireComponentEvent(Class<E> eventClass, E event) {
         ((ComponentEventListener<Component, E>) getListenerDispatcher(eventClass)).onEvent(event);
     }
 

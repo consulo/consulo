@@ -18,7 +18,12 @@ package consulo.desktop.qt.editor.impl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
+import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.document.Document;
+import consulo.platform.Platform;
+import io.qt.core.QRect;
 import io.qt.core.QSize;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
@@ -53,6 +58,7 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
     private final DesktopQtEditorGutterWidget myGutter;
     private final DesktopQtEditorErrorStripeWidget myErrorStripe;
     private final DesktopQtEditorStatusPanelWidget myStatusPanel;
+    private final DesktopQtEditorLinkNavigation myLinkNavigation;
     private final QTimer myCaretBlinkTimer;
 
     private boolean myCaretBlinkOn = true;
@@ -71,9 +77,12 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         myGutter = new DesktopQtEditorGutterWidget(this, editor);
         myErrorStripe = new DesktopQtEditorErrorStripeWidget(this, editor);
         myStatusPanel = new DesktopQtEditorStatusPanelWidget(this, editor);
+        myLinkNavigation = new DesktopQtEditorLinkNavigation(editor);
 
         viewport().setAutoFillBackground(false);
         viewport().setCursor(new QCursor(Qt.CursorShape.IBeamCursor));
+        // moves with no button held are what a ctrl hover is made of
+        viewport().setMouseTracking(true);
         setFrameShape(Shape.NoFrame);
         setFocusPolicy(Qt.FocusPolicy.StrongFocus);
         setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding);
@@ -110,21 +119,21 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
             setViewportMargins(gutterWidth, 0, stripeWidth, 0);
         }
 
-        myGutter.setGeometry(0, 0, gutterWidth, height());
+        QRect viewportRect = viewport().geometry();
+
+        myGutter.setGeometry(viewportRect.left() - gutterWidth, viewportRect.top(), gutterWidth, viewportRect.height());
         myGutter.setVisible(gutterWidth > 0);
         myGutter.update();
 
-        myErrorStripe.setGeometry(width() - stripeWidth, 0, stripeWidth, height());
+        myErrorStripe.setGeometry(viewportRect.right() + 1, viewportRect.top(), stripeWidth, viewportRect.height());
         myErrorStripe.setVisible(stripeWidth > 0);
         myErrorStripe.update();
 
-        // the counters float over the top right of the text, clear of the strip - they are not given room of
-        // their own, since taking a line off the top of every editor for them would be worse than overlapping
         int statusWidth = myStatusPanel.preferredWidth();
         if (statusWidth > 0) {
             int statusHeight = myStatusPanel.preferredHeight();
 
-            myStatusPanel.setGeometry(width() - stripeWidth - statusWidth, 0, statusWidth, statusHeight);
+            myStatusPanel.setGeometry(viewportRect.right() + 1 - statusWidth, viewportRect.top(), statusWidth, statusHeight);
             myStatusPanel.raise();
         }
     }
@@ -233,11 +242,13 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
     @Override
     protected void mousePressEvent(QMouseEvent event) {
         if (event.button() == Qt.MouseButton.RightButton) {
-            // the menu is built out of the data context, so the caret has to have reached the click before qt
-            // asks for it. a click inside the selection is meant for the selection and leaves the caret alone
+            // the menu is built out of the data context, so the caret has to have reached the click before the
+            // handlers are asked. a click inside the selection is meant for it and leaves the caret alone
             placeCaretForContextMenu(offsetAt(event));
 
-            super.mousePressEvent(event);
+            myEditor.fireMousePressed(editingAreaEvent(event));
+
+            event.accept();
             return;
         }
 
@@ -247,6 +258,14 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         }
 
         int offset = offsetAt(event);
+
+        // ctrl click follows the reference rather than moving the caret to it
+        if (isNavigationModifier(event.modifiers())) {
+            myLinkNavigation.navigateTo(offset);
+
+            event.accept();
+            return;
+        }
 
         if (event.modifiers().testFlag(Qt.KeyboardModifier.ShiftModifier)) {
             // shift keeps whatever the selection was anchored to, so a click extends the run rather than starting one
@@ -262,6 +281,8 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         moveCaretTo(offset);
         mySelecting = true;
 
+        myEditor.fireMousePressed(editingAreaEvent(event));
+
         // qt keeps sending moves to whoever took the press, and dropping the press would hand the drag to the
         // scroll area instead
         event.accept();
@@ -270,6 +291,8 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
     @Override
     protected void mouseMoveEvent(QMouseEvent event) {
         if (!mySelecting) {
+            updateLinkUnderPointer(event);
+
             super.mouseMoveEvent(event);
             return;
         }
@@ -279,9 +302,56 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         event.accept();
     }
 
+    /**
+     * Underlines whatever ctrl is held over, and takes the underline away as soon as it is not. The platform
+     * does this from its own mouse motion listener in the awt frontend, which reads the modifiers off an awt
+     * event - so the frontend drives it here instead, the way the web one does.
+     */
+    /**
+     * A press or a move of the pointer over the text, in the shape the platform listens for.
+     */
+    private EditorMouseEvent editingAreaEvent(QMouseEvent event) {
+        return new EditorMouseEvent(
+            myEditor,
+            DesktopQtInputDetails.mouse(viewport(), event),
+            event.button() == Qt.MouseButton.RightButton,
+            EditorMouseEventArea.EDITING_AREA
+        );
+    }
+
+    private void updateLinkUnderPointer(QMouseEvent event) {
+        if (!isNavigationModifier(event.modifiers())) {
+            if (myLinkNavigation.hasLink()) {
+                myLinkNavigation.clear();
+
+                viewport().setCursor(new QCursor(Qt.CursorShape.IBeamCursor));
+                viewport().update();
+            }
+            return;
+        }
+
+        myEditor.fireMouseMoved(editingAreaEvent(event));
+
+        boolean navigable = myLinkNavigation.highlightLinkAt(offsetAt(event));
+
+        viewport().setCursor(new QCursor(navigable ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.IBeamCursor));
+        viewport().update();
+    }
+
+    /**
+     * Control everywhere but on a mac, where the same gesture is made with command.
+     */
+    private static boolean isNavigationModifier(Qt.KeyboardModifiers modifiers) {
+        return Platform.current().os().isMac()
+            ? modifiers.testFlag(Qt.KeyboardModifier.MetaModifier)
+            : modifiers.testFlag(Qt.KeyboardModifier.ControlModifier);
+    }
+
     @Override
     protected void mouseReleaseEvent(QMouseEvent event) {
         mySelecting = false;
+
+        myEditor.fireMouseReleased(editingAreaEvent(event));
 
         super.mouseReleaseEvent(event);
     }

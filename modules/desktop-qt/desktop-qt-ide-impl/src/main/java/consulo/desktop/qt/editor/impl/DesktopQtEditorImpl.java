@@ -33,7 +33,9 @@ import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseListener;
+import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
@@ -189,6 +191,32 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      */
     public List<EditorMouseListener> getEditorMouseListeners() {
         return myMouseListeners;
+    }
+
+    /**
+     * Hands a press to everything the platform hung off the editor, then lets the popup handlers have it. That
+     * second step is how the editor context menu is meant to open: {@code invokePopupIfNeeded} runs the handlers
+     * registered for the editing area when the press is a popup trigger, and it can only run if the frontend
+     * reports the press at all - which the qt surface did not until now.
+     */
+    public void fireMousePressed(EditorMouseEvent event) {
+        for (EditorMouseListener listener : myMouseListeners) {
+            listener.mousePressed(event);
+        }
+
+        invokePopupIfNeeded(event);
+    }
+
+    public void fireMouseReleased(EditorMouseEvent event) {
+        for (EditorMouseListener listener : myMouseListeners) {
+            listener.mouseReleased(event);
+        }
+    }
+
+    public void fireMouseMoved(EditorMouseEvent event) {
+        for (EditorMouseMotionListener listener : myMouseMotionListeners) {
+            listener.mouseMoved(event);
+        }
     }
 
     public DesktopQtEditorVisualLines getVisualLines() {

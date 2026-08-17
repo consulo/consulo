@@ -126,7 +126,7 @@ public class DesktopQtWindowFrame extends QObject {
 
         if (placement == DesktopQtTitleBarPlacement.OVERLAY) {
             // the controls are a child of the content and no part of its layout, so they are placed by hand over
-            // whatever the window shows and nothing of it is moved down by them
+            // whatever the window shows - the room they need is stated by DesktopQtTitlelessDecorator instead
             myOverlayControls = new DesktopQtWindowControls(centralWidget);
         }
         else {

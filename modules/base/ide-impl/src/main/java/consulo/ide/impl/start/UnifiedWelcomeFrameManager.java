@@ -41,6 +41,7 @@ import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TitlelessDecorator;
+import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -137,7 +138,8 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
             frameClosed();
         });
 
-        TitlelessDecorator titlelessDecorator = TitlelessDecorator.NOTHING;
+        TitlelessDecorator titlelessDecorator =
+            TitlelessDecoratorService.getInstance().of(welcomeFrame, TitlelessDecorator.WELCOME_WINDOW);
 
         BaseUnifiedWelcomeScreenPanel panel =
             new BaseUnifiedWelcomeScreenPanel(uiDisposable, myDataManager, myActionManager, titlelessDecorator) {

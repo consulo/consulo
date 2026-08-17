@@ -36,11 +36,6 @@ import org.jspecify.annotations.Nullable;
 @Singleton
 @ServiceImpl
 public class DesktopQtTitlelessDecoratorService implements TitlelessDecoratorService {
-    /**
-     * Nothing is ever answered but {@link TitlelessDecorator#NOTHING}: what the decorator states is the room the
-     * content of an awt frame has to leave for a header drawn over it, and a qt header is a widget of the window
-     * which holds the room it needs itself.
-     */
     @RequiredUIAccess
     @Override
     public TitlelessDecorator of(Object pane, String windowId) {
@@ -50,7 +45,11 @@ public class DesktopQtTitlelessDecoratorService implements TitlelessDecoratorSer
             window.installTitleBar(placement);
         }
 
-        return TitlelessDecorator.NOTHING;
+        // a header standing in the layout as a strip holds the room it needs itself, only one floating over the
+        // content has to be kept clear by that content
+        return placement == DesktopQtTitleBarPlacement.OVERLAY
+            ? new DesktopQtTitlelessDecorator(DesktopQtTitleBar.getBarHeight())
+            : TitlelessDecorator.NOTHING;
     }
 
     private static @Nullable DesktopQtTitleBarPlacement placementOf(String windowId) {

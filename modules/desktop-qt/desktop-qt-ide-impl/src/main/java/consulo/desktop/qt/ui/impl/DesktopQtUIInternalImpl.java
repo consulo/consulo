@@ -313,6 +313,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public Separator _Separator_create(SeparatorStyle style) {
+        return new DesktopQtSeparatorImpl(style);
+    }
+
+    @Override
     public ValueGroup<Boolean> _ValueGroups_boolGroup() {
         return new DesktopQtBoolValueGroup();
     }

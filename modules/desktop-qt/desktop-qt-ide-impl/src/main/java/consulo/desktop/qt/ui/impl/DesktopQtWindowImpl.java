@@ -201,27 +201,6 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         frame.setMenuBar(myQtMenuBar);
     }
 
-    /**
-     * Asks for the decoration of the welcome screen, which nothing else does.
-     * <p/>
-     * The frame of a project is decorated by {@code DesktopQtIdeFrameImpl}, but the welcome screen is built by
-     * {@code UnifiedWelcomeFrameManager} - shared code, which knows of no frontend and asks no
-     * {@code TitlelessDecoratorService} for anything. The window is recognised by the frame the ui is currently
-     * showing, which the welcome manager registers before it shows the window.
-     */
-    @RequiredUIAccess
-    private void installWelcomeTitleBar() {
-        if (myTitlelessFrame != null) {
-            return;
-        }
-
-        UIAccess uiAccess = UIAccess.current();
-        if (uiAccess.getUserData(IdeFrame.KEY) instanceof UnifiedWelcomeIdeFrame welcomeFrame
-            && welcomeFrame.getWindow() == this) {
-            TitlelessDecoratorService.getInstance().of(this, TitlelessDecorator.WELCOME_WINDOW);
-        }
-    }
-
     @Override
     protected QMainWindow createQt(QWidget parent) {
         throw new UnsupportedOperationException();
@@ -469,7 +448,6 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         // and that packed geometry is what the window falls back to for the rest of its life whenever it
         // leaves the maximized state
         if (!myComponent.isVisible()) {
-            installWelcomeTitleBar();
             applyDialogRole();
             applyDefaultSize();
 

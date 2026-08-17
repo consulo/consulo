@@ -19,6 +19,10 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.impl.BorderInfo;
+import io.qt.core.QSize;
+import io.qt.core.Qt;
 import io.qt.gui.QPixmap;
 import io.qt.widgets.QLabel;
 import io.qt.widgets.QSizePolicy;
@@ -35,9 +39,28 @@ public class DesktopQtImageBoxImpl extends QtComponentDelegate<QLabel> implement
         myImage = image;
     }
 
+    private class ImageLabel extends QLabel {
+        private ImageLabel(QWidget parent) {
+            super(parent);
+        }
+
+        @Override
+        public QSize sizeHint() {
+            return new QSize(
+                myImage.getWidth() + borderSpace(BorderPosition.LEFT) + borderSpace(BorderPosition.RIGHT),
+                myImage.getHeight() + borderSpace(BorderPosition.TOP) + borderSpace(BorderPosition.BOTTOM)
+            );
+        }
+    }
+
+    private int borderSpace(BorderPosition position) {
+        BorderInfo info = myDataObject.getBorders().get(position);
+        return info == null ? 0 : info.getWidth();
+    }
+
     @Override
     protected QLabel createQt(QWidget parent) {
-        return new QLabel(parent);
+        return new ImageLabel(parent);
     }
 
     @Override
@@ -57,14 +80,10 @@ public class DesktopQtImageBoxImpl extends QtComponentDelegate<QLabel> implement
 
         if (pixmap != null && !pixmap.isNull()) {
             component.setPixmap(pixmap);
+        }
 
-            // a label already asks for the size of its pixmap and whatever border was put around it, while a fixed
-            // size would swallow that border instead of leaving room for it
-            component.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
-        }
-        else {
-            component.setFixedSize(myImage.getWidth(), myImage.getHeight());
-        }
+        component.setAlignment(Qt.AlignmentFlag.AlignCenter);
+        component.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
     }
 
     @Override

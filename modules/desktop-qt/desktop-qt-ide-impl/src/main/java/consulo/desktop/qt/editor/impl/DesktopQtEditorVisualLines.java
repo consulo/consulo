@@ -72,9 +72,22 @@ public class DesktopQtEditorVisualLines {
     public int logicalToVisualLine(int logicalLine) {
         Document document = myEditor.getDocument();
 
-        int line = Math.max(0, Math.min(logicalLine, document.getLineCount() - 1));
+        int line = visibleLineOf(Math.max(0, Math.min(logicalLine, document.getLineCount() - 1)));
 
         return line - myEditor.getFoldingModel().getFoldedLinesCountBefore(document.getLineStartOffset(line));
+    }
+
+    private int visibleLineOf(int logicalLine) {
+        Document document = myEditor.getDocument();
+
+        int lineStart = document.getLineStartOffset(logicalLine);
+
+        FoldRegion region = myEditor.getFoldingModel().getCollapsedRegionAtOffset(lineStart);
+        if (region == null || region.getStartOffset() >= lineStart) {
+            return logicalLine;
+        }
+
+        return document.getLineNumber(region.getStartOffset());
     }
 
     /**
