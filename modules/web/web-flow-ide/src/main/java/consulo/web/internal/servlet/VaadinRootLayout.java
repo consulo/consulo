@@ -26,7 +26,7 @@ import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;

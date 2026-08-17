@@ -30,8 +30,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.servlet.VaadinRootLayout;
-import consulo.web.internal.ui.WebRootPaneImpl;
-import consulo.web.internal.ui.base.TargetVaadin;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;

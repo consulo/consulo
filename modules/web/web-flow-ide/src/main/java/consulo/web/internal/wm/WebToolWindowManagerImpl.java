@@ -46,7 +46,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
-import consulo.web.internal.ui.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowInternalDecorator;
 import consulo.web.internal.wm.toolWindow.WebToolWindowPanelImpl;
 import consulo.web.internal.wm.toolWindow.WebToolWindowStripeButtonImpl;

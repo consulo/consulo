@@ -46,12 +46,12 @@ import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
-import consulo.web.internal.ui.WebFocusManagerImpl;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaadin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.base.WebFocusTracker;
-import consulo.web.internal.ui.image.WebImageConverter;
+import consulo.web.ui.impl.internal.WebFocusManagerImpl;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebFocusTracker;
+import consulo.web.ui.impl.internal.image.WebImageConverter;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;

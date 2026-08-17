@@ -22,7 +22,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.execution.process.ColoredOutputTypeRegistry;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.ui.color.ColorValue;
-import consulo.web.internal.ui.WebColors;
+import consulo.web.ui.impl.internal.WebColors;
 import tools.jackson.databind.node.ObjectNode;
 
 /**

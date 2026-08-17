@@ -16,7 +16,7 @@ module consulo.logging.api {
         consulo.application.impl,
         consulo.external.service.impl,
         consulo.application.api,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.it;
 
     uses consulo.logging.internal.LoggerFactoryProvider;

@@ -4,6 +4,8 @@
  */
 module consulo.desktop.qt.ide.impl {
     requires consulo.ide.impl;
+    requires consulo.desktop.qt.ui.impl;
+    requires consulo.desktop.qt.editor.impl;
     requires consulo.ui.ex.impl;
     requires consulo.ui.impl;
     requires consulo.desktop.ide.impl;
@@ -29,8 +31,6 @@ module consulo.desktop.qt.ide.impl {
 
     requires qtjambi;
 
-    provides consulo.ui.internal.UIInternal with consulo.desktop.qt.ui.impl.DesktopQtUIInternalImpl;
     provides consulo.platform.internal.PlatformInternal with consulo.desktop.qt.platform.DesktopQtPlatformInternal;
     provides consulo.container.boot.ContainerStartup with consulo.desktop.qt.container.boot.DesktopQtContainerStartup;
-    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.qt.ui.impl.TargetAWTFacadeStub;
 }

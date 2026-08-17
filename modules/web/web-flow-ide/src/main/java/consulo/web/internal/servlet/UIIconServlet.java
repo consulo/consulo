@@ -15,10 +15,10 @@
  */
 package consulo.web.internal.servlet;
 
-import consulo.web.internal.ui.image.WebImageRenderer;
-import consulo.web.internal.ui.image.WebImageSpec;
-import consulo.web.internal.ui.image.WebImageUrl;
-import consulo.web.internal.ui.image.WebRenderedImage;
+import consulo.web.ui.impl.internal.image.WebImageRenderer;
+import consulo.web.ui.impl.internal.image.WebImageSpec;
+import consulo.web.ui.impl.internal.image.WebImageUrl;
+import consulo.web.ui.impl.internal.image.WebRenderedImage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.annotation.WebServlet;

@@ -16,6 +16,8 @@
 package consulo.web.internal.servlet;
 
 import com.vaadin.flow.component.UI;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -26,8 +28,7 @@ import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.util.lang.TimeoutUtil;
-import consulo.web.application.WebApplication;
-import consulo.web.internal.WebApplicationImpl;
+import consulo.web.ui.impl.internal.WebApplicationImpl;
 
 /**
  * @author VISTALL
@@ -38,7 +39,7 @@ public class RootUIBuilder implements UIBuilder {
   @Override
   public void build(Window window) {
 //    Disposer.register(UIServlet.getDisposable(UI.getCurrent()), () -> {
-//      WebApplication application = WebApplication.getInstance();
+//      Application application = ApplicationManager.getApplication();
 //      if (application == null || !((ApplicationEx)application).isLoaded()) {
 //        return;
 //      }
@@ -62,7 +63,7 @@ public class RootUIBuilder implements UIBuilder {
     new Thread(() -> {
       TimeoutUtil.sleep(1000L);
       
-      WebApplication application = WebApplication.getInstance();
+      Application application = ApplicationManager.getApplication();
       if (application == null || !((ApplicationEx)application).isLoaded()) {
         if (access.isValid()) {
           scheduleWelcomeFrame(access, window, tryCount + 1);
@@ -77,7 +78,7 @@ public class RootUIBuilder implements UIBuilder {
   }
 
   @RequiredUIAccess
-  private void showWelcomeFrame(WebApplication application, Window window) {
+  private void showWelcomeFrame(Application application, Window window) {
     window.setContent(DockLayout.create());
 
     WelcomeFrameManager welcomeFrameManager = WelcomeFrameManager.getInstance();

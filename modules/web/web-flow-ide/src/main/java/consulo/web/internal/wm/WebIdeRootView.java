@@ -28,13 +28,13 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
-import consulo.web.internal.ui.action.WebActionMenuExpander;
+import consulo.web.ui.impl.internal.action.WebActionMenuExpander;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.web.internal.ui.WebRootPaneImpl;
-import consulo.web.internal.ui.base.WebFocusTracker;
-import consulo.web.internal.ui.base.WebKeyTracker;
-import consulo.web.internal.ui.base.WebShortcutDispatcher;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.base.WebFocusTracker;
+import consulo.web.ui.impl.internal.base.WebKeyTracker;
+import consulo.web.ui.impl.internal.base.WebShortcutDispatcher;
 
 /**
  * @author VISTALL

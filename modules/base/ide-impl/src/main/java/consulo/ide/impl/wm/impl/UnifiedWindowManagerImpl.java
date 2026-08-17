@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.wm.impl;
 
+import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.WindowManagerEx;

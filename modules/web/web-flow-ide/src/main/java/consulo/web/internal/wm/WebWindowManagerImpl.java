@@ -29,7 +29,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.servlet.VaadinRootLayout;
-import consulo.web.internal.ui.WebUIAccessImpl;
+import consulo.web.ui.impl.internal.WebUIAccessImpl;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;

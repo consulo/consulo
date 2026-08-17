@@ -15,11 +15,12 @@
  */
 package consulo.desktop.awt.ui.keymap;
 
+import consulo.desktop.awt.ui.LastFocusAtDeactivationTracker;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.wm.FocusManagerImpl;
+
 import consulo.ui.ex.awt.AWTConstants;
 import consulo.ui.ex.impl.internal.action.ActionImplUtil;
 import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
@@ -151,10 +152,10 @@ public final class IdeMouseEventDispatcher {
                 IdeFrame ideFrame = uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
                 if (ideFrame != null) {
                     IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
-                    if (focusManager instanceof FocusManagerImpl) {
+                    if (focusManager instanceof LastFocusAtDeactivationTracker) {
                         Component at = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
                         if (at != null && at.isFocusable()) {
-                            ((FocusManagerImpl) focusManager).setLastFocusedAtDeactivation(ideFrame, at);
+                            ((LastFocusAtDeactivationTracker) focusManager).setLastFocusedAtDeactivation(ideFrame, at);
                         }
                     }
                 }

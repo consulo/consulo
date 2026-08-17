@@ -24,9 +24,9 @@ module consulo.project.ui.api {
 
     exports consulo.project.ui.internal to
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.external.system.impl,
         consulo.desktop.ide.impl,
         consulo.ui.ex.awt.api,
@@ -40,5 +40,5 @@ module consulo.project.ui.api {
         consulo.project.impl,
         consulo.project.ui.impl,
         consulo.it,
-        consulo.web.ide;
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 }

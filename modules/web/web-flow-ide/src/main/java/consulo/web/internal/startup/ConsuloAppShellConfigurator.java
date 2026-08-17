@@ -55,10 +55,10 @@ import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.aura.Aura;
-import consulo.web.internal.ui.WebFontRegistry;
-import consulo.web.internal.ui.WebStyleCssRegistry;
-import consulo.web.internal.ui.vaadin.carousel.Carousel;
-import consulo.web.internal.ui.vaadin.carousel.Slide;
+import consulo.web.ui.impl.internal.WebFontRegistry;
+import consulo.web.ui.impl.internal.WebStyleCssRegistry;
+import consulo.web.ui.impl.internal.vaadin.carousel.Carousel;
+import consulo.web.ui.impl.internal.vaadin.carousel.Slide;
 import org.vaadin.addons.tatu.ColorPicker;
 import org.vaadin.stefan.table.Table;
 

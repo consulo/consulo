@@ -20,6 +20,8 @@
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.web/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
+        <include>consulo:consulo-web-ui-impl</include>
+        <include>consulo:consulo-web-editor-impl</include>
         <include>consulo:consulo-web-ide</include>
 
         <include>org.jsoup:jsoup</include>

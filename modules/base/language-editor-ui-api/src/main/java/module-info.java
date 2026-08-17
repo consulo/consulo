@@ -26,5 +26,5 @@ module consulo.language.editor.ui.api {
         consulo.execution.debug.impl,
         consulo.version.control.system.impl,
         consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
 }

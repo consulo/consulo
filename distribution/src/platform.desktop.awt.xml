@@ -22,6 +22,8 @@
             <unpack>false</unpack>
             <includes>
                 <include>consulo:consulo-desktop-ide-impl</include>
+                <include>consulo:consulo-desktop-awt-editor-impl</include>
+                <include>consulo:consulo-desktop-awt-ui-impl</include>
                 <include>consulo:consulo-desktop-awt-ide-impl</include>
                 <include>consulo:consulo-desktop-awt-os-mac</include>
                 <include>org.antlr:antlr4-runtime</include>

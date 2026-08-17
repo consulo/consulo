@@ -15,7 +15,7 @@
  */
 package consulo.web.internal.servlet;
 
-import consulo.ide.impl.ui.BundledFontRegistry;
+import consulo.ui.impl.font.BundledFontRegistry;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

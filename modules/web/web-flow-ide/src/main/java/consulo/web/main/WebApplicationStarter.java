@@ -23,8 +23,8 @@ import consulo.application.internal.ApplicationEx;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.web.internal.WebApplicationImpl;
-import consulo.web.internal.WebStartupProgressImpl;
+import consulo.web.ui.impl.internal.WebApplicationImpl;
+import consulo.web.ui.impl.internal.WebStartupProgressImpl;
 import org.jspecify.annotations.Nullable;
 
 /**

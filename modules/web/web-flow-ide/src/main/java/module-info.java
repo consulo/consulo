@@ -27,6 +27,8 @@ module consulo.web.ide {
     requires consulo.execution.coverage.api;
     requires consulo.file.editor.api;
     requires consulo.ide.impl;
+    requires consulo.web.editor.impl;
+    requires consulo.web.ui.impl;
     requires consulo.language.api;
     requires consulo.language.editor.api;
     requires consulo.language.editor.impl;
@@ -104,6 +106,4 @@ module consulo.web.ide {
 
     provides consulo.container.boot.ContainerStartup with consulo.web.internal.startup.WebContainerStartup;
     provides consulo.platform.internal.PlatformInternal with consulo.web.internal.platform.WebPlatformInternalImpl;
-    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.web.internal.TargetAWTFacadeStub;
-    provides consulo.ui.internal.UIInternal with consulo.web.internal.ui.WebUIInternalImpl;
 }

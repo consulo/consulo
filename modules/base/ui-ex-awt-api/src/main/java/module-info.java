@@ -50,7 +50,7 @@ module consulo.ui.ex.awt.api {
 
     exports consulo.ui.ex.awt.internal to
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.language.editor.refactoring.api,
         consulo.version.control.system.log.impl,
         consulo.external.system.api,

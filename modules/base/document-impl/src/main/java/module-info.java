@@ -16,13 +16,13 @@ module consulo.document.impl {
         consulo.test.impl,
         consulo.code.editor.impl,
         consulo.file.editor.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.language.editor.impl;
 
     exports consulo.document.impl.event to
         consulo.ide.impl,
         consulo.language.impl,
         consulo.language.editor.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.code.editor.impl;
 }

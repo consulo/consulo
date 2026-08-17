@@ -21,8 +21,8 @@ import consulo.project.Project;
 import consulo.project.ui.impl.internal.wm.UnifiedToolWindowImpl;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.web.internal.ui.base.TargetVaadin;
-import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 
 /**
  * @author VISTALL

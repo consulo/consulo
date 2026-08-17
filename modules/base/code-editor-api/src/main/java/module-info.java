@@ -30,13 +30,13 @@ module consulo.code.editor.api {
         consulo.code.editor.impl,
         consulo.ide.impl,
         consulo.language.editor.impl,
-        consulo.desktop.awt.ide.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.codeEditor.internal to consulo.ide.impl,
         consulo.ui.ex.impl,
         consulo.code.editor.impl,
         consulo.language.inject.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.language.editor.api,
         consulo.language.code.style.ui.api,
         consulo.language.code.style.impl,
@@ -44,11 +44,11 @@ module consulo.code.editor.api {
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.file.editor.api,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl,
+        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.language.editor.impl,
         consulo.execution.debug.impl,
         consulo.version.control.system.impl,
-        consulo.web.ide;
+        consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     opens consulo.codeEditor.internal to consulo.proxy;
 }

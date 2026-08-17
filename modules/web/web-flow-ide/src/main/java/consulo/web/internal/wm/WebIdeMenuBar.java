@@ -36,10 +36,10 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.WebMenuBarImpl;
-import consulo.web.internal.ui.WebMenuImpl;
-import consulo.web.internal.ui.WebMenuItemImpl;
-import consulo.web.internal.ui.base.WebFocusTracker;
+import consulo.web.ui.impl.internal.WebMenuBarImpl;
+import consulo.web.ui.impl.internal.WebMenuImpl;
+import consulo.web.ui.impl.internal.WebMenuItemImpl;
+import consulo.web.ui.impl.internal.base.WebFocusTracker;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;

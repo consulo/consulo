@@ -41,6 +41,16 @@ public interface IdeEventQueueProxy {
   default void flushDelayedKeyEvents() {
   }
 
+  /**
+   * The count of events the queue has dispatched, used to tell whether anything happened while a task ran.
+   */
+  default int getEventCount() {
+    return 0;
+  }
+
+  default void setEventCount(int eventCount) {
+  }
+
   default boolean closeAllPopups() {
     return closeAllPopups(true);
   }

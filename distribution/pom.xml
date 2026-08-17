@@ -238,6 +238,16 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-awt-editor-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-awt-ui-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>consulo-desktop-awt-ide-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -254,6 +264,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-desktop-qt-bootstrap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-qt-ui-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-desktop-qt-editor-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -579,6 +599,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo-web-browser-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-web-ui-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-web-editor-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -14,7 +14,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionListStep;
+import consulo.language.editor.impl.internal.intention.IntentionListStep;
 import consulo.ide.impl.idea.codeInsight.hint.PriorityQuestionAction;
 import consulo.ide.impl.idea.codeInsight.hint.ScrollAwareHint;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;

@@ -20,8 +20,8 @@ import com.jediterm.terminal.model.TerminalTextBuffer;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.model.RangeModel;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;

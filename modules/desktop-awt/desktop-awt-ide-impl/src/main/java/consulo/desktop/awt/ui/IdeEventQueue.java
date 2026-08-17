@@ -33,7 +33,7 @@ import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.desktop.awt.ui.keymap.IdeMouseEventDispatcher;
-import consulo.desktop.awt.wm.FocusManagerImpl;
+
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;
@@ -847,7 +847,7 @@ public class IdeEventQueue extends EventQueue {
             if (focusOwnerInDeactivatedWindow != null) {
                 for (IdeFrame ideFrame : allProjectFrames) {
                     Window aFrame = TargetAWT.to(WindowManager.getInstance().getWindow(ideFrame.getProject()));
-                    if (aFrame.equals(frame) && IdeFocusManager.getGlobalInstance() instanceof FocusManagerImpl focusManager) {
+                    if (aFrame.equals(frame) && IdeFocusManager.getGlobalInstance() instanceof LastFocusAtDeactivationTracker focusManager) {
                         focusManager.setLastFocusedAtDeactivation(ideFrame, focusOwnerInDeactivatedWindow);
                     }
                 }

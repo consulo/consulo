@@ -34,6 +34,16 @@ import java.util.function.Predicate;
 @ServiceImpl
 @Singleton
 public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
+  @Override
+  public int getEventCount() {
+    return IdeEventQueue.getInstance().getEventCount();
+  }
+
+  @Override
+  public void setEventCount(int eventCount) {
+    IdeEventQueue.getInstance().setEventCount(eventCount);
+  }
+
   private final IdeEventQueue myIdeEventQueue;
 
   public IdeEventQueueProxyImpl() {

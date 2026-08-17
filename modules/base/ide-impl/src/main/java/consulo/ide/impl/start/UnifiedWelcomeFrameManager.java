@@ -24,7 +24,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.welcomeScreen.BaseUnifiedWelcomeScreenPanel;
-import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
+import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.ProjectManager;

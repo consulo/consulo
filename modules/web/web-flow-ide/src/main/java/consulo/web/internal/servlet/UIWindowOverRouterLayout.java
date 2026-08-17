@@ -33,9 +33,9 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.web.internal.ui.WebRootPaneImpl;
-import consulo.web.internal.ui.base.TargetVaadin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.WebRootPaneImpl;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 

@@ -1,0 +1,132 @@
+/**
+ * The awt ui layer - the swing component delegates, the facade, the look and feel and the images behind them.
+ * Sits below the editor so both it and the ide layer can build on the same widgets.
+ *
+ * @author VISTALL
+ * @since 2026-08-17
+ */
+open module consulo.desktop.awt.ui.impl {
+    requires consulo.annotation;
+    requires java.desktop;
+    requires java.management;
+    requires miglayout;
+    requires com.google.common;
+    requires com.github.weisj.jsvg;
+    requires com.google.gson;
+    requires io.netty.buffer;
+    requires io.netty.codec;
+    requires io.netty.codec.http;
+    requires io.netty.common;
+    requires io.netty.handler;
+    requires io.netty.resolver;
+    requires io.netty.transport;
+    requires jdk.xml.dom;
+    requires cobra.core;
+    requires net.sf.cssbox.jstyleparser;
+    requires it.unimi.dsi.fastutil;
+    requires consulo.application.ui.impl;
+    requires consulo.bootstrap;
+    requires consulo.code.editor.impl;
+    requires consulo.container.api;
+    requires consulo.desktop.bootstrap;
+    requires consulo.desktop.ide.impl;
+    requires consulo.diagram.api;
+    requires consulo.diff.impl;
+    requires consulo.execution.impl;
+    requires consulo.external.service.impl;
+    requires consulo.file.editor.impl;
+    requires consulo.ide.impl;
+    requires consulo.language.editor.impl;
+    requires consulo.platform.impl;
+    requires consulo.project.ui.impl;
+    requires consulo.ui.ex.awt.api;
+    requires consulo.ui.ex.impl;
+    requires consulo.ui.impl;
+    requires consulo.util.jna;
+    requires consulo.version.control.system.impl;
+    requires consulo.version.control.system.api;
+    requires consulo.execution.api;
+    requires consulo.execution.coverage.api;
+    requires consulo.find.api;
+    requires consulo.application.impl;
+    requires consulo.ide.api;
+    requires consulo.version.control.system.log.api;
+    requires consulo.external.service.api;
+    requires consulo.web.browser.api;
+    requires consulo.version.control.system.distributed.api;
+    requires consulo.language.editor.refactoring.api;
+    requires consulo.execution.debug.api;
+    requires consulo.builtin.web.server.api;
+    requires consulo.color.scheme.ui.api;
+    requires consulo.navigation.bar.api;
+    requires consulo.language.ui.api;
+    requires consulo.navigation.bar.impl;
+    requires gnu.trove;
+    requires pty4j;
+    requires jediterm.core;
+    requires jediterm.ui;
+    requires com.formdev.flatlaf;
+    requires com.formdev.flatlaf.swingx;
+    requires swingx.all;
+    requires jetbrains.runtime.api;
+    requires consulo.desktop.awt.bootstrap;
+    requires consulo.desktop.awt.hacking;
+    requires consulo.desktop.awt.eawt.wrapper;
+
+    exports consulo.desktop.awt.facade;
+    exports consulo.desktop.awt.internal.clipboard;
+    exports consulo.desktop.awt.ui.impl;
+    exports consulo.desktop.awt.ui.impl.alert;
+    exports consulo.desktop.awt.ui.impl.base;
+    exports consulo.desktop.awt.ui.impl.clipboard;
+    exports consulo.desktop.awt.ui.impl.components;
+    exports consulo.desktop.awt.ui.impl.components.fields;
+    exports consulo.desktop.awt.ui.impl.event;
+    exports consulo.desktop.awt.ui.impl.htmlView;
+    exports consulo.desktop.awt.ui.impl.image;
+    exports consulo.desktop.awt.ui.impl.image.canvas;
+    exports consulo.desktop.awt.ui.impl.image.reference;
+    exports consulo.desktop.awt.ui.impl.layout;
+    exports consulo.desktop.awt.ui.impl.progressBar;
+    exports consulo.desktop.awt.ui.impl.style;
+    exports consulo.desktop.awt.ui.impl.taskBar;
+    exports consulo.desktop.awt.ui.impl.textBox;
+    exports consulo.desktop.awt.ui.impl.util;
+    exports consulo.desktop.awt.ui.impl.validableComponent;
+    exports consulo.desktop.awt.ui.impl.window;
+    exports consulo.desktop.awt.ui.plaf;
+    exports consulo.desktop.awt.ui.plaf.extend.textBox;
+    exports consulo.desktop.awt.ui.plaf.intellij;
+    exports consulo.desktop.awt.ui.plaf2;
+    exports consulo.desktop.awt.ui.plaf2.flat;
+    exports consulo.desktop.awt.ui.plaf2.flat.kde;
+
+    exports com.mxgraph.analysis;
+    exports com.mxgraph.canvas;
+    exports com.mxgraph.costfunction;
+    exports com.mxgraph.generatorfunction;
+    exports com.mxgraph.io;
+    exports com.mxgraph.io.graphml;
+    exports com.mxgraph.layout;
+    exports com.mxgraph.layout.hierarchical;
+    exports com.mxgraph.layout.hierarchical.model;
+    exports com.mxgraph.layout.hierarchical.stage;
+    exports com.mxgraph.layout.orthogonal;
+    exports com.mxgraph.layout.orthogonal.model;
+    exports com.mxgraph.model;
+    exports com.mxgraph.reader;
+    exports com.mxgraph.shape;
+    exports com.mxgraph.sharing;
+    exports com.mxgraph.swing;
+    exports com.mxgraph.swing.handler;
+    exports com.mxgraph.swing.util;
+    exports com.mxgraph.swing.view;
+    exports com.mxgraph.util;
+    exports com.mxgraph.util.png;
+    exports com.mxgraph.util.svg;
+    exports com.mxgraph.view;
+
+    provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
+    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
+    provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon;
+}

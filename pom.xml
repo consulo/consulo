@@ -27,6 +27,8 @@
     <module>sandbox/sand-language-plugin</module>
 
     <module>modules/desktop-awt/desktop-awt-hacking</module>
+    <module>modules/desktop-awt/desktop-awt-ui-impl</module>
+    <module>modules/desktop-awt/desktop-awt-editor-impl</module>
     <module>modules/desktop-awt/desktop-awt-ide-impl</module>
     <module>modules/desktop-awt/desktop-awt-bootstrap</module>
     <module>modules/desktop-awt/desktop-awt-eawt-wrapper</module>
@@ -39,9 +41,13 @@
     <module>modules/desktop-swt/desktop-swt-ide-impl</module>
 
     <module>modules/desktop-qt/desktop-qt-bootstrap</module>
+    <module>modules/desktop-qt/desktop-qt-ui-impl</module>
+    <module>modules/desktop-qt/desktop-qt-editor-impl</module>
     <module>modules/desktop-qt/desktop-qt-ide-impl</module>
 
     <module>modules/web/web-bootstrap</module>
+    <module>modules/web/web-ui-impl</module>
+    <module>modules/web/web-editor-impl</module>
     <module>modules/web/web-flow-ide</module>
 
     <module>modules/boot/bootstrap</module>

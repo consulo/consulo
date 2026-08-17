@@ -17,7 +17,7 @@ package consulo.web.internal.wm.toolWindow;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import consulo.web.internal.ui.vaadin.AuraUtility;
+import consulo.web.ui.impl.internal.vaadin.AuraUtility;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
@@ -27,11 +27,11 @@ import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.ui.layout.TwoComponentSplitLayout;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaadin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.InitiableComponent;
-import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.TargetVaadin;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.vaadin.InitiableComponent;
+import consulo.web.ui.impl.internal.vaadin.VaadinSizeUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;

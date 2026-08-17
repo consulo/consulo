@@ -15,13 +15,13 @@ module consulo.file.editor.impl {
 
     requires com.google.common;
 
-    exports consulo.fileEditor.impl.internal to consulo.desktop.awt.ide.impl, consulo.ide.impl;
+    exports consulo.fileEditor.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl, consulo.ide.impl;
 
     opens consulo.fileEditor.impl.internal to consulo.util.xml.serializer, consulo.proxy;
 
-    exports consulo.fileEditor.impl.internal.search to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+    exports consulo.fileEditor.impl.internal.search to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
 
-    exports consulo.fileEditor.impl.internal.text to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+    exports consulo.fileEditor.impl.internal.text to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
 
     // TODO remove in future
     requires java.desktop;

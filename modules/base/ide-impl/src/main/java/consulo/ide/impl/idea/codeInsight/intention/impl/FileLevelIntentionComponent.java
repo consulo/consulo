@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
+import consulo.language.editor.impl.internal.intention.IntentionListStep;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.document.util.TextRange;

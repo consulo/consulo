@@ -25,9 +25,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.image.WebImageConverter;
+import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.image.WebImageConverter;
 
 /**
  * @author VISTALL

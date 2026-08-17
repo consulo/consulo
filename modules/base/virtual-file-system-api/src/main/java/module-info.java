@@ -51,7 +51,7 @@ module consulo.virtual.file.system.api {
         consulo.test.junit.impl,
         consulo.it,
         consulo.desktop.ide.impl,
-        consulo.desktop.awt.ide.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
         consulo.local.history.impl,
         consulo.execution.coverage.impl,
         consulo.version.control.system.impl;
