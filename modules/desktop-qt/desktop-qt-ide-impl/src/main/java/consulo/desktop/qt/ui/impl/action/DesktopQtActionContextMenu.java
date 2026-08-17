@@ -32,6 +32,7 @@ import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.Qt;
+import io.qt.widgets.QAbstractScrollArea;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -108,6 +109,18 @@ public final class DesktopQtActionContextMenu extends QObject {
         widget.customContextMenuRequested.connect(this::showMenu);
     }
 
+    /**
+     * Which widget the position of the signal is measured in.
+     * <p>
+     * A scroll area is handed the context menu event of its own viewport - {@code viewportEvent} answers it out
+     * of the scroll area's policy while the event still carries a point relative to the viewport - so mapping
+     * that point through the scroll area would place the menu off by whatever the viewport is inset by, which is
+     * the gutter.
+     */
+    private QWidget coordinateWidget() {
+        return myWidget instanceof QAbstractScrollArea scrollArea ? scrollArea.viewport() : myWidget;
+    }
+
     @RequiredUIAccess
     private void showMenu(QPoint position) {
         ActionGroup group = myGroupSupplier.apply(position);
@@ -119,7 +132,7 @@ public final class DesktopQtActionContextMenu extends QObject {
         }
 
         // the expansion runs off the ui thread and the widget may have moved by the time it comes back
-        QPoint globalPosition = myWidget.mapToGlobal(position);
+        QPoint globalPosition = coordinateWidget().mapToGlobal(position);
 
         UIAccess uiAccess = UIAccess.current();
 

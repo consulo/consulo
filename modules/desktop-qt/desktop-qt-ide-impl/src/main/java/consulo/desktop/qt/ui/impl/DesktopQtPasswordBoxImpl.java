@@ -16,9 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.TextBox;
+import consulo.ui.PasswordBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.util.lang.StringUtil;
@@ -31,29 +29,25 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2026-08-16
+ * @since 2026-08-17
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> implements TextBox {
+public class DesktopQtPasswordBoxImpl extends QtComponentDelegate<QLineEdit> implements PasswordBox {
     private String myText;
-
-    private boolean myEditable = true;
 
     private boolean myFireListeners = true;
 
-    private LocalizeValue myPlaceholder = LocalizeValue.empty();
-
-    private int myVisibleLength = -1;
-
     private final List<Validator<String>> myValidators = new ArrayList<>();
 
-    public DesktopQtTextBoxImpl(String text) {
-        myText = StringUtil.notNullize(text);
+    public DesktopQtPasswordBoxImpl(String password) {
+        myText = StringUtil.notNullize(password);
     }
 
     @Override
     protected QLineEdit createQt(QWidget parent) {
-        return new QLineEdit(parent);
+        QLineEdit lineEdit = new QLineEdit(parent);
+        lineEdit.setEchoMode(QLineEdit.EchoMode.Password);
+        return lineEdit;
     }
 
     @Override
@@ -61,10 +55,6 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
         super.initialize(component);
 
         component.setText(myText);
-        component.setReadOnly(!myEditable);
-
-        applyPlaceholder();
-        applyVisibleLength();
 
         component.textChanged.connect(text -> {
             myText = StringUtil.notNullize(text);
@@ -73,76 +63,6 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
                 getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, myText));
             }
         });
-    }
-
-    @Override
-    public void setPlaceholder(LocalizeValue text) {
-        myPlaceholder = text == null ? LocalizeValue.empty() : text;
-
-        applyPlaceholder();
-    }
-
-    private void applyPlaceholder() {
-        if (myComponent != null) {
-            myComponent.setPlaceholderText(myPlaceholder.get());
-        }
-    }
-
-    @Override
-    public void setVisibleLength(int columns) {
-        myVisibleLength = columns;
-
-        applyVisibleLength();
-    }
-
-    /**
-     * The api asks for a width in characters, which qt has no notion of - the average advance of the font is what
-     * the awt text field measures a column by, and the frame the style draws around the text is added on top.
-     */
-    private void applyVisibleLength() {
-        if (myComponent == null || myVisibleLength <= 0) {
-            return;
-        }
-
-        int columnWidth = myComponent.fontMetrics().horizontalAdvance("m");
-
-        myComponent.setMinimumWidth(columnWidth * myVisibleLength + myComponent.textMargins().left()
-            + myComponent.textMargins().right() + 8);
-    }
-
-    @Override
-    public void selectAll() {
-        if (myComponent != null) {
-            myComponent.selectAll();
-        }
-    }
-
-    @Override
-    public void select(int from, int to) {
-        if (myComponent != null) {
-            myComponent.setSelection(from, to - from);
-        }
-    }
-
-    @Override
-    public void moveCaretTo(int index) {
-        if (myComponent != null) {
-            myComponent.setCursorPosition(index);
-        }
-    }
-
-    @Override
-    public void setEditable(boolean editable) {
-        myEditable = editable;
-
-        if (myComponent != null) {
-            myComponent.setReadOnly(!editable);
-        }
-    }
-
-    @Override
-    public boolean isEditable() {
-        return myEditable;
     }
 
     @Override
@@ -183,14 +103,5 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
                 myFireListeners = true;
             }
         }
-    }
-
-    @Override
-    public void setSuffixComponent(@Nullable Component suffixComponent) {
-    }
-
-    @Override
-    public @Nullable Component getSuffixComponent() {
-        return null;
     }
 }

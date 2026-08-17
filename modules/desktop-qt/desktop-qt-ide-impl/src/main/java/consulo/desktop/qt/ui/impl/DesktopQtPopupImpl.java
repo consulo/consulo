@@ -23,6 +23,7 @@ import consulo.ui.PopupOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.PopupCloseEvent;
 import io.qt.core.QEvent;
+import io.qt.core.QMetaObject;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
@@ -31,6 +32,7 @@ import io.qt.core.QSize;
 import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QCloseEvent;
+import io.qt.gui.QGuiApplication;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QPainterPath;
 import io.qt.gui.QRegion;
@@ -157,6 +159,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
     private @Nullable QLabel myTitleLabel;
     private @Nullable QtComponentDelegate<?> myContent;
+
+    private QMetaObject.@Nullable Connection myFocusConnection;
 
     private boolean myDisposed;
 
@@ -392,6 +396,39 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         }
 
         QApplication.instance().installEventFilter(myDismissWatcher);
+
+        installFocusWatcher();
+    }
+
+    /**
+     * Closes the popup once the application stops being the one in front: a popup nobody dismissed would otherwise
+     * stand over whatever the user turned to.
+     * <p/>
+     * What is watched is the application losing its focused window rather than the owner being deactivated - a
+     * popup is a window of its own, so showing one deactivates the window it belongs to, and reading that as
+     * leaving would close every popup the moment it opened.
+     */
+    private void installFocusWatcher() {
+        if (!myOptions.isCancelOnClickOutside() || myFocusConnection != null) {
+            return;
+        }
+
+        myFocusConnection = QGuiApplication.instance().focusWindowChanged.connect(window -> {
+            if (window == null && isVisible()) {
+                close();
+            }
+        });
+    }
+
+    private void uninstallFocusWatcher() {
+        QMetaObject.Connection connection = myFocusConnection;
+        if (connection == null) {
+            return;
+        }
+
+        myFocusConnection = null;
+
+        QGuiApplication.instance().focusWindowChanged.disconnect(connection);
     }
 
     /**
@@ -457,6 +494,8 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
         myDisposed = true;
 
         QApplication.instance().removeEventFilter(myDismissWatcher);
+
+        uninstallFocusWatcher();
 
         getListenerDispatcher(PopupCloseEvent.class).onEvent(new PopupCloseEvent((Popup) this));
 

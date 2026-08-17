@@ -69,6 +69,10 @@
         </dependency>
 
         <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>jediterm-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.qtjambi</groupId>
             <artifactId>qtjambi</artifactId>
             <version>${qtjambi.version}</version>

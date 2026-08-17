@@ -15,11 +15,13 @@
  */
 package consulo.desktop.qt.execution.terminal;
 
+import com.jediterm.core.compatibility.Point;
 import com.jediterm.terminal.StyledTextConsumer;
 import com.jediterm.terminal.TerminalColor;
 import com.jediterm.terminal.TextStyle;
 import com.jediterm.terminal.model.CharBuffer;
 import com.jediterm.terminal.model.JediTerminal;
+import com.jediterm.terminal.model.SelectionUtil;
 import com.jediterm.terminal.model.TerminalSelection;
 import com.jediterm.terminal.model.TerminalTextBuffer;
 import io.qt.core.QPointF;
@@ -30,10 +32,13 @@ import io.qt.gui.QColor;
 import io.qt.gui.QFont;
 import io.qt.gui.QFontDatabase;
 import io.qt.gui.QFontMetricsF;
+import io.qt.gui.QGuiApplication;
 import io.qt.gui.QKeyEvent;
+import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPainter;
 import io.qt.gui.QPaintEvent;
 import io.qt.gui.QResizeEvent;
+import io.qt.gui.QWheelEvent;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -51,14 +56,18 @@ import java.util.function.Consumer;
  * @since 2026-08-17
  */
 public class DesktopQtTerminalWidget extends QWidget {
-    private static final QColor ourDefaultBackground = new QColor(0x1E, 0x1E, 0x1E);
-    private static final QColor ourDefaultForeground = new QColor(0xCC, 0xCC, 0xCC);
+    private static final int ourWheelRows = 3;
 
     private final TerminalTextBuffer myTextBuffer;
     private final JediTerminal myTerminal;
 
     private final Consumer<String> myInputConsumer;
     private final BiConsumer<Integer, Integer> myResizeConsumer;
+
+    private final DesktopQtTerminalPalette myPalette = DesktopQtTerminalPalette.ofGlobalScheme();
+
+    private QColor myDefaultForeground = new QColor(0xCC, 0xCC, 0xCC);
+    private QColor myDefaultBackground = new QColor(0x1E, 0x1E, 0x1E);
 
     private QFont myFont;
     private double myCellWidth;
@@ -73,6 +82,8 @@ public class DesktopQtTerminalWidget extends QWidget {
 
     /** what the pointer has marked out, which the ui owns rather than the emulator */
     private @Nullable TerminalSelection mySelection;
+
+    private @Nullable Point mySelectionAnchor;
 
     public DesktopQtTerminalWidget(
         @Nullable QWidget parent,
@@ -139,14 +150,19 @@ public class DesktopQtTerminalWidget extends QWidget {
         super.resizeEvent(event);
 
         myResizeConsumer.accept(columnCount(), rowCount());
+
+        setScrollOrigin(myScrollOrigin);
     }
 
     @Override
     protected void paintEvent(QPaintEvent event) {
+        myDefaultForeground = toColor(myPalette.getDefaultForeground());
+        myDefaultBackground = toColor(myPalette.getDefaultBackground());
+
         QPainter painter = new QPainter(this);
         try {
             painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, true);
-            painter.fillRect(rect(), ourDefaultBackground);
+            painter.fillRect(rect(), defaultBackground());
             painter.setFont(myFont);
 
             myTextBuffer.lock();
@@ -158,21 +174,33 @@ public class DesktopQtTerminalWidget extends QWidget {
                 myTextBuffer.processHistoryAndScreenLines(myScrollOrigin, rows, new StyledTextConsumer() {
                     @Override
                     public void consume(int x, int y, TextStyle style, CharBuffer characters, int startRow) {
-                        drawRun(painter, x, y - startRow, styleOf(style, x, y, characters.length()), characters.toString());
+                        int row = y - startRow;
+                        String text = characters.toString();
+
+                        drawRun(painter, x, row, style, text);
+                        drawSelectedPart(painter, x, row, style, text);
                     }
 
                     @Override
                     public void consumeNul(int x, int y, int nulIndex, TextStyle style, CharBuffer characters, int startRow) {
                         // the tail of a line the process never wrote to, which still carries the background of the
                         // style it was left in
-                        drawRun(painter, x, y - startRow, styleOf(style, x, y, characters.length()), " ".repeat(characters.length()));
+                        int row = y - startRow;
+                        String text = " ".repeat(characters.length());
+
+                        if (intersectSelection(nulIndex, row, columnCount() - nulIndex) != null) {
+                            drawRun(painter, x, row, inverse(style), text);
+                            return;
+                        }
+
+                        drawRun(painter, x, row, style, text);
                     }
 
                     @Override
                     public void consumeQueue(int x, int y, int nulIndex, int startRow) {
                         int columns = columnCount();
                         if (x < columns) {
-                            drawRun(painter, x, y - startRow, TextStyle.EMPTY, " ".repeat(columns - x));
+                            consumeNul(x, y, nulIndex, TextStyle.EMPTY, new CharBuffer(' ', columns - x), startRow);
                         }
                     }
                 });
@@ -188,16 +216,32 @@ public class DesktopQtTerminalWidget extends QWidget {
         }
     }
 
-    /**
-     * The style a run is drawn in, which is the one the buffer holds unless the run is inside the selection.
-     */
-    private TextStyle styleOf(TextStyle style, int x, int y, int length) {
+    private TerminalSelection.@Nullable IntersectResult intersectSelection(int column, int row, int length) {
         TerminalSelection selection = mySelection;
-        if (selection == null) {
-            return style;
+        if (selection == null || length <= 0) {
+            return null;
         }
 
-        return selection.intersect(x, y, length) == null ? style : inverse(style);
+        return selection.intersect(column, row + myScrollOrigin, length);
+    }
+
+    private void drawSelectedPart(QPainter painter, int column, int row, TextStyle style, String text) {
+        TerminalSelection.IntersectResult interval = intersectSelection(column, row, text.length());
+        if (interval == null) {
+            return;
+        }
+
+        int from = interval.x() - column;
+        if (from < 0 || from >= text.length()) {
+            return;
+        }
+
+        int to = Math.min(from + interval.length(), text.length());
+        if (to <= from) {
+            return;
+        }
+
+        drawRun(painter, interval.x(), row, inverse(style), text.substring(from, to));
     }
 
     public void setSelection(@Nullable TerminalSelection selection) {
@@ -271,16 +315,24 @@ public class DesktopQtTerminalWidget extends QWidget {
 
     private QColor foreground(TextStyle style) {
         TerminalColor color = style.getForeground();
-        return color == null ? ourDefaultForeground : toColor(DesktopQtTerminalPalette.INSTANCE.getForeground(color));
+        return color == null ? defaultForeground() : toColor(myPalette.getForeground(color));
     }
 
     private QColor background(TextStyle style) {
         TerminalColor color = style.getBackground();
-        return color == null ? ourDefaultBackground : toColor(DesktopQtTerminalPalette.INSTANCE.getBackground(color));
+        return color == null ? defaultBackground() : toColor(myPalette.getBackground(color));
     }
 
     private static QColor toColor(com.jediterm.core.Color color) {
         return new QColor(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    private QColor defaultForeground() {
+        return myDefaultForeground;
+    }
+
+    private QColor defaultBackground() {
+        return myDefaultBackground;
     }
 
     /**
@@ -298,12 +350,134 @@ public class DesktopQtTerminalWidget extends QWidget {
 
         painter.save();
         painter.setCompositionMode(QPainter.CompositionMode.RasterOp_SourceXorDestination);
-        painter.fillRect(new QRectF(x, y, myCellWidth, myCellHeight), ourDefaultForeground);
+        painter.fillRect(new QRectF(x, y, myCellWidth, myCellHeight), defaultForeground());
         painter.restore();
     }
 
     @Override
+    protected void wheelEvent(QWheelEvent event) {
+        int degrees = event.angleDelta().y();
+        if (degrees == 0) {
+            super.wheelEvent(event);
+            return;
+        }
+
+        setScrollOrigin(myScrollOrigin - Integer.signum(degrees) * ourWheelRows);
+
+        event.accept();
+    }
+
+    @Override
+    protected void mousePressEvent(QMouseEvent event) {
+        if (event.button() != Qt.MouseButton.LeftButton) {
+            super.mousePressEvent(event);
+            return;
+        }
+
+        mySelectionAnchor = pointAt(event.position());
+        setSelection(null);
+
+        setFocus();
+    }
+
+    @Override
+    protected void mouseMoveEvent(QMouseEvent event) {
+        Point anchor = mySelectionAnchor;
+        if (anchor == null || !event.buttons().testFlag(Qt.MouseButton.LeftButton)) {
+            super.mouseMoveEvent(event);
+            return;
+        }
+
+        TerminalSelection selection = mySelection;
+        if (selection == null) {
+            selection = new TerminalSelection(new Point(anchor.x, anchor.y));
+            mySelection = selection;
+        }
+
+        selection.updateEnd(pointAt(event.position()));
+
+        update();
+    }
+
+    @Override
+    protected void mouseReleaseEvent(QMouseEvent event) {
+        mySelectionAnchor = null;
+
+        super.mouseReleaseEvent(event);
+    }
+
+    private Point pointAt(QPointF position) {
+        int column = myCellWidth <= 0 ? 0 : (int) (position.x() / myCellWidth);
+        int row = myCellHeight <= 0 ? 0 : (int) (position.y() / myCellHeight);
+
+        return new Point(
+            Math.max(0, Math.min(column, Math.max(0, columnCount() - 1))),
+            Math.min(row, Math.max(0, rowCount() - 1)) + myScrollOrigin
+        );
+    }
+
+    public @Nullable String getSelectionText() {
+        TerminalSelection selection = mySelection;
+        if (selection == null) {
+            return null;
+        }
+
+        myTextBuffer.lock();
+        try {
+            return SelectionUtil.getSelectionText(selection, myTextBuffer);
+        }
+        finally {
+            myTextBuffer.unlock();
+        }
+    }
+
+    private boolean copySelection() {
+        String text = getSelectionText();
+        if (text == null || text.isEmpty()) {
+            return false;
+        }
+
+        QGuiApplication.clipboard().setText(text);
+
+        return true;
+    }
+
+    private boolean pasteClipboard() {
+        String text = QGuiApplication.clipboard().text();
+        if (text == null || text.isEmpty()) {
+            return false;
+        }
+
+        setScrollOrigin(0);
+
+        myInputConsumer.accept(text);
+
+        return true;
+    }
+
+    private boolean handleClipboardKey(QKeyEvent event) {
+        if (!event.modifiers().testFlag(Qt.KeyboardModifier.ControlModifier)) {
+            return false;
+        }
+
+        int key = event.key();
+        if (key == Qt.Key.Key_C.value()) {
+            return copySelection();
+        }
+        if (key == Qt.Key.Key_V.value()) {
+            return pasteClipboard();
+        }
+
+        return false;
+    }
+
+    @Override
     protected void keyPressEvent(QKeyEvent event) {
+        if (handleClipboardKey(event)) {
+            event.accept();
+            return;
+        }
+
         String sequence = toSequence(event);
         if (sequence == null) {
             super.keyPressEvent(event);

@@ -22,6 +22,8 @@ import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
+import consulo.ui.annotation.RequiredUIAccess;
+import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -45,8 +47,47 @@ public class DesktopQtTabImpl implements Tab {
 
     private @Nullable String myPopupPlace;
 
+    private @Nullable BiConsumer<Tab, Component> myCloseHandler;
+
     @Override
     public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+        myCloseHandler = closeHandler;
+
+        QTabWidget tabWidget = myTabWidget;
+        if (tabWidget != null && !tabWidget.isDisposed()) {
+            applyClosable(tabWidget);
+        }
+    }
+
+    public @Nullable BiConsumer<Tab, Component> getCloseHandler() {
+        return myCloseHandler;
+    }
+
+    /**
+     * Takes the cross off a tab nobody asked to be closable: a tab bar is closable as a whole or not at all, so the
+     * button of every tab which has no handler is dropped one by one.
+     */
+    public void applyClosable(QTabWidget tabWidget) {
+        if (myCloseHandler != null) {
+            return;
+        }
+
+        int index = getIndex();
+        if (index == -1) {
+            return;
+        }
+
+        QTabBar tabBar = tabWidget.tabBar();
+        tabBar.setTabButton(index, QTabBar.ButtonPosition.LeftSide, null);
+        tabBar.setTabButton(index, QTabBar.ButtonPosition.RightSide, null);
+    }
+
+    @RequiredUIAccess
+    public void close() {
+        BiConsumer<Tab, Component> closeHandler = myCloseHandler;
+        if (closeHandler != null) {
+            closeHandler.accept(this, myComponent);
+        }
     }
 
     @Override
@@ -111,7 +152,16 @@ public class DesktopQtTabImpl implements Tab {
      * another tab is dropped - so the position is asked of the widget every time instead of being remembered.
      */
     public int getIndex() {
-        return myTabWidget == null || myContent == null ? -1 : myTabWidget.indexOf(myContent);
+        QTabWidget tabWidget = myTabWidget;
+        QWidget content = myContent;
+
+        // a project being closed takes the whole tree of widgets down before the editors it held are closed one
+        // by one, so both of these outlive the native objects they stand for and answering either throws
+        if (tabWidget == null || tabWidget.isDisposed() || content == null || content.isDisposed()) {
+            return -1;
+        }
+
+        return tabWidget.indexOf(content);
     }
 
     public void initialize(QTabWidget tabWidget, Component parent) {
@@ -135,12 +185,14 @@ public class DesktopQtTabImpl implements Tab {
 
         tabWidget.addTab(content, "");
 
+        applyClosable(tabWidget);
+
         update();
     }
 
     public void detach() {
         int index = getIndex();
-        if (myTabWidget != null && index != -1) {
+        if (index != -1) {
             myTabWidget.removeTab(index);
         }
 

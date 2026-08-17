@@ -23,6 +23,7 @@ module consulo.project.api {
     exports consulo.project.localize;
 
     exports consulo.project.internal to
+        consulo.desktop.qt.ide.impl,
         consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl,

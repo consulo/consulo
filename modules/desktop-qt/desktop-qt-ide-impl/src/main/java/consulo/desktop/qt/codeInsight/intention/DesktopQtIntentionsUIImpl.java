@@ -17,16 +17,11 @@ package consulo.desktop.qt.codeInsight.intention;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionListStep;
 import consulo.language.editor.internal.intention.CachedIntentions;
 import consulo.language.editor.internal.intention.IntentionsUI;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -38,7 +33,7 @@ import org.jspecify.annotations.Nullable;
 @ServiceImpl
 @Singleton
 public class DesktopQtIntentionsUIImpl extends IntentionsUI {
-    private volatile @Nullable JBPopup myLastPopup;
+    private volatile @Nullable DesktopQtIntentionHintComponent myLastHint;
 
     @Inject
     public DesktopQtIntentionsUIImpl(Project project) {
@@ -49,6 +44,7 @@ public class DesktopQtIntentionsUIImpl extends IntentionsUI {
     @RequiredUIAccess
     public void update(CachedIntentions cachedIntentions, boolean actionsChanged) {
         Editor editor = cachedIntentions.getEditor();
+
         if (editor == null || !actionsChanged) {
             return;
         }
@@ -65,19 +61,21 @@ public class DesktopQtIntentionsUIImpl extends IntentionsUI {
     @Override
     @RequiredUIAccess
     public void hide() {
-        JBPopup popup = myLastPopup;
-        myLastPopup = null;
+        DesktopQtIntentionHintComponent hint = myLastHint;
+        myLastHint = null;
 
-        if (popup != null && !popup.isDisposed()) {
-            popup.cancel();
+        if (hint != null) {
+            hint.dispose();
         }
     }
 
     @Override
     @RequiredUIAccess
     public void showHint(PsiFile file, Editor editor, CachedIntentions cachedIntentions) {
-        // the bulb of the other frontends hangs off the caret, and the qt editor is no
-        // CaretPixelLocationProvider yet - until it is, there is nothing to place it against
+        DesktopQtIntentionHintComponent hint = new DesktopQtIntentionHintComponent(file, editor, cachedIntentions);
+        myLastHint = hint;
+
+        hint.showHint();
     }
 
     @Override
@@ -85,12 +83,9 @@ public class DesktopQtIntentionsUIImpl extends IntentionsUI {
     public void showPopup(PsiFile file, Editor editor, CachedIntentions cachedIntentions) {
         hide();
 
-        ListPopupStep step =
-            new IntentionListStep(null, editor, file, cachedIntentions.getProject(), cachedIntentions);
+        DesktopQtIntentionHintComponent hint = new DesktopQtIntentionHintComponent(file, editor, cachedIntentions);
+        myLastHint = hint;
 
-        ListPopup popup = JBPopupFactory.getInstance().createListPopup(cachedIntentions.getProject(), step);
-        myLastPopup = popup;
-
-        editor.showPopupInBestPositionFor(popup);
+        hint.showPopup();
     }
 }

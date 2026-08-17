@@ -82,6 +82,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     private final DesktopQtEditorVisualLines myVisualLines = new DesktopQtEditorVisualLines(this);
 
+    private final DesktopQtEditorInlays myInlays = new DesktopQtEditorInlays(this);
+
     private final DesktopQtEditorCoordinateMapper myCoordinateMapper = new DesktopQtEditorCoordinateMapper(this, myVisualLines);
 
     private boolean myCaretVisible = true;
@@ -139,8 +141,11 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
                 return;
             }
 
+            // the scroll area, not its viewport: qt hands a context menu event on the viewport to
+            // QAbstractScrollArea::viewportEvent, which answers it out of the scroll area's own policy, so a
+            // policy set on the viewport is never the one consulted
             DesktopQtActionContextMenu.installOn(
-                surface.viewport(),
+                surface,
                 position -> contextMenuGroup(),
                 ActionPlaces.EDITOR_POPUP,
                 position -> getDataContext()
@@ -269,6 +274,14 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         for (EditorMouseMotionListener listener : myMouseMotionListeners) {
             listener.mouseMoved(event);
         }
+    }
+
+    public DesktopQtEditorInlays getInlays() {
+        return myInlays;
+    }
+
+    public DesktopQtEditorCoordinateMapper.@Nullable InlayHit inlayAt(Point p) {
+        return myCoordinateMapper.inlayAt(p);
     }
 
     public DesktopQtEditorVisualLines getVisualLines() {
@@ -463,6 +476,8 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         if (widget == null) {
             return;
         }
+
+        myGutterComponent.dropRenderersCache();
 
         if (canImpactGutterSize) {
             widget.updateSideAreas();

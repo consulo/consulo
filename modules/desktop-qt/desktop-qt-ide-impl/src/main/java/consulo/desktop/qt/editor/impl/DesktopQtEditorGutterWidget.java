@@ -44,6 +44,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.application.util.registry.Registry;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import io.qt.core.QEvent;
@@ -95,9 +96,19 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     private static final int MARKER_AREA_PADDING = 2;
 
     /**
+     * Smallest icon column, so a gutter which has no icons yet does not jump wider the moment it gets one - the
+     * awt gutter starts from the same width.
+     */
+    private static final int START_ICON_AREA_WIDTH = 17;
+
+    private static final int GAP_BETWEEN_ICONS = 3;
+
+    /**
      * The row height the icons of the gutter are drawn at scale 1, as awt's {@code getScale} measures it.
      */
     private static final double STANDARD_LINE_HEIGHT = 16.0;
+
+    private static final double SCALE_DEADBAND = 0.10;
 
     private static final double HOVER_MARK_OPACITY = 0.5;
 
@@ -273,14 +284,60 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             return 0;
         }
 
+        return lineNumberAreaWidth() + iconsAreaWidth() + markerAreaWidth() + SEPARATOR_AREA_WIDTH;
+    }
+
+    private int lineNumberAreaWidth() {
         int lastLine = Math.max(1, myEditor.getDocument().getLineCount());
         String widest = "0".repeat(String.valueOf(lastLine).length());
 
-        return LEFT_PADDING
-            + (int) Math.ceil(myEditor.getFontMetrics().getTextWidth(widest))
-            + RIGHT_PADDING
-            + markerAreaWidth()
-            + SEPARATOR_AREA_WIDTH;
+        return LEFT_PADDING + (int) Math.ceil(myEditor.getFontMetrics().getTextWidth(widest)) + RIGHT_PADDING;
+    }
+
+    /**
+     * How wide the icon column has to be for the busiest row in the document. Measured over every row rather than
+     * the visible ones, so the text does not shift sideways while scrolling past a line carrying more icons.
+     */
+    private int iconsAreaWidth() {
+        int widest = START_ICON_AREA_WIDTH;
+
+        int lineCount = myEditor.getVisualLines().getVisualLineCount();
+        for (int line = 0; line < lineCount; line++) {
+            int width = 1;
+            int count = 0;
+
+            for (GutterMark mark : myEditor.getGutterComponentEx().getGutterRenderers(line)) {
+                if (isMergedWithLineNumbers(mark)) {
+                    continue;
+                }
+
+                width += scaledIconSize(mark.getIcon()) + (count > 0 ? GAP_BETWEEN_ICONS : 0);
+                count++;
+            }
+
+            widest = Math.max(widest, width + 1);
+        }
+
+        return widest;
+    }
+
+    /**
+     * Whether the mark is drawn over the line number instead of in the icon column. The awt gutter drops the
+     * alignment back to the left when there are no numbers to draw over.
+     */
+    private boolean isMergedWithLineNumbers(GutterMark mark) {
+        return BreakpointEditorUtil.isBreakPointsOnLineNumbers()
+            && myEditor.getSettings().isLineNumbersShown()
+            && mark instanceof GutterIconRenderer renderer
+            && renderer.getAlignment() == GutterIconRenderer.Alignment.LINE_NUMBERS;
+    }
+
+    public int iconAreaOffset() {
+        return lineNumberAreaOffset() + lineNumberAreaWidth();
+    }
+
+    private int lineNumberAreaOffset() {
+        return 0;
     }
 
     /**
@@ -289,6 +346,92 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      */
     public int markerAreaOffset() {
         return Math.max(0, separatorOffset() - markerAreaWidth());
+    }
+
+    /**
+     * Vertically centres an icon on the text of its row, preferring the baseline when the icon is taller than
+     * half the row - the same rule the awt gutter uses.
+     */
+    private int iconAlignmentShift(int iconSize, int lineHeight) {
+        return Math.max((lineHeight - iconSize) / 2, myEditor.getFontMetrics().getAscent() - iconSize);
+    }
+
+    /**
+     * The icons of a row, laid out the way awt lays them out: left aligned packed from the left of the column,
+     * right aligned packed from its right, and centred ones sharing what is left between them.
+     */
+    private void paintRowIcons(QPainter painter, int visualLine, int scrollY, int lineHeight) {
+        List<GutterMark> row = myEditor.getGutterComponentEx().getGutterRenderers(visualLine);
+        if (row.isEmpty()) {
+            return;
+        }
+
+        int y = visualLine * lineHeight - scrollY;
+        int areaOffset = iconAreaOffset();
+        int areaWidth = iconsAreaWidth();
+
+        int left = areaOffset + 2;
+        int right = areaOffset + areaWidth;
+
+        int centeredWidth = 0;
+        int centeredCount = 0;
+
+        for (GutterMark mark : row) {
+            if (isMergedWithLineNumbers(mark)) {
+                continue;
+            }
+
+            int size = scaledIconSize(mark.getIcon());
+
+            switch (alignmentOf(mark)) {
+                case LEFT -> {
+                    paintIcon(painter, mark.getIcon(), left, y + iconAlignmentShift(size, lineHeight), size);
+                    left += size + GAP_BETWEEN_ICONS;
+                }
+                case RIGHT -> {
+                    right -= size;
+                    paintIcon(painter, mark.getIcon(), right, y + iconAlignmentShift(size, lineHeight), size);
+                    right -= GAP_BETWEEN_ICONS;
+                }
+                default -> {
+                    centeredWidth += size + GAP_BETWEEN_ICONS;
+                    centeredCount++;
+                }
+            }
+        }
+
+        if (centeredCount == 0) {
+            return;
+        }
+
+        int x = left + Math.max(0, (right - left - (centeredWidth - GAP_BETWEEN_ICONS)) / 2);
+
+        for (GutterMark mark : row) {
+            if (!isMergedWithLineNumbers(mark) && alignmentOf(mark) == GutterIconRenderer.Alignment.CENTER) {
+                int size = scaledIconSize(mark.getIcon());
+
+                paintIcon(painter, mark.getIcon(), x, y + iconAlignmentShift(size, lineHeight), size);
+                x += size + GAP_BETWEEN_ICONS;
+            }
+        }
+    }
+
+    /**
+     * A mark asking to stand on the line number falls back to the left of the icon column when there are no
+     * numbers for it to stand on.
+     */
+    private GutterIconRenderer.Alignment alignmentOf(GutterMark mark) {
+        GutterIconRenderer.Alignment alignment = mark instanceof GutterIconRenderer renderer
+            ? renderer.getAlignment()
+            : GutterIconRenderer.Alignment.LEFT;
+
+      return alignment == GutterIconRenderer.Alignment.LINE_NUMBERS ? GutterIconRenderer.Alignment.LEFT : alignment;
+    }
+
+    private void paintIcon(QPainter painter, @Nullable Image image, int x, int y, int size) {
+        if (image instanceof DesktopQtImage qtImage) {
+            qtImage.toQIcon().paint(painter, new QRect(x, y, size, size));
+        }
     }
 
     /**
@@ -354,7 +497,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         painter.setFont(metrics.getFont(Font.PLAIN));
 
-        int right = markerAreaOffset() - RIGHT_PADDING;
+        int right = lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING;
         int baselineOffset = metrics.getAscent();
 
         int hoverLine = hoverMarkLine();
@@ -381,6 +524,10 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             painter.drawText(new QPointF(x, line * lineHeight - scrollY + baselineOffset), number);
         }
 
+        for (int line = firstLine; line <= lastLine; line++) {
+            paintRowIcons(painter, line, scrollY, lineHeight);
+        }
+
         paintFoldAnchors(painter, firstLine, lastLine, scrollY, lineHeight);
     }
 
@@ -390,13 +537,25 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * {@code getEditorScaleFactor}, and it applies to every icon here rather than to one of them.
      */
     private double iconScale() {
+        if (!Registry.is("editor.scale.gutter.icons")) {
+            return 1;
+        }
+
         float lineSpacing = myEditor.getColorsScheme().getLineSpacing();
         double normalizedLineHeight = myEditor.getLineHeight() / (lineSpacing <= 0 ? 1f : lineSpacing);
 
-        return normalizedLineHeight / STANDARD_LINE_HEIGHT;
+        double scale = normalizedLineHeight / STANDARD_LINE_HEIGHT;
+
+        // awt leaves an icon at its own size unless the row differs from the standard one by more than a tenth,
+        // so a row a pixel or two off does not blow every icon up
+        return Math.abs(1 - scale) > SCALE_DEADBAND ? scale : 1;
     }
 
-    private int scaledIconSize(Image image) {
+    private int scaledIconSize(@Nullable Image image) {
+        if (image == null) {
+            return 0;
+        }
+
         return Math.max(1, (int) Math.round(image.getWidth() * iconScale()));
     }
 
@@ -463,7 +622,7 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         painter.save();
         painter.setOpacity(opacity);
-        qtImage.toQIcon().paint(painter, new QRect(Math.max(0, markerAreaOffset() - RIGHT_PADDING - size), y, size, size));
+        qtImage.toQIcon().paint(painter, new QRect(Math.max(0, lineNumberAreaOffset() + lineNumberAreaWidth() - RIGHT_PADDING - size), y, size, size));
         painter.restore();
 
         return true;
@@ -632,7 +791,11 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     }
 
     private EditorMouseEventArea areaAt(int x) {
-        return x < markerAreaOffset() ? EditorMouseEventArea.LINE_NUMBERS_AREA : EditorMouseEventArea.LINE_MARKERS_AREA;
+        int numbers = lineNumberAreaOffset();
+
+        return x >= numbers && x < numbers + lineNumberAreaWidth()
+            ? EditorMouseEventArea.LINE_NUMBERS_AREA
+            : EditorMouseEventArea.LINE_MARKERS_AREA;
     }
 
     @Override

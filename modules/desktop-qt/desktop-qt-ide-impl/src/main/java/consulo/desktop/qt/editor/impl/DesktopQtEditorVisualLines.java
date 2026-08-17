@@ -44,13 +44,42 @@ public class DesktopQtEditorVisualLines {
      *
      * @param fold the region this stands for, null for ordinary text
      */
-    public record Segment(int startOffset, int endOffset, @Nullable FoldRegion fold) {
+    public record Segment(
+        int startOffset,
+        int endOffset,
+        @Nullable FoldRegion fold,
+        DesktopQtEditorInlays.@Nullable Rendered inlay
+    ) {
+        public Segment(int startOffset, int endOffset, @Nullable FoldRegion fold) {
+            this(startOffset, endOffset, fold, null);
+        }
+
         public boolean isFold() {
             return fold != null;
         }
 
+        public boolean isInlay() {
+            return inlay != null;
+        }
+
         public CharSequence text(CharSequence documentText) {
+            if (inlay != null) {
+                return "";
+            }
+
             return fold != null ? fold.getPlaceholderText() : documentText.subSequence(startOffset, endOffset);
+        }
+
+        /**
+         * How many columns the piece takes. A hint counts as one however wide it is drawn, which is what the awt
+         * fragment iterator does - the caret steps over it in a single move rather than through the middle of it.
+         */
+        public int columns() {
+            if (inlay != null) {
+                return 1;
+            }
+
+            return fold != null ? fold.getPlaceholderText().length() : endOffset - startOffset;
         }
     }
 
@@ -156,7 +185,7 @@ public class DesktopQtEditorVisualLines {
     public List<Segment> getSegments(int visualLine) {
         Document document = myEditor.getDocument();
 
-        List<Segment> segments = new ArrayList<>();
+        List<Segment> text = new ArrayList<>();
 
         int offset = visualLineStartOffset(visualLine);
         int textLength = document.getTextLength();
@@ -167,19 +196,88 @@ public class DesktopQtEditorVisualLines {
             FoldRegion fold = nextCollapsedRegion(offset, lineEnd);
             if (fold == null) {
                 if (offset < lineEnd) {
-                    segments.add(new Segment(offset, lineEnd, null));
+                    text.add(new Segment(offset, lineEnd, null));
                 }
-                return segments;
+                break;
             }
 
             if (fold.getStartOffset() > offset) {
-                segments.add(new Segment(offset, fold.getStartOffset(), null));
+                text.add(new Segment(offset, fold.getStartOffset(), null));
             }
 
-            segments.add(new Segment(fold.getStartOffset(), fold.getEndOffset(), fold));
+            text.add(new Segment(fold.getStartOffset(), fold.getEndOffset(), fold));
 
             offset = fold.getEndOffset();
         }
+
+        return withInlays(visualLine, text);
+    }
+
+    /**
+     * Puts the hints of the row in among its text. A hint sits between two characters, so a piece met across one
+     * is cut at it - the same cut the painter makes, off the same widths, or the caret would land somewhere the
+     * glyphs are not.
+     */
+    private List<Segment> withInlays(int visualLine, List<Segment> text) {
+        int lineStart = visualLineStartOffset(visualLine);
+        int lineEnd = visualLineEndOffset(visualLine);
+
+        DesktopQtEditorInlays inlays = myEditor.getInlays();
+
+        List<DesktopQtEditorInlays.Rendered> inline = inlays.inlineIn(lineStart, lineEnd);
+        List<DesktopQtEditorInlays.Rendered> afterEnd = inlays.afterLineEndIn(lineStart, lineEnd);
+
+        if (inline.isEmpty() && afterEnd.isEmpty()) {
+            return text;
+        }
+
+        List<Segment> segments = new ArrayList<>(text.size() + inline.size() + afterEnd.size());
+
+        int next = 0;
+
+        for (Segment segment : text) {
+            while (next < inline.size() && inline.get(next).inlay().getOffset() <= segment.startOffset()) {
+                segments.add(inlaySegment(inline.get(next++)));
+            }
+
+            if (segment.isFold()) {
+                segments.add(segment);
+                continue;
+            }
+
+            int cut = segment.startOffset();
+
+            while (next < inline.size() && inline.get(next).inlay().getOffset() < segment.endOffset()) {
+                int offset = inline.get(next).inlay().getOffset();
+
+                if (offset > cut) {
+                    segments.add(new Segment(cut, offset, null));
+                    cut = offset;
+                }
+
+                segments.add(inlaySegment(inline.get(next++)));
+            }
+
+            if (cut < segment.endOffset()) {
+                segments.add(new Segment(cut, segment.endOffset(), null));
+            }
+        }
+
+        while (next < inline.size()) {
+            segments.add(inlaySegment(inline.get(next++)));
+        }
+
+        for (DesktopQtEditorInlays.Rendered rendered : afterEnd) {
+            segments.add(inlaySegment(rendered));
+        }
+
+        return segments;
+    }
+
+    private static Segment inlaySegment(DesktopQtEditorInlays.Rendered rendered) {
+        int offset = rendered.inlay().getOffset();
+
+        return new Segment(offset, offset, null, rendered);
     }
 
     /**

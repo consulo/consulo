@@ -20,6 +20,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.HasFocus;
 import consulo.ui.HasSize;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -46,6 +47,7 @@ import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
 import io.qt.gui.QKeyEvent;
 import io.qt.gui.QPalette;
+import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -58,7 +60,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-08-16
  */
-public abstract class QtComponentDelegate<T extends QWidget> implements Component, HasSize {
+public abstract class QtComponentDelegate<T extends QWidget> implements Component, HasSize, HasFocus {
     private static final int ourUnsetSize = -1;
 
     private int myWidth = ourUnsetSize;
@@ -626,7 +628,21 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
     }
 
     public boolean hasFocus() {
-        return myComponent != null && myComponent.hasFocus();
+        T component = myComponent;
+        if (component == null || component.isDisposed()) {
+            return false;
+        }
+
+        if (component.hasFocus()) {
+            return true;
+        }
+
+        // a component which is a container of others - the editor is a scroll area and a strip side by side -
+        // never holds the focus itself, one of the widgets inside it does, and to everything asking whether the
+        // editor has focus that is the same thing
+        QWidget focused = QApplication.focusWidget();
+
+        return focused != null && !focused.isDisposed() && component.isAncestorOf(focused);
     }
 
     public void setFocusable(boolean focusable) {

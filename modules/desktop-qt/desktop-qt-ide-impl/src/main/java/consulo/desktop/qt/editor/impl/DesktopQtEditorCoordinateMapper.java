@@ -19,6 +19,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
 import consulo.desktop.qt.editor.impl.DesktopQtEditorVisualLines.Segment;
 import consulo.document.Document;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -102,7 +103,8 @@ public class DesktopQtEditorCoordinateMapper {
         int column = 0;
 
         for (Segment segment : myVisualLines.getSegments(visualLine)) {
-            if (offset < segment.endOffset()) {
+            // a hint owns no offset of its own, so an offset never resolves into one - it is stepped over
+            if (!segment.isInlay() && offset < segment.endOffset()) {
                 // an offset buried inside a collapsed region has no column of its own - the placeholder is one
                 // thing, so the caret goes to its near end
                 return segment.isFold() ? column : column + (offset - segment.startOffset());
@@ -124,7 +126,9 @@ public class DesktopQtEditorCoordinateMapper {
             int length = segmentLength(segment);
 
             if (position.column < column + length) {
-                return segment.isFold() ? segment.startOffset() : segment.startOffset() + (position.column - column);
+                return segment.isFold() || segment.isInlay()
+                    ? segment.startOffset()
+                    : segment.startOffset() + (position.column - column);
             }
 
             column += length;
@@ -136,9 +140,17 @@ public class DesktopQtEditorCoordinateMapper {
     }
 
     private int segmentLength(Segment segment) {
-        return segment.isFold()
-            ? segment.fold().getPlaceholderText().length()
-            : segment.endOffset() - segment.startOffset();
+        return segment.columns();
+    }
+
+    /**
+     * How wide the piece is drawn. A hint is measured by what the painter drew rather than by any text, which is
+     * how the two are kept from disagreeing about where the glyphs after it start.
+     */
+    private double segmentWidth(Segment segment, CharSequence text) {
+        return segment.isInlay()
+            ? segment.inlay().width()
+            : myEditor.getFontMetrics().getTextWidth(segment.text(text));
     }
 
     public Point visualPositionToXY(VisualPosition position) {
@@ -183,13 +195,15 @@ public class DesktopQtEditorCoordinateMapper {
 
         for (Segment segment : myVisualLines.getSegments(visualLine)) {
             int length = segmentLength(segment);
-            CharSequence segmentText = segment.text(text);
 
             if (column < consumed + length) {
-                return x + metrics.getTextWidth(segmentText.subSequence(0, column - consumed));
+                // a hint is one column wide and indivisible, so a column landing on it sits at its left edge
+                return segment.isInlay()
+                    ? x
+                    : x + metrics.getTextWidth(segment.text(text).subSequence(0, column - consumed));
             }
 
-            x += metrics.getTextWidth(segmentText);
+            x += segmentWidth(segment, text);
             consumed += length;
         }
 
@@ -215,6 +229,37 @@ public class DesktopQtEditorCoordinateMapper {
         }
 
         return length + (int) Math.round((x - previous) / myEditor.getFontMetrics().getSpaceWidth());
+    }
+
+    /**
+     * The hint under a point, together with how far into it the point is, or null when the point is over text.
+     * Walks the pieces of the row exactly as {@link #columnToX} does, so what is hit is what was drawn.
+     */
+    public @Nullable InlayHit inlayAt(Point p) {
+        int lineHeight = myEditor.getLineHeight();
+        int visualLine = Math.max(0, Math.min(p.y / lineHeight, myVisualLines.getVisualLineCount() - 1));
+
+        CharSequence text = myEditor.getDocument().getCharsSequence();
+
+        double x = 0;
+
+        for (Segment segment : myVisualLines.getSegments(visualLine)) {
+            double width = segmentWidth(segment, text);
+
+            if (segment.isInlay() && p.x >= x && p.x < x + width) {
+                return new InlayHit(segment.inlay(), p.x - x);
+            }
+
+            x += width;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param xInInlay how far into the hint the point is, which is what names the run that was hit
+     */
+    public record InlayHit(DesktopQtEditorInlays.Rendered inlay, double xInInlay) {
     }
 
     private int visualLineLength(int visualLine) {

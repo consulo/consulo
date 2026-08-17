@@ -31,6 +31,8 @@ import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,6 +55,8 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     private boolean myShowDefaultGutterPopup = true;
 
+    private @Nullable Map<Integer, List<GutterMark>> myRenderersByLine;
+
     public DesktopQtEditorGutterComponentImpl(DesktopQtEditorImpl editor) {
         myEditor = editor;
     }
@@ -64,6 +68,8 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public void repaint() {
+        dropRenderersCache();
+
         DesktopQtEditorGutterWidget widget = getWidget();
         if (widget != null) {
             widget.update();
@@ -88,15 +94,31 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
      */
     @Override
     public List<GutterMark> getGutterRenderers(int line) {
-        List<GutterMark> renderers = new ArrayList<>();
-
-        collectRenderers(myEditor.getFilteredDocumentMarkupModel(), line, renderers);
-        collectRenderers(myEditor.getMarkupModel(), line, renderers);
-
-        return renderers;
+        return renderersByLine().getOrDefault(line, List.of());
     }
 
-    private void collectRenderers(@Nullable MarkupModel model, int visualLine, List<GutterMark> into) {
+    /**
+     * Every mark in the document keyed by the row it stands on, built in one pass over the markup and kept until
+     * the markup changes. Asking each row separately would walk every highlighter again for every row, and the
+     * width of the icon column is measured over all of them on every layout.
+     */
+    private Map<Integer, List<GutterMark>> renderersByLine() {
+        Map<Integer, List<GutterMark>> cache = myRenderersByLine;
+        if (cache != null) {
+            return cache;
+        }
+
+        cache = new HashMap<>();
+
+        collectRenderers(myEditor.getFilteredDocumentMarkupModel(), cache);
+        collectRenderers(myEditor.getMarkupModel(), cache);
+
+        myRenderersByLine = cache;
+
+        return cache;
+    }
+
+    private void collectRenderers(@Nullable MarkupModel model, Map<Integer, List<GutterMark>> into) {
         if (model == null) {
             return;
         }
@@ -104,12 +126,19 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
         for (RangeHighlighter highlighter : model.getAllHighlighters()) {
             GutterMark renderer = highlighter.getGutterIconRenderer();
 
-            if (renderer != null
-                && highlighter.isValid()
-                && myEditor.offsetToVisualLine(highlighter.getStartOffset()) == visualLine) {
-                into.add(renderer);
+            if (renderer != null && highlighter.isValid()) {
+                into.computeIfAbsent(myEditor.offsetToVisualLine(highlighter.getStartOffset()), line -> new ArrayList<>())
+                    .add(renderer);
             }
         }
+    }
+
+    /**
+     * Drops what was read off the markup. Anything moving a mark - the markup changing, or folding moving the row
+     * it is shown on - has to come through here or the icons stay where they were.
+     */
+    public void dropRenderersCache() {
+        myRenderersByLine = null;
     }
 
     @Override
@@ -120,6 +149,8 @@ public class DesktopQtEditorGutterComponentImpl implements EditorGutterComponent
 
     @Override
     public void revalidateMarkup() {
+        dropRenderersCache();
+
         DesktopQtEditorGutterWidget widget = getWidget();
         if (widget != null) {
             widget.update();

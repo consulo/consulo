@@ -171,6 +171,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public PasswordBox _Components_passwordBox(String password) {
+        return new DesktopQtPasswordBoxImpl(password);
+    }
+
+    @Override
     public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
         return new DesktopQtTextBoxWithHistoryImpl(text);
     }

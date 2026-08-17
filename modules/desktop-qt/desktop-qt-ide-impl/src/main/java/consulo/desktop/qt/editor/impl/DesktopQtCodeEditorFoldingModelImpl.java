@@ -29,10 +29,15 @@ public class DesktopQtCodeEditorFoldingModelImpl extends CodeEditorFoldingModelB
 
     @Override
     protected void notifyBatchFoldingProcessingDoneToEditor() {
-        DesktopQtEditorWidget widget = ((DesktopQtEditorImpl) myEditor).getSurface();
+        DesktopQtEditorImpl editor = (DesktopQtEditorImpl) myEditor;
+
+        DesktopQtEditorWidget widget = editor.getSurface();
         if (widget == null) {
             return;
         }
+
+        // folding moves which row a mark is shown on, and the gutter keyed its icons by row
+        ((DesktopQtEditorGutterComponentImpl) editor.getGutterComponentEx()).dropRenderersCache();
 
         widget.updateSideAreas();
         widget.updateScrollRanges();

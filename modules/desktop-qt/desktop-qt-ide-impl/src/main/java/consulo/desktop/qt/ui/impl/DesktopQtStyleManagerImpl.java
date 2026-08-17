@@ -52,6 +52,8 @@ public class DesktopQtStyleManagerImpl extends StyleManagerImpl {
     /** the preference of the desktop is only the default, and a theme picked in the ide outranks it */
     private boolean myStyleChosen;
 
+    private boolean myApplyingStyle;
+
     @Override
     public List<Style> getStyles() {
         return ourStyles;
@@ -64,11 +66,21 @@ public class DesktopQtStyleManagerImpl extends StyleManagerImpl {
 
     @Override
     public void setCurrentStyle(Style style) {
+        if (myApplyingStyle) {
+            LOG.warn("style change re-entered while applying " + myCurrentStyle.getId() + ", ignoring " + style.getId());
+            return;
+        }
+
         myStyleChosen = true;
+        myApplyingStyle = true;
+        try {
+            applyStyle(style);
 
-        applyStyle(style);
-
-        updateEditorColorsScheme(style);
+            updateEditorColorsScheme(style);
+        }
+        finally {
+            myApplyingStyle = false;
+        }
     }
 
     /**

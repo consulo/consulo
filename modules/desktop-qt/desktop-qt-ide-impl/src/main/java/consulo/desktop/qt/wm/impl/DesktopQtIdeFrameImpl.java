@@ -15,10 +15,13 @@
  */
 package consulo.desktop.qt.wm.impl;
 
+import consulo.application.Application;
+import consulo.application.internal.AppLifecycleListener;
 import consulo.desktop.qt.ui.impl.DesktopQtWindowImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -27,6 +30,7 @@ import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
@@ -95,11 +99,7 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
 
         applyState(qtWindow);
 
-        window.addCloseListener(event -> {
-            window.close();
-
-            ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
-        });
+        window.addCloseListener(event -> onCloseRequested());
 
         window.setMenuBar(myRootView.getMenuBar());
         window.setContent(myRootView.getRootPanel().getComponent());
@@ -107,6 +107,35 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
         window.show();
 
         myRootView.update();
+    }
+
+    @RequiredUIAccess
+    private void onCloseRequested() {
+        if (myWindow == null) {
+            return;
+        }
+
+        ProjectManager projectManager = ProjectManager.getInstance();
+
+        Project[] openProjects = projectManager.getOpenProjects();
+        if (openProjects.length > 1 || openProjects.length == 1 && Platform.current().os().isMac()) {
+            if (myProject.isOpen()) {
+                projectManager.closeAndDisposeAsync(myProject, UIAccess.current())
+                    .whenComplete((closed, throwable) -> frameClosed());
+            }
+            else {
+                frameClosed();
+            }
+        }
+        else {
+            Application.get().exit();
+        }
+    }
+
+    private static void frameClosed() {
+        Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
+
+        WelcomeFrameManager.getInstance().showIfNoProjectOpened();
     }
 
     @RequiredUIAccess

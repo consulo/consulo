@@ -41,6 +41,7 @@ import io.qt.widgets.QListWidgetItem;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -166,9 +167,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
         component.setMouseTracking(true);
         component.viewport().setMouseTracking(true);
 
-        rebuildItems(component);
-
-        component.currentRowChanged.connect(this::onCurrentRowChanged);
+        component.itemSelectionChanged.connect(this::onSelectionChanged);
         component.itemClicked.connect(item -> fireClicked(component.row(item)));
         component.itemDoubleClicked.connect(item -> fireDoubleClicked(component.row(item)));
         component.itemEntered.connect(item -> {
@@ -177,7 +176,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             }
         });
 
-        applySelectedIndex(component);
+        rebuild(component);
     }
 
     /** the icon of a row is drawn from what the render answered, so the rows are asked to render once more */
@@ -187,41 +186,66 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             return;
         }
 
-        rebuildItems(myComponent);
+        rebuild(myComponent);
+    }
 
-        applySelectedIndex(myComponent);
+    private void rebuild(QListWidget component) {
+        myRebuilding = true;
+        try {
+            rebuildItems(component);
+
+            applySelectedIndex(component);
+        }
+        finally {
+            myRebuilding = false;
+        }
     }
 
     private void applySelectedIndex(QListWidget component) {
         int index = mySelectedIndex;
-        if (index >= 0 && index < component.count()) {
-            component.setCurrentRow(index);
+
+        // a list of a popup always offers a row - the awt popups open with the first one under the selection, and
+        // a list which offers none answers the return key with nothing at all
+        if (index < 0 || index >= component.count()) {
+            index = mySelectOnHover ? firstSelectableRow() : -1;
         }
+
+        if (index < 0) {
+            return;
+        }
+
+        mySelectedIndex = index;
+
+        component.setCurrentRow(index);
+    }
+
+    private int firstSelectableRow() {
+        for (int i = 0; i < myModel.getSize(); i++) {
+            if (!mySeparatorPredicate.test(myModel.get(i))) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private void rebuildItems(QListWidget component) {
-        myRebuilding = true;
-        try {
-            component.clear();
+        component.clear();
 
-            for (int i = 0; i < myModel.getSize(); i++) {
-                E element = myModel.get(i);
+        for (int i = 0; i < myModel.getSize(); i++) {
+            E element = myModel.get(i);
 
-                if (mySeparatorPredicate.test(element)) {
-                    addSeparatorItem(component);
-                    continue;
-                }
-
-                if (myComponentRender != null) {
-                    addRenderedItem(component, element, i);
-                    continue;
-                }
-
-                component.addItem(createItem(element, i));
+            if (mySeparatorPredicate.test(element)) {
+                addSeparatorItem(component);
+                continue;
             }
-        }
-        finally {
-            myRebuilding = false;
+
+            if (myComponentRender != null) {
+                addRenderedItem(component, element, i);
+                continue;
+            }
+
+            component.addItem(createItem(element, i));
         }
     }
 
@@ -297,12 +321,15 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void onCurrentRowChanged(int row) {
-        mySelectedIndex = row;
-
-        if (myRebuilding) {
+    private void onSelectionChanged() {
+        QListWidget component = myComponent;
+        if (myRebuilding || component == null) {
             return;
         }
+
+        List<QListWidgetItem> selected = component.selectedItems();
+
+        mySelectedIndex = selected.isEmpty() ? -1 : component.row(selected.get(0));
 
         getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
     }
@@ -351,9 +378,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     private void rebuildIfBound() {
         if (myComponent != null) {
-            rebuildItems(myComponent);
-
-            applySelectedIndex(myComponent);
+            rebuild(myComponent);
         }
     }
 

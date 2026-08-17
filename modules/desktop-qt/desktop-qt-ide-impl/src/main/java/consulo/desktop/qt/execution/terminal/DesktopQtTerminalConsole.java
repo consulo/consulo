@@ -139,6 +139,11 @@ public class DesktopQtTerminalConsole implements JediTerminalConsole {
             return;
         }
 
+        // a drag raises a resize for every pixel, and reflowing the buffer for a size it already has drops content
+        if (columns == myTextBuffer.getWidth() && rows == myTextBuffer.getHeight()) {
+            return;
+        }
+
         TermSize size = new TermSize(columns, rows);
 
         myTerminal.resize(size, RequestOrigin.User);
@@ -166,8 +171,37 @@ public class DesktopQtTerminalConsole implements JediTerminalConsole {
     }
 
     @Override
-    public @Nullable RangeModel getTerminalVerticalScrollModel() {
-        return null;
+    public RangeModel getTerminalVerticalScrollModel() {
+        return new RangeModel() {
+            @Override
+            public int getValue() {
+                DesktopQtTerminalWidget widget = myComponent.getTerminalWidget();
+                return widget == null ? 0 : widget.getScrollOrigin();
+            }
+
+            @Override
+            public void setValue(int value) {
+                DesktopQtTerminalWidget widget = myComponent.getTerminalWidget();
+                if (widget != null) {
+                    widget.setScrollOrigin(value);
+                }
+            }
+
+            @Override
+            public int getMinimum() {
+                return -myTextBuffer.getHistoryLinesCount();
+            }
+
+            @Override
+            public int getMaximum() {
+                return 0;
+            }
+
+            @Override
+            public int getExtent() {
+                return myTextBuffer.getHeight();
+            }
+        };
     }
 
     @Override

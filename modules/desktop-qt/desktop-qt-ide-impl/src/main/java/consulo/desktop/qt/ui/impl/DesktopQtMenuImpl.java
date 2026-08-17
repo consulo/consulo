@@ -81,6 +81,10 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
             // carries no widget to test - the widget the same press is handed to next answers this properly
             if (event.type() == QEvent.Type.MouseButtonPress && watched instanceof QWidget widget && !ownsWidget(widget)) {
                 hideDetached();
+
+                // hiding takes this very filter down and disposes it, so there is no object left to hand the
+                // event on with - going through super here is a call into one qt has already destroyed
+                return false;
             }
 
             return super.eventFilter(watched, event);
@@ -174,13 +178,14 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
                 + " transientParent=" + (shown.windowHandle() == null ? "no-handle" : shown.windowHandle().transientParent())
         ));
 
-        OutsideClickWatcher watcher = myOutsideClickWatcher;
-        if (watcher == null) {
-            watcher = new OutsideClickWatcher();
+        // one filter per menu: installing an already installed watcher a second time has qt call it twice for
+        // every event in the application
+        if (myOutsideClickWatcher == null) {
+            OutsideClickWatcher watcher = new OutsideClickWatcher();
             myOutsideClickWatcher = watcher;
-        }
 
-        QApplication.instance().installEventFilter(watcher);
+            QApplication.instance().installEventFilter(watcher);
+        }
     }
 
     /**
@@ -221,7 +226,9 @@ public class DesktopQtMenuImpl extends DesktopQtMenuItemImpl implements Menu {
         myOutsideClickWatcher = null;
 
         QApplication.instance().removeEventFilter(watcher);
-        watcher.dispose();
+
+        // the watcher is taken down from inside its own event filter, and qt is still walking the stack of it
+        watcher.disposeLater();
     }
 
     /**

@@ -24,6 +24,9 @@ import io.qt.widgets.QLineEdit;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.List;
 
 /**
@@ -31,6 +34,8 @@ import java.util.List;
  * @since 2026-08-16
  */
 public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QLineEdit> implements TextBoxWithHistory {
+    private final List<Validator<String>> myValidators = new ArrayList<>();
+
     private final String myText;
 
     public DesktopQtTextBoxWithHistoryImpl(String text) {
@@ -69,13 +74,21 @@ public class DesktopQtTextBoxWithHistoryImpl extends QtComponentDelegate<QLineEd
 
     @Override
     public Disposable addValidator(Validator<String> validator) {
-        return null;
+        myValidators.add(validator);
+
+        return () -> myValidators.remove(validator);
     }
 
     @RequiredUIAccess
     @Override
     public boolean validate() {
-        return false;
+        for (Validator<String> validator : myValidators) {
+            if (validator.validateValue(getValue()) != null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

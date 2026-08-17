@@ -17,47 +17,82 @@ package consulo.desktop.qt.execution.terminal;
 
 import com.jediterm.core.Color;
 import com.jediterm.terminal.emulator.ColorPalette;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.execution.process.ColoredOutputTypeRegistry;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import org.jspecify.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
- * What the sixteen colours an indexed style names are drawn as. The numbers are the xterm defaults, which is what
- * the awt terminal falls back to before a colour scheme has anything to say.
+ * The colours the terminal draws with, taken from the console keys of the active scheme so the terminal follows the
+ * theme rather than carrying colours of its own - the same keys the awt and web terminals read.
  *
  * @author VISTALL
  * @since 2026-08-17
  */
 public class DesktopQtTerminalPalette extends ColorPalette {
-    public static final DesktopQtTerminalPalette INSTANCE = new DesktopQtTerminalPalette();
+    public static DesktopQtTerminalPalette ofGlobalScheme() {
+        return new DesktopQtTerminalPalette(() -> EditorColorsManager.getInstance().getGlobalScheme());
+    }
 
-    private static final Color[] ourColors = {
-        new Color(0x00, 0x00, 0x00),
-        new Color(0xCD, 0x00, 0x00),
-        new Color(0x00, 0xCD, 0x00),
-        new Color(0xCD, 0xCD, 0x00),
-        new Color(0x00, 0x00, 0xEE),
-        new Color(0xCD, 0x00, 0xCD),
-        new Color(0x00, 0xCD, 0xCD),
-        new Color(0xE5, 0xE5, 0xE5),
+    private final Supplier<EditorColorsScheme> myScheme;
 
-        new Color(0x7F, 0x7F, 0x7F),
-        new Color(0xFF, 0x00, 0x00),
-        new Color(0x00, 0xFF, 0x00),
-        new Color(0xFF, 0xFF, 0x00),
-        new Color(0x5C, 0x5C, 0xFF),
-        new Color(0xFF, 0x00, 0xFF),
-        new Color(0x00, 0xFF, 0xFF),
-        new Color(0xFF, 0xFF, 0xFF)
-    };
+    public DesktopQtTerminalPalette(Supplier<EditorColorsScheme> scheme) {
+        myScheme = scheme;
+    }
 
-    private DesktopQtTerminalPalette() {
+    public Color getDefaultForeground() {
+        EditorColorsScheme scheme = myScheme.get();
+
+        ColorValue color = scheme.getAttributes(ConsoleViewContentType.NORMAL_OUTPUT_KEY).getForegroundColor();
+
+        return toColor(color != null ? color : scheme.getDefaultForeground());
+    }
+
+    public Color getDefaultBackground() {
+        EditorColorsScheme scheme = myScheme.get();
+
+        ColorValue color = scheme.getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
+
+        return toColor(color != null ? color : scheme.getDefaultBackground());
     }
 
     @Override
     protected Color getForegroundByColorIndex(int colorIndex) {
-        return ourColors[colorIndex % ourColors.length];
+        ColorValue color = ansi(colorIndex, true);
+
+        return color != null ? toColor(color) : getDefaultForeground();
     }
 
     @Override
     protected Color getBackgroundByColorIndex(int colorIndex) {
-        return ourColors[colorIndex % ourColors.length];
+        ColorValue color = ansi(colorIndex, false);
+
+        return color != null ? toColor(color) : getDefaultBackground();
+    }
+
+    private @Nullable ColorValue ansi(int colorIndex, boolean foreground) {
+        TextAttributes attributes = myScheme.get().getAttributes(ColoredOutputTypeRegistry.getAnsiColorKey(colorIndex));
+        if (attributes == null) {
+            return null;
+        }
+
+        ColorValue color = foreground ? attributes.getForegroundColor() : attributes.getBackgroundColor();
+        if (color != null) {
+            return color;
+        }
+
+        return foreground ? attributes.getBackgroundColor() : attributes.getForegroundColor();
+    }
+
+    private static Color toColor(ColorValue color) {
+        RGBColor rgb = color.toRGB();
+
+        return new Color(rgb.getRed(), rgb.getGreen(), rgb.getBlue());
     }
 }

@@ -24,9 +24,13 @@ import consulo.application.internal.StartupProgress;
 import consulo.component.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.desktop.qt.application.impl.DesktopQtApplicationImpl;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
+import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
+import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
@@ -69,28 +73,49 @@ public class DesktopQtApplicationStarter extends ApplicationStarter {
     ) {
         appInitializeMark.run();
 
-        stat.dump("Startup statistics", LOG::info);
+        SystemDock.getInstance().updateMenu();
 
-        app.invokeLater(() -> openProjectFromCommandLine(app, args), IdeaModalityState.any());
+        RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
+
+        // a project reopened at startup raises a frame of its own, and the welcome screen would only stand behind
+        // it - so it is shown for the case where nothing is going to be reopened
+        if (args.isNoRecentProjects() || !recentProjectsManager.willReopenProjectOnStart()) {
+            app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any());
+        }
+
+        app.invokeLater(
+            () -> {
+                if (!args.isNoRecentProjects()) {
+                    openProject(recentProjectsManager, args);
+                }
+
+                UsageTrigger.trigger("consulo.app.started");
+            },
+            app.getNoneModalityState()
+        );
+
+        stat.dump("Startup statistics", LOG::info);
     }
 
+    /**
+     * What the ide comes up on: the project named on the command line, and the ones which were open when it was
+     * last closed for anything else.
+     */
     @RequiredUIAccess
-    private void openProjectFromCommandLine(ApplicationEx app, CommandLineArgs args) {
-        AsyncResult<Project> project = AsyncResult.rejected();
+    private void openProject(RecentProjectsManagerImpl recentProjectsManager, CommandLineArgs args) {
+        AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
 
-        if (isPerformProjectLoad() && !args.isNoRecentProjects() && args.getFile() != null) {
+        if (isPerformProjectLoad()) {
             try {
-                project = CommandLineProcessor.processExternalCommandLine(args, null);
+                projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
             }
             catch (Throwable e) {
                 LOG.warn("Failed to open project from command line: " + args.getFile(), e);
-                project = AsyncResult.rejected();
+
+                projectFromCommandLine = AsyncResult.rejected();
             }
         }
 
-        // the open can reject from whatever thread finished it, while a welcome frame may only be built on the ui one
-        project.doWhenRejected(
-            () -> app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any())
-        );
+        projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
     }
 }

@@ -230,6 +230,16 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
             return;
         }
 
+        // a hint answers the click itself when it says it does, and the caret must not move to a place it has no
+        // offset for - it stands between two characters rather than on one
+        DesktopQtEditorCoordinateMapper.InlayHit hit = myEditor.inlayAt(documentPoint(event));
+        if (hit != null
+            && event.button() == Qt.MouseButton.LeftButton
+            && myEditor.getInlays().click(hit.inlay(), hit.xInInlay(), isNavigationModifier(event.modifiers()))) {
+            event.accept();
+            return;
+        }
+
         if (event.button() != Qt.MouseButton.LeftButton) {
             super.mousePressEvent(event);
             return;
@@ -237,8 +247,8 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
 
         int offset = offsetAt(event);
 
-        // ctrl click follows the reference rather than moving the caret to it
-        if (isNavigationModifier(event.modifiers())) {
+        // ctrl click follows the reference rather than moving the caret to it, but never the one behind a hint
+        if (hit == null && isNavigationModifier(event.modifiers())) {
             myLinkNavigation.navigateTo(offset);
 
             event.accept();
@@ -310,7 +320,15 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
 
         myEditor.fireMouseMoved(editingAreaEvent(event));
 
-        boolean navigable = myLinkNavigation.highlightLinkAt(offsetAt(event));
+        // a hint owns no offset of its own, so the offset under it is the one of the character it stands before -
+        // resolving that would underline the code after the hint as though the pointer were over it
+        boolean overInlay = myEditor.inlayAt(documentPoint(event)) != null;
+
+        if (overInlay && myLinkNavigation.hasLink()) {
+            myLinkNavigation.clear();
+        }
+
+        boolean navigable = !overInlay && myLinkNavigation.highlightLinkAt(offsetAt(event));
 
         viewport().setCursor(new QCursor(navigable ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.IBeamCursor));
         viewport().update();
@@ -401,10 +419,12 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
         restartCaretBlink();
     }
 
-    private int offsetAt(QMouseEvent event) {
-        Point point = new Point(event.pos().x() + horizontalScrollBar().value(), event.pos().y() + verticalScrollBar().value());
+    private Point documentPoint(QMouseEvent event) {
+        return new Point(event.pos().x() + horizontalScrollBar().value(), event.pos().y() + verticalScrollBar().value());
+    }
 
-        return myEditor.logicalPositionToOffset(myEditor.xyToLogicalPosition(point));
+    private int offsetAt(QMouseEvent event) {
+        return myEditor.logicalPositionToOffset(myEditor.xyToLogicalPosition(documentPoint(event)));
     }
 
     @Override

@@ -43,9 +43,14 @@ public interface DockContainer extends Disposable, Activatable {
     throw new AbstractMethodError();
   }
 
-  
-  default Component getUIContainerComponent() {
-    throw new AbstractMethodError();
+  /**
+   * The container as a component of the unified ui, or {@code null} for one which is swing only and answers
+   * {@link #getContainerComponent()} instead. A dock manager of a unified frontend asks every container it holds,
+   * and a container which knows nothing of the unified ui is no fault of anyone - it simply holds nothing the
+   * question is about.
+   */
+  default @Nullable Component getUIContainerComponent() {
+    return null;
   }
 
   void add(DockableContent content, RelativePoint dropTarget);

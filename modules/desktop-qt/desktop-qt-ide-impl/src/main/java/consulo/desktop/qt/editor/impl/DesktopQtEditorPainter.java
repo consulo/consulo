@@ -111,23 +111,31 @@ public class DesktopQtEditorPainter {
         int lineHeight = metrics.getLineHeight();
         int baseline = y + metrics.getAscent();
 
-        List<Run> runs = collectVisualLineRuns(line, caretData);
+        List<Cell> cells = collectCells(line, caretData);
 
         // first pass lays down every background of the line, second pass draws the glyphs over them
         double x = startX;
-        for (Run run : runs) {
-            CharSequence chunk = run.text(text);
-            double width = metrics.getTextWidth(chunk, run.fontType());
+        for (Cell cell : cells) {
+            Run run = cell.run();
 
-            if (run.background() != null) {
-                painter.fillRect(new QRectF(x, y, width, lineHeight), TargetQt.to(run.background()));
+            if (run != null && run.background() != null) {
+                painter.fillRect(new QRectF(x, y, cell.width(metrics, text), lineHeight), TargetQt.to(run.background()));
             }
 
-            x += width;
+            x += cell.width(metrics, text);
         }
 
         x = startX;
-        for (Run run : runs) {
+        for (Cell cell : cells) {
+            Run run = cell.run();
+
+            if (run == null) {
+                myEditor.getInlays().paint(painter, cell.inlay(), x, y, lineHeight);
+
+                x += cell.width(metrics, text);
+                continue;
+            }
+
             CharSequence chunk = run.text(text);
             int fontType = run.fontType();
 
@@ -144,10 +152,13 @@ public class DesktopQtEditorPainter {
 
         // effects last: an error is drawn as an underline and nothing else, so it has to survive the glyphs
         x = startX;
-        for (Run run : runs) {
-            double width = metrics.getTextWidth(run.text(text), run.fontType());
+        for (Cell cell : cells) {
+            double width = cell.width(metrics, text);
+            Run run = cell.run();
 
-            paintEffect(painter, x, x + width, baseline, run.effectColor(), run.effectType());
+            if (run != null) {
+                paintEffect(painter, x, x + width, baseline, run.effectColor(), run.effectType());
+            }
 
             x += width;
         }
@@ -245,6 +256,10 @@ public class DesktopQtEditorPainter {
         CharSequence text(CharSequence documentText) {
             return placeholder != null ? placeholder : documentText.subSequence(startOffset, endOffset);
         }
+
+        Run slice(int from, int to) {
+            return new Run(from, to, foreground, background, fontType, null, effectColor, effectType);
+        }
     }
 
     /**
@@ -253,10 +268,78 @@ public class DesktopQtEditorPainter {
      * collapsed region as a single segment whose merged attributes already carry the placeholder styling - and
      * the selection or caret row over it, which attributes read straight off the scheme would have lost.
      */
-    private List<Run> collectVisualLineRuns(int visualLine, CaretData caretData) {
+    /**
+     * One piece of a row as it is laid out left to right: either a run of the text, or a hint standing between
+     * two characters of it. The three passes over a row all walk the same cells, so a hint cannot advance the
+     * glyphs by one amount and the backgrounds by another.
+     */
+    private record Cell(@Nullable Run run, DesktopQtEditorInlays.@Nullable Rendered inlay) {
+        double width(DesktopQtEditorFontMetrics metrics, CharSequence documentText) {
+            return run == null
+                ? Objects.requireNonNull(inlay).width()
+                : metrics.getTextWidth(run.text(documentText), run.fontType());
+        }
+    }
+
+    /**
+     * The row cut into the pieces it is drawn from. A hint sits between two characters, so a run met across one
+     * is split at it - otherwise the hint would be drawn over the glyphs rather than between them.
+     */
+    private List<Cell> collectCells(int visualLine, CaretData caretData) {
         DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
 
-        return collectRuns(visualLines.visualLineStartOffset(visualLine), visualLines.visualLineEndOffset(visualLine), caretData);
+        int lineStart = visualLines.visualLineStartOffset(visualLine);
+        int lineEnd = visualLines.visualLineEndOffset(visualLine);
+
+        List<Run> runs = collectRuns(lineStart, lineEnd, caretData);
+
+        List<DesktopQtEditorInlays.Rendered> inlines = myEditor.getInlays().inlineIn(lineStart, lineEnd);
+        List<DesktopQtEditorInlays.Rendered> afterEnd = myEditor.getInlays().afterLineEndIn(lineStart, lineEnd);
+
+        List<Cell> cells = new ArrayList<>(runs.size() + inlines.size() + afterEnd.size());
+
+        int next = 0;
+
+        for (Run run : runs) {
+            int from = run.startOffset();
+
+            // a placeholder stands for a whole collapsed region and cannot be cut, so hints inside it are skipped
+            while (next < inlines.size() && inlines.get(next).inlay().getOffset() <= from) {
+                cells.add(new Cell(null, inlines.get(next++)));
+            }
+
+            if (run.placeholder() != null) {
+                cells.add(new Cell(run, null));
+                continue;
+            }
+
+            int cut = from;
+
+            while (next < inlines.size() && inlines.get(next).inlay().getOffset() < run.endOffset()) {
+                int offset = inlines.get(next).inlay().getOffset();
+
+                if (offset > cut) {
+                    cells.add(new Cell(run.slice(cut, offset), null));
+                    cut = offset;
+                }
+
+                cells.add(new Cell(null, inlines.get(next++)));
+            }
+
+            if (cut < run.endOffset()) {
+                cells.add(new Cell(run.slice(cut, run.endOffset()), null));
+            }
+        }
+
+        while (next < inlines.size()) {
+            cells.add(new Cell(null, inlines.get(next++)));
+        }
+
+        for (DesktopQtEditorInlays.Rendered rendered : afterEnd) {
+            cells.add(new Cell(null, rendered));
+        }
+
+        return cells;
     }
 
     /**

@@ -26,6 +26,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CustomActionsSchema;
 import io.qt.core.QPoint;
+import io.qt.core.Qt;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
@@ -46,8 +47,11 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     private @Nullable Component mySuffixComponent;
 
     @Override
+    @RequiredUIAccess
     public void setPrefixComponent(@Nullable Component prefixComponent) {
         myPrefixComponent = prefixComponent;
+
+        applyCornerComponent(prefixComponent, Qt.Corner.TopLeftCorner);
     }
 
     @Override
@@ -56,8 +60,11 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     }
 
     @Override
+    @RequiredUIAccess
     public void setSuffixComponent(@Nullable Component suffixComponent) {
         mySuffixComponent = suffixComponent;
+
+        applyCornerComponent(suffixComponent, Qt.Corner.TopRightCorner);
     }
 
     @Override
@@ -77,13 +84,51 @@ public class DesktopQtTabbedLayoutImpl extends QtComponentDelegate<QTabWidget> i
     protected void initialize(QTabWidget component) {
         super.initialize(component);
 
+        // the bar draws a cross for every tab, and a tab which was given no close handler takes its own back off
+        component.setTabsClosable(true);
+        component.tabCloseRequested.connect(this::closeTab);
+
         for (DesktopQtTabImpl tab : myTabs) {
             tab.initialize(component, this);
         }
 
         component.setCurrentIndex(myTabs.size() - 1);
 
+        applyCornerComponent(myPrefixComponent, Qt.Corner.TopLeftCorner);
+        applyCornerComponent(mySuffixComponent, Qt.Corner.TopRightCorner);
+
         installTabPopupMenu(component);
+    }
+
+    @RequiredUIAccess
+    private void closeTab(int index) {
+        for (DesktopQtTabImpl tab : myTabs) {
+            if (tab.getIndex() == index) {
+                tab.close();
+                return;
+            }
+        }
+    }
+
+    /**
+     * What a tab bar shows beside its tabs - the toolbar of the editor window sits at the trailing end of the row
+     * rather than in the content, so the widget is given to the corner qt keeps for it.
+     */
+    @RequiredUIAccess
+    private void applyCornerComponent(@Nullable Component component, Qt.Corner corner) {
+        if (myComponent == null || myComponent.isDisposed()) {
+            return;
+        }
+
+        if (!(component instanceof QtComponentDelegate<?> delegate)) {
+            myComponent.setCornerWidget(null, corner);
+            return;
+        }
+
+        delegate.setParent(this);
+        delegate.bind(myComponent, null);
+
+        myComponent.setCornerWidget(delegate.toQtComponent(), corner);
     }
 
     /**
