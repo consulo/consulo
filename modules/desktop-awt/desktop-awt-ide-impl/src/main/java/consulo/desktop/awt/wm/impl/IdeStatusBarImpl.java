@@ -21,7 +21,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.ui.plaf.BasicStripeButtonUI;
+import consulo.desktop.awt.ui.impl.plaf2.BasicStripeButtonUI;
 import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

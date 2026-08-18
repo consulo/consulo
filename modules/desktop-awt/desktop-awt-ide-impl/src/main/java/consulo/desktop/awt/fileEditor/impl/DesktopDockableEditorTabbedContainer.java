@@ -24,7 +24,7 @@ import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.UIAccess;

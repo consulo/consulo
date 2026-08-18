@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.desktop.awt.facade.ToSwingIconWrapper;
-import consulo.ide.impl.idea.util.ui.JBImageIcon;
+import consulo.desktop.awt.ui.impl.facade.ToSwingIconWrapper;
+import consulo.ui.ex.awt.JBImageIcon;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

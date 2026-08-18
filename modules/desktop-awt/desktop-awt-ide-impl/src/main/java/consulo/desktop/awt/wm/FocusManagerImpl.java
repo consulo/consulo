@@ -17,7 +17,6 @@ import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.desktop.awt.ui.LastFocusAtDeactivationTracker;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ModalityState;
@@ -45,7 +44,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.AWT)
-public final class FocusManagerImpl implements ApplicationIdeFocusManager, LastFocusAtDeactivationTracker, Disposable {
+public final class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable {
   private static final Logger LOG = Logger.getInstance(FocusManagerImpl.class);
 
   private final List<FocusRequestInfo> myRequests = new LinkedList<>();
@@ -234,7 +233,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, LastF
     return myLastFocused.get(frame);
   }
 
-  @Override
   public void setLastFocusedAtDeactivation(IdeFrame frame, Component c) {
     myLastFocusedAtDeactivation.put(frame, c);
   }

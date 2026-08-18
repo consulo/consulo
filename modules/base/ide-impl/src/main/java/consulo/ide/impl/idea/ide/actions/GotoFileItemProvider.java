@@ -22,7 +22,7 @@ import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.FList;
 import consulo.util.collection.JBIterable;
 import consulo.util.io.FileUtil;

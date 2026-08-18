@@ -67,7 +67,7 @@ import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.style.StandardColors;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;

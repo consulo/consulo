@@ -28,7 +28,7 @@ import consulo.ui.Label;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.idea.ui.tabs.TabsUtil;
+import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ComponentEvent;

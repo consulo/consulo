@@ -21,7 +21,7 @@ import consulo.ui.clipboard.ClipboardAccessException;
 import consulo.ui.clipboard.ClipboardFeature;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
-import consulo.desktop.awt.internal.clipboard.DesktopAWTDataTransfers;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTDataTransfers;
 import consulo.ui.impl.clipboard.BaseClipboard;
 import org.jspecify.annotations.Nullable;
 

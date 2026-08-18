@@ -47,14 +47,15 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.errorTreeView;
     exports consulo.ui.ex.localize;
 
-    exports consulo.ui.ex.internal to
+    exports consulo.ui.ex.internal.actionholder;
+  exports consulo.ui.ex.internal to
         consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.external.system.api,
         consulo.language.editor.api,
         consulo.language.inject.advanced.impl,
         consulo.language.editor.refactoring.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.ui.ex.awt.api,
         consulo.execution.api,
@@ -76,12 +77,12 @@ module consulo.ui.ex.api {
     exports consulo.ui.ex.keymap.internal to
         consulo.ui.ex.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.ui.ex.awtUnsafe.internal to
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 

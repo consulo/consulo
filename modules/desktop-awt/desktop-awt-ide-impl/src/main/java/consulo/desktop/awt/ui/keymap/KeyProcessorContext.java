@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.keymap;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;

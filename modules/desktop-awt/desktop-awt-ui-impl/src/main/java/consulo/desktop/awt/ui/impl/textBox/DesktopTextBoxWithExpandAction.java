@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
-import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
+import consulo.desktop.awt.ui.impl.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.desktop.awt.ui.impl.components.fields.ExpandableTextField;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

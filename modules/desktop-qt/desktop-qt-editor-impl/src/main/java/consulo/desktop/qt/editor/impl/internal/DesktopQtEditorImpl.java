@@ -30,7 +30,10 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.Component;
+import io.qt.core.Qt;
+import io.qt.gui.QCursor;
 import consulo.ui.cursor.Cursor;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CustomActionsSchema;
@@ -49,6 +52,7 @@ import java.util.List;
  * @since 2026-08-16
  */
 public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, CaretPixelLocationProvider {
+    private final java.util.Map<Object, Cursor> myCustomCursors = new java.util.LinkedHashMap<>();
     private final DesktopQtEditorComponent myComponent;
 
     private @Nullable JComponent myHeaderComponent;
@@ -559,6 +563,18 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
 
     @Override
     public void setCustomCursor(Object requestor, @Nullable Cursor cursor) {
+        if (cursor == null) {
+            myCustomCursors.remove(requestor);
+        }
+        else {
+            myCustomCursors.put(requestor, cursor);
+        }
+
+        DesktopQtEditorWidget widget = getSurface();
+        if (widget != null) {
+            boolean hand = myCustomCursors.containsValue(StandardCursors.HAND);
+            widget.viewport().setCursor(new QCursor(hand ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.IBeamCursor));
+        }
     }
 
     @Override

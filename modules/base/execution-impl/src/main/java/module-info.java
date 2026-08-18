@@ -36,12 +36,12 @@ module consulo.execution.impl {
     exports consulo.execution.impl.internal.ui.layout to
         consulo.ide.impl,
         consulo.execution.debug.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.impl.internal.ui.layout.action to
         consulo.ide.impl,
         consulo.execution.debug.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.execution.impl.internal.dashboard.action to consulo.execution.debug.impl;
 

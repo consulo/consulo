@@ -101,6 +101,25 @@ public class EditorMouseEvent extends EventObject {
         );
     }
 
+    /**
+     * Full-geometry event for frontends without an awt event to wrap.
+     */
+    public EditorMouseEvent(
+        Editor editor,
+        @Nullable InputDetails inputDetails,
+        boolean popupTrigger,
+        EditorMouseEventArea area,
+        int offset,
+        LogicalPosition logicalPosition,
+        VisualPosition visualPosition,
+        boolean isOverText,
+        @Nullable FoldRegion collapsedFoldRegion,
+        @Nullable Inlay inlay,
+        @Nullable GutterIconRenderer gutterIconRenderer
+    ) {
+        this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, offset, logicalPosition, visualPosition, isOverText, collapsedFoldRegion, inlay, gutterIconRenderer);
+    }
+
     public EditorMouseEvent(
         Editor editor,
         MouseEvent mouseEvent,

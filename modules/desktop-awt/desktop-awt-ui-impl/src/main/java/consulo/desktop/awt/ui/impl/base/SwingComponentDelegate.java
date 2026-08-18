@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import consulo.desktop.awt.facade.ToSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.ToSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;

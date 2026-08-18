@@ -10,7 +10,7 @@ module consulo.component.store.impl {
 
   requires org.lz4.java;
 
-  exports consulo.component.store.impl.internal to consulo.ide.impl, consulo.application.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl, consulo.proxy, consulo.component.impl, consulo.test.impl, consulo.module.impl, consulo.project.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+  exports consulo.component.store.impl.internal to consulo.ide.impl, consulo.application.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.proxy, consulo.component.impl, consulo.test.impl, consulo.module.impl, consulo.project.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
   exports consulo.component.store.impl.internal.storage to consulo.ide.impl, consulo.application.impl, consulo.component.impl, consulo.project.impl;
   exports consulo.component.store.impl.internal.scheme to consulo.application.impl;
 }

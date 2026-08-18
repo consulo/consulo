@@ -163,7 +163,7 @@ open module consulo.ide.impl {
         consulo.ide.impl.ui.impl.LightIconLibraryDescriptor,
         consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor;
 
-    exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     //opens consulo.ide.impl.presentationAssistant to consulo.util.xml.serializer;
 
@@ -175,7 +175,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.codeInsight.codeVision;
     exports consulo.ide.impl.command;
     exports consulo.ide.impl.compiler;
-    exports consulo.ide.impl.desktop;
     exports consulo.ide.impl.diff;
     exports consulo.ide.impl.eap;
     exports consulo.ide.impl.execution;
@@ -270,7 +269,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.execution.rmi;
     exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
     exports consulo.ide.impl.idea.execution.ui;
-    exports consulo.ide.impl.idea.execution.ui.layout.impl;
     exports consulo.ide.impl.idea.execution.util;
     exports consulo.ide.impl.idea.execution.wsl;
     exports consulo.ide.impl.idea.find;
@@ -351,7 +349,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.notification.impl.actions;
     exports consulo.ide.impl.idea.notification.impl.ui;
     exports consulo.ide.impl.idea.openapi.actionSystem.impl;
-    exports consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder;
     exports consulo.ide.impl.idea.openapi.application;
     exports consulo.ide.impl.idea.openapi.application.ex;
     exports consulo.ide.impl.idea.openapi.application.impl;
@@ -454,11 +451,8 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.ui.components;
     exports consulo.ide.impl.idea.ui.components.labels;
     exports consulo.ide.impl.idea.ui.components.panels;
-    exports consulo.ide.impl.idea.ui.content;
     exports consulo.ide.impl.idea.ui.content.impl;
     exports consulo.ide.impl.idea.ui.content.tabs;
-    exports consulo.ide.impl.idea.ui.debugger;
-    exports consulo.ide.impl.idea.ui.debugger.extensions;
     exports consulo.ide.impl.idea.ui.mac;
     exports consulo.ide.impl.idea.ui.navigation;
     exports consulo.ide.impl.idea.ui.paint;
@@ -471,13 +465,9 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.ui.roots;
     exports consulo.ide.impl.idea.ui.stripe;
     exports consulo.ide.impl.idea.ui.tabs;
-    exports consulo.ide.impl.idea.ui.tabs.impl;
-    exports consulo.ide.impl.idea.ui.tabs.impl.singleRow;
-    exports consulo.ide.impl.idea.ui.tabs.impl.table;
     exports consulo.ide.impl.idea.ui.tree;
     exports consulo.ide.impl.idea.ui.tree.project;
     exports consulo.ide.impl.idea.ui.treeStructure.filtered;
-    exports consulo.ide.impl.idea.ui.util;
     exports consulo.ide.impl.idea.unscramble;
     exports consulo.ide.impl.idea.usageView.impl;
     exports consulo.ide.impl.idea.usages;
@@ -494,7 +484,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.idea.util.ui.accessibility;
     exports consulo.ide.impl.idea.util.ui.classpath;
     exports consulo.ide.impl.idea.util.ui.tree;
-    exports consulo.ide.impl.idea.util.ui.update;
     exports consulo.ide.impl.idea.webcore.packaging;
     exports consulo.ide.impl.language;
     exports consulo.ide.impl.language.codeStyle;
@@ -537,7 +526,6 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.ui.app.impl.settings;
     exports consulo.ide.impl.ui.docking.impl;
     exports consulo.ide.impl.ui.impl;
-    exports consulo.ide.impl.ui.laf;
     exports consulo.ide.impl.ui.popup;
     exports consulo.ide.impl.usage;
     exports consulo.ide.impl.welcomeScreen;
@@ -545,11 +533,11 @@ open module consulo.ide.impl {
     exports consulo.ide.impl.wm.impl.status;
     exports consulo.ide.impl.wm.impl.welcomeScreen;
 
-    exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
-    exports consulo.ide.impl.idea.ui.popup.actionPopup to consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.internal to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
+    exports consulo.ide.impl.idea.ui.popup.actionPopup to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
 }

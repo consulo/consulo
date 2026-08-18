@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ui.ex.awt.internal.laf.LafManager;
 import consulo.ui.AntialiasingType;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;

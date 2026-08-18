@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
-import consulo.desktop.awt.ui.plaf2.flat.InplaceComponent;
+import consulo.desktop.awt.ui.impl.plaf2.flat.InplaceComponent;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;

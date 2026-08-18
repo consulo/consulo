@@ -17,19 +17,11 @@ package consulo.desktop.qt.editor.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.codeEditor.EditorColors;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.navigation.CtrlMouseHandler;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.Navigatable;
 import consulo.project.DumbService;
@@ -38,85 +30,18 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * Underlines the reference under the pointer while ctrl is held, and follows it when clicked.
- * <p>
- * The awt frontend gets this from {@code CtrlMouseHandler}'s own mouse motion listener, which reads the modifiers
- * and the screen position off a {@code java.awt.event.MouseEvent} and so is closed to a frontend without one. The
- * open seam is the static {@link CtrlMouseHandler#getInfoAt}: the frontend notices the ctrl hover itself, asks
- * what is under the offset, and draws the underline as ordinary markup. That is what the web frontend does, and
- * this is the same thing driven by qt events.
- *
- * @author VISTALL
- * @since 2026-08-16
+ * The go to declaration click for the qt editor - ctrl/cmd click and middle click. The hover half
+ * (underline and hand cursor) is the platform ctrl hover handling, driven by the editor mouse events
+ * the widget fires.
  */
 public class DesktopQtEditorLinkNavigation {
     private final DesktopQtEditorImpl myEditor;
 
-    private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
-
     public DesktopQtEditorLinkNavigation(DesktopQtEditorImpl editor) {
         myEditor = editor;
-    }
-
-    public boolean hasLink() {
-        return !myHighlighters.isEmpty();
-    }
-
-    /**
-     * @return whether something navigable is under the offset, so the caller can put the hand cursor up
-     */
-    @RequiredUIAccess
-    public boolean highlightLinkAt(int offset) {
-        Project project = myEditor.getProject();
-        if (project == null) {
-            return false;
-        }
-
-        return Application.get().runReadAction((Supplier<Boolean>) () -> {
-            clear();
-
-            if (offset < 0 || offset > myEditor.getDocument().getTextLength()) {
-                return false;
-            }
-
-            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument());
-            if (file == null) {
-                return false;
-            }
-
-            CtrlMouseHandler.Info info =
-                CtrlMouseHandler.getInfoAt(project, myEditor, file, offset, CtrlMouseHandler.BrowseMode.Declaration);
-            if (info == null || !info.isNavigatable()) {
-                return false;
-            }
-
-            TextAttributes attributes = myEditor.getColorsScheme().getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR);
-
-            for (TextRange range : info.getRanges()) {
-                myHighlighters.add(myEditor.getMarkupModel().addRangeHighlighter(
-                    range.getStartOffset(),
-                    range.getEndOffset(),
-                    HighlighterLayer.HYPERLINK,
-                    attributes,
-                    HighlighterTargetArea.EXACT_RANGE
-                ));
-            }
-
-            return true;
-        });
-    }
-
-    public void clear() {
-        for (RangeHighlighter highlighter : myHighlighters) {
-            myEditor.getMarkupModel().removeHighlighter(highlighter);
-        }
-
-        myHighlighters.clear();
     }
 
     /**
@@ -129,8 +54,6 @@ public class DesktopQtEditorLinkNavigation {
         if (project == null) {
             return;
         }
-
-        clear();
 
         myEditor.getCaretModel().moveToOffset(offset);
 

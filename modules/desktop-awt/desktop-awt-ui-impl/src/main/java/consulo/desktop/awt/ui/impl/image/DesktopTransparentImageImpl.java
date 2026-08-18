@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.ide.impl.idea.ui.RetrievableIcon;
+import consulo.desktop.awt.ui.impl.image.RetrievableIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 

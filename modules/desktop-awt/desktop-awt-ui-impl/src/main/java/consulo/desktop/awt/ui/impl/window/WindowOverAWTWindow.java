@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.window;
 
-import consulo.desktop.awt.facade.ToSwingWindowWrapper;
+import consulo.desktop.awt.ui.impl.facade.ToSwingWindowWrapper;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;

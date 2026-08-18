@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ui.ex.awt.internal.laf.LafManager;
 import consulo.application.ui.UISettings;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;

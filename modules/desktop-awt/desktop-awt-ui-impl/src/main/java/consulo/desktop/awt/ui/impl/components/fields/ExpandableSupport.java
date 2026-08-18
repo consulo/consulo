@@ -19,7 +19,7 @@ import java.awt.event.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.createTooltipText;
+import static consulo.ui.ex.keymap.util.KeymapUtil.createTooltipText;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import static java.beans.EventHandler.create;
 import static java.util.Collections.singletonList;

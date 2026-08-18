@@ -47,7 +47,7 @@ module consulo.application.api {
     exports consulo.application.internal.start to
         consulo.ide.impl,
         consulo.external.service.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
@@ -55,7 +55,7 @@ module consulo.application.api {
         consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.desktop.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.external.system.impl,
         consulo.document.impl,
@@ -92,7 +92,7 @@ module consulo.application.api {
         consulo.application.impl,
         consulo.external.service.impl,
         consulo.ide.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
 
     exports consulo.application.internal.util to
@@ -104,12 +104,12 @@ module consulo.application.api {
 
     exports consulo.application.internal.perfomance to
         consulo.project.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
     exports consulo.application.util.mac.foundation;
 
     exports consulo.application.internal.dateTime to
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac;
 
     exports consulo.application.util;

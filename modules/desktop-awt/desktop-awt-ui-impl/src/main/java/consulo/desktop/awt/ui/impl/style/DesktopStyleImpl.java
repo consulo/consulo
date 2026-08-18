@@ -17,8 +17,8 @@ package consulo.desktop.awt.ui.impl.style;
 
 import com.formdev.flatlaf.FlatLaf;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTImage;
-import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
-import consulo.desktop.awt.ui.plaf2.IdeLookAndFeelInfo;
+import consulo.desktop.awt.ui.impl.plaf.LafWithIconLibrary;
+import consulo.desktop.awt.ui.impl.plaf2.IdeLookAndFeelInfo;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;

@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.util.collection.ArrayUtil;
@@ -96,7 +95,7 @@ public class RowIcon extends JBUI.CachingScalableJBIcon<RowIcon> {
     
     @TestOnly
     Icon[] getAllIcons() {
-        List<Icon> icons = ContainerUtil.packNullables(myIcons);
+        List<Icon> icons = java.util.Arrays.stream(myIcons).filter(java.util.Objects::nonNull).collect(java.util.stream.Collectors.toList());
         return icons.toArray(new Icon[icons.size()]);
     }
 

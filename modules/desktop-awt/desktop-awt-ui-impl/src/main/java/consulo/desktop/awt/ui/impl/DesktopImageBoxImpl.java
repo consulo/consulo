@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
+import consulo.desktop.awt.ui.impl.components.ScalableIconComponent;
 import consulo.ui.Component;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;

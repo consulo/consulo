@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui;
 
+import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -847,7 +848,7 @@ public class IdeEventQueue extends EventQueue {
             if (focusOwnerInDeactivatedWindow != null) {
                 for (IdeFrame ideFrame : allProjectFrames) {
                     Window aFrame = TargetAWT.to(WindowManager.getInstance().getWindow(ideFrame.getProject()));
-                    if (aFrame.equals(frame) && IdeFocusManager.getGlobalInstance() instanceof LastFocusAtDeactivationTracker focusManager) {
+                    if (aFrame.equals(frame) && IdeFocusManager.getGlobalInstance() instanceof FocusManagerImpl focusManager) {
                         focusManager.setLastFocusedAtDeactivation(ideFrame, focusOwnerInDeactivatedWindow);
                     }
                 }

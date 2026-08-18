@@ -18,6 +18,7 @@ package consulo.desktop.qt.editor.impl.internal;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
@@ -299,39 +300,29 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea {
      * A press or a move of the pointer over the text, in the shape the platform listens for.
      */
     private EditorMouseEvent editingAreaEvent(QMouseEvent event) {
+        int offset = offsetAt(event);
+        // a hint owns no offset of its own, so the offset under it is the one of the character it stands before -
+        // resolving that would underline the code after the hint as though the pointer were over it
+        boolean overText = offset >= 0 && myEditor.inlayAt(documentPoint(event)) == null;
+        LogicalPosition logicalPosition = myEditor.offsetToLogicalPosition(Math.max(offset, 0));
+
         return new EditorMouseEvent(
             myEditor,
             DesktopQtInputDetails.mouse(viewport(), event),
             event.button() == Qt.MouseButton.RightButton,
-            EditorMouseEventArea.EDITING_AREA
+            EditorMouseEventArea.EDITING_AREA,
+            Math.max(offset, 0),
+            logicalPosition,
+            myEditor.logicalToVisualPosition(logicalPosition),
+            overText,
+            null,
+            null,
+            null
         );
     }
 
     private void updateLinkUnderPointer(QMouseEvent event) {
-        if (!isNavigationModifier(event.modifiers())) {
-            if (myLinkNavigation.hasLink()) {
-                myLinkNavigation.clear();
-
-                viewport().setCursor(new QCursor(Qt.CursorShape.IBeamCursor));
-                viewport().update();
-            }
-            return;
-        }
-
         myEditor.fireMouseMoved(editingAreaEvent(event));
-
-        // a hint owns no offset of its own, so the offset under it is the one of the character it stands before -
-        // resolving that would underline the code after the hint as though the pointer were over it
-        boolean overInlay = myEditor.inlayAt(documentPoint(event)) != null;
-
-        if (overInlay && myLinkNavigation.hasLink()) {
-            myLinkNavigation.clear();
-        }
-
-        boolean navigable = !overInlay && myLinkNavigation.highlightLinkAt(offsetAt(event));
-
-        viewport().setCursor(new QCursor(navigable ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.IBeamCursor));
-        viewport().update();
     }
 
     /**

@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
-import consulo.ide.impl.idea.ide.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;

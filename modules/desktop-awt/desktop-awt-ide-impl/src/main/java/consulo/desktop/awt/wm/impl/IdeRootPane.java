@@ -25,7 +25,7 @@ import consulo.desktop.awt.wm.impl.mac.MacScreenIdeMenuBar;
 import consulo.desktop.awt.wm.navigationToolbar.IdeRootPaneNorthExtensionWithDecorator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
+import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ide.actions.CustomizeUIAction;
 import consulo.ide.impl.idea.ide.actions.ViewToolbarAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;

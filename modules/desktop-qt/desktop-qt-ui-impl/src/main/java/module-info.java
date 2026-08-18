@@ -6,16 +6,31 @@
  * @since 2026-08-17
  */
 module consulo.desktop.qt.ui.impl {
+    requires consulo.annotation;
+    requires consulo.application.api;
+    requires consulo.color.scheme.api;
+    requires consulo.component.api;
+    requires consulo.datacontext.api;
+    requires consulo.disposer.api;
+    requires consulo.localize.api;
+    requires consulo.logging.api;
+    requires consulo.platform.api;
+    requires consulo.project.ui.api;
+    requires consulo.project.ui.impl;
+    requires consulo.ui.api;
+    requires consulo.ui.ex.api;
+    requires consulo.ui.ex.awt.api;
+    requires consulo.util.dataholder;
+    requires consulo.util.io;
+    requires consulo.util.lang;
+    requires consulo.base.icon.library;
+    requires consulo.base.localize.library;
     requires consulo.ui.impl;
     requires consulo.ui.ex.impl;
-    requires consulo.platform.impl;
     requires consulo.application.impl;
-    requires consulo.application.ui.impl;
-    requires consulo.project.ui.impl;
 
     // TargetAWTFacade is typed against java.awt even on a frontend which never draws with it
     requires java.desktop;
-
     requires qtjambi;
 
     exports consulo.desktop.qt.ui.impl;

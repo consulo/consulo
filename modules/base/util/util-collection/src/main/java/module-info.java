@@ -13,7 +13,7 @@ module consulo.util.collection {
 
     exports consulo.util.collection.impl.map to
         consulo.util.collection.primitive,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.language.impl,
         consulo.index.io,
         consulo.ide.impl,

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

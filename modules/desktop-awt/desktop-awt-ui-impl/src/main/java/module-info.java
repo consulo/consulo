@@ -6,79 +6,71 @@
  * @since 2026-08-17
  */
 open module consulo.desktop.awt.ui.impl {
+    requires consulo.application.api;
+    requires consulo.application.ui.api;
+    requires consulo.code.editor.api;
+    requires consulo.color.scheme.api;
+    requires consulo.component.api;
+    requires consulo.component.store.impl;
+    requires consulo.datacontext.api;
+    requires consulo.disposer.api;
+    requires consulo.language.api;
+    requires consulo.localize.api;
+    requires consulo.logging.api;
+    requires consulo.platform.api;
+    requires consulo.project.api;
+    requires consulo.project.ui.api;
+    requires consulo.proxy;
+    requires consulo.ui.api;
+    requires consulo.ui.ex.api;
+    requires consulo.util.collection;
+    requires consulo.util.collection.primitive;
+    requires consulo.util.concurrent;
+    requires consulo.util.dataholder;
+    requires consulo.util.io;
+    requires consulo.util.lang;
+    requires consulo.virtual.file.system.api;
+    requires consulo.ide.api;
+    requires consulo.language.editor.api;
+    requires consulo.language.editor.ui.api;
+    requires consulo.virtual.file.status.api;
+    requires imgscalr.lib;
+    requires com.sun.jna;
+    requires consulo.base.icon.library;
+    requires consulo.base.localize.library;
+    requires kava.beans;
     requires consulo.annotation;
     requires java.desktop;
-    requires java.management;
     requires miglayout;
     requires com.google.common;
     requires com.github.weisj.jsvg;
-    requires com.google.gson;
-    requires io.netty.buffer;
-    requires io.netty.codec;
-    requires io.netty.codec.http;
-    requires io.netty.common;
-    requires io.netty.handler;
-    requires io.netty.resolver;
-    requires io.netty.transport;
+
     requires jdk.xml.dom;
     requires cobra.core;
-    requires net.sf.cssbox.jstyleparser;
-    requires it.unimi.dsi.fastutil;
-    requires consulo.application.ui.impl;
-    requires consulo.bootstrap;
-    requires consulo.code.editor.impl;
+
     requires consulo.container.api;
-    requires consulo.desktop.bootstrap;
-    requires consulo.desktop.ide.impl;
-    requires consulo.diagram.api;
-    requires consulo.diff.impl;
-    requires consulo.execution.impl;
-    requires consulo.external.service.impl;
-    requires consulo.file.editor.impl;
-    requires consulo.ide.impl;
-    requires consulo.language.editor.impl;
-    requires consulo.platform.impl;
-    requires consulo.project.ui.impl;
+
     requires consulo.ui.ex.awt.api;
     requires consulo.ui.ex.impl;
     requires consulo.ui.impl;
-    requires consulo.util.jna;
-    requires consulo.version.control.system.impl;
-    requires consulo.version.control.system.api;
-    requires consulo.execution.api;
-    requires consulo.execution.coverage.api;
-    requires consulo.find.api;
+
     requires consulo.application.impl;
-    requires consulo.ide.api;
-    requires consulo.version.control.system.log.api;
+
     requires consulo.external.service.api;
     requires consulo.web.browser.api;
-    requires consulo.version.control.system.distributed.api;
-    requires consulo.language.editor.refactoring.api;
-    requires consulo.execution.debug.api;
-    requires consulo.builtin.web.server.api;
-    requires consulo.color.scheme.ui.api;
-    requires consulo.navigation.bar.api;
-    requires consulo.language.ui.api;
-    requires consulo.navigation.bar.impl;
-    requires gnu.trove;
-    requires pty4j;
-    requires jediterm.core;
-    requires jediterm.ui;
-    requires com.formdev.flatlaf;
-    requires com.formdev.flatlaf.swingx;
-    requires swingx.all;
-    requires jetbrains.runtime.api;
-    requires consulo.desktop.awt.bootstrap;
-    requires consulo.desktop.awt.hacking;
-    requires consulo.desktop.awt.eawt.wrapper;
 
-    exports consulo.desktop.awt.facade;
-    exports consulo.desktop.awt.internal.clipboard;
+    requires com.formdev.flatlaf;
+    requires swingx.all;
+
+    exports consulo.desktop.awt.ui.impl.action;
+    exports consulo.desktop.awt.ui.impl.action.menu;
+    exports consulo.desktop.awt.ui.impl.action.toolbar;
+    exports consulo.desktop.awt.ui.impl.facade;
+    exports consulo.desktop.awt.ui.impl.animation;
+    exports consulo.desktop.awt.ui.impl.clipboard;
     exports consulo.desktop.awt.ui.impl;
     exports consulo.desktop.awt.ui.impl.alert;
     exports consulo.desktop.awt.ui.impl.base;
-    exports consulo.desktop.awt.ui.impl.clipboard;
     exports consulo.desktop.awt.ui.impl.components;
     exports consulo.desktop.awt.ui.impl.components.fields;
     exports consulo.desktop.awt.ui.impl.event;
@@ -92,14 +84,17 @@ open module consulo.desktop.awt.ui.impl {
     exports consulo.desktop.awt.ui.impl.taskBar;
     exports consulo.desktop.awt.ui.impl.textBox;
     exports consulo.desktop.awt.ui.impl.util;
+    exports consulo.desktop.awt.ui.impl.tabs;
+    exports consulo.desktop.awt.ui.impl.tabs.laf;
+    exports consulo.desktop.awt.ui.impl.tabs.singleRow;
+    exports consulo.desktop.awt.ui.impl.tabs.table;
     exports consulo.desktop.awt.ui.impl.validableComponent;
     exports consulo.desktop.awt.ui.impl.window;
-    exports consulo.desktop.awt.ui.plaf;
-    exports consulo.desktop.awt.ui.plaf.extend.textBox;
-    exports consulo.desktop.awt.ui.plaf.intellij;
-    exports consulo.desktop.awt.ui.plaf2;
-    exports consulo.desktop.awt.ui.plaf2.flat;
-    exports consulo.desktop.awt.ui.plaf2.flat.kde;
+    exports consulo.desktop.awt.ui.impl.plaf;
+    exports consulo.desktop.awt.ui.impl.plaf.extend.textBox;
+    exports consulo.desktop.awt.ui.impl.plaf2;
+    exports consulo.desktop.awt.ui.impl.plaf2.flat;
+    exports consulo.desktop.awt.ui.impl.plaf2.flat.kde;
 
     exports com.mxgraph.analysis;
     exports com.mxgraph.canvas;
@@ -127,6 +122,6 @@ open module consulo.desktop.awt.ui.impl {
     exports com.mxgraph.view;
 
     provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
-    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
-    provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.plaf2.flat.ConsuloFlatDefaultsAddon;
+    provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
+    provides com.formdev.flatlaf.FlatDefaultsAddon with consulo.desktop.awt.ui.impl.plaf2.flat.ConsuloFlatDefaultsAddon;
 }

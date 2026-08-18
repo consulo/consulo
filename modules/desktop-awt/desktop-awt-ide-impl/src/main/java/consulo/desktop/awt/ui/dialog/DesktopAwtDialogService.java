@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.dialog;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.toolbar.ActionButtonToolbarImpl;
+import consulo.desktop.awt.ui.impl.action.toolbar.ActionButtonToolbarImpl;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;

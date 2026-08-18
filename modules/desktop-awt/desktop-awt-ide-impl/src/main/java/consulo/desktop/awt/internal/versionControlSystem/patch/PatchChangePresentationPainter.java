@@ -17,7 +17,7 @@ package consulo.desktop.awt.internal.versionControlSystem.patch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.desktop.awt.editor.impl.gutter.AwtLineMarkerPresentationPainter;
+import consulo.desktop.awt.editor.impl.internal.gutter.AwtLineMarkerPresentationPainter;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

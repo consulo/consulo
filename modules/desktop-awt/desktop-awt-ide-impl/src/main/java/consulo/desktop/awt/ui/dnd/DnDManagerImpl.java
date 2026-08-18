@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.dnd;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.MouseDragHelper;
+import consulo.util.lang.ref.SoftReference;
+import consulo.desktop.awt.ui.impl.util.MouseDragHelper;
 import consulo.ui.ex.awt.util.GeometryUtil;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;

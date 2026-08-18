@@ -23,7 +23,7 @@
                     class="consulo.ide.impl.idea.notification.impl.actions.NotificationTestAction"
                     text="Add Test Notification"/>
 
-            <action id="UiInspector" internal="true" class="consulo.desktop.awt.action.UiInspectorAction" text="UI Inspector"/>
+            <action id="UiInspector" internal="true" class="consulo.desktop.awt.ui.impl.action.UiInspectorAction" text="UI Inspector"/>
             <action id="ShowSplash" internal="true" class="consulo.desktop.awt.uiOld.ShowSplashAction" text="Show Splash"/>
             <action id="ShowGotItMessage" internal="true" class="consulo.ide.impl.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
             <action id="ValidationTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestDialogWithValidationAction"
@@ -38,7 +38,7 @@
             <separator/>
             <action id="TestGestureAction" class="consulo.ide.impl.idea.openapi.keymap.impl.ui.TestGestureAction"
                     text="Test Gesture Action"/>
-            <action id="TestDndAction" class="consulo.desktop.awt.action.TestDnd" text="Test Dnd"/>
+            <action id="TestDndAction" class="consulo.desktop.awt.ui.impl.action.TestDnd" text="Test Dnd"/>
 
             <add-to-group group-id="Internal.UI"/>.
         </group>
@@ -138,5 +138,9 @@
 
             <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
         </group>
+
+        <action id="UiDebugger" class="consulo.desktop.awt.uiOld.debugger.ShowUiDebuggerAction">
+            <add-to-group group-id="MaintenanceGroup"/>
+        </action>
     </actions>
 </consulo-plugin>

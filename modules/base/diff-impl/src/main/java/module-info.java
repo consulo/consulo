@@ -13,29 +13,29 @@ module consulo.diff.impl {
 
   exports consulo.diff.impl.internal to
     consulo.ide.impl,
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.diff.impl.internal.action to
     consulo.ide.impl,
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.diff.impl.internal.editor to
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.diff.impl.internal.fragment to
     consulo.ide.impl,
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.diff.impl.internal.dir to
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.diff.impl.internal.util to
     consulo.ide.impl,
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.diff.impl.internal.external to
     consulo.ide.impl,
-    consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+    consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   opens consulo.diff.impl.internal.action to consulo.component.impl;
   opens consulo.diff.impl.internal to consulo.util.xml.serializer;

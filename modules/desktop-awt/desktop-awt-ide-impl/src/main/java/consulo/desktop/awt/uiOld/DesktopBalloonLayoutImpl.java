@@ -15,12 +15,13 @@
  */
 package consulo.desktop.awt.uiOld;
 
+import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
 import consulo.desktop.awt.internal.notification.EventLog;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ide.impl.idea.ide.ui.LafManagerListener;
+import consulo.ui.ex.awt.internal.laf.LafManager;
+import consulo.ui.ex.awt.internal.laf.LafManagerListener;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.project.ui.internal.BalloonLayoutEx;
 import consulo.project.ui.notification.Notification;

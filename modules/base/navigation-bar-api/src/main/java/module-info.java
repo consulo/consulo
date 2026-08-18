@@ -10,7 +10,7 @@ module consulo.navigation.bar.api {
     exports consulo.navigationBar.model;
 
     exports consulo.navigationBar.internal to
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl,
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
         consulo.navigation.bar.impl;
 }

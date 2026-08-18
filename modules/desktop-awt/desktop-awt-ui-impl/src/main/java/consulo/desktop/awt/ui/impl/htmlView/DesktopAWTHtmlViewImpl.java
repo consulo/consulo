@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.htmlView;
 
 import consulo.application.Application;
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;

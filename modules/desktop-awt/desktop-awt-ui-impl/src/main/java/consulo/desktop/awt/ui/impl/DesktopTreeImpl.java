@@ -17,10 +17,10 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.TransferHandler;
 import consulo.ui.DragAndDropTransferHandler;
-import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferHandlerAdapter;
-import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferTarget;
-import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferTarget;
+import consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;

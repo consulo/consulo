@@ -22,7 +22,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ui.ex.awt.internal.laf.LafManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.platform.base.localize.ActionLocalize;

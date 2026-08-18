@@ -42,9 +42,6 @@
                             serviceImplementation="consulo.language.editor.impl.internal.template.ExportableTemplateSettings"/>
 
 
-        <search.optionContributor
-            implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
-
         <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
 
@@ -341,9 +338,7 @@
 
         <action id="MaintenanceAction" class="consulo.ide.impl.idea.ide.actions.MaintenanceAction"/>
 
-        <group id="MaintenanceGroup">
-            <action id="UiDebugger" class="consulo.ide.impl.idea.ui.debugger.ShowUiDebuggerAction"/>
-        </group>
+        <group id="MaintenanceGroup"/>
 
         <action id="Console.Open" class="consulo.ui.ex.action.EmptyAction"/>
         <action id="Console.Execute" class="consulo.ui.ex.action.EmptyAction"/>

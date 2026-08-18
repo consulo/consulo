@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.window;
 
-import consulo.desktop.awt.facade.FromSwingWindowWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingWindowWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 

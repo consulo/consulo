@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.ide.impl.idea.ui.tabs.impl.singleRow.MoreTabsIcon;
+import consulo.desktop.awt.ui.impl.tabs.singleRow.MoreTabsIcon;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
+import consulo.ui.ex.awt.paint.ToolwindowPaintUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;

@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
+import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;

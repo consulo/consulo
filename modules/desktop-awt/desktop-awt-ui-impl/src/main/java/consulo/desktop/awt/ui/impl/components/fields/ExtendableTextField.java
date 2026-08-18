@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.impl.components.fields;
 
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -138,7 +138,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
 
     public ExtendableTextField addBrowseExtension(Runnable action, @Nullable Disposable parentDisposable) {
         KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK);
-        String tooltip = UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get() + " (" + KeymapUtil.getKeystrokeText(keyStroke) + ")";
+        String tooltip = UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get() + " (" + ShortcutUtil.getKeystrokeText(keyStroke) + ")";
 
         ExtendableTextComponent.Extension browseExtension = ExtendableTextComponent.Extension.create(AllIcons.Nodes.TreeOpen, AllIcons.Nodes.TreeOpen, tooltip, action);
 

@@ -21,7 +21,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.action.ActionMenu;
+import consulo.desktop.awt.ui.impl.action.ActionMenu;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.disposer.Disposable;

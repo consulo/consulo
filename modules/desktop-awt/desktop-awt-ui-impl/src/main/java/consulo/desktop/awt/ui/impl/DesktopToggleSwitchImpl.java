@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.components.OnOffButton;
 import consulo.ui.Component;

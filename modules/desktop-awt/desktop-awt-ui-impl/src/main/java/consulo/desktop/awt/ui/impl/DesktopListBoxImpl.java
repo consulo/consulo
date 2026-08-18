@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.TransferHandler;
-import consulo.desktop.awt.internal.clipboard.DesktopAWTTransferHandlerAdapter;
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.ui.*;

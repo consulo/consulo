@@ -19,6 +19,7 @@ import consulo.component.util.ActiveRunnable;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -27,8 +28,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public interface JBTabs {
+    Key<JBTabs> NAVIGATION_ACTIONS_KEY = Key.create("JBTabs");
 
-    
+    boolean isEditorTabs();
+
+    boolean canShowMorePopup();
+
+    void showMorePopup(@Nullable MouseEvent e);
+
     TabInfo addTab(TabInfo info, int index);
 
     

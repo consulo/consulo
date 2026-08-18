@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
+import consulo.ui.ex.awt.internal.TabInfoHolder;
 import consulo.ide.internal.CopyPathProviderUtil;
 import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.language.editor.internal.CopyReferenceUtil;
@@ -68,11 +68,11 @@ public class CopyPathProvider extends DumbAwareAction implements AnActionWithAsy
     }
 
     private DataContext createCustomDataContext(DataContext dataContext) {
-        if (!(dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof TabLabel tabLabel)) {
+        if (!(dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof TabInfoHolder tabLabel)) {
             return dataContext;
         }
 
-        Object file = tabLabel.getInfo().getObject();
+        Object file = tabLabel.getTabInfo().getObject();
         if (!(file instanceof VirtualFile)) {
             return dataContext;
         }

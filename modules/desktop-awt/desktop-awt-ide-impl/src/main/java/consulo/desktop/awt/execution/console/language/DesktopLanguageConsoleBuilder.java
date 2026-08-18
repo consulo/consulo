@@ -19,7 +19,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.markup.*;
-import consulo.desktop.awt.editor.impl.EditorComponentImpl;
+import consulo.desktop.awt.editor.impl.internal.EditorComponentImpl;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentBulkUpdateListener;

@@ -52,7 +52,7 @@ import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
-import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ui.ex.awt.internal.laf.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;

@@ -26,5 +26,5 @@ module consulo.version.control.system.log.api {
         consulo.ide.impl,
         consulo.version.control.system.log.impl,
         consulo.version.control.system.distributed.impl,
-        consulo.desktop.awt.ide.impl, consulo.desktop.awt.ui.impl;
+        consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 }

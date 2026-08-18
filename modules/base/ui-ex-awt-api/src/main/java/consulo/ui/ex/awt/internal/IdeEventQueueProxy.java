@@ -48,6 +48,19 @@ public interface IdeEventQueueProxy {
     return 0;
   }
 
+  /**
+   * Swallows the queued events belonging to the given mouse interaction so they stop firing actions - the way
+   * the editor mutes stray drag events after it handled the drag itself.
+   */
+  default void blockNextEventsForActions(java.awt.event.MouseEvent e) {
+  }
+
+  default boolean isInputMethodEnabled() {
+    return true;
+  }
+
+
+
   default void setEventCount(int eventCount) {
   }
 

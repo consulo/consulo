@@ -18,7 +18,6 @@ package consulo.ide.impl.wm.impl;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -50,7 +49,7 @@ public class UnifiedContentFactoryImpl implements ContentFactory {
   
   @Override
   public ContentManager createContentManager(boolean canCloseContents, ComponentManager project) {
-    return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
+    return createContentManager(new UnifiedTabbedPaneContentUI(), canCloseContents, project);
   }
 
   

@@ -69,7 +69,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.undoRedo.UndoManager;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;

@@ -72,7 +72,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ExceptionUtil;

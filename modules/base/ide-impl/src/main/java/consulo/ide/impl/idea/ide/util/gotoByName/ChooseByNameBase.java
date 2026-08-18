@@ -25,7 +25,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.*;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
-import consulo.ide.impl.idea.ide.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;

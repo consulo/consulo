@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.designer.model.Property;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
 import consulo.ide.impl.idea.designer.propertyTable.renderers.LabelPropertyRenderer;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
+import consulo.ui.ex.awt.paint.ToolwindowPaintUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.logging.Logger;
 import consulo.ui.ex.Cell;

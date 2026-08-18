@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.util.ui.JBImageIcon;
+import consulo.ui.ex.awt.JBImageIcon;
 import consulo.ui.ex.awt.ImageUtil;
 
 import java.awt.*;

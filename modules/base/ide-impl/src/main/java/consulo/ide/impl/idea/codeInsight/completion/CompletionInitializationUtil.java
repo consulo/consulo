@@ -10,7 +10,7 @@ import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.impl.internal.completion.CompletionAssertions;
 import consulo.language.editor.impl.internal.completion.OffsetTranslatorImpl;

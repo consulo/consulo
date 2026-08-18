@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
-import consulo.ide.impl.idea.ide.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.language.editor.AutoImportHelper;
 import consulo.language.editor.impl.internal.daemon.DaemonListeners;
 import consulo.language.editor.localize.DaemonLocalize;

@@ -34,7 +34,6 @@ import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.navigation.CtrlMouseHandler;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
@@ -49,6 +48,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.Navigatable;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -167,7 +167,6 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private volatile int myCharWidth = 8;
     private volatile int myLineHeight = 16;
 
-    private final java.util.List<RangeHighlighter> myLinkHighlighters = new java.util.ArrayList<>();
 
     /**
      * the browser identifies a clicked marker by its index here - a line carries more than one of them
@@ -322,7 +321,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.addViewportListener(event -> ((WebScrollingModelImpl) myScrollingModel)
             .setVisibleAreaFromClient(new Rectangle(event.getX(), event.getY(), event.getWidth(), event.getHeight())));
 
-        vaadin.addCtrlHoverListener(event -> highlightLinkAt(event.getOffset()));
+        vaadin.addCtrlHoverListener(event -> fireCtrlHover(event.getOffset()));
 
         vaadin.addCtrlClickListener(event -> navigateTo(event.getOffset()));
 
@@ -581,52 +580,42 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     /**
-     * Underlines the reference under the pointer while ctrl/cmd is held. The highlighter carries
-     * {@link EditorColors#REFERENCE_HYPERLINK_COLOR}, so the existing style range push renders it.
+     * Routes the browser ctrl/cmd hover into the shared editor mouse pipeline, so the platform ctrl hover
+     * handling runs for this frontend like for any other. Offset -1 arrives once the modifier is released -
+     * the event then reports the pointer off the text, which drops the link highlight.
      */
-    private void highlightLinkAt(int offset) {
-        boolean navigatable = Application.get().runReadAction((Supplier<Boolean>) () -> {
-            clearLinkHighlighters();
+    @RequiredUIAccess
+    private void fireCtrlHover(int offset) {
+        boolean overText = offset >= 0 && offset <= myDocument.getTextLength();
 
-            if (offset < 0 || myProject == null || offset > myDocument.getTextLength()) {
-                return false;
-            }
+        LogicalPosition logicalPosition = overText ? offsetToLogicalPosition(offset) : new LogicalPosition(0, 0);
+        VisualPosition visualPosition = logicalToVisualPosition(logicalPosition);
 
-            PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
-            if (file == null) {
-                return false;
-            }
+        MouseInputDetails details = new MouseInputDetails(
+            new Point2D(0, visualLineToY(visualPosition.line)),
+            new Point2D(0, 0),
+            EnumSet.of(Platform.current().os().isMac() ? ModifiedInputDetails.Modifier.META : ModifiedInputDetails.Modifier.CTRL),
+            MouseInputDetails.MouseButton.LEFT
+        );
 
-            CtrlMouseHandler.Info info = CtrlMouseHandler.getInfoAt(myProject, this, file, offset, CtrlMouseHandler.BrowseMode.Declaration);
-            if (info == null || !info.isNavigatable()) {
-                return false;
-            }
+        EditorMouseEvent event = new EditorMouseEvent(
+            this,
+            fakeEvent,
+            details,
+            false,
+            EditorMouseEventArea.EDITING_AREA,
+            overText ? offset : 0,
+            logicalPosition,
+            visualPosition,
+            overText,
+            null,
+            null,
+            null
+        );
 
-            TextAttributes attributes = getColorsScheme().getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR);
-
-            for (TextRange range : info.getRanges()) {
-                myLinkHighlighters.add(myMarkupModel.addRangeHighlighter(
-                    range.getStartOffset(),
-                    range.getEndOffset(),
-                    HighlighterLayer.HYPERLINK,
-                    attributes,
-                    HighlighterTargetArea.EXACT_RANGE
-                ));
-            }
-
-            return true;
-        });
-
-        // the browser cannot tell a resolvable reference from plain text, the hand cursor is switched on from here
-        setCustomCursor(WebEditorImpl.class, navigatable ? StandardCursors.HAND : null);
-    }
-
-    private void clearLinkHighlighters() {
-        for (RangeHighlighter highlighter : myLinkHighlighters) {
-            highlighter.dispose();
+        for (EditorMouseMotionListener listener : myMouseMotionListeners) {
+            listener.mouseMoved(event);
         }
-
-        myLinkHighlighters.clear();
     }
 
     /**
@@ -637,7 +626,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             return;
         }
 
-        clearLinkHighlighters();
+        fireCtrlHover(-1);
 
         // a jump lands on a caret and selects nothing
         moveCaretFromClient(offset, offset, offset);
@@ -700,7 +689,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             return;
         }
 
-        clearLinkHighlighters();
+        fireCtrlHover(-1);
 
         target.inlay().getRenderer().handleClick(target.inlay(), target.contentIndex(), controlDown);
     }

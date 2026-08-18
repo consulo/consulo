@@ -21,7 +21,7 @@ import consulo.application.util.Queryable;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.internal.project.DumbUnawareHider;
-import consulo.desktop.awt.ui.animation.AlphaAnimated;
+import consulo.desktop.awt.ui.impl.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;

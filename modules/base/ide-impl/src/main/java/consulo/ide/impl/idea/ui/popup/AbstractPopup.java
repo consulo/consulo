@@ -20,7 +20,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.HelpTooltipImpl;
+import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
