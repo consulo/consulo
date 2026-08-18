@@ -94,8 +94,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
                 unblockReloadingProjectOnExternalChanges();
             }
         }, this);
-
-        myConcurrency.getScheduledExecutorService().schedule(reloadChangedStoragesTask, 1, TimeUnit.SECONDS);
     }
 
     public void projectStorageFileChanged(VirtualFileEvent event, StateStorage storage, Project project) {
@@ -212,6 +210,10 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     }
 
     private void start() {
+        if (myChangedProjectFiles.isEmpty()) {
+            return;
+        }
+
         if (myChangedFilesFuture.isDone() || myChangedFilesFuture.isCancelled()) {
             myChangedFilesFuture = myConcurrency.getScheduledExecutorService().schedule(reloadChangedStoragesTask, 1, TimeUnit.SECONDS);
         }
