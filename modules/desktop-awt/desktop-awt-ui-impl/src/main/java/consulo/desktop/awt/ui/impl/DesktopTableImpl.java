@@ -167,7 +167,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         DesktopTableColumnImpl<Item, Value> column = new DesktopTableColumnImpl<>(header, valueProvider);
         myColumns.add(column);
 
-        if (isRealized()) {
+        if (isInitialized()) {
             applyColumns(toAWTComponent());
         }
         return column;
@@ -182,7 +182,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     @Override
     public void setSelectionMode(SelectionMode mode) {
         mySelectionMode = mode;
-        if (isRealized()) {
+        if (isInitialized()) {
             applySelectionMode(toAWTComponent());
         }
     }
@@ -212,7 +212,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     @Override
     public void setShowHeader(boolean show) {
         myShowHeader = show;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyHeader(toAWTComponent());
         }
     }
@@ -232,14 +232,14 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     @Override
     public void setSpeedSearchConverter(@Nullable Function<Item, String> converter) {
         mySpeedSearchConverter = converter;
-        if (isRealized()) {
+        if (isInitialized()) {
             applySpeedSearch(toAWTComponent());
         }
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        if (!isRealized()) {
+        if (!isInitialized()) {
             return null;
         }
         SpeedSearchSupply supply = SpeedSearchSupply.getSupply(toAWTComponent());
@@ -249,7 +249,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     @Override
     public void setItemHeightGetter(@Nullable ToIntFunction<Item> getter) {
         myItemHeightGetter = getter;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyItemHeight(toAWTComponent());
         }
     }

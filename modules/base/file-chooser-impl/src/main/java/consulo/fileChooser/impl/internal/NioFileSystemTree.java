@@ -39,6 +39,12 @@ class NioFileSystemTree implements Disposable {
         myModel = new NioFileTreeModel(descriptor);
         myTree = Tree.create(myModel, disposable);
 
+        myTree.setSpeedSearchConverter(node -> {
+            NioFileNode value = node.getValue();
+            String name = value == null ? null : value.getName();
+            return name == null ? "" : name;
+        });
+
         myTree.addSelectListener(event -> fireSelectionChanged());
     }
 

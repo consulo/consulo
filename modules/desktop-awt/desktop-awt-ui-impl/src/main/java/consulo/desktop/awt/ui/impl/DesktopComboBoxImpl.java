@@ -89,7 +89,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     public void setRender(TextItemRender<E> render) {
         myTextRender = render;
         myComponentRender = null;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyRender(toAWTComponent());
         }
     }
@@ -98,7 +98,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     @SuppressWarnings("unchecked")
     public void setRender(ComponentItemRender<E> render) {
         myComponentRender = render;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyRender(toAWTComponent());
         }
     }
@@ -107,14 +107,14 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     @SuppressWarnings("unchecked")
     public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
         mySpeedSearchConverter = converter;
-        if (isRealized()) {
+        if (isInitialized()) {
             applySpeedSearch(toAWTComponent());
         }
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        if (!isRealized()) {
+        if (!isInitialized()) {
             return null;
         }
         SpeedSearchSupply supply = SpeedSearchSupply.getSupply(toAWTComponent());

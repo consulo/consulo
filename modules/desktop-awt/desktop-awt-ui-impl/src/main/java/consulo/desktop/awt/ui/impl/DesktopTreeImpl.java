@@ -34,6 +34,8 @@ import consulo.ui.ex.awt.MorphColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
@@ -72,6 +74,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
@@ -108,6 +111,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
     private @Nullable ToIntFunction<TreeNode<E>> myItemHeightGetter;
+    private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
 
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
         private boolean myLeaf;
@@ -434,6 +438,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         if (myItemHeightGetter != null) {
             tree.setRowHeight(0);
         }
+        applySpeedSearch(tree);
 
         new DoubleClickListener() {
             @Override
@@ -695,9 +700,39 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
         myItemHeightGetter = getter;
 
-        if (isRealized()) {
+        if (isInitialized()) {
             toAWTComponent().setRowHeight(getter == null ? UIManager.getInt("Tree.rowHeight") : 0);
         }
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<TreeNode<E>, String> converter) {
+        mySpeedSearchConverter = converter;
+
+        if (isInitialized()) {
+            applySpeedSearch(toAWTComponent());
+        }
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        if (!isInitialized()) {
+            return null;
+        }
+        SpeedSearchSupply supply = SpeedSearchSupply.getSupply(toAWTComponent());
+        return supply == null ? null : supply.getEnteredPrefix();
+    }
+
+    private void applySpeedSearch(MyTree tree) {
+        Function<TreeNode<E>, String> converter = mySpeedSearchConverter;
+        if (converter == null) {
+            return;
+        }
+
+        TreeSpeedSearch.installOn(tree, false, path -> {
+            TreeNode<E> node = nodeOf(path);
+            return node == null ? "" : converter.apply(node);
+        });
     }
 
     @Override

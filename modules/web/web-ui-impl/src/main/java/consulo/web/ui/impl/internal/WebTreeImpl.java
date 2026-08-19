@@ -53,6 +53,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 /**
@@ -65,6 +66,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable ToIntFunction<TreeNode<NODE>> myItemHeightGetter;
+    private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
 
     /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
     private volatile @Nullable Point2D myPopupPosition;
@@ -912,6 +914,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
 
         getVaadinComponent().getDataProvider().refreshAll();
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<TreeNode<NODE>, String> converter) {
+        mySpeedSearchConverter = converter;
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        return null;
     }
 
     @Override
