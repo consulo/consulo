@@ -247,6 +247,10 @@ public class InfoAndProgressPanel extends JPanel implements Disposable, CustomSt
             }
 
             if (last) {
+                removeAll();
+                revalidate();
+                repaint();
+
                 if (myShouldClosePopupAndOnProcessFinish) {
                     hideProcessPopup();
                 }
