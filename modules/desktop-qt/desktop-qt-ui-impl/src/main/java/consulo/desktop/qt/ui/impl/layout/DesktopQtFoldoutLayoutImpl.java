@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl.layout;
 
+import consulo.desktop.qt.ui.impl.DesktopQtCurrentInput;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.QtMnemonic;
 import consulo.localize.LocalizeValue;
@@ -168,7 +169,8 @@ public class DesktopQtFoldoutLayoutImpl extends DesktopQtLayoutComponent<LayoutC
     private void onToggled(boolean state) {
         applyState(state);
 
-        getListenerDispatcher(FoldoutLayoutOpenedEvent.class).onEvent(new FoldoutLayoutOpenedEvent(this, state));
+        getListenerDispatcher(FoldoutLayoutOpenedEvent.class)
+            .onEvent(new FoldoutLayoutOpenedEvent(this, DesktopQtCurrentInput.current(myComponent), state));
     }
 
     private void applyState(boolean state) {

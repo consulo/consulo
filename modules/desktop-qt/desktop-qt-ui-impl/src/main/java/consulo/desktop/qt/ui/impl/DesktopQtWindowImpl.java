@@ -556,7 +556,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
 
         myDisposed = true;
 
-        getListenerDispatcher(WindowCloseEvent.class).onEvent(new WindowCloseEvent(this));
+        getListenerDispatcher(WindowCloseEvent.class).onEvent(new WindowCloseEvent(this, DesktopQtCurrentInput.current(myComponent)));
 
         // the widget is still handling its own close event here, so deleting it now would pull the object out
         // from under the running event dispatch

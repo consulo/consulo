@@ -17,6 +17,7 @@ package consulo.ui.event;
 
 import consulo.ui.Table;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -31,10 +32,10 @@ public final class TableSelectEvent<Item> extends ComponentEvent<Table<Item>> {
     private final List<Item> myValues;
 
     public TableSelectEvent(Table<Item> component, List<Item> values) {
-        this(component, values, null);
+        this(component, values, ProgrammaticInputDetails.INSTANCE);
     }
 
-    public TableSelectEvent(Table<Item> component, List<Item> values, @Nullable InputDetails inputDetails) {
+    public TableSelectEvent(Table<Item> component, List<Item> values, InputDetails inputDetails) {
         super(component, inputDetails);
         myValues = values;
     }

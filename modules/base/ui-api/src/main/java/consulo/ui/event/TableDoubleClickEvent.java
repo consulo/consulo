@@ -17,6 +17,7 @@ package consulo.ui.event;
 
 import consulo.ui.Table;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -27,10 +28,10 @@ public final class TableDoubleClickEvent<Item> extends ComponentEvent<Table<Item
     private final @Nullable Item myValue;
 
     public TableDoubleClickEvent(Table<Item> component, @Nullable Item value) {
-        this(component, value, null);
+        this(component, value, ProgrammaticInputDetails.INSTANCE);
     }
 
-    public TableDoubleClickEvent(Table<Item> component, @Nullable Item value, @Nullable InputDetails inputDetails) {
+    public TableDoubleClickEvent(Table<Item> component, @Nullable Item value, InputDetails inputDetails) {
         super(component, inputDetails);
         myValue = value;
     }

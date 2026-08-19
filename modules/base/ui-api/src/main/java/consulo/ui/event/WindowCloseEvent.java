@@ -17,7 +17,6 @@ package consulo.ui.event;
 
 import consulo.ui.Window;
 import consulo.ui.event.details.InputDetails;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ public final class WindowCloseEvent extends ComponentEvent<Window> {
         super(component);
     }
 
-    public WindowCloseEvent(Window component, @Nullable InputDetails inputDetails) {
+    public WindowCloseEvent(Window component, InputDetails inputDetails) {
         super(component, inputDetails);
     }
 }

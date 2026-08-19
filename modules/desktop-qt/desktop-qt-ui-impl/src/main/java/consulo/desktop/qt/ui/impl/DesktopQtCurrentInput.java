@@ -21,6 +21,7 @@ import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.event.details.MouseInputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.core.QCoreApplication;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
@@ -89,13 +90,13 @@ public final class DesktopQtCurrentInput {
     }
 
     /**
-     * The details of the input event being dispatched right now, placed against the widget, or null when
-     * nothing user driven is in flight.
+     * The details of the input event being dispatched right now, placed against the widget. When nothing
+     * user driven is in flight the answer says so rather than leaving a null to guess about.
      */
-    public static @Nullable InputDetails current(@Nullable QWidget widget) {
+    public static InputDetails current(@Nullable QWidget widget) {
         Snapshot snapshot = ourCurrent;
         if (snapshot == null) {
-            return null;
+            return ProgrammaticInputDetails.INSTANCE;
         }
 
         QPoint onScreen = new QPoint(snapshot.screenX(), snapshot.screenY());

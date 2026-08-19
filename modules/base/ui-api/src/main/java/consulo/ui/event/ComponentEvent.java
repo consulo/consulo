@@ -17,39 +17,38 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
-import org.jspecify.annotations.Nullable;
+import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.util.dataholder.UserDataHolderBase;
 
 /**
+ * The user data is how one listener leaves something for the ones dispatched after it. The listeners of an
+ * event are open to plugins, so there is deliberately no consumed flag - a veto in one plugin's hands would
+ * switch every other listener off - and what a listener wants the others to know it says in the data instead.
+ * <p>
+ * The details are never null - an event built without any is taken for one no user input drove and carries
+ * {@link ProgrammaticInputDetails}.
+ *
  * @author VISTALL
  * @since 2024-09-10
  */
-public class ComponentEvent<C extends Component> {
+public class ComponentEvent<C extends Component> extends UserDataHolderBase {
     private final C myComponent;
-    private final @Nullable InputDetails myInputDetails;
-
-    private boolean myConsumed;
+    private final InputDetails myInputDetails;
 
     public ComponentEvent(C component) {
-        this(component, null);
+        this(component, ProgrammaticInputDetails.INSTANCE);
     }
 
-    public ComponentEvent(C component, @Nullable InputDetails inputDetails) {
+    public ComponentEvent(C component, InputDetails inputDetails) {
         myComponent = component;
         myInputDetails = inputDetails;
     }
 
-    public @Nullable InputDetails getInputDetails() {
+    public InputDetails getInputDetails() {
         return myInputDetails;
     }
+
     public C getComponent() {
         return myComponent;
-    }
-
-    public boolean isConsumed() {
-        return myConsumed;
-    }
-
-    public void consume() {
-        myConsumed = true;
     }
 }

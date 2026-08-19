@@ -20,6 +20,7 @@ import consulo.ui.ToggleButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import io.qt.widgets.QPushButton;
 import org.jspecify.annotations.Nullable;
 
@@ -84,7 +85,8 @@ public class DesktopQtToggleButtonImpl extends DesktopQtButtonImpl implements To
 
         if (myComponent == null) {
             if (fireListeners) {
-                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, mySelected));
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, mySelected, ProgrammaticInputDetails.INSTANCE));
             }
             return;
         }

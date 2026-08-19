@@ -17,7 +17,6 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public final class HyperlinkEvent extends ComponentEvent<Component> {
         myDescription = description;
     }
 
-    public HyperlinkEvent(Component component, String description, @Nullable InputDetails details) {
+    public HyperlinkEvent(Component component, String description, InputDetails details) {
         super(component, details);
         myDescription = description;
     }

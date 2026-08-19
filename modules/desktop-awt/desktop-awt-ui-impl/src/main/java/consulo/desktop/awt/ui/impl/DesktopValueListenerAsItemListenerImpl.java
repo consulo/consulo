@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.event.details.InputDetails;
-import org.jspecify.annotations.Nullable;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;
@@ -60,7 +60,9 @@ class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
         }
     }
 
-    private static @Nullable InputDetails inputDetails(ItemEvent e) {
-        return e.getSource() instanceof Component awtComponent ? DesktopAWTInputDetails.currentEvent(awtComponent) : null;
+    private static InputDetails inputDetails(ItemEvent e) {
+        return e.getSource() instanceof Component awtComponent
+            ? DesktopAWTInputDetails.currentEvent(awtComponent)
+            : ProgrammaticInputDetails.INSTANCE;
     }
 }

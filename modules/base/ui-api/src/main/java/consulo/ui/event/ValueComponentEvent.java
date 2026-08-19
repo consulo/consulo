@@ -17,7 +17,7 @@ package consulo.ui.event;
 
 import consulo.ui.ValueComponent;
 import consulo.ui.event.details.InputDetails;
-import org.jspecify.annotations.Nullable;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 
 /**
  * @author VISTALL
@@ -27,10 +27,10 @@ public final class ValueComponentEvent<V> extends ComponentEvent<ValueComponent<
     private V myValue;
 
     public ValueComponentEvent(ValueComponent<V> component, V value) {
-        this(component, value, null);
+        this(component, value, ProgrammaticInputDetails.INSTANCE);
     }
 
-    public ValueComponentEvent(ValueComponent<V> component, V value, @Nullable InputDetails inputDetails) {
+    public ValueComponentEvent(ValueComponent<V> component, V value, InputDetails inputDetails) {
         super(component, inputDetails);
         myValue = value;
     }

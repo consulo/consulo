@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -117,7 +118,8 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
 
     @RequiredUIAccess
     private void fireStateListeners(boolean state) {
-        getListenerDispatcher(FoldoutLayoutOpenedEvent.class).onEvent(new FoldoutLayoutOpenedEvent(this, state));
+        getListenerDispatcher(FoldoutLayoutOpenedEvent.class)
+            .onEvent(new FoldoutLayoutOpenedEvent(this, DesktopAWTInputDetails.currentEvent(toAWTComponent()), state));
     }
 
     @Override

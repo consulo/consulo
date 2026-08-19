@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
 
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public final class ClickEvent extends ComponentEvent<Component> {
         super(component);
     }
 
-    public ClickEvent(Component component, @Nullable InputDetails inputDetails) {
+    public ClickEvent(Component component, InputDetails inputDetails) {
         super(component, inputDetails);
     }
 }

@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.event;
+package consulo.ui.event.details;
 
-import consulo.ui.Popup;
-import consulo.ui.event.details.InputDetails;
-import consulo.ui.event.details.ProgrammaticInputDetails;
+import consulo.ui.Point2D;
 
 /**
+ * The details of an event no user input drove - a {@code setValue} call, a selection made by code. It says so
+ * outright where a null used to leave "programmatic" and "the frontend did not fill the details in" apart only
+ * by guesswork. It carries no position of its own.
+ *
  * @author VISTALL
- * @since 2026-08-02
+ * @since 2026-08-19
  */
-public final class PopupCloseEvent extends ComponentEvent<Popup> {
-    public PopupCloseEvent(Popup component) {
-        this(component, ProgrammaticInputDetails.INSTANCE);
-    }
+public final class ProgrammaticInputDetails extends InputDetails {
+    public static final ProgrammaticInputDetails INSTANCE = new ProgrammaticInputDetails();
 
-    public PopupCloseEvent(Popup component, InputDetails inputDetails) {
-        super(component, inputDetails);
+    private ProgrammaticInputDetails() {
+        super(new Point2D(0, 0), new Point2D(0, 0));
     }
 }

@@ -37,14 +37,15 @@ import java.util.Set;
 public class DesktopAWTInputDetails {
     /**
      * Details of the event the EDT dispatches right now, for the listeners AWT hands no input event -
-     * a selection, item or change listener sees only the fact of the change. Null when the change was
-     * not driven by the user acting on a showing component - a programmatic call arrives outside of
-     * mouse and key dispatch, or during construction while the component is not on the screen yet.
+     * a selection, item or change listener sees only the fact of the change. When the change was not
+     * driven by the user acting on a showing component - a programmatic call arrives outside of mouse
+     * and key dispatch, or during construction while the component is not on the screen yet - the
+     * answer says so rather than leaving a null to guess about.
      */
-    public static @Nullable InputDetails currentEvent(Component awtComponent) {
+    public static InputDetails currentEvent(Component awtComponent) {
         AWTEvent event = EventQueue.getCurrentEvent();
         if (!awtComponent.isShowing()) {
-            return null;
+            return ProgrammaticInputDetails.INSTANCE;
         }
 
         if (event instanceof MouseEvent mouseEvent) {
@@ -52,14 +53,14 @@ public class DesktopAWTInputDetails {
             if (source != null && source.isShowing()) {
                 return convert(awtComponent, SwingUtilities.convertMouseEvent(source, mouseEvent, awtComponent));
             }
-            return null;
+            return ProgrammaticInputDetails.INSTANCE;
         }
 
         if (event instanceof KeyEvent) {
             return convert(awtComponent, event);
         }
 
-        return null;
+        return ProgrammaticInputDetails.INSTANCE;
     }
 
     public static InputDetails convert(Component awtComponent, AWTEvent event) {
