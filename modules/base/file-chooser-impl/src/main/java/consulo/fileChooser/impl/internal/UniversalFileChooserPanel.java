@@ -10,6 +10,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.AnActionEvent;
@@ -126,6 +127,7 @@ class UniversalFileChooserPanel {
             e.getPresentation().setEnabled(true);
         }
 
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
             navigateToDesktop();
@@ -153,6 +155,7 @@ class UniversalFileChooserPanel {
                 parent != null && parent.getParent() != null && Files.isDirectory(parent) && Files.isWritable(parent));
         }
 
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
             createNewFolder();
@@ -174,6 +177,7 @@ class UniversalFileChooserPanel {
             e.getPresentation().setEnabled(activeFileView != null && activeFileView.canDeleteSelectedFile());
         }
 
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
             deleteSelectedFile();
@@ -188,6 +192,7 @@ class UniversalFileChooserPanel {
             FileChooserLocalize.universalFileChooserActionHomeDescription(),
             PlatformIconGroup.nodesHomefolder()
         ) {
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
                 navigateToHome();
@@ -200,8 +205,9 @@ class UniversalFileChooserPanel {
             group.add(new DumbAwareAction(
                 FileChooserLocalize.universalFileChooserActionProjectText(),
                 FileChooserLocalize.universalFileChooserActionProjectDescription(),
-                PlatformIconGroup.nodesProject()
+                myProject.getApplication().getIcon()
             ) {
+                @RequiredUIAccess
                 @Override
                 public void actionPerformed(AnActionEvent e) {
                     navigateToProject();
@@ -221,6 +227,7 @@ class UniversalFileChooserPanel {
             FileChooserLocalize.universalFileChooserActionRefreshDescription(),
             PlatformIconGroup.actionsRefresh()
         ) {
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
                 FileView activeFileView = getActiveFileView();
@@ -241,6 +248,7 @@ class UniversalFileChooserPanel {
                 return activeFileView != null && activeFileView.getFileTree().areHiddensShown();
             }
 
+            @RequiredUIAccess
             @Override
             public void setSelected(AnActionEvent e, boolean state) {
                 for (FileView fileView : myFileViews) {
