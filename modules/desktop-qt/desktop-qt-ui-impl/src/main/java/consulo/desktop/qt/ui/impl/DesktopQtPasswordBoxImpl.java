@@ -60,7 +60,8 @@ public class DesktopQtPasswordBoxImpl extends QtComponentDelegate<QLineEdit> imp
             myText = StringUtil.notNullize(text);
 
             if (myFireListeners) {
-                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, myText));
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myText, DesktopQtCurrentInput.current(component)));
             }
         });
     }

@@ -17,6 +17,8 @@ package consulo.ui.event;
 
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
+import consulo.ui.event.details.InputDetails;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Sent when a node is closed, whether by the user or by a call on the tree.
@@ -28,7 +30,11 @@ public final class TreeCollapseEvent<V> extends ComponentEvent<Tree<V>> {
     private final TreeNode<V> myValue;
 
     public TreeCollapseEvent(Tree<V> component, TreeNode<V> value) {
-        super(component);
+        this(component, value, null);
+    }
+
+    public TreeCollapseEvent(Tree<V> component, TreeNode<V> value, @Nullable InputDetails inputDetails) {
+        super(component, inputDetails);
         myValue = value;
     }
 

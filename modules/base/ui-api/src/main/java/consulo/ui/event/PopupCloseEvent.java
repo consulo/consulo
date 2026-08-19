@@ -16,6 +16,8 @@
 package consulo.ui.event;
 
 import consulo.ui.Popup;
+import consulo.ui.event.details.InputDetails;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -23,6 +25,10 @@ import consulo.ui.Popup;
  */
 public final class PopupCloseEvent extends ComponentEvent<Popup> {
     public PopupCloseEvent(Popup component) {
-        super(component);
+        this(component, null);
+    }
+
+    public PopupCloseEvent(Popup component, @Nullable InputDetails inputDetails) {
+        super(component, inputDetails);
     }
 }

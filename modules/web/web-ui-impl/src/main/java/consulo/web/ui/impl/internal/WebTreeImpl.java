@@ -47,6 +47,7 @@ import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -702,7 +703,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 return;
             }
 
-            getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(this, selectedNode));
+            getListenerDispatcher(TreeDoubleClickEvent.class)
+                .onEvent(new TreeDoubleClickEvent<>(this, selectedNode, WebInputDetails.details(event)));
 
             // the return value is the contract - true asks the tree to toggle the node, the way the awt trees
             // do, and a model that answered with an action of its own - opening the file - says false

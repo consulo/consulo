@@ -72,7 +72,8 @@ public class DesktopQtHyperlinkImpl extends QtComponentDelegate<QWidget> impleme
         layout.addWidget(myTextLabel);
 
         myTextLabel.linkActivated.connect(href ->
-            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(DesktopQtHyperlinkImpl.this, ""))
+            getListenerDispatcher(HyperlinkEvent.class)
+                .onEvent(new HyperlinkEvent(DesktopQtHyperlinkImpl.this, "", DesktopQtCurrentInput.current(myTextLabel)))
         );
 
         updateIcon();

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
@@ -81,6 +82,7 @@ public class DesktopIntSliderImpl extends SwingComponentDelegate<DesktopIntSlide
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     private void fireListeners() {
-        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
+        getListenerDispatcher(ValueComponentEvent.class)
+            .onEvent(new ValueComponentEvent(this, getValue(), DesktopAWTInputDetails.currentEvent(toAWTComponent())));
     }
 }

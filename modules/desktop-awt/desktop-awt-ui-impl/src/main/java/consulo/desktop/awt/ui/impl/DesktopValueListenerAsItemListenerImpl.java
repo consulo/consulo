@@ -15,11 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.event.details.InputDetails;
+import org.jspecify.annotations.Nullable;
 
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -46,13 +50,17 @@ class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
     public void itemStateChanged(ItemEvent e) {
         if (mySelectEvent) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                myValueListener.onEvent(new ValueComponentEvent<>(myComponent, myComponent.getValue()));
+                myValueListener.onEvent(new ValueComponentEvent<>(myComponent, myComponent.getValue(), inputDetails(e)));
             }
         }
         else {
             if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
-                myValueListener.onEvent(new ValueComponentEvent<>(myComponent, myComponent.getValue()));
+                myValueListener.onEvent(new ValueComponentEvent<>(myComponent, myComponent.getValue(), inputDetails(e)));
             }
         }
+    }
+
+    private static @Nullable InputDetails inputDetails(ItemEvent e) {
+        return e.getSource() instanceof Component awtComponent ? DesktopAWTInputDetails.currentEvent(awtComponent) : null;
     }
 }

@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.TransferHandler;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
@@ -102,7 +103,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
                 }
 
                 getListenerDispatcher(ListDoubleClickEvent.class)
-                    .onEvent(new ListDoubleClickEvent(DesktopListBoxImpl.this, value));
+                    .onEvent(new ListDoubleClickEvent(DesktopListBoxImpl.this, value, DesktopAWTInputDetails.convert(component, event)));
                 return true;
             }
         }.installOn(component);

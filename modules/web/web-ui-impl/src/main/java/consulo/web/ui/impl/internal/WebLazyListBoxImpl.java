@@ -36,6 +36,7 @@ import consulo.ui.model.FlatDataModelEvent;
 import consulo.ui.model.LazyFlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
@@ -237,9 +238,9 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
 
         rendered.getElement().addEventListener("click", event -> setValue((E) ComponentUtil.getData(rendered, ITEM)));
 
-        rendered.getElement().addEventListener("dblclick", event -> {
+        WebInputDetails.addClickListener(rendered.getElement(), "dblclick", details -> {
             E item = (E) ComponentUtil.getData(rendered, ITEM);
-            getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item));
+            getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item, details));
         });
     }
 
@@ -279,9 +280,10 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
 
         rendered.getElement().addEventListener("click", event -> setValue(item));
 
-        rendered.getElement().addEventListener(
+        WebInputDetails.addClickListener(
+            rendered.getElement(),
             "dblclick",
-            event -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item))
+            details -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item, details))
         );
 
         return rendered;

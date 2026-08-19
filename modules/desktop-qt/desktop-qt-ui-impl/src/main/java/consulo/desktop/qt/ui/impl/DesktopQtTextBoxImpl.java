@@ -70,7 +70,8 @@ public class DesktopQtTextBoxImpl extends QtComponentDelegate<QLineEdit> impleme
             myText = StringUtil.notNullize(text);
 
             if (myFireListeners) {
-                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, myText));
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myText, DesktopQtCurrentInput.current(component)));
             }
         });
     }

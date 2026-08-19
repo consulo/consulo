@@ -85,6 +85,8 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
                     scheme -> DesktopQtStyleManagerImpl.INSTANCE.syncWithPlatform()
                 );
 
+                DesktopQtCurrentInput.install();
+
                 countDownLatch.countDown();
 
                 try {

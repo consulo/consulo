@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
@@ -40,7 +41,8 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
             super(new LocalizeAction(LocalizeValue.of(text)) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(DesktopHyperlinkImpl.this, ""));
+                    getListenerDispatcher(HyperlinkEvent.class)
+                        .onEvent(new HyperlinkEvent(DesktopHyperlinkImpl.this, "", DesktopAWTInputDetails.convert(toAWTComponent(), e)));
                 }
             });
 

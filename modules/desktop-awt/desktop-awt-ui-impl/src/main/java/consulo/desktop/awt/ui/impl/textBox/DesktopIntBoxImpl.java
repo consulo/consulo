@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 import consulo.localize.LocalizeValue;
@@ -82,7 +83,8 @@ public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopI
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
     private void valueChanged(int value) {
-        dataObject().getDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, value));
+        dataObject().getDispatcher(ValueComponentEvent.class)
+            .onEvent(new ValueComponentEvent(this, value, DesktopAWTInputDetails.currentEvent(toAWTComponent())));
     }
 
     @Override

@@ -497,7 +497,7 @@ public abstract class DesktopQtPopupImpl extends QtComponentDelegate<QWidget> im
 
         uninstallFocusWatcher();
 
-        getListenerDispatcher(PopupCloseEvent.class).onEvent(new PopupCloseEvent((Popup) this));
+        getListenerDispatcher(PopupCloseEvent.class).onEvent(new PopupCloseEvent((Popup) this, DesktopQtCurrentInput.current(myComponent)));
 
         // the widget is still handling its own close event here, and the watcher may be inside the very filter
         // call which closed the popup - deleting either now would pull the object out from under the running

@@ -18,7 +18,9 @@ package consulo.desktop.awt.ui.impl.event;
 import consulo.ui.Point2D;
 import consulo.ui.event.details.*;
 import consulo.util.lang.BitUtil;
+import org.jspecify.annotations.Nullable;
 
+import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -33,13 +35,52 @@ import java.util.Set;
  * @since 2022-11-06
  */
 public class DesktopAWTInputDetails {
+    /**
+     * Details of the event the EDT dispatches right now, for the listeners AWT hands no input event -
+     * a selection, item or change listener sees only the fact of the change. Null when the change was
+     * not driven by the user acting on a showing component - a programmatic call arrives outside of
+     * mouse and key dispatch, or during construction while the component is not on the screen yet.
+     */
+    public static @Nullable InputDetails currentEvent(Component awtComponent) {
+        AWTEvent event = EventQueue.getCurrentEvent();
+        if (!awtComponent.isShowing()) {
+            return null;
+        }
+
+        if (event instanceof MouseEvent mouseEvent) {
+            Component source = mouseEvent.getComponent();
+            if (source != null && source.isShowing()) {
+                return convert(awtComponent, SwingUtilities.convertMouseEvent(source, mouseEvent, awtComponent));
+            }
+            return null;
+        }
+
+        if (event instanceof KeyEvent) {
+            return convert(awtComponent, event);
+        }
+
+        return null;
+    }
+
     public static InputDetails convert(Component awtComponent, AWTEvent event) {
         Set<ModifiedInputDetails.Modifier> modifiers = new HashSet<>();
 
         if (event instanceof ActionEvent actionEvent) {
             AWTEvent awtEvent = EventQueue.getCurrentEvent();
 
-            InputDetails details = convert(awtComponent, awtEvent);
+            Point2D position;
+            Point2D positionOnScreen;
+            if (awtEvent instanceof MouseEvent || awtEvent instanceof KeyEvent) {
+                InputDetails details = convert(awtComponent, awtEvent);
+                position = details.getPosition();
+                positionOnScreen = details.getPositionOnScreen();
+            }
+            else {
+                // an action fired outside of mouse and key dispatch - a programmatic click - has only the component to place it at
+                position = new Point2D(0, 0);
+                Point locationOnScreen = awtComponent.isShowing() ? awtComponent.getLocationOnScreen() : new Point(0, 0);
+                positionOnScreen = new Point2D(locationOnScreen.x, locationOnScreen.y);
+            }
 
             if (BitUtil.isSet(actionEvent.getModifiers(), ActionEvent.CTRL_MASK)) {
                 modifiers.add(ModifiedInputDetails.Modifier.CTRL);
@@ -54,8 +95,9 @@ public class DesktopAWTInputDetails {
             }
 
             EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
-            return new MouseInputDetails(details.getPosition(), details.getPositionOnScreen(), enumModifiers, MouseInputDetails.MouseButton.LEFT);
-        } else {
+            return new MouseInputDetails(position, positionOnScreen, enumModifiers, MouseInputDetails.MouseButton.LEFT);
+        }
+        else {
             if (event instanceof InputEvent inputEvent) {
                 modifiers.addAll(toModifiers(inputEvent));
             }

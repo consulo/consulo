@@ -101,7 +101,8 @@ public class DesktopTextBoxWithExtensions {
                 @SuppressWarnings("unchecked")
                 @RequiredUIAccess
                 protected void textChanged(DocumentEvent e) {
-                    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(Supported.this, getValue()));
+                    getListenerDispatcher(ValueComponentEvent.class)
+                        .onEvent(new ValueComponentEvent(Supported.this, getValue(), DesktopAWTInputDetails.currentEvent(field)));
                 }
             });
 

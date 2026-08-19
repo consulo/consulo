@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl.htmlView;
 
+import consulo.desktop.qt.ui.impl.DesktopQtCurrentInput;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.logging.Logger;
@@ -94,7 +95,8 @@ public class DesktopQtHtmlViewImpl extends QtComponentDelegate<QTextBrowser> imp
         component.setOpenExternalLinks(false);
 
         component.anchorClicked.connect(url ->
-            getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, url.toString(), null))
+            getListenerDispatcher(HyperlinkEvent.class)
+                .onEvent(new HyperlinkEvent(this, url.toString(), DesktopQtCurrentInput.current(component)))
         );
 
         String pending = myPendingHtml;

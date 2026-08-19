@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
@@ -83,7 +84,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         tableView.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 getListenerDispatcher(TableSelectEvent.class)
-                    .onEvent(new TableSelectEvent(this, getSelectedItems()));
+                    .onEvent(new TableSelectEvent(this, getSelectedItems(), DesktopAWTInputDetails.currentEvent(tableView)));
             }
         });
 
@@ -95,7 +96,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
                     return false;
                 }
                 getListenerDispatcher(TableDoubleClickEvent.class)
-                    .onEvent(new TableDoubleClickEvent(DesktopTableImpl.this, tableView.getRow(row)));
+                    .onEvent(new TableDoubleClickEvent(DesktopTableImpl.this, tableView.getRow(row), DesktopAWTInputDetails.convert(tableView, event)));
                 return true;
             }
         }.installOn(tableView);

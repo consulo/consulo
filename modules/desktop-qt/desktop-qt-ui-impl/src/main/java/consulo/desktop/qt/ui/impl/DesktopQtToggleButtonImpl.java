@@ -48,7 +48,8 @@ public class DesktopQtToggleButtonImpl extends DesktopQtButtonImpl implements To
             mySelected = checked;
 
             if (myFireListeners) {
-                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, mySelected));
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, mySelected, DesktopQtCurrentInput.current(component)));
             }
         });
     }

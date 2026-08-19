@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
@@ -53,7 +54,8 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
         pane.addChangeListener(event -> {
             int index = pane.getSelectedIndex();
             if (index >= 0 && index < myTabs.size()) {
-                getListenerDispatcher(TabSelectEvent.class).onEvent(new TabSelectEvent(this, myTabs.get(index)));
+                getListenerDispatcher(TabSelectEvent.class)
+                    .onEvent(new TabSelectEvent(this, myTabs.get(index), DesktopAWTInputDetails.currentEvent(pane)));
             }
         });
         return pane;

@@ -60,7 +60,8 @@ public class DesktopQtCheckBoxImpl extends QtComponentDelegate<QCheckBox> implem
             myValue = checked;
 
             if (myFireListeners) {
-                getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, myValue));
+                getListenerDispatcher(ValueComponentEvent.class)
+                    .onEvent(new ValueComponentEvent(this, myValue, DesktopQtCurrentInput.current(component)));
             }
         });
     }

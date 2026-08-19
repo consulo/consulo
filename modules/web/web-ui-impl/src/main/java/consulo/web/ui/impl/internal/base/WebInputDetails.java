@@ -66,7 +66,11 @@ public class WebInputDetails {
     private static final String ELEMENT_SCREEN_Y = "window.screenY + element.getBoundingClientRect().top";
 
     public static DomListenerRegistration addClickListener(Element element, Consumer<InputDetails> consumer) {
-        DomListenerRegistration registration = element.addEventListener("click", event -> consumer.accept(convert(event)));
+        return addClickListener(element, "click", consumer);
+    }
+
+    public static DomListenerRegistration addClickListener(Element element, String eventType, Consumer<InputDetails> consumer) {
+        DomListenerRegistration registration = element.addEventListener(eventType, event -> consumer.accept(convert(event)));
 
         registration.addEventData(OFFSET_X);
         registration.addEventData(OFFSET_Y);
@@ -103,6 +107,46 @@ public class WebInputDetails {
         registration.addEventData(ELEMENT_SCREEN_Y);
 
         return registration;
+    }
+
+    /**
+     * The details of a typed vaadin click - the row events of a grid resolve the item, which a dom listener
+     * cannot, so those come through here. The client position is viewport relative rather than component
+     * relative, but the screen position - the one a popup is placed by - is exact.
+     */
+    public static InputDetails details(com.vaadin.flow.component.ClickEvent<?> event) {
+        EnumSet<ModifiedInputDetails.Modifier> modifiers = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+        if (event.isAltKey()) {
+            modifiers.add(ModifiedInputDetails.Modifier.ALT);
+        }
+        if (event.isCtrlKey()) {
+            modifiers.add(ModifiedInputDetails.Modifier.CTRL);
+        }
+        if (event.isShiftKey()) {
+            modifiers.add(ModifiedInputDetails.Modifier.SHIFT);
+        }
+        if (event.isMetaKey()) {
+            modifiers.add(ModifiedInputDetails.Modifier.META);
+        }
+
+        if (event.getClickCount() == 0) {
+            // the click the browser synthesises for enter or space carries no coordinates at all
+            return new KeyboardInputDetails(
+                new Point2D(0, 0),
+                new Point2D(event.getScreenX(), event.getScreenY()),
+                modifiers,
+                KeyCode.ENTER
+            );
+        }
+
+        return mouse(
+            event.getClientX(),
+            event.getClientY(),
+            event.getScreenX(),
+            event.getScreenY(),
+            event.getButton(),
+            modifiers
+        );
     }
 
     private static KeyboardInputDetails convertKey(DomEvent event) {

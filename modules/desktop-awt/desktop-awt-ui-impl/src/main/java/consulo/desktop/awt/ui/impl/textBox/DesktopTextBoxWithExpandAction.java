@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
 import consulo.desktop.awt.ui.impl.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
@@ -82,7 +83,8 @@ public class DesktopTextBoxWithExpandAction {
                 @SuppressWarnings("unchecked")
                 @RequiredUIAccess
                 protected void textChanged(DocumentEvent e) {
-                    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(SupportedTextBoxWithExpandAction.this, getValue()));
+                    getListenerDispatcher(ValueComponentEvent.class)
+                        .onEvent(new ValueComponentEvent(SupportedTextBoxWithExpandAction.this, getValue(), DesktopAWTInputDetails.currentEvent(field)));
                 }
             });
             return field;

@@ -31,6 +31,7 @@ import consulo.ui.model.FlatDataModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
         grid.addItemDoubleClickListener(event ->
             getListenerDispatcher(TableDoubleClickEvent.class)
-                .onEvent(new TableDoubleClickEvent(this, event.getItem())));
+                .onEvent(new TableDoubleClickEvent(this, event.getItem(), WebInputDetails.details(event))));
     }
 
     @Override

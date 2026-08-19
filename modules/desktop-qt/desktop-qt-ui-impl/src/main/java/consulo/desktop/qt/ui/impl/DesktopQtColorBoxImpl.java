@@ -137,7 +137,8 @@ public class DesktopQtColorBoxImpl extends QtComponentDelegate<QPushButton> impl
         updateSwatch();
 
         if (fireListeners) {
-            getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, value));
+            getListenerDispatcher(ValueComponentEvent.class)
+                .onEvent(new ValueComponentEvent(this, value, DesktopQtCurrentInput.current(myComponent)));
         }
     }
 

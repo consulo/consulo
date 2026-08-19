@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
@@ -55,6 +56,7 @@ class DesktopValueListenerAsListSelectionListener<E> implements ListSelectionLis
     @Override
     @RequiredUIAccess
     public void valueChanged(ListSelectionEvent e) {
-        myValueListener.onEvent(new ValueComponentEvent<>(myBox, myDesktopListBox.getSelectedValue()));
+        myValueListener
+            .onEvent(new ValueComponentEvent<>(myBox, myDesktopListBox.getSelectedValue(), DesktopAWTInputDetails.currentEvent(myDesktopListBox)));
     }
 }

@@ -28,6 +28,7 @@ import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.image.WebImageConverter;
 import consulo.web.ui.impl.internal.vaadin.SimpleComponent;
 import org.jspecify.annotations.Nullable;
@@ -60,7 +61,7 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
         vaadin.getElement().appendChild(myTextLabel.getElement());
 
         vaadin.addClickListener(
-            event -> getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""))
+            event -> getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, "", WebInputDetails.details(event)))
         );
     }
 

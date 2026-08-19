@@ -17,6 +17,8 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.Tab;
+import consulo.ui.event.details.InputDetails;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,7 +28,11 @@ public final class TabSelectEvent extends ComponentEvent<Component> {
     private final Tab myTab;
 
     public TabSelectEvent(Component component, Tab tab) {
-        super(component);
+        this(component, tab, null);
+    }
+
+    public TabSelectEvent(Component component, Tab tab, @Nullable InputDetails inputDetails) {
+        super(component, inputDetails);
         myTab = tab;
     }
 

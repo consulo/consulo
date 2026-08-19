@@ -27,6 +27,7 @@ import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.model.FlatDataModel;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.ToVaadinComponentWrapper;
+import consulo.web.ui.impl.internal.base.WebInputDetails;
 import consulo.web.ui.impl.internal.vaadin.WebSingleListComponentBase;
 import org.jspecify.annotations.Nullable;
 
@@ -184,9 +185,10 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
     }
 
     private com.vaadin.flow.component.Component applyDoubleClick(com.vaadin.flow.component.Component component, @Nullable E item) {
-        component.getElement().addEventListener(
+        WebInputDetails.addClickListener(
+            component.getElement(),
             "dblclick",
-            event -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item))
+            details -> getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, item, details))
         );
         return component;
     }

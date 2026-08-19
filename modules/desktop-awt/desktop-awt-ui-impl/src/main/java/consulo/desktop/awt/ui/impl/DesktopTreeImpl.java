@@ -22,6 +22,7 @@ import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferTarget;
 import consulo.desktop.awt.ui.impl.facade.DesktopAWTTargetAWTImpl;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
@@ -443,7 +444,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                     return false;
                 }
 
-                getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(DesktopTreeImpl.this, node));
+                getListenerDispatcher(TreeDoubleClickEvent.class)
+                    .onEvent(new TreeDoubleClickEvent<>(DesktopTreeImpl.this, node, DesktopAWTInputDetails.convert(event.getComponent(), event)));
 
                 // the model answers whether the node should open, which is what the tree does on its own -
                 // the event is consumed only when the model took the click for an action of its own
@@ -459,7 +461,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
             TreeNode<E> node = nodeOf(path);
             if (node != null) {
-                getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(this, node));
+                getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(this, node, DesktopAWTInputDetails.currentEvent(tree)));
             }
         });
 
@@ -469,7 +471,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             public void treeExpanded(TreeExpansionEvent event) {
                 TreeNode<E> node = nodeOf(event.getPath());
                 if (node != null) {
-                    getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent<>(DesktopTreeImpl.this, node));
+                    getListenerDispatcher(TreeExpandEvent.class)
+                        .onEvent(new TreeExpandEvent<>(DesktopTreeImpl.this, node, DesktopAWTInputDetails.currentEvent(tree)));
                 }
             }
 
@@ -477,7 +480,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             public void treeCollapsed(TreeExpansionEvent event) {
                 TreeNode<E> node = nodeOf(event.getPath());
                 if (node != null) {
-                    getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent<>(DesktopTreeImpl.this, node));
+                    getListenerDispatcher(TreeCollapseEvent.class)
+                        .onEvent(new TreeCollapseEvent<>(DesktopTreeImpl.this, node, DesktopAWTInputDetails.currentEvent(tree)));
                 }
             }
         });

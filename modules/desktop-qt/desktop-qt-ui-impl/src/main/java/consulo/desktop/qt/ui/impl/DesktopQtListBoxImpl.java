@@ -331,7 +331,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
         mySelectedIndex = selected.isEmpty() ? -1 : component.row(selected.get(0));
 
-        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
+        getListenerDispatcher(ValueComponentEvent.class)
+            .onEvent(new ValueComponentEvent(this, getValue(), DesktopQtCurrentInput.current(component)));
     }
 
     private void fireClicked(int row) {
@@ -360,7 +361,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
         mySelectedIndex = row;
 
-        getListenerDispatcher(ListDoubleClickEvent.class).onEvent(new ListDoubleClickEvent(this, value));
+        getListenerDispatcher(ListDoubleClickEvent.class)
+            .onEvent(new ListDoubleClickEvent(this, value, DesktopQtCurrentInput.current(myComponent)));
     }
 
     /**

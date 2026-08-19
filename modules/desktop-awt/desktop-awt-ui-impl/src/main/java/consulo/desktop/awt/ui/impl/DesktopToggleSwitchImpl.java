@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.components.OnOffButton;
@@ -70,6 +71,7 @@ public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggl
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
     private void fireListeners() {
-        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
+        getListenerDispatcher(ValueComponentEvent.class)
+            .onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected(), DesktopAWTInputDetails.currentEvent(toAWTComponent())));
     }
 }

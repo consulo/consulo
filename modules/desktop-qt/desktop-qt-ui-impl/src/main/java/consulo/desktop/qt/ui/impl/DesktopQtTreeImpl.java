@@ -31,6 +31,7 @@ import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.localize.UILocalize;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
@@ -159,23 +160,29 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         myRootNode = createRootNode();
 
         tree.itemSelectionChanged.connect(() ->
-            getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(DesktopQtTreeImpl.this, getSelectedNode()))
+            getListenerDispatcher(TreeSelectEvent.class)
+                .onEvent(new TreeSelectEvent(DesktopQtTreeImpl.this, getSelectedNode(), DesktopQtCurrentInput.current(tree)))
         );
 
-        tree.itemDoubleClicked.connect((item, column) -> UIAccess.current().give(() -> {
-            TreeNode<E> selectedNode = getSelectedNode();
-            if (selectedNode == null) {
-                return;
-            }
+        tree.itemDoubleClicked.connect((item, column) -> {
+            // the handler is queued past the dispatch of the click, so the details are taken while it still runs
+            InputDetails inputDetails = DesktopQtCurrentInput.current(tree);
+            UIAccess.current().give(() -> {
+                TreeNode<E> selectedNode = getSelectedNode();
+                if (selectedNode == null) {
+                    return;
+                }
 
-            getListenerDispatcher(TreeDoubleClickEvent.class).onEvent(new TreeDoubleClickEvent<>(DesktopQtTreeImpl.this, selectedNode));
+                getListenerDispatcher(TreeDoubleClickEvent.class)
+                    .onEvent(new TreeDoubleClickEvent<>(DesktopQtTreeImpl.this, selectedNode, inputDetails));
 
-            // the answer is the contract - a model which took the double click for itself, opening the file it
-            // stands for, says false, and true asks the tree to open or close the row the way the awt trees do
-            if (myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode) && !item.isDisposed()) {
-                item.setExpanded(!item.isExpanded());
-            }
-        }));
+                // the answer is the contract - a model which took the double click for itself, opening the file it
+                // stands for, says false, and true asks the tree to open or close the row the way the awt trees do
+                if (myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode) && !item.isDisposed()) {
+                    item.setExpanded(!item.isExpanded());
+                }
+            });
+        });
 
         tree.itemExpanded.connect(item -> {
             DesktopQtTreeNode<E> node = myNodes.get(item);
@@ -395,14 +402,14 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     private void fireExpand(QTreeWidgetItem item) {
         DesktopQtTreeNode<E> node = myNodes.get(item);
         if (node != null) {
-            getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent(this, node));
+            getListenerDispatcher(TreeExpandEvent.class).onEvent(new TreeExpandEvent(this, node, DesktopQtCurrentInput.current(myComponent)));
         }
     }
 
     private void fireCollapse(QTreeWidgetItem item) {
         DesktopQtTreeNode<E> node = myNodes.get(item);
         if (node != null) {
-            getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node));
+            getListenerDispatcher(TreeCollapseEvent.class).onEvent(new TreeCollapseEvent(this, node, DesktopQtCurrentInput.current(myComponent)));
         }
     }
 
