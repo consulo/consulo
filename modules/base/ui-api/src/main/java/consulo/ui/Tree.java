@@ -31,7 +31,8 @@ import java.util.concurrent.CompletableFuture;
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface Tree<E> extends Component, HasTransferHandler<TreeNode<E>>, HasComponentStyle<TreeStyle>, HasItemSize<TreeNode<E>> {
+public interface Tree<E> extends Component, HasTransferHandler<TreeNode<E>>, HasComponentStyle<TreeStyle>, HasItemSize<TreeNode<E>>,
+    HasSpeedSearch<TreeNode<E>> {
     static <E> Tree<E> create(TreeModel<E> model, Disposable disposable) {
         return create(null, model, disposable);
     }

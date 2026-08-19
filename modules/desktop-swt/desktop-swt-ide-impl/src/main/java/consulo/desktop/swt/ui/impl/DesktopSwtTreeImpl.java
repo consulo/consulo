@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -331,5 +332,14 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
 
   @Override
   public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
+  }
+
+  @Override
+  public void setSpeedSearchConverter(@Nullable Function<TreeNode<E>, String> converter) {
+  }
+
+  @Override
+  public @Nullable String getSpeedSearchText() {
+    return null;
   }
 }

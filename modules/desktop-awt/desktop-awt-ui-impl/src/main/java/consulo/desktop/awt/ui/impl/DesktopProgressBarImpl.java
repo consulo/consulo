@@ -122,9 +122,6 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
                 break;
             case TRANSPARENT_BACKGROUND:
                 myTransparent = true;
-                if (isInitialized()) {
-                    toAWTComponent().setOpaque(false);
-                }
                 break;
         }
     }

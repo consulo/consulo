@@ -132,7 +132,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     @Override
     public void isSeparator(Predicate<E> predicate) {
         mySeparatorPredicate = predicate;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyRender(toAWTComponent());
             applySeparatorSelection(toAWTComponent());
         }
@@ -182,7 +182,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     public void setRender(TextItemRender<E> render) {
         myTextRender = render;
         myComponentRender = null;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyRender(toAWTComponent());
         }
     }
@@ -190,7 +190,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     @Override
     public void setRender(ComponentItemRender<E> render) {
         myComponentRender = render;
-        if (isRealized()) {
+        if (isInitialized()) {
             applyRender(toAWTComponent());
         }
     }
@@ -198,14 +198,14 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     @Override
     public void setSpeedSearchConverter(@Nullable Function<E, String> converter) {
         mySpeedSearchConverter = converter;
-        if (isRealized()) {
+        if (isInitialized()) {
             applySpeedSearch(toAWTComponent());
         }
     }
 
     @Override
     public @Nullable String getSpeedSearchText() {
-        if (!isRealized()) {
+        if (!isInitialized()) {
             return null;
         }
         SpeedSearchSupply supply = SpeedSearchSupply.getSupply(toAWTComponent());
@@ -215,7 +215,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     @Override
     public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
         myItemHeightGetter = getter;
-        if (isRealized()) {
+        if (isInitialized()) {
             toAWTComponent().setFixedCellHeight(-1);
         }
     }

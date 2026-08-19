@@ -68,14 +68,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     protected abstract T createComponent();
 
-    /**
-     * Lets a setter apply straight away once the component exists, instead of forcing it into
-     * existence early just to configure it.
-     */
-    protected boolean isRealized() {
-        return myInitializedComponent != null;
-    }
-
     protected void init(T component) {
         component.addKeyListener(new AWTKeyAdapterAsKeyPressedListener(this, getListenerDispatcher(KeyPressedEvent.class)));
         component.addKeyListener(new AWTKeyAdapterAsKeyReleasedListener(this, getListenerDispatcher(KeyReleasedEvent.class)));

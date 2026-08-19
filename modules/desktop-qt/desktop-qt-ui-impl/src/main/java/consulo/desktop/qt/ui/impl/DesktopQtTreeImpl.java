@@ -54,6 +54,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 /**
@@ -68,6 +69,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     private static final int EXPAND_ALL_DEPTH = 4;
 
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
+    private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
 
     private final E myRootValue;
     private final TreeModel<E> myModel;
@@ -644,5 +646,15 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     @Override
     public @Nullable TransferHandler<TreeNode<E>> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public void setSpeedSearchConverter(@Nullable Function<TreeNode<E>, String> converter) {
+        mySpeedSearchConverter = converter;
+    }
+
+    @Override
+    public @Nullable String getSpeedSearchText() {
+        return null;
     }
 }
