@@ -438,7 +438,10 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
 
                 tab.setPopupGroup(IdeActions.GROUP_EDITOR_TAB_POPUP, ActionPlaces.EDITOR_TAB_POPUP);
 
-                myTabbedLayout.addTab(tab, editor.getUIComponent());
+                Component content = editor.getUIComponent();
+                content.putUserData(UiDataProvider.KEY, sink -> sink.set(VirtualFile.KEY, editor.getFile()));
+
+                myTabbedLayout.addTab(tab, content);
                 myEditors.put(editor, tabInfo);
 
                 // a file opened into a tab which was already there comes to the front, and one opening a tab of
