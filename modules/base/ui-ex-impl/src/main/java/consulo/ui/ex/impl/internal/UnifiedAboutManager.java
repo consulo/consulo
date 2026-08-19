@@ -15,13 +15,13 @@
  */
 package consulo.ui.ex.impl.internal;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.internal.AboutManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.internal.AboutManager;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,11 +29,25 @@ import org.jspecify.annotations.Nullable;
  * @since 2019-05-09
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 public class UnifiedAboutManager implements AboutManager {
-  @RequiredUIAccess
-  @Override
-  public void showAsync(@Nullable Window parentWindow) {
-    new UnifiedAboutDialog(parentWindow).show();
-  }
+    private final DialogService myDialogService;
+
+    @Inject
+    public UnifiedAboutManager(DialogService dialogService) {
+        myDialogService = dialogService;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void showAsync(@Nullable Window parentWindow) {
+        AboutDialogDescriptor descriptor = new AboutDialogDescriptor();
+
+        if (parentWindow == null) {
+            myDialogService.build(descriptor).showAsync();
+        }
+        else {
+            myDialogService.build(parentWindow, descriptor).showAsync();
+        }
+    }
 }
