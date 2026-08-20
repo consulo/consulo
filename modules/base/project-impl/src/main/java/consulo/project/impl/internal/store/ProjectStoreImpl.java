@@ -100,45 +100,24 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   public void setProjectFilePath(String filePath) {
     StateStorageManager stateStorageManager = getStateStorageManager();
-    LocalFileSystem fs = LocalFileSystem.getInstance();
 
     File file = new File(filePath);
 
-    File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+    File dirStore = file.isDirectory()
+        ? new File(file, Project.DIRECTORY_STORE_FOLDER)
+        : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+
     String defaultFilePath = new File(dirStore, "misc.xml").getPath();
-    // deprecated
+
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
+
     stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
 
     File ws = new File(dirStore, "workspace.xml");
+
     stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
-
-    ApplicationManager.getApplication().invokeAndWait(() -> VirtualFileUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), IdeaModalityState.defaultModalityState());
-
-    myPresentableUrl = null;
-  }
-
-  @Override
-  public void setProjectFilePathNoUI(String filePath) {
-    StateStorageManager stateStorageManager = getStateStorageManager();
-    LocalFileSystem fs = LocalFileSystem.getInstance();
-
-    File file = new File(filePath);
-
-    File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
-    String defaultFilePath = new File(dirStore, "misc.xml").getPath();
-    // deprecated
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
-    stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
-
-    File ws = new File(dirStore, "workspace.xml");
-    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
-
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
-
-    VirtualFileUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
 
     myPresentableUrl = null;
   }

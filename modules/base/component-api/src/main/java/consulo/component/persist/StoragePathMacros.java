@@ -44,7 +44,6 @@ public class StoragePathMacros {
    */
   @Deprecated
   @DeprecationInfo(value = "Project file types is not supported anymore")
-  
   public static final String PROJECT_FILE = "$PROJECT_FILE$";
 
   /**

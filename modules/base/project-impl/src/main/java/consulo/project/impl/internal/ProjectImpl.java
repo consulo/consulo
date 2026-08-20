@@ -97,12 +97,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
 
         if (!isDefault()) {
-            if (noUIThread) {
-                getStateStore().setProjectFilePathNoUI(dirPath);
-            }
-            else {
-                getStateStore().setProjectFilePath(dirPath);
-            }
+            getStateStore().setProjectFilePath(dirPath);
         }
 
         myManager = (ProjectManagerEx) manager;
