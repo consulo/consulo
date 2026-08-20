@@ -28,14 +28,16 @@
         <include>ar.com.hjg:pngj</include>
 
         <include>org.eclipse.jetty:*</include>
+        <include>org.eclipse.jetty.ee:*</include>
         <include>org.eclipse.jetty.ee11:*</include>
         <include>org.eclipse.jetty.ee11.websocket:*</include>
         <include>org.eclipse.jetty.websocket:*</include>
+        <include>org.eclipse.jetty.compression:*</include>
+        <include>org.ow2.asm:*</include>
 
         <include>jakarta.servlet:jakarta.servlet-api</include>
         <include>jakarta.websocket:*</include>
 
-        <include>commons-io:commons-io</include>
         <include>com.vaadin:flow-server</include>
         <include>com.vaadin:flow-client</include>
         <include>com.vaadin:flow-push</include>
@@ -43,6 +45,8 @@
         <include>com.vaadin:vaadin-flow-components-base</include>
         <include>com.vaadin.external:gentyref</include>
         <include>com.vaadin.external.atmosphere:atmosphere-runtime</include>
+        <include>com.vaadin:vaadin-accordion-flow</include>
+        <include>com.vaadin:vaadin-radio-button-flow</include>
         <include>com.vaadin:vaadin-dialog-flow</include>
         <include>com.vaadin:vaadin-popover-flow</include>
         <include>com.vaadin:vaadin-button-flow</include>
@@ -84,7 +88,6 @@
         <include>com.fasterxml.jackson.core:jackson-databind</include>
         <include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>
 
-        <include>tools.jackson.core:jackson-core</include>
         <include>tools.jackson.core:jackson-databind</include>
       </includes>
     </dependencySet>

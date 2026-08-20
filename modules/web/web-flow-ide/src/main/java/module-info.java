@@ -102,7 +102,12 @@ module consulo.web.ide {
     requires pngj;
     requires tools.jackson.databind;
 
+    exports consulo.web.internal.servlet to flow.server;
+    exports consulo.web.internal.startup to flow.server;
+
     opens consulo.web.internal.wm to consulo.util.xml.serializer;
+    opens consulo.web.internal.servlet to org.eclipse.jetty.ee11.servlet, flow.server;
+    opens consulo.web.internal.startup to org.eclipse.jetty.ee11.servlet, flow.server;
 
     provides consulo.container.boot.ContainerStartup with consulo.web.internal.startup.WebContainerStartup;
     provides consulo.platform.internal.PlatformInternal with consulo.web.internal.platform.WebPlatformInternalImpl;

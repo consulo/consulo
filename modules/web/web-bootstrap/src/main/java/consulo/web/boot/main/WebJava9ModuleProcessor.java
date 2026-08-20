@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.qt.boot.main;
+package consulo.web.boot.main;
 
 import consulo.container.internal.plugin.classloader.BaseJava9ModuleProcessor;
 
 /**
  * @author VISTALL
- * @since 2026-08-16
+ * @since 2026-08-20
  */
-public class DesktopQtJava9ModuleProcessor extends BaseJava9ModuleProcessor {
+public class WebJava9ModuleProcessor extends BaseJava9ModuleProcessor {
 }

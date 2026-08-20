@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.qt.boot.main;
+package consulo.container.internal.plugin.classloader;
 
-import consulo.container.internal.plugin.classloader.BaseJava9ModuleProcessor;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2026-08-16
+ * @since 2026-08-20
  */
-public class DesktopQtJava9ModuleProcessor extends BaseJava9ModuleProcessor {
+public abstract class BaseJava9ModuleProcessor implements Java9ModuleProcessor {
+    @Override
+    public void process(List<Opens> toOpenMap) {
+        toOpenMap.add(new Opens("java.base", "java.lang", "consulo.hacking.java.base"));
+    }
+
+    @Override
+    public boolean isEnabledModules() {
+        return System.getProperty("jdk.module.path") != null;
+    }
 }

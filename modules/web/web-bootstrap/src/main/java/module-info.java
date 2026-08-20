@@ -4,4 +4,6 @@
  */
 module consulo.web.bootstrap {
     requires consulo.container.api;
+    // required by ee11
+    requires java.instrument;
 }

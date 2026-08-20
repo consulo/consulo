@@ -66,7 +66,7 @@
         <commons.compress.version>1.28.0</commons.compress.version>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
-        <maven.consulo.plugin>3.30</maven.consulo.plugin>
+        <maven.consulo.plugin>3.31</maven.consulo.plugin>
         <maven.jar.plugin>3.3.0</maven.jar.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
         <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
@@ -683,6 +683,16 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-accordion-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-radio-button-flow</artifactId>
+                <version>${vaadin.flow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-dialog-flow</artifactId>
                 <version>${vaadin.flow.version}</version>
             </dependency>
@@ -755,7 +765,7 @@
             <dependency>
                 <groupId>com.vaadin.external.atmosphere</groupId>
                 <artifactId>atmosphere-runtime</artifactId>
-                <version>3.0.3.slf4jvaadin1</version>
+                <version>3.0.5.slf4jvaadin1</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

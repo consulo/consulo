@@ -29,40 +29,16 @@
 
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}/../../distribution/platform/shared/</directory>
-            <includes>
-                <include>*/*</include>
-            </includes>
-            <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/../../distribution/platform/win</directory>
-            <includes>
-                <include>*/*</include>
-            </includes>
-            <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>${project.basedir}/../../distribution/platform/consulo/shared/</directory>
             <includes>
-                <include>**</include>
+                <include>*/**</include>
             </includes>
             <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/../../distribution/platform/linux</directory>
+            <directory>${project.basedir}/../../distribution/platform/consulo.web/shared/</directory>
             <includes>
-                <include>*/*</include>
-            </includes>
-            <excludes>
-                <exclude>/bin/.gitignore</exclude>
-            </excludes>
-            <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/../../distribution/platform/mac</directory>
-            <includes>
-                <include>*/*</include>
+                <include>*/**</include>
             </includes>
             <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
         </fileSet>

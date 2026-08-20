@@ -96,6 +96,11 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <execution>
+                        <buildDirectory>${project.build.directory}/consulo-sandbox-web-${project.version}-main/</buildDirectory>
+                    </execution>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -581,6 +586,14 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-checkbox-flow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-accordion-flow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-radio-button-flow</artifactId>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
