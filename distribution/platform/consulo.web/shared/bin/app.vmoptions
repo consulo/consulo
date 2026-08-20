@@ -1,4 +1,4 @@
---add-opens=java.base/java.lang=ALL-UNNAMED
+--add-opens=java.base/java.lang=consulo.container.api
 -Didea.io.use.nio2=true
 -Dfile.encoding=UTF-8
 -Dsun.stdout.encoding=UTF-8
