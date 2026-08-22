@@ -38,8 +38,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -49,18 +47,10 @@ import java.util.Map;
 @State(name = "ExternalServiceConfiguration", storages = @Storage(value = "externalService.xml", roamingType = RoamingType.DISABLED))
 @ServiceImpl
 public class ExternalServiceConfigurationImpl
-    implements PersistentStateComponent<ExternalServiceConfigurationImpl.State>, ExternalServiceConfiguration {
+    implements PersistentStateComponent<ExternalServiceConfigurationState>, ExternalServiceConfiguration {
     private static final Logger LOG = Logger.getInstance(ExternalServiceConfigurationImpl.class);
 
-    public static class State {
-        public String email;
-        public String oauthKey;
-        public String iconBytes;
-
-        public Map<ExternalService, ThreeState> states = new LinkedHashMap<>();
-    }
-
-    private final State myState = new State();
+    private final ExternalServiceConfigurationState myState = new ExternalServiceConfigurationState();
     private Image myUserIcon;
 
     private final Application myApplication;
@@ -116,12 +106,12 @@ public class ExternalServiceConfigurationImpl
     }
 
     @Override
-    public State getState() {
+    public ExternalServiceConfigurationState getState() {
         return myState;
     }
 
     @Override
-    public void loadState(State state) {
+    public void loadState(ExternalServiceConfigurationState state) {
         XmlSerializerUtil.copyBean(state, myState);
     }
 

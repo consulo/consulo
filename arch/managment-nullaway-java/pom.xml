@@ -76,6 +76,11 @@
                             <artifactId>compiler.apt.java.generation</artifactId>
                             <version>${compiler.apt.version}</version>
                         </path>
+                        <path>
+                            <groupId>consulo.internal.com.dslplatform</groupId>
+                            <artifactId>dsl-json-processor</artifactId>
+                            <version>${dsl.json.version}</version>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

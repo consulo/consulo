@@ -24,6 +24,7 @@ module consulo.component.api {
     requires transitive org.jdom;
     requires transitive org.slf4j;
     requires transitive jakarta.inject;
+    requires transitive com.dslplatform.json;
 
     requires static consulo.hacking.java.base;
     requires static com.ibm.icu;

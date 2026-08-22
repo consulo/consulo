@@ -88,6 +88,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>consulo.internal.com.dslplatform</groupId>
+            <artifactId>dsl-json</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-api</artifactId>
         </dependency>

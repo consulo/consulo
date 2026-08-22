@@ -15,10 +15,13 @@
  */
 package consulo.externalService.update;
 
+import com.dslplatform.json.CompiledJson;
+
 /**
  * @author VISTALL
  * @since 02-Sep-16
  */
+@CompiledJson
 public enum UpdateChannel {
   release,
   beta,

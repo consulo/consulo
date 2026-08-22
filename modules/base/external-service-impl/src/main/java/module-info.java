@@ -3,6 +3,7 @@
  * @since 2022-07-21
  */
 module consulo.external.service.impl {
+    requires static org.jspecify;
     requires consulo.application.api;
     requires consulo.builtin.web.server.api;
     requires consulo.component.store.api;

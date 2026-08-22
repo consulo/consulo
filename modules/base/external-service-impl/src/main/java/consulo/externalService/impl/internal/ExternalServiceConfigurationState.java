@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.internal;
+package consulo.externalService.impl.internal;
 
 import com.dslplatform.json.CompiledJson;
+import consulo.externalService.ExternalService;
+import consulo.util.lang.ThreeState;
 
-/**
- * @author VISTALL
- * @since 2025-01-30
- */
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @CompiledJson
-public enum PlatformOrPluginUpdateResultType {
-    PLATFORM_UPDATE,
-    PLUGIN_UPDATE,
-    RESTART_REQUIRED,
-    NO_UPDATE,
-    CANCELED,
-    // special case when user install plugins
-    PLUGIN_INSTALL
+public class ExternalServiceConfigurationState {
+    public String email;
+    public String oauthKey;
+    public String iconBytes;
+
+    public Map<ExternalService, ThreeState> states = new LinkedHashMap<>();
 }

@@ -1055,5 +1055,9 @@
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis-ext</artifactId>
         </dependency>
+        <dependency>
+            <groupId>consulo.internal.com.dslplatform</groupId>
+            <artifactId>dsl-json</artifactId>
+        </dependency>
     </dependencies>
 </project>

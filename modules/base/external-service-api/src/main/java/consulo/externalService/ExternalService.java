@@ -15,6 +15,7 @@
  */
 package consulo.externalService;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.localize.LocalizeValue;
@@ -29,6 +30,7 @@ import consulo.util.lang.ThreeState;
  * @author VISTALL
  * @since 2021-09-04
  */
+@CompiledJson
 public enum ExternalService {
     ERROR_REPORTING(LocalizeValue.localizeTODO("Error Reporting"), ThreeState.UNSURE, ThreeState.YES, ThreeState.UNSURE, ThreeState.NO),
     DEVELOPER_LIST(LocalizeValue.localizeTODO("Developer List (Error Reporting)"), ThreeState.NO, ThreeState.YES, ThreeState.NO),

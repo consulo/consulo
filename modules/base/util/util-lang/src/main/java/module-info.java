@@ -5,6 +5,8 @@ module consulo.util.lang {
   requires jdk.unsupported;
   requires static consulo.annotation;
   requires static com.uber.nullaway.annotations;
+  requires static com.dslplatform.json;
+
   requires org.slf4j;
   
   exports consulo.util.lang;

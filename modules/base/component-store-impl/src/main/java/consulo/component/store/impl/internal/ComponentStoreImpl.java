@@ -15,6 +15,7 @@
  */
 package consulo.component.store.impl.internal;
 
+import com.dslplatform.json.CompiledJson;
 import consulo.application.ApplicationManager;
 
 import consulo.application.util.ConcurrentFactoryMap;

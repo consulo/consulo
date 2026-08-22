@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.internal;
+package consulo.externalService.impl.internal.update;
 
 import com.dslplatform.json.CompiledJson;
+import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
+import consulo.externalService.update.UpdateChannel;
 
 /**
- * @author VISTALL
- * @since 2025-01-30
- */
+* @author VISTALL
+* @since 2026-08-21
+*/
 @CompiledJson
-public enum PlatformOrPluginUpdateResultType {
-    PLATFORM_UPDATE,
-    PLUGIN_UPDATE,
-    RESTART_REQUIRED,
-    NO_UPDATE,
-    CANCELED,
-    // special case when user install plugins
-    PLUGIN_INSTALL
+class UpdateSettingsState {
+    public boolean enable = true;
+    public long lastTimeCheck = 0;
+    public UpdateChannel channel;
+    public PlatformOrPluginUpdateResultType lastCheckResult = PlatformOrPluginUpdateResultType.NO_UPDATE;
 }

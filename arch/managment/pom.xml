@@ -80,6 +80,8 @@
 
         <compiler.apt.version>3.0</compiler.apt.version>
 
+        <dsl.json.version>3.0.2</dsl.json.version>
+
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
@@ -999,6 +1001,11 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-javalite</artifactId>
                 <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>consulo.internal.com.dslplatform</groupId>
+                <artifactId>dsl-json</artifactId>
+                <version>${dsl.json.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
