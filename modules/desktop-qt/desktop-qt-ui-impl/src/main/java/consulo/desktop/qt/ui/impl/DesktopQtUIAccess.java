@@ -64,6 +64,8 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
         Thread thread = new Thread("Qt Event Queue") {
             @Override
             public void run() {
+                DesktopQtNativePaths.applyBundledPluginPath();
+
                 QApplication.initialize(new String[0]);
                 QApplication.setQuitOnLastWindowClosed(false);
 

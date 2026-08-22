@@ -27,6 +27,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.desktop.qt.starter.DesktopQtApplicationStarter;
+import consulo.desktop.qt.ui.impl.DesktopQtNativePaths;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.logging.Logger;
 
@@ -98,6 +99,11 @@ public class DesktopQtContainerStartup implements ContainerStartup {
             + System.getProperty("java.library.path", "");
 
         System.setProperty("io.qt.library-path-override", searchPath);
+
+        File qtPluginPath = new File(nativePath, "plugins");
+        if (qtPluginPath.isDirectory()) {
+            System.setProperty(DesktopQtNativePaths.PLUGIN_PATH_PROPERTY, qtPluginPath.getAbsolutePath());
+        }
     }
 
     private static void start(StatCollector stat, Runnable appInitializeMark, String[] args) {
