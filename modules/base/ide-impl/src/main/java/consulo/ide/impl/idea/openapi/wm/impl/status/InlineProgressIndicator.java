@@ -15,12 +15,7 @@ import consulo.ui.ProgressBarStyle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.ActionToolbarFactory;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -33,7 +28,7 @@ import java.util.List;
 public class InlineProgressIndicator extends ProgressIndicatorBase implements Disposable {
     private final ActionToolbar myToolbar;
 
-    private class CancelAction extends LegacyDumbAwareAction {
+    private class CancelAction extends DumbAwareAction implements AnActionWithSyncUpdate {
         public CancelAction(LocalizeValue text, LocalizeValue description) {
             super(text, description, PlatformIconGroup.actionsClose());
         }
@@ -46,7 +41,8 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
         @Override
         public void update(AnActionEvent e) {
-            e.getPresentation().setEnabledAndVisible(myInfo != null && myInfo.isCancellable());
+            TaskInfo info = myInfo;
+            e.getPresentation().setEnabledAndVisible(info != null && info.isCancellable());
         }
     }
 
@@ -58,7 +54,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     private Component myComponent;
 
     private final boolean myCompact;
-    private TaskInfo myInfo;
+    private volatile TaskInfo myInfo;
 
     private final Label myProcessName = Label.create();
     private boolean myDisposed;
