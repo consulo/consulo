@@ -20,7 +20,6 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.internal.AsyncEditorLoader;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
@@ -72,7 +71,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
   
   @Override
   protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-    return new PsiAwareTextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+    return new PsiAwareTextEditorComponent(project, file, this);
   }
 
   @Override
@@ -91,11 +90,8 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(Project project,
-                                        VirtualFile file,
-                                        TextEditorImpl textEditor,
-                                        TextEditorComponentContainerFactory factory) {
-      super(project, file, textEditor, factory);
+    private PsiAwareTextEditorComponent(Project project, VirtualFile file, TextEditorImpl textEditor) {
+      super(project, file, textEditor);
       myProject = project;
       myFile = file;
     }

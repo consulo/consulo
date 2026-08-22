@@ -20,8 +20,10 @@ import consulo.fileEditor.impl.internal.largeFileEditor.search.RangeSearchCreato
 import consulo.fileEditor.internal.largeFileEditor.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
@@ -95,6 +97,11 @@ public final class LargeFileEditorImpl extends UserDataHolderBase implements Lar
     @Override
     public JComponent getComponent() {
         return editorModel.getComponent();
+    }
+
+    @Override
+    public Component getUIComponent() {
+        return TargetAWT.wrap(editorModel.getComponent());
     }
 
     @Override

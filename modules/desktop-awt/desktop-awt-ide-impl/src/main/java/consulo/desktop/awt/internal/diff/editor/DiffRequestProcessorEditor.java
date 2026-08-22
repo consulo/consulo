@@ -21,6 +21,7 @@ import consulo.diff.impl.internal.editor.FileEditorBase;
 import consulo.diff.localize.DiffLocalize;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -92,6 +93,11 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
   @Override
   public JComponent getComponent() {
     return myPanel;
+  }
+
+  @Override
+  public consulo.ui.Component getUIComponent() {
+    return TargetAWT.wrap(myPanel);
   }
 
   @Override

@@ -31,7 +31,6 @@ import consulo.fileEditor.TextEditorLocation;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.RealTextEditor;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
@@ -63,14 +62,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
 
     private final AsyncEditorLoaderImpl myAsyncLoader;
 
-    protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
-
     @RequiredUIAccess
     public TextEditorImpl(Project project, VirtualFile file, TextEditorProviderImpl provider) {
         myProject = project;
         myFile = file;
         myChangeSupport = new PropertyChangeSupport(this);
-        myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
         myComponent = createEditorComponent(project, file);
         Disposer.register(this, myComponent);
 
@@ -87,7 +83,7 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     protected TextEditorComponent createEditorComponent(Project project, VirtualFile file) {
-        return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
+        return new TextEditorComponent(project, file, this);
     }
 
     @Override
@@ -95,18 +91,13 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    public JComponent getComponent() {
-        return myComponent.getComponentContainer().getComponent();
-    }
-
-    @Override
-    public @Nullable Component getUIComponent() {
-        return myComponent.getComponentContainer().getUIComponent();
+    public Component getUIComponent() {
+        return myComponent.getUIComponent();
     }
 
     @Override
     public @Nullable Component getPreferredFocusedUIComponent() {
-        return getUIComponent();
+        return getActiveEditor().getContentUIComponent();
     }
 
     @Override

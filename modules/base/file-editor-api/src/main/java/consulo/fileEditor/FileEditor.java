@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.structureView.StructureViewBuilder;
@@ -43,9 +44,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
      */
     String PROP_VALID = "valid";
 
-    default @Nullable Component getUIComponent() {
-        return null;
-    }
+    Component getUIComponent();
 
     /**
      * Returns component to be focused when editor is opened.
@@ -151,6 +150,8 @@ public interface FileEditor extends UserDataHolder, Disposable {
      * @return component which represents editor in the UI.
      * The method should never return <code>null</code>.
      */
+    @Deprecated
+    @DeprecationInfo("Desktop only")
     default javax.swing.JComponent getComponent() {
         Component uiComponent = getUIComponent();
         if (uiComponent != null) {
@@ -162,6 +163,8 @@ public interface FileEditor extends UserDataHolder, Disposable {
     /**
      * Returns component to be focused when editor is opened.
      */
+    @Deprecated
+    @DeprecationInfo("Desktop only")
     default javax.swing.@Nullable JComponent getPreferredFocusedComponent() {
         Component component = getPreferredFocusedUIComponent();
         if (component != null) {

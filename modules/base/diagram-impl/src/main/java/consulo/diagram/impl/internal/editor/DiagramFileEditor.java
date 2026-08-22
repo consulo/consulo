@@ -29,6 +29,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.UserDataHolderBase;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
@@ -51,25 +52,36 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
 
     private JPanel myPanel;
 
+    private @Nullable Component myUIComponent;
+
     public DiagramFileEditor(Project project, DiagramVirtualFile virtualFile) {
         myProject = project;
         myVirtualFile = virtualFile;
     }
 
-    
+    @Override
+    public Component getUIComponent() {
+        if (myUIComponent == null) {
+            myUIComponent = TargetAWT.wrap(getComponent());
+        }
+        return myUIComponent;
+    }
+
     @Override
     public JComponent getComponent() {
-        myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
+        if (myLoadingPanel == null) {
+            myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
 
-        myPanel = new JPanel(new BorderLayout());
+            myPanel = new JPanel(new BorderLayout());
 
-        myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myPanel, true), BorderLayout.CENTER);
+            myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myPanel, true), BorderLayout.CENTER);
 
-        UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-            myLoadingPanel.setLoadingText(LocalizeValue.localizeTODO("Building Diagram..."));
-            myLoadingPanel.startLoading();
-            buildData();
-        });
+            UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
+                myLoadingPanel.setLoadingText(LocalizeValue.localizeTODO("Building Diagram..."));
+                myLoadingPanel.startLoading();
+                buildData();
+            });
+        }
 
         return myLoadingPanel;
     }

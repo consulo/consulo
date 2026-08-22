@@ -129,7 +129,7 @@ public final class MacroManagerImpl implements MacroManager {
       return dataContext;
     }
     FileEditor fileEditor = editorManager.getSelectedEditor(files[0]);
-    return fileEditor == null ? dataContext : DataManager.getInstance().getDataContext(fileEditor.getComponent());
+    return fileEditor == null ? dataContext : DataManager.getInstance().getDataContext(fileEditor.getUIComponent());
   }
 
   /**

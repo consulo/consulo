@@ -21,6 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.event.SplitProportionChangedEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -48,6 +49,14 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
         toVaadinComponent().setOrientation(position == SplitLayoutPosition.VERTICAL
             ? SplitLayout.Orientation.VERTICAL
             : SplitLayout.Orientation.HORIZONTAL);
+
+        toVaadinComponent().addSplitterDragEndListener(event -> {
+            Double splitterPosition = toVaadinComponent().getSplitterPosition();
+            if (splitterPosition != null) {
+                getListenerDispatcher(SplitProportionChangedEvent.class)
+                    .onEvent(new SplitProportionChangedEvent(this, (int) Math.round(splitterPosition)));
+            }
+        });
     }
 
     @Override

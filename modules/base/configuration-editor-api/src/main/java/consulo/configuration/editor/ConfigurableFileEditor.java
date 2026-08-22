@@ -169,6 +169,13 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
 
     @Override
     @RequiredUIAccess
+    public consulo.ui.Component getUIComponent() {
+        init();
+        return TargetAWT.wrap(myContentPanel);
+    }
+
+    @Override
+    @RequiredUIAccess
     public @Nullable JComponent getPreferredFocusedComponent() {
         if (myDisposed) {
             return null;

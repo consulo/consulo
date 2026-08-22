@@ -15,8 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OnePixelSplitter;
@@ -24,6 +25,7 @@ import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.event.SplitProportionChangedEvent;
 
 import javax.swing.*;
 
@@ -51,7 +53,13 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
 
     @Override
     protected Splitter createComponent() {
-        return new MySplitter(myPosition == SplitLayoutPosition.VERTICAL);
+        MySplitter splitter = new MySplitter(myPosition == SplitLayoutPosition.VERTICAL);
+        splitter.addPropertyChangeListener(Splitter.PROP_PROPORTION, event -> {
+            int percent = Math.round(((Float) event.getNewValue()) * 100f);
+            getListenerDispatcher(SplitProportionChangedEvent.class)
+                .onEvent(new SplitProportionChangedEvent(this, DesktopAWTInputDetails.currentEvent(splitter), percent));
+        });
+        return splitter;
     }
 
     @Override

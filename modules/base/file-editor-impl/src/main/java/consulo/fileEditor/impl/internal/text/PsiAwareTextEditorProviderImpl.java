@@ -24,7 +24,6 @@ import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.internal.AsyncEditorLoader;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.fileEditor.text.TextEditorState;
 import consulo.language.editor.folding.CodeFoldingManager;
@@ -34,7 +33,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
@@ -46,11 +44,6 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);
 
     private static final String FOLDING_ELEMENT = "folding";
-
-    @Inject
-    public PsiAwareTextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
-        super(textEditorComponentContainerFactory);
-    }
 
     @Override
     @RequiredUIAccess

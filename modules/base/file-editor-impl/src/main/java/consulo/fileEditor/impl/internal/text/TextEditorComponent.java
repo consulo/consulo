@@ -33,24 +33,24 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.FileContentUtilCore;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
-import consulo.fileEditor.internal.TextEditorComponentContainer;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LoadingLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -85,9 +85,9 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
 
   private final EditorHighlighterUpdater myEditorHighlighterUpdater;
 
-  private final TextEditorComponentContainer myTextEditorComponentContainer;
+  private final LoadingLayout<DockLayout> myLoadingLayout;
 
-  public TextEditorComponent(Project project, VirtualFile file, TextEditorImpl textEditor, TextEditorComponentContainerFactory editorFactory) {
+  public TextEditorComponent(Project project, VirtualFile file, TextEditorImpl textEditor) {
 
     myProject = project;
     myFile = file;
@@ -102,7 +102,9 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
     myValid = isEditorValidImpl();
     LOG.assertTrue(myValid);
 
-    myTextEditorComponentContainer = editorFactory.createTextComponentContainer(myEditor, this, this);
+    myLoadingLayout = LoadingLayout.create(DockLayout.create(), this);
+    myLoadingLayout.putUserData(UiDataProvider.KEY, this);
+    myLoadingLayout.setBackgroundColor(myEditor.getColorsScheme().getDefaultBackground());
 
     MyVirtualFileListener myVirtualFileListener = new MyVirtualFileListener();
     myFile.getFileSystem().addVirtualFileListener(myVirtualFileListener);
@@ -235,17 +237,12 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
     statusBar.updateWidgets(); // TODO: do we need this?!
   }
 
-  private @Nullable Editor validateCurrentEditor() {
-    return myTextEditorComponentContainer.validateEditor(myEditor);
-  }
-
   @Override
   public void uiDataSnapshot(DataSink sink) {
-    Editor e = validateCurrentEditor();
-    if (e == null || e.isDisposed()) return;
+    if (myEditor.isDisposed()) return;
 
-    sink.set(Editor.KEY, e);
-    sink.set(Caret.KEY, e.getCaretModel().getCurrentCaret());
+    sink.set(Editor.KEY, myEditor);
+    sink.set(Caret.KEY, myEditor.getCaretModel().getCurrentCaret());
     if (myFile.isValid()) {
       sink.set(VirtualFile.KEY, myFile);
     }
@@ -324,16 +321,20 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
     }
   }
 
+  @RequiredUIAccess
+  public void startLoading() {
+    myLoadingLayout.startLoading();
+  }
+
+  @RequiredUIAccess
   public void loadingFinished() {
-    myTextEditorComponentContainer.loadingFinished();
+    myLoadingLayout.stopLoading(content -> content.center(myEditor.getUIComponent()));
   }
 
-  
-  public TextEditorComponentContainer getComponentContainer() {
-    return myTextEditorComponentContainer;
+  public Component getUIComponent() {
+    return myLoadingLayout;
   }
 
-  
   public VirtualFile getFile() {
     return myFile;
   }

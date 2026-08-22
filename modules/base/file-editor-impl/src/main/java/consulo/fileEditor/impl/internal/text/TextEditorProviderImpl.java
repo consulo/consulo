@@ -21,7 +21,6 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.internal.TextEditorComponentContainerFactory;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorProvider;
@@ -35,7 +34,6 @@ import consulo.ui.util.ShowNotifier;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
 import kava.beans.PropertyChangeListener;
 import org.jspecify.annotations.Nullable;
 
@@ -49,13 +47,6 @@ import java.util.List;
  */
 public class TextEditorProviderImpl extends TextEditorProvider {
     private static final Logger LOG = Logger.getInstance(TextEditorProviderImpl.class);
-
-    protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
-
-    @Inject
-    public TextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
-        myTextEditorComponentContainerFactory = textEditorComponentContainerFactory;
-    }
 
     @Override
     public boolean accept(Project project, VirtualFile file) {

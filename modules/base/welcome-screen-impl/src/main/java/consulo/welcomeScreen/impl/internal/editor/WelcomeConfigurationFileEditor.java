@@ -17,15 +17,30 @@ package consulo.welcomeScreen.impl.internal.editor;
 
 import consulo.configuration.editor.ConfigurationFileEditor;
 import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-09-17
  */
 public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
+    private @Nullable DockLayout myComponent;
+
     public WelcomeConfigurationFileEditor(Project project, VirtualFile virtualFile) {
         super(project, virtualFile);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Component getUIComponent() {
+        if (myComponent == null) {
+            myComponent = DockLayout.create();
+        }
+        return myComponent;
     }
 
     @Override

@@ -15,10 +15,13 @@
  */
 package consulo.ui.layout;
 
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.internal.UIInternal;
+import consulo.ui.layout.event.SplitProportionChangedEvent;
 
 /**
  * @author VISTALL
@@ -41,6 +44,10 @@ public interface TwoComponentSplitLayout extends Layout<LayoutConstraint> {
      * @param percent from 0 to 100
      */
     void setProportion(int percent);
+
+    default Disposable addSplitProportionChangedListener(ComponentEventListener<TwoComponentSplitLayout, SplitProportionChangedEvent> listener) {
+        return addListener(SplitProportionChangedEvent.class, listener);
+    }
 
     @RequiredUIAccess
     default TwoComponentSplitLayout withFirstComponent(PseudoComponent component) {

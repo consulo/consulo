@@ -21,6 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.event.SplitProportionChangedEvent;
 import io.qt.core.Qt;
 import io.qt.gui.QResizeEvent;
 import io.qt.widgets.QLayout;
@@ -78,7 +79,10 @@ public class DesktopQtTwoComponentSplitLayoutImpl extends DesktopQtLayoutCompone
         );
         splitter.setHandleWidth(1);
         splitter.setChildrenCollapsible(false);
-        splitter.splitterMoved.connect((position, index) -> myUserMoved = true);
+        splitter.splitterMoved.connect((position, index) -> {
+            myUserMoved = true;
+            fireProportionChanged(splitter);
+        });
         return splitter;
     }
 
@@ -129,6 +133,23 @@ public class DesktopQtTwoComponentSplitLayoutImpl extends DesktopQtLayoutCompone
         int first = total * myProportion / 100;
 
         splitter.setSizes(List.of(first, total - first));
+    }
+
+    private void fireProportionChanged(QSplitter splitter) {
+        int total = myPosition == SplitLayoutPosition.VERTICAL ? splitter.height() : splitter.width();
+        if (total <= 0) {
+            return;
+        }
+
+        List<Integer> sizes = splitter.sizes();
+        if (sizes.size() != 2) {
+            return;
+        }
+
+        myProportion = sizes.get(0) * 100 / total;
+
+        getListenerDispatcher(SplitProportionChangedEvent.class)
+            .onEvent(new SplitProportionChangedEvent(this, myProportion));
     }
 
     @Override

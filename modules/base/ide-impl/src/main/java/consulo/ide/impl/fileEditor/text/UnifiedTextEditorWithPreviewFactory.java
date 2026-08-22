@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.fileEditor.text;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
@@ -30,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-07
  */
 @Singleton
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+@ServiceImpl
 public class UnifiedTextEditorWithPreviewFactory implements TextEditorWithPreviewFactory {
     @Override
     public TextEditorWithPreview create(TextEditor editor,

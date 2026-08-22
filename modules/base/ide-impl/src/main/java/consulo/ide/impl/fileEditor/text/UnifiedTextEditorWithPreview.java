@@ -18,6 +18,7 @@ package consulo.ide.impl.fileEditor.text;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
@@ -32,6 +33,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Pair;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jspecify.annotations.Nullable;
@@ -98,12 +100,14 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
         }
     }
 
+    private static final int DEFAULT_PROPORTION = 50;
+
     private final TextEditor myEditor;
     private final FileEditor myPreview;
     private final @Nullable ActionToolbar myLeftToolbarActionToolbar;
     private final String myName;
 
-    private final Map<PropertyChangeListener, DelegatePropertyChangeListener> myListeners = new HashMap<>();
+    private final Map<PropertyChangeListener, Pair<Integer, DelegatePropertyChangeListener>> myListeners = new HashMap<>();
 
     private @Nullable Layout myLayout;
     private @Nullable DockLayout myComponent;
@@ -141,10 +145,15 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
     @Override
     public Component getUIComponent() {
         if (myComponent == null) {
+            ApplicationPropertiesComponent properties = ApplicationPropertiesComponent.getInstance();
+
             TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
-            splitLayout.setProportion(50);
+            splitLayout.setProportion(properties.getInt(getSplitterProportionKey(), DEFAULT_PROPORTION));
             splitLayout.setFirstComponent(myEditor.getUIComponent());
             splitLayout.setSecondComponent(myPreview.getUIComponent());
+            splitLayout.addSplitProportionChangedListener(
+                event -> properties.setValue(getSplitterProportionKey(), event.getProportion(), DEFAULT_PROPORTION)
+            );
 
             if (myLayout == null) {
                 String lastUsed = ApplicationPropertiesComponent.getInstance().getValue(getLayoutPropertyName());
@@ -195,6 +204,24 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
         }
     }
 
+    @RequiredUIAccess
+    private void invalidateLayout() {
+        adjustEditorsVisibility();
+
+        if (myLayoutToolbar != null) {
+            myLayoutToolbar.updateActionsAsync();
+        }
+
+        Component focusComponent = getPreferredFocusedUIComponent();
+        if (focusComponent != null) {
+            IdeFocusManager.getGlobalInstance().requestFocus(focusComponent, true);
+        }
+    }
+
+    private String getSplitterProportionKey() {
+        return myName + "SplitterProportion";
+    }
+
     @Override
     public @Nullable Component getPreferredFocusedUIComponent() {
         return myLayout == Layout.SHOW_PREVIEW
@@ -223,7 +250,7 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
             }
             if (compositeState.mySplitLayout != null) {
                 myLayout = compositeState.mySplitLayout;
-                adjustEditorsVisibility();
+                invalidateLayout();
             }
         }
     }
@@ -267,20 +294,32 @@ public class UnifiedTextEditorWithPreview extends UserDataHolderBase implements 
 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        DelegatePropertyChangeListener delegate =
-            myListeners.computeIfAbsent(listener, DelegatePropertyChangeListener::new);
+        Pair<Integer, DelegatePropertyChangeListener> pair = myListeners.get(listener);
+        pair = pair == null
+            ? Pair.create(1, new DelegatePropertyChangeListener(listener))
+            : Pair.create(pair.getFirst() + 1, pair.getSecond());
+        myListeners.put(listener, pair);
 
-        myEditor.addPropertyChangeListener(delegate);
-        myPreview.addPropertyChangeListener(delegate);
+        myEditor.addPropertyChangeListener(pair.getSecond());
+        myPreview.addPropertyChangeListener(pair.getSecond());
     }
 
     @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        DelegatePropertyChangeListener delegate = myListeners.remove(listener);
-        if (delegate != null) {
-            myEditor.removePropertyChangeListener(delegate);
-            myPreview.removePropertyChangeListener(delegate);
+        Pair<Integer, DelegatePropertyChangeListener> pair = myListeners.get(listener);
+        if (pair == null) {
+            return;
         }
+
+        if (pair.getFirst() == 1) {
+            myListeners.remove(listener);
+        }
+        else {
+            myListeners.put(listener, Pair.create(pair.getFirst() - 1, pair.getSecond()));
+        }
+
+        myEditor.removePropertyChangeListener(pair.getSecond());
+        myPreview.removePropertyChangeListener(pair.getSecond());
     }
 
     @Override
