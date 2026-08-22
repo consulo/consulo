@@ -31,7 +31,6 @@ import io.qt.gui.QPainter;
 import io.qt.gui.QPalette;
 import io.qt.gui.QPen;
 import io.qt.gui.QRegion;
-import io.qt.gui.QScreen;
 import io.qt.gui.QWindow;
 import io.qt.widgets.QBoxLayout;
 import io.qt.widgets.QLayout;
@@ -495,9 +494,9 @@ public class DesktopQtWindowFrame extends QObject {
     }
 
     /**
-     * A maximized, full screen or tiled frame is sized by the compositor and has no edge of its own to drag or to
-     * cast a shadow off, so the margin is given back to the content there - and with it go the rounded corners,
-     * which at a screen edge would be four notches of desktop cut out of the frame.
+     * A maximized or full screen frame is sized by the compositor and has no edge of its own to drag or to cast a
+     * shadow off, so the margin is given back to the content there - and with it go the rounded corners, which at
+     * a screen edge would be four notches of desktop cut out of the frame.
      */
     private int currentFrameMargin() {
         return isSizedByCompositor() ? 0 : ourFrameMargin;
@@ -508,25 +507,15 @@ public class DesktopQtWindowFrame extends QObject {
     }
 
     /**
-     * Whether the frame stands against the edges of the screen rather than free on the desktop.
+     * Whether the compositor owns the size of the frame.
      * <p/>
-     * A maximized or full screen frame says so itself. A tiled one does not: kwin hands a wayland top level the
-     * tiled edges of {@code xdg_toplevel}, which qt keeps to itself, and the position of a wayland window is not
-     * something it is told either - so what is left to recognise a tile by is its size, which the compositor makes
-     * exactly as tall or as wide as the working area of the screen.
+     * Only the two states the window reports of itself are read. A tiled frame is not one of them - kwin hands a
+     * wayland top level the tiled edges of {@code xdg_toplevel} and qt keeps them to itself - and it must not be
+     * guessed at from the size of the frame against the screen: the margin is the only thing the frame can be
+     * resized by, so a guess which takes it away can never be revised afterwards. A tiled frame keeps its margin
+     * instead, which costs a gap at the screen edge and nothing else.
      */
     private boolean isSizedByCompositor() {
-        if (myWindow.isMaximized() || myWindow.isFullScreen()) {
-            return true;
-        }
-
-        QScreen screen = myWindow.screen();
-        if (screen == null) {
-            return false;
-        }
-
-        QRect available = screen.availableGeometry();
-
-        return myWindow.height() >= available.height() || myWindow.width() >= available.width();
+        return myWindow.isMaximized() || myWindow.isFullScreen();
     }
 }

@@ -341,7 +341,7 @@ public class DesktopQtWindowImpl extends QtComponentDelegate<QMainWindow> implem
         // drag to the compositor and only tells the frame its new size, so no button is held anywhere and
         // isPointerDown answers on x11 alone - a drag there was undone edge by edge. What a drag looks like on
         // either is a stream of sizes tens of milliseconds apart, while a stored geometry arrives on its own
-        if (isPointerDown() || isResizeStreaming()) {
+        if (isPointerDown() || myResizeStreaming) {
             myOwnedSize = newSize;
             myCorrections = 0;
             return;
