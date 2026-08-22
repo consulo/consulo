@@ -22,50 +22,23 @@ First of all, you need these tools:
  * Maven 3.9+
  * JDK 25+
 
-Then execute from command line:
+Build from command line:
 
 ```sh
 mvn package
 ```
 
 If you want run Consulo from repository
- * as a desktop application
 
-   ```sh
-    mvn install
-
-    mvn consulo:run-desktop-awt-fork -pl consulo:consulo-sandbox-desktop-awt
-   ```
-
- * as a web application
-
-   first need build web sandbox
-   ```
-   mvn package -am -pl consulo:consulo-sandbox-web
-   ```
-
-   then need start code server (since we used gwt as frontend)
-
-   ```sh
-   cd modules/web/web-ui-impl-client
-
-   mvn -am vaadin:run-codeserver
-   ```
-
-   and start web server
-
-   ```sh
-   cd modules/web/web-bootstrap
-
-   mvn -am jetty:run
-   ```
+|Platform     | Command Line    |
+|-------------| ----------------|
+|Desktop Application (AWT/Swing)    |  `mvn consulo:run-desktop-awt-fork -am -pl :consulo-sandbox-desktop-awt` |
+|Web (port 8080)          | `mvn consulo:run-web-fork -am -pl :consulo-sandbox-web` |
 
 ## Sandbox Projects
 
  * Profiler API [link](https://github.com/consulo/profiler-sandbox)
  * Diagram support [link](https://github.com/consulo/consulo/tree/master/modules/base/graph-api)
- * Web IDE [link](https://github.com/consulo/consulo/tree/master/modules/web)
- * SWT UI [link](https://github.com/consulo/consulo/tree/master/modules/desktop-swt)
 
 ## Links
 
