@@ -29,6 +29,7 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.style.StandardColors;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.TimeoutUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -140,6 +141,22 @@ public class UITester {
             }));
 
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Toggle Switch"))).add(toggleSwitch).add(checkBox));
+
+            TriStateCheckBox triStateCheckBox = TriStateCheckBox.create(LocalizeValue.of("Tri state"));
+            triStateCheckBox.addValueListener(
+                event -> Alerts.okInfo(LocalizeValue.of("triStateCheckBox " + event.getValue())).showAsync()
+            );
+
+            TriStateCheckBox twoStateCheckBox = TriStateCheckBox.create(LocalizeValue.of("Unsure disabled"), ThreeState.UNSURE);
+            twoStateCheckBox.setUnsureEnabled(false);
+            twoStateCheckBox.addValueListener(
+                event -> Alerts.okInfo(LocalizeValue.of("twoStateCheckBox " + event.getValue())).showAsync()
+            );
+
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("TriStateCheckBox")))
+                .add(triStateCheckBox)
+                .add(twoStateCheckBox));
 
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Password"))).add(PasswordBox.create()));
 

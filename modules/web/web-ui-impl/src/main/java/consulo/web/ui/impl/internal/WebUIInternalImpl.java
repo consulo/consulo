@@ -75,6 +75,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public TriStateCheckBox _Components_triStateCheckBox() {
+        return new WebTriStateCheckBoxImpl();
+    }
+
+    @Override
     public DockLayout _Layouts_dock(int gapInPixels) {
         return new WebDockLayoutImpl(gapInPixels);
     }

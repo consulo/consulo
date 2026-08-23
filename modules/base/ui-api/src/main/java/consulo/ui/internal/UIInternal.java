@@ -54,6 +54,10 @@ public abstract class UIInternal {
 
     public abstract CheckBox _Components_checkBox();
 
+    public TriStateCheckBox _Components_triStateCheckBox() {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract DockLayout _Layouts_dock(int gapInPixels);
 
     public abstract WrappedLayout _Layouts_wrapped();

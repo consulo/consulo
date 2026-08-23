@@ -285,6 +285,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public TriStateCheckBox _Components_triStateCheckBox() {
+        return new DesktopTriStateCheckBoxImpl();
+    }
+
+    @Override
     public DockLayout _Layouts_dock(int gapInPixels) {
         return new DesktopDockLayoutImpl(gapInPixels);
     }

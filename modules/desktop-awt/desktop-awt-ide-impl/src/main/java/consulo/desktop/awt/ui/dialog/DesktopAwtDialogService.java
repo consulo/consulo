@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.action.toolbar.ActionButtonToolbarImpl;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
@@ -57,6 +58,8 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 @ServiceImpl
 public class DesktopAwtDialogService implements DialogService {
+    private static final Logger LOG = Logger.getInstance(DesktopAwtDialogService.class);
+
     private static class DialogImpl implements Dialog {
         private final DialogWrapperImpl myDialogWrapper;
         private final DialogDescriptor myDescriptor;
@@ -144,7 +147,13 @@ public class DesktopAwtDialogService implements DialogService {
 
             setTitle(myDescriptor.getTitle());
 
-            init();
+            try {
+                init();
+            }
+            catch (Throwable e) {
+                LOG.error("Cannot build dialog: " + myDescriptor.getClass().getName(), e);
+                throw e;
+            }
         }
 
         @Override

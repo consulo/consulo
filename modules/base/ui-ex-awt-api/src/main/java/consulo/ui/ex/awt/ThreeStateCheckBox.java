@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -28,6 +29,8 @@ import java.awt.event.ItemEvent;
 /**
  * @author spleaner
  */
+@Deprecated
+@DeprecationInfo("Use consulo.ui.TriStateCheckBox")
 public class ThreeStateCheckBox extends JCheckBox {
     private State myState;
     private boolean myThirdStateEnabled = true;

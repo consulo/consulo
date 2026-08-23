@@ -81,6 +81,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public TriStateCheckBox _Components_triStateCheckBox() {
+        return new DesktopQtTriStateCheckBoxImpl();
+    }
+
+    @Override
     public DockLayout _Layouts_dock(int gapInPixels) {
         return new DesktopQtDockLayoutImpl(gapInPixels);
     }
