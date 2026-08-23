@@ -86,6 +86,31 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+        return new DesktopQtToggleSwitchImpl(selected);
+    }
+
+    @Override
+    public IntSlider _Components_intSlider(int min, int max, int value) {
+        return new DesktopQtIntSliderImpl(min, max, value);
+    }
+
+    @Override
+    public AdvancedLabel _Components_advancedLabel() {
+        return new DesktopQtAdvancedLabelImpl();
+    }
+
+    @Override
+    public DatePicker _Components_datePicker(@Nullable String datePattern) {
+        return new DesktopQtDatePickerImpl(datePattern);
+    }
+
+    @Override
+    public <T> Table<T> _Table_create(FlatDataModel<T> model) {
+        return new DesktopQtTableImpl<>(model);
+    }
+
+    @Override
     public DockLayout _Layouts_dock(int gapInPixels) {
         return new DesktopQtDockLayoutImpl(gapInPixels);
     }

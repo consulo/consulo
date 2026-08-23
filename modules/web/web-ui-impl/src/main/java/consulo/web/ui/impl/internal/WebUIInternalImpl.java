@@ -156,9 +156,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
-        throw notSupported();
-
-        //return new WebHtmlLabelImpl(html, labelOptions);
+        return new WebHtmlLabelImpl(html, labelOptions);
     }
 
     @Override
@@ -458,25 +456,22 @@ public class WebUIInternalImpl extends UIInternal {
         Function<String, List<String>> parser,
         Function<List<String>, String> joiner
     ) {
-        throw notSupported();
+        return new WebTextBoxWithExpandActionImpl(editButtonImage, dialogTitle, parser, joiner);
     }
 
     @Override
     public TextBoxWithExtensions _Components_textBoxWithExtensions(@Nullable String text) {
-        throw notSupported();
-        //return new WebTextBoxWithExtensionsImpl(text);
+        return new WebTextBoxWithExtensionsImpl(text);
     }
 
     @Override
     public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
-        throw notSupported();
-        //return new WebFoldoutLayoutImpl();
+        return new WebFoldoutLayoutImpl(titleValue, component, show);
     }
 
     @Override
     public ToggleSwitch _Components_toggleSwitch(boolean selected) {
-        throw notSupported();
-        //return new WebToggleSwitchImpl(selected);
+        return new WebToggleSwitchImpl(selected);
     }
 
     @Override
@@ -491,8 +486,12 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public IntSlider _Components_intSlider(int min, int max, int value) {
-        throw notSupported();
-        //return new WebIntSliderImpl(min, max, value);
+        return new WebIntSliderImpl(min, max, value);
+    }
+
+    @Override
+    public DatePicker _Components_datePicker(@Nullable String datePattern) {
+        return new WebDatePickerImpl(datePattern);
     }
 
     @Override

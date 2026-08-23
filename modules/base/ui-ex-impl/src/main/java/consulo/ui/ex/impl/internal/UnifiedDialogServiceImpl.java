@@ -18,6 +18,7 @@ package consulo.ui.ex.impl.internal;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataContext;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.Size2D;
@@ -51,6 +52,8 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedDialogServiceImpl implements DialogService {
+    private static final Logger LOG = Logger.getInstance(UnifiedDialogServiceImpl.class);
+
     private static class DialogImpl implements Dialog {
         private static final String PLACE = "DialogRightButtons";
 
@@ -70,7 +73,16 @@ public class UnifiedDialogServiceImpl implements DialogService {
         @Override
         @RequiredUIAccess
         public CompletableFuture<DialogValue> showAsync() {
-            myWindow.setContent(buildContent());
+            Component content;
+            try {
+                content = buildContent();
+            }
+            catch (Throwable e) {
+                LOG.error("showAsync: cannot build content of " + myDescriptor.getClass().getName(), e);
+                throw e;
+            }
+
+            myWindow.setContent(content);
 
             Size2D initialSize = myDescriptor.getInitialSize();
             if (initialSize != null) {
@@ -90,7 +102,13 @@ public class UnifiedDialogServiceImpl implements DialogService {
                 myResult.completeExceptionally(new IllegalArgumentException("reject"));
             });
 
-            myWindow.show();
+            try {
+                myWindow.show();
+            }
+            catch (Throwable e) {
+                LOG.error("showAsync: cannot show window " + myWindow.getClass().getName(), e);
+                throw e;
+            }
 
             return myResult;
         }

@@ -68,6 +68,10 @@ module consulo.web.ide {
     requires vaadin.combo.box.flow;
     requires vaadin.context.menu.flow;
     requires vaadin.dev.server;
+    requires vaadin.details.flow;
+    requires vaadin.date.picker.flow;
+    requires vaadin.slider.flow;
+    requires togglebutton;
     requires vaadin.dialog.flow;
     requires vaadin.flow.components.base;
     requires vaadin.grid.flow;

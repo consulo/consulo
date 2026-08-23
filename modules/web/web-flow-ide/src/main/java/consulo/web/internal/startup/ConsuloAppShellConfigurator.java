@@ -27,6 +27,8 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dependency.Uses;
 import com.flowingcode.vaadin.addons.xterm.ConsuloPtyTerm;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -44,6 +46,7 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.slider.IntegerSlider;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -51,6 +54,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.componentfactory.ToggleButton;
 import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
@@ -117,6 +121,10 @@ import org.vaadin.stefan.table.Table;
 @Uses(TabSheet.class)
 @Uses(TextArea.class)
 @Uses(ProgressBar.class)
+@Uses(Details.class)
+@Uses(DatePicker.class)
+@Uses(IntegerSlider.class)
+@Uses(ToggleButton.class)
 public class ConsuloAppShellConfigurator implements AppShellConfigurator {
   @Override
   public void configurePage(AppShellSettings settings) {

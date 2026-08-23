@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl.titleless;
 import consulo.desktop.qt.ui.impl.DesktopQtStyleApplier;
 import consulo.ui.style.ComponentColors;
 import io.qt.core.QEvent;
+import io.qt.core.QMargins;
 import io.qt.core.QObject;
 import io.qt.core.QPoint;
 import io.qt.core.QRect;
@@ -92,7 +93,6 @@ public class DesktopQtWindowFrame extends QObject {
     private final @Nullable DesktopQtWindowControls myOverlayControls;
 
     private boolean myCursorOverridden;
-    private int myAppliedMargin = -1;
 
     public DesktopQtWindowFrame(QMainWindow window, QWidget centralWidget, DesktopQtTitleBarPlacement placement) {
         super(window);
@@ -349,7 +349,7 @@ public class DesktopQtWindowFrame extends QObject {
             return false;
         }
 
-        if (type == QEvent.Type.Resize) {
+        if (type == QEvent.Type.Resize || type == QEvent.Type.Show) {
             // a frame the compositor tiled changes its size and not its state, so the margin is answered here too
             applyFrameMargin();
 
@@ -481,15 +481,20 @@ public class DesktopQtWindowFrame extends QObject {
         }
     }
 
+    /**
+     * The margin the window carries is read back off the window rather than remembered here: the state a frame
+     * comes up in is handed to it before it is shown, which is a state change qt has no window to report against,
+     * so a margin remembered from the constructor is one the frame never had.
+     */
     private void applyFrameMargin() {
         int margin = currentFrameMargin();
-        if (margin == myAppliedMargin) {
+
+        QMargins margins = new QMargins(margin, margin, margin, margin);
+        if (margins.equals(myWindow.contentsMargins())) {
             return;
         }
 
-        myAppliedMargin = margin;
-
-        myWindow.setContentsMargins(margin, margin, margin, margin);
+        myWindow.setContentsMargins(margins);
         applyContentMask();
     }
 

@@ -96,8 +96,6 @@ public class UITester {
 
             borderLayout.add(centerBtn).add(dockLayout);
 
-            borderLayout.add(centerBtn);
-
             tabbedLayout.addTab("DockLayout", borderLayout);
             tabbedLayout.addTab("LoadingLayout", loadingLayout(uiDisposable));
 
@@ -171,6 +169,35 @@ public class UITester {
             IntSlider intSlider = IntSlider.create(3);
             intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
             layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
+
+            DatePicker datePicker = DatePicker.create();
+            datePicker.setValue(new Date());
+            datePicker.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("datePicker " + event.getValue())).showAsync());
+            layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("DatePicker"))).add(datePicker));
+
+            layout.add(HtmlLabel.create(LocalizeValue.of("<b>Html</b> <i>Label</i>")));
+
+            TextBoxWithExtensions textBoxWithExtensions = TextBoxWithExtensions.create("with extensions");
+            textBoxWithExtensions.addLastExtension(new TextBoxWithExtensions.Extension(
+                false,
+                PlatformIconGroup.actionsFind(),
+                null,
+                event -> Alerts.okInfo(LocalizeValue.of("extension clicked")).showAsync()
+            ));
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("TextBox With Extensions")))
+                .add(textBoxWithExtensions));
+
+            TextBoxWithExpandAction textBoxWithExpandAction = TextBoxWithExpandAction.create(
+                null,
+                "Edit Lines",
+                text -> List.of(text.split(";")),
+                lines -> String.join(";", lines)
+            );
+            textBoxWithExpandAction.setValue("one;two;three");
+            layout.add(HorizontalLayout.create()
+                .add(Label.create(LocalizeValue.of("TextBox With Expand")))
+                .add(textBoxWithExpandAction));
 
             layout.add(Hyperlink.create(
                 LocalizeValue.localizeTODO("Some Link"),

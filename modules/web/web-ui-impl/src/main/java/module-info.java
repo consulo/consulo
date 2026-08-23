@@ -42,7 +42,9 @@ module consulo.web.ui.impl {
     requires vaadin.button.flow;
     requires vaadin.checkbox.flow;
     requires vaadin.context.menu.flow;
+    requires vaadin.details.flow;
     requires vaadin.dialog.flow;
+    requires togglebutton;
     requires vaadin.flow.components.base;
     requires vaadin.grid.flow;
     requires vaadin.icons.flow;
@@ -53,6 +55,8 @@ module consulo.web.ui.impl {
     requires vaadin.progress.bar.flow;
     requires vaadin.renderer.flow;
     requires vaadin.select.flow;
+    requires vaadin.slider.flow;
+    requires vaadin.date.picker.flow;
     requires vaadin.split.layout.flow;
     requires vaadin.tabs.flow;
     requires jakarta.inject;
