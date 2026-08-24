@@ -22,12 +22,11 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.project.ui.localize.ProjectUILocalize;
+import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.ScrollingUtil;
 
-import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -56,9 +55,9 @@ public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenAct
 
             rebuildRecentProjectsList(e);
 
-            JList list = getList(e);
-            if (list != null) {
-                ScrollingUtil.ensureSelectionExists(list);
+            ListBox<AnAction> list = getList(e);
+            if (list != null && list.getValue() == null && list.getDataModel().getSize() != 0) {
+                list.setValueByIndex(0);
             }
         }
 

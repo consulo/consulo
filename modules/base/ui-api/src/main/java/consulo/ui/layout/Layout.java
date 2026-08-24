@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasAccessibility;
 import consulo.ui.HasSize;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -25,7 +26,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2016-06-09
  */
-public interface Layout<C extends LayoutConstraint> extends Component, HasSize {
+public interface Layout<C extends LayoutConstraint> extends Component, HasSize, HasAccessibility {
     default Layout<C> add(Component component, C constraint) {
         throw new UnsupportedOperationException("Adding not supported");
     }

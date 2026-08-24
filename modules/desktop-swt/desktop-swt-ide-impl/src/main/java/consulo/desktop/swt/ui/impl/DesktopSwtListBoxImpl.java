@@ -15,13 +15,13 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.Length;
 import consulo.ui.TransferHandler;
 import consulo.ui.ListBox;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ComponentItemRender;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import consulo.ui.model.FlatDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -89,7 +89,7 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
     }
 
   @Override
@@ -101,4 +101,8 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
   public @Nullable TransferHandler<E> getTransferHandler() {
       return myTransferHandler;
   }
+
+    @Override
+    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    }
 }

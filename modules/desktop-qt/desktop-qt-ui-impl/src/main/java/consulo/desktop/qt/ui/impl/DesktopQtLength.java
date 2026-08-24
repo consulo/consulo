@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.it.internal.ui;
+package consulo.desktop.qt.ui.impl;
 
-import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.Length;
+import io.qt.gui.QFontMetrics;
+import io.qt.widgets.QWidget;
 
 /**
- * Dummy-but-creatable headless {@link TextBoxWithExpandAction}.
- *
  * @author VISTALL
+ * @since 2026-08-24
  */
-public class HeadlessTextBoxWithExpandAction extends HeadlessTextBox implements TextBoxWithExpandAction {
-    public HeadlessTextBoxWithExpandAction() {
-        super("");
+public final class DesktopQtLength {
+    public static int toPixels(QWidget widget, Length length) {
+        return length.toPixels(new QFontMetrics(widget.font()).height());
     }
 
-    @Override
-    public TextBoxWithExpandAction withDialogTitle(String text) {
-        return this;
-    }
-
-    @Override
-    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    private DesktopQtLength() {
     }
 }

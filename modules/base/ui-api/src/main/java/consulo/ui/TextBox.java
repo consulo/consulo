@@ -23,7 +23,8 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2016-11-19
  */
-public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent, HasPrefixComponent {
+public interface TextBox extends ValueComponent<String>, HasValidator<String>, HasFocus, HasSuffixComponent, HasPrefixComponent,
+    HasPlaceholder {
     static TextBox create() {
         return create(null);
     }
@@ -32,18 +33,9 @@ public interface TextBox extends ValueComponent<String>, HasValidator<String>, H
         return UIInternal.get()._Components_textBox(text == null ? "" : text);
     }
 
-    default void setPlaceholder(LocalizeValue text) {
-        // unwarranted action
-    }
-
     default TextBox withPlaceholder(LocalizeValue text) {
         setPlaceholder(text);
         return this;
-    }
-
-    @Deprecated
-    default void setPlaceholder(@Nullable String text) {
-        setPlaceholder(LocalizeValue.ofNullable(text));
     }
 
     @Deprecated

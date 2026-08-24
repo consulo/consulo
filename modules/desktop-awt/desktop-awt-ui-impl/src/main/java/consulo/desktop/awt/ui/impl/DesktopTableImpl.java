@@ -19,6 +19,7 @@ import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Length;
 import consulo.ui.Component;
 import consulo.ui.SelectionMode;
 import consulo.ui.Table;
@@ -39,7 +40,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -63,7 +63,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     private SelectionMode mySelectionMode = SelectionMode.SINGLE;
     private boolean myShowHeader = true;
     private @Nullable Function<Item, String> mySpeedSearchConverter;
-    private @Nullable ToIntFunction<Item> myItemHeightGetter;
+    private @Nullable Function<Item, Length> myItemHeightGetter;
 
     public DesktopTableImpl(FlatDataModel<Item> model) {
         myModel = model;
@@ -154,7 +154,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
         // JTable has no per row height hook, so each row is set outright - the height comes from the
         // caller, so there is no measure pass
         for (int row = 0; row < tableView.getRowCount(); row++) {
-            tableView.setRowHeight(row, myItemHeightGetter.applyAsInt(tableView.getRow(row)));
+            tableView.setRowHeight(row, DesktopLength.toPixels(tableView, myItemHeightGetter.apply(tableView.getRow(row))));
         }
     }
 
@@ -248,7 +248,7 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> imp
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<Item> getter) {
+    public void setItemHeightGetter(@Nullable Function<Item, Length> getter) {
         myItemHeightGetter = getter;
         if (isInitialized()) {
             applyItemHeight(toAWTComponent());

@@ -61,6 +61,11 @@ public class DesktopQtPopupMenuImpl extends DesktopQtMenuImpl implements PopupMe
         myOpenOnClick = openOnClick;
     }
 
+    @Override
+    public void hide() {
+        toQtMenu().close();
+    }
+
     @RequiredUIAccess
     @Override
     public void show(int relativeX, int relativeY) {

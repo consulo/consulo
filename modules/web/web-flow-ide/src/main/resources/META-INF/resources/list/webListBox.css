@@ -23,6 +23,15 @@ vaadin-list-box.web-list-box vaadin-item[selected]
   background: var(--consulo-list-row-selection, #d4e2ff);
 }
 
+/* a vaadin item wraps what it holds in a content part whose automatic minimum size is its content, so a row with a
+   long path in it pushes that part - and with it the row - past the width of the item, and whatever the row docks to
+   its right ends up outside the list. the part is told it may shrink, which is what makes a width of the row resolve
+   against the item it is actually in */
+vaadin-list-box.web-list-box vaadin-item::part(content)
+{
+  min-width: 0;
+}
+
 /* the lazy list has no vaadin-item to put a row in - what a render made is the row - so the chrome an item would
    have carried is put on it here, and a row of either list ends up looking the same.
    the list wraps every render of its own accord, so the row is the wrapper and what the render made is inside it */
@@ -99,4 +108,15 @@ vaadin-item:has(> .web-list-box-separator)
 {
   min-height: 0;
   padding: 0;
+}
+
+/* a list which holds nothing says so in the middle of itself, the way the empty text of a platform list does - the
+   text is an attribute rather than a row, so it is never something the list can be scrolled to or chosen from */
+vaadin-list-box.web-list-box[placeholder]:not(:has(vaadin-item))::after
+{
+  content: attr(placeholder);
+  display: block;
+  padding: 8px;
+  text-align: center;
+  color: var(--vaadin-text-color-secondary, #6b7280);
 }

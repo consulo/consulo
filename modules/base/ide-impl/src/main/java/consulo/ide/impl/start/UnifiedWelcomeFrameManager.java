@@ -19,11 +19,18 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
+import consulo.dataContext.UiDataProvider;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.event.ComponentEvent;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.welcomeScreen.BaseUnifiedWelcomeScreenPanel;
+import consulo.ide.impl.welcomeScreen.RecentProjectItemRender;
 import consulo.project.ui.impl.internal.wm.UnifiedWelcomeIdeFrame;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -35,7 +42,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
-import consulo.ui.Size2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
@@ -43,11 +49,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.TitlelessDecoratorService;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.layout.Layout;
 import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -64,6 +72,10 @@ import java.util.List;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
+    private static final String WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP = "WelcomeScreenRecentProjectActionGroup";
+
+    private @Nullable ActionPopupMenu myRecentProjectMenu;
+
     private final Provider<ProjectManager> myProjectManager;
     // asking for the instance here rather than at the frame would have the platform build the service - and
     // read its stored state - while the application is still coming up, and it answers no recent project at all
@@ -170,31 +182,67 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
     @RequiredUIAccess
     private ListBox<AnAction> createRecentProjectsList(AnAction[] recentProjectsActions, Window welcomeFrame) {
-        FlatDataModel<AnAction> model = FlatDataModel.of(Arrays.asList(recentProjectsActions));
+        MutableFlatDataModel<AnAction> model = FlatDataModel.of(Arrays.asList(recentProjectsActions));
+
+        SimpleReference<ListBox<AnAction>> listBoxRef = SimpleReference.create();
 
         ListBox<AnAction> listSelect = ListBox.create(model);
-        listSelect.setRender((renderer, renderItem) -> {
-            ReopenProjectAction action = (ReopenProjectAction) renderItem.getValue();
-            if (action.isOpened()) {
-                renderer.append(ProjectLocalize.recentProject0OpenedActionText(LocalizeValue.of(action.getProjectName())));
-                return;
-            }
+        listBoxRef.set(listSelect);
+        listSelect.setRender(new RecentProjectItemRender(
+            myRecentProjectsManager.get(),
+            RecentProjectsChecker.getInstance(),
+            (action, event) -> {
+                AnActionEvent e = AnActionEvent.createFromAnAction(
+                    action,
+                    null,
+                    ActionPlaces.WELCOME_SCREEN,
+                    myDataManager.getDataContext(welcomeFrame),
+                    event.getInputDetails()
+                );
 
-            renderer.append(action.getProjectName());
-            String branch = RecentProjectsChecker.getInstance().getBranch(action.getProjectPath());
-            if (branch != null && !branch.isEmpty()) {
-                renderer.append(" [" + branch + "]");
-            }
-        });
-        listSelect.addValueListener(event -> {
-            ReopenProjectAction value = (ReopenProjectAction) event.getValue();
+                action.actionPerformed(e);
+            },
+            (action, event) -> showRecentProjectMenu(listBoxRef.get(), action, event)
+        ));
+        // the menu is built against the list, so what the actions of the menu work on is published by it
+        listSelect.putUserData(
+            UiDataProvider.KEY,
+            sink -> sink.set(RecentProjectsWelcomeScreenActionBase.RECENT_PROJECTS_LIST, listSelect)
+        );
 
-            AnActionEvent e =
-                AnActionEvent.createFromAnAction(value, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
-
-            value.actionPerformed(e);
-        });
-        listSelect.setSize(new Size2D(300, -1));
+        listSelect.setSelectOnHover(true);
+        listSelect.setPlaceholder(ProjectLocalize.recentProjectsNoProjectOpenYet());
+        listSelect.setItemHeightGetter(action -> RecentProjectItemRender.ROW_HEIGHT);
+        listSelect.setSize(RecentProjectItemRender.LIST_WIDTH, null);
         return listSelect;
+    }
+
+    @RequiredUIAccess
+    private void showRecentProjectMenu(ListBox<AnAction> listBox, AnAction action, ComponentEvent<Component> event) {
+        if (!(myActionManager.getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP) instanceof ActionGroup group)) {
+            return;
+        }
+
+        listBox.setValue(action, false);
+
+        // asking for the menu again is asking for one menu, wherever it was asked from - the one standing open is
+        // not closed by the gesture which opens the next, since that gesture never reaches it
+        closeRecentProjectMenu();
+
+        ActionPopupMenu menu = myActionManager.createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group);
+        menu.setTargetComponent(listBox);
+
+        myRecentProjectMenu = menu;
+        menu.show(event.getComponent(), event.getInputDetails().getX(), event.getInputDetails().getY());
+    }
+
+    @RequiredUIAccess
+    private void closeRecentProjectMenu() {
+        ActionPopupMenu menu = myRecentProjectMenu;
+        myRecentProjectMenu = null;
+
+        if (menu != null) {
+            menu.hide();
+        }
     }
 }

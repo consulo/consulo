@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Length;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.RenderItem;
@@ -39,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -55,7 +55,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
     private boolean myShowHeader = true;
 
     private @Nullable Function<Item, String> mySpeedSearchConverter;
-    private @Nullable ToIntFunction<Item> myItemHeightGetter;
+    private @Nullable Function<Item, Length> myItemHeightGetter;
 
     /**
      * The rows the table shows, which is the model order until a sortable column is clicked - the model itself is
@@ -210,7 +210,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
             Item item = myRows.get(row);
 
             if (myItemHeightGetter != null) {
-                component.setRowHeight(row, myItemHeightGetter.applyAsInt(item));
+                component.setRowHeight(row, DesktopQtLength.toPixels(component, myItemHeightGetter.apply(item)));
             }
 
             for (DesktopQtTableColumnImpl<Item, ?> column : myColumns) {
@@ -365,7 +365,7 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<Item> getter) {
+    public void setItemHeightGetter(@Nullable Function<Item, Length> getter) {
         myItemHeightGetter = getter;
 
         updateRows();

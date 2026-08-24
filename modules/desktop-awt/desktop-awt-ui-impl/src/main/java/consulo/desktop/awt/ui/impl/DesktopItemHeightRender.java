@@ -15,10 +15,12 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.Length;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
+import java.util.function.Function;
 
 /**
  * JList has no per item height hook - with a fixed cell height of -1 it asks the renderer for each
@@ -27,21 +29,21 @@ import java.util.function.ToIntFunction;
  * @author VISTALL
  * @since 2026-08-02
  */
-final class DesktopItemHeightRender {
-    static <E> ListCellRenderer<E> wrap(ListCellRenderer<E> delegate, Supplier<ToIntFunction<E>> getterSupplier) {
+final class DesktopLengthRender {
+    static <E> ListCellRenderer<E> wrap(ListCellRenderer<E> delegate, Supplier<Function<E, Length>> getterSupplier) {
         return (list, value, index, selected, hasFocus) -> {
             Component component = delegate.getListCellRendererComponent(list, value, index, selected, hasFocus);
 
-            ToIntFunction<E> getter = getterSupplier.get();
+            Function<E, Length> getter = getterSupplier.get();
             if (getter != null && component != null) {
                 Dimension size = component.getPreferredSize();
-                component.setPreferredSize(new Dimension(size.width, getter.applyAsInt(value)));
+                component.setPreferredSize(new Dimension(size.width, DesktopLength.toPixels(list, getter.apply(value))));
             }
 
             return component;
         };
     }
 
-    private DesktopItemHeightRender() {
+    private DesktopLengthRender() {
     }
 }

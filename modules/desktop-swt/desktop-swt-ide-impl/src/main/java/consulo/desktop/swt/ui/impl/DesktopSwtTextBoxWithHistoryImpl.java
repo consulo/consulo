@@ -103,4 +103,8 @@ public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text>
     public @Nullable Component getSuffixComponent() {
         return null;
     }
+
+    @Override
+    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    }
 }

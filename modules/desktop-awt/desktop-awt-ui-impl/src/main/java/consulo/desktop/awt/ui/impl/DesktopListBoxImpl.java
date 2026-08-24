@@ -15,15 +15,21 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.Length;
 import consulo.ui.TransferHandler;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.desktop.awt.ui.impl.DesktopListRenderInteraction.ClickTarget;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.event.ListDoubleClickEvent;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
@@ -38,11 +44,13 @@ import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.AWTEvent;
+import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -50,14 +58,127 @@ import java.util.function.ToIntFunction;
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
     private @Nullable TransferHandler<E> myTransferHandler;
-    class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
-        MyJBList(javax.swing.ListModel<T> dataModel) {
+    private boolean mySelectOnHover;
+    private int myHoverIndex = -1;
+    private int myCursorIndex = -1;
+
+    class MyJBList extends JBList<E> implements FromSwingComponentWrapper {
+        MyJBList(javax.swing.ListModel<E> dataModel) {
             super(dataModel);
+            enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        }
+
+        @Override
+        protected void processMouseEvent(MouseEvent e) {
+            if (e.getID() == MouseEvent.MOUSE_EXITED) {
+                setHoverIndex(-1);
+            }
+
+            if (e.isPopupTrigger()) {
+                ClickTarget menuTarget = findTarget(e.getPoint(), ContextMenuEvent.class);
+                if (menuTarget != null) {
+                    DesktopListRenderInteraction.contextMenu(menuTarget, this, e);
+                    e.consume();
+                    return;
+                }
+            }
+
+            ClickTarget target = SwingUtilities.isLeftMouseButton(e) ? findTarget(e.getPoint(), ClickEvent.class) : null;
+            if (target != null) {
+                if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+                    DesktopListRenderInteraction.click(target, this, e);
+                }
+
+                if (!target.rowRoot()) {
+                    e.consume();
+                    return;
+                }
+            }
+
+            super.processMouseEvent(e);
+        }
+
+        @Override
+        protected void processMouseMotionEvent(MouseEvent e) {
+            if (e.getID() == MouseEvent.MOUSE_MOVED) {
+                onMouseMoved(e);
+            }
+
+            super.processMouseMotionEvent(e);
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return myRenderAdapter != null || super.getScrollableTracksViewportWidth();
         }
 
         @Override
         public Component toUIComponent() {
             return DesktopListBoxImpl.this;
+        }
+
+        private void onMouseMoved(MouseEvent e) {
+            int index = rowAt(e.getPoint());
+
+            if (mySelectOnHover) {
+                if (index >= 0) {
+                    setSelectedIndex(index);
+                }
+            }
+            else {
+                setHoverIndex(index);
+            }
+
+            if (index != myCursorIndex) {
+                myCursorIndex = index;
+                updateCursor(e);
+            }
+        }
+
+        private void updateCursor(MouseEvent e) {
+            boolean clickable = findTarget(e.getPoint(), ClickEvent.class) != null;
+            setCursor(clickable ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : null);
+        }
+
+        private @Nullable ClickTarget findTarget(Point point, Class<? extends ComponentEvent<?>> eventClass) {
+            if (myHitTestRenderer == null || myRenderAdapter == null || !myRenderAdapter.isMouseEventsAllowed()) {
+                return null;
+            }
+
+            return DesktopListRenderInteraction.findTarget(this, myHitTestRenderer, point, eventClass);
+        }
+
+        private void setHoverIndex(int index) {
+            if (myHoverIndex == index) {
+                return;
+            }
+
+            int previous = myHoverIndex;
+            myHoverIndex = index;
+
+            repaintRow(previous);
+            repaintRow(index);
+        }
+
+        private void repaintRow(int index) {
+            if (index < 0) {
+                return;
+            }
+
+            Rectangle bounds = getCellBounds(index, index);
+            if (bounds != null) {
+                repaint(bounds);
+            }
+        }
+
+        private int rowAt(Point point) {
+            int index = locationToIndex(point);
+            if (index < 0) {
+                return -1;
+            }
+
+            Rectangle bounds = getCellBounds(index, index);
+            return bounds != null && bounds.contains(point) ? index : -1;
         }
     }
 
@@ -65,8 +186,10 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
     private TextItemRender<E> myTextRender = TextItemRender.defaultRender();
     private @Nullable ComponentItemRender<E> myComponentRender;
+    private @Nullable DesktopComponentItemRenderAdapter<E> myRenderAdapter;
+    private @Nullable ListCellRenderer<E> myHitTestRenderer;
     private @Nullable Function<E, String> mySpeedSearchConverter;
-    private @Nullable ToIntFunction<E> myItemHeightGetter;
+    private @Nullable Function<E, Length> myItemHeightGetter;
     private Predicate<E> mySeparatorPredicate = item -> false;
 
     public DesktopListBoxImpl(FlatDataModel<E> model) {
@@ -75,7 +198,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
     @Override
     protected JBList<E> createComponent() {
-        MyJBList<E> component = new MyJBList<>(new DesktopFlatDataModelWrapper<>(myModel));
+        MyJBList component = new MyJBList(new DesktopFlatDataModelWrapper<>(myModel));
         applyRender(component);
         applySpeedSearch(component);
         applySeparatorSelection(component);
@@ -110,15 +233,15 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     private void applyRender(JBList<E> component) {
-        ListCellRenderer<E> render = myComponentRender != null
-            ? new DesktopComponentItemRenderAdapter<>(myComponentRender)
-            : new DesktopListRender<>(() -> myTextRender);
+        myRenderAdapter = myComponentRender == null ? null : new DesktopComponentItemRenderAdapter<>(myComponentRender, () -> myHoverIndex);
 
-        ListCellRenderer<E> withHeight = DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter);
+        ListCellRenderer<E> render = myRenderAdapter != null ? myRenderAdapter : new DesktopListRender<>(() -> myTextRender);
+
+        ListCellRenderer<E> withHeight = DesktopLengthRender.wrap(render, () -> myItemHeightGetter);
 
         // the swing popups do the same - the renderer answers a separator with a component of its own rather than
         // with a row, see GroupedItemsListRenderer
-        component.setCellRenderer((list, value, index, selected, focused) -> {
+        myHitTestRenderer = (list, value, index, selected, focused) -> {
             if (value != null && mySeparatorPredicate.test(value)) {
                 TitledSeparator separator = new TitledSeparator();
                 separator.setBorder(JBUI.Borders.empty());
@@ -126,7 +249,9 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
                 return separator;
             }
             return withHeight.getListCellRendererComponent(list, value, index, selected, focused);
-        });
+        };
+
+        component.setCellRenderer(myHitTestRenderer);
     }
 
     @Override
@@ -213,11 +338,21 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
         myItemHeightGetter = getter;
         if (isInitialized()) {
             toAWTComponent().setFixedCellHeight(-1);
         }
+    }
+
+    @Override
+    public void setPlaceholder(LocalizeValue text) {
+        toAWTComponent().getEmptyText().setText(text.get());
+    }
+
+    @Override
+    public void setSelectOnHover(boolean selectOnHover) {
+        mySelectOnHover = selectOnHover;
     }
 
     @Override

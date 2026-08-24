@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import consulo.ui.Length;
 import consulo.ui.ComboBox;
 import consulo.ui.ComponentItemRender;
 import consulo.ui.RenderItem;
@@ -26,7 +27,6 @@ import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -109,6 +109,6 @@ public class DesktopQtComboBoxImpl<E> extends QtComponentDelegate<QComboBox> imp
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
     }
 }

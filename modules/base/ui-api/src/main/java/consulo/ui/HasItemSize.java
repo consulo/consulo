@@ -17,7 +17,7 @@ package consulo.ui;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.ToIntFunction;
+import java.util.function.Function;
 
 /**
  * Row sizing for the collection components. Sizing sits on the component rather than the render,
@@ -35,7 +35,7 @@ public interface HasItemSize<Item> extends Component {
      *               height; a per item computation gives variable rows, which the backend then gets
      *               told outright instead of having to measure each row.
      */
-    void setItemHeightGetter(@Nullable ToIntFunction<Item> getter);
+    void setItemHeightGetter(@Nullable Function<Item, Length> getter);
 
     /**
      * How many rows are on screen at once. The rest of the items are still there, a scroll away - this bounds how

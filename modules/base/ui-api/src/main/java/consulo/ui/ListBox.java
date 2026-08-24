@@ -30,7 +30,8 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E>, HasSize {
+public interface ListBox<E> extends ValueComponent<E>, HasSpeedSearch<E>, HasItemSize<E>, HasTransferHandler<E>, HasSize,
+    HasPlaceholder, HasAccessibility {
     @SafeVarargs
     static <E> ListBox<E> create(E... elements) {
         return UIInternal.get()._Components_listBox(FlatDataModel.of(Arrays.asList(elements)));

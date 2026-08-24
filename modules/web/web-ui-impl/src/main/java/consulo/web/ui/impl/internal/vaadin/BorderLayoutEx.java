@@ -64,6 +64,9 @@ public class BorderLayoutEx extends VerticalLayout {
     myWestHolder.getStyle().set("flex", "0 0 auto");
     myEastHolder.getStyle().set("flex", "0 0 auto");
 
+    centerContent(myWestHolder);
+    centerContent(myEastHolder);
+
     myCenterLayout.add(myWestHolder);
     myCenterLayout.add(myCenterHolder);
     myCenterLayout.setFlexGrow(1, myCenterHolder);
@@ -72,6 +75,9 @@ public class BorderLayoutEx extends VerticalLayout {
     add(noPaddingMargin(myTopLayout));
     add(noPaddingMargin(myCenterLayout));
     add(noPaddingMargin(myBottomLayout));
+
+    setFlexGrow(1, myCenterLayout);
+    myCenterLayout.getStyle().set("min-width", "0");
   }
 
   @Override
@@ -97,9 +103,19 @@ public class BorderLayoutEx extends VerticalLayout {
    * line which separates it from the centre - is only a separator while it runs the whole height.
    */
   private void fillHeight(Component component) {
+    // a label stretched over the row draws its glyph at the top of that height, and the holder centring it then has
+    // nothing left to centre - everything else keeps the full height a side of an awt border layout has
+    if (component instanceof VaadinLabelComponentBase) {
+      return;
+    }
+
     if (component instanceof HasSize hasSize) {
       hasSize.setHeightFull();
     }
+  }
+
+  private static void centerContent(Div holder) {
+    holder.getStyle().set("display", "flex").set("align-items", "center");
   }
 
   private <T extends Component & HasSize & ThemableLayout> T noPaddingMargin(T component) {

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.Length;
 import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
@@ -33,7 +34,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -331,7 +331,7 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   }
 
   @Override
-  public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
+  public void setItemHeightGetter(@Nullable Function<TreeNode<E>, Length> getter) {
   }
 
   @Override

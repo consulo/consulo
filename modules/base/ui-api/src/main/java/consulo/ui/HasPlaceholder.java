@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.it.internal.ui;
+package consulo.ui;
 
-import consulo.ui.TextBoxWithExpandAction;
+import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Dummy-but-creatable headless {@link TextBoxWithExpandAction}.
+ * What a component shows in place of content it has none of - the grey prompt of an empty text box, and the line a
+ * collection puts in the middle of itself while it holds nothing.
  *
  * @author VISTALL
+ * @since 2026-08-24
  */
-public class HeadlessTextBoxWithExpandAction extends HeadlessTextBox implements TextBoxWithExpandAction {
-    public HeadlessTextBoxWithExpandAction() {
-        super("");
-    }
+public interface HasPlaceholder {
+    void setPlaceholder(LocalizeValue text);
 
-    @Override
-    public TextBoxWithExpandAction withDialogTitle(String text) {
-        return this;
-    }
-
-    @Override
-    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    @Deprecated
+    default void setPlaceholder(@Nullable String text) {
+        setPlaceholder(LocalizeValue.ofNullable(text));
     }
 }

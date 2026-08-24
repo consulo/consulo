@@ -42,4 +42,8 @@ public class HeadlessTextBoxWithExtensions extends HeadlessTextBox implements Te
     public TextBoxWithExtensions addFirstExtension(Extension extension) {
         return this;
     }
+
+    @Override
+    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    }
 }

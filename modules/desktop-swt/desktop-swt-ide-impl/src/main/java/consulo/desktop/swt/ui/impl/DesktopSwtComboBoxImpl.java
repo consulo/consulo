@@ -15,13 +15,13 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.Length;
 import consulo.ui.ComboBox;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ComponentItemRender;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import consulo.ui.model.FlatDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -132,6 +132,6 @@ public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> impl
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
     }
 }

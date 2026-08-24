@@ -114,4 +114,10 @@ public abstract class HeadlessComponentBase implements Component, HasSize {
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return myDataObject.getDispatcher(eventClass);
     }
+
+    public void setAccessibleName(consulo.localize.LocalizeValue name) {
+    }
+
+    public void setAccessibleDescription(consulo.localize.LocalizeValue description) {
+    }
 }

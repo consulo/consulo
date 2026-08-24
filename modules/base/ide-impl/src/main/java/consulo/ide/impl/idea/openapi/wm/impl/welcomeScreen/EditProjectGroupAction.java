@@ -16,19 +16,20 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.project.Project;
 import consulo.project.ProjectGroup;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.localize.ProjectUILocalize;
+import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.ScrollingUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -44,11 +45,11 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         final ProjectGroup group = ((PopupProjectGroupActionGroup) getSelectedElements(e).get(0)).getGroup();
-        JList list = getList(e);
+        ListBox<AnAction> list = getList(e);
         assert list != null;
-        DefaultListModel model = getDataModel(e);
+        MutableFlatDataModel<AnAction> model = getDataModel(e);
         String name = Messages.showInputDialog(
-            list,
+            (Project) null,
             ProjectUILocalize.labelRecentProjectsEnterGroupName().get(),
             ProjectUILocalize.dialogTitleRecentProjectsChangeGroupName().get(),
             null,
@@ -94,7 +95,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
             rebuildRecentProjectDataModel(model);
             for (int i = 0; i < model.getSize(); i++) {
                 if (model.get(i) instanceof PopupProjectGroupActionGroup popupGroup && popupGroup.getGroup().equals(group)) {
-                    ScrollingUtil.selectItem(list, i);
+                    list.setValueByIndex(i);
                     break;
                 }
             }

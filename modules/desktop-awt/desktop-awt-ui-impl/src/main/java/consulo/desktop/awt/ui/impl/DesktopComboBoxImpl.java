@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
+import consulo.ui.Length;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
@@ -29,7 +30,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -49,7 +49,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     private TextItemRender<E> myTextRender = TextItemRender.defaultRender();
     private @Nullable ComponentItemRender<E> myComponentRender;
     private @Nullable Function<E, String> mySpeedSearchConverter;
-    private @Nullable ToIntFunction<E> myItemHeightGetter;
+    private @Nullable Function<E, Length> myItemHeightGetter;
 
     public DesktopComboBoxImpl(FlatDataModel<E> model) {
         myModel = model;
@@ -67,10 +67,10 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     @SuppressWarnings("unchecked")
     private void applyRender(MyComboBox<E> component) {
         ListCellRenderer<E> render = myComponentRender != null
-            ? new DesktopComponentItemRenderAdapter<>(myComponentRender)
+            ? new DesktopComponentItemRenderAdapter<>(myComponentRender, () -> -1)
             : new DesktopListRender<>(() -> myTextRender);
 
-        component.setRenderer(DesktopItemHeightRender.wrap(render, () -> myItemHeightGetter));
+        component.setRenderer(DesktopLengthRender.wrap(render, () -> myItemHeightGetter));
     }
 
     private void applySpeedSearch(MyComboBox<E> component) {
@@ -122,7 +122,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
         myItemHeightGetter = getter;
     }
 

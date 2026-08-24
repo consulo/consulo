@@ -15,12 +15,12 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.ui.Length;
 import consulo.ui.ComboBox;
 import consulo.ui.TextItemRender;
 import consulo.ui.ComponentItemRender;
 import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import consulo.ui.model.FlatDataModel;
 
 /**
@@ -62,6 +62,6 @@ public class HeadlessComboBox<E> extends HeadlessValueComponentBase<E> implement
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
     }
 }

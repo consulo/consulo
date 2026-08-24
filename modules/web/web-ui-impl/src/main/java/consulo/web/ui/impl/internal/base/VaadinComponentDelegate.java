@@ -24,6 +24,8 @@ import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.Length;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -31,6 +33,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.AttachEvent;
 import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.DetachEvent;
@@ -102,6 +105,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
      * top of its own and the press does not arrive twice.
      */
     protected boolean myClickInstalled;
+    private boolean myContextMenuInstalled;
     private boolean myKeyReleasedInstalled;
 
     public VaadinComponentDelegate() {
@@ -175,26 +179,36 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void setWidth(int widthInPixels) {
-        ((HasSize) getVaadinComponent()).setWidth(widthInPixels, Unit.PIXELS);
+    public void setWidth(Length width) {
+        ((HasSize) getVaadinComponent()).setWidth(WebLength.toCss(width));
     }
 
     @RequiredUIAccess
     @Override
-    public void setHeight(int heightInPixels) {
-        ((HasSize) getVaadinComponent()).setHeight(heightInPixels, Unit.PIXELS);
+    public void setHeight(Length height) {
+        ((HasSize) getVaadinComponent()).setHeight(WebLength.toCss(height));
     }
 
     @RequiredUIAccess
     @Override
-    public void setMinWidth(int widthInPixels) {
-        ((HasSize) getVaadinComponent()).setMinWidth(widthInPixels, Unit.PIXELS);
+    public void setMinWidth(Length width) {
+        ((HasSize) getVaadinComponent()).setMinWidth(WebLength.toCss(width));
     }
 
     @RequiredUIAccess
     @Override
-    public void setMinHeight(int heightInPixels) {
-        ((HasSize) getVaadinComponent()).setMinHeight(heightInPixels, Unit.PIXELS);
+    public void setMinHeight(Length height) {
+        ((HasSize) getVaadinComponent()).setMinHeight(WebLength.toCss(height));
+    }
+
+    @RequiredUIAccess
+    public void setAccessibleName(LocalizeValue name) {
+        toVaadinComponent().getElement().setAttribute("aria-label", name.get());
+    }
+
+    @RequiredUIAccess
+    public void setAccessibleDescription(LocalizeValue description) {
+        toVaadinComponent().getElement().setAttribute("aria-description", description.get());
     }
 
     @Override
@@ -222,7 +236,17 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
             WebInputDetails.addClickListener(
                 toVaadinComponent().getElement(),
                 details -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this, details))
-            );
+            ).stopPropagation();
+        }
+
+        if (eventClass == ContextMenuEvent.class && !myContextMenuInstalled) {
+            myContextMenuInstalled = true;
+
+            WebInputDetails.addClickListener(
+                toVaadinComponent().getElement(),
+                "contextmenu",
+                details -> getListenerDispatcher(ContextMenuEvent.class).onEvent(new ContextMenuEvent(this, details))
+            ).stopPropagation().preventDefault();
         }
 
         if (eventClass == KeyPressedEvent.class && !myKeyPressedInstalled) {

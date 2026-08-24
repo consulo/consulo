@@ -43,6 +43,7 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
     private final @Nullable PresentationFactory myPresentationFactory;
 
     private @Nullable Supplier<DataContext> myDataContextProvider;
+    private @Nullable PopupMenu myPopupMenu;
 
     public UnifiedActionPopupMenuImpl(String place,
                                       ActionGroup group,
@@ -77,7 +78,10 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
         PresentationFactory presentationFactory = myPresentationFactory == null ? new BasePresentationFactory() : myPresentationFactory;
 
+        hide();
+
         PopupMenu popupMenu = PopupMenu.create(component);
+        myPopupMenu = popupMenu;
 
         UIAccess uiAccess = UIAccess.current();
         UnifiedActionUtil.expandActionGroup(myGroup, context, myPlace, myManager, presentationFactory, popupMenu::add)
@@ -89,6 +93,11 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
 
     @Override
     public void hide() {
+        PopupMenu popupMenu = myPopupMenu;
+        myPopupMenu = null;
 
+        if (popupMenu != null) {
+            popupMenu.hide();
+        }
     }
 }

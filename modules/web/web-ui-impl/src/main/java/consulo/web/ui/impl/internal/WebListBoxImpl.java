@@ -20,6 +20,7 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.ui.ComponentItemRender;
 import com.vaadin.flow.component.html.Hr;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
@@ -144,6 +145,11 @@ public class WebListBoxImpl<E> extends WebSingleListComponentBase<E, WebListBoxI
         Hr line = new Hr();
         line.addClassName(SEPARATOR_CLASS);
         return line;
+    }
+
+    @Override
+    public void setPlaceholder(LocalizeValue text) {
+        getVaadinComponent().getElement().setAttribute("placeholder", text.get());
     }
 
     @Override

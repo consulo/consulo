@@ -17,7 +17,9 @@ package consulo.desktop.qt.ui.impl;
 
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
+import consulo.ui.Length;
 import consulo.ui.ComponentItemRender;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ListBox;
 import consulo.ui.RenderItem;
 import consulo.ui.TextItemRender;
@@ -36,6 +38,9 @@ import io.qt.gui.QKeyEvent;
 import io.qt.gui.QMouseEvent;
 import io.qt.widgets.QAbstractItemView;
 import io.qt.widgets.QFrame;
+import io.qt.gui.QPaintEvent;
+import io.qt.gui.QPainter;
+import io.qt.gui.QPalette;
 import io.qt.widgets.QListWidget;
 import io.qt.widgets.QListWidgetItem;
 import io.qt.widgets.QWidget;
@@ -44,7 +49,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -68,6 +72,25 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     private class QtListBox extends QListWidget {
         QtListBox(QWidget parent) {
             super(parent);
+        }
+
+        @Override
+        protected void paintEvent(QPaintEvent event) {
+            super.paintEvent(event);
+
+            String placeholder = myPlaceholder.get();
+            if (count() != 0 || placeholder.isEmpty()) {
+                return;
+            }
+
+            QPainter painter = new QPainter(viewport());
+            try {
+                painter.setPen(palette().color(QPalette.ColorRole.PlaceholderText));
+                painter.drawText(viewport().rect(), Qt.AlignmentFlag.AlignCenter.value(), placeholder);
+            }
+            finally {
+                painter.end();
+            }
         }
 
         @Override
@@ -134,7 +157,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
 
     private Predicate<E> mySeparatorPredicate = item -> false;
 
-    private @Nullable ToIntFunction<E> myItemHeightGetter;
+    private @Nullable Function<E, Length> myItemHeightGetter;
+    private LocalizeValue myPlaceholder = LocalizeValue.empty();
     private @Nullable TransferHandler<E> myTransferHandler;
     private @Nullable Function<E, String> mySpeedSearchConverter;
 
@@ -293,8 +317,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             return;
         }
 
-        ToIntFunction<E> heightGetter = myItemHeightGetter;
-        int height = heightGetter != null ? heightGetter.applyAsInt(element) : widget.sizeHint().height();
+        Function<E, Length> heightGetter = myItemHeightGetter;
+        int height = heightGetter != null ? DesktopQtLength.toPixels(widget, heightGetter.apply(element)) : widget.sizeHint().height();
         item.setSizeHint(new QSize(0, height));
 
         component.setItemWidget(item, widget);
@@ -312,9 +336,9 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             item.setIcon(qtImage.toQIcon());
         }
 
-        ToIntFunction<E> heightGetter = myItemHeightGetter;
+        Function<E, Length> heightGetter = myItemHeightGetter;
         if (heightGetter != null) {
-            item.setSizeHint(new QSize(0, heightGetter.applyAsInt(element)));
+            item.setSizeHint(new QSize(0, DesktopQtLength.toPixels(toQtComponent(), heightGetter.apply(element))));
         }
 
         return item;
@@ -411,6 +435,16 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     }
 
     @Override
+    public void setPlaceholder(LocalizeValue text) {
+        myPlaceholder = text;
+
+        QListWidget widget = toQtComponent();
+        if (widget != null) {
+            widget.viewport().update();
+        }
+    }
+
+    @Override
     @RequiredUIAccess
     public void setSelectOnHover(boolean selectOnHover) {
         mySelectOnHover = selectOnHover;
@@ -460,7 +494,7 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
         myItemHeightGetter = getter;
 
         rebuildIfBound();

@@ -31,6 +31,7 @@ import consulo.module.creation.scratch.NewModuleContextItem;
 import consulo.module.creation.scratch.NewModuleContextNode;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.util.ProjectUtil;
+import consulo.ui.Length;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
@@ -212,7 +213,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, Disposable 
         Tree<NewModuleContextNode> tree = Tree.create(new NewProjectTreeModel(context), myParentDisposable);
         tree.addStyle(TreeStyle.FONT_LARGE);
         tree.addStyle(TreeStyle.TRANSPARENT_BACKGROUND);
-        tree.setItemHeightGetter(node -> 24);
+        tree.setItemHeightGetter(node -> Length.ofPixel(24));
         tree.expandAll();
         tree.addSelectListener(event -> {
             TreeNode<NewModuleContextNode> node = event.getValue();

@@ -15,6 +15,9 @@
  */
 package consulo.web.ui.impl.internal;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.Length;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -43,7 +46,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * A list which only builds the rows it shows.
@@ -75,7 +77,7 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     private final FlatDataModel<E> myModel;
 
     private @Nullable E myValue;
-    private @Nullable ToIntFunction<E> myItemHeightGetter;
+    private @Nullable Function<E, Length> myItemHeightGetter;
     private @Nullable Function<E, String> mySpeedSearchConverter;
 
     public WebLazyListBoxImpl(FlatDataModel<E> model) {
@@ -254,8 +256,16 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     }
 
     private void applyItemHeight(com.vaadin.flow.component.Component rendered, @Nullable E item) {
+        rendered.getElement().getStyle()
+            .set("width", "100%")
+            .set("max-width", "100%")
+            .set("min-width", "0")
+            .set("flex", "1 1 0")
+            .set("overflow", "hidden")
+            .set("box-sizing", "border-box");
+
         if (myItemHeightGetter != null && item != null) {
-            rendered.getElement().getStyle().set("height", myItemHeightGetter.applyAsInt(item) + "px");
+            rendered.getElement().getStyle().set("height", WebLength.toCss(myItemHeightGetter.apply(item)));
         }
     }
 
@@ -269,7 +279,7 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
         }
 
         if (myItemHeightGetter != null && item != null) {
-            rendered.getElement().getStyle().set("height", myItemHeightGetter.applyAsInt(item) + "px");
+            rendered.getElement().getStyle().set("height", WebLength.toCss(myItemHeightGetter.apply(item)));
         }
 
         // pressing on a row is what moves the focus onto the popup it is in, and a list of the platform is driven
@@ -337,8 +347,10 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
         myItemHeightGetter = getter;
+
+        refreshItems();
     }
 
     /**
@@ -355,7 +367,7 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
         }
 
         String rowHeight = myItemHeightGetter != null && myModel.getSize() > 0
-            ? myItemHeightGetter.applyAsInt(myModel.get(0)) + "px"
+            ? WebLength.toCss(myItemHeightGetter.apply(myModel.get(0)))
             : "var(--consulo-list-row-height, 24px)";
 
         list.getElement().getStyle().set("max-height", "calc(" + count + " * " + rowHeight + ")");
@@ -374,5 +386,9 @@ public class WebLazyListBoxImpl<E> extends VaadinComponentDelegate<WebLazyListBo
     @Override
     public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public void setPlaceholder(LocalizeValue text) {
     }
 }

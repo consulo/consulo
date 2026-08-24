@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.it.internal.ui;
+package consulo.ui.event;
 
-import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.Component;
+import consulo.ui.event.details.InputDetails;
 
 /**
- * Dummy-but-creatable headless {@link TextBoxWithExpandAction}.
+ * The gesture which asks for the menu of a component - a right click on the desktop and in the browser, and whatever
+ * else the platform recognises. A frontend which raises this also keeps its own menu from opening, so the one the
+ * listener shows is the only one.
  *
  * @author VISTALL
+ * @since 2026-08-24
  */
-public class HeadlessTextBoxWithExpandAction extends HeadlessTextBox implements TextBoxWithExpandAction {
-    public HeadlessTextBoxWithExpandAction() {
-        super("");
-    }
-
-    @Override
-    public TextBoxWithExpandAction withDialogTitle(String text) {
-        return this;
-    }
-
-    @Override
-    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+public final class ContextMenuEvent extends ComponentEvent<Component> {
+    public ContextMenuEvent(Component component, InputDetails inputDetails) {
+        super(component, inputDetails);
     }
 }

@@ -61,6 +61,11 @@ public class UIDataObject extends UserDataHolderBase {
         return (ComponentEventListener<C, E>) eventDispatcher.getMulticaster();
     }
 
+    public boolean hasListeners(Class<? extends ComponentEvent<?>> eventClass) {
+        EventDispatcher<ComponentEventListener> eventDispatcher = myListeners.get(eventClass);
+        return eventDispatcher != null && eventDispatcher.hasListeners();
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getUserData(Key<T> key) {

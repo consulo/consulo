@@ -21,9 +21,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
+import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -45,11 +45,11 @@ public class PopupProjectGroupActionGroup extends DefaultActionGroup implements 
             @Override
             public void actionPerformed(AnActionEvent e) {
                 myGroup.setExpanded(!myGroup.isExpanded());
-                JList list = getList(e);
+                ListBox<AnAction> list = getList(e);
                 if (list != null) {
-                    int index = list.getSelectedIndex();
+                    int index = list.getDataModel().indexOf(list.getValue());
                     rebuildRecentProjectsList(e);
-                    list.setSelectedIndex(index);
+                    list.setValueByIndex(index);
                 }
             }
         }.actionPerformed(e);

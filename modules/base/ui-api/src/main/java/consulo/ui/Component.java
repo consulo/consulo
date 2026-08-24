@@ -223,6 +223,10 @@ public interface Component extends UserDataHolder {
         return addListener(ClickEvent.class, clickListener);
     }
 
+    default Disposable addContextMenuListener(ComponentEventListener<Component, ContextMenuEvent> contextMenuListener) {
+        return addListener(ContextMenuEvent.class, contextMenuListener);
+    }
+
     default void forceRepaint() {
     }
 }

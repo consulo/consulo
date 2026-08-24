@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.base;
 
 import consulo.desktop.awt.ui.impl.facade.ToSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
+import consulo.desktop.awt.ui.impl.DesktopLength;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
@@ -28,6 +29,7 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
 import consulo.ui.HasSize;
+import consulo.ui.Length;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -46,8 +48,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 
@@ -59,6 +63,9 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     private T myInitializedComponent;
 
     private @Nullable ColorValue myBackgroundColor;
+
+    private boolean myClickBridgeInstalled;
+    private boolean myContextMenuInstalled;
 
     /** the desktop frontend draws into a single ui, so every component of it answers the same access */
     @Override
@@ -102,16 +109,37 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @Override
     public Disposable addClickListener(ComponentEventListener<Component, ClickEvent> clickListener) {
-        ClickListener awtClickListener = new ClickListener() {
-            @Override
-            @RequiredUIAccess
-            public boolean onClick(MouseEvent event, int clickCount) {
-                clickListener.onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(event.getComponent(), event)));
-                return true;
-            }
-        };
-        awtClickListener.installOn(toAWTComponent());
-        return () -> awtClickListener.uninstall(toAWTComponent());
+        if (!myClickBridgeInstalled) {
+            myClickBridgeInstalled = true;
+
+            new ClickListener() {
+                @Override
+                @RequiredUIAccess
+                public boolean onClick(MouseEvent event, int clickCount) {
+                    getListenerDispatcher(ClickEvent.class)
+                        .onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(event.getComponent(), event)));
+                    return true;
+                }
+            }.installOn(toAWTComponent());
+        }
+
+        return dataObject().addListener(ClickEvent.class, clickListener);
+    }
+
+    @RequiredUIAccess
+    public void setAccessibleName(LocalizeValue name) {
+        AccessibleContext context = toAWTComponent().getAccessibleContext();
+        if (context != null) {
+            context.setAccessibleName(name.get());
+        }
+    }
+
+    @RequiredUIAccess
+    public void setAccessibleDescription(LocalizeValue description) {
+        AccessibleContext context = toAWTComponent().getAccessibleContext();
+        if (context != null) {
+            context.setAccessibleDescription(description.get());
+        }
     }
 
     public boolean hasFocus() {
@@ -181,34 +209,34 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @RequiredUIAccess
     @Override
-    public void setWidth(int widthInPixels) {
+    public void setWidth(Length width) {
         T component = toAWTComponent();
         Dimension size = component.getPreferredSize();
-        component.setPreferredSize(new Dimension(JBUI.scale(widthInPixels), size.height));
+        component.setPreferredSize(new Dimension(DesktopLength.toPixels(component, width), size.height));
     }
 
     @RequiredUIAccess
     @Override
-    public void setHeight(int heightInPixels) {
+    public void setHeight(Length height) {
         T component = toAWTComponent();
         Dimension size = component.getPreferredSize();
-        component.setPreferredSize(new Dimension(size.width, JBUI.scale(heightInPixels)));
+        component.setPreferredSize(new Dimension(size.width, DesktopLength.toPixels(component, height)));
     }
 
     @RequiredUIAccess
     @Override
-    public void setMinWidth(int widthInPixels) {
+    public void setMinWidth(Length width) {
         T component = toAWTComponent();
         Dimension size = component.getMinimumSize();
-        component.setMinimumSize(new Dimension(JBUI.scale(widthInPixels), size.height));
+        component.setMinimumSize(new Dimension(DesktopLength.toPixels(component, width), size.height));
     }
 
     @RequiredUIAccess
     @Override
-    public void setMinHeight(int heightInPixels) {
+    public void setMinHeight(Length height) {
         T component = toAWTComponent();
         Dimension size = component.getMinimumSize();
-        component.setMinimumSize(new Dimension(size.width, JBUI.scale(heightInPixels)));
+        component.setMinimumSize(new Dimension(size.width, DesktopLength.toPixels(component, height)));
     }
 
     @Override
@@ -224,7 +252,43 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     @Override
     public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
                                                                                      ComponentEventListener<C, E> listener) {
+        if (eventClass == ContextMenuEvent.class) {
+            installContextMenuDispatch();
+        }
+
         return dataObject().addListener(eventClass, listener);
+    }
+
+    private void installContextMenuDispatch() {
+        if (myContextMenuInstalled) {
+            return;
+        }
+
+        myContextMenuInstalled = true;
+
+        toAWTComponent().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                fireIfPopupTrigger(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                fireIfPopupTrigger(e);
+            }
+
+            private void fireIfPopupTrigger(MouseEvent e) {
+                if (!e.isPopupTrigger()) {
+                    return;
+                }
+
+                e.consume();
+
+                getListenerDispatcher(ContextMenuEvent.class).onEvent(
+                    new ContextMenuEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(e.getComponent(), e))
+                );
+            }
+        });
     }
 
     @Override
@@ -316,5 +380,9 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
             component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
         }
         return dataObject;
+    }
+
+    public boolean hasListeners(Class<? extends ComponentEvent<?>> eventClass) {
+        return dataObject().hasListeners(eventClass);
     }
 }

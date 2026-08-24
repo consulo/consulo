@@ -26,6 +26,7 @@ import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.plugin.ui.PluginTab;
 import consulo.externalService.impl.internal.plugin.ui.PluginsPanel;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Length;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.RenderItem;
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
  * @since 2026-08-13
  */
 public class UnifiedPluginRowRender {
-    public static final int ROW_HEIGHT = 40;
+    public static final Length ROW_HEIGHT = Length.ofFont(2).plusPixel(8);
 
     @RequiredUIAccess
     public static Component render(RenderItem<PluginDescriptor> item) {

@@ -214,4 +214,10 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
     public boolean isFocusable() {
         return true;
     }
+
+    public void setAccessibleName(consulo.localize.LocalizeValue name) {
+    }
+
+    public void setAccessibleDescription(consulo.localize.LocalizeValue description) {
+    }
 }

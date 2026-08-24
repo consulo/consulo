@@ -15,6 +15,8 @@
  */
 package consulo.web.ui.impl.internal;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.Length;
 import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -38,7 +40,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * A list which scrolls over a count rather than over its rows.
@@ -69,6 +70,7 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
     private static final int OVERSCAN = 4;
 
     private static final int DEFAULT_ROW_HEIGHT = 24;
+    private static final int DEFAULT_LINE_HEIGHT = 20;
 
     // served straight from META-INF/resources - the theme goes through the vite bundle, which skips rebuilding
     // on css only changes
@@ -125,7 +127,7 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
 
     private @Nullable ReusableComponentItemRender<E, ?> myReusableRender;
     private @Nullable ComponentItemRender<E> myRender;
-    private @Nullable ToIntFunction<E> myItemHeightGetter;
+    private @Nullable Function<E, Length> myItemHeightGetter;
     private @Nullable Function<E, String> mySpeedSearchConverter;
 
     private @Nullable E myValue;
@@ -295,7 +297,7 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
 
     private int rowHeight() {
         if (myItemHeightGetter != null && myModel.getSize() > 0) {
-            return myItemHeightGetter.applyAsInt(myModel.get(0));
+            return myItemHeightGetter.apply(myModel.get(0)).toPixels(DEFAULT_LINE_HEIGHT);
         }
         return DEFAULT_ROW_HEIGHT;
     }
@@ -429,7 +431,7 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<E> getter) {
+    public void setItemHeightGetter(@Nullable Function<E, Length> getter) {
         myItemHeightGetter = getter;
         pushItemCount();
     }
@@ -467,5 +469,10 @@ public class WebPooledListBoxImpl<E> extends VaadinComponentDelegate<WebPooledLi
     @Override
     public @Nullable TransferHandler<E> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public void setPlaceholder(LocalizeValue text) {
+
     }
 }

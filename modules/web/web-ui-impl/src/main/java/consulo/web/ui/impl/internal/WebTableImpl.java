@@ -20,6 +20,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Length;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.ui.Component;
 import consulo.ui.SelectionMode;
 import consulo.ui.Table;
@@ -37,7 +39,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -57,7 +58,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     private final FlatDataModel<Item> myModel;
     private final List<WebTableColumnImpl<Item, ?>> myColumns = new ArrayList<>();
 
-    private @Nullable ToIntFunction<Item> myItemHeightGetter;
+    private @Nullable Function<Item, Length> myItemHeightGetter;
     private @Nullable Function<Item, String> mySpeedSearchConverter;
 
     public WebTableImpl(FlatDataModel<Item> model) {
@@ -96,7 +97,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
 
     void applyItemHeight(com.vaadin.flow.component.Component component, @Nullable Item item) {
         if (myItemHeightGetter != null && item != null) {
-            component.getElement().getStyle().set("height", myItemHeightGetter.applyAsInt(item) + "px");
+            component.getElement().getStyle().set("height", WebLength.toCss(myItemHeightGetter.apply(item)));
         }
     }
 
@@ -178,7 +179,7 @@ public class WebTableImpl<Item> extends VaadinComponentDelegate<WebTableImpl<Ite
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<Item> getter) {
+    public void setItemHeightGetter(@Nullable Function<Item, Length> getter) {
         myItemHeightGetter = getter;
         toVaadinComponent().getDataProvider().refreshAll();
     }

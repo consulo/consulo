@@ -19,6 +19,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.disposer.Disposable;
+import consulo.ui.Length;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
 import consulo.ui.TransferHandler;
@@ -55,7 +56,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -88,7 +88,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
      */
     private volatile DesktopQtTreeNode<E> myRootNode;
 
-    private @Nullable ToIntFunction<TreeNode<E>> myItemHeightGetter;
+    private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
 
     /**
      * Which tree the levels being built belong to. Rebuilding the tree throws away every row and starts again
@@ -599,18 +599,18 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
+    public void setItemHeightGetter(@Nullable Function<TreeNode<E>, Length> getter) {
         myItemHeightGetter = getter;
     }
 
     private void applyItemHeight(QTreeWidgetItem item, DesktopQtTreeNode<E> node) {
-        ToIntFunction<TreeNode<E>> getter = myItemHeightGetter;
+        Function<TreeNode<E>, Length> getter = myItemHeightGetter;
         if (getter == null) {
             return;
         }
 
         // the width is -1 until something sets one, and a negative width makes the whole hint invalid
-        item.setSizeHint(0, new QSize(Math.max(0, item.sizeHint(0).width()), getter.applyAsInt(node)));
+        item.setSizeHint(0, new QSize(Math.max(0, item.sizeHint(0).width()), DesktopQtLength.toPixels(toQtComponent(), getter.apply(node))));
     }
 
     @Override

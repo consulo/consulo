@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.it.internal.ui;
+package consulo.ui.internal;
 
-import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.Length;
 
 /**
- * Dummy-but-creatable headless {@link TextBoxWithExpandAction}.
- *
  * @author VISTALL
+ * @since 2026-08-24
  */
-public class HeadlessTextBoxWithExpandAction extends HeadlessTextBox implements TextBoxWithExpandAction {
-    public HeadlessTextBoxWithExpandAction() {
-        super("");
-    }
-
+public record FontLength(float fonts) implements Length {
     @Override
-    public TextBoxWithExpandAction withDialogTitle(String text) {
-        return this;
-    }
-
-    @Override
-    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    public <R> R accept(Length.Visitor<R> visitor) {
+        return visitor.visitFont(fonts);
     }
 }

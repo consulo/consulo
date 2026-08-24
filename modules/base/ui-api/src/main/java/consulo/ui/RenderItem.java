@@ -29,7 +29,13 @@ import org.jspecify.annotations.Nullable;
  */
 public interface RenderItem<E> {
     static <E> RenderItem<E> of(@Nullable E value, boolean selected) {
+        return of(value, selected, false);
+    }
+
+    static <E> RenderItem<E> of(@Nullable E value, boolean selected, boolean hovered) {
         return new RenderItem<>() {
+            private boolean myMouseEventsAllowed;
+
             @Override
             public @Nullable E getValue() {
                 return value;
@@ -39,6 +45,21 @@ public interface RenderItem<E> {
             public boolean isSelected() {
                 return selected;
             }
+
+            @Override
+            public boolean isHovered() {
+                return hovered;
+            }
+
+            @Override
+            public void allowMouseEvents() {
+                myMouseEventsAllowed = true;
+            }
+
+            @Override
+            public boolean isMouseEventsAllowed() {
+                return myMouseEventsAllowed;
+            }
         };
     }
 
@@ -46,4 +67,20 @@ public interface RenderItem<E> {
     E getValue();
 
     boolean isSelected();
+
+    /**
+     * Whether the row is the one under the pointer. A frontend which draws its own hover says so here, so a render
+     * colours text to match the band it is drawn on; one which leaves hover to the platform answers {@code false}.
+     */
+    default boolean isHovered() {
+        return false;
+    }
+
+    /**
+     * Declares that components inside the row take mouse events of their own. Listeners registered on them do not
+     * fire unless this was called while the row was rendered.
+     */
+    void allowMouseEvents();
+
+    boolean isMouseEventsAllowed();
 }

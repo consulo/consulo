@@ -29,6 +29,11 @@ public interface PopupMenu extends Menu {
     void show(int relativeX, int relativeY);
 
     /**
+     * Takes the menu off screen. A menu which was never shown is left alone.
+     */
+    void hide();
+
+    /**
      * Opens the menu on a plain click of the target rather than on {@link #show}, which is what a toolbar
      * button holding a popup group needs. Off by default - a context menu belongs to the right button.
      */

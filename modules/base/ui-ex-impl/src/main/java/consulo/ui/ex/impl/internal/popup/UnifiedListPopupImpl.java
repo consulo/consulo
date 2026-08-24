@@ -34,6 +34,7 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.popup.AsyncPopupStep;
 import consulo.ui.ex.popup.ListPopup;
@@ -292,6 +293,11 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
         }
         else if (myAnchor != null && myAnchorPoint != null) {
             popup.showAt(myAnchor, myAnchorPoint.x(), myAnchorPoint.y(), myAnchorHeight);
+        }
+        else if (myAnchor != null && myAnchorDetails instanceof MouseInputDetails mouse) {
+            // a menu asked for by pointing at something opens where it was pointed at, not at the corner of
+            // whatever was pointed at
+            popup.showAt(myAnchor, mouse.getX(), mouse.getY(), 0);
         }
         else if (myAnchor != null && popup instanceof LightPopup light) {
             light.showBy(myAnchor);

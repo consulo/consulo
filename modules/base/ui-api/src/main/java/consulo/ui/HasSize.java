@@ -16,30 +16,54 @@
 package consulo.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 /**
+ * A frontend answers a {@link Length}, so that a size counted in fonts is resolved against the text it draws - the
+ * same window is wider in the browser than it is on the desktop. The pixel calls are the same thing with no font part.
+ *
  * @author VISTALL
  * @since 2026-08-13
  */
 public interface HasSize {
     @RequiredUIAccess
-    default void setWidth(int widthInPixels) {
+    default void setWidth(Length width) {
         throw new AbstractMethodError("not supported");
+    }
+
+    @RequiredUIAccess
+    default void setHeight(Length height) {
+        throw new AbstractMethodError("not supported");
+    }
+
+    @RequiredUIAccess
+    default void setMinWidth(Length width) {
+        throw new AbstractMethodError("not supported");
+    }
+
+    @RequiredUIAccess
+    default void setMinHeight(Length height) {
+        throw new AbstractMethodError("not supported");
+    }
+
+    @RequiredUIAccess
+    default void setWidth(int widthInPixels) {
+        setWidth(Length.ofPixel(widthInPixels));
     }
 
     @RequiredUIAccess
     default void setHeight(int heightInPixels) {
-        throw new AbstractMethodError("not supported");
+        setHeight(Length.ofPixel(heightInPixels));
     }
 
     @RequiredUIAccess
     default void setMinWidth(int widthInPixels) {
-        throw new AbstractMethodError("not supported");
+        setMinWidth(Length.ofPixel(widthInPixels));
     }
 
     @RequiredUIAccess
     default void setMinHeight(int heightInPixels) {
-        throw new AbstractMethodError("not supported");
+        setMinHeight(Length.ofPixel(heightInPixels));
     }
 
     /**
@@ -54,6 +78,21 @@ public interface HasSize {
 
         if (size.height() != -1) {
             setHeight(size.height());
+        }
+    }
+
+    /**
+     * @param width  {@code null} is unspecified and left untouched
+     * @param height {@code null} is unspecified and left untouched
+     */
+    @RequiredUIAccess
+    default void setSize(@Nullable Length width, @Nullable Length height) {
+        if (width != null) {
+            setWidth(width);
+        }
+
+        if (height != null) {
+            setHeight(height);
         }
     }
 }

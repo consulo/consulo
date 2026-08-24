@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.it.internal.ui;
+package consulo.ui.internal;
 
-import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.Length;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Dummy-but-creatable headless {@link TextBoxWithExpandAction}.
- *
  * @author VISTALL
+ * @since 2026-08-24
  */
-public class HeadlessTextBoxWithExpandAction extends HeadlessTextBox implements TextBoxWithExpandAction {
-    public HeadlessTextBoxWithExpandAction() {
-        super("");
+public record CompositeLength(List<Length> parts) implements Length {
+    @Override
+    public <R> R accept(Length.Visitor<R> visitor) {
+        return visitor.visitComposite(parts);
     }
 
     @Override
-    public TextBoxWithExpandAction withDialogTitle(String text) {
-        return this;
-    }
-
-    @Override
-    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    public Length plus(Length other) {
+        List<Length> merged = new ArrayList<>(parts);
+        merged.add(other);
+        return new CompositeLength(List.copyOf(merged));
     }
 }

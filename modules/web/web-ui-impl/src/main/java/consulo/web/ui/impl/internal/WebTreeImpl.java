@@ -15,6 +15,8 @@
  */
 package consulo.web.ui.impl.internal;
 
+import consulo.ui.Length;
+import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.ui.DragAndDropTransferHandler;
 import consulo.ui.TransferHandler;
 import com.vaadin.flow.component.*;
@@ -55,7 +57,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -66,7 +67,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     private static final List CANCELED_RESULT = new ArrayList<>();
 
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
-    private @Nullable ToIntFunction<TreeNode<NODE>> myItemHeightGetter;
+    private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<NODE>, String> mySpeedSearchConverter;
 
     /** where the row of the last right click ended up, which is what a popup raised over the tree hangs off */
@@ -899,16 +900,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
      * height written on the toggle instead leaves it short of the row, which is where the selection is drawn.
      */
     void applyItemHeight(@Nullable TreeNode<NODE> node) {
-        ToIntFunction<TreeNode<NODE>> getter = myItemHeightGetter;
+        Function<TreeNode<NODE>, Length> getter = myItemHeightGetter;
         if (getter == null || node == null) {
             return;
         }
 
-        getVaadinComponent().getStyle().set("--consulo-tree-row-height", getter.applyAsInt(node) + "px");
+        getVaadinComponent().getStyle().set("--consulo-tree-row-height", WebLength.toCss(getter.apply(node)));
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<NODE>> getter) {
+    public void setItemHeightGetter(@Nullable Function<TreeNode<NODE>, Length> getter) {
         myItemHeightGetter = getter;
 
         if (getter == null) {

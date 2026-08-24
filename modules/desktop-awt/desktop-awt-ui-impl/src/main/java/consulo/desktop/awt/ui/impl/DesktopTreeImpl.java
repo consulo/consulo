@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.Length;
 import consulo.ui.TransferHandler;
 import consulo.ui.DragAndDropTransferHandler;
 import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTTransferHandlerAdapter;
@@ -77,7 +78,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -111,7 +111,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     private @Nullable TransferHandler<TreeNode<E>> myTransferHandler;
-    private @Nullable ToIntFunction<TreeNode<E>> myItemHeightGetter;
+    private @Nullable Function<TreeNode<E>, Length> myItemHeightGetter;
     private @Nullable Function<TreeNode<E>, String> mySpeedSearchConverter;
 
     private static class MyTreeNodeImpl<K> implements TreeNode<K> {
@@ -689,11 +689,11 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             java.awt.Component component =
                 delegate.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
-            ToIntFunction<TreeNode<E>> getter = myItemHeightGetter;
+            Function<TreeNode<E>, Length> getter = myItemHeightGetter;
             TreeNode<E> node = nodeOfComponent(value);
             if (getter != null && component != null && node != null) {
                 Dimension size = component.getPreferredSize();
-                component.setPreferredSize(new Dimension(size.width, getter.applyAsInt(node)));
+                component.setPreferredSize(new Dimension(size.width, DesktopLength.toPixels(tree, getter.apply(node))));
             }
 
             return component;
@@ -701,7 +701,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     @Override
-    public void setItemHeightGetter(@Nullable ToIntFunction<TreeNode<E>> getter) {
+    public void setItemHeightGetter(@Nullable Function<TreeNode<E>, Length> getter) {
         myItemHeightGetter = getter;
 
         if (isInitialized()) {

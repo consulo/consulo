@@ -24,7 +24,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2020-04-19
  */
-public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, HasFocus {
+public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, HasFocus, HasPlaceholder {
     static IntBox create() {
         return create(0);
     }
@@ -33,15 +33,12 @@ public interface IntBox extends ValueComponent<Integer>, HasValidator<Integer>, 
         return UIInternal.get()._Components_intBox(value);
     }
 
+    @Override
     void setPlaceholder(LocalizeValue text);
 
     default IntBox withPlaceholder(LocalizeValue text) {
         setPlaceholder(text);
         return this;
-    }
-
-    default void setPlaceholder(@Nullable String text) {
-        setPlaceholder(LocalizeValue.ofNullable(text));
     }
 
     default IntBox withPlaceholder(@Nullable String text) {

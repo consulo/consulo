@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -94,5 +95,9 @@ public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<Strin
     @Override
     public void setValue(String value, boolean fireListeners) {
         toAWTComponent().setText(value);
+    }
+
+    @Override
+    public void setPlaceholder(LocalizeValue text) {
     }
 }

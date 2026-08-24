@@ -61,6 +61,11 @@ public class WebPopupMenuImpl extends VaadinComponentDelegate<WebPopupMenuImpl.V
     }
 
     @Override
+    public void hide() {
+        getVaadinComponent().close();
+    }
+
+    @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }

@@ -18,6 +18,7 @@ package consulo.web.ui.impl.internal.vaadin;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.data.provider.HasListDataView;
+import consulo.ui.Length;
 import consulo.ui.TextItemRender;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,7 +30,6 @@ import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 /**
  * @author VISTALL
@@ -41,7 +41,7 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
     protected TextItemRender<V> myTextRender = TextItemRender.defaultRender();
 
     protected @Nullable Function<V, String> mySpeedSearchConverter;
-    protected @Nullable ToIntFunction<V> myItemHeightGetter;
+    protected @Nullable Function<V, Length> myItemHeightGetter;
     protected int myVisibleRowCount;
 
     @SuppressWarnings("unchecked")
@@ -81,13 +81,24 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
         return null;
     }
 
-    public void setItemHeightGetter(@Nullable ToIntFunction<V> getter) {
+    public void setItemHeightGetter(@Nullable Function<V, Length> getter) {
         myItemHeightGetter = getter;
+
+        // the rows were built by the renderer already, and a renderer is only run again when the items are pushed
+        pushItems();
     }
 
     protected void applyItemHeight(com.vaadin.flow.component.Component itemComponent, @Nullable V item) {
+        itemComponent.getElement().getStyle()
+            .set("width", "100%")
+            .set("max-width", "100%")
+            .set("min-width", "0")
+            .set("flex", "1 1 0")
+            .set("overflow", "hidden")
+            .set("box-sizing", "border-box");
+
         if (myItemHeightGetter != null && item != null) {
-            itemComponent.getElement().getStyle().set("height", myItemHeightGetter.applyAsInt(item) + "px");
+            itemComponent.getElement().getStyle().set("height", WebLength.toCss(myItemHeightGetter.apply(item)));
         }
     }
 
@@ -111,7 +122,7 @@ public abstract class WebSingleListComponentBase<V, C extends Component & HasLis
         }
 
         String rowHeight = myItemHeightGetter != null && myModel.getSize() > 0
-            ? myItemHeightGetter.applyAsInt(myModel.get(0)) + "px"
+            ? WebLength.toCss(myItemHeightGetter.apply(myModel.get(0)))
             : "var(--consulo-list-row-height, 24px)";
 
         // a height only - the list never scrolls anything itself, the scroll layout it is put in does

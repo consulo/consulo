@@ -24,6 +24,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.MorphValue;
 import consulo.ui.ex.awt.LightColors;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.IconLibraryManager;
@@ -66,6 +67,27 @@ public class DesktopStyleImpl extends StyleImpl {
         }
         else if (colorValue == ComponentColors.BORDER) {
             return TargetAWT.from(UIUtil.getBorderColor());
+        }
+        else if (colorValue == ComponentColors.HOVER_BACKGROUND) {
+            return TargetAWT.from(JBCurrentTheme.List.Hover.background(true));
+        }
+        else if (colorValue == ComponentColors.COMPONENT_BACKGROUND) {
+            return TargetAWT.from(JBCurrentTheme.List.BACKGROUND);
+        }
+        else if (colorValue == ComponentColors.SELECTION_BACKGROUND) {
+            return TargetAWT.from(JBCurrentTheme.List.Selection.background(true));
+        }
+        else if (colorValue == ComponentColors.SELECTION_FOREGROUND) {
+            return TargetAWT.from(JBCurrentTheme.List.Selection.foreground(true));
+        }
+        else if (colorValue == ComponentColors.SELECTION_INACTIVE_BACKGROUND) {
+            return TargetAWT.from(JBCurrentTheme.List.Selection.background(false));
+        }
+        else if (colorValue == ComponentColors.SELECTION_INACTIVE_FOREGROUND) {
+            return TargetAWT.from(JBCurrentTheme.List.Selection.foreground(false));
+        }
+        else if (colorValue == ComponentColors.SEPARATOR) {
+            return TargetAWT.from(JBCurrentTheme.CustomFrameDecorations.separatorForeground());
         }
         else if (colorValue == StandardColors.BLUE) {
             return TargetAWT.from(JBColor.BLUE);

@@ -18,26 +18,23 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.localize.LocalizeValue;
 import consulo.project.internal.RecentProjectsManager;
-import consulo.ui.ex.awt.speedSearch.NameFilteringListModel;
+import consulo.ui.ListBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.LegacyDumbAwareAction;
-import consulo.ui.ex.awt.UIExAWTDataKey;
-
 import consulo.ui.image.Image;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAwareAction {
-    public static final Key<JList> RECENT_PROJECTS_LIST = Key.create("recent-projects-list");
+    public static final Key<ListBox<AnAction>> RECENT_PROJECTS_LIST = Key.create("recent-projects-list");
 
     protected RecentProjectsWelcomeScreenActionBase() {
     }
@@ -54,27 +51,18 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAw
         super(text, description, icon);
     }
 
-    public static @Nullable DefaultListModel getDataModel(AnActionEvent e) {
-        JList list = getList(e);
-        return list != null && list.getModel() instanceof NameFilteringListModel nameFilteringListModel
-            && nameFilteringListModel.getOriginalModel() instanceof DefaultListModel defaultListModel ? defaultListModel : null;
+    public static @Nullable MutableFlatDataModel<AnAction> getDataModel(AnActionEvent e) {
+        ListBox<AnAction> list = getList(e);
+        return list != null && list.getDataModel() instanceof MutableFlatDataModel<AnAction> model ? model : null;
     }
-
 
     public static List<AnAction> getSelectedElements(AnActionEvent e) {
-        JList list = getList(e);
-        List<AnAction> actions = new ArrayList<>();
-        if (list != null) {
-            for (Object value : list.getSelectedValues()) {
-                if (value instanceof AnAction action) {
-                    actions.add(action);
-                }
-            }
-        }
-        return actions;
+        ListBox<AnAction> list = getList(e);
+        AnAction value = list == null ? null : list.getValue();
+        return value == null ? List.of() : List.of(value);
     }
 
-    public static @Nullable JList getList(AnActionEvent e) {
+    public static @Nullable ListBox<AnAction> getList(AnActionEvent e) {
         return e.getData(RECENT_PROJECTS_LIST);
     }
 
@@ -87,18 +75,16 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends LegacyDumbAw
         return false;
     }
 
+    @RequiredUIAccess
     public static void rebuildRecentProjectsList(AnActionEvent e) {
-        DefaultListModel model = getDataModel(e);
+        MutableFlatDataModel<AnAction> model = getDataModel(e);
         if (model != null) {
             rebuildRecentProjectDataModel(model);
         }
     }
 
-    public static void rebuildRecentProjectDataModel(DefaultListModel model) {
-        model.clear();
-        for (AnAction action : RecentProjectsManager.getInstance().getRecentProjectsActions(false, true)) {
-            //noinspection unchecked
-            model.addElement(action);
-        }
+    @RequiredUIAccess
+    public static void rebuildRecentProjectDataModel(MutableFlatDataModel<AnAction> model) {
+        model.replaceAll(List.of(RecentProjectsManager.getInstance().getRecentProjectsActions(false, true)));
     }
 }

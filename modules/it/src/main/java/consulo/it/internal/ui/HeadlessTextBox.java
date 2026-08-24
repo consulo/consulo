@@ -85,4 +85,8 @@ public class HeadlessTextBox extends HeadlessValueComponentBase<String> implemen
     public boolean isFocusable() {
         return false;
     }
+
+    @Override
+    public void setPlaceholder(consulo.localize.LocalizeValue text) {
+    }
 }

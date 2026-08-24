@@ -20,6 +20,7 @@ import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.Length;
 import consulo.ui.HasFocus;
 import consulo.ui.HasSize;
 import consulo.ui.UIAccess;
@@ -34,6 +35,8 @@ import consulo.ui.event.AttachEvent;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.DetachEvent;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ContextMenuEvent;
 import consulo.ui.event.KeyPressedEvent;
 import consulo.ui.event.KeyReleasedEvent;
 import consulo.ui.impl.BorderInfo;
@@ -46,6 +49,7 @@ import io.qt.core.Qt;
 import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
 import io.qt.gui.QKeyEvent;
+import io.qt.gui.QMouseEvent;
 import io.qt.gui.QPalette;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
@@ -82,6 +86,8 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
 
     private boolean myKeyDispatchInstalled;
     private boolean myAttachDispatchInstalled;
+    private boolean myClickDispatchInstalled;
+    private boolean myContextMenuDispatchInstalled;
 
     private boolean myEnabled = true;
     private boolean myVisible = true;
@@ -373,33 +379,48 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
      * undone by the next pass of the layout.
      */
     @RequiredUIAccess
+    public void setAccessibleName(LocalizeValue name) {
+        whenBound(widget -> widget.setAccessibleName(name.get()));
+    }
+
+    @RequiredUIAccess
+    public void setAccessibleDescription(LocalizeValue description) {
+        whenBound(widget -> widget.setAccessibleDescription(description.get()));
+    }
+
+    private int toPixels(Length length) {
+        QWidget widget = toQtComponent();
+        return widget == null ? length.toPixels(16) : DesktopQtLength.toPixels(widget, length);
+    }
+
+    @RequiredUIAccess
     @Override
-    public void setWidth(int widthInPixels) {
-        myWidth = widthInPixels;
+    public void setWidth(Length length) {
+        myWidth = toPixels(length);
 
         applySize();
     }
 
     @RequiredUIAccess
     @Override
-    public void setHeight(int heightInPixels) {
-        myHeight = heightInPixels;
+    public void setHeight(Length length) {
+        myHeight = toPixels(length);
 
         applySize();
     }
 
     @RequiredUIAccess
     @Override
-    public void setMinWidth(int widthInPixels) {
-        myMinWidth = widthInPixels;
+    public void setMinWidth(Length length) {
+        myMinWidth = toPixels(length);
 
         applySize();
     }
 
     @RequiredUIAccess
     @Override
-    public void setMinHeight(int heightInPixels) {
-        myMinHeight = heightInPixels;
+    public void setMinHeight(Length length) {
+        myMinHeight = toPixels(length);
 
         applySize();
     }
@@ -444,6 +465,14 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
             installAttachDispatch();
         }
 
+        if (eventClass == ClickEvent.class) {
+            installClickDispatch();
+        }
+
+        if (eventClass == ContextMenuEvent.class) {
+            installContextMenuDispatch();
+        }
+
         return myDataObject.addListener(eventClass, listener);
     }
 
@@ -481,6 +510,63 @@ public abstract class QtComponentDelegate<T extends QWidget> implements Componen
                 }
 
                 // never swallowed here - the widget still does whatever the key normally does to it
+                return false;
+            }
+        }));
+    }
+
+    private void installContextMenuDispatch() {
+        if (myContextMenuDispatchInstalled) {
+            return;
+        }
+
+        myContextMenuDispatchInstalled = true;
+
+        whenBound(widget -> {
+            widget.setContextMenuPolicy(io.qt.core.Qt.ContextMenuPolicy.DefaultContextMenu);
+
+            widget.installEventFilter(new QObject(widget) {
+                @Override
+                public boolean eventFilter(QObject watched, QEvent event) {
+                    if (event.type() == QEvent.Type.ContextMenu) {
+                        fireComponentEvent(ContextMenuEvent.class, new ContextMenuEvent(
+                            QtComponentDelegate.this,
+                            DesktopQtInputDetails.mouseAtCursor(widget)
+                        ));
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
+        });
+    }
+
+    /**
+     * Starts passing clicks on to the api. Qt hands a mouse event to the deepest widget under the pointer and only
+     * passes it on when that widget lets it go, so swallowing it here is what keeps a click on something inside a
+     * row from counting as a click on the row as well.
+     */
+    private void installClickDispatch() {
+        if (myClickDispatchInstalled) {
+            return;
+        }
+
+        myClickDispatchInstalled = true;
+
+        whenBound(widget -> widget.installEventFilter(new QObject(widget) {
+            @Override
+            public boolean eventFilter(QObject watched, QEvent event) {
+                if (event.type() == QEvent.Type.MouseButtonRelease
+                    && event instanceof QMouseEvent mouseEvent
+                    && mouseEvent.button() == io.qt.core.Qt.MouseButton.LeftButton) {
+                    fireComponentEvent(ClickEvent.class, new ClickEvent(
+                        QtComponentDelegate.this,
+                        DesktopQtInputDetails.mouse(widget, mouseEvent)
+                    ));
+                    return true;
+                }
+
                 return false;
             }
         }));
