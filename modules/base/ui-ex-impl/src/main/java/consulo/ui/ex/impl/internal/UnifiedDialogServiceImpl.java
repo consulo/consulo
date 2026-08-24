@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.Component;
-import consulo.ui.Size2D;
+import consulo.ui.WidthAndHeight;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.WindowOwner;
@@ -84,9 +84,9 @@ public class UnifiedDialogServiceImpl implements DialogService {
 
             myWindow.setContent(content);
 
-            Size2D initialSize = myDescriptor.getInitialSize();
+            WidthAndHeight initialSize = myDescriptor.getInitialSize();
             if (initialSize != null) {
-                myWindow.setSize(initialSize);
+                myWindow.setSize(initialSize.width(), initialSize.height());
             }
 
             // the cross of the window and a close coming from the frontend are a cancel, the same way closing a

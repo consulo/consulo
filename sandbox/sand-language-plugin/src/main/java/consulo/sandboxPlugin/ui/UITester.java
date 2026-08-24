@@ -28,6 +28,7 @@ import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;
 import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.TimeoutUtil;
@@ -213,27 +214,77 @@ public class UITester {
         @RequiredUIAccess
         private Component table() {
             DockLayout layout = DockLayout.create();
-            Map<String, String> map = new TreeMap<>();
-            map.put("test1", "1");
-            map.put("test2", "3");
-            map.put("test3", "5");
 
-            Table<Map.Entry<String, String>> table = Table.create(FlatDataModel.of(new ArrayList<>(map.entrySet())));
+            // the rows are the keys, so the cell values live outside the model and an edit is a write into these maps
+            Map<String, String> values = new TreeMap<>();
+            values.put("test1", "1");
+            values.put("test2", "3");
+            values.put("test3", "5");
 
-            table.addColumn(LocalizeValue.localizeTODO("Key"), Map.Entry::getKey)
+            Map<String, ThreeState> states = new TreeMap<>();
+            states.put("test1", ThreeState.YES);
+            states.put("test2", ThreeState.UNSURE);
+            states.put("test3", ThreeState.NO);
+
+            MutableFlatDataModel<String> model = FlatDataModel.of(new ArrayList<>(values.keySet()));
+
+            Table<String> table = Table.create(model);
+
+            // a component column which is also editable - a check box carries its whole value in the click, so it has
+            // to commit there and then rather than wait for the edit to be left
+            table.addColumn(LocalizeValue.localizeTODO("On"), key -> states.getOrDefault(key, ThreeState.NO))
+                .setWidth(40)
+                .setResizable(false)
+                .setRender(ComponentItemRender.reusable(
+                    () -> TriStateCheckBox.create(LocalizeValue.empty()),
+                    (checkBox, item) -> checkBox.setValue(item.getValue() == null ? ThreeState.NO : item.getValue())))
+                .setEditor(new TableItemEditor<>() {
+                    @RequiredUIAccess
+                    @Override
+                    public ValueComponent<ThreeState> createComponent(String key) {
+                        TriStateCheckBox checkBox =
+                            TriStateCheckBox.create(LocalizeValue.empty(), states.getOrDefault(key, ThreeState.NO));
+                        checkBox.setUnsureEnabled(true);
+                        return checkBox;
+                    }
+
+                    @RequiredUIAccess
+                    @Override
+                    public void commit(String key, @Nullable ThreeState value) {
+                        states.put(key, value == null ? ThreeState.NO : value);
+                        model.update(key);
+                    }
+                });
+
+            table.addColumn(LocalizeValue.localizeTODO("Key"), key -> key)
                 .setSortable(Comparator.naturalOrder())
                 .setWidth(160);
 
-            table.addColumn(LocalizeValue.localizeTODO("Value"), Map.Entry::getValue)
+            // a text column which is also editable - the opposite case, where the value is only settled once typing stops
+            table.addColumn(LocalizeValue.localizeTODO("Value"), values::get)
                 .setHorizontalAlignment(HorizontalAlignment.RIGHT)
                 .setSortable(Comparator.naturalOrder())
                 .setRender((presentation, item) -> presentation.append(
                     String.valueOf(item.getValue()),
                     item.isSelected() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
-                ));
+                ))
+                .setEditor(new TableItemEditor<>() {
+                    @RequiredUIAccess
+                    @Override
+                    public ValueComponent<String> createComponent(String key) {
+                        return TextBox.create(values.get(key));
+                    }
+
+                    @RequiredUIAccess
+                    @Override
+                    public void commit(String key, @Nullable String value) {
+                        values.put(key, value == null ? "" : value);
+                        model.update(key);
+                    }
+                });
 
             table.setSelectionMode(SelectionMode.MULTIPLE);
-            table.setSpeedSearchConverter(Map.Entry::getKey);
+            table.setSpeedSearchConverter(key -> key);
             table.addSelectListener(event -> Alerts.okInfo(LocalizeValue.of("Selected: " + event.getValues().size())).showAsync());
 
             layout.center(ScrollableLayout.create(table));
@@ -334,8 +385,8 @@ public class UITester {
         }
 
         @Override
-        public @Nullable Size2D getInitialSize() {
-            return new Size2D(500, 500);
+        public @Nullable WidthAndHeight getInitialSize() {
+            return WidthAndHeight.ofFont(25, 25);
         }
     }
 

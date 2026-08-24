@@ -5,7 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.Size2D;
+import consulo.ui.WidthAndHeight;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import org.jspecify.annotations.Nullable;
@@ -17,8 +17,8 @@ import java.util.List;
  * The size of the browser panel when nothing is stored in the dimension service yet.
  */
 class UniversalFileChooserDescriptor extends DialogDescriptor {
-    private static final int DEFAULT_WIDTH = 700;
-    private static final int DEFAULT_HEIGHT = 500;
+    private static final float DEFAULT_WIDTH = 35;
+    private static final float DEFAULT_HEIGHT = 25;
 
     private final FileChooserDescriptor myDescriptor;
     private final Project myProject;
@@ -43,8 +43,8 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
     }
 
     @Override
-    public @Nullable Size2D getInitialSize() {
-        return new Size2D(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    public @Nullable WidthAndHeight getInitialSize() {
+        return WidthAndHeight.ofFont(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     @Override

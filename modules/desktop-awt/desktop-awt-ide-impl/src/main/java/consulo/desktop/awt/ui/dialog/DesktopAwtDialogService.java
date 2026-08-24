@@ -24,7 +24,8 @@ import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.Component;
-import consulo.ui.Size2D;
+import consulo.ui.WidthAndHeight;
+import consulo.desktop.awt.ui.impl.DesktopLength;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -158,11 +159,13 @@ public class DesktopAwtDialogService implements DialogService {
 
         @Override
         public @Nullable Dimension getInitialSize() {
-            Size2D size = myDescriptor.getInitialSize();
+            WidthAndHeight size = myDescriptor.getInitialSize();
             if (size == null) {
                 return null;
             }
-            return new Dimension(JBUI.scale(size.width()), JBUI.scale(size.height()));
+
+            java.awt.Component owner = getWindow();
+            return new Dimension(DesktopLength.toPixels(owner, size.width()), DesktopLength.toPixels(owner, size.height()));
         }
 
         @Override

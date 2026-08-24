@@ -37,6 +37,7 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
 
     private TextItemRender<Value> myTextRender = TextItemRender.defaultRender();
     private @Nullable ComponentItemRender<Value> myComponentRender;
+    private @Nullable TableItemEditor<Item, Value> myEditor;
 
     public WebTableColumnImpl(WebTableImpl<Item> table, Function<Item, Value> valueProvider) {
         myTable = table;
@@ -47,20 +48,36 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
 
     private com.vaadin.flow.component.Component renderCell(Item item) {
         Value value = myValueProvider.apply(item);
-        RenderItem<Value> renderItem = RenderItem.of(value, myTable.isSelected(item));
 
-        com.vaadin.flow.component.Component component;
-        if (myComponentRender != null) {
-            component = ((ToVaadinComponentWrapper) myComponentRender.render(renderItem)).toVaadinComponent();
-        }
-        else {
-            WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-            myTextRender.render(presentation, renderItem);
-            component = presentation.toComponent();
-        }
+        com.vaadin.flow.component.Component component = renderCellContent(item, value);
 
         myTable.applyItemHeight(component, item);
         return component;
+    }
+
+    /**
+     * A cell lives in the document and is interactive as soon as it is drawn, so an editable column renders its editor
+     * straight into the cell rather than a read only view - there is no edit mode to open, and a value listener is the
+     * only point at which the change can be committed.
+     */
+    private com.vaadin.flow.component.Component renderCellContent(Item item, Value value) {
+        TableItemEditor<Item, Value> editor = myEditor;
+        if (editor != null && editor.isEditable(item)) {
+            ValueComponent<Value> component = editor.createComponent(item);
+            component.setValue(value, false);
+            component.addValueListener(event -> editor.commit(item, event.getValue()));
+            return ((ToVaadinComponentWrapper) component).toVaadinComponent();
+        }
+
+        RenderItem<Value> renderItem = RenderItem.of(value, myTable.isSelected(item));
+
+        if (myComponentRender != null) {
+            return ((ToVaadinComponentWrapper) myComponentRender.render(renderItem)).toVaadinComponent();
+        }
+
+        WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+        myTextRender.render(presentation, renderItem);
+        return presentation.toComponent();
     }
 
     @Override
@@ -119,17 +136,8 @@ public class WebTableColumnImpl<Item, Value> implements TableColumn<Item, Value>
 
     @Override
     public TableColumn<Item, Value> setEditor(@Nullable TableItemEditor<Item, Value> editor) {
-        if (editor == null) {
-            myColumn.setEditorComponent((com.vaadin.flow.component.Component) null);
-            return this;
-        }
-
-        myColumn.setEditorComponent(item -> {
-            ValueComponent<Value> component = editor.createComponent(item);
-            component.setValue(myValueProvider.apply(item), false);
-            component.addValueListener(event -> editor.commit(item, event.getValue()));
-            return ((ToVaadinComponentWrapper) component).toVaadinComponent();
-        });
+        myEditor = editor;
+        myTable.toVaadinComponent().getDataProvider().refreshAll();
         return this;
     }
 }

@@ -41,7 +41,13 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     private final Function<Item, Value> myValueProvider;
 
     private TextItemRender<Value> myTextRender = TextItemRender.defaultRender();
-    private @Nullable ComponentItemRender<Value> myComponentRender;
+
+    /**
+     * A table asks for a renderer per row, so the bridge is held here instead of being built per call - a
+     * reusable render can only keep its component while the bridge outlives a single paint.
+     */
+    private @Nullable DesktopComponentItemTableCellRenderer<Value> myComponentRenderer;
+
     private @Nullable Comparator<Value> myComparator;
     private @Nullable TableItemEditor<Item, Value> myEditor;
 
@@ -68,13 +74,13 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
     @Override
     public TableColumn<Item, Value> setRender(TextItemRender<Value> render) {
         myTextRender = render;
-        myComponentRender = null;
+        myComponentRenderer = null;
         return this;
     }
 
     @Override
     public TableColumn<Item, Value> setRender(ComponentItemRender<Value> render) {
-        myComponentRender = render;
+        myComponentRenderer = new DesktopComponentItemTableCellRenderer<>(render);
         return this;
     }
 
@@ -128,17 +134,8 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
 
     @Override
     public @Nullable TableCellRenderer getRenderer(Item item) {
-        if (myComponentRender != null) {
-            ComponentItemRender<Value> render = myComponentRender;
-            return (table, value, selected, hasFocus, row, column) -> {
-                java.awt.Component awtComponent = TargetAWT.to(render.render(RenderItem.of(valueOf(item), selected)));
-
-                // swing components are opaque by default and would paint over the row background
-                if (awtComponent instanceof JComponent jComponent) {
-                    jComponent.setOpaque(false);
-                }
-                return awtComponent;
-            };
+        if (myComponentRenderer != null) {
+            return myComponentRenderer;
         }
 
         return new ColoredTableCellRenderer() {
@@ -169,7 +166,24 @@ public class DesktopTableColumnImpl<Item, Value> extends ColumnInfo<Item, Value>
             public java.awt.Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
                 myValueComponent = editor.createComponent(item);
                 myValueComponent.setValue(valueOf(item), false);
-                return TargetAWT.to(myValueComponent);
+
+                java.awt.Component awtComponent = TargetAWT.to(myValueComponent);
+
+                // the editor sits in the row it edits, so it is painted like one - a widget left on its own
+                // look and feel fill would otherwise flash a box of a different color the moment editing starts
+                DesktopComponentItemRenderBase.applyRowColors(
+                    awtComponent,
+                    isSelected ? table.getSelectionBackground() : table.getBackground(),
+                    isSelected ? table.getSelectionForeground() : table.getForeground()
+                );
+
+                // a button carries its whole value in the click, so there is nothing further to type and
+                // waiting for focus to leave would only lose the change
+                if (awtComponent instanceof AbstractButton) {
+                    myValueComponent.addValueListener(event -> stopCellEditing());
+                }
+
+                return awtComponent;
             }
 
             @Override

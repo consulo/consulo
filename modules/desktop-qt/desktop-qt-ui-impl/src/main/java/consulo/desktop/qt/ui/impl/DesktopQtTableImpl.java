@@ -23,6 +23,8 @@ import consulo.ui.RenderItem;
 import consulo.ui.SelectionMode;
 import consulo.ui.Table;
 import consulo.ui.TableColumn;
+import consulo.ui.TableItemEditor;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.TableDoubleClickEvent;
 import consulo.ui.event.TableSelectEvent;
@@ -222,27 +224,55 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableWidget> 
     private <Value> void updateCell(QTableWidget component, int row, Item item, DesktopQtTableColumnImpl<Item, Value> column) {
         int index = column.getIndex();
         Value value = column.getValueProvider().apply(item);
-        RenderItem<Value> renderItem = RenderItem.of(value, isSelected(row));
 
-        ComponentItemRender<Value> componentRender = column.getComponentRender();
-        if (componentRender != null) {
-            consulo.ui.Component rendered = componentRender.render(renderItem);
-            QWidget widget = rendered instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
-
-            if (widget != null) {
-                component.setCellWidget(row, index, widget);
-                return;
-            }
+        QWidget widget = createCellWidget(row, item, column, value);
+        if (widget != null) {
+            component.setCellWidget(row, index, widget);
+            return;
         }
 
+        // a cell keeps whatever widget was put in it, so one left from an earlier render would sit on top of the text
+        component.removeCellWidget(row, index);
+
         DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-        column.getTextRender().render(presentation, renderItem);
+        column.getTextRender().render(presentation, RenderItem.of(value, isSelected(row)));
 
         QTableWidgetItem cell = new QTableWidgetItem(presentation.toString());
         cell.setFlags(Qt.ItemFlag.ItemIsEnabled, Qt.ItemFlag.ItemIsSelectable);
         cell.setTextAlignment(toAlignment(column.getAlignment()));
 
         component.setItem(row, index, cell);
+    }
+
+    /**
+     * A cell widget is live from the moment it is placed, so an editable column puts its editor straight in the cell
+     * rather than a read only render - there is no separate edit mode to enter, which is why the edit triggers are off,
+     * and a value listener is the only point at which the change can be committed.
+     *
+     * @return the widget the cell shows, or {@code null} when the column falls back to text
+     */
+    private <Value> @Nullable QWidget createCellWidget(int row,
+                                                       Item item,
+                                                       DesktopQtTableColumnImpl<Item, Value> column,
+                                                       Value value) {
+        TableItemEditor<Item, Value> editor = column.getEditor();
+        if (editor != null && editor.isEditable(item)) {
+            ValueComponent<Value> valueComponent = editor.createComponent(item);
+            valueComponent.setValue(value, false);
+            valueComponent.addValueListener(event -> editor.commit(item, event.getValue()));
+            return toQtWidget(valueComponent);
+        }
+
+        ComponentItemRender<Value> componentRender = column.getComponentRender();
+        if (componentRender != null) {
+            return toQtWidget(componentRender.render(RenderItem.of(value, isSelected(row))));
+        }
+
+        return null;
+    }
+
+    private static @Nullable QWidget toQtWidget(consulo.ui.@Nullable Component component) {
+        return component instanceof QtComponentDelegate<?> delegate ? delegate.toQtComponent() : null;
     }
 
     private static Qt.Alignment toAlignment(HorizontalAlignment alignment) {

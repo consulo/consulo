@@ -20,7 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
-import consulo.ui.Size2D;
+import consulo.ui.WidthAndHeight;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -59,8 +59,8 @@ public class AboutDialogDescriptor extends DialogDescriptor {
     }
 
     @Override
-    public @Nullable Size2D getInitialSize() {
-        return new Size2D(700, 600);
+    public @Nullable WidthAndHeight getInitialSize() {
+        return WidthAndHeight.ofFont(35, 30);
     }
 
     @RequiredUIAccess
