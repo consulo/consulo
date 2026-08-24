@@ -37,6 +37,8 @@ import java.util.concurrent.CompletableFuture;
  * The DialogBuilder is a simpler alternative to {@link DialogWrapper}.
  * There is no need to create a subclass (which is needed in the DialogWrapper), which can be nice for simple dialogs.
  */
+@Deprecated
+@DeprecationInfo("Use unified UI")
 public class DialogBuilder implements Disposable {
     public static final String REQUEST_FOCUS_ENABLED = "requestFocusEnabled";
 

@@ -25,6 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
+import consulo.util.lang.ControlFlowException;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
@@ -55,6 +56,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -192,7 +194,12 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         // Phase 2: With the ProjectImpl, load state, init services, load modules, etc.
         projectInit.whenComplete((projectImpl, throwable) -> {
             if (throwable != null) {
-                LOG.warn("Failed to open project: " + filePath, throwable);
+                // a cancelled open is the user changing their mind, not a failure - it still unwinds the caller,
+                // but a stack trace in the log reads as something having gone wrong
+                if (!isCancellation(throwable)) {
+                    LOG.warn("Failed to open project: " + filePath, throwable);
+                }
+
                 resultFuture.completeExceptionally(throwable);
             }
             else if (projectImpl == null) {
@@ -204,6 +211,16 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         });
 
         return resultFuture;
+    }
+
+    private static boolean isCancellation(Throwable throwable) {
+        for (Throwable each = throwable; each != null && each.getCause() != each; each = each.getCause()) {
+            if (each instanceof ControlFlowException || each instanceof CancellationException) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void doOpenInProject(ProjectImpl project, Path filePath, UIAccess uiAccess,

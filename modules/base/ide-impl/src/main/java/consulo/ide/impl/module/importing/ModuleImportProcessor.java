@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.module.importing;
 
+import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -23,12 +24,9 @@ import consulo.module.creation.importing.ModuleImportContext;
 import consulo.module.creation.importing.ModuleImportProvider;
 import consulo.project.Project;
 import consulo.ui.Alerts;
-import consulo.ui.ComboBox;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogBuilder;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.layout.LabeledLayout;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
@@ -38,7 +36,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -151,22 +148,12 @@ public class ModuleImportProcessor {
 
     @RequiredUIAccess
     private static CompletableFuture<ModuleImportProvider> showImportTarget(List<ModuleImportProvider> providers) {
-        ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
-        box.setRender((renderer, renderItem) -> {
-            var item = renderItem.getValue();
-            assert item != null;
-            renderer.withIcon(item.getIcon());
-            renderer.append(item.getName());
-        });
-        box.setValueByIndex(0);
+        ModuleImportTargetDialogDescriptor descriptor = new ModuleImportTargetDialogDescriptor(providers);
 
-        LabeledLayout layout = LabeledLayout.create(LocalizeValue.localizeTODO("Select import target"), box);
-
-        DialogBuilder builder = new DialogBuilder();
-        builder.setTitle("Import Target");
-        builder.setCenterPanel((JComponent) TargetAWT.to(layout));
-
-        return builder.showAsync().thenApply(ignored -> box.getValue());
+        return Application.get().getInstance(DialogService.class)
+            .build(descriptor)
+            .showAsync()
+            .thenApply(_ -> descriptor.getProvider());
     }
 
     @RequiredUIAccess
@@ -176,14 +163,14 @@ public class ModuleImportProcessor {
         ModuleImportProvider<C> moduleImportProvider,
         CompletableFuture<Pair<C, ModuleImportProvider<C>>> result
     ) {
-        ModuleImportDialog<C> dialog = new ModuleImportDialog<>(project, targetFile, moduleImportProvider);
+        ModuleImportDialogDescriptor<C> descriptor = new ModuleImportDialogDescriptor<>(project, targetFile, moduleImportProvider);
 
-        dialog.showAsync().whenComplete((value, error) -> {
+        Application.get().getInstance(DialogService.class).build(descriptor).showAsync().whenComplete((value, error) -> {
             if (error == null) {
-                result.complete(Pair.create(dialog.getContext(), moduleImportProvider));
+                result.complete(Pair.create(descriptor.getContext(), moduleImportProvider));
             }
             else {
-                dialog.getContext().dispose();
+                descriptor.disposeContext();
 
                 result.completeExceptionally(error);
             }
