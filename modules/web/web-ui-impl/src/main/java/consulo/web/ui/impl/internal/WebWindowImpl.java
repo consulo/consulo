@@ -27,6 +27,7 @@ import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.WindowCloseEvent;
+import consulo.util.lang.StringUtil;
 import consulo.web.ui.impl.internal.base.ComponentHolder;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -145,7 +146,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     @Override
     @RequiredUIAccess
     public void setTitle(String title) {
-        getVaadinComponent().setHeaderTitle(title);
+        getVaadinComponent().setHeaderTitle(StringUtil.notNullize(title));
     }
 
     @Override

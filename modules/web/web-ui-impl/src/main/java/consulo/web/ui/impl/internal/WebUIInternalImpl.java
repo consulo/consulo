@@ -368,7 +368,7 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     @RequiredUIAccess
     public Window _Window_create(String title, WindowOptions options) {
-        WebWindowImpl window = new WebWindowImpl(true, options);
+        WebWindowImpl window = new WebWindowImpl(options.isModal(), options);
         window.setTitle(title);
         return window;
     }
