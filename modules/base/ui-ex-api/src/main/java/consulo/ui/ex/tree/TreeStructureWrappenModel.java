@@ -24,6 +24,7 @@ import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.image.Image;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
@@ -91,13 +92,29 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
                 }
 
                 try {
-                    ReadAction.compute(() -> itemPresentation.withIcon(descriptor.getIcon()));
+                    ReadAction.compute(() -> itemPresentation.withIcon(iconOf(descriptor)));
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
             });
         }
+    }
+
+    /**
+     * The icon of a node can live in two places - the {@link NodeDescriptor} field filled by {@code setIcon},
+     * and the {@link PresentationData} filled by the template presentation or {@code update(PresentationData)}.
+     * The awt renderer paints the presentation one, and the descriptor→presentation sync is one way, so a node
+     * which only ever touched its presentation has an empty descriptor field.
+     */
+    private static @Nullable Image iconOf(NodeDescriptor descriptor) {
+        if (descriptor instanceof PresentableNodeDescriptor<?> presentable) {
+            Image icon = presentable.getPresentation().getIcon();
+            if (icon != null) {
+                return icon;
+            }
+        }
+        return descriptor.getIcon();
     }
 
     /**

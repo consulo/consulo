@@ -67,6 +67,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.Arrays;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -428,6 +429,22 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         myStructureTreeModel = new StructureTreeModel<>(myStructure, disposable);
     }
 
+    /**
+     * The awt trees move the selection to the row under the pointer before a popup is shown - see
+     * {@code PopupHandler#installFollowingSelectionTreePopup} - and a {@link consulo.ui.event.ContextMenuEvent}
+     * listener reads the selection. The web tree already does this in its {@code installSelectOnRightClick}.
+     */
+    private static void selectRowUnderPopupTrigger(JTree tree, MouseEvent e) {
+        if (!e.isPopupTrigger()) {
+            return;
+        }
+
+        TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+        if (path != null && !tree.isPathSelected(path)) {
+            tree.setSelectionPath(path);
+        }
+    }
+
     @Override
     protected MyTree createComponent() {
         MyTree tree = new MyTree(myStructureTreeModel, myDisposable);
@@ -440,6 +457,18 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             tree.setRowHeight(0);
         }
         applySpeedSearch(tree);
+
+        tree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selectRowUnderPopupTrigger(tree, e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                selectRowUnderPopupTrigger(tree, e);
+            }
+        });
 
         new DoubleClickListener() {
             @Override
