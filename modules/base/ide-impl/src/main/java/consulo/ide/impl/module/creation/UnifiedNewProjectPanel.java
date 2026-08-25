@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.disposer.Disposable;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
+import consulo.ide.impl.welcomeScreen.WelcomeSlide;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -72,7 +73,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2026-08-15
  */
-public class UnifiedNewProjectPanel implements NewProjectWizardData, Disposable {
+public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlide {
     private static final Logger LOG = Logger.getInstance(UnifiedNewProjectPanel.class);
 
     private static final String EMPTY_PANEL = "empty-panel";
@@ -153,9 +154,13 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, Disposable 
         myTitlelessDecorator = titlelessDecorator;
     }
 
-    public void setDefaultActions(@Nullable Runnable okAction, @Nullable Runnable cancelAction) {
+    public void setDefaultOkAction(@Nullable @RequiredUIAccess Runnable okAction) {
         myDefaultOkAction = okAction;
-        myDefaultCancelAction = cancelAction;
+    }
+
+    @Override
+    public void setCloseAction(Runnable closeAction) {
+        myDefaultCancelAction = closeAction;
     }
 
     public boolean isModuleCreation() {
@@ -172,6 +177,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, Disposable 
         return myWizardContext;
     }
 
+    @Override
     @RequiredUIAccess
     public Layout getLayout() {
         DockLayout root = myRoot;

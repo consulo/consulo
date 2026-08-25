@@ -42,6 +42,8 @@ module consulo.sand.language.plugin {
 
   requires consulo.builtin.web.server.api;
 
+  requires consulo.version.control.system.api;
+
   requires consulo.language.impl;
 
   opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;

@@ -17,23 +17,24 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.vcs.checkout.UnifiedCheckoutPanel;
+import consulo.ide.impl.welcomeScreen.WelcomeSlide;
+import consulo.ide.impl.welcomeScreen.WelcomeSlideAction;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.ui.ex.action.AnAction;
+import consulo.project.ProjectManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.TitlelessDecorator;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.inject.Inject;
 
-import java.util.*;
-
 @ActionImpl(id = "WelcomeScreen.GetFromVcs")
-public class WelcomeGetFromVcsAction extends WelcomePopupAction {
-    
+public class WelcomeGetFromVcsAction extends WelcomeSlideAction implements AnActionWithSyncUpdate {
     private final Application myApplication;
 
     @Inject
@@ -47,26 +48,19 @@ public class WelcomeGetFromVcsAction extends WelcomePopupAction {
     }
 
     @Override
-    protected void fillActions(DefaultActionGroup group) {
-        SortedMap<LocalizeValue, AnAction> actions = myApplication.getExtensionPoint(CheckoutProvider.class)
-            .collectMapped(new TreeMap<>(), p -> p.getName().map(Presentation.NO_MNEMONIC), CheckoutAction::new);
-        group.addAll(actions.values());
-    }
-
-    @Override
     public boolean displayTextInToolbar() {
         return true;
     }
 
-    
     @Override
-    protected LocalizeValue getTextForEmpty() {
-        return UILocalize.welcomeScreenGetFromVcsActionNoVcsPluginsWithCheckOutActionInstalledActionName();
+    protected LocalizeValue getSlideTitle() {
+        return VcsLocalize.checkoutTitle();
     }
 
     @Override
-    protected boolean isSilentlyChooseSingleOption() {
-        return true;
+    @RequiredUIAccess
+    protected WelcomeSlide createSlide(Disposable parentDisposable, TitlelessDecorator titlelessDecorator) {
+        return new UnifiedCheckoutPanel(myApplication, ProjectManager.getInstance().getDefaultProject(), titlelessDecorator);
     }
 
     @Override

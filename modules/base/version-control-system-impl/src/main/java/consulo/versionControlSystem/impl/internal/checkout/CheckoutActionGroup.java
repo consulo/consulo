@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.checkout;
+package consulo.versionControlSystem.impl.internal.checkout;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
@@ -25,6 +25,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jspecify.annotations.Nullable;
@@ -36,11 +37,13 @@ import java.util.TreeMap;
 @ActionImpl(id = "Vcs.Checkout")
 public class CheckoutActionGroup extends ActionGroup implements DumbAware, AnActionWithSyncUpdate {
     private final Application myApplication;
+    private final DialogService myDialogService;
 
     @Inject
-    public CheckoutActionGroup(Application application) {
+    public CheckoutActionGroup(Application application, DialogService dialogService) {
         super(VcsLocalize.groupCheckoutText(), true);
         myApplication = application;
+        myDialogService = dialogService;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware, AnAct
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         SortedMap<LocalizeValue, AnAction> actions = myApplication.getExtensionPoint(CheckoutProvider.class)
-            .collectMapped(new TreeMap<>(), p -> p.getName().map(Presentation.NO_MNEMONIC), CheckoutAction::new);
+            .collectMapped(new TreeMap<>(), p -> p.getName().map(Presentation.NO_MNEMONIC), p -> new CheckoutAction(p, myDialogService));
         return actions.values().toArray(AnAction[]::new);
     }
 }

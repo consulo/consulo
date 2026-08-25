@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.checkout;
+package consulo.versionControlSystem.impl.internal.checkout;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 
 public class CheckoutAction extends DumbAwareAction {
     private final CheckoutProvider myProvider;
+    private final DialogService myDialogService;
 
-    public CheckoutAction(CheckoutProvider provider) {
-        super(provider.getName());
+    public CheckoutAction(CheckoutProvider provider, DialogService dialogService) {
+        super(provider.getName(), LocalizeValue.empty(), provider.getIcon());
         myProvider = provider;
+        myDialogService = dialogService;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class CheckoutAction extends DumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         project = (project == null) ? ProjectManager.getInstance().getDefaultProject() : project;
-        myProvider.doCheckout(project, ProjectLevelVcsManager.getInstance(project).getCompositeCheckoutListener());
+
+        myDialogService.build(project, new CheckoutDialogDescriptor(project, myProvider)).showAsync();
     }
 }

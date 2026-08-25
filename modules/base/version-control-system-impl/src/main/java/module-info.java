@@ -46,6 +46,7 @@ module consulo.version.control.system.impl {
     opens consulo.versionControlSystem.impl.internal.change.conflict to consulo.util.xml.serializer, consulo.ui.ex.awt.api;
     opens consulo.versionControlSystem.impl.internal.change to consulo.util.xml.serializer;
     opens consulo.versionControlSystem.impl.internal.action to consulo.component.impl;
+    opens consulo.versionControlSystem.impl.internal.checkout to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.patch to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.action to consulo.component.impl;
     opens consulo.versionControlSystem.impl.internal.change.ui.awt to consulo.proxy;

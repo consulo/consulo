@@ -36,13 +36,13 @@ import java.util.List;
 /**
  * to be called after checkout - notifiers extenders on checkout completion
  */
-public class CompositeCheckoutListener implements CheckoutProvider.Listener {
+public class CompositeCheckoutCallback implements CheckoutCallback {
     private final Project myProject;
     private boolean myFoundProject = false;
     private File myFirstDirectory;
     private VcsKey myVcsKey;
 
-    public CompositeCheckoutListener(Project project) {
+    public CompositeCheckoutCallback(Project project) {
         myProject = project;
     }
 

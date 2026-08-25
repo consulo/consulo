@@ -435,6 +435,8 @@ checkbox.show.clear.read.only.status.dialog:
     text: Show "&Clear Read-only Status" Dialog
 checking.code.smells.progress.title:
     text: Performing Code Analysis
+checkout.button.text:
+    text: Checkout
 checkout.create.project.prompt:
     text: Would you like to create project for the sources you have checked out to {0}?
 checkout.open.directory.prompt:
@@ -444,6 +446,8 @@ checkout.open.project.prompt:
         You have checked out known to Consulo project file:
         {0}
         Would you like to open it?
+checkout.select.vcs.prompt:
+    text: Please select version control system
 checkout.title:
     text: Checkout From Version Control
 close.tab.action.name:

@@ -29,7 +29,7 @@ import java.util.Collections;
 public class RegisterMappingCheckoutListener implements VcsAwareCheckoutListener {
   @Override
   public boolean processCheckedOutDirectory(Project currentProject, File directory, VcsKey vcsKey) {
-    Project project = CompositeCheckoutListener.findProjectByBaseDirLocation(directory);
+    Project project = CompositeCheckoutCallback.findProjectByBaseDirLocation(directory);
     if (project != null) {
       ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
       if (!vcsManager.hasAnyMappings()) {
