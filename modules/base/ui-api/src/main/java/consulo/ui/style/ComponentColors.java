@@ -27,6 +27,7 @@ public enum ComponentColors implements StyleColorValue {
     TEXT_FOREGROUND,
     LAYOUT,
     DISABLED_TEXT,
+    INFO_FOREGROUND,
 
     COMPONENT_BACKGROUND,
 
@@ -43,6 +44,8 @@ public enum ComponentColors implements StyleColorValue {
     DISABLED_BORDER,
 
     LINK_FOREGROUND,
+
+    ERROR_FOREGROUND,
 
     ERROR_BORDER,
     WARNING_BORDER,

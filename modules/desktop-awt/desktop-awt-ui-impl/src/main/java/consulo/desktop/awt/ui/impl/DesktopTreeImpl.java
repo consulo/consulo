@@ -29,6 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.ex.awt.JBUI;
@@ -478,12 +479,14 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                     return false;
                 }
 
+                InputDetails inputDetails = DesktopAWTInputDetails.convert(event.getComponent(), event);
+
                 getListenerDispatcher(TreeDoubleClickEvent.class)
-                    .onEvent(new TreeDoubleClickEvent<>(DesktopTreeImpl.this, node, DesktopAWTInputDetails.convert(event.getComponent(), event)));
+                    .onEvent(new TreeDoubleClickEvent<>(DesktopTreeImpl.this, node, inputDetails));
 
                 // the model answers whether the node should open, which is what the tree does on its own -
                 // the event is consumed only when the model took the click for an action of its own
-                return !myModel.onDoubleClick(DesktopTreeImpl.this, node);
+                return !myModel.onDoubleClick(DesktopTreeImpl.this, node, inputDetails);
             }
         }.installOn(tree);
 

@@ -15,10 +15,13 @@
  */
 package consulo.ui.ex;
 
-import consulo.ui.ex.util.LafProperty;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Comparing;
-import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -44,55 +47,60 @@ public final class SimpleTextAttributes {
     public static final int STYLE_SMALLER = STYLE_SEARCH_MATCH << 1;
     public static final int STYLE_OPAQUE = STYLE_SMALLER << 1;
 
-    public static final SimpleTextAttributes REGULAR_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, null);
-    public static final SimpleTextAttributes REGULAR_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, null);
-    public static final SimpleTextAttributes REGULAR_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, null);
-    public static final SimpleTextAttributes ERROR_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.red);
-    public static final SimpleTextAttributes ERROR_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, JBColor.red);
+    public static final SimpleTextAttributes REGULAR_ATTRIBUTES = of(STYLE_PLAIN, null);
+    public static final SimpleTextAttributes REGULAR_BOLD_ATTRIBUTES = of(STYLE_BOLD, null);
+    public static final SimpleTextAttributes REGULAR_ITALIC_ATTRIBUTES = of(STYLE_ITALIC, null);
+    public static final SimpleTextAttributes ERROR_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.ERROR_FOREGROUND);
+    public static final SimpleTextAttributes ERROR_BOLD_ATTRIBUTES = of(STYLE_BOLD, ComponentColors.ERROR_FOREGROUND);
 
-    public static final SimpleTextAttributes GRAY_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.GRAY);
-    public static final SimpleTextAttributes GRAY_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, JBColor.GRAY);
-    public static final SimpleTextAttributes GRAY_SMALL_ATTRIBUTES = new SimpleTextAttributes(STYLE_SMALLER, JBColor.GRAY);
+    public static final SimpleTextAttributes GRAY_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.INFO_FOREGROUND);
+    public static final SimpleTextAttributes GRAY_ITALIC_ATTRIBUTES = of(STYLE_ITALIC, ComponentColors.INFO_FOREGROUND);
+    public static final SimpleTextAttributes GRAY_SMALL_ATTRIBUTES = of(STYLE_SMALLER, ComponentColors.INFO_FOREGROUND);
 
-    public static final SimpleTextAttributes GRAYED_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getInactiveTextColor());
-    public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, LafProperty.getInactiveTextColor());
-    public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, LafProperty.getInactiveTextColor());
-    public static final SimpleTextAttributes GRAYED_SMALL_ATTRIBUTES = new SimpleTextAttributes(STYLE_SMALLER, LafProperty.getInactiveTextColor());
+    public static final SimpleTextAttributes GRAYED_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.DISABLED_TEXT);
+    public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES = of(STYLE_BOLD, ComponentColors.DISABLED_TEXT);
+    public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES = of(STYLE_ITALIC, ComponentColors.DISABLED_TEXT);
+    public static final SimpleTextAttributes GRAYED_SMALL_ATTRIBUTES = of(STYLE_SMALLER, ComponentColors.DISABLED_TEXT);
 
-    public static final SimpleTextAttributes SYNTHETIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.blue);
-    public static final SimpleTextAttributes DARK_TEXT = new SimpleTextAttributes(STYLE_PLAIN, new Color(112, 112, 164));
-    public static final SimpleTextAttributes SIMPLE_CELL_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, new JBColor(Gray._0, Gray._187));
-    public static final SimpleTextAttributes SELECTED_SIMPLE_CELL_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getListSelectionForeground());
-    public static final SimpleTextAttributes EXCLUDED_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, JBColor.GRAY);
+    public static final SimpleTextAttributes SYNTHETIC_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.LINK_FOREGROUND);
+    public static final SimpleTextAttributes DARK_TEXT = of(STYLE_PLAIN, ComponentColors.TEXT_FOREGROUND);
+    public static final SimpleTextAttributes SIMPLE_CELL_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.TEXT_FOREGROUND);
+    public static final SimpleTextAttributes SELECTED_SIMPLE_CELL_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.SELECTION_FOREGROUND);
+    public static final SimpleTextAttributes EXCLUDED_ATTRIBUTES = of(STYLE_ITALIC, ComponentColors.INFO_FOREGROUND);
 
-    public static final SimpleTextAttributes LINK_PLAIN_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.blue);
-    public static final SimpleTextAttributes LINK_ATTRIBUTES = new SimpleTextAttributes(STYLE_UNDERLINE, JBColor.blue);
-    public static final SimpleTextAttributes LINK_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_UNDERLINE | STYLE_BOLD, JBColor.blue);
+    public static final SimpleTextAttributes LINK_PLAIN_ATTRIBUTES = of(STYLE_PLAIN, ComponentColors.LINK_FOREGROUND);
+    public static final SimpleTextAttributes LINK_ATTRIBUTES = of(STYLE_UNDERLINE, ComponentColors.LINK_FOREGROUND);
+    public static final SimpleTextAttributes LINK_BOLD_ATTRIBUTES = of(STYLE_UNDERLINE | STYLE_BOLD, ComponentColors.LINK_FOREGROUND);
 
-    private final Color myBgColor;
-    private final Color myFgColor;
-    private final Color myWaveColor;
+    private final ColorValue myBgColor;
+    private final ColorValue myFgColor;
+    private final ColorValue myWaveColor;
     @StyleAttributeConstant
     private final int myStyle;
 
-    /**
-     * @param style   style of the text fragment.
-     * @param fgColor color of the text fragment. <code>color</code> can be
-     *                <code>null</code>. In that case <code>SimpleColoredComponent</code> will
-     *                use its foreground to paint the text fragment.
-     */
-    public SimpleTextAttributes(@StyleAttributeConstant int style, Color fgColor) {
-        this(style, fgColor, null);
+    public static SimpleTextAttributes of(@StyleAttributeConstant int style, @Nullable ColorValue fgColor) {
+        return of(style, fgColor, null);
     }
 
-    public SimpleTextAttributes(@StyleAttributeConstant int style, Color fgColor, @Nullable Color waveColor) {
-        this(null, fgColor, waveColor, style);
+    public static SimpleTextAttributes of(@StyleAttributeConstant int style, @Nullable ColorValue fgColor, @Nullable ColorValue waveColor) {
+        return of(null, fgColor, waveColor, style);
     }
 
-    public SimpleTextAttributes(@Nullable Color bgColor,
-                                Color fgColor,
-                                @Nullable Color waveColor,
-                                @StyleAttributeConstant int style) {
+    public static SimpleTextAttributes of(
+        @Nullable ColorValue bgColor,
+        @Nullable ColorValue fgColor,
+        @Nullable ColorValue waveColor,
+        @StyleAttributeConstant int style
+    ) {
+        return new SimpleTextAttributes(bgColor, fgColor, waveColor, style);
+    }
+
+    private SimpleTextAttributes(
+        @Nullable ColorValue bgColor,
+        @Nullable ColorValue fgColor,
+        @Nullable ColorValue waveColor,
+        @StyleAttributeConstant int style
+    ) {
         if ((~(STYLE_PLAIN |
             STYLE_BOLD |
             STYLE_ITALIC |
@@ -113,25 +121,73 @@ public final class SimpleTextAttributes {
     }
 
     /**
+     * @param style   style of the text fragment.
+     * @param fgColor color of the text fragment. <code>color</code> can be
+     *                <code>null</code>. In that case <code>SimpleColoredComponent</code> will
+     *                use its foreground to paint the text fragment.
+     */
+    @Deprecated
+    @DeprecationInfo("Use of() with ColorValue")
+    public SimpleTextAttributes(@StyleAttributeConstant int style, Color fgColor) {
+        this(style, fgColor, null);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use of() with ColorValue")
+    public SimpleTextAttributes(@StyleAttributeConstant int style, Color fgColor, @Nullable Color waveColor) {
+        this(null, fgColor, waveColor, style);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use of() with ColorValue")
+    public SimpleTextAttributes(@Nullable Color bgColor,
+                                Color fgColor,
+                                @Nullable Color waveColor,
+                                @StyleAttributeConstant int style) {
+        this(TargetAWT.from(bgColor), TargetAWT.from(fgColor), TargetAWT.from(waveColor), style);
+    }
+
+    public @Nullable ColorValue foreground() {
+        return myFgColor;
+    }
+
+    public @Nullable ColorValue background() {
+        return myBgColor;
+    }
+
+    /**
+     * <code>null</code> means that color of wave is the same as foreground color.
+     */
+    public @Nullable ColorValue wave() {
+        return myWaveColor;
+    }
+
+    /**
      * @return foreground color
      */
+    @Deprecated
+    @DeprecationInfo("Use foreground()")
     public Color getFgColor() {
-        return myFgColor;
+        return TargetAWT.to(myFgColor);
     }
 
     /**
      * @return background color
      */
+    @Deprecated
+    @DeprecationInfo("Use background()")
     public @Nullable Color getBgColor() {
-        return myBgColor;
+        return TargetAWT.to(myBgColor);
     }
 
     /**
      * @return wave color. The method can return <code>null</code>. <code>null</code>
      * means that color of wave is the same as foreground color.
      */
+    @Deprecated
+    @DeprecationInfo("Use wave()")
     public @Nullable Color getWaveColor() {
-        return myWaveColor;
+        return TargetAWT.to(myWaveColor);
     }
 
     @StyleAttributeConstant
@@ -177,9 +233,24 @@ public final class SimpleTextAttributes {
         return myStyle & FONT_MASK;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use deriveColors()")
     public SimpleTextAttributes derive(@StyleAttributeConstant int style, @Nullable Color fg, @Nullable Color bg, @Nullable Color wave) {
-        return new SimpleTextAttributes(bg != null ? bg : getBgColor(), fg != null ? fg : getFgColor(), wave != null ? wave : getWaveColor(),
-            style == -1 ? getStyle() : style);
+        return deriveColors(style, TargetAWT.from(fg), TargetAWT.from(bg), TargetAWT.from(wave));
+    }
+
+    public SimpleTextAttributes deriveColors(
+        @StyleAttributeConstant int style,
+        @Nullable ColorValue fg,
+        @Nullable ColorValue bg,
+        @Nullable ColorValue wave
+    ) {
+        return of(
+            bg != null ? bg : background(),
+            fg != null ? fg : foreground(),
+            wave != null ? wave : wave(),
+            style == -1 ? getStyle() : style
+        );
     }
 
     // take what differs from REGULAR
@@ -191,28 +262,28 @@ public final class SimpleTextAttributes {
         else {
             style = weak.getStyle();
         }
-        Color wave;
-        if (!Comparing.equal(strong.getWaveColor(), REGULAR_ATTRIBUTES.getWaveColor())) {
-            wave = strong.getWaveColor();
+        ColorValue wave;
+        if (!Comparing.equal(strong.wave(), REGULAR_ATTRIBUTES.wave())) {
+            wave = strong.wave();
         }
         else {
-            wave = weak.getWaveColor();
+            wave = weak.wave();
         }
-        Color fg;
-        if (!Comparing.equal(strong.getFgColor(), REGULAR_ATTRIBUTES.getFgColor())) {
-            fg = strong.getFgColor();
-        }
-        else {
-            fg = weak.getFgColor();
-        }
-        Color bg;
-        if (!Comparing.equal(strong.getBgColor(), REGULAR_ATTRIBUTES.getBgColor())) {
-            bg = strong.getBgColor();
+        ColorValue fg;
+        if (!Comparing.equal(strong.foreground(), REGULAR_ATTRIBUTES.foreground())) {
+            fg = strong.foreground();
         }
         else {
-            bg = weak.getBgColor();
+            fg = weak.foreground();
+        }
+        ColorValue bg;
+        if (!Comparing.equal(strong.background(), REGULAR_ATTRIBUTES.background())) {
+            bg = strong.background();
+        }
+        else {
+            bg = weak.background();
         }
 
-        return new SimpleTextAttributes(bg, fg, wave, style);
+        return of(bg, fg, wave, style);
     }
 }

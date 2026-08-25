@@ -34,6 +34,8 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.TEXT, "Label.foreground");
         ourKeys.put(ComponentColors.TEXT_FOREGROUND, "Label.foreground");
         ourKeys.put(ComponentColors.DISABLED_TEXT, "Label.disabledForeground");
+        ourKeys.put(ComponentColors.INFO_FOREGROUND, "Label.infoForeground");
+        ourKeys.put(ComponentColors.ERROR_FOREGROUND, "Label.errorForeground");
         ourKeys.put(ComponentColors.BORDER, "Component.borderColor");
 
         ourKeys.put(ComponentColors.COMPONENT_BACKGROUND, "TextField.background");

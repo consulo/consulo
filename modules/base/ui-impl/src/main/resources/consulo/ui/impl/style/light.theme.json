@@ -33,7 +33,9 @@
     },
     "Label": {
       "foreground": "foreground",
-      "disabledForeground": "#797a7b"
+      "disabledForeground": "#797a7b",
+      "infoForeground": "#808080",
+      "errorForeground": "#c7222d"
     },
     "TextField": {
       "background": "componentBackground"

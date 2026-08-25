@@ -17,18 +17,14 @@ package consulo.ui.ex.tree;
 
 import consulo.application.ReadAction;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.localize.LocalizeValue;
-import consulo.ui.TextAttribute;
-import consulo.ui.TextItemPresentation;
+import consulo.dataContext.DataManager;
+import consulo.logging.Logger;
+import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
-import consulo.ui.color.ColorValue;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.image.Image;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.event.details.InputDetails;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -36,6 +32,8 @@ import java.util.function.Function;
  * @since 16-Sep-17
  */
 public class TreeStructureWrappenModel<T> implements TreeModel<T> {
+    private static final Logger LOG = Logger.getInstance(TreeStructureWrappenModel.class);
+
     private AbstractTreeStructure myStructure;
 
     public TreeStructureWrappenModel(AbstractTreeStructure structure) {
@@ -44,6 +42,14 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
 
     public @Nullable T getRootElement() {
         return (T) myStructure.getRootElement();
+    }
+
+    @Override
+    public boolean onDoubleClick(Tree<T> tree, TreeNode<T> node, @Nullable InputDetails inputDetails) {
+        if (node.getValue() instanceof SimpleNode simpleNode) {
+            return !simpleNode.handleDoubleClickOrEnter(DataManager.getInstance().getDataContext(tree), inputDetails);
+        }
+        return true;
     }
 
     @Override
@@ -85,91 +91,19 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
                 descriptor.update();
 
                 if (descriptor instanceof PresentableNodeDescriptor<?> presentable) {
-                    renderPresentation(itemPresentation, presentable, descriptor);
+                    SimpleTreeModel.renderPresentation(itemPresentation, presentable, descriptor);
                 }
                 else {
                     itemPresentation.append(descriptor.toString());
                 }
 
                 try {
-                    ReadAction.compute(() -> itemPresentation.withIcon(iconOf(descriptor)));
+                    ReadAction.compute(() -> itemPresentation.withIcon(SimpleTreeModel.iconOf(descriptor)));
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error(e);
                 }
             });
         }
-    }
-
-    /**
-     * The icon of a node can live in two places - the {@link NodeDescriptor} field filled by {@code setIcon},
-     * and the {@link PresentationData} filled by the template presentation or {@code update(PresentationData)}.
-     * The awt renderer paints the presentation one, and the descriptor→presentation sync is one way, so a node
-     * which only ever touched its presentation has an empty descriptor field.
-     */
-    private static @Nullable Image iconOf(NodeDescriptor descriptor) {
-        if (descriptor instanceof PresentableNodeDescriptor<?> presentable) {
-            Image icon = presentable.getPresentation().getIcon();
-            if (icon != null) {
-                return icon;
-            }
-        }
-        return descriptor.getIcon();
-    }
-
-    /**
-     * The descriptor carries everything the awt renderer paints - coloured fragments, the file status
-     * foreground and the file colour background - and flattening it to {@code toString()} lost all of it.
-     * The forced colour wins only where a fragment has no colour of its own, so the grey location text stays
-     * grey while the name takes the status colour. The background of the presentation is what the awt tree
-     * paints the whole row with - see {@code ProjectViewTree.getFileColorFor} - so it goes to the item rather
-     * than to the fragments, which paint theirs behind their own run of text.
-     */
-    private static void renderPresentation(
-        TextItemPresentation itemPresentation,
-        PresentableNodeDescriptor<?> presentable,
-        NodeDescriptor descriptor
-    ) {
-        PresentationData presentation = presentable.getPresentation();
-        ColorValue forced = presentation.getForcedTextForeground();
-
-        itemPresentation.withBackgroundColor(presentation.getBackground());
-
-        List<PresentableNodeDescriptor.ColoredFragment> fragments = presentation.getColoredText();
-        if (fragments.isEmpty()) {
-            itemPresentation.append(LocalizeValue.ofNullable(descriptor.toString()), toTextAttribute(null, forced));
-            return;
-        }
-
-        for (PresentableNodeDescriptor.ColoredFragment fragment : fragments) {
-            itemPresentation.append(fragment.getText(), toTextAttribute(fragment.getAttributes(), forced));
-        }
-    }
-
-    private static TextAttribute toTextAttribute(@Nullable SimpleTextAttributes attributes, @Nullable ColorValue forced) {
-        int style = 0;
-        ColorValue foreground = null;
-        ColorValue background = null;
-
-        if (attributes != null) {
-            if ((attributes.getStyle() & SimpleTextAttributes.STYLE_BOLD) != 0) {
-                style |= TextAttribute.STYLE_BOLD;
-            }
-            if ((attributes.getStyle() & SimpleTextAttributes.STYLE_ITALIC) != 0) {
-                style |= TextAttribute.STYLE_ITALIC;
-            }
-            if (attributes.getFgColor() != null) {
-                foreground = TargetAWT.from(attributes.getFgColor());
-            }
-            if (attributes.getBgColor() != null) {
-                background = TargetAWT.from(attributes.getBgColor());
-            }
-        }
-
-        if (foreground == null) {
-            foreground = forced;
-        }
-
-        return new TextAttribute(style, foreground, background);
     }
 }

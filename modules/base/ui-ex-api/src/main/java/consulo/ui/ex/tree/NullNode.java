@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.tree;
+package consulo.ui.ex.tree;
 
-import consulo.annotation.DeprecationInfo;
-
-@Deprecated
-@DeprecationInfo("Use consulo.ui.ex.tree.NullNode")
 public class NullNode extends SimpleNode {
     public NullNode() {
         super();

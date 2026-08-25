@@ -180,7 +180,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
                 // the answer is the contract - a model which took the double click for itself, opening the file it
                 // stands for, says false, and true asks the tree to open or close the row the way the awt trees do
-                if (myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode) && !item.isDisposed()) {
+                if (myModel.onDoubleClick(DesktopQtTreeImpl.this, selectedNode, inputDetails) && !item.isDisposed()) {
                     item.setExpanded(!item.isExpanded());
                 }
             });

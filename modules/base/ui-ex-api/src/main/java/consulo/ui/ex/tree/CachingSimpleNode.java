@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.tree;
+package consulo.ui.ex.tree;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.project.Project;
-import consulo.ui.ex.tree.NodeDescriptor;
 import org.jspecify.annotations.Nullable;
 
-@Deprecated
-@DeprecationInfo("Use consulo.ui.ex.tree.CachingSimpleNode")
 public abstract class CachingSimpleNode extends SimpleNode {
     SimpleNode[] myChildren;
 
@@ -29,8 +24,8 @@ public abstract class CachingSimpleNode extends SimpleNode {
         super(aParent);
     }
 
-    protected CachingSimpleNode(Project aProject, @Nullable NodeDescriptor aParentDescriptor) {
-        super(aProject, aParentDescriptor);
+    protected CachingSimpleNode(@Nullable NodeDescriptor aParentDescriptor) {
+        super(aParentDescriptor);
     }
 
     @Override

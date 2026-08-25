@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.event.details.InputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
@@ -39,6 +40,13 @@ public interface TreeModel<N> {
      */
     default boolean onDoubleClick(Tree<N> tree, TreeNode<N> node) {
         return true;
+    }
+
+    /**
+     * @return expand on double click
+     */
+    default boolean onDoubleClick(Tree<N> tree, TreeNode<N> node, @Nullable InputDetails inputDetails) {
+        return onDoubleClick(tree, node);
     }
 
     default @Nullable Comparator<TreeNode<N>> getNodeComparator() {

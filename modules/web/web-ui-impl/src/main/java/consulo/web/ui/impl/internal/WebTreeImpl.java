@@ -42,6 +42,7 @@ import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.TreeCollapseEvent;
 import consulo.ui.event.TreeDoubleClickEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
@@ -706,12 +707,14 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                 return;
             }
 
+            InputDetails inputDetails = WebInputDetails.details(event);
+
             getListenerDispatcher(TreeDoubleClickEvent.class)
-                .onEvent(new TreeDoubleClickEvent<>(this, selectedNode, WebInputDetails.details(event)));
+                .onEvent(new TreeDoubleClickEvent<>(this, selectedNode, inputDetails));
 
             // the return value is the contract - true asks the tree to toggle the node, the way the awt trees
             // do, and a model that answered with an action of its own - opening the file - says false
-            if (model.onDoubleClick(this, selectedNode) && selectedNode instanceof WebTreeNodeImpl<NODE> node) {
+            if (model.onDoubleClick(this, selectedNode, inputDetails) && selectedNode instanceof WebTreeNodeImpl<NODE> node) {
                 if (vaadin.isExpanded(node)) {
                     vaadin.collapse(List.of(node));
                 }

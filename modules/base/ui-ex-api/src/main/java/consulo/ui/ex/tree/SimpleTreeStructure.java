@@ -13,15 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.tree;
+package consulo.ui.ex.tree;
 
-import consulo.annotation.DeprecationInfo;
-
-@Deprecated
-@DeprecationInfo("Use consulo.ui.ex.tree.SimpleTreeStructure")
-public abstract class SimpleTreeStructure extends consulo.ui.ex.tree.SimpleTreeStructure {
+public abstract class SimpleTreeStructure extends AbstractTreeStructure {
     @Override
-    public final void clearCaches() {
+    public Object[] getChildElements(Object element) {
+        return ((SimpleNode) element).getChildren();
+    }
+
+    @Override
+    public Object getParentElement(Object element) {
+        return ((SimpleNode) element).getParent();
+    }
+
+    @Override
+    public boolean isAlwaysLeaf(Object element) {
+        return ((SimpleNode) element).isAlwaysLeaf();
+    }
+
+    @Override
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+        return (NodeDescriptor) element;
+    }
+
+    @Override
+    public void commit() {
+    }
+
+    @Override
+    public boolean hasSomethingToCommit() {
+        return false;
+    }
+
+    public void clearCaches() {
         cleanUpCaches((SimpleNode) getRootElement());
     }
 

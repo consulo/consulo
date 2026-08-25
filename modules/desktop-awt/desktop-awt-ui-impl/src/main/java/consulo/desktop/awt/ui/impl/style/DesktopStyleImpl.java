@@ -19,7 +19,6 @@ import com.formdev.flatlaf.FlatLaf;
 import consulo.desktop.awt.ui.impl.image.DesktopAWTImage;
 import consulo.desktop.awt.ui.impl.plaf.LafWithIconLibrary;
 import consulo.desktop.awt.ui.impl.plaf2.IdeLookAndFeelInfo;
-import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.MorphValue;
@@ -42,8 +41,6 @@ import java.util.Objects;
  * @since 2020-08-23
  */
 public class DesktopStyleImpl extends StyleImpl {
-    private static final Logger LOG = Logger.getInstance(DesktopStyleImpl.class);
-
     private final MorphValue<Boolean> myDarkValue = MorphValue.of(FlatLaf::isLafDark);
 
     private final UIManager.LookAndFeelInfo myLookAndFeelInfo;
@@ -131,8 +128,7 @@ public class DesktopStyleImpl extends StyleImpl {
         else if (colorValue == StandardColors.CYAN) {
             return TargetAWT.from(JBColor.CYAN);
         }
-        LOG.error(new UnsupportedOperationException(colorValue.toString()));
-        return TargetAWT.from(JBColor.WHITE);
+        return super.getColorValue(colorValue);
     }
 
     
