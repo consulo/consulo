@@ -42,6 +42,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -296,6 +297,15 @@ public abstract class DvcsCheckoutPage implements CheckoutPage {
         }
 
         return DistributedVcsLocalize.cloneInvalidUrl();
+    }
+
+    @RequiredUIAccess
+    @UsedInPlugin
+    protected void setUrlHistory(List<String> history) {
+        TextBoxWithHistory repositoryUrlBox = myRepositoryUrlBox;
+        if (repositoryUrlBox != null) {
+            repositoryUrlBox.setHistory(history);
+        }
     }
 
     @RequiredUIAccess
