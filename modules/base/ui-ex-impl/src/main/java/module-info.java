@@ -22,7 +22,7 @@ module consulo.ui.ex.impl {
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.ui.ex.impl.internal.popup.action to
@@ -32,7 +32,7 @@ module consulo.ui.ex.impl {
     exports consulo.ui.ex.impl.internal.keymap to
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     opens consulo.ui.ex.impl.internal.keymap to consulo.util.xml.serializer;

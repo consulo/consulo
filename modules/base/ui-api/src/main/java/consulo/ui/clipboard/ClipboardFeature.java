@@ -30,7 +30,7 @@ public enum ClipboardFeature {
     /**
      * {@link Clipboard#getAvailableTypes()} answers without pulling the payload.
      * <p>
-     * AWT, SWT, Android. Not web - asking the browser what it holds is the same gated read as taking
+     * AWT, Qt, Android. Not web - asking the browser what it holds is the same gated read as taking
      * the payload, so only the types this session wrote itself are reported.
      */
     AVAILABLE_TYPES,
@@ -39,7 +39,7 @@ public enum ClipboardFeature {
      * A listener also hears changes made by other applications, so nothing has to poll. A listener
      * always hears changes made through this api, so registering one is never pointless.
      * <p>
-     * AWT, Android. Not SWT, which has no notification api at all, and not web, where a page is never
+     * AWT, Android. Not Qt, which does not subscribe to the clipboard change signal, and not web, where a page is never
      * told about the clipboard.
      */
     CONTENT_LISTENER,
@@ -48,7 +48,7 @@ public enum ClipboardFeature {
      * A read needs no user gesture, no input focus and no permission grant, so it may be started from
      * a menu item or a background task rather than only from the paste shortcut.
      * <p>
-     * AWT, SWT. Not web, which needs transient user activation, and not android, which needs input
+     * AWT, Qt. Not web, which needs transient user activation, and not android, which needs input
      * focus or the default ime role.
      */
     UNRESTRICTED_READ

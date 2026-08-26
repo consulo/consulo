@@ -44,7 +44,7 @@ module consulo.code.editor.api {
         consulo.language.editor.refactoring.api,
         consulo.language.editor.ui.api,
         consulo.file.editor.api,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.language.editor.impl,
         consulo.execution.debug.impl,
         consulo.version.control.system.impl,

@@ -37,7 +37,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
- * Chat UI built only from {@code consulo.ui}, so it runs on the AWT, SWT and web frontends alike.
+ * Chat UI built only from {@code consulo.ui}, so it runs on the AWT, Qt and web frontends alike.
  *
  * @author VISTALL
  * @since 2026-08-04

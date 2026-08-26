@@ -22,7 +22,7 @@ import consulo.ui.ex.impl.internal.clipboard.BaseCopyPasteManagerImpl;
 import jakarta.inject.Singleton;
 
 /**
- * AWT and SWT hold a single {@link UIAccess} for the whole run, so there is nothing to key on.
+ * AWT and Qt hold a single {@link UIAccess} for the whole run, so there is nothing to key on.
  *
  * @author VISTALL
  * @since 2026-08-07

@@ -56,7 +56,7 @@ module consulo.ui.ex.api {
         consulo.language.inject.advanced.impl,
         consulo.language.editor.refactoring.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.ui.ex.awt.api,
         consulo.execution.api,
         consulo.execution.impl,
@@ -78,12 +78,12 @@ module consulo.ui.ex.api {
         consulo.ui.ex.impl,
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     exports consulo.ui.ex.awtUnsafe.internal to
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
     uses TargetAWTFacade;

@@ -28,7 +28,7 @@ import consulo.ui.UIAccess;
  * Ticking and the activity gating happen on a background thread; a listener is only run when there was user activity
  * since the previous tick, and never while the user is typing. Listeners of a single {@link UIAccess} are then run
  * together in one UI event on that {@code UIAccess} - a listener is bound to the UI it was registered with, since an
- * application can drive several independent UIs (AWT, SWT, and one per session for web).
+ * application can drive several independent UIs (AWT, Qt, and one per session for web).
  *
  * @author VISTALL
  */

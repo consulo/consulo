@@ -30,7 +30,7 @@ public final class ComponentProfiles {
     public static final int AWT = 1 << 2;
 
     /**
-     * Marker for Unified profile implementation, used of SWT & Web
+     * Marker for Unified profile implementation, used of Qt & Web
      */
     public static final int UNIFIED = 1 << 3;
 

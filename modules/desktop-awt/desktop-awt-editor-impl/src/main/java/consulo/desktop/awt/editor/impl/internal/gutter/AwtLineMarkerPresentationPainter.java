@@ -32,7 +32,7 @@ import java.util.function.Function;
  * <p>
  * The extension point is deliberately <b>platform-specific</b> — there is no shared painter
  * abstraction, because a cross-platform drawing interface would just reintroduce an AWT-shaped API
- * one level down. SWT and web declare their own painter extension points over their own drawing
+ * one level down. Qt and web declare their own painter extension points over their own drawing
  * types, and {@link LineMarkerPresentation} stays the only contract they share.
  * <p>
  * Lookup goes through {@link ByClassGrouper}, which resolves a presentation class against the exact type

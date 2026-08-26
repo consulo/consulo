@@ -29,15 +29,9 @@ cargo build --release --target loongarch64-unknown-linux-gnu
 #   riscv64gc-unknown-linux-gnu     → gcc-riscv64-linux-gnu
 ```
 
-## UI variant (AWT / SWT / …)
+## UI variant (AWT / …)
 
-AWT is default. To switch:
-
-```bash
-cargo build --release --no-default-features --features swt
-```
-
-Variant selection is compile-time; each variant produces its own binary filename suffix (e.g. `libconsulo-swt.so`). AWT has no suffix.
+AWT is the only variant today and is the default. Variant selection is compile-time; each variant produces its own binary filename suffix. AWT has no suffix.
 
 ## Debug logging
 

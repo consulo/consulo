@@ -58,7 +58,7 @@ module consulo.component.api {
         consulo.component.store.api,
         consulo.component.store.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.test.impl,
         consulo.it,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
@@ -70,7 +70,7 @@ module consulo.component.api {
         consulo.module.impl,
         consulo.ide.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.test.impl,
         consulo.language.editor.api,
         consulo.it;

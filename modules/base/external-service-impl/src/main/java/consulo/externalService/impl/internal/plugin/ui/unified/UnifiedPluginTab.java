@@ -62,7 +62,7 @@ public abstract class UnifiedPluginTab implements Disposable {
         myFilterBox = TextBox.create("");
         myFilterBox.addValueListener(event -> applyFilter());
 
-        // the awt and swt lists only scroll inside a scroll layout; the web list scrolls itself and fills the
+        // the awt and qt lists only scroll inside a scroll layout; the web list scrolls itself and fills the
         // layout, which then never overflows
         DockLayout listSide = DockLayout.create(0);
         listSide.top(myFilterBox);

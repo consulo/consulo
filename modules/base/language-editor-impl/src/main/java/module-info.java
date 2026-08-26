@@ -40,7 +40,7 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.template to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.rawHighlight to consulo.ide.impl;
-  exports consulo.language.editor.impl.internal.markup to consulo.file.editor.impl, consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.version.control.system.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
+  exports consulo.language.editor.impl.internal.markup to consulo.file.editor.impl, consulo.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.version.control.system.impl, consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
   exports consulo.language.editor.impl.internal.hint to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl;
 
   exports consulo.language.editor.impl.internal.inlay to consulo.ide.impl;

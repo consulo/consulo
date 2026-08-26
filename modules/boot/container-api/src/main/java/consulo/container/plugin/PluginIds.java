@@ -28,14 +28,12 @@ public final class PluginIds {
 
   public static final PluginId CONSULO_DESKTOP_AWT = PluginId.getId("consulo.desktop.awt");
 
-  public static final PluginId CONSULO_DESKTOP_SWT = PluginId.getId("consulo.desktop.swt");
-
   public static final PluginId CONSULO_DESKTOP_QT = PluginId.getId("consulo.desktop.qt");
 
   public static final PluginId CONSULO_WEB = PluginId.getId("consulo.web");
 
   /**
-   * ID of repo analyzer, since it's running without AWT/SWT/Web dependencies
+   * ID of repo analyzer, since it's running without AWT/Qt/Web dependencies
    */
   private static final PluginId CONSULO_REPO_ANALYZER = PluginId.getId("consulo.repo.analyzer");
 
@@ -44,7 +42,7 @@ public final class PluginIds {
                                         PluginId.getId("consulo.presentationAssistant")));
 
   private static final Set<PluginId> ourPlatformIds =
-    new HashSet<PluginId>(Arrays.asList(CONSULO_DESKTOP_AWT, CONSULO_DESKTOP_SWT, CONSULO_DESKTOP_QT, CONSULO_WEB, CONSULO_REPO_ANALYZER));
+    new HashSet<PluginId>(Arrays.asList(CONSULO_DESKTOP_AWT, CONSULO_DESKTOP_QT, CONSULO_WEB, CONSULO_REPO_ANALYZER));
 
   public static boolean isPlatformImplementationPlugin(PluginId pluginId) {
     return ourPlatformIds.contains(pluginId);

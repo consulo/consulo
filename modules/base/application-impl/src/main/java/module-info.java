@@ -34,7 +34,7 @@ module consulo.application.impl {
         consulo.logging.logback.impl,
         consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.desktop.awt.os.mac,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.proxy,
         consulo.test.impl,
         consulo.module.impl,
@@ -59,7 +59,7 @@ module consulo.application.impl {
         consulo.project.impl,
         consulo.desktop.ide.impl,
         consulo.virtual.file.system.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.it;
 
     exports consulo.application.impl.internal.performance to
@@ -72,14 +72,14 @@ module consulo.application.impl {
         consulo.desktop.awt.os.mac,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
-    exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
+    exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl;
 
     exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl, consulo.desktop.awt.editor.impl, consulo.desktop.awt.ui.impl,
         consulo.ide.impl,
         consulo.language.index.impl,
         consulo.logging.logback.impl,
         consulo.desktop.ide.impl,
-        consulo.desktop.swt.ide.impl, consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
+        consulo.desktop.qt.ide.impl, consulo.desktop.qt.editor.impl, consulo.desktop.qt.ui.impl,
         consulo.builtin.web.server.impl,
         consulo.web.ide, consulo.web.ui.impl, consulo.web.editor.impl;
 
