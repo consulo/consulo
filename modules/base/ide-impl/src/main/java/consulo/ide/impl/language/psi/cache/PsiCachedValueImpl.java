@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
+public class PsiCachedValueImpl<T extends @Nullable Object> extends PsiCachedValue<T> implements CachedValue<T> {
     private final CachedValueProvider<T> myProvider;
 
     public PsiCachedValueImpl(PsiManager manager, CachedValueProvider<T> provider, CachedValuesFactory factory) {
