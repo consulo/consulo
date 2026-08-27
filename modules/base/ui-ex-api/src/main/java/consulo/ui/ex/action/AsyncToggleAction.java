@@ -74,9 +74,10 @@ public abstract class AsyncToggleAction extends AnAction implements Toggleable, 
 
         Coroutine.first(isSelectedAsync(e))
             .then(UIAction.apply((state) -> {
-                setSelected(e, Objects.requireNonNull(state));
+                boolean newState = !Objects.requireNonNull(state);
+                setSelected(e, newState);
                 Presentation presentation = e.getPresentation();
-                Toggleable.setSelected(presentation, state);
+                Toggleable.setSelected(presentation, newState);
                 return null;
             }))
             .runAsync(scope, null);
