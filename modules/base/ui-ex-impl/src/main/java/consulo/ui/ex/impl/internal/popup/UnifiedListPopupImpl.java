@@ -36,7 +36,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.UIAccess;
+import consulo.ui.model.FlatDataModel;
 import consulo.ui.ex.popup.AsyncPopupStep;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
@@ -52,6 +54,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * The counterpart of {@code ListPopupImpl} for the frontends which have no swing - each {@link ListPopupStep} is a
@@ -79,6 +82,9 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
 
     private @Nullable ListBox<Object> myTopList;
     private @Nullable TextItemRender<Object> myRender;
+
+    /** kept until the unified popups grow title chrome to put the pin button on */
+    private @Nullable Predicate<? super JBPopup> myCouldPin;
     private int myMinimumWidth = -1;
     private boolean myResizable;
 
@@ -105,6 +111,11 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     public ListPopupStep getListStep() {
         Level top = myLevels.peek();
         return top == null ? myRootStep.join() : top.step();
+    }
+
+    @Override
+    public void setCouldPin(@Nullable Predicate<? super JBPopup> couldPin) {
+        myCouldPin = couldPin;
     }
 
     @SuppressWarnings("unchecked")
@@ -160,7 +171,9 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
     private ListBox<Object> buildList(ListPopupStep step) {
-        ListBox<Object> list = ListBox.create(step.getValues());
+        @SuppressWarnings("unchecked")
+        FlatDataModel<Object> model = step.getModel();
+        ListBox<Object> list = model != null ? ListBox.create(model) : ListBox.create(step.getValues());
 
         TextItemRender<Object> render = myRender;
         list.setRender(render != null ? render : (presentation, item) -> {
@@ -463,6 +476,12 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
     public boolean isVisible() {
         Level top = myLevels.peek();
         return top != null && top.popup().isVisible();
+    }
+
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        Level top = myLevels.peek();
+        return top == null ? null : top.popup().getUIAccess();
     }
 
     @Override

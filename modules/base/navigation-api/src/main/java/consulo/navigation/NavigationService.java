@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.gutter;
+package consulo.navigation;
 
-import consulo.language.psi.PsiElement;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ComponentEvent;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.localize.LocalizeValue;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 2026-08-27
  */
-public interface GutterIconNavigationHandler<T extends PsiElement> {
-    /**
-     * @param e the event the icon was activated with - where it happened comes from the event's input
-     *          details, so a handler works the same on every frontend
-     */
-    @RequiredUIAccess
-    void navigate(ComponentEvent<?> e, T elt);
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface NavigationService {
+    TargetPresentationBuilder presentationBuilder(LocalizeValue presentableText);
 }

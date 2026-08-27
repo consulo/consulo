@@ -24,7 +24,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import org.jspecify.annotations.Nullable;
 
-import java.awt.event.MouseEvent;
+import consulo.ui.Component;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 
 /**
  * @author Dmitry Avdeev
@@ -50,13 +52,23 @@ public class NavigateAction<T extends PsiElement> extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    if (myInfo.getNavigationHandler() != null) {
-      MouseEvent mouseEvent = (MouseEvent)e.getInputEvent();
-      T element = myInfo.getElement();
-      if (element == null || !element.isValid()) return;
-
-      myInfo.getNavigationHandler().navigate(mouseEvent, element);
+    GutterIconNavigationHandler<T> handler = myInfo.getNavigationHandler();
+    if (handler == null) {
+      return;
     }
+
+    Component component = e.getData(Component.KEY);
+    if (component == null) {
+      return;
+    }
+
+    T element = myInfo.getElement();
+    if (element == null || !element.isValid()) {
+      return;
+    }
+
+    InputDetails inputDetails = e.getInputDetails();
+    handler.navigate(inputDetails == null ? new ComponentEvent<>(component) : new ComponentEvent<>(component, inputDetails), element);
   }
 
   

@@ -112,6 +112,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     private PopupComponent myPopup;
     private MyContentPanel myContent;
+
+    private @Nullable Predicate<? super JBPopup> myPinCallback;
+    private List<AnAction> myHeaderRightActions = List.of();
+    private ComponentPopupBuilderImpl.@Nullable CancelButtonInfo myCancelButtonInfo;
     private JComponent myPreferredFocusedComponent;
     private boolean myRequestFocus;
     private boolean myFocusable;
@@ -351,28 +355,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         }
 
         if (myCaption != null) {
-            List<AnAction> rightActions = new ArrayList<>(headerRightActions);
-
-            if (pinCallback != null) {
-                Image icon = ToolWindowManagerEx
-                    .getInstanceEx(myProject != null ? myProject : ProjectUIUtil.guessCurrentProject((JComponent) myOwner))
-                    .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
-
-                rightActions.add(new PinToToolWindowAction(pinCallback::test, icon, this));
-            }
-            else if (cancelButtonInfo != null) {
-                ClosePopupAction action = new ClosePopupAction(cancelButtonInfo.tooltipText(), cancelButtonInfo.icon(), this);
-                rightActions.add(action);
-            }
-
-            if (!rightActions.isEmpty()) {
-                ActionToolbar toolbar = ActionManager.getInstance()
-                    .createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
-                toolbar.setMiniMode(true);
-                toolbar.setTargetComponent(myContent);
-
-                myCaption.setRightComponent(toolbar.getComponent());
-            }
+            // built when the popup is shown rather than here, so a pin handed to the popup after it is
+            // created - the way ListPopup.setCouldPin arrives - still gets its button
+            myPinCallback = pinCallback;
+            myHeaderRightActions = headerRightActions;
+            myCancelButtonInfo = cancelButtonInfo;
 
             if (!headerLeftActions.isEmpty()) {
                 ActionToolbar toolbar = ActionManager.getInstance()
@@ -963,6 +950,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         UIAccess.assertIsUIThread();
         assert myState == State.INIT : "Popup was already shown. Recreate a new instance to show again.";
 
+        buildCaptionRightToolbar();
+
         debugState("show popup", State.INIT);
         myState = State.SHOWING;
 
@@ -1523,6 +1512,45 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     @Override
     public JComponent getContent() {
         return myContent;
+    }
+
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        Project project = myProject;
+        return project == null ? null : project.getUIAccess();
+    }
+
+    public void setCouldPin(@Nullable Predicate<? super JBPopup> couldPin) {
+        myPinCallback = couldPin;
+    }
+
+    private void buildCaptionRightToolbar() {
+        if (myCaption == null) {
+            return;
+        }
+
+        List<AnAction> rightActions = new ArrayList<>(myHeaderRightActions);
+
+        Predicate<? super JBPopup> pinCallback = myPinCallback;
+        if (pinCallback != null) {
+            Image icon = ToolWindowManagerEx
+                .getInstanceEx(myProject != null ? myProject : ProjectUIUtil.guessCurrentProject((JComponent) myOwner))
+                .getLocationIcon(ToolWindowId.FIND, PlatformIconGroup.generalPin_tab());
+
+            rightActions.add(new PinToToolWindowAction(pinCallback::test, icon, this));
+        }
+        else if (myCancelButtonInfo != null) {
+            rightActions.add(new ClosePopupAction(myCancelButtonInfo.tooltipText(), myCancelButtonInfo.icon(), this));
+        }
+
+        if (!rightActions.isEmpty()) {
+            ActionToolbar toolbar = ActionManager.getInstance()
+                .createActionToolbar("PopupRight", ActionGroup.newImmutableBuilder().addAll(rightActions).build(), true);
+            toolbar.setMiniMode(true);
+            toolbar.setTargetComponent(myContent);
+
+            myCaption.setRightComponent(toolbar.getComponent());
+        }
     }
 
     public void setLocation(RelativePoint p) {

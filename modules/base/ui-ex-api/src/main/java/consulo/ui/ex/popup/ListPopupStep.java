@@ -16,6 +16,7 @@
 package consulo.ui.ex.popup;
 
 import consulo.ui.image.Image;
+import consulo.ui.model.FlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -34,6 +35,14 @@ public interface ListPopupStep<T> extends PopupStep<T> {
      * @return the list of values to be displayed in the list popup.
      */
     List<T> getValues();
+
+    /**
+     * The model behind {@link #getValues()}, for a step whose values change while the popup is open.
+     * A popup shown for a step with a model follows the model rather than the snapshot it took.
+     */
+    default @Nullable FlatDataModel<T> getModel() {
+        return null;
+    }
 
     /**
      * Checks if the specified value in the list can be selected.

@@ -20,6 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.HasFocus;
 import consulo.ui.HeavyPopup;
 import consulo.ui.LightPopup;
+import consulo.ui.UIAccess;
 import consulo.ui.Point2D;
 import consulo.ui.Popup;
 import consulo.ui.PopupOptions;
@@ -133,6 +134,12 @@ public class UnifiedComponentPopupImpl extends UnifiedPopupImpl {
     public boolean isVisible() {
         Popup popup = myPopup;
         return popup != null && popup.isVisible();
+    }
+
+    @Override
+    public @Nullable UIAccess getUIAccess() {
+        Popup popup = myPopup;
+        return popup == null ? null : popup.getUIAccess();
     }
 
     @Override

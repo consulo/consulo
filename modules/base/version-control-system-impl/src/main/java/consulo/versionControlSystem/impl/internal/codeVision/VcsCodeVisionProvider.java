@@ -37,9 +37,6 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 
@@ -182,11 +179,7 @@ public class VcsCodeVisionProvider implements DaemonBoundCodeVisionProvider {
                 text,
                 ID,
                 (event, ed) -> {
-                    if (event == null) return;
-                    Component component = event.getComponent();
-                    if (component instanceof JComponent jComponent) {
-                        invokeAnnotateAction(event, jComponent);
-                    }
+                    invokeAnnotateAction();
                     PsiElement el = pointer.getElement();
                     if (el == null) return;
                     VcsCodeVisionLanguageContext ctx = VcsCodeVisionLanguageContext.forLanguage(finalElementLanguage);
@@ -269,10 +262,10 @@ public class VcsCodeVisionProvider implements DaemonBoundCodeVisionProvider {
         Application.get().invokeLater(() -> EditorUtil.disposeWithEditor(editor, annotationDisposable));
     }
 
-    private static void invokeAnnotateAction(MouseEvent event, JComponent contextComponent) {
+    private static void invokeAnnotateAction() {
         AnAction action = ActionManager.getInstance().getAction("Annotate");
         if (action != null) {
-            ActionManager.getInstance().tryToExecute(action, event, contextComponent, ActionPlaces.UNKNOWN, true);
+            ActionManager.getInstance().tryToExecute(action, null, null, ActionPlaces.UNKNOWN, true);
         }
     }
 

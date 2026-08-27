@@ -37,6 +37,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.ServiceLoader;
+import consulo.ui.event.ComponentEvent;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -229,6 +233,16 @@ public abstract class UIInternal {
 
     public <T> MutableFlatDataModel<T> _FlatDataModel_createLazy(Collection<? extends T> list) {
         return _FlatDataModel_create(list);
+    }
+
+    /**
+     * A frontend which has somewhere to draw a busy indicator overrides this and draws one at the anchor
+     * until it is stopped. Having nowhere to draw it is not an error - the work runs either way.
+     */
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
+        return () -> {
+        };
     }
 
     @RequiredUIAccess

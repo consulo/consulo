@@ -40,6 +40,9 @@ import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.ui.ex.impl.internal.UnifiedAlertImpl;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
+import io.qt.core.Qt;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -213,6 +216,30 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     @Override
     public ProgressBar _Components_progressBar() {
         return new DesktopQtProgressBarImpl();
+    }
+
+    @Override
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
+        InputDetails details = anchor.getInputDetails();
+
+        QWidget host = new QWidget(null, Qt.WindowType.ToolTip, Qt.WindowType.FramelessWindowHint, Qt.WindowType.WindowStaysOnTopHint);
+        host.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, true);
+        host.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, true);
+
+        DesktopQtProgressBarImpl progressBar = new DesktopQtProgressBarImpl();
+        progressBar.setIndeterminate(true);
+        progressBar.addStyle(ProgressBarStyle.SPINNER);
+        progressBar.bind(host, null);
+
+        host.adjustSize();
+        host.move(details.getXOnScreen() - host.width() / 2, details.getYOnScreen() - host.height() / 2);
+        host.show();
+
+        return () -> {
+            host.close();
+            host.disposeLater();
+        };
     }
 
     @Override

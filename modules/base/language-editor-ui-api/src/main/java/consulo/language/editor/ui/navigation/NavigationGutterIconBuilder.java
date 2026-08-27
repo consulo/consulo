@@ -24,8 +24,6 @@ import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
@@ -69,7 +67,7 @@ public class NavigationGutterIconBuilder<T> {
     
     private LocalizeValue myTooltipTitle = LocalizeValue.empty();
     private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
-    private Supplier<PsiElementListCellRenderer> myCellRenderer;
+    private @Nullable TargetPresentationProvider<PsiElement> myPresentationProvider;
     private Function<T, String> myNamer = createDefaultNamer();
     private final Function<T, Collection<? extends GotoRelatedItem>> myGotoRelatedItemProvider;
 
@@ -186,8 +184,11 @@ public class NavigationGutterIconBuilder<T> {
         return this;
     }
 
-    public NavigationGutterIconBuilder<T> setCellRenderer(PsiElementListCellRenderer cellRenderer) {
-        myCellRenderer = () -> cellRenderer;
+    /**
+     * When left unset, the targets are shown with their own item presentation.
+     */
+    public NavigationGutterIconBuilder<T> setPresentationProvider(TargetPresentationProvider<PsiElement> provider) {
+        myPresentationProvider = provider;
         return this;
     }
 
@@ -275,8 +276,7 @@ public class NavigationGutterIconBuilder<T> {
             myTooltipText = LocalizeValue.of(sb.toString());
         }
 
-        Supplier<PsiElementListCellRenderer> renderer = myCellRenderer == null ? DefaultPsiElementCellRenderer::new : myCellRenderer;
-        return new MyNavigationGutterIconRenderer(this, myAlignment, myIcon, myTooltipText, pointers, renderer, empty);
+        return new MyNavigationGutterIconRenderer(this, myAlignment, myIcon, myTooltipText, pointers, myPresentationProvider, empty);
     }
 
     private boolean isEmpty() {
@@ -308,10 +308,10 @@ public class NavigationGutterIconBuilder<T> {
             Image icon,
             LocalizeValue tooltipText,
             Supplier<List<SmartPsiElementPointer>> pointers,
-            Supplier<PsiElementListCellRenderer> cellRenderer,
+            @Nullable TargetPresentationProvider<PsiElement> presentationProvider,
             boolean empty
         ) {
-            super(builder.myPopupTitle, builder.myEmptyText, cellRenderer, pointers);
+            super(builder.myPopupTitle, builder.myEmptyText, presentationProvider, pointers);
             myAlignment = alignment;
             myIcon = icon;
             myTooltipText = tooltipText;

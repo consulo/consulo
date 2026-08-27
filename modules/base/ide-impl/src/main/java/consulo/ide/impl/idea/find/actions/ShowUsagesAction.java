@@ -72,6 +72,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -257,14 +258,20 @@ public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
         HintManager.getInstance().hideHints(HintManager.HIDE_BY_ANY_KEY, false, false);
     }
 
+    /**
+     * The position comes in platform terms and turns into awt ones here, at the door of the awt popup - a
+     * frontend's own relative point walks through unchanged.
+     */
     @RequiredUIAccess
-    public void startFindUsages(PsiElement element, RelativePoint popupPosition, Editor editor, int maxUsages) {
+    public void startFindUsages(PsiElement element, RelativePoint2D position, Editor editor, int maxUsages) {
         Project project = element.getProject();
         FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(project)).getFindUsagesManager();
         FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
         if (handler == null) {
             return;
         }
+
+        RelativePoint popupPosition = RelativePoint.from(position);
 
         DataContext context = DataManager.getInstance().getDataContext();
         if (myShowSettingsDialogBefore) {

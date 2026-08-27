@@ -1393,7 +1393,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @RequiredUIAccess
     public ActionCallback tryToExecute(
         AnAction action,
-        InputEvent inputEvent,
+        @Nullable InputEvent inputEvent,
         @Nullable Component contextComponent,
         @Nullable String place,
         boolean now
@@ -1417,7 +1417,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     @RequiredReadAction
     private void tryToExecuteNow(
         AnAction action,
-        InputEvent inputEvent,
+        @Nullable InputEvent inputEvent,
         Component contextComponent,
         String place,
         ActionCallback result
@@ -1434,7 +1434,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
                     place != null ? place : ActionPlaces.UNKNOWN,
                     presentation,
                     this,
-                    inputEvent.getModifiersEx()
+                    inputEvent == null ? 0 : inputEvent.getModifiersEx()
                 );
 
                 UIAccess uiAccess = Application.get().getLastUIAccess();

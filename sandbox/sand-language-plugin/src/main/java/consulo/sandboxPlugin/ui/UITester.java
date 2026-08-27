@@ -35,6 +35,7 @@ import consulo.util.lang.TimeoutUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 import java.util.*;
 
 /**
@@ -58,8 +59,20 @@ public class UITester {
             tabbedLayout.addTab("Components > Table", table());
             tabbedLayout.addTab("Components > Tree", tree(uiDisposable));
             tabbedLayout.addTab("Alerts", alerts());
+            tabbedLayout.addTab("DelayedAction", delayedAction());
 
             return tabbedLayout;
+        }
+
+        @RequiredUIAccess
+        private Component delayedAction() {
+            VerticalLayout layout = VerticalLayout.create();
+            layout.add(Label.create(LocalizeValue.localizeTODO("The indicator is drawn where the click happened, for two seconds")));
+            layout.add(Button.create(LocalizeValue.localizeTODO("Start"), e -> {
+                DelayedAction action = DelayedAction.start(e);
+                UIAccess.current().getScheduler().schedule(action::stop, 2, TimeUnit.SECONDS);
+            }));
+            return layout;
         }
 
         @RequiredUIAccess

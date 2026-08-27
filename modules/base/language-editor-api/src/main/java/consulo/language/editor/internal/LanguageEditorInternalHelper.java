@@ -31,9 +31,9 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
@@ -119,6 +119,6 @@ public interface LanguageEditorInternalHelper {
     default void startFindUsages(Editor editor,
                                  Project project,
                                  PsiElement element,
-                                 @Nullable RelativePoint point) {
+                                 @Nullable RelativePoint2D point) {
     }
 }

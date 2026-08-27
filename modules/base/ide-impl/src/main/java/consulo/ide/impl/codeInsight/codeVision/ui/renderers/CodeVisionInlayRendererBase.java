@@ -19,6 +19,7 @@ import consulo.language.editor.codeVision.CodeVisionEntry;
 import consulo.language.editor.codeVision.TextCodeVisionEntry;
 import consulo.ui.cursor.StandardCursors;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.JLabel;
@@ -133,7 +134,7 @@ public abstract class CodeVisionInlayRendererBase implements CodeVisionInlayRend
     public void mouseReleased(MouseEvent event, Point translated) {
         CodeVisionEntry clickedEntry = hoveredEntry;
         if (clickedEntry == null) return;
-        clickedEntry.putUserData(ClickableTextCodeVisionEntry.MOUSE_EVENT_KEY, event);
+        clickedEntry.putUserData(ClickableTextCodeVisionEntry.EVENT_KEY, TargetAWT.from(event));
 
         if (event.isShiftDown()) return;
         if (SwingUtilities.isLeftMouseButton(event)) {

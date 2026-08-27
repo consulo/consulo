@@ -16,6 +16,7 @@
 package consulo.ui.ex.popup;
 
 import consulo.ui.image.Image;
+import consulo.ui.model.FlatDataModel;
 
 import org.jspecify.annotations.Nullable;
 
@@ -29,10 +30,20 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
     private List<T> myValues;
     private List<Image> myIcons;
     private int myDefaultOptionIndex = -1;
+    private @Nullable FlatDataModel<T> myModel;
 
     @SafeVarargs
     public BaseListPopupStep(@Nullable String title, T... values) {
         this(title, values, new Image[0]);
+    }
+
+    /**
+     * A step over a model rather than a snapshot - whatever is added to the model while the popup is
+     * open appears in it.
+     */
+    public BaseListPopupStep(@Nullable String title, FlatDataModel<T> model) {
+        init(title, List.of(), null);
+        myModel = model;
     }
 
     public BaseListPopupStep(@Nullable String title, List<? extends T> values) {
@@ -70,10 +81,23 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
         return myTitle;
     }
 
-    
+
     @Override
     public final List<T> getValues() {
+        FlatDataModel<T> model = myModel;
+        if (model != null) {
+            List<T> values = new ArrayList<>(model.getSize());
+            for (T value : model) {
+                values.add(value);
+            }
+            return values;
+        }
         return myValues;
+    }
+
+    @Override
+    public final @Nullable FlatDataModel<T> getModel() {
+        return myModel;
     }
 
     @Override

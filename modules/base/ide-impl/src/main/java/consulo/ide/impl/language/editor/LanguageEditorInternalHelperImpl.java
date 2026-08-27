@@ -51,6 +51,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.RelativePoint2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -167,14 +168,14 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
-    public void startFindUsages(Editor editor, Project project, PsiElement element, RelativePoint point) {
+    public void startFindUsages(Editor editor, Project project, PsiElement element, @Nullable RelativePoint2D point) {
         ShowUsagesAction action = (ShowUsagesAction) ActionManager.getInstance().getAction(ShowUsagesAction.ID);
         if (DumbService.getInstance(project).isDumb()) {
             LocalizeValue name = action.getTemplatePresentation().getTextValue();
             DumbService.getInstance(project).showDumbModeNotification(LocalizeValue.localizeTODO("Usage search is not available until indices are ready"));
         }
         else {
-            RelativePoint popupPosition = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
+            RelativePoint2D popupPosition = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
             action.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
         }
     }

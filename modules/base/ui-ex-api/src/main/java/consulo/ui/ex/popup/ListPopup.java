@@ -19,10 +19,12 @@ package consulo.ui.ex.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.TextItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.InputEvent;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * A popup window displaying a list of items (or other actions).
@@ -63,6 +65,15 @@ public interface ListPopup extends JBPopup {
 
     @RequiredUIAccess
     default void setRender(TextItemRender<?> render) {
+    }
+
+    /**
+     * Offers a pin button which moves the popup's content somewhere permanent - the callback does the
+     * moving and answers whether the popup should stay. Call before the popup is shown; a frontend whose
+     * popups carry no title chrome accepts and ignores it.
+     */
+    @RequiredUIAccess
+    default void setCouldPin(@Nullable Predicate<? super JBPopup> couldPin) {
     }
 
     @RequiredUIAccess

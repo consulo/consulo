@@ -23,6 +23,7 @@ import consulo.ui.*;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
@@ -86,6 +87,10 @@ public final class TargetAWT {
 
     public static Image wrap(Icon icon) {
         return ourFacade.wrap(icon);
+    }
+
+    public static ComponentEvent<?> from(java.awt.event.MouseEvent event) {
+        return ourFacade.from(event);
     }
 
     @Contract("null -> null")

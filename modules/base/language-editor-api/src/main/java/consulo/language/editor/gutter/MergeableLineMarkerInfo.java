@@ -20,7 +20,6 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
@@ -28,8 +27,8 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
+import consulo.ui.event.ComponentEvent;
 import org.jspecify.annotations.Nullable;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -118,7 +117,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
       return new GutterIconNavigationHandler<>() {
         @RequiredUIAccess
         @Override
-        public void navigate(MouseEvent e, PsiElement elt) {
+        public void navigate(ComponentEvent<?> e, PsiElement elt) {
           List<LineMarkerInfo> infos = new ArrayList<>(markers);
           Collections.sort(infos, (o1, o2) -> o1.startOffset - o2.startOffset);
           IPopupChooserBuilder<LineMarkerInfo> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(infos);
@@ -149,7 +148,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
             }
           });
 
-          builder.createPopup().show(new RelativePoint(e));
+          builder.createPopup().showBy(e);
         }
       };
     }

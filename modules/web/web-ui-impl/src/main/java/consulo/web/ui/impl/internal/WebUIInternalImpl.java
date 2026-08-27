@@ -19,7 +19,10 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.server.VaadinSession;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.AdvancedLabel;
@@ -406,6 +409,45 @@ public class WebUIInternalImpl extends UIInternal {
     @Override
     public <T> MutableFlatDataModel<T> _FlatDataModel_createLazy(Collection<? extends T> list) {
         return new LazyFlatDataModelImpl<>(list);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
+        UI ui = UI.getCurrent();
+        if (ui == null) {
+            return () -> {
+            };
+        }
+
+        InputDetails details = anchor.getInputDetails();
+
+        ui.getElement().executeJs(
+            "if (!document.getElementById('consulo-delayed-action-style')) {" +
+                "  const style = document.createElement('style');" +
+                "  style.id = 'consulo-delayed-action-style';" +
+                "  style.textContent = '@keyframes consulo-delayed-action-spin { to { transform: rotate(360deg); } }';" +
+                "  document.head.appendChild(style);" +
+                "}"
+        );
+
+        Div spinner = new Div();
+        spinner.getStyle()
+            .set("position", "fixed")
+            .set("width", "20px")
+            .set("height", "20px")
+            .set("left", (details.getXOnScreen() - 10) + "px")
+            .set("top", (details.getYOnScreen() - 10) + "px")
+            .set("border", "2px solid var(--lumo-contrast-20pct)")
+            .set("border-top-color", "var(--lumo-primary-color)")
+            .set("border-radius", "50%")
+            .set("animation", "consulo-delayed-action-spin 0.8s linear infinite")
+            .set("pointer-events", "none")
+            .set("z-index", "1000");
+
+        ui.add(spinner);
+
+        return () -> ui.remove(spinner);
     }
 
     @Override

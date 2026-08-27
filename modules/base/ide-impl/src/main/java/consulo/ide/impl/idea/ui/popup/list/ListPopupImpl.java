@@ -32,6 +32,8 @@ import consulo.ui.ex.awt.internal.ListWithInlineButtons;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
 import consulo.ui.ex.awt.popup.AWTListPopup;
 import consulo.ui.ex.awt.popup.ListPopupModel;
+import consulo.disposer.Disposer;
+import consulo.ui.model.FlatDataModel;
 import consulo.ui.ex.awt.popup.ListPopupStepEx;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.ListPopup;
@@ -288,6 +290,12 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
         ListPopupStep<Object> step = getListStep();
         myListModel = new ListPopupModel(this, getSpeedSearch(), step);
+
+        FlatDataModel<Object> stepModel = step.getModel();
+        if (stepModel != null) {
+            Disposer.register(this, stepModel.addListener(event -> myListModel.syncModel()));
+        }
+
         myList = new MyList();
         if (myStep.getTitle() != null) {
             myList.getAccessibleContext().setAccessibleName(myStep.getTitle());

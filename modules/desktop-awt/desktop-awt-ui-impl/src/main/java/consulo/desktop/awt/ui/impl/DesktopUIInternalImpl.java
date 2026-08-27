@@ -31,6 +31,7 @@ import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
 import consulo.desktop.awt.ui.impl.image.DesktopDeferredIconImpl;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -43,7 +44,11 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ModalityStateListener;
+import consulo.ui.event.details.InputDetails;
+import consulo.ui.ex.awt.AsyncProcessIcon;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -418,6 +423,41 @@ public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
         return new DesktopColorBoxImpl(colorValue);
+    }
+
+    @Override
+    @RequiredUIAccess
+    public DelayedAction _DelayedAction_start(ComponentEvent<?> anchor) {
+        java.awt.Component component = TargetAWT.to(anchor.getComponent());
+        JRootPane rootPane = component == null ? null : UIUtil.getRootPane(component);
+        if (rootPane == null || !(rootPane.getGlassPane() instanceof JComponent glassPane)) {
+            return () -> {
+            };
+        }
+
+        AsyncProcessIcon icon = new AsyncProcessIcon("DelayedAction");
+        Dimension size = icon.getPreferredSize();
+        icon.setSize(size);
+
+        InputDetails details = anchor.getInputDetails();
+        Point point = SwingUtilities.convertPoint(component, details.getX(), details.getY(), glassPane);
+        icon.setLocation(point.x - size.width / 2, point.y - size.height / 2);
+
+        // the default glass pane sits invisible until something needs it, and goes back once the
+        // indicator is gone - an invisible glass pane is what lets the mouse through
+        boolean glassPaneWasVisible = glassPane.isVisible();
+        glassPane.add(icon);
+        glassPane.setVisible(true);
+        icon.resume();
+        glassPane.repaint();
+
+        return () -> {
+            icon.suspend();
+            glassPane.remove(icon);
+            Disposer.dispose(icon);
+            glassPane.setVisible(glassPaneWasVisible);
+            glassPane.repaint();
+        };
     }
 
     @Override

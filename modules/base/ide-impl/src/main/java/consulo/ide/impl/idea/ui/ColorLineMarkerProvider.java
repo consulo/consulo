@@ -40,7 +40,7 @@ import consulo.ui.image.ImageKey;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.inject.Inject;
 
-import java.awt.event.MouseEvent;
+import consulo.ui.event.ComponentEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -64,7 +64,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
                 new GutterIconNavigationHandler<>() {
                     @Override
                     @RequiredUIAccess
-                    public void navigate(MouseEvent e, PsiElement elt) {
+                    public void navigate(ComponentEvent<?> e, PsiElement elt) {
                         if (!elt.isWritable()) {
                             return;
                         }

@@ -23,7 +23,9 @@ import consulo.desktop.awt.ui.impl.image.DesktopImageOverIconImpl;
 import consulo.desktop.awt.ui.impl.window.DummyWindow;
 import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 import consulo.logging.Logger;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.ui.Component;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -85,6 +87,12 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
     @Override
     public Component wrap(java.awt.Component component) {
         return new TempComponentWrapper(component);
+    }
+
+    @Override
+    public ComponentEvent<?> from(java.awt.event.MouseEvent event) {
+        java.awt.Component component = event.getComponent();
+        return new ComponentEvent<>(wrap(component), DesktopAWTInputDetails.convert(component, event));
     }
 
     @Override

@@ -7,15 +7,16 @@ import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.RelativePoint;
-
-import java.awt.event.MouseEvent;
+import consulo.ui.RelativePoint2D;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 
 public abstract class ReferencesCodeVisionProvider extends CodeVisionProviderBase {
     @Override
-    public final void handleClick(Editor editor, PsiElement element, MouseEvent event) {
+    public final void handleClick(Editor editor, PsiElement element, ComponentEvent<?> event) {
         LanguageEditorInternalHelper helper = LanguageEditorInternalHelper.getInstance();
-        helper.startFindUsages(editor, element.getProject(), element, event == null ? null : new RelativePoint(event));
+        RelativePoint2D point = event.getInputDetails() instanceof ProgrammaticInputDetails ? null : RelativePoint2D.of(event);
+        helper.startFindUsages(editor, element.getProject(), element, point);
     }
 
     @Override

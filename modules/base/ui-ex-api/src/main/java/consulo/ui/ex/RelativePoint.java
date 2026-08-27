@@ -3,6 +3,8 @@ package consulo.ui.ex;
 
 import consulo.ui.Point2D;
 import consulo.ui.RelativePoint2D;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -158,6 +160,30 @@ public class RelativePoint implements RelativePoint2D {
     Frame root = JOptionPane.getRootFrame();
     SwingUtilities.convertPointFromScreen(screenPoint, root);
     return new RelativePoint(root, screenPoint);
+  }
+
+  /**
+   * Where a unified event happened, in awt terms. Only the screen position survives the trip - the component
+   * an event carries is a unified one and says nothing about the awt hierarchy.
+   */
+  public static RelativePoint fromScreen(ComponentEvent<?> event) {
+    InputDetails details = event.getInputDetails();
+    return fromScreen(new Point(details.getXOnScreen(), details.getYOnScreen()));
+  }
+
+  /**
+   * The awt form of a platform point. A frontend's own relative point already is one and passes through;
+   * anything else must carry a component this frontend can answer for.
+   */
+  public static RelativePoint from(RelativePoint2D point) {
+    if (point instanceof RelativePoint relativePoint) {
+      return relativePoint;
+    }
+    Component component = TargetAWT.to(point.getUIComponent());
+    if (component == null) {
+      throw new IllegalArgumentException(point + " carries no component of this frontend");
+    }
+    return new RelativePoint(component, TargetAWT.to(point.getUIPoint()));
   }
 
   

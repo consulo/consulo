@@ -52,6 +52,16 @@ public interface TextItemPresentation {
         return this;
     }
 
+    /**
+     * Text and icon pinned to the trailing edge of the item, past whatever {@link #append} has written -
+     * the module, library or sdk a navigation target sits in. A frontend which has nowhere to put it
+     * leaves it out.
+     */
+    default TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
+        // unwarranted action
+        return this;
+    }
+
     void clearText();
 
     default void append(String text) {

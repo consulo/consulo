@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.event.ComponentEvent;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,6 +29,14 @@ import org.jspecify.annotations.Nullable;
  * @since 2026-08-09
  */
 public interface RelativePoint2D {
+    /**
+     * Where the event happened inside its component. The position of a programmatic event is (0, 0) - a
+     * caller that wants "no particular place" instead should check the event's input details first.
+     */
+    static RelativePoint2D of(ComponentEvent<?> event) {
+        return of(event.getComponent(), event.getInputDetails().getPosition());
+    }
+
     static RelativePoint2D of(Component component, Point2D point) {
         return new RelativePoint2D() {
             @Override

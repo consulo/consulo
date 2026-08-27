@@ -200,6 +200,8 @@ public class DesktopQtListBoxImpl<E> extends QtComponentDelegate<QListWidget> im
             }
         });
 
+        myModel.addListener(event -> rebuildIfBound());
+
         rebuild(component);
     }
 

@@ -5,6 +5,7 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
@@ -168,6 +169,15 @@ public interface JBPopup extends Disposable, LightweightWindow {
      * @return the contents of the popup.
      */
     JComponent getContent();
+
+    /**
+     * The UI this popup belongs to, or {@code null} while it is attached to none. A frontend may serve
+     * several UIs at once, so background code that needs to get back to the UI thread must go through
+     * the popup it is updating rather than through any application-wide access.
+     * <p>
+     * A {@code null} means there is no UI to get back to, and the caller has nothing to do.
+     */
+    @Nullable UIAccess getUIAccess();
 
     /**
      * Moves popup to the given point. Does nothing if popup is invisible.

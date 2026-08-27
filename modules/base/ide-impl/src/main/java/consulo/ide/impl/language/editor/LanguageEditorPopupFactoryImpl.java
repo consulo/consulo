@@ -16,30 +16,20 @@
 package consulo.ide.impl.language.editor;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.language.editor.ui.PsiElementListNavigator;
 import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
 import consulo.language.navigation.GotoRelatedItem;
-import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
-import consulo.usage.UsageView;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
@@ -47,7 +37,6 @@ import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,110 +51,6 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactory {
-    private static class NavigateOrPopupBuilderImpl extends PsiElementListNavigator.NavigateOrPopupBuilder {
-        public NavigateOrPopupBuilderImpl(NavigatablePsiElement[] targets, String title) {
-            super(targets, title);
-        }
-
-        @Override
-        public final @Nullable JBPopup build() {
-            if (myTargets.length == 0) {
-                if (!allowEmptyTargets()) {
-                    return null; // empty initial targets are not allowed
-                }
-                if (myListUpdaterTask == null || myListUpdaterTask.isFinished()) {
-                    return null; // there will be no targets.
-                }
-            }
-            if (myTargets.length == 1 && (myListUpdaterTask == null || myListUpdaterTask.isFinished())) {
-                myTargetsConsumer.accept(myTargets);
-                return null;
-            }
-            List<NavigatablePsiElement> initialTargetsList = Arrays.asList(myTargets);
-            SimpleReference<NavigatablePsiElement[]> updatedTargetsList = SimpleReference.create(myTargets);
-
-            IPopupChooserBuilder<NavigatablePsiElement> builder =
-                JBPopupFactory.getInstance().createPopupChooserBuilder(initialTargetsList);
-            afterPopupBuilderCreated(builder);
-            if (myListRenderer instanceof PsiElementListCellRenderer psiElementListCellRenderer) {
-                psiElementListCellRenderer.installSpeedSearch(builder);
-            }
-
-            IPopupChooserBuilder<NavigatablePsiElement> popupChooserBuilder = builder
-                .setTitle(myTitle)
-                .setMovable(true)
-                .setFont(EditorUtil.getEditorFont())
-                .setRenderer(myListRenderer)
-                .withHintUpdateSupply()
-                .setResizable(true)
-                .setItemsChosenCallback(selectedValues -> myTargetsConsumer.accept(ArrayUtil.toObjectArray(selectedValues)))
-                .setCancelCallback(() -> {
-                    if (myListUpdaterTask != null) {
-                        myListUpdaterTask.cancelTask();
-                    }
-                    return true;
-                });
-            SimpleReference<UsageView> usageView = new SimpleReference<>();
-            if (myFindUsagesTitle != null) {
-                popupChooserBuilder = popupChooserBuilder.setCouldPin(popup -> {
-                    usageView.set(FindUtil.showInUsageView(null, updatedTargetsList.get(), myFindUsagesTitle, getProject()));
-                    popup.cancel();
-                    return false;
-                });
-            }
-
-            JBPopup popup = popupChooserBuilder.createPopup();
-            if (builder instanceof PopupChooserBuilder pcBuilder) {
-                JBList<NavigatablePsiElement> list = (JBList) pcBuilder.getChooserComponent();
-                list.setTransferHandler(new TransferHandler() {
-                    @Override
-                    protected Transferable createTransferable(JComponent c) {
-                        Object[] selectedValues = list.getSelectedValues();
-                        PsiElement[] copy = new PsiElement[selectedValues.length];
-                        for (int i = 0; i < selectedValues.length; i++) {
-                            copy[i] = (PsiElement) selectedValues[i];
-                        }
-                        return new PsiCopyPasteManagerImpl.MyTransferable(copy);
-                    }
-
-                    @Override
-                    public int getSourceActions(JComponent c) {
-                        return COPY;
-                    }
-                });
-
-                JScrollPane pane = ((PopupChooserBuilder) builder).getScrollPane();
-                pane.setBorder(null);
-                pane.setViewportBorder(null);
-            }
-
-            if (myListUpdaterTask != null) {
-                ListComponentUpdater popupUpdater = builder.getBackgroundUpdater();
-                myListUpdaterTask.init(
-                    popup,
-                    new ListComponentUpdater<>() {
-                        @Override
-                        public void replaceModel(List<? extends PsiElement> data) {
-                            updatedTargetsList.set(data.toArray(NavigatablePsiElement.EMPTY_ARRAY));
-                            popupUpdater.replaceModel(data);
-                        }
-
-                        @Override
-                        public void paintBusy(boolean paintBusy) {
-                            popupUpdater.paintBusy(paintBusy);
-                        }
-                    },
-                    usageView
-                );
-            }
-            return popup;
-        }
-    }
-
-    @Override
-    public PsiElementListNavigator.NavigateOrPopupBuilder builder(NavigatablePsiElement[] targets, String title) {
-        return new NavigateOrPopupBuilderImpl(targets, title);
-    }
 
     @Override
     public JBPopup getPsiElementPopup(

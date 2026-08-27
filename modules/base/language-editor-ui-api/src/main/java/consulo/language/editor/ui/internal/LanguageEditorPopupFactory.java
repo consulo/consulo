@@ -18,9 +18,7 @@ package consulo.language.editor.ui.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.language.editor.ui.PsiElementListNavigator;
 import consulo.language.navigation.GotoRelatedItem;
-import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.popup.JBPopup;
 
@@ -37,10 +35,7 @@ public interface LanguageEditorPopupFactory {
     return Application.get().getInstance(LanguageEditorPopupFactory.class);
   }
 
-  
-  PsiElementListNavigator.NavigateOrPopupBuilder builder(NavigatablePsiElement[] targets, String title);
 
-  
   JBPopup getPsiElementPopup(Object[] elements,
                              Map<PsiElement, GotoRelatedItem> itemsMap,
                              String title,

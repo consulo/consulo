@@ -141,8 +141,13 @@ public abstract class ActionManager {
 
     public abstract AnAction getActionOrStub(String id);
 
+    /**
+     * @param inputEvent       the awt event behind the invocation, when there is one - an invocation driven by
+     *                         a unified event or by code has none
+     * @param contextComponent where to take the data context from; the focused component when {@code null}
+     */
     public abstract ActionCallback tryToExecute(
-        AnAction action, InputEvent inputEvent, @Nullable Component contextComponent,
+        AnAction action, @Nullable InputEvent inputEvent, @Nullable Component contextComponent,
         @Nullable String place, boolean now
     );
 

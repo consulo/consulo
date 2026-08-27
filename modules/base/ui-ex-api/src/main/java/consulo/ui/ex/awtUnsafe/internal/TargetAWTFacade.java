@@ -23,6 +23,7 @@ import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -52,6 +53,14 @@ public interface TargetAWTFacade {
     Component from(java.awt.@Nullable Component component);
 
     default Component wrap(java.awt.Component component) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * The unified form of an awt mouse event, for the code that still receives one from a swing listener but
+     * hands it to an api that speaks {@link ComponentEvent}.
+     */
+    default ComponentEvent<?> from(java.awt.event.MouseEvent event) {
         throw new UnsupportedOperationException();
     }
 
