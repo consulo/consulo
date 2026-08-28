@@ -84,6 +84,10 @@ public class SimpleActionToolbarImpl extends JToolBar implements DesktopAWTActio
 
         setOrientation(style.isHorizontal() ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
 
+        if (style == Style.INPLACE) {
+            setOpaque(false);
+        }
+
         // If the panel doesn't handle mouse event then it will be passed to its parent.
         // It means that if the panel is in sliding mode then the focus goes to the editor
         // and panel will be automatically hidden.
