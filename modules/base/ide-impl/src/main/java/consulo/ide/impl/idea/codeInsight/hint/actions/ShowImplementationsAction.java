@@ -64,6 +64,7 @@ import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -506,9 +507,10 @@ public class ShowImplementationsAction extends LegacyAnAction implements PopupAc
             myIncludeSelf = includeSelf;
         }
 
+        @Nonnull
         @Override
-        public String getCaption(int size) {
-            return myCaption.get();
+        public LocalizeValue getCaption(int size) {
+            return myCaption;
         }
 
         @Override

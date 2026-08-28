@@ -234,9 +234,9 @@ class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator
         MutableFlatDataModel<ItemWithPresentation<T>> model = FlatDataModel.of(items);
 
         TargetUpdaterTask<T> updater = myUpdater;
-        String title = myTitle.isNotEmpty() || updater == null ? myTitle.get() : updater.getCaption(items.size());
+        LocalizeValue title = myTitle.isNotEmpty() || updater == null ? myTitle : updater.getCaption(items.size());
 
-        BaseListPopupStep<ItemWithPresentation<T>> step = new BaseListPopupStep<>(title, model) {
+        BaseListPopupStep<ItemWithPresentation<T>> step = new BaseListPopupStep<>(title.get(), model) {
             @Override
             public boolean isSpeedSearchEnabled() {
                 return true;

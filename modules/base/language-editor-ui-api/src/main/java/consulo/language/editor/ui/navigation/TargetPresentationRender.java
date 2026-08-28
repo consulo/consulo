@@ -38,8 +38,10 @@ public class TargetPresentationRender<T extends PsiElement> implements TextItemR
             return;
         }
 
-        TargetPresentation target = value.getPresentation();
+        renderPresentation(presentation, value.getPresentation());
+    }
 
+    public static void renderPresentation(TextItemPresentation presentation, TargetPresentation target) {
         presentation.withIcon(target.getIcon());
         presentation.withBackgroundColor(target.getBackgroundColor());
 

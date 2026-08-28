@@ -15,6 +15,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
@@ -62,7 +63,8 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
         myUsageView = usageView;
     }
 
-    public abstract String getCaption(int size);
+    @Nonnull
+    public abstract LocalizeValue getCaption(int size);
 
     protected abstract @Nullable Usage createUsage(T element);
 
@@ -201,7 +203,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
             data = new ArrayList<>(myData);
         }
         replaceModel(data);
-        myPopup.setCaption(getCaption(getCurrentSize()));
+        myPopup.setCaption(getCaption(getCurrentSize()).get());
         myPopup.pack(true, true);
     }
 

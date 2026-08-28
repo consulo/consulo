@@ -18,24 +18,24 @@ package consulo.ide.impl.idea.codeInsight.navigation;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.localize.CodeInsightLocalize;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.editor.ui.navigation.ItemWithPresentation;
+import consulo.language.editor.ui.navigation.TargetUpdaterTask;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.search.ContainerProvider;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GotoImplementationHandler extends GotoTargetHandler {
     @Override
@@ -72,8 +72,12 @@ public class GotoImplementationHandler extends GotoTargetHandler {
             @RequiredUIAccess
             public void onFinished() {
                 super.onFinished();
-                PsiElement oneElement = getTheOnlyOneElement();
-                if (oneElement != null && navigateToElement(oneElement)) {
+                ItemWithPresentation<PsiElement> onlyOne = getTheOnlyOneElement();
+                if (onlyOne == null) {
+                    return;
+                }
+                PsiElement element = onlyOne.dereference();
+                if (element != null && navigateToElement(element)) {
                     myPopup.cancel();
                 }
             }
@@ -91,9 +95,9 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         return refElement.getParent();
     }
 
+    @Nonnull
     @Override
-    
-    protected String getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
+    protected LocalizeValue getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
         ItemPresentation presentation = ((NavigationItem)sourceElement).getPresentation();
         String fullName;
         if (presentation == null) {
@@ -106,12 +110,13 @@ public class GotoImplementationHandler extends GotoTargetHandler {
             String containerText = containerPresentation == null ? null : containerPresentation.getPresentableText();
             fullName = (containerText == null ? "" : containerText + ".") + presentation.getPresentableText();
         }
-        return CodeInsightBundle.message("goto.implementation.chooserTitle", fullName, length, finished ? "" : " so far");
+        return CodeInsightLocalize.gotoImplementationChoosertitle(fullName, length, finished ? "" : " so far");
     }
 
+    @Nonnull
     @Override
-    protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
-        return CodeInsightBundle.message("goto.implementation.findUsages.title", name, length);
+    protected LocalizeValue getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
+        return CodeInsightLocalize.gotoImplementationFindusagesTitle(name);
     }
 
     @Override
@@ -119,15 +124,18 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         return CodeInsightLocalize.gotoImplementationNotfound().get();
     }
 
-    private class ImplementationsUpdaterTask extends ListBackgroundUpdaterTask {
+    private class ImplementationsUpdaterTask extends TargetUpdaterTask<PsiElement> {
         private final Editor myEditor;
         private final int myOffset;
         private final GotoData myGotoData;
-        private final Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
         private final PsiReference myReference;
 
         ImplementationsUpdaterTask(GotoData gotoData, Editor editor, int offset, PsiReference reference) {
-            super(gotoData.source.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS);
+            super(
+                gotoData.source.getProject(),
+                ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS,
+                element -> createPresentation(gotoData, element)
+            );
             myEditor = editor;
             myOffset = offset;
             myGotoData = gotoData;
@@ -138,7 +146,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
         public void run(ProgressIndicator indicator) {
             super.run(indicator);
             for (PsiElement element : myGotoData.targets) {
-                if (!updateComponent(element, createComparator(renderers, myGotoData))) {
+                if (!updateElement(element)) {
                     return;
                 }
             }
@@ -149,18 +157,17 @@ public class GotoImplementationHandler extends GotoTargetHandler {
                     if (!TargetElementUtil.acceptImplementationForReference(myReference, element)) {
                         return;
                     }
-                    if (myGotoData.addTarget(element)) {
-                        if (!updateComponent(element, createComparator(renderers, myGotoData))) {
-                            indicator.cancel();
-                        }
+                    if (myGotoData.addTarget(element) && !updateElement(element)) {
+                        indicator.cancel();
                     }
                 }
             }.searchImplementations(myEditor, myGotoData.source, myOffset);
         }
 
+        @Nonnull
         @Override
         @RequiredReadAction
-        public String getCaption(int size) {
+        public LocalizeValue getCaption(int size) {
             return getChooserTitle(myGotoData.source, ((PsiNamedElement)myGotoData.source).getName(), size, isFinished());
         }
     }

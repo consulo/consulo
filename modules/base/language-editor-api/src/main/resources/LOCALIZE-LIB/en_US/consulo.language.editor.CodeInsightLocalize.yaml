@@ -293,7 +293,7 @@ generate.list.popup.title:
 generate.setter.fields.chooser.title:
     text: Select Fields to Generate Setters
 goto.implementation.chooserTitle:
-    text: <html><body>Choose Implementation of <b>{0}</b> ({1} found)</body></html>
+    text: <html><body>Choose Implementation of <b>{0}</b> ({1} found{2})</body></html>
 goto.implementation.findUsages.title:
     text: Implementations of {0}
 goto.implementation.notFound:
@@ -305,9 +305,9 @@ goto.super.method.chooser.title:
 goto.super.method.findUsages.title:
     text: Super methods of {0}
 goto.test.chooserTitle.subject:
-    text: <html><body>Choose Test Subject for <b>{0}</b> ({1} found)</body></html>
+    text: <html><body>Choose Test Subject for <b>{0}</b> ({1} found{2})</body></html>
 goto.test.chooserTitle.test:
-    text: <html><body>Choose Test for <b>{0}</b> ({1} found)</body></html>
+    text: <html><body>Choose Test for <b>{0}</b> ({1} found{2})</body></html>
 goto.test.findUsages.subject.title:
     text: Test Subjects for {0}
 goto.test.findUsages.test.title:

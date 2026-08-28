@@ -16,8 +16,10 @@
 
 package consulo.ide.impl.idea.testIntegration;
 
-import consulo.language.editor.CodeInsightBundle;
 import consulo.ide.impl.idea.codeInsight.navigation.GotoTargetHandler;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import consulo.language.editor.testIntegration.TestCreator;
 import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.language.editor.ui.PopupNavigationUtil;
@@ -95,33 +97,26 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     return false;
   }
 
-  
+  @Nonnull
   @Override
-  protected String getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
+  protected LocalizeValue getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
     String suffix = finished ? "" : " so far";
-    if (TestFinderHelper.isTest(sourceElement)) {
-      return CodeInsightBundle.message("goto.test.chooserTitle.subject", name, length, suffix);
-    }
-    else {
-      return CodeInsightBundle.message("goto.test.chooserTitle.test", name, length, suffix);
-    }
+    return TestFinderHelper.isTest(sourceElement)
+      ? CodeInsightLocalize.gotoTestChoosertitleSubject(name, length, suffix)
+      : CodeInsightLocalize.gotoTestChoosertitleTest(name, length, suffix);
   }
 
-  
+  @Nonnull
   @Override
-  protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
-    if (TestFinderHelper.isTest(sourceElement)) {
-      return CodeInsightBundle.message("goto.test.findUsages.subject.title", name);
-    }
-    else {
-      return CodeInsightBundle.message("goto.test.findUsages.test.title", name);
-    }
+  protected LocalizeValue getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
+    return TestFinderHelper.isTest(sourceElement)
+      ? CodeInsightLocalize.gotoTestFindusagesSubjectTitle(name)
+      : CodeInsightLocalize.gotoTestFindusagesTestTitle(name);
   }
 
-  
   @Override
   protected String getNotFoundMessage(Project project, Editor editor, PsiFile file) {
-    return CodeInsightBundle.message("goto.test.notFound");
+    return CodeInsightLocalize.gotoTestNotfound().get();
   }
 
   @Override
