@@ -397,8 +397,13 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         myToolbar.updateActionsAsync();
         JComponent toolbarComponent = myToolbar.getComponent();
         toolbarComponent.setOpaque(false);
-        toolbarComponent.setBorder(JBUI.Borders.empty(2, 0, 2, 0));
-        return toolbarComponent;
+        toolbarComponent.setBorder(JBUI.Borders.empty());
+
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setOpaque(false);
+        wrapper.setBorder(JBUI.Borders.emptyRight(8));
+        wrapper.add(toolbarComponent);
+        return wrapper;
     }
 
     public CompletableFuture<?> updateToolbarFuture() {
@@ -439,8 +444,8 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     protected JComponent createTopLeftPanel() {
         myTabbedPane = new JTabbedPane(JTabbedPane.TOP);
         myTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        myTabbedPane.putClientProperty("JTabbedPane.tabHeight", 30);
         myTabbedPane.setOpaque(false);
+        myTabbedPane.setBorder(JBUI.Borders.emptyLeft(8));
 
         // "All" tab
         SETab allTab = new SETab(null);
@@ -471,6 +476,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         myTabbedPane.putClientProperty("JTabbedPane.showContentSeparator", false);
         // Use FlatLaf tabsPopupPolicy to avoid popup for scroll tabs
         myTabbedPane.putClientProperty("JTabbedPane.tabsPopupPolicy", "never");
+        myTabbedPane.putClientProperty("FlatLaf.style", "tabInsets: 2,12,2,12");
 
         return myTabbedPane;
     }
