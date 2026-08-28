@@ -44,7 +44,20 @@ public class WebImageElement {
 
     public static @Nullable Element toElement(Image image) {
         WebImageSpec spec = WebImageUrl.toSpec(image);
-        return spec == null ? null : toElement(spec);
+        if (spec != null) {
+            return toElement(spec);
+        }
+
+        String url = WebImageUrl.toURL(image);
+        if (url == null) {
+            return null;
+        }
+
+        Element element = new Element(IMAGE);
+        element.setAttribute("width", String.valueOf(image.getWidth()));
+        element.setAttribute("height", String.valueOf(image.getHeight()));
+        element.setAttribute("src", url);
+        return element;
     }
 
     public static Element toElement(WebImageSpec spec) {
@@ -96,7 +109,17 @@ public class WebImageElement {
 
     public static @Nullable String toHtml(Image image) {
         WebImageSpec spec = WebImageUrl.toSpec(image);
-        return spec == null ? null : toHtml(spec);
+        if (spec != null) {
+            return toHtml(spec);
+        }
+
+        String url = WebImageUrl.toURL(image);
+        if (url == null) {
+            return null;
+        }
+
+        return "<" + IMAGE + " width=\"" + image.getWidth() + "\" height=\"" + image.getHeight()
+            + "\" src=\"" + escape(url) + "\"></" + IMAGE + ">";
     }
 
     public static String toHtml(WebImageSpec spec) {
