@@ -91,6 +91,8 @@ public abstract class JBTabsImpl extends JComponent
 
     private static final String uiClassID = "JBEditorTabsUI";
 
+    public static final int SIDE_TABS_DEFAULT_WIDTH = 200;
+
     public static final Key<Integer> SIDE_TABS_SIZE_LIMIT_KEY = Key.create("SIDE_TABS_SIZE_LIMIT_KEY");
 
     final ActionManager myActionManager;
@@ -496,18 +498,22 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     public void layoutComp(SingleRowPassInfo data, int deltaX, int deltaY) {
+        layoutComp(data, deltaX, deltaY, 0, 0);
+    }
+
+    public void layoutComp(SingleRowPassInfo data, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
         if (data.hToolbar != null) {
             int toolbarHeight = data.hToolbar.getPreferredSize().height;
-            Rectangle compRect = layoutComp(deltaX, toolbarHeight + deltaY, data.comp);
+            Rectangle compRect = layoutComp(deltaX, toolbarHeight + deltaY, data.comp, deltaWidth, deltaHeight);
             layout(data.hToolbar, compRect.x, compRect.y - toolbarHeight, compRect.width, toolbarHeight);
         }
         else if (data.vToolbar != null) {
             int toolbarWidth = data.vToolbar.getPreferredSize().width;
-            Rectangle compRect = layoutComp(toolbarWidth + deltaX, deltaY, data.comp);
+            Rectangle compRect = layoutComp(toolbarWidth + deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
             layout(data.vToolbar, compRect.x - toolbarWidth, compRect.y, toolbarWidth, compRect.height);
         }
         else {
-            layoutComp(deltaX, deltaY, data.comp);
+            layoutComp(deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
         }
     }
 
@@ -1523,11 +1529,15 @@ public abstract class JBTabsImpl extends JComponent
             return new Dimension(getSize().width, myHorizontalSide ? Math.max(max.myLabel.height, max.myToolbar.height) : max.myLabel.height);
         }
         else {
-            return new Dimension(max.myLabel.width + (myHorizontalSide ? 0 : max.myToolbar.width), getSize().height);
+            return new Dimension(JBUI.scale(SIDE_TABS_DEFAULT_WIDTH) + (myHorizontalSide ? 0 : max.myToolbar.width), getSize().height);
         }
     }
 
     public Rectangle layoutComp(int componentX, int componentY, JComponent comp) {
+        return layoutComp(componentX, componentY, comp, 0, 0);
+    }
+
+    public Rectangle layoutComp(int componentX, int componentY, JComponent comp, int deltaWidth, int deltaHeight) {
         Insets insets = getLayoutInsets();
 
         Insets border = JBUI.emptyInsets();
@@ -1542,6 +1552,11 @@ public abstract class JBTabsImpl extends JComponent
         int y = insets.top + componentY + border.top;
         int width = getWidth() - insets.left - insets.right - componentX - border.left - border.right;
         int height = getHeight() - insets.top - insets.bottom - componentY - border.top - border.bottom;
+
+        if (!isHideTabs()) {
+            width += deltaWidth;
+            height += deltaHeight;
+        }
 
         return layout(comp, x, y, width, height);
     }

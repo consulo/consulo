@@ -20,6 +20,8 @@ import consulo.desktop.awt.ui.impl.tabs.ShapeTransform;
 import consulo.desktop.awt.ui.impl.tabs.TabLabel;
 import consulo.desktop.awt.ui.impl.tabs.TabLayout;
 
+import javax.swing.*;
+
 import java.awt.*;
 
 public abstract class SingleRowLayoutStrategy {
@@ -188,8 +190,8 @@ public abstract class SingleRowLayoutStrategy {
       int entryPointWidth = myTabs.getEntryPointButtonWidth();
       Dimension prefSize = myLayout.myMoreButton.getPreferredSize();
       int x = data.layoutSize.width - prefSize.width - 1 - entryPointWidth;
-      return new Rectangle(x, data.insets.top + JBTabsImpl.getSelectionTabVShift(),
-                                            prefSize.width, prefSize.height);
+      int y = data.insets.top + Math.max(0, (myTabs.myHeaderFitSize.height - prefSize.height) / 2);
+      return new Rectangle(x, y, prefSize.width, prefSize.height);
     }
 
     @Override
@@ -231,9 +233,9 @@ public abstract class SingleRowLayoutStrategy {
     @Override
     public void layoutComp(SingleRowPassInfo data) {
       if (myTabs.isHideTabs()) {
-        myTabs.layoutComp(data, 0, 0);
+        myTabs.layoutComp(data, 0, 0, 0, 0);
       } else {
-        myTabs.layoutComp(data, 0, 0);
+        myTabs.layoutComp(data, 0, 0, 0, -(myTabs.myHeaderFitSize.height));
       }
     }
 
@@ -246,7 +248,8 @@ public abstract class SingleRowLayoutStrategy {
     public Rectangle getMoreRect(SingleRowPassInfo data) {
       int entryPointWidth = myTabs.getEntryPointButtonWidth();
       Dimension prefSize = myLayout.myMoreButton.getPreferredSize();
-      return new Rectangle(myTabs.getWidth() - data.insets.right - prefSize.width + 2 - entryPointWidth, getFixedPosition(data),
+      int y = getFixedPosition(data) + Math.max(0, (myTabs.myHeaderFitSize.height - prefSize.height) / 2);
+      return new Rectangle(myTabs.getWidth() - data.insets.right - prefSize.width + 2 - entryPointWidth, y,
                                             prefSize.width, prefSize.height);
     }
 
@@ -283,12 +286,17 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public int getStartPosition(SingleRowPassInfo data) {
-      return data.insets.top;
+      return data.insets.top + getEntryPointReserve();
     }
 
     @Override
     public int getToFitLength(SingleRowPassInfo data) {
-      return myTabs.getHeight() - data.insets.top - data.insets.bottom;
+      return myTabs.getHeight() - data.insets.top - data.insets.bottom - getEntryPointReserve();
+    }
+
+    private int getEntryPointReserve() {
+      JComponent entryPointButton = myTabs.getEntryPointButton();
+      return entryPointButton == null ? 0 : entryPointButton.getPreferredSize().height + 1;
     }
 
     @Override
@@ -371,9 +379,9 @@ public abstract class SingleRowLayoutStrategy {
     @Override
     public void layoutComp(SingleRowPassInfo data) {
       if (myTabs.isHideTabs()) {
-        myTabs.layoutComp(data, 0, 0);
+        myTabs.layoutComp(data, 0, 0, 0, 0);
       } else {
-        myTabs.layoutComp(data, 0, 0);
+        myTabs.layoutComp(data, 0, 0, -(myTabs.myHeaderFitSize.width), 0);
       }
     }
 

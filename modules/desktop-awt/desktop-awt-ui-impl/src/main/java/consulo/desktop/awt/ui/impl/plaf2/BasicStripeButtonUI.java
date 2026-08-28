@@ -6,9 +6,12 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -41,6 +44,10 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
         return new BasicStripeButtonUI();
     }
 
+    private static boolean isToolWindowActive(AnchoredButton button) {
+        return button instanceof ToolWindowStripeButton stripeButton && stripeButton.getWindowInfo().isActive();
+    }
+
     @Override
     public void installUI(JComponent c) {
         super.installUI(c);
@@ -51,8 +58,8 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
         AnchoredButton button = (AnchoredButton) c;
         Dimension dim = super.getPreferredSize(button);
 
-        dim.width = (int) (JBUIScale.scale(4) + dim.width * 1.1f);
-        dim.height += JBUIScale.scale(2);
+        dim.width = (int) (JBUIScale.scale(16) + dim.width * 1.1f);
+        dim.height = TabsUtil.getRealTabsHeight();
 
         ToolWindowAnchor anchor = button.getAnchor();
         if (ToolWindowAnchor.LEFT == anchor || ToolWindowAnchor.RIGHT == anchor) {
@@ -120,14 +127,19 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
                     g2.translate(0, -off);
                 }
 
-                g2.setColor(model.isSelected() ? SELECTED_BACKGROUND_COLOR : BACKGROUND_COLOR);
-
-                int arc = UIManager.getInt("Component.arc");
-                if (arc > 0) {
-                    g2.fillRoundRect(3, 3, button.getWidth() - 6, button.getHeight() - 6, arc, arc);
-                } else {
-                    g2.fillRect(0, 0, button.getWidth(), button.getHeight());
+                Color color;
+                if (model.isSelected() && isToolWindowActive(button)) {
+                    Color selectedBackground = UIManager.getColor("TabbedPane.selectedBackground");
+                    color = selectedBackground != null ? selectedBackground : SELECTED_BACKGROUND_COLOR;
                 }
+                else if (model.isSelected()) {
+                    color = SELECTED_BACKGROUND_COLOR;
+                }
+                else {
+                    color = BACKGROUND_COLOR;
+                }
+
+                TabPainter.paintTab(g2, 0, 0, button.getWidth(), button.getHeight(), color, new Insets(5, 5, 5, 5), true);
 
                 if (anchor == ToolWindowAnchor.LEFT) {
                     g2.translate(off, 0);

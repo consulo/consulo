@@ -32,6 +32,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -189,6 +190,12 @@ public class TabLabel extends JPanel implements consulo.ui.ex.awt.internal.TabIn
         Insets insets = super.getInsets();
         if (UISettings.getInstance().SHOW_CLOSE_BUTTON) {
             insets.right = JBUI.scale(3);
+        }
+
+        JBTabsPosition position = myTabs.getTabsPosition();
+        if (position == JBTabsPosition.left || position == JBTabsPosition.right) {
+            insets.left += JBUI.scale(6);
+            insets.right += JBUI.scale(6);
         }
         return insets;
     }

@@ -3,7 +3,7 @@ package consulo.desktop.awt.wm.impl.content;
 
 import consulo.desktop.awt.ui.impl.tabs.singleRow.MoreTabsIcon;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ui.ex.awt.paint.ToolwindowPaintUtil;
+import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
@@ -281,7 +281,10 @@ class TabContentLayout extends ContentLayout {
                 g2d.fillRect(isIdVisible() ? r.x : r.x, r.y, r.width, r.height);
 
                 if (each.isSelected()) {
-                    ToolwindowPaintUtil.paintUnderlineColor(g2d, r.x, r.y, r.width, r.height, myUi.myWindow.isActive());
+                    TabPainter.paintTabSelection(g2d, r.x, r.y, r.width, r.height);
+                }
+                else {
+                    TabPainter.paintTabHover(g2d, r.x, r.y, r.width, r.height);
                 }
 
                 g2d.dispose();

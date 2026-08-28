@@ -107,7 +107,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
         add(myWestPanel, BorderLayout.CENTER);
 
-        myWestPanel.add(wrapAndFillVertical(toolWindow.getContentUI().getTabComponent()));
+        myWestPanel.add(wrapAndFillVertical(toolWindow.getContentUI().getTabComponent(), 0));
 
         DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
 
@@ -189,7 +189,11 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     
     public static JPanel wrapAndFillVertical(JComponent owner) {
-        JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(5), false, true));
+        return wrapAndFillVertical(owner, 5);
+    }
+
+    public static JPanel wrapAndFillVertical(JComponent owner, int vGap) {
+        JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, JBUI.scale(vGap), false, true));
         panel.add(owner);
         panel.setOpaque(false);
         return panel;

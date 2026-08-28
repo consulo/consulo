@@ -54,6 +54,8 @@ public class ConsuloFlatDefaultsAddon extends FlatDefaultsAddon {
         // disable selecting on focus
         uiDefaults.put("TextComponent.selectAllOnFocusPolicy", "never");
 
+        uiDefaults.put("TabbedPaneUI", FlatTabbedPaneUI2.class.getName());
+
         uiDefaults.put("TreeUI", FlatTreeUIWidePatch.class.getName());
         uiDefaults.put("Tree.wideCellRenderer", true);
 

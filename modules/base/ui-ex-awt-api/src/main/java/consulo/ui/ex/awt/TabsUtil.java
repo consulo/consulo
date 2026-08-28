@@ -17,6 +17,8 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.JBUI;
 
+import javax.swing.*;
+
 /**
  * @author pegov
  */
@@ -33,6 +35,10 @@ public class TabsUtil {
   }
 
   public static int getRealTabsHeight() {
-    return TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2;
+    int height = UIManager.getInt("TabbedPane.tabHeight");
+    if (height <= 0) {
+      return TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2;
+    }
+    return JBUI.scale(height);
   }
 }

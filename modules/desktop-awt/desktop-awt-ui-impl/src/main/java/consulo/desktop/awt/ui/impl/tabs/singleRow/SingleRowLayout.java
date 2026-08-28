@@ -231,8 +231,27 @@ public class SingleRowLayout extends TabLayout {
       return;
     }
     Dimension size = entryPointButton.getPreferredSize();
-    int x = data.layoutSize.width - size.width - 1;
-    int y = data.insets.top + JBTabsImpl.getSelectionTabVShift();
+    int x;
+    int y;
+    switch (myTabs.getTabsPosition()) {
+      case top:
+        x = data.layoutSize.width - size.width - 1;
+        y = data.insets.top + Math.max(0, (myTabs.myHeaderFitSize.height - size.height) / 2);
+        break;
+      case bottom:
+        x = data.layoutSize.width - size.width - 1;
+        y = myTabs.getHeight() - data.insets.bottom - myTabs.myHeaderFitSize.height
+          + Math.max(0, (myTabs.myHeaderFitSize.height - size.height) / 2);
+        break;
+      case left:
+        x = data.insets.left + myTabs.myHeaderFitSize.width - size.width - 1;
+        y = data.insets.top;
+        break;
+      default:
+        x = data.layoutSize.width - size.width - 1;
+        y = data.insets.top;
+        break;
+    }
     myTabs.layout(entryPointButton, x, y, size.width, size.height);
   }
 

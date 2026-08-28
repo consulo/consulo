@@ -334,6 +334,12 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
+    public Dimension getPreferredSize() {
+        Dimension size = super.getPreferredSize();
+        return new Dimension(size.width, TabsUtil.getRealTabsHeight());
+    }
+
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         update();
     }

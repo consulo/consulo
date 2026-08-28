@@ -20,10 +20,10 @@ import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.desktop.awt.ui.impl.tabs.TabLabel;
 import consulo.desktop.awt.ui.impl.tabs.laf.JBEditorTabsUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -36,20 +36,26 @@ public class FlatEditorTabsUI extends IntelliJEditorTabsUI {
 
     @Override
     protected void fillInactiveTab(JBTabsImpl tabs, Graphics2D g2d, TabLabel label, ShapeInfo shape) {
-        Color tabColor = Objects.requireNonNullElse(label.getInfo().getTabColor(), UIUtil.getPanelBackground());
-
-        g2d.setColor(tabColor);
+        g2d.setColor(UIUtil.getPanelBackground());
 
         g2d.fill(shape.fillPath.getShape());
+
+        Rectangle rect = tabPaintRect(tabs, label.getBounds());
+        Color tabColor = label.getInfo().getTabColor();
+
+        if (tabColor != null) {
+            TabPainter.paintTab(g2d, rect.x, rect.y, rect.width, rect.height, tabColor, SwingConstants.TOP, false);
+        }
+        else if (tabs.isPaintFocus() && tabs.isHoveredTab(label)) {
+            TabPainter.paintTabHover(g2d, rect.x, rect.y, rect.width, rect.height, SwingConstants.TOP);
+        }
     }
 
     @Override
     protected void fillActiveTabWithColor(TabLabel label, JBTabsImpl tabs, Graphics2D g2d) {
         ShapeInfo shape = computeLabelShape(tabs, label);
 
-        Color tabColor = Objects.requireNonNullElse(label.getInfo().getTabColor(), UIUtil.getPanelBackground());
-
-        g2d.setColor(tabColor);
+        g2d.setColor(UIUtil.getPanelBackground());
 
         g2d.fill(shape.fillPath.getShape());
     }

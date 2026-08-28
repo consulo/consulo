@@ -226,8 +226,14 @@ final class DesktopStripePanelImpl extends JPanel {
             data.eachX = horizontaloffset - 1;
             data.eachY = 1;
         }
+        else if (data.horizontal) {
+            data.eachX = JBUI.scale(3);
+            data.size.width = data.eachX;
+        }
         else {
             data.eachX = 0;
+            data.eachY = JBUI.scale(3);
+            data.size.height = data.eachY;
         }
 
         data.fitSize = toFitWith != null ? toFitWith : new Dimension();

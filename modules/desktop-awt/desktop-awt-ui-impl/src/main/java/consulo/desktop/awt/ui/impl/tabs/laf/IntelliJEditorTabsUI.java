@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.impl.tabs.laf;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.desktop.awt.ui.impl.tabs.ShapeTransform;
 import consulo.desktop.awt.ui.impl.tabs.TabLabel;
-import consulo.ui.ex.awt.paint.ToolwindowPaintUtil;
+import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 import consulo.desktop.awt.ui.impl.tabs.laf.JBEditorTabsUI;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.LinePainter2D;
-import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -183,13 +182,13 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
                 }
             }
 
-            tabLineRunner.run();
-
             if (!tabs.isStealthModeEffective() && !tabs.isHideTabs()) {
                 paintNonSelectedTabs(tabs, g2d);
             }
 
             doPaintActive(tabs, (Graphics2D) g);
+
+            tabLineRunner.run();
 
             TabLabel selectedLabel = tabs.getSelectedLabel();
             if (selected != null) {
@@ -293,11 +292,29 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
         int finalMaxLength = maxLength;
         return () -> {
-            if (tabs.getPosition() == JBTabsPosition.top) {
-                g2d.setColor(JBColor.border());
+            g2d.setColor(JBColor.border());
 
-                int borderHeight = finalMaxLength - tabs.getTabBorderSize();
-                LinePainter2D.paint(g2d, rect.x, borderHeight, rect.x + rect.getWidth(), borderHeight);
+            switch (tabs.getPosition()) {
+                case top: {
+                    int borderHeight = finalMaxLength - tabs.getTabBorderSize();
+                    LinePainter2D.paint(g2d, rect.x, borderHeight, rect.x + rect.getWidth(), borderHeight);
+                    break;
+                }
+                case bottom: {
+                    int borderY = rect.height - finalMaxLength;
+                    LinePainter2D.paint(g2d, rect.x, borderY, rect.x + rect.getWidth(), borderY);
+                    break;
+                }
+                case left: {
+                    int borderX = finalMaxLength - tabs.getTabBorderSize();
+                    LinePainter2D.paint(g2d, borderX, rect.y, borderX, rect.y + rect.getHeight());
+                    break;
+                }
+                case right: {
+                    int borderX = rect.width - finalMaxLength;
+                    LinePainter2D.paint(g2d, borderX, rect.y, borderX, rect.y + rect.getHeight());
+                    break;
+                }
             }
         };
     }
@@ -363,43 +380,30 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
             return;
         }
 
+        Color tabColor = tabs.getSelectedInfo().getTabColor();
+
+        Rectangle paintRect = tabPaintRect(tabs, rect);
+
+        // JBTabs labels stay horizontal in every position, so tab insets are never rotated
+        TabPainter.paintTabSelection(g2d, paintRect.x, paintRect.y, paintRect.width, paintRect.height, tabColor, SwingConstants.TOP);
+    }
+
+    protected static Rectangle tabPaintRect(JBTabsImpl tabs, Rectangle rect) {
+        int gap = JBUI.scale(4);
         switch (tabs.getTabsPosition()) {
-            case top:
-                ToolwindowPaintUtil.paintUnderlineColor(g2d, rect.x, rect.y, rect.width, rect.height, tabs.holdsFocus());
-                break;
             case left:
-                Color color = tabs.holdsFocus() ? getFocusColor() : getInactiveFocusColor();
-                int underlineSize = JBUI.scale(3);
-                g2d.setColor(color);
-                RectanglePainter2D.FILL.paint(g2d, rect.x + rect.width - underlineSize, rect.y, underlineSize, rect.height);
-                break;
+                return new Rectangle(rect.x, rect.y, rect.width - gap, rect.height);
+            case right:
+                return new Rectangle(rect.x + gap, rect.y, rect.width - gap, rect.height);
+            default:
+                return rect;
         }
-    }
-
-    private Color getInactiveFocusColor() {
-        Color color = UIManager.getColor("TabbedPane.inactiveUnderlineColor");
-        if (color == null) {
-            return JBColor.border();
-        }
-        return color;
-    }
-
-    public static Color getFocusColor() {
-        return ToolwindowPaintUtil.getFocusColor();
     }
 
     protected void doPaintInactive(JBTabsImpl tabs, Graphics2D g2d, TabLabel label) {
-        Rectangle rect = label.getBounds();
-
         ShapeInfo shape = computeLabelShape(tabs, label);
 
         fillInactiveTab(tabs, g2d, label, shape);
-
-        if (tabs.getTabsPosition() == JBTabsPosition.top) {
-            g2d.setColor(JBColor.border());
-
-            LinePainter2D.paint(g2d, rect.x, rect.y + rect.height - JBUI.scale(1), rect.x + rect.width, rect.y + rect.height - JBUI.scale(1));
-        }
     }
 
     protected void fillInactiveTab(JBTabsImpl tabs, Graphics2D g2d, TabLabel label, ShapeInfo shape) {

@@ -122,6 +122,8 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             }
         });
         myTabs.setTransferHandler(new MyTransferHandler());
+        myTabs.setFirstTabOffset(3);
+
         myTabs.setDataProvider(new MyDataProvider())
             .setPopupGroup(
                 () -> (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP),
@@ -131,7 +133,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .addTabMouseListener(new TabMouseListener())
             .getPresentation()
             .setTabDraggingEnabled(true)
-            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 8)))
+            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 6)))
             .setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
             .setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()))
             .setPaintFocus(true)
