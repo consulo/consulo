@@ -36,6 +36,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -56,8 +57,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Project service driving the navigation bar models: IDE activity events are merged through
  * a {@link MergingUpdateQueue} ({@link NavBarUi#DEFAULT_UI_RESPONSE_TIMEOUT} merging span),
- * each update recomputes the context model from the focused component, and an epoch counter
- * guarantees that only the latest update is applied.
+ * each update recomputes the context model from the focused component, and a per-panel epoch
+ * counter guarantees that only the latest computed update is applied. The epoch is claimed
+ * only once an update has obtained a data context - a pass that finds nothing to compute
+ * (window unfocused, focus inside the bar) must not invalidate an in-flight computation,
+ * otherwise the freshest model is silently lost and the bar keeps stale state.
  */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -69,12 +73,14 @@ public final class NavBarUIController implements Disposable {
         return myProject.getInstance(NavBarUIController.class);
     }
 
+    private record PanelState(Window window, AtomicInteger updateEpoch) {
+    }
+
     private final Project myProject;
     private final MergingUpdateQueue myUpdateQueue;
-    private final AtomicInteger myUpdateEpoch = new AtomicInteger();
 
     // EDT only
-    private final Map<StaticNavBarPanel, Window> myPanels = new LinkedHashMap<>();
+    private final Map<StaticNavBarPanel, PanelState> myPanels = new LinkedHashMap<>();
 
     // floating bar job analogue
     private @Nullable LightweightHintImpl myFloatingHint;
@@ -130,7 +136,7 @@ public final class NavBarUIController implements Disposable {
 
     @RequiredUIAccess
     public void attach(StaticNavBarPanel panel, Window window) {
-        myPanels.put(panel, window);
+        myPanels.put(panel, new PanelState(window, new AtomicInteger()));
         UIAccess uiAccess = UIAccess.current();
         myNavBarService.defaultModel().whenCompleteAsync((item, throwable) -> {
             if (throwable != null || item == null) {
@@ -222,28 +228,25 @@ public final class NavBarUIController implements Disposable {
         if (myPanels.isEmpty()) {
             return;
         }
-        int epoch = myUpdateEpoch.incrementAndGet();
-        for (Map.Entry<StaticNavBarPanel, Window> entry : new ArrayList<>(myPanels.entrySet())) {
-            updatePanelModel(entry.getKey(), entry.getValue(), epoch);
+        for (Map.Entry<StaticNavBarPanel, PanelState> entry : new ArrayList<>(myPanels.entrySet())) {
+            updatePanelModel(entry.getKey(), entry.getValue());
         }
     }
 
     @RequiredUIAccess
-    private void updatePanelModel(StaticNavBarPanel panel, Window window, int epoch) {
+    private void updatePanelModel(StaticNavBarPanel panel, PanelState state) {
         UIAccess uiAccess = UIAccess.current();
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-            if (epoch != myUpdateEpoch.get()) {
-                return;
-            }
             if (!(panel.getModel() instanceof NavBarVmImpl vm)) {
                 return;
             }
-            DataContext ctx = dataContext(window, panel);
+            DataContext ctx = dataContext(state.window(), panel);
             if (ctx == null) {
                 return;
             }
+            int epoch = state.updateEpoch().incrementAndGet();
             contextModel(ctx).whenCompleteAsync((items, throwable) -> {
-                if (epoch != myUpdateEpoch.get()) {
+                if (epoch != state.updateEpoch().get()) {
                     return;
                 }
                 if (throwable != null || items == null) {
@@ -285,6 +288,8 @@ public final class NavBarUIController implements Disposable {
             // ignore updates while panel or one of its children has focus
             return null;
         }
-        return DataManager.getInstance().getDataContext(focusedComponentInWindow);
+        DataContext dataContext = DataManager.getInstance().getDataContext(focusedComponentInWindow);
+        DataContext uiSnapshot = DataManager.getInstance().createAsyncDataContext(dataContext);
+        return AnActionEvent.getInjectedDataContext(uiSnapshot);
     }
 }
