@@ -304,7 +304,10 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
         FlatDataModel<Object> stepModel = step.getModel();
         if (stepModel != null) {
-            Disposer.register(this, stepModel.addListener(event -> myListModel.syncModel()));
+            Disposer.register(this, stepModel.addListener(event -> {
+                myListModel.syncModel();
+                myList.setVisibleRowCount(Math.min(myMaxRowCount, myListModel.getSize()));
+            }));
         }
 
         myList = new MyList();
