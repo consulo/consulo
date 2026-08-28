@@ -16,15 +16,14 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.ui.ColorBox;
+import consulo.ui.ColorPickerBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.localize.UILocalize;
 import io.qt.core.Qt;
-import io.qt.gui.QColor;
 import io.qt.gui.QCursor;
-import io.qt.widgets.QColorDialog;
 import io.qt.widgets.QPushButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
@@ -108,20 +107,15 @@ public class DesktopQtColorBoxImpl extends QtComponentDelegate<QPushButton> impl
             return;
         }
 
-        QColor current = myValue == null ? new QColor(255, 255, 255) : TargetQt.to(myValue);
-
-        QColor selected = QColorDialog.getColor(
-            current,
-            myComponent.window(),
-            UILocalize.colorPanelSelectColorDialogDescription().get()
-        );
-
-        // the dialog answers an invalid colour when it was cancelled, and the value has to stay as it was
-        if (selected == null || !selected.isValid()) {
-            return;
-        }
-
-        setValue(new RGBColor(selected.red(), selected.green(), selected.blue(), selected.alpha()), true);
+        ColorPickerBuilder.create()
+            .withTitle(UILocalize.colorPanelSelectColorDialogDescription())
+            .withColor(myValue == null ? new RGBColor(255, 255, 255) : myValue)
+            .showAsync(this)
+            .whenComplete((color, throwable) -> {
+                if (color != null) {
+                    setValue(color, true);
+                }
+            });
     }
 
     @Override

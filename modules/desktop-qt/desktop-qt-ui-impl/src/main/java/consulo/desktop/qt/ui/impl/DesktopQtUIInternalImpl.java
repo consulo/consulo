@@ -109,6 +109,11 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public ColorPickerBuilder _ColorPicker_create() {
+        return new DesktopQtColorPickerBuilderImpl();
+    }
+
+    @Override
     public <T> Table<T> _Table_create(FlatDataModel<T> model) {
         return new DesktopQtTableImpl<>(model);
     }

@@ -15,12 +15,14 @@
  */
 package consulo.desktop.awt.ui.impl.components;
 
-import consulo.ui.ex.awt.ColorChooser;
+import consulo.ui.ColorPickerBuilder;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.RelativeFont;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import consulo.ui.ex.localize.UILocalize;
 import org.jspecify.annotations.Nullable;
@@ -66,22 +68,26 @@ public class ColorPanel extends JComponent {
 
   public void onPressed() {
     if (myEditable && isEnabled()) {
-      ColorChooser.chooseColor(this, UILocalize.colorPanelSelectColorDialogDescription(), myColor, color -> {
-        if (color != null) {
-          setSelectedColor(color);
-          if (!myListeners.isEmpty() && (myEvent == null)) {
-            try {
-              myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "colorPanelChanged");
-              for (ActionListener listener : myListeners) {
-                listener.actionPerformed(myEvent);
+      ColorPickerBuilder.create()
+        .withTitle(UILocalize.colorPanelSelectColorDialogDescription())
+        .withColor(TargetAWT.from(myColor))
+        .showAsync(TargetAWT.from(UIUtil.getWindow(this)))
+        .whenComplete((color, throwable) -> {
+          if (color != null) {
+            setSelectedColor(TargetAWT.to(color));
+            if (!myListeners.isEmpty() && (myEvent == null)) {
+              try {
+                myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "colorPanelChanged");
+                for (ActionListener listener : myListeners) {
+                  listener.actionPerformed(myEvent);
+                }
+              }
+              finally {
+                myEvent = null;
               }
             }
-            finally {
-              myEvent = null;
-            }
           }
-        }
-      });
+        });
     }
   }
 

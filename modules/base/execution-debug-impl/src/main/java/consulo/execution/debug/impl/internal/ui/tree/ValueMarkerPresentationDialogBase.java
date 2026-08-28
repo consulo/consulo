@@ -17,13 +17,15 @@ package consulo.execution.debug.impl.internal.ui.tree;
 
 import consulo.execution.debug.ui.ValueMarkup;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.awt.ColorChooser;
+import consulo.ui.ColorPickerBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FixedSizeButton;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import org.jspecify.annotations.Nullable;
 import javax.swing.*;
@@ -57,12 +59,16 @@ public abstract class ValueMarkerPresentationDialogBase extends DialogWrapper {
     myChooseColorButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ColorChooser.chooseColor(myColorSample, LocalizeValue.localizeTODO("Choose Label Color"), myColor, color -> {
-          if (color != null) {
-            myColor = color;
-            updateLabelSample();
-          }
-        });
+        ColorPickerBuilder.create()
+          .withTitle(LocalizeValue.localizeTODO("Choose Label Color"))
+          .withColor(TargetAWT.from(myColor))
+          .showAsync(TargetAWT.from(UIUtil.getWindow(myColorSample)))
+          .whenComplete((color, throwable) -> {
+            if (color != null) {
+              myColor = TargetAWT.to(color);
+              updateLabelSample();
+            }
+          });
       }
     });
     myColor = DEFAULT_COLOR;

@@ -15,13 +15,13 @@
  */
 package consulo.ui;
 
-import consulo.ui.internal.UIInternal;
 import consulo.ui.color.ColorValue;
-
+import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
+ * @see ColorPickerBuilder
  * @since 2018-06-09
  */
 public interface ColorBox extends ValueComponent<ColorValue> {

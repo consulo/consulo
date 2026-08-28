@@ -242,6 +242,11 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
+    public ColorPickerBuilder _ColorPicker_create() {
+        return new WebColorPickerBuilderImpl();
+    }
+
+    @Override
     public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
         return new WebTreeImpl<>(rootValue, model, disposable);
     }

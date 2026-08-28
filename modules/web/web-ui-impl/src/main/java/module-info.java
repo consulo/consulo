@@ -18,6 +18,7 @@ module consulo.web.ui.impl {
     requires consulo.application.impl;
     requires consulo.application.ui.api;
     requires consulo.application.ui.impl;
+    requires consulo.base.localize.library;
     requires consulo.color.scheme.api;
     requires consulo.component.api;
     requires consulo.component.store.impl;

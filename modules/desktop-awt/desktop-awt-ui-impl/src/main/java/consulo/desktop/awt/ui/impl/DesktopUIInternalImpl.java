@@ -41,6 +41,7 @@ import consulo.ui.Menu;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.Window;
+import consulo.desktop.awt.ui.impl.color.DesktopAWTColorPickerBuilder;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -424,6 +425,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     @Override
     public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
         return new DesktopColorBoxImpl(colorValue);
+    }
+
+    @Override
+    public ColorPickerBuilder _ColorPicker_create() {
+        return new DesktopAWTColorPickerBuilder();
     }
 
     @Override

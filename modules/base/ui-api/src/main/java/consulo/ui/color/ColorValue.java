@@ -42,6 +42,10 @@ public interface ColorValue {
 
     RGBColor toRGB();
 
+    default HSLColor toHSL() {
+        return HSLColor.fromRGB(toRGB());
+    }
+
     default ColorValue withAlpha(float value) {
         return new WithAlphaColorValue(this, (int) (value * 255 + 0.5f));
     }

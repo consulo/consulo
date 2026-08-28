@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.uiOld;
+package consulo.desktop.awt.ui.impl.color;
 
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.logging.Logger;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.WindowManager;
@@ -61,6 +62,8 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         void colorChanged(Color color, Object source);
     }
 
+    private static final Logger LOG = Logger.getInstance(DesktopColorPicker.class);
+
     private static final String COLOR_CHOOSER_COLORS_KEY = "ColorChooser.RecentColors";
     private static final String HSB_PROPERTY = "color.picker.is.hsb";
 
@@ -85,12 +88,15 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
     private final JLabel myB_after = new JLabel("");
     private final JComboBox<String> myFormat = new JComboBox<>(new String[]{"RGB", "HSB"});
 
+    private @Nullable Consumer<Color> myColorConsumer;
+
     private DesktopColorPicker(
         Disposable parent,
         @Nullable Color color,
         boolean restoreColors,
         boolean enableOpacity,
-        boolean opacityInPercent
+        boolean opacityInPercent,
+        boolean enablePipette
     ) {
         super(new BorderLayout());
         myUpdateQueue = new Alarm(Alarm.ThreadToUse.SWING_THREAD, parent);
@@ -104,7 +110,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         myColorWheelPanel = new ColorWheelPanel(this::colorChanged, enableOpacity, myOpacityInPercent);
 
         myFormat.addActionListener(e -> {
-            PropertiesComponent.getInstance().setValue(HSB_PROPERTY, String.valueOf(!isRGBMode()));
+            ApplicationPropertiesComponent.getInstance().setValue(HSB_PROPERTY, String.valueOf(!isRGBMode()));
             myR.setText(isRGBMode() ? "R:" : "H:");
             myG.setText(isRGBMode() ? "G:" : "S:");
             myR_after.setText(isRGBMode() ? "" : "\u00B0");
@@ -117,12 +123,14 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         myPicker = new ColorPipette(this, getColor());
         myPicker.setListener(this::setColor);
         try {
-            add(buildTopPanel(true), BorderLayout.NORTH);
+            add(buildTopPanel(enablePipette), BorderLayout.NORTH);
             add(myColorWheelPanel, BorderLayout.CENTER);
 
             myRecentColorsComponent = new RecentColorsComponent(this::setColor, restoreColors);
 
-            add(myRecentColorsComponent, BorderLayout.SOUTH);
+            if (restoreColors) {
+                add(myRecentColorsComponent, BorderLayout.SOUTH);
+            }
         }
         catch (ParseException ignore) {
         }
@@ -135,7 +143,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
         setSize(JBUI.size(300, 350));
 
-        boolean hsb = PropertiesComponent.getInstance().getBoolean(HSB_PROPERTY, false);
+        boolean hsb = ApplicationPropertiesComponent.getInstance().getBoolean(HSB_PROPERTY, false);
         if (hsb) {
             myFormat.setSelectedIndex(1);
         }
@@ -243,7 +251,15 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
                 applyColorToHEX(color);
             }
             myPreviewComponent.setColor(color);
+
+            if (myColorConsumer != null) {
+                myColorConsumer.accept(color);
+            }
         }
+    }
+
+    public void setColorConsumer(@Nullable Consumer<Color> colorConsumer) {
+        myColorConsumer = colorConsumer;
     }
 
     private @Nullable Color gatherRGB() {
@@ -283,27 +299,6 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         else {
             applyColorToHSB(color);
         }
-    }
-
-    public static void showDialog(
-        Component parent,
-        String caption,
-        Color preselectedColor,
-        boolean enableOpacity,
-        boolean opacityInPercent,
-        Consumer<Color> colorConsumer
-    ) {
-        ColorPickerDialog dialog = new ColorPickerDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent);
-        SwingUtilities.invokeLater(() -> {
-            dialog.show();
-
-            if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-                colorConsumer.accept(dialog.getColor());
-            }
-            else {
-                colorConsumer.accept(null);
-            }
-        });
     }
 
     private JComponent buildTopPanel(boolean enablePipette) throws ParseException {
@@ -726,7 +721,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         }
 
         private void restoreColors() {
-            String value = PropertiesComponent.getInstance().getValue(COLOR_CHOOSER_COLORS_KEY);
+            String value = ApplicationPropertiesComponent.getInstance().getValue(COLOR_CHOOSER_COLORS_KEY);
             if (value != null) {
                 List<String> colors = StringUtil.split(value, ",,,");
                 for (String color : colors) {
@@ -791,7 +786,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
                 ));
             }
 
-            PropertiesComponent.getInstance().setValue(COLOR_CHOOSER_COLORS_KEY, StringUtil.join(values, ",,,"));
+            ApplicationPropertiesComponent.getInstance().setValue(COLOR_CHOOSER_COLORS_KEY, StringUtil.join(values, ",,,"));
         }
 
         public void appendColor(Color c) {
@@ -888,19 +883,25 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         private final boolean myEnableOpacity;
         private ColorPipette myPicker;
         private final boolean myOpacityInPercent;
+        private final boolean myRestoreColors;
+        private final boolean myEnablePipette;
 
         public ColorPickerDialog(
-            Component parent,
+            @Nullable Component parent,
             String caption,
             @Nullable Color preselectedColor,
             boolean enableOpacity,
-            boolean opacityInPercent
+            boolean opacityInPercent,
+            boolean restoreColors,
+            boolean enablePipette
         ) {
             super(parent, true);
             setTitle(caption);
             myPreselectedColor = preselectedColor;
             myEnableOpacity = enableOpacity;
             myOpacityInPercent = opacityInPercent;
+            myRestoreColors = restoreColors;
+            myEnablePipette = enablePipette;
             setResizable(false);
             setOKButtonText("Choose");
             init();
@@ -921,7 +922,14 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         @Override
         protected JComponent createCenterPanel() {
             if (myColorPicker == null) {
-                myColorPicker = new DesktopColorPicker(myDisposable, myPreselectedColor, true, myEnableOpacity, myOpacityInPercent);
+                myColorPicker = new DesktopColorPicker(
+                    myDisposable,
+                    myPreselectedColor,
+                    myRestoreColors,
+                    myEnableOpacity,
+                    myOpacityInPercent,
+                    myEnablePipette
+                );
             }
 
             return myColorPicker;
@@ -929,6 +937,10 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
         public Color getColor() {
             return myColorPicker.getColor();
+        }
+
+        public void setColorConsumer(@Nullable Consumer<Color> colorConsumer) {
+            myColorPicker.setColorConsumer(colorConsumer);
         }
 
         @Override
@@ -1026,7 +1038,8 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
         private Point myPoint = new Point();
         private Point myPickOffset;
-        private Robot myRobot = null;
+        private static @Nullable Robot ourRobot;
+        private static boolean ourRobotUnavailable;
         private Color myPreviousColor;
         private Point myPreviousLocation;
         private Rectangle myCaptureRect;
@@ -1045,13 +1058,27 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         private ColorPipette(JComponent parent, Color oldColor) {
             myParent = parent;
             myOldColor = oldColor;
+        }
 
-            try {
-                myRobot = new Robot();
+        private @Nullable Robot getRobot() {
+            if (ourRobot == null && !ourRobotUnavailable) {
+                try {
+                    ourRobot = new Robot();
+                }
+                catch (AWTException e) {
+                    ourRobotUnavailable = true;
+                    LOG.error("Screen color sampling is not available", e);
+                }
             }
-            catch (AWTException e) {
-                // should not happen
-            }
+
+            return ourRobot;
+        }
+
+        private void disableCapture(SecurityException e) {
+            ourRobotUnavailable = true;
+            ourRobot = null;
+            LOG.warn("Screen color sampling was not allowed, disabling pipette", e);
+            cancelPipette();
         }
 
         public void setListener(ColorListener colorListener) {
@@ -1059,6 +1086,10 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         }
 
         public void pick() {
+            if (ourRobotUnavailable) {
+                return;
+            }
+
             Dialog picker = getPicker();
             picker.setVisible(true);
             myTimer.start();
@@ -1198,9 +1229,24 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         }
 
         public void pickDone() {
+            Robot robot = getRobot();
+            if (robot == null) {
+                cancelPipette();
+                return;
+            }
+
             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
             Point location = pointerInfo.getLocation();
-            Color pixelColor = myRobot.getPixelColor(location.x + myPickOffset.x, location.y + myPickOffset.y);
+
+            Color pixelColor;
+            try {
+                pixelColor = robot.getPixelColor(location.x + myPickOffset.x, location.y + myPickOffset.y);
+            }
+            catch (SecurityException e) {
+                disableCapture(e);
+                return;
+            }
+
             cancelPipette();
             if (myColorListener != null) {
                 myColorListener.colorChanged(pixelColor, this);
@@ -1217,14 +1263,35 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
                 myPoint.x = mouseLoc.x + myPickOffset.x;
                 myPoint.y = mouseLoc.y + myPickOffset.y;
 
-                Color c = myRobot.getPixelColor(myPoint.x, myPoint.y);
+                Robot robot = getRobot();
+                if (robot == null) {
+                    cancelPipette();
+                    return;
+                }
+
+                Color c;
+                try {
+                    c = robot.getPixelColor(myPoint.x, myPoint.y);
+                }
+                catch (SecurityException e) {
+                    disableCapture(e);
+                    return;
+                }
+
                 if (!c.equals(myPreviousColor) || !mouseLoc.equals(myPreviousLocation)) {
                     myPreviousColor = c;
                     myPreviousLocation = mouseLoc;
                     myCaptureRect.setLocation(mouseLoc.x - 2/*+ myCaptureOffset.x*/, mouseLoc.y - 2/*+ myCaptureOffset.y*/);
                     myCaptureRect.setBounds(mouseLoc.x - 2, mouseLoc.y - 2, 5, 5);
 
-                    BufferedImage capture = myRobot.createScreenCapture(myCaptureRect);
+                    BufferedImage capture;
+                    try {
+                        capture = robot.createScreenCapture(myCaptureRect);
+                    }
+                    catch (SecurityException e) {
+                        disableCapture(e);
+                        return;
+                    }
 
                     // Clear the cursor graphics
                     myGraphics.setComposite(AlphaComposite.Src);
@@ -1263,14 +1330,9 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         //}
 
         public static boolean isAvailable() {
-            try {
-                Robot robot = new Robot();
-                robot.createScreenCapture(new Rectangle(0, 0, 1, 1));
-                return WindowManager.getInstance().isAlphaModeSupported();
-            }
-            catch (AWTException e) {
-                return false;
-            }
+            return !GraphicsEnvironment.isHeadless()
+                && !ourRobotUnavailable
+                && WindowManager.getInstance().isAlphaModeSupported();
         }
     }
 }

@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.uiOld;
+package consulo.desktop.awt.ui.impl.color;
 
-import consulo.ide.impl.idea.ui.LightweightHintImpl;
+import consulo.application.Application;
+import consulo.ui.ex.awt.hint.LightweightHint;
+import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.RelativePoint;
@@ -42,7 +44,7 @@ class SlideComponent extends JComponent {
     private final String myTitle;
 
     private final List<Consumer<Integer>> myListeners = Lists.newLockFreeCopyOnWriteList();
-    private LightweightHintImpl myTooltipHint;
+    private LightweightHint myTooltipHint;
     private final JLabel myLabel = new JLabel();
     private Unit myUnit = Unit.LEVEL;
 
@@ -133,7 +135,7 @@ class SlideComponent extends JComponent {
         Point point = myVertical ? new Point(0, myPointerValue) : new Point(myPointerValue, 0);
         myLabel.setText(myTitle + ": " + Unit.formatValue(myValue, myUnit));
         if (myTooltipHint == null) {
-            myTooltipHint = new LightweightHintImpl(myLabel);
+            myTooltipHint = Application.get().getInstance(LightweightHintFactory.class).create(myLabel);
             myTooltipHint.setCancelOnClickOutside(false);
             myTooltipHint.setCancelOnOtherWindowOpen(false);
 

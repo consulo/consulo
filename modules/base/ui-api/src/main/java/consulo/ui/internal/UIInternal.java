@@ -340,4 +340,8 @@ public abstract class UIInternal {
     public DatePicker _Components_datePicker(@Nullable String datePattern) {
         throw new UnsupportedOperationException();
     }
+
+    public ColorPickerBuilder _ColorPicker_create() {
+        throw new UnsupportedOperationException();
+    }
 }

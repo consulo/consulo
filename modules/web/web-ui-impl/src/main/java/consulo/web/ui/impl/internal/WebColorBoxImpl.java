@@ -16,12 +16,10 @@
 package consulo.web.ui.impl.internal;
 
 import com.vaadin.flow.component.dependency.StyleSheet;
-import consulo.logging.Logger;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
@@ -33,8 +31,6 @@ import org.vaadin.addons.tatu.ColorPicker;
  * @since 2026-08-16
  */
 public class WebColorBoxImpl extends VaadinComponentDelegate<WebColorBoxImpl.Vaadin> implements ColorBox {
-    private static final Logger LOG = Logger.getInstance(WebColorBoxImpl.class);
-
     @StyleSheet("/colorBox/webColorBox.css")
     public class Vaadin extends ColorPicker implements FromVaadinComponentWrapper {
         @Override
@@ -56,7 +52,7 @@ public class WebColorBoxImpl extends VaadinComponentDelegate<WebColorBoxImpl.Vaa
         setValue(colorValue, false);
 
         vaadin.addValueChangeListener(event -> {
-            myValue = toColorValue(event.getValue());
+            myValue = WebColors.fromCssColor(event.getValue());
 
             getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, myValue));
         });
@@ -82,24 +78,6 @@ public class WebColorBoxImpl extends VaadinComponentDelegate<WebColorBoxImpl.Vaa
 
         if (fireListeners) {
             getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, value));
-        }
-    }
-
-    /**
-     * The component answers the colour of its swatch as css, and only a hex one is a colour the platform can
-     * hold - a named or a function one has no {@link RGBColor} to decode into.
-     */
-    private static @Nullable ColorValue toColorValue(@Nullable String cssColor) {
-        if (cssColor == null || cssColor.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return RGBColor.decode(cssColor);
-        }
-        catch (NumberFormatException e) {
-            LOG.warn("Cannot read color: " + cssColor);
-            return null;
         }
     }
 
