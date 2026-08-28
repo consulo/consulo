@@ -47,6 +47,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.event.details.ProgrammaticInputDetails;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.JBUIScale;
@@ -439,8 +440,17 @@ public class DesktopUIInternalImpl extends UIInternal {
         Dimension size = icon.getPreferredSize();
         icon.setSize(size);
 
+        // the anchor of an event and the component its details were measured against are not always the same one -
+        // a gutter click travels with the editor component - so only the screen position places the icon reliably
         InputDetails details = anchor.getInputDetails();
-        Point point = SwingUtilities.convertPoint(component, details.getX(), details.getY(), glassPane);
+        Point point;
+        if (details instanceof ProgrammaticInputDetails) {
+            point = SwingUtilities.convertPoint(component, 0, 0, glassPane);
+        }
+        else {
+            point = new Point(details.getXOnScreen(), details.getYOnScreen());
+            SwingUtilities.convertPointFromScreen(point, glassPane);
+        }
         icon.setLocation(point.x - size.width / 2, point.y - size.height / 2);
 
         // the default glass pane sits invisible until something needs it, and goes back once the
