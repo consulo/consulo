@@ -2881,7 +2881,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
         boolean overText = inlayCandidate == null &&
             (foldRegionCandidate == null || foldRegion != null) &&
             offsetToLogicalPosition(offset).equals(logicalPosition);
-        InputDetails inputDetails = DesktopAWTInputDetails.convert(myEditorComponent, e);
+        InputDetails inputDetails = DesktopAWTInputDetails.convert(myPanel, e);
         return new EditorMouseEvent(this, e, inputDetails, e.isPopupTrigger(), area, offset, logicalPosition, visualPosition,
             overText, foldRegion, inlay, gutterIconRenderer);
     }

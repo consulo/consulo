@@ -105,17 +105,23 @@ public class DesktopAWTInputDetails {
 
             EnumSet<MouseInputDetails.Modifier> enumModifiers = modifiers.isEmpty() ? EnumSet.noneOf(ModifiedInputDetails.Modifier.class) : EnumSet.copyOf(modifiers);
 
-            if (event instanceof MouseEvent mouseEvent) {
+            if (event instanceof MouseEvent sourceEvent) {
                 MouseInputDetails.MouseButton button = MouseInputDetails.MouseButton.LEFT;
-                if (mouseEvent.getButton() == MouseEvent.BUTTON2) {
+                if (sourceEvent.getButton() == MouseEvent.BUTTON2) {
                     button = MouseInputDetails.MouseButton.MIDDLE;
                 }
-                else if (mouseEvent.getButton() == MouseEvent.BUTTON3) {
+                else if (sourceEvent.getButton() == MouseEvent.BUTTON3) {
                     button = MouseInputDetails.MouseButton.RIGHT;
                 }
 
-                Point2D relative = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
-                Point2D absolute = new Point2D(((MouseEvent) event).getXOnScreen(), ((MouseEvent) event).getYOnScreen());
+                MouseEvent mouseEvent = sourceEvent;
+                Component source = sourceEvent.getComponent();
+                if (source != null && source != awtComponent) {
+                    mouseEvent = SwingUtilities.convertMouseEvent(source, sourceEvent, awtComponent);
+                }
+
+                Point2D relative = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+                Point2D absolute = new Point2D(mouseEvent.getXOnScreen(), mouseEvent.getYOnScreen());
 
                 return new MouseInputDetails(relative, absolute, enumModifiers, button);
             }
