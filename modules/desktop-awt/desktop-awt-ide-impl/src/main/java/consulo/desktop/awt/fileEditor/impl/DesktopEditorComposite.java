@@ -45,7 +45,6 @@ import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
@@ -182,7 +181,6 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
             new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
         TabFactoryBuilderImpl.AsJBTabs wrapper =
             new TabFactoryBuilderImpl.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
-        wrapper.getTabs().getPresentation().setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(0, 8)));
         wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
 
         boolean firstEditor = true;

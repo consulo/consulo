@@ -2349,7 +2349,7 @@ public abstract class JBTabsImpl extends JComponent
     private static class DefaultDecorator implements UiDecorator {
         @Override
         public UiDecoration getDecoration() {
-            return new UiDecoration(null, JBUI.insets(0, 4, 0, 5));
+            return new UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 12));
         }
     }
 

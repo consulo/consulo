@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import consulo.ui.ex.awt.TabsUtil;
 import consulo.desktop.awt.ui.impl.tabs.JBEditorTabs;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.localize.LocalizeValue;
@@ -134,7 +133,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .addTabMouseListener(new TabMouseListener())
             .getPresentation()
             .setTabDraggingEnabled(true)
-            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 12)))
             .setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
             .setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()))
             .setPaintFocus(true)
