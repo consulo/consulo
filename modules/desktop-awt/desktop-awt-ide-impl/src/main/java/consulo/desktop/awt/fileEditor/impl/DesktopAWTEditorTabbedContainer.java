@@ -56,8 +56,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.UIAction;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tab.*;
@@ -110,6 +112,15 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         if (entryPointGroup instanceof ActionGroup actionGroup) {
             myTabs.setEntryPointActionGroup(actionGroup);
         }
+        myTabs.setBorder(new CustomLineBorder(JBColor.border(), 1, 0, 0, 0) {
+            @Override
+            public Insets getBorderInsets(Component c) {
+                if (myTabs.getPresentation().isHideTabs()) {
+                    return super.getBorderInsets(c);
+                }
+                return JBUI.emptyInsets();
+            }
+        });
         myTabs.setTransferHandler(new MyTransferHandler());
         myTabs.setDataProvider(new MyDataProvider())
             .setPopupGroup(
