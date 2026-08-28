@@ -52,4 +52,7 @@ module consulo.web.editor.impl {
         consulo.web.ide;
     exports consulo.web.editor.impl.internal.gutter to
         consulo.web.ide;
+
+    opens consulo.web.editor.impl.internal to
+        flow.server;
 }

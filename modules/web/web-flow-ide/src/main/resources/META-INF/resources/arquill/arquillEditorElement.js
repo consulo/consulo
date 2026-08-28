@@ -747,6 +747,23 @@
         let annotationTooltipHtml = null;
         let annotationTooltipPoint = null;
 
+        const gutterClickDetail = (id, domEvent) => {
+            const hostRect = element.getBoundingClientRect();
+
+            return {
+                id: id,
+                x: Math.round(domEvent.clientX - hostRect.left),
+                y: Math.round(domEvent.clientY - hostRect.top),
+                screenX: Math.round(domEvent.screenX),
+                screenY: Math.round(domEvent.screenY),
+                button: domEvent.button,
+                alt: domEvent.altKey,
+                ctrl: domEvent.ctrlKey,
+                shift: domEvent.shiftKey,
+                meta: domEvent.metaKey
+            };
+        };
+
         // the icon takes the whole width of the line number column and is painted on the gutter background, which
         // is how it hides the number underneath - the awt gutter simply leaves that number undrawn
         const renderLineNumberMarks = marks => {
@@ -802,7 +819,7 @@
                     // that is already there, and its own action is what a click on it means
                     domEvent.stopPropagation();
                     hideTooltip();
-                    element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: { id: mark.id } }));
+                    element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: gutterClickDetail(mark.id, domEvent) }));
                 });
 
                 lineNumberGutter.appendChild(icon);
@@ -951,9 +968,9 @@
                     MARK_GAP,
                     (iconColumnWidth - countPerLine[mark.line] * slot) / 2 + column * slot + MARK_GAP
                 ) + 'px';
-                icon.addEventListener('click', () => {
+                icon.addEventListener('click', domEvent => {
                     hideTooltip();
-                    element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: { id: mark.id } }));
+                    element.dispatchEvent(new CustomEvent('arquill-gutter-click', { detail: gutterClickDetail(mark.id, domEvent) }));
                 });
                 gutter.appendChild(icon);
             }
@@ -1276,21 +1293,8 @@
                 domEvent.stopPropagation();
                 domEvent.preventDefault();
 
-                const hostRect = element.getBoundingClientRect();
-
                 element.dispatchEvent(new CustomEvent('arquill-gutter-band-click', {
-                    detail: {
-                        id: band.clickId,
-                        x: Math.round(domEvent.clientX - hostRect.left),
-                        y: Math.round(domEvent.clientY - hostRect.top),
-                        screenX: Math.round(domEvent.screenX),
-                        screenY: Math.round(domEvent.screenY),
-                        button: domEvent.button,
-                        alt: domEvent.altKey,
-                        ctrl: domEvent.ctrlKey,
-                        shift: domEvent.shiftKey,
-                        meta: domEvent.metaKey
-                    }
+                    detail: gutterClickDetail(band.clickId, domEvent)
                 }));
             });
 

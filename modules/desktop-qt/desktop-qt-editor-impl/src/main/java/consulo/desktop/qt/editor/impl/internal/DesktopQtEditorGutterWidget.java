@@ -45,8 +45,16 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
 import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.application.util.registry.Registry;
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.impl.internal.action.ActionImplUtil;
+import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.SimpleReference;
 import io.qt.core.QEvent;
 import io.qt.core.QPoint;
 import io.qt.core.QPointF;
@@ -70,6 +78,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * The line number strip to the left of the text.
@@ -83,6 +92,8 @@ import java.util.Set;
  * @since 2026-08-16
  */
 public class DesktopQtEditorGutterWidget extends QWidget {
+    private static final Logger LOG = Logger.getInstance(DesktopQtEditorGutterWidget.class);
+
     private static final int LEFT_PADDING = 6;
     private static final int RIGHT_PADDING = 8;
 
@@ -222,11 +233,13 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
         FoldRegion region = x >= markerAreaOffset() ? foldRegionAt(visualLine) : null;
 
-        setCursor(new QCursor(region != null ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.ArrowCursor));
+        GutterIconRenderer renderer = region == null ? gutterRendererAt(event.pos()) : null;
 
-        fireMouseMoved(event, visualLine, x < markerAreaOffset()
-            ? EditorMouseEventArea.LINE_NUMBERS_AREA
-            : EditorMouseEventArea.LINE_MARKERS_AREA);
+        boolean actionable = region != null || renderer != null && renderer.getClickAction() != null;
+
+        setCursor(new QCursor(actionable ? Qt.CursorShape.PointingHandCursor : Qt.CursorShape.ArrowCursor));
+
+        fireMouseMoved(event, visualLine, areaAt(x));
 
         event.accept();
     }
@@ -361,12 +374,15 @@ public class DesktopQtEditorGutterWidget extends QWidget {
      * right aligned packed from its right, and centred ones sharing what is left between them.
      */
     private void paintRowIcons(QPainter painter, int visualLine, int scrollY, int lineHeight) {
+        layoutRowIcons(visualLine, visualLine * lineHeight - scrollY, lineHeight, (mark, bounds) -> paintIcon(painter, mark.getIcon(), bounds));
+    }
+
+    private void layoutRowIcons(int visualLine, int y, int lineHeight, BiConsumer<GutterMark, QRect> consumer) {
         List<GutterMark> row = myEditor.getGutterComponentEx().getGutterRenderers(visualLine);
         if (row.isEmpty()) {
             return;
         }
 
-        int y = visualLine * lineHeight - scrollY;
         int areaOffset = iconAreaOffset();
         int areaWidth = iconsAreaWidth();
 
@@ -385,12 +401,12 @@ public class DesktopQtEditorGutterWidget extends QWidget {
 
             switch (alignmentOf(mark)) {
                 case LEFT -> {
-                    paintIcon(painter, mark.getIcon(), left, y + iconAlignmentShift(size, lineHeight), size);
+                    consumer.accept(mark, new QRect(left, y + iconAlignmentShift(size, lineHeight), size, size));
                     left += size + GAP_BETWEEN_ICONS;
                 }
                 case RIGHT -> {
                     right -= size;
-                    paintIcon(painter, mark.getIcon(), right, y + iconAlignmentShift(size, lineHeight), size);
+                    consumer.accept(mark, new QRect(right, y + iconAlignmentShift(size, lineHeight), size, size));
                     right -= GAP_BETWEEN_ICONS;
                 }
                 default -> {
@@ -410,10 +426,73 @@ public class DesktopQtEditorGutterWidget extends QWidget {
             if (!isMergedWithLineNumbers(mark) && alignmentOf(mark) == GutterIconRenderer.Alignment.CENTER) {
                 int size = scaledIconSize(mark.getIcon());
 
-                paintIcon(painter, mark.getIcon(), x, y + iconAlignmentShift(size, lineHeight), size);
+                consumer.accept(mark, new QRect(x, y + iconAlignmentShift(size, lineHeight), size, size));
                 x += size + GAP_BETWEEN_ICONS;
             }
         }
+    }
+
+    /**
+     * The mark the pointer stands on, if any. Which row it is has already been decided by the y of the point, so
+     * only the column of the icon is tested - a click a few pixels above or below the icon still belongs to it,
+     * which is the target the row looks like it offers.
+     */
+    private @Nullable GutterIconRenderer gutterRendererAt(QPoint position) {
+        SimpleReference<GutterIconRenderer> found = SimpleReference.create();
+
+        layoutRowIcons(visualLineAt(position.y()), 0, myEditor.getLineHeight(), (mark, bounds) -> {
+            if (found.get() == null
+                && mark instanceof GutterIconRenderer renderer
+                && position.x() >= bounds.left()
+                && position.x() <= bounds.right()) {
+                found.set(renderer);
+            }
+        });
+
+        return found.get();
+    }
+
+    /**
+     * What a click on the mark under the pointer runs, or null when nothing on the row answers the button.
+     */
+    private @Nullable AnAction clickActionAt(QMouseEvent event) {
+        GutterIconRenderer renderer = gutterRendererAt(event.pos());
+        if (renderer == null) {
+            return null;
+        }
+
+        return event.button() == Qt.MouseButton.MiddleButton ? renderer.getMiddleButtonClickAction() : renderer.getClickAction();
+    }
+
+    /**
+     * Runs the action a gutter icon is bound to. The click ends in navigation which hangs a popup off the pointer,
+     * so the details of the event travel with it - without them the popup opens at the corner of the screen.
+     */
+    @RequiredUIAccess
+    private void performClickAction(AnAction action, QMouseEvent event) {
+        DataContext context = myEditor.getDataContext();
+
+        AnActionEvent actionEvent = AnActionEvent.createFromAnAction(
+            action,
+            null,
+            ActionPlaces.EDITOR_GUTTER,
+            context,
+            DesktopQtInputDetails.mouse(this, event)
+        );
+
+        UIAccess uiAccess = UIAccess.current();
+
+        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, true).whenCompleteAsync((enabled, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Gutter click action update failed: " + action, throwable);
+                return;
+            }
+
+            if (Boolean.TRUE.equals(enabled)) {
+                ActionImplUtil.performActionDumbAwareWithCallbacks(action, actionEvent, context);
+                update();
+            }
+        }, uiAccess);
     }
 
     /**
@@ -428,9 +507,9 @@ public class DesktopQtEditorGutterWidget extends QWidget {
       return alignment == GutterIconRenderer.Alignment.LINE_NUMBERS ? GutterIconRenderer.Alignment.LEFT : alignment;
     }
 
-    private void paintIcon(QPainter painter, @Nullable Image image, int x, int y, int size) {
+    private void paintIcon(QPainter painter, @Nullable Image image, QRect bounds) {
         if (image instanceof DesktopQtImage qtImage) {
-            qtImage.toQIcon().paint(painter, new QRect(x, y, size, size));
+            qtImage.toQIcon().paint(painter, bounds);
         }
     }
 
@@ -801,6 +880,21 @@ public class DesktopQtEditorGutterWidget extends QWidget {
     @Override
     protected void mouseReleaseEvent(QMouseEvent event) {
         int visualLine = visualLineAt(event.pos().y());
+
+        // the mark takes the click for itself, the way the awt gutter consumes one it found an action for -
+        // otherwise the same click both navigates and toggles whatever the platform binds to the marker area
+        if (visualLine == myPressedLine
+            && (event.button() == Qt.MouseButton.LeftButton || event.button() == Qt.MouseButton.MiddleButton)) {
+            AnAction action = clickActionAt(event);
+            if (action != null) {
+                myPressedLine = -1;
+
+                performClickAction(action, event);
+
+                event.accept();
+                return;
+            }
+        }
 
         EditorMouseEvent editorEvent = gutterMouseEvent(event, visualLine, areaAt(event.pos().x()));
         if (editorEvent != null) {

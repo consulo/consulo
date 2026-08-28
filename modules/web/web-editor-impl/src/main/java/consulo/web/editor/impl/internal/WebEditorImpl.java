@@ -15,6 +15,7 @@
  */
 package consulo.web.editor.impl.internal;
 
+import com.vaadin.flow.component.UI;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
@@ -40,6 +41,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.logging.Logger;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -73,6 +75,7 @@ import consulo.versionControlSystem.internal.LineStatusTrackerListener;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.web.ui.impl.internal.WebColors;
+import consulo.web.ui.impl.internal.WebLightPopupImpl;
 import consulo.web.ui.impl.internal.action.WebActionContextMenu;
 import consulo.web.ui.impl.internal.base.ComponentHolder;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
@@ -98,6 +101,8 @@ import java.util.function.Supplier;
  * @since 2019-02-18
  */
 public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationProvider {
+    private static final Logger LOG = Logger.getInstance(WebEditorImpl.class);
+
     public static class Vaadin extends ArquillEditorElement implements ComponentHolder, FromVaadinComponentWrapper {
         private consulo.ui.Component myComponent;
 
@@ -327,7 +332,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
 
         vaadin.addInlayClickListener(event -> performInlayClick(event.getId(), event.isControlDown()));
 
-        vaadin.addGutterClickListener(event -> performGutterClick(event.getId()));
+        vaadin.addGutterClickListener(event -> performGutterClick(event.getId(), event.getDetails()));
 
         vaadin.addGutterBandClickListener(event -> performGutterBandClick(event.getId(), event.getDetails()));
 
@@ -699,7 +704,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * handler.
      */
     @RequiredUIAccess
-    private void performGutterClick(int id) {
+    private void performGutterClick(int id, InputDetails details) {
         if (id < 0 || id >= myGutterMarks.size()) {
             return;
         }
@@ -713,23 +718,23 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             return;
         }
 
+        WebLightPopupImpl.closeAll(UI.getCurrent());
+
         ActionManagerEx actionManager = (ActionManagerEx) ActionManager.getInstance();
 
         DataContext context = getDataContext();
 
-        AnActionEvent event = new AnActionEvent(
-            null,
-            context,
-            ActionPlaces.EDITOR_GUTTER,
-            action.getTemplatePresentation().clone(),
-            actionManager,
-            0
-        );
+        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.EDITOR_GUTTER, context, details);
 
         UIAccess uiAccess = UIAccess.current();
 
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
-            if (throwable != null || !Boolean.TRUE.equals(enabled)) {
+            if (throwable != null) {
+                LOG.error("Gutter click action update failed: " + action, throwable);
+                return;
+            }
+
+            if (!Boolean.TRUE.equals(enabled)) {
                 return;
             }
 

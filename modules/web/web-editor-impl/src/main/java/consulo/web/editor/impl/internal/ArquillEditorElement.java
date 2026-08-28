@@ -307,14 +307,33 @@ public class ArquillEditorElement extends Component implements HasSize {
     @DomEvent("arquill-gutter-click")
     public static class ArquillGutterClickEvent extends ComponentEvent<ArquillEditorElement> {
         private final int myId;
+        private final InputDetails myDetails;
 
-        public ArquillGutterClickEvent(ArquillEditorElement source, boolean fromClient, @EventData("event.detail.id") int id) {
+        public ArquillGutterClickEvent(
+            ArquillEditorElement source,
+            boolean fromClient,
+            @EventData("event.detail.id") int id,
+            @EventData("event.detail.x") int x,
+            @EventData("event.detail.y") int y,
+            @EventData("event.detail.screenX") int screenX,
+            @EventData("event.detail.screenY") int screenY,
+            @EventData("event.detail.button") int button,
+            @EventData("event.detail.alt") boolean alt,
+            @EventData("event.detail.ctrl") boolean ctrl,
+            @EventData("event.detail.shift") boolean shift,
+            @EventData("event.detail.meta") boolean meta
+        ) {
             super(source, fromClient);
             myId = id;
+            myDetails = WebInputDetails.mouse(x, y, screenX, screenY, button, alt, ctrl, shift, meta);
         }
 
         public int getId() {
             return myId;
+        }
+
+        public InputDetails getDetails() {
+            return myDetails;
         }
     }
 

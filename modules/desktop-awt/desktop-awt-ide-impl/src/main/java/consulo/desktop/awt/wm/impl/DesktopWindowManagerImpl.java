@@ -346,6 +346,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         }
     }
 
+    /**
+     * A toolbar living inside a popup gets its buttons from an update that finishes after the popup was
+     * measured, so a popup sized to its content can be too small once they arrive. Only the shortfall
+     * against what the content asks for now is added - the toolbar's own growth says nothing about the
+     * window when the toolbar shares a row with other components.
+     */
     @Override
     public void adjustContainerWindow(Component c, Dimension oldSize, Dimension newSize) {
         if (c == null) {
@@ -354,14 +360,16 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
         Window wnd = SwingUtilities.getWindowAncestor(c);
 
-        if (wnd instanceof JWindow) {
-            JBPopup popup = (JBPopup) ((JWindow) wnd).getRootPane().getClientProperty(JBPopup.KEY);
-            if (popup != null) {
-                if (oldSize.height < newSize.height) {
-                    Dimension size = popup.getSize();
-                    size.height += newSize.height - oldSize.height;
-                    popup.setSize(size);
-                    popup.moveToFitScreen();
+        if (wnd instanceof JWindow window) {
+            JBPopup popup = (JBPopup) window.getRootPane().getClientProperty(JBPopup.KEY);
+            if (popup != null && (oldSize.width < newSize.width || oldSize.height < newSize.height)) {
+                Rectangle bounds = window.getBounds();
+                Dimension preferred = popup.getContent().getPreferredSize();
+                if (bounds.width < preferred.width || bounds.height < preferred.height) {
+                    bounds.width = Math.max(bounds.width, preferred.width);
+                    bounds.height = Math.max(bounds.height, preferred.height);
+                    ScreenUtil.moveRectangleToFitTheScreen(bounds);
+                    window.setBounds(bounds);
                 }
             }
         }

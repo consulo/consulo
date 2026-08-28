@@ -41,9 +41,21 @@ public class WebItemPresentationImpl implements TextItemPresentation {
     private List<Component> myFragments = new ArrayList<>();
     private @Nullable ColorValue myBackgroundColor;
 
+    private LocalizeValue mySuffixText = LocalizeValue.empty();
+    private @Nullable Image mySuffixIcon;
+
     @Override
     public TextItemPresentation withIcon(@Nullable Image image) {
         myIcon = image;
+
+        after();
+        return this;
+    }
+
+    @Override
+    public TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
+        mySuffixText = text;
+        mySuffixIcon = icon;
 
         after();
         return this;
@@ -158,7 +170,38 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             span.add(image);
         }
         span.add(myFragments.toArray(Component[]::new));
-        return span;
+
+        if (mySuffixText.isEmpty() && mySuffixIcon == null) {
+            return span;
+        }
+
+        Span row = new Span();
+        row.getStyle()
+            .set("display", "flex")
+            .set("align-items", "center")
+            .set("width", "100%");
+
+        Span suffix = new Span();
+        suffix.getStyle()
+            .set("margin-left", "auto")
+            .set("padding-left", "16px")
+            .set("display", "inline-flex")
+            .set("align-items", "center");
+
+        if (mySuffixIcon != null) {
+            Component image = WebImageConverter.getImage(mySuffixIcon);
+            image.addClassName(AuraUtility.Margin.Right.SMALL);
+            suffix.add(image);
+        }
+
+        if (mySuffixText.isNotEmpty()) {
+            Span suffixText = new Span(mySuffixText.get());
+            applyAttribute(suffixText, TextAttribute.GRAYED);
+            suffix.add(suffixText);
+        }
+
+        row.add(span, suffix);
+        return row;
     }
 
     protected void after() {

@@ -25,10 +25,10 @@ import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.editor.ui.navigation.ItemWithPresentation;
 import consulo.language.editor.ui.navigation.PsiTargetNavigator;
+import consulo.language.editor.ui.navigation.PsiTargetPresentationFactory;
 import consulo.language.editor.ui.navigation.TargetPresentationProvider;
 import consulo.language.editor.ui.navigation.TargetPresentationRender;
 import consulo.language.editor.ui.navigation.TargetUpdaterTask;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
@@ -36,14 +36,11 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.localize.LocalizeValue;
-import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
-import consulo.navigation.NavigationItem;
-import consulo.navigation.NavigationService;
 import consulo.navigation.TargetPresentation;
-import consulo.navigation.TargetPresentationBuilder;
 import consulo.project.Project;
 import consulo.ui.DelayedAction;
+import consulo.ui.UIAccess;
 import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
@@ -83,7 +80,7 @@ import java.util.function.Consumer;
  */
 class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator<T> {
     private final CoroutineStep<Void, Collection<T>> myTargets;
-    private final NavigationService myNavigationService;
+    private final PsiTargetPresentationFactory myPresentationFactory;
 
     private @Nullable TargetPresentationProvider<? super T> myPresentationProvider;
     private LocalizeValue myTitle = LocalizeValue.empty();
@@ -97,9 +94,9 @@ class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator
     private @Nullable ComponentEvent<?> myEvent;
     private @Nullable Editor myEditor;
 
-    PsiTargetNavigatorImpl(CoroutineStep<Void, Collection<T>> targets, NavigationService navigationService) {
+    PsiTargetNavigatorImpl(CoroutineStep<Void, Collection<T>> targets, PsiTargetPresentationFactory presentationFactory) {
         myTargets = targets;
-        myNavigationService = navigationService;
+        myPresentationFactory = presentationFactory;
     }
 
     @Override
@@ -171,18 +168,21 @@ class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator
         collect(project, items -> consumer.accept(buildPopup(project, items)));
     }
 
+    @RequiredUIAccess
     private void collect(Project project, Consumer<List<ItemWithPresentation<T>>> consumer) {
-        CoroutineScope.launchAsync(
-            project.coroutineContext(),
-            () -> Coroutine.first("collecting.targets", myTargets)
-                .then("building.presentations", ReadLock.<Collection<T>, List<ItemWithPresentation<T>>>apply(this::present))
-                .then(UIAction.<List<ItemWithPresentation<T>>, List<ItemWithPresentation<T>>>apply(items -> {
-                    consumer.accept(items);
-                    return items;
-                }))
-        );
+        CoroutineScope scope = CoroutineScope.of(project.coroutineContext());
+        scope.putCopyableUserData(UIAccess.KEY, UIAccess.current());
+
+        Coroutine.first("collecting.targets", myTargets)
+            .then("building.presentations", ReadLock.<Collection<T>, List<ItemWithPresentation<T>>>apply(this::present))
+            .then(UIAction.<List<ItemWithPresentation<T>>, List<ItemWithPresentation<T>>>apply(items -> {
+                consumer.accept(items);
+                return items;
+            }))
+            .runAsync(scope, null);
     }
 
+    @RequiredReadAction
     private List<ItemWithPresentation<T>> present(Collection<T> targets) {
         SmartPointerManager pointerManager = null;
         List<ItemWithPresentation<T>> items = new ArrayList<>(targets.size());
@@ -204,22 +204,7 @@ class PsiTargetNavigatorImpl<T extends PsiElement> implements PsiTargetNavigator
 
     @RequiredReadAction
     private TargetPresentation defaultPresentation(T element) {
-        ItemPresentation itemPresentation = element instanceof NavigationItem item ? item.getPresentation() : null;
-
-        String presentableText = itemPresentation == null ? null : itemPresentation.getPresentableText();
-        if (presentableText == null) {
-            presentableText = String.valueOf(element);
-        }
-
-        TargetPresentationBuilder builder = myNavigationService.presentationBuilder(LocalizeValue.of(presentableText));
-        builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, 0));
-
-        String locationString = itemPresentation == null ? null : itemPresentation.getLocationString();
-        if (locationString != null) {
-            builder = builder.withContainerText(LocalizeValue.of(locationString));
-        }
-
-        return builder.build();
+        return myPresentationFactory.presentation(element);
     }
 
     @RequiredUIAccess

@@ -19,9 +19,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.language.editor.ui.navigation.PsiTargetNavigationService;
 import consulo.language.editor.ui.navigation.PsiTargetNavigator;
+import consulo.language.editor.ui.navigation.PsiTargetPresentationFactory;
 import consulo.language.psi.PsiElement;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import consulo.navigation.NavigationService;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -35,20 +35,20 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl
 public class PsiTargetNavigationServiceImpl implements PsiTargetNavigationService {
-    private final NavigationService myNavigationService;
+    private final PsiTargetPresentationFactory myPresentationFactory;
 
     @Inject
-    public PsiTargetNavigationServiceImpl(NavigationService navigationService) {
-        myNavigationService = navigationService;
+    public PsiTargetNavigationServiceImpl(PsiTargetPresentationFactory presentationFactory) {
+        myPresentationFactory = presentationFactory;
     }
 
     @Override
     public <T extends PsiElement> PsiTargetNavigator<T> newNavigator(Supplier<Collection<T>> targets) {
-        return new PsiTargetNavigatorImpl<>(ReadLock.apply(ignored -> targets.get()), myNavigationService);
+        return new PsiTargetNavigatorImpl<>(ReadLock.apply(ignored -> targets.get()), myPresentationFactory);
     }
 
     @Override
     public <T extends PsiElement> PsiTargetNavigator<T> newNavigator(CoroutineStep<Void, Collection<T>> targets) {
-        return new PsiTargetNavigatorImpl<>(targets, myNavigationService);
+        return new PsiTargetNavigatorImpl<>(targets, myPresentationFactory);
     }
 }

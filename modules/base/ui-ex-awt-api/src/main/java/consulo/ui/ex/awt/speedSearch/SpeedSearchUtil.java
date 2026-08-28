@@ -23,6 +23,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,14 @@ public final class SpeedSearchUtil {
 
   public static void applySpeedSearchHighlighting(JComponent speedSearchEnabledComponent, ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
     SpeedSearchUtilBase.applySpeedSearchHighlighting(speedSearchEnabledComponent, coloredComponent, mainTextOnly, selected);
+  }
+
+  /**
+   * The variant for components which hold their speed search themselves - a popup keeps its {@link SpeedSearch}
+   * out of the list's client properties, so there is nothing to look the supply up by.
+   */
+  public static void applySpeedSearchHighlighting(@Nullable SpeedSearchSupply speedSearch, ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
+    SpeedSearchUtilBase.applySpeedSearchHighlighting(speedSearch, coloredComponent, mainTextOnly, selected);
   }
 
   public static void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,

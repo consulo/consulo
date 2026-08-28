@@ -22,6 +22,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupOptions;
@@ -34,6 +35,7 @@ import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
 /**
@@ -48,6 +50,8 @@ import java.util.Deque;
  * @since 2026-08-02
  */
 public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl.Vaadin> implements LightPopup {
+    private static final Logger LOG = Logger.getInstance(WebLightPopupImpl.class);
+
     private static final String RESIZABLE_CLASS = "consulo-resizable-popup";
     private static final String MIN_WIDTH_PROPERTY = "--consulo-popup-min-width";
 
@@ -65,17 +69,21 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
      */
     private @Nullable Div myAnchor;
 
-    /**
-     * The popups escape closes, innermost first, kept on the ui because a browser session has one of its own.
-     * <p/>
-     * A popup which never takes the focus cannot answer the key by itself: the keymap owns escape, so the frontend
-     * hands it to the platform before anything on the page sees it. {@link consulo.web.ui.impl.internal.base.WebShortcutDispatcher}
-     * asks here first, which is the order the desktop already runs in - the hint manager takes escape ahead of the
-     * editor action bound to it.
-     */
-    private static final String ESCAPABLE_POPUPS = "consulo.escapable.popups";
+    private final Div myTitle = new Div();
 
-    private boolean myEscapable;
+    /**
+     * Every popup currently open, innermost first, kept on the ui because a browser session has one of its own.
+     * <p/>
+     * Escape walks it for the innermost popup which asked to be closable by the key: a popup which never takes
+     * the focus cannot answer the key by itself - the keymap owns escape, so the frontend hands it to the platform
+     * before anything on the page sees it. {@link consulo.web.ui.impl.internal.base.WebShortcutDispatcher}
+     * asks here first, which is the order the desktop already runs in - the hint manager takes escape ahead of the
+     * editor action bound to it. The same list is what {@link #closeAll} drains when something opens a popup of
+     * its own and everything standing has to go, the way the desktop uses {@code closeAllPopups()}.
+     */
+    private static final String OPEN_POPUPS = "consulo.open.popups";
+
+    private boolean myRegistered;
 
     private final PopupOptions myOptions;
 
@@ -83,6 +91,9 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
     public WebLightPopupImpl(PopupOptions options) {
         myOptions = options;
+
+        myTitle.addClassName("consulo-popup-title");
+        myTitle.setVisible(false);
 
         Vaadin popover = getVaadinComponent();
 
@@ -119,6 +130,9 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     @RequiredUIAccess
     public void setTitle(@Nullable String title) {
         getVaadinComponent().setAriaLabel(title);
+
+        myTitle.setText(title == null ? "" : title);
+        myTitle.setVisible(title != null && !title.isEmpty());
     }
 
     @Override
@@ -134,6 +148,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         Vaadin popover = getVaadinComponent();
 
         popover.removeAll();
+        popover.add(myTitle);
         popover.add(TargetVaadin.to(content));
     }
 
@@ -148,7 +163,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         popover.setTarget(TargetVaadin.to(target));
         popover.setOpened(true);
-        listenForEscape();
+        registerOpen();
     }
 
     /**
@@ -168,21 +183,25 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
         }
     }
 
-    /**
-     * Only for a popup which asked not to take the focus - one which has it is given the key by the browser and the
-     * popover closes itself.
-     */
     @RequiredUIAccess
-    private void listenForEscape() {
-        if (myEscapable || !myOptions.isCancelOnEscape() || myOptions.isRequestFocus()) {
+    private void registerOpen() {
+        if (myRegistered) {
             return;
         }
 
-        Deque<WebLightPopupImpl> popups = escapablePopups(ui());
+        Deque<WebLightPopupImpl> popups = openPopups(ui());
         if (popups != null) {
             popups.push(this);
-            myEscapable = true;
+            myRegistered = true;
         }
+    }
+
+    /**
+     * Only a popup which asked not to take the focus answers escape from here - one which has it is given the key
+     * by the browser and the popover closes itself.
+     */
+    private boolean isEscapable() {
+        return myOptions.isCancelOnEscape() && !myOptions.isRequestFocus();
     }
 
     private @Nullable UI ui() {
@@ -190,15 +209,15 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
     }
 
     @SuppressWarnings("unchecked")
-    private static @Nullable Deque<WebLightPopupImpl> escapablePopups(@Nullable UI ui) {
+    private static @Nullable Deque<WebLightPopupImpl> openPopups(@Nullable UI ui) {
         if (ui == null) {
             return null;
         }
 
-        Deque<WebLightPopupImpl> popups = (Deque<WebLightPopupImpl>) ComponentUtil.getData(ui, ESCAPABLE_POPUPS);
+        Deque<WebLightPopupImpl> popups = (Deque<WebLightPopupImpl>) ComponentUtil.getData(ui, OPEN_POPUPS);
         if (popups == null) {
             popups = new ArrayDeque<>();
-            ComponentUtil.setData(ui, ESCAPABLE_POPUPS, popups);
+            ComponentUtil.setData(ui, OPEN_POPUPS, popups);
         }
         return popups;
     }
@@ -210,14 +229,35 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
      */
     @RequiredUIAccess
     public static boolean closeTopEscapable(@Nullable UI ui) {
-        Deque<WebLightPopupImpl> popups = escapablePopups(ui);
-        WebLightPopupImpl popup = popups == null ? null : popups.peek();
-        if (popup == null) {
+        Deque<WebLightPopupImpl> popups = openPopups(ui);
+        if (popups == null) {
             return false;
         }
 
-        popup.close();
-        return true;
+        for (WebLightPopupImpl popup : popups) {
+            if (popup.isEscapable()) {
+                popup.close();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Closes every popup standing, outermost last. What the desktop reaches through
+     * {@code IdeEventQueueProxy.closeAllPopups()} - something is about to put a popup of its own up, and whatever
+     * is open belongs to a click that is no longer the current one.
+     */
+    @RequiredUIAccess
+    public static void closeAll(@Nullable UI ui) {
+        Deque<WebLightPopupImpl> popups = openPopups(ui);
+        if (popups == null) {
+            return;
+        }
+
+        for (WebLightPopupImpl popup : new ArrayList<>(popups)) {
+            popup.close();
+        }
     }
 
     @Override
@@ -234,14 +274,14 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
             anchor = new Div();
             anchor.getStyle()
                 .set("position", "fixed")
-                .set("width", "0")
+                .set("width", "1px")
                 .set("pointer-events", "none");
 
             UI.getCurrent().add(anchor);
             myAnchor = anchor;
         }
 
-        anchor.getStyle().set("height", anchorHeight + "px");
+        anchor.getStyle().set("height", Math.max(anchorHeight, 1) + "px");
 
         // a popup which is already up is only moved. re-targeting an open popover tears the overlay down and builds
         // it again, which is every row of the list back over the wire for one typed character
@@ -277,8 +317,8 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
             popover.setTarget(anchorToShow);
             popover.setOpened(true);
-            listenForEscape();
-        });
+            registerOpen();
+        }, error -> LOG.error("Failed to position popup: " + error));
     }
 
     @RequiredUIAccess
@@ -312,10 +352,10 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         myDisposed = true;
 
-        if (myEscapable) {
-            myEscapable = false;
+        if (myRegistered) {
+            myRegistered = false;
 
-            Deque<WebLightPopupImpl> popups = escapablePopups(ui());
+            Deque<WebLightPopupImpl> popups = openPopups(ui());
             if (popups != null) {
                 popups.remove(this);
             }

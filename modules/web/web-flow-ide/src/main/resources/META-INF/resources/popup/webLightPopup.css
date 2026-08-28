@@ -28,6 +28,19 @@ vaadin-popover::part(overlay)
   min-width: var(--consulo-popup-min-width, auto);
 }
 
+/* the caption of a popup which carries one - what the desktop draws as the caption panel above the list. it sits
+   inside the content, so it scrolls with nothing and stays a strip above whatever the popup shows */
+.consulo-popup-title
+{
+  padding: 4px 8px 2px 8px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--vaadin-text-color-secondary, rgba(0, 0, 0, 0.6));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* a popover carries no grip of its own, so the browser's is used for a popup which says it may be resized.
    hidden rather than auto: a grip only needs the overflow not to be visible, and auto puts a second pair of bars
    around content which already scrolls itself */

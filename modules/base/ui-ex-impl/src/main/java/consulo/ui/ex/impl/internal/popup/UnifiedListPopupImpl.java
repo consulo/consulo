@@ -362,13 +362,13 @@ public class UnifiedListPopupImpl extends UnifiedPopupImpl implements ListPopup 
                 return;
             }
 
-            if (handleAutoSelection(step)) {
-                return;
-            }
-
-            fireBeforeShown();
-
             try {
+                if (handleAutoSelection(step)) {
+                    return;
+                }
+
+                fireBeforeShown();
+
                 pushLevel(step);
             }
             catch (Throwable e) {

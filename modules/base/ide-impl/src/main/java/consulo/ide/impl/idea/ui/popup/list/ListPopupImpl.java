@@ -20,13 +20,22 @@ import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.statistician.StatisticsInfo;
 import consulo.language.statistician.StatisticsManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.ui.RenderItem;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.TextItemRender;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.KeepPopupOnPerform;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.internal.ListWithInlineButtons;
 import consulo.ui.ex.awt.internal.PopupInlineActionsSupport;
@@ -40,6 +49,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -66,6 +76,7 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         LazyValue.notNull(() -> PopupInlineActionsSupportKt.createSupport(this));
 
     private MyList myList;
+    private @Nullable TextItemRender<Object> myTextItemRender;
 
     private MyMouseMotionListener myMouseMotionListener;
     private MyMouseListener myMouseListener;
@@ -429,7 +440,105 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
     }
 
     protected ListCellRenderer getListElementRenderer() {
+        TextItemRender<Object> render = myTextItemRender;
+        if (render != null) {
+            return new TextItemRenderCellRenderer(render, getSpeedSearch());
+        }
         return new PopupListElementRenderer(this);
+    }
+
+    @Override
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    public void setRender(TextItemRender<?> render) {
+        myTextItemRender = (TextItemRender<Object>) render;
+        if (myList != null) {
+            myList.setCellRenderer(getListElementRenderer());
+        }
+    }
+
+    /**
+     * The rows of a render-driven popup. The render paints in platform terms into a colored component;
+     * a background it sets stands only while the row is unselected, so the selection never loses its
+     * own color to a row's. Whatever the render pins as a suffix is drawn on the trailing edge, past
+     * the space the main text leaves.
+     */
+    private static class TextItemRenderCellRenderer extends JPanel implements ListCellRenderer<Object> {
+        private final TextItemRender<Object> myRender;
+        private final @Nullable SpeedSearchSupply mySpeedSearch;
+
+        private final MainComponent myMainComponent = new MainComponent();
+        private final SimpleColoredComponent mySuffixComponent = new SimpleColoredComponent();
+
+        private LocalizeValue mySuffixText = LocalizeValue.empty();
+        private Image mySuffixIcon;
+
+        private TextItemRenderCellRenderer(TextItemRender<Object> render, @Nullable SpeedSearchSupply speedSearch) {
+            super(new BorderLayout());
+            myRender = render;
+            mySpeedSearch = speedSearch;
+            setOpaque(true);
+            mySuffixComponent.setIpad(JBUI.insets(2, 8));
+            mySuffixComponent.setOpaque(false);
+        }
+
+        private class MainComponent extends ColoredListCellRenderer<Object> {
+            private MainComponent() {
+                setIpad(JBUI.insets(2, 8));
+            }
+
+            @Override
+            protected void customizeCellRenderer(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
+                myRender.render(new ColoredTextItemPresentation(this) {
+                    @Override
+                    public TextItemPresentation withBackgroundColor(@Nullable ColorValue color) {
+                        if (color != null && !selected) {
+                            super.withBackgroundColor(color);
+                        }
+                        return this;
+                    }
+
+                    @Override
+                    public TextItemPresentation withSuffix(LocalizeValue text, @Nullable Image icon) {
+                        mySuffixText = text;
+                        mySuffixIcon = icon;
+                        return this;
+                    }
+                }, RenderItem.of(value, selected));
+
+                SpeedSearchUtil.applySpeedSearchHighlighting(mySpeedSearch, this, false, selected);
+            }
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
+            removeAll();
+
+            mySuffixText = LocalizeValue.empty();
+            mySuffixIcon = null;
+
+            Component main = myMainComponent.getListCellRendererComponent(list, value, index, selected, hasFocus);
+            Color background = ObjectUtil.notNull(main.getBackground(), list.getBackground());
+            myMainComponent.setOpaque(false);
+            add(main, BorderLayout.WEST);
+            setBackground(background);
+
+            if (mySuffixText.isNotEmpty() || mySuffixIcon != null) {
+                mySuffixComponent.clear();
+                mySuffixComponent.setIcon(mySuffixIcon);
+                if (mySuffixText.isNotEmpty()) {
+                    mySuffixComponent.append(
+                        mySuffixText,
+                        selected
+                            ? new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getSelectionForeground())
+                            : SimpleTextAttributes.GRAYED_ATTRIBUTES
+                    );
+                }
+                add(mySuffixComponent, BorderLayout.EAST);
+            }
+
+            return this;
+        }
     }
 
     @Override
@@ -925,6 +1034,9 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
 
         @Override
         public Dimension getPreferredScrollableViewportSize() {
+            if (getModel().getSize() <= Math.min(myMaxRowCount, getVisibleRowCount())) {
+                return getPreferredSize();
+            }
             return removeSeparatorsHeight(super.getPreferredScrollableViewportSize());
         }
 

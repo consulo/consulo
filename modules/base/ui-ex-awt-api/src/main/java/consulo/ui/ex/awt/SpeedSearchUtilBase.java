@@ -21,6 +21,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,13 @@ public class SpeedSearchUtilBase {
   }
 
   public static void applySpeedSearchHighlighting(JComponent speedSearchEnabledComponent, ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
-    SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
+    applySpeedSearchHighlighting(SpeedSearchSupply.getSupply(speedSearchEnabledComponent), coloredComponent, mainTextOnly, selected);
+  }
+
+  public static void applySpeedSearchHighlighting(@Nullable SpeedSearchSupply speedSearch, ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
+    if (speedSearch != null && !speedSearch.isPopupActive()) {
+      return;
+    }
     // The bad thing is that SpeedSearch model is decoupled from UI presentation so we don't know the real matched text.
     // Our best guess is to get strgin from the ColoredComponent. We can only provide main-text-only option.
     Iterable<MatcherTextRange> ranges = speedSearch == null ? null : speedSearch.matchingFragments(coloredComponent.getCharSequence(mainTextOnly).toString());
