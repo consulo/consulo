@@ -189,7 +189,7 @@ public class TabLabel extends JPanel implements consulo.ui.ex.awt.internal.TabIn
     public Insets getInsets() {
         Insets insets = super.getInsets();
         if (UISettings.getInstance().SHOW_CLOSE_BUTTON) {
-            insets.right = JBUI.scale(3);
+            insets.right = JBUI.scale(9);
         }
 
         JBTabsPosition position = myTabs.getTabsPosition();

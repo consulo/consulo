@@ -38,6 +38,8 @@ import javax.swing.event.HyperlinkListener;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ToolWindowManager {
+    public abstract Project getProject();
+
     public abstract boolean canShowNotification(String toolWindowId);
 
     public static ToolWindowManager getInstance(Project project) {

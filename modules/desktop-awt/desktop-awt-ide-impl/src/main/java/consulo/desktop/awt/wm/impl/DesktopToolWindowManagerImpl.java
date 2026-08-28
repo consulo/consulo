@@ -145,7 +145,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                 ToolWindowAnchor anchor = info.getAnchor();
                 DesktopInternalDecorator another = null;
                 if (source.getParent() instanceof Splitter splitter) {
-                    float sizeInSplit = ToolWindowAnchorUtil.isSplitVertically(anchor) ? source.getHeight() : source.getWidth();
+                    float sizeInSplit = ToolWindowAnchorUtil.isSplitVertically(getProject(), anchor) ? source.getHeight() : source.getWidth();
                     if (splitter.getSecondComponent() == source) {
                         sizeInSplit += splitter.getDividerWidth();
                         another = (DesktopInternalDecorator) splitter.getFirstComponent();
@@ -153,7 +153,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                     else {
                         another = (DesktopInternalDecorator) splitter.getSecondComponent();
                     }
-                    if (ToolWindowAnchorUtil.isSplitVertically(anchor)) {
+                    if (ToolWindowAnchorUtil.isSplitVertically(getProject(), anchor)) {
                         info.setSideWeight(sizeInSplit / (float) splitter.getHeight());
                     }
                     else {
@@ -165,7 +165,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                     ? (float) source.getHeight() / (float) getToolWindowPanel().getMyLayeredPane().getHeight()
                     : (float) source.getWidth() / (float) getToolWindowPanel().getMyLayeredPane().getWidth();
                 info.setWeight(paneWeight);
-                if (another != null && ToolWindowAnchorUtil.isSplitVertically(anchor)) {
+                if (another != null && ToolWindowAnchorUtil.isSplitVertically(getProject(), anchor)) {
                     paneWeight = anchor.isHorizontal()
                         ? (float) another.getHeight() / (float) getToolWindowPanel().getMyLayeredPane().getHeight()
                         : (float) another.getWidth() / (float) getToolWindowPanel().getMyLayeredPane().getWidth();

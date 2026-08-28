@@ -22,6 +22,7 @@ import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
@@ -113,7 +114,7 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     setSelected(window.isVisible());
 
     boolean toShow = window.isAvailable() || window.isPlaceholderMode();
-    if (UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
+    if (ToolWindowSettings.getInstance(window.getToolWindowManager().getProject()).isAlwaysShowWindowButtons()) {
       setVisible(window.isShowStripeButton() || isSelected());
     }
     else {

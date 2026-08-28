@@ -499,6 +499,10 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         return myToolWindow;
     }
 
+    public Project getProject() {
+        return myProject;
+    }
+
     /**
      * @return last window info applied to the decorator.
      */
@@ -836,7 +840,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         @Override
         public Cursor getCursor() {
             boolean isVerticalCursor =
-                myInfo.isDocked() ? ToolWindowAnchorUtil.isSplitVertically(myInfo.getAnchor()) : myInfo.getAnchor().isHorizontal();
+                myInfo.isDocked() ? ToolWindowAnchorUtil.isSplitVertically(myProject, myInfo.getAnchor()) : myInfo.getAnchor().isHorizontal();
             return isVerticalCursor ? Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR) : Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
         }
     }

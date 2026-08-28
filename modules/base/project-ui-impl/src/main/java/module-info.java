@@ -29,6 +29,10 @@ module consulo.project.ui.impl {
         consulo.util.xml.serializer,
         consulo.component.impl;
 
+    opens consulo.project.ui.impl.internal.wm to
+        consulo.util.xml.serializer,
+        consulo.component.impl;
+
     exports consulo.project.ui.impl.internal.action to
         consulo.ide.impl;
 

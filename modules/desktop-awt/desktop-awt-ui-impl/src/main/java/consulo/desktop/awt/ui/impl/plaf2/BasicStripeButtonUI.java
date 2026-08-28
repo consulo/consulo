@@ -10,8 +10,11 @@ import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.impl.tabs.TabPainter;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.toolWindow.ButtonDisplay;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -48,6 +51,10 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
         return button instanceof ToolWindowStripeButton stripeButton && stripeButton.getWindowInfo().isActive();
     }
 
+    private static @Nullable ToolWindowSettings getToolWindowSettings(AnchoredButton button) {
+        return button instanceof ToolWindowStripeButton stripeButton ? stripeButton.getSettings() : null;
+    }
+
     @Override
     public void installUI(JComponent c) {
         super.installUI(c);
@@ -58,8 +65,33 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
         AnchoredButton button = (AnchoredButton) c;
         Dimension dim = super.getPreferredSize(button);
 
-        dim.width = (int) (JBUIScale.scale(16) + dim.width * 1.1f);
-        dim.height = TabsUtil.getRealTabsHeight();
+        ToolWindowSettings settings = getToolWindowSettings(button);
+
+        boolean textHidden = false;
+        String text = button.getText();
+        if (settings != null && !settings.isPaintText() && text != null) {
+            FontMetrics fm = button.getFontMetrics(button.getFont());
+            dim.width -= fm.stringWidth(text) + button.getIconTextGap();
+            textHidden = true;
+        }
+
+        Icon icon = button.getIcon();
+        if (settings != null && !settings.isPaintIcon() && icon != null) {
+            dim.width -= icon.getIconWidth() + button.getIconTextGap();
+        }
+
+        if (textHidden) {
+            int size = TabsUtil.getRealTabsHeight();
+            if (settings.getButtonDisplay() == ButtonDisplay.LARGE_ICON) {
+                size += JBUIScale.scale(12);
+            }
+            dim.width = size;
+            dim.height = size;
+        }
+        else {
+            dim.width = (int) (JBUIScale.scale(16) + dim.width * 1.1f);
+            dim.height = TabsUtil.getRealTabsHeight();
+        }
 
         ToolWindowAnchor anchor = button.getAnchor();
         if (ToolWindowAnchor.LEFT == anchor || ToolWindowAnchor.RIGHT == anchor) {
@@ -75,8 +107,13 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
     public void paint(Graphics g, JComponent c) {
         AnchoredButton button = (AnchoredButton) c;
 
-        String text = button.getText();
+        ToolWindowSettings settings = getToolWindowSettings(button);
+
+        String text = settings == null || settings.isPaintText() ? button.getText() : null;
         Icon icon = (button.isEnabled()) ? button.getIcon() : button.getDisabledIcon();
+        if (settings != null && !settings.isPaintIcon()) {
+            icon = null;
+        }
 
         if ((icon == null) && (text == null)) {
             return;
@@ -116,8 +153,10 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
             ButtonModel model = button.getModel();
             int off = anchor == ToolWindowAnchor.BOTTOM ? 0 : JBUIScale.scale(1);
 
-            myIconRect.x -= JBUIScale.scale(2);
-            myTextRect.x -= JBUIScale.scale(2);
+            if (text != null && icon != null) {
+                myIconRect.x -= JBUIScale.scale(2);
+                myTextRect.x -= JBUIScale.scale(2);
+            }
             if (model.isArmed() && model.isPressed() || model.isSelected() || model.isRollover()) {
                 if (anchor == ToolWindowAnchor.LEFT) {
                     g2.translate(-off, 0);
@@ -127,8 +166,10 @@ public final class BasicStripeButtonUI extends BasicToggleButtonUI {
                     g2.translate(0, -off);
                 }
 
+                boolean paintFocus = settings == null || settings.isPaintFocus();
+
                 Color color;
-                if (model.isSelected() && isToolWindowActive(button)) {
+                if (model.isSelected() && paintFocus && isToolWindowActive(button)) {
                     Color selectedBackground = UIManager.getColor("TabbedPane.selectedBackground");
                     color = selectedBackground != null ? selectedBackground : SELECTED_BACKGROUND_COLOR;
                 }

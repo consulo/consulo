@@ -24,6 +24,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
+import consulo.project.ui.impl.internal.wm.ToolWindowBase;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.ui.layout.TwoComponentSplitLayout;
@@ -274,8 +275,11 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
         consulo.ui.Component component;
         if (primary != null && secondary != null) {
+            ToolWindowBase toolWindow = (ToolWindowBase) primary.getToolWindow();
             TwoComponentSplitLayout splitter = TwoComponentSplitLayout.create(
-                ToolWindowAnchorUtil.isSplitVertically(anchor) ? SplitLayoutPosition.VERTICAL : SplitLayoutPosition.HORIZONTAL
+                ToolWindowAnchorUtil.isSplitVertically(toolWindow.getToolWindowManager().getProject(), anchor)
+                    ? SplitLayoutPosition.VERTICAL
+                    : SplitLayoutPosition.HORIZONTAL
             );
             splitter.setFirstComponent(primary.getComponent());
             splitter.setSecondComponent(secondary.getComponent());

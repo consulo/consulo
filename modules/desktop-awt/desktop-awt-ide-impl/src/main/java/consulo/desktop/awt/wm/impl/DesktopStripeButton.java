@@ -17,6 +17,8 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.toolWindow.ButtonDisplay;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ui.ex.awt.internal.HelpTooltipImpl;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
@@ -56,12 +58,15 @@ import java.awt.image.BufferedImage;
 public final class DesktopStripeButton extends AnchoredButton implements ActionListener, Disposable, ToolWindowStripeButton {
     private static final String uiClassID = "StripeButtonUI";
 
+    public static final int LARGE_ICON_SIZE = 24;
+
     /**
      * This is analog of Swing mnemonic. We cannot use the standard ones
      * because it causes typing of "funny" characters into the editor.
      */
     private int myMnemonic;
     private final DesktopInternalDecorator myDecorator;
+    private final ToolWindowSettings mySettings;
     private boolean myPressedWhenSelected;
 
     private JLayeredPane myDragPane;
@@ -77,6 +82,8 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         myDecorator = decorator;
         myKeymapListener = new MyKeymapListener();
         myPane = pane;
+
+        mySettings = ToolWindowSettings.getInstance(decorator.getProject());
 
         setFocusable(false);
         setBorder(JBUI.Borders.empty(6));
@@ -363,6 +370,11 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     }
 
     @Override
+    public ToolWindowSettings getSettings() {
+        return mySettings;
+    }
+
+    @Override
     public void updateUI() {
         super.updateUI();
 
@@ -376,6 +388,9 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         updateState();
         updateText();
         Image image = myDecorator.getToolWindow().getIcon();
+        if (image != null && mySettings.getButtonDisplay() == ButtonDisplay.LARGE_ICON && image.getWidth() != 0) {
+            image = ImageEffects.resize(image, LARGE_ICON_SIZE / (float) image.getWidth());
+        }
         setIcon(TargetAWT.to(image));
         setDisabledIcon(image == null ? null : TargetAWT.to(ImageEffects.grayed(image)));
     }
@@ -388,16 +403,14 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         }
 
         String text = myDecorator.getToolWindow().getDisplayName().getValue();
-        if (UISettings.getInstance().SHOW_TOOL_WINDOW_NUMBERS) {
-            String toolWindowId = myDecorator.getToolWindow().getId();
-            int mnemonic = ActivateToolWindowAction.getMnemonicForToolWindow(toolWindowId);
-            if (mnemonic != -1) {
-                text = (char) mnemonic + ": " + text;
-                setMnemonic2(mnemonic);
-            }
-            else {
-                setMnemonic2(0);
-            }
+        String toolWindowId = myDecorator.getToolWindow().getId();
+        int mnemonic = mySettings.isShowMnemonic() ? ActivateToolWindowAction.getMnemonicForToolWindow(toolWindowId) : -1;
+        if (mnemonic != -1) {
+            text = (char) mnemonic + ": " + text;
+            setMnemonic2(mnemonic);
+        }
+        else {
+            setMnemonic2(0);
         }
         setText(text);
         updateHelpTooltip();
@@ -406,7 +419,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     private void updateState() {
         DesktopToolWindowImpl window = myDecorator.getToolWindow();
         boolean toShow = window.isAvailable() || window.isPlaceholderMode();
-        if (UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
+        if (mySettings.isAlwaysShowWindowButtons()) {
             setVisible(window.isShowStripeButton() || isSelected());
         }
         else {

@@ -32,7 +32,6 @@ import java.util.List;
 @ExtensionImpl
 public class AppearanceOptionsTopHitProviderEx extends OptionsTopHitProvider implements OptionsTopHitProvider.CoveredByToggleActions {
   private static final Collection<BooleanOptionDescription> ourOptions = List.of(
-    AppearanceOptionsTopHitProvider.appearance(IdeLocalize.labelOptionWindow(IdeLocalize.optionHideToolWindowBars()), "HIDE_TOOL_STRIPES"),
     AppearanceOptionsTopHitProvider.appearance(IdeLocalize.labelOptionView(IdeLocalize.showMainToolbar()), "SHOW_MAIN_TOOLBAR"),
     AppearanceOptionsTopHitProvider.appearance(IdeLocalize.labelOptionView(IdeLocalize.showStatusBar()), "SHOW_STATUS_BAR"),
     AppearanceOptionsTopHitProvider.appearance(IdeLocalize.labelOptionView(IdeLocalize.showNavigationBar()), "SHOW_NAVIGATION_BAR")

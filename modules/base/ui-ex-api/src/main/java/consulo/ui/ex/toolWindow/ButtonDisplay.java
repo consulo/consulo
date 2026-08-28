@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,16 @@
  */
 package consulo.ui.ex.toolWindow;
 
-import consulo.disposer.Disposable;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import org.jspecify.annotations.Nullable;
+import com.dslplatform.json.CompiledJson;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 2026-08-28
  */
-public interface ToolWindowStripeButton extends Disposable {
-
-  WindowInfo getWindowInfo();
-
-  default @Nullable ToolWindowSettings getSettings() {
-    return null;
-  }
-
-  void apply(WindowInfo windowInfo);
-
-  @RequiredUIAccess
-  void updatePresentation();
-
-  
-  Component getComponent();
+@CompiledJson
+public enum ButtonDisplay {
+    ICON_AND_TEXT,
+    ICON,
+    LARGE_ICON,
+    TEXT
 }

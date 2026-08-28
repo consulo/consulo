@@ -32,16 +32,19 @@ public final class TabPainter {
     private TabPainter() {
     }
 
-    public static void paintTabSelection(Graphics2D g2d, int x, int y, int width, int height) {
-        paintTabSelection(g2d, x, y, width, height, SwingConstants.TOP);
+    public static void paintTabSelection(Graphics2D g2d, int x, int y, int width, int height, boolean focused) {
+        paintTabSelection(g2d, x, y, width, height, focused, SwingConstants.TOP);
     }
 
-    public static void paintTabSelection(Graphics2D g2d, int x, int y, int width, int height, int tabPlacement) {
-        paintTabSelection(g2d, x, y, width, height, null, tabPlacement);
+    public static void paintTabSelection(Graphics2D g2d, int x, int y, int width, int height, boolean focused, int tabPlacement) {
+        paintTabSelection(g2d, x, y, width, height, null, focused, tabPlacement);
     }
 
-    public static void paintTabSelection(Graphics2D g2d, int x, int y, int width, int height, @Nullable Color color, int tabPlacement) {
+    public static void paintTabSelection(Graphics2D g2d, int x, int y, int width, int height, @Nullable Color color, boolean focused, int tabPlacement) {
         Color fill = color;
+        if (fill == null) {
+            fill = focused ? null : UIManager.getColor("TabbedPane.inactiveSelectedBackground");
+        }
         if (fill == null) {
             fill = UIManager.getColor("TabbedPane.selectedBackground");
         }

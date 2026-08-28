@@ -8,32 +8,30 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 
 @ExtensionImpl(id = "notificationsWidget", order = "after readOnlyWidget")
 public class NotificationWidgetFactory implements StatusBarWidgetFactory {
-    public static boolean isAvailable() {
-        return UISettings.getInstance().getHideToolStripes() || UISettings.getInstance().getPresentationMode();
-    }
-
     @Override
-    
+
     public String getDisplayName() {
         return UILocalize.statusBarNotificationsWidgetName().get();
     }
 
     @Override
     public boolean isAvailable(Project project) {
-        return isAvailable();
+        return ToolWindowSettings.getInstance(project).isHideToolStripes() || UISettings.getInstance().getPresentationMode();
     }
 
     @Override
-    
+
     public StatusBarWidget createWidget(Project project) {
         return new IdeNotificationArea(this);
     }
 
     @Override
     public boolean canBeEnabledOn(StatusBar statusBar) {
-        return isAvailable();
+        Project project = statusBar.getProject();
+        return project != null && isAvailable(project);
     }
 }

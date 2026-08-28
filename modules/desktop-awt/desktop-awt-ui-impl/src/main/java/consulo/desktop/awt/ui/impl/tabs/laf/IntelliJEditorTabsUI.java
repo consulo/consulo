@@ -385,7 +385,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         Rectangle paintRect = tabPaintRect(tabs, rect);
 
         // JBTabs labels stay horizontal in every position, so tab insets are never rotated
-        TabPainter.paintTabSelection(g2d, paintRect.x, paintRect.y, paintRect.width, paintRect.height, tabColor, SwingConstants.TOP);
+        TabPainter.paintTabSelection(g2d, paintRect.x, paintRect.y, paintRect.width, paintRect.height, tabColor, tabs.holdsFocus(), SwingConstants.TOP);
     }
 
     protected static Rectangle tabPaintRect(JBTabsImpl tabs, Rectangle rect) {

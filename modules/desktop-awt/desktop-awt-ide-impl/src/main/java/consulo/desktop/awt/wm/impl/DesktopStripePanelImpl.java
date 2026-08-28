@@ -503,6 +503,23 @@ final class DesktopStripePanelImpl extends JPanel {
         for (DesktopStripeButton button : myButtons) {
             button.updatePresentation();
         }
+
+        SwingUtilities.invokeLater(() -> {
+            for (DesktopStripeButton button : myButtons) {
+                button.invalidate();
+            }
+
+            myPrefSize = null;
+            myLastLayoutData = null;
+            revalidate();
+            repaint();
+
+            Container parent = getParent();
+            if (parent != null) {
+                parent.revalidate();
+                parent.repaint();
+            }
+        });
     }
 
     public boolean containsScreen(Rectangle screenRec) {

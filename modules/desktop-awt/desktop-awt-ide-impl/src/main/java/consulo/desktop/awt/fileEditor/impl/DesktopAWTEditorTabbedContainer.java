@@ -64,6 +64,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tab.*;
 import consulo.ui.ex.awt.util.TimedDeadzone;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -133,7 +134,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             .addTabMouseListener(new TabMouseListener())
             .getPresentation()
             .setTabDraggingEnabled(true)
-            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 6)))
+            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 12)))
             .setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
             .setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()))
             .setPaintFocus(true)
@@ -258,7 +259,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         List<String> rightIds = mgr.getIdsOn(ToolWindowAnchor.RIGHT);
         List<String> leftIds = mgr.getIdsOn(ToolWindowAnchor.LEFT);
 
-        if (!uiSettings.getHideToolStripes() && !uiSettings.getPresentationMode()) {
+        if (!ToolWindowSettings.getInstance(myProject).isHideToolStripes() && !uiSettings.getPresentationMode()) {
             border.top = !topIds.isEmpty() ? 1 : 0;
             border.bottom = !bottom.isEmpty() ? 1 : 0;
             border.left = !leftIds.isEmpty() ? 1 : 0;

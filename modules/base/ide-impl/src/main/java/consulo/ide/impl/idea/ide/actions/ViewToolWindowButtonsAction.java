@@ -18,10 +18,12 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.ui.UISettings;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 
 @ActionImpl(id ="ViewToolButtons")
 public class ViewToolWindowButtonsAction extends ToggleAction implements DumbAware {
@@ -31,14 +33,18 @@ public class ViewToolWindowButtonsAction extends ToggleAction implements DumbAwa
 
     @Override
     public boolean isSelected(AnActionEvent event) {
-        return !UISettings.getInstance().HIDE_TOOL_STRIPES;
+        Project project = event.getData(Project.KEY);
+        return project != null && !ToolWindowSettings.getInstance(project).isHideToolStripes();
     }
 
     @Override
     @RequiredUIAccess
     public void setSelected(AnActionEvent event, boolean state) {
-        UISettings uiSettings = UISettings.getInstance();
-        uiSettings.HIDE_TOOL_STRIPES = !state;
-        uiSettings.fireUISettingsChanged();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        ToolWindowSettings.getInstance(project).setHideToolStripes(!state);
+        UISettings.getInstance().fireUISettingsChanged();
     }
 }

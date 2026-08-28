@@ -28,6 +28,7 @@ import consulo.ui.FocusManager;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.image.Image;
 
 /**
@@ -57,7 +58,8 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
 
   public void performAction() {
     if (isActive()) {
-      UISettings.getInstance().setHideToolStripes(!UISettings.getInstance().getHideToolStripes());
+      ToolWindowSettings settings = ToolWindowSettings.getInstance(myStatusBar.getProject());
+      settings.setHideToolStripes(!settings.isHideToolStripes());
       UISettings.getInstance().fireUISettingsChanged();
     }
   }
@@ -73,7 +75,9 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
         changes = true;
       }
 
-      Image icon = UISettings.getInstance().getHideToolStripes() ? PlatformIconGroup.generalTbshown() : PlatformIconGroup.generalTbhidden();
+      Image icon = ToolWindowSettings.getInstance(myStatusBar.getProject()).isHideToolStripes()
+        ? PlatformIconGroup.generalTbshown()
+        : PlatformIconGroup.generalTbhidden();
       if (icon != myLabel.getImage()) {
         myLabel.setImage(icon);
         changes = true;

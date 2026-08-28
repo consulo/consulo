@@ -15,7 +15,7 @@
  */
 package consulo.project.ui.internal;
 
-import consulo.application.ui.UISettings;
+import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -311,10 +311,11 @@ public final class ToolWindowLayout {
   
   public List<String> getVisibleIdsOn(ToolWindowAnchor anchor, ToolWindowManager manager) {
     List<String> ids = new ArrayList<>();
+    ToolWindowSettings settings = ToolWindowSettings.getInstance(manager.getProject());
     for (WindowInfoImpl each : getAllInfos(anchor)) {
       ToolWindow window = manager.getToolWindow(each.getId());
       if (window == null) continue;
-      if (window.isAvailable() || UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
+      if (window.isAvailable() || settings.isAlwaysShowWindowButtons()) {
         ids.add(each.getId());
       }
     }

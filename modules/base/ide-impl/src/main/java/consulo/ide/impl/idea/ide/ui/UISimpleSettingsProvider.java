@@ -36,8 +36,6 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
   private static OptionDescription SHOW_MAIN_TOOLBAR = AppearanceOptionsTopHitProvider.appearance("Show Main Toolbar", "SHOW_MAIN_TOOLBAR");
   private static OptionDescription SHOW_NAVIGATION_BAR = AppearanceOptionsTopHitProvider.appearance("Show Navigation Bar",
                                                                                                     "SHOW_NAVIGATION_BAR");
-  private static OptionDescription HIDE_TOOL_STRIPES = AppearanceOptionsTopHitProvider.appearance("Hide Tool Window Bars",
-                                                                                                  "HIDE_TOOL_STRIPES");
   private static OptionDescription SHOW_STATUS_BAR = AppearanceOptionsTopHitProvider.appearance("Show Status Bar", "SHOW_STATUS_BAR");
   private static OptionDescription IS_BLOCK_CURSOR =
     EditorOptionsTopHitProvider.editor(LocalizeValue.localizeTODO("Show Block Cursor"), "IS_BLOCK_CURSOR");
@@ -63,9 +61,6 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
     }
     else if (StringUtil.isBetween(pattern, "tool", "toolbar ")) {
       collector.accept(SHOW_MAIN_TOOLBAR);
-    }
-    else if (StringUtil.isBetween(pattern, "tool w", "tool window bars") || StringUtil.isBetween(pattern, "toolw", "toolwindow ")) {
-      collector.accept(HIDE_TOOL_STRIPES);
     }
     else if (StringUtil.isBetween(pattern, "stat", "status bar ")) {
       collector.accept(SHOW_STATUS_BAR);

@@ -45,6 +45,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.TabsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -208,7 +209,7 @@ public class IdeStatusBarImpl extends JPanel implements StatusBarEx, Predicate<A
         }
 
         Insets insets = getInsets();
-        int minHeight = insets.top + insets.bottom + MIN_ICON_HEIGHT;
+        int minHeight = Math.max(insets.top + insets.bottom + MIN_ICON_HEIGHT, TabsUtil.getRealTabsHeight());
         return new Dimension(size.width, Math.max(size.height, minHeight));
     }
 

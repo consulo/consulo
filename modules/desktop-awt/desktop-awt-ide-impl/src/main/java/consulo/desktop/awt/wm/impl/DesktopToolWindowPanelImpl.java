@@ -86,6 +86,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
     private final List<DesktopStripePanelImpl> myStripes = new ArrayList<>();
 
+    private Comparator<ToolWindowStripeButton> myButtonComparator;
+
     private final DesktopToolWindowManagerImpl myManager;
 
     private boolean myStripesOverlayed;
@@ -113,9 +115,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         myHorizontalSplitter.setDividerWidth(0);
         myHorizontalSplitter.setDividerMouseZoneSize(Registry.intValue("ide.splitter.mouseZone"));
         myHorizontalSplitter.setBackground(Color.gray);
-        myWideScreen = UISettings.getInstance().getWideScreenSupport();
-        myLeftHorizontalSplit = UISettings.getInstance().getLeftHorizontalSplit();
-        myRightHorizontalSplit = UISettings.getInstance().getRightHorizontalSplit();
+        ToolWindowSettings toolWindowSettings = ToolWindowSettings.getInstance(getProject());
+        myWideScreen = toolWindowSettings.isWidescreenSupport();
+        myLeftHorizontalSplit = toolWindowSettings.isLeftHorizontalSplit();
+        myRightHorizontalSplit = toolWindowSettings.isRightHorizontalSplit();
         if (myWideScreen) {
             myHorizontalSplitter.setInnerComponent(myVerticalSplitter);
         }
@@ -170,7 +173,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             myLeftStripe.setBounds(0, topSize.height, leftSize.width, size.height - topSize.height);
             myRightStripe.setBounds(size.width - rightSize.width, topSize.height, rightSize.width, size.height - topSize.height);
 
-            if (UISettings.getInstance().getHideToolStripes() || UISettings.getInstance().getPresentationMode()) {
+            if (ToolWindowSettings.getInstance(getProject()).isHideToolStripes() || UISettings.getInstance().getPresentationMode()) {
                 myLayeredPane.setBounds(0, 0, size.width, size.height);
             }
             else {
@@ -215,7 +218,67 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     @Override
     public final void uiSettingsChanged(UISettings uiSettings) {
         updateToolStripesVisibility();
+        updateButtonsPlacement();
         updateLayout();
+    }
+
+    private boolean isLargeIconsMode() {
+        return ToolWindowSettings.getInstance(getProject()).getButtonDisplay() == ButtonDisplay.LARGE_ICON;
+    }
+
+    private DesktopStripePanelImpl getStripeByAnchor(ToolWindowAnchor anchor) {
+        if (ToolWindowAnchor.BOTTOM == anchor && isLargeIconsMode()) {
+            return myLeftStripe;
+        }
+        if (ToolWindowAnchor.TOP == anchor) {
+            return myTopStripe;
+        }
+        if (ToolWindowAnchor.LEFT == anchor) {
+            return myLeftStripe;
+        }
+        if (ToolWindowAnchor.BOTTOM == anchor) {
+            return myBottomStripe;
+        }
+        if (ToolWindowAnchor.RIGHT == anchor) {
+            return myRightStripe;
+        }
+        throw new IllegalArgumentException("unknown anchor: " + anchor);
+    }
+
+    private Comparator<ToolWindowStripeButton> stripeComparator() {
+        Comparator<ToolWindowStripeButton> base = myButtonComparator != null ? myButtonComparator : (o1, o2) -> 0;
+        return (o1, o2) -> {
+            boolean bottom1 = o1.getWindowInfo().getAnchor() == ToolWindowAnchor.BOTTOM;
+            boolean bottom2 = o2.getWindowInfo().getAnchor() == ToolWindowAnchor.BOTTOM;
+            if (bottom1 != bottom2) {
+                return bottom1 ? 1 : -1;
+            }
+            return base.compare(o1, o2);
+        };
+    }
+
+    @RequiredUIAccess
+    private void updateButtonsPlacement() {
+        for (Map.Entry<DesktopStripeButton, WindowInfoImpl> entry : myButton2Info.entrySet()) {
+            DesktopStripeButton button = entry.getKey();
+            WindowInfoImpl info = entry.getValue();
+            if (info.getAnchor() != ToolWindowAnchor.BOTTOM) {
+                continue;
+            }
+
+            DesktopStripePanelImpl target = getStripeByAnchor(ToolWindowAnchor.BOTTOM);
+            if (button.getParent() == target) {
+                continue;
+            }
+
+            for (DesktopStripePanelImpl stripe : myStripes) {
+                stripe.removeButton(button);
+            }
+            target.addButton(button, stripeComparator());
+        }
+
+        revalidate();
+        repaint();
     }
 
     /**
@@ -237,22 +300,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         myId2Button.put(copiedInfo.getId(), (DesktopStripeButton) button);
         myButton2Info.put((DesktopStripeButton) button, copiedInfo);
 
-        ToolWindowAnchor anchor = copiedInfo.getAnchor();
-        if (ToolWindowAnchor.TOP == anchor) {
-            myTopStripe.addButton((DesktopStripeButton) button, comparator);
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-            myLeftStripe.addButton((DesktopStripeButton) button, comparator);
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-            myBottomStripe.addButton((DesktopStripeButton) button, comparator);
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-            myRightStripe.addButton((DesktopStripeButton) button, comparator);
-        }
-        else {
-            LOG.error("unknown anchor: " + anchor);
-        }
+        myButtonComparator = comparator;
+
+        getStripeByAnchor(copiedInfo.getAnchor()).addButton((DesktopStripeButton) button, stripeComparator());
+
         validate();
         repaint();
     }
@@ -302,25 +353,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         if (button == null) {
             return;
         }
-        WindowInfoImpl info = getButtonInfoById(id);
 
         myButton2Info.remove(button);
         myId2Button.remove(id);
-        ToolWindowAnchor anchor = info.getAnchor();
-        if (ToolWindowAnchor.TOP == anchor) {
-            myTopStripe.removeButton(button);
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-            myLeftStripe.removeButton(button);
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-            myBottomStripe.removeButton(button);
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-            myRightStripe.removeButton(button);
-        }
-        else {
-            LOG.error("unknown anchor: " + anchor);
+        for (DesktopStripePanelImpl stripe : myStripes) {
+            stripe.removeButton(button);
         }
 
         validate();
@@ -498,7 +535,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private void updateToolStripesVisibility() {
         boolean oldVisible = myLeftStripe.isVisible();
 
-        boolean showButtons = !UISettings.getInstance().getHideToolStripes() && !UISettings.getInstance().getPresentationMode();
+        boolean showButtons = !ToolWindowSettings.getInstance(getProject()).isHideToolStripes() && !UISettings.getInstance().getPresentationMode();
         boolean visible = showButtons || myStripesOverlayed;
         myLeftStripe.setVisible(visible);
         myRightStripe.setVisible(visible);
@@ -653,10 +690,10 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
 
     private void updateLayout() {
-        UISettings uiSettings = UISettings.getInstance();
-        if (myWideScreen != uiSettings.getWideScreenSupport()) {
+        ToolWindowSettings toolWindowSettings = ToolWindowSettings.getInstance(getProject());
+        if (myWideScreen != toolWindowSettings.isWidescreenSupport()) {
             JComponent documentComponent = (myWideScreen ? myVerticalSplitter : myHorizontalSplitter).getInnerComponent();
-            myWideScreen = uiSettings.getWideScreenSupport();
+            myWideScreen = toolWindowSettings.isWidescreenSupport();
             if (myWideScreen) {
                 myVerticalSplitter.setInnerComponent(null);
                 myHorizontalSplitter.setInnerComponent(myVerticalSplitter);
@@ -669,7 +706,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             myLayeredPane.add(myWideScreen ? myHorizontalSplitter : myVerticalSplitter, DEFAULT_LAYER);
             setDocumentComponent(documentComponent);
         }
-        if (myLeftHorizontalSplit != uiSettings.getLeftHorizontalSplit()) {
+        if (myLeftHorizontalSplit != toolWindowSettings.isLeftHorizontalSplit()) {
             JComponent component = getComponentAt(ToolWindowAnchor.LEFT);
             if (component instanceof Splitter splitter) {
                 DesktopInternalDecorator first = (DesktopInternalDecorator) splitter.getFirstComponent();
@@ -677,14 +714,14 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 setComponent(
                     splitter,
                     ToolWindowAnchor.LEFT,
-                    ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.LEFT)
+                    ToolWindowAnchorUtil.isSplitVertically(getProject(), ToolWindowAnchor.LEFT)
                         ? first.getWindowInfo().getWeight()
                         : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight()
                 );
             }
-            myLeftHorizontalSplit = uiSettings.getLeftHorizontalSplit();
+            myLeftHorizontalSplit = toolWindowSettings.isLeftHorizontalSplit();
         }
-        if (myRightHorizontalSplit != uiSettings.getRightHorizontalSplit()) {
+        if (myRightHorizontalSplit != toolWindowSettings.isRightHorizontalSplit()) {
             JComponent component = getComponentAt(ToolWindowAnchor.RIGHT);
             if (component instanceof Splitter splitter) {
                 DesktopInternalDecorator first = (DesktopInternalDecorator) splitter.getFirstComponent();
@@ -692,12 +729,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                 setComponent(
                     splitter,
                     ToolWindowAnchor.RIGHT,
-                    ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.RIGHT)
+                    ToolWindowAnchorUtil.isSplitVertically(getProject(), ToolWindowAnchor.RIGHT)
                         ? first.getWindowInfo().getWeight()
                         : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight()
                 );
             }
-            myRightHorizontalSplit = uiSettings.getRightHorizontalSplit();
+            myRightHorizontalSplit = toolWindowSettings.isRightHorizontalSplit();
         }
     }
 
@@ -876,16 +913,17 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
             class MySplitter extends Splitter implements UISettingsListener {
                 @Override
                 public void uiSettingsChanged(UISettings uiSettings) {
+                    ToolWindowSettings toolWindowSettings = ToolWindowSettings.getInstance(getProject());
                     if (anchor == ToolWindowAnchor.LEFT) {
-                        setOrientation(!uiSettings.getLeftHorizontalSplit());
+                        setOrientation(!toolWindowSettings.isLeftHorizontalSplit());
                     }
                     else if (anchor == ToolWindowAnchor.RIGHT) {
-                        setOrientation(!uiSettings.getRightHorizontalSplit());
+                        setOrientation(!toolWindowSettings.isRightHorizontalSplit());
                     }
                 }
             }
             Splitter splitter = new MySplitter();
-            splitter.setOrientation(ToolWindowAnchorUtil.isSplitVertically(anchor));
+            splitter.setOrientation(ToolWindowAnchorUtil.isSplitVertically(getProject(), anchor));
             if (!anchor.isHorizontal()) {
                 splitter.setAllowSwitchOrientationByMouseClick(true);
                 splitter.addPropertyChangeListener(evt -> {
@@ -893,17 +931,17 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                         return;
                     }
                     boolean isSplitterHorizontalNow = !splitter.isVertical();
-                    UISettings settings = UISettings.getInstance();
+                    ToolWindowSettings settings = ToolWindowSettings.getInstance(getProject());
                     if (anchor == ToolWindowAnchor.LEFT) {
-                        if (settings.getLeftHorizontalSplit() != isSplitterHorizontalNow) {
+                        if (settings.isLeftHorizontalSplit() != isSplitterHorizontalNow) {
                             settings.setLeftHorizontalSplit(isSplitterHorizontalNow);
-                            settings.fireUISettingsChanged();
+                            UISettings.getInstance().fireUISettingsChanged();
                         }
                     }
                     if (anchor == ToolWindowAnchor.RIGHT) {
-                        if (settings.getRightHorizontalSplit() != isSplitterHorizontalNow) {
+                        if (settings.isRightHorizontalSplit() != isSplitterHorizontalNow) {
                             settings.setRightHorizontalSplit(isSplitterHorizontalNow);
-                            settings.fireUISettingsChanged();
+                            UISettings.getInstance().fireUISettingsChanged();
                         }
                     }
                 });
@@ -919,7 +957,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                         WindowInfoImpl.normalizeWeight(sideWeight / (sideWeight + myInfo.getSideWeight()))
                     );
                     splitter.setProportion(proportion);
-                    if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(anchor)) {
+                    if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(getProject(), anchor)) {
                         newWeight = WindowInfoImpl.normalizeWeight(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
                     }
                     else {
@@ -930,7 +968,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
                     splitter.setFirstComponent(myNewComponent);
                     splitter.setSecondComponent(oldComponent);
                     splitter.setProportion(WindowInfoImpl.normalizeWeight(myInfo.getSideWeight()));
-                    if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(anchor)) {
+                    if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(getProject(), anchor)) {
                         newWeight = WindowInfoImpl.normalizeWeight(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
                     }
                     else {
