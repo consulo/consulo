@@ -63,6 +63,7 @@ public interface Canvas2D {
      * Next fill should draw a rectangle.
      */
     default void fillRect(double x, double y, double w, double h) {
+        beginPath();
         rect(x, y, w, h);
         fill();
     }
@@ -71,6 +72,7 @@ public interface Canvas2D {
      * Next fill should draw a rectangle.
      */
     default void strokeRect(double x, double y, double w, double h) {
+        beginPath();
         rect(x, y, w, h);
         stroke();
     }

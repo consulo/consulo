@@ -533,7 +533,9 @@ public class DesktopCanvas2DImpl implements Canvas2D {
 
   @Override
   public void rect(double x, double y, double w, double h) {
-    currentPath = new GeneralPath();
+    if (currentPath == null) {
+      currentPath = new GeneralPath();
+    }
     currentPath.append(new Rectangle2D.Double((state.dx + x) * state.scale, (state.dy + y) * state.scale, w * state.scale, h * state.scale), false);
   }
 
@@ -544,7 +546,9 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     y -= r;
 
     // TODO [VISTALL] sAngle + eAngle not supported
-    currentPath = new GeneralPath();
+    if (currentPath == null) {
+      currentPath = new GeneralPath();
+    }
     currentPath.append(new Ellipse2D.Double((state.dx + x) * state.scale, (state.dy + y) * state.scale, r * state.scale * 2, r * state.scale * 2), false);
   }
 

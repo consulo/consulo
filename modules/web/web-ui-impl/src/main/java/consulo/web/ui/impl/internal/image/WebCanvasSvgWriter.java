@@ -156,7 +156,6 @@ public class WebCanvasSvgWriter implements Canvas2D {
 
     @Override
     public void rect(double x, double y, double w, double h) {
-        myPath.setLength(0);
         myPath.append('M').append(number(x)).append(' ').append(number(y))
             .append('H').append(number(x + w))
             .append('V').append(number(y + h))
@@ -166,8 +165,6 @@ public class WebCanvasSvgWriter implements Canvas2D {
 
     @Override
     public void arc(double x, double y, double r, double sAngle, double eAngle) {
-        myPath.setLength(0);
-
         double sweep = eAngle - sAngle;
 
         // an svg elliptical arc whose end lands on its start draws nothing, so a full turn is cut in halves
