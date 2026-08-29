@@ -193,6 +193,6 @@ unnamed.list.display.name:
 use.non.english.keyboard.layout.support:
     text: '{0} la&yout support'
 use.unicode.characters.in.shortcuts:
-    text: Use unicode characters instead text in shortcuts (⇧ instead SHIFT)
+    text: Use unicode characters instead of text in shortcuts (⇧ instead of SHIFT)
 version.control.group.title:
     text: Version Control Systems
