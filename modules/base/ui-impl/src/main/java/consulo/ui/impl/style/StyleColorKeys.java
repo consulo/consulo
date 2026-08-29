@@ -67,10 +67,12 @@ public final class StyleColorKeys {
         ourKeys.put(ComponentColors.SCROLL_BAR_THUMB, "ScrollBar.thumb");
         ourKeys.put(ComponentColors.SCROLL_BAR_HOVER_THUMB, "ScrollBar.hoverThumbColor");
 
-        ourKeys.put(ComponentColors.TABBED_PANE_BACKGROUND, "TabbedPane.background");
-        ourKeys.put(ComponentColors.TABBED_PANE_FOREGROUND, "TabbedPane.foreground");
-        ourKeys.put(ComponentColors.TABBED_PANE_HOVER, "TabbedPane.hoverColor");
-        ourKeys.put(ComponentColors.TABBED_PANE_UNDERLINE, "TabbedPane.underlineColor");
+        ourKeys.put(ComponentColors.TABBED_LAYOUT_BACKGROUND, "TabbedPane.background");
+        ourKeys.put(ComponentColors.TABBED_LAYOUT_FOREGROUND, "TabbedPane.foreground");
+        ourKeys.put(ComponentColors.TABBED_LAYOUT_HOVER, "TabbedPane.hoverColor");
+        ourKeys.put(ComponentColors.TABBED_LAYOUT_UNDERLINE, "TabbedPane.underlineColor");
+        ourKeys.put(ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND, "TabbedPane.selectedBackground");
+        ourKeys.put(ComponentColors.TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND, "TabbedPane.inactiveSelectedBackground");
     }
 
     public static @Nullable String getKey(StyleColorValue colorValue) {

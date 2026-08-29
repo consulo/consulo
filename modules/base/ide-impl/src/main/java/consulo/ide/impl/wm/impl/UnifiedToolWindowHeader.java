@@ -234,7 +234,7 @@ public class UnifiedToolWindowHeader implements Disposable {
             tabLayout.addBorder(
                 BorderPosition.BOTTOM,
                 BorderStyle.LINE,
-                style.getColorValue(ComponentColors.TABBED_PANE_UNDERLINE),
+                style.getColorValue(ComponentColors.TABBED_LAYOUT_UNDERLINE),
                 2
             );
         }

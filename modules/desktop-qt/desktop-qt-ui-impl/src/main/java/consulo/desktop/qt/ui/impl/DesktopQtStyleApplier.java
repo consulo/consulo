@@ -101,7 +101,7 @@ public final class DesktopQtStyleApplier {
             palette.setColor(group, QPalette.ColorRole.Link, link);
             palette.setColor(group, QPalette.ColorRole.LinkVisited, link);
             palette.setColor(group, QPalette.ColorRole.Mid, border);
-            palette.setColor(group, QPalette.ColorRole.Accent, color(style, ComponentColors.TABBED_PANE_UNDERLINE));
+            palette.setColor(group, QPalette.ColorRole.Accent, color(style, ComponentColors.TABBED_LAYOUT_UNDERLINE));
             palette.setColor(group, QPalette.ColorRole.Highlight, selectionBackground);
             palette.setColor(group, QPalette.ColorRole.HighlightedText, selectionForeground);
         }

@@ -16,7 +16,9 @@
       "background": "#f2f3f5",
       "foreground": "#252525",
       "hoverColor": "#dee0e5",
-      "underlineColor": "#007aff"
+      "underlineColor": "#007aff",
+      "selectedBackground": "#d8e8fa",
+      "inactiveSelectedBackground": "#e5eef8"
     },
     "ScrollBar": {
       "thumb": "#c2c2c2",

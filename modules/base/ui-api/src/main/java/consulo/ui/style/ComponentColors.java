@@ -60,8 +60,15 @@ public enum ComponentColors implements StyleColorValue {
     SCROLL_BAR_THUMB,
     SCROLL_BAR_HOVER_THUMB,
 
-    TABBED_PANE_BACKGROUND,
-    TABBED_PANE_FOREGROUND,
-    TABBED_PANE_HOVER,
-    TABBED_PANE_UNDERLINE
+    TABBED_LAYOUT_BACKGROUND,
+    TABBED_LAYOUT_FOREGROUND,
+    TABBED_LAYOUT_HOVER,
+    TABBED_LAYOUT_UNDERLINE,
+    /**
+     * The fill of the selected tab, and of a selected tab whose window is not the active one. Both are what a
+     * tab is drawn as - the awt painter fills the tab with them, so a frontend which cannot ask for them has
+     * to invent a way to tell the selected tab apart.
+     */
+    TABBED_LAYOUT_SELECTED_BACKGROUND,
+    TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND
 }
