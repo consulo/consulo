@@ -16,6 +16,7 @@
 package consulo.desktop.qt.platform;
 
 import consulo.desktop.qt.ui.impl.DesktopQtUIAccess;
+import consulo.platform.PlatformUser;
 import consulo.platform.impl.PlatformBase;
 import consulo.ui.UIAccess;
 import io.qt.core.QUrl;
@@ -23,6 +24,7 @@ import io.qt.gui.QDesktopServices;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -31,6 +33,11 @@ import java.net.URL;
 public class DesktopQtPlatformImpl extends PlatformBase {
     public DesktopQtPlatformImpl() {
         super(LOCAL, LOCAL, getSystemJvmProperties());
+    }
+
+    @Override
+    protected PlatformUser createUser(Map<String, String> jvmProperties) {
+        return new DesktopQtPlatformUserImpl(this, jvmProperties);
     }
 
     @Override

@@ -49,7 +49,6 @@ public class DesktopStyleImpl extends StyleImpl {
         myLookAndFeelInfo = lookAndFeelInfo;
     }
 
-    
     @Override
     public ColorValue getColorValue(StyleColorValue colorValue) {
         // maybe time for map?

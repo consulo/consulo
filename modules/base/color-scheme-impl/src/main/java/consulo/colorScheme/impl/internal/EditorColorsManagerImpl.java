@@ -283,7 +283,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         setGlobalSchemeInner(scheme);
 
         if (refreshUI) {
-            StyleManager.get().refreshUI();
+            StyleManager.get().forceRepaintAll();
         }
 
         fireChanges(scheme);

@@ -26,6 +26,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.clipboard.Clipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
+import consulo.ui.impl.style.StyleManagerService;
 import io.qt.core.QCoreApplication;
 import io.qt.core.QMetaObject;
 import io.qt.core.QObject;
@@ -82,10 +83,8 @@ public class DesktopQtUIAccess extends BaseUIAccess implements UIAccess {
                 // the family resolved to the first time it was asked for
                 DesktopQtFontRegistry.registerBundledFonts();
 
-                DesktopQtStyleManagerImpl.INSTANCE.syncWithPlatform();
-                QGuiApplication.styleHints().colorSchemeChanged.connect(
-                    scheme -> DesktopQtStyleManagerImpl.INSTANCE.syncWithPlatform()
-                );
+                // load style state
+                Application.get().getInstance(StyleManagerService.class);
 
                 DesktopQtCurrentInput.install();
 

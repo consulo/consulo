@@ -48,6 +48,12 @@ public final class DesktopQtStyleApplier {
      * What an item of the menu bar in the header of a titleless window is padded by, which is what decides how
      * tall the menu bar asks to be.
      */
+    private static final int ourTabVerticalPadding = 4;
+    private static final int ourTabHorizontalPadding = 8;
+    /** what separates one tab from the next, so a rounded tab is not drawn against its neighbour */
+    private static final int ourTabGap = 2;
+    private static final int ourTabCloseGap = 4;
+
     private static final int ourMenuBarItemVerticalPadding = 3;
     private static final int ourMenuBarItemHorizontalPadding = 8;
 
@@ -125,7 +131,67 @@ public final class DesktopQtStyleApplier {
      * among the rest - and the theme reaches it through the palette instead.
      */
     private static String buildStyleSheet(Style style) {
-        return buildTitleBarStyleSheet(style);
+        return buildTitleBarStyleSheet(style) + buildTabStyleSheet(style);
+    }
+
+    /**
+     * The tabs of a {@link consulo.ui.layout.TabbedLayout}. The desktop style draws a tab out of the palette,
+     * where the only role a tab colour of the ide reaches is Accent - so a tab carries the colours of breeze or
+     * fusion and not the ones of the theme picked in the ide.
+     *
+     * <p>Naming {@code QTabBar::tab} takes the drawing of a tab away from the desktop style altogether, which is
+     * why every state a tab has is written out here: leaving one out does not fall back to the native drawing,
+     * it draws nothing.
+     */
+    private static String buildTabStyleSheet(Style style) {
+        String background = css(style, ComponentColors.TABBED_LAYOUT_BACKGROUND);
+        String foreground = css(style, ComponentColors.TABBED_LAYOUT_FOREGROUND);
+        String hover = css(style, ComponentColors.TABBED_LAYOUT_HOVER);
+        String selected = css(style, ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND);
+        String inactiveSelected = css(style, ComponentColors.TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND);
+        String selectedBorder = cssBorderOf(style, ComponentColors.TABBED_LAYOUT_SELECTED_BACKGROUND);
+        String inactiveSelectedBorder = cssBorderOf(style, ComponentColors.TABBED_LAYOUT_INACTIVE_SELECTED_BACKGROUND);
+        String layout = css(style, ComponentColors.LAYOUT);
+
+        // a tab bar of qt draws its own background behind the tabs, and the pane below carries the frame the
+        // desktop style puts around the content - neither belongs to a tabbed layout of the ide
+        return """
+
+            QTabWidget::pane { background: %s; border: none; }
+            QTabBar { background: %s; qproperty-drawBase: 0; }
+            QTabBar::tab {
+                background: transparent;
+                color: %s;
+                padding: %dpx %dpx;
+                margin: 0px %dpx;
+
+                /* the border is on every tab and only coloured on the selected one - giving it to the selected
+                   tab alone would widen that tab by two pixels and shove the row along as the selection moves */
+                border: 1px solid transparent;
+                border-radius: %dpx;
+            }
+            QTabBar::tab:hover { background: %s; }
+            QTabBar::tab:selected { background: %s; border-color: %s; }
+            QTabBar::tab:selected:!active { background: %s; border-color: %s; }
+
+            /* the cross carries the room it needs on its own side, so the padding of the tab is what is left
+               of the label on either side of it */
+            QTabBar::close-button { margin-left: %dpx; }
+            """.formatted(
+            layout,
+            background,
+            foreground,
+            ourTabVerticalPadding,
+            ourTabHorizontalPadding,
+            ourTabGap,
+            ourButtonArc,
+            hover,
+            selected,
+            selectedBorder,
+            inactiveSelected,
+            inactiveSelectedBorder,
+            ourTabCloseGap
+        );
     }
 
     /**
@@ -220,6 +286,28 @@ public final class DesktopQtStyleApplier {
     private static QColor color(Style style, StyleColorValue colorValue) {
         RGBColor rgb = style.getColorValue(colorValue).toRGB();
         return new QColor(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), rgb.getAlpha());
+    }
+
+    /**
+     * The border a tab is drawn with, taken from the fill rather than from a key of its own - the awt painter
+     * does the same in {@code TabPainter#getTabBorderColor}: a dark fill is lightened and a light one darkened,
+     * so the edge stands off the fill whichever side of the contrast the theme is on.
+     */
+    private static String cssBorderOf(Style style, StyleColorValue colorValue) {
+        RGBColor rgb = style.getColorValue(colorValue).toRGB();
+        boolean dark = (rgb.getRed() * 299 + rgb.getGreen() * 587 + rgb.getBlue() * 114) / 1000 < 128;
+        float factor = dark ? 1.2f : 0.9f;
+
+        return "rgba(%d, %d, %d, %d%%)".formatted(
+            shift(rgb.getRed(), factor),
+            shift(rgb.getGreen(), factor),
+            shift(rgb.getBlue(), factor),
+            rgb.getAlpha() * 100 / 255
+        );
+    }
+
+    private static int shift(int component, float factor) {
+        return Math.max(0, Math.min(255, Math.round(component * factor)));
     }
 
     private static String css(Style style, StyleColorValue colorValue) {

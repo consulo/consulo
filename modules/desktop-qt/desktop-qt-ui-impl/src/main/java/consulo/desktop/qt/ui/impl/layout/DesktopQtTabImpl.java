@@ -18,11 +18,14 @@ package consulo.desktop.qt.ui.impl.layout;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.qt.ui.impl.DesktopQtTextItemPresentation;
+import consulo.desktop.qt.ui.impl.image.DesktopQtImage;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
+import consulo.ui.image.Image;
 import consulo.ui.annotation.RequiredUIAccess;
+import io.qt.gui.QIcon;
 import io.qt.widgets.QTabBar;
 import io.qt.widgets.QTabWidget;
 import io.qt.widgets.QWidget;
@@ -137,6 +140,11 @@ public class DesktopQtTabImpl implements Tab {
         myRenderer.accept(this, item);
 
         myTabWidget.setTabText(index, item.toString());
+
+        // the renderer names an icon for the file the tab stands for - the other frontends draw it beside the
+        // label, and a tab bar which asks the renderer only for its text drops it
+        Image image = item.getImage();
+        myTabWidget.setTabIcon(index, image == null ? new QIcon() : DesktopQtImage.toQIcon(image));
     }
 
     public void setComponent(Component component) {

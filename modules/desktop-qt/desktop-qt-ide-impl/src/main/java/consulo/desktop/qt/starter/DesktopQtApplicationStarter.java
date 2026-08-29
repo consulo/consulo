@@ -33,6 +33,7 @@ import consulo.project.Project;
 import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;

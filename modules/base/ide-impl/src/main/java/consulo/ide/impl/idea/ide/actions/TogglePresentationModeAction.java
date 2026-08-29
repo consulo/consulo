@@ -22,10 +22,10 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awt.internal.laf.LafManager;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.component.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -37,6 +37,7 @@ import consulo.ui.ex.action.LegacyDumbAwareAction;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.style.StyleManager;
 import consulo.util.concurrent.ActionCallback;
 import org.jspecify.annotations.Nullable;
 
@@ -101,7 +102,7 @@ public class TogglePresentationModeAction extends LegacyDumbAwareAction {
     private static ActionCallback tweakFrameFullScreen(Project project, boolean inPresentation) {
         IdeFrameEx frame = (IdeFrameEx) IdeFrameUtil.findActiveRootIdeFrame();
         if (frame != null) {
-            PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
+            PropertiesComponent propertiesComponent = ProjectPropertiesComponent.getInstance(project);
             if (inPresentation) {
                 propertiesComponent.setValue("full.screen.before.presentation.mode", String.valueOf(frame.isInFullScreen()));
                 return frame.toggleFullScreen(true);
@@ -132,7 +133,7 @@ public class TogglePresentationModeAction extends LegacyDumbAwareAction {
             }
         }
         UISettings.getInstance().fireUISettingsChanged();
-        LafManager.getInstance().updateUI();
+        StyleManager.get().forceReinitAll();
         EditorUtil.reinitSettings();
     }
 

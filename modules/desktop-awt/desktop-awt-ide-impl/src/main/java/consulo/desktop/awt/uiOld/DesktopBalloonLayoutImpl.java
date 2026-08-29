@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
 import consulo.desktop.awt.internal.notification.EventLog;
+import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
 import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.internal.laf.LafManager;
-import consulo.ui.ex.awt.internal.laf.LafManagerListener;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.project.ui.internal.BalloonLayoutEx;
 import consulo.project.ui.notification.Notification;
@@ -30,6 +29,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.style.StyleChangeListener;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -37,8 +38,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     private final ComponentAdapter myResizeListener = new ComponentAdapter() {
@@ -76,7 +77,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
         fireRelayout();
     };
 
-    private LafManagerListener myLafListener;
+    private Disposable myStyleDisposable;
 
     private final List<Runnable> myListeners = new ArrayList<>();
 
@@ -89,9 +90,9 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
     public void dispose() {
         myLayeredPane.removeComponentListener(myResizeListener);
-        if (myLafListener != null) {
-            LafManager.getInstance().removeLafManagerListener(myLafListener);
-            myLafListener = null;
+        if (myStyleDisposable != null) {
+            myStyleDisposable.dispose();
+            myStyleDisposable = null;
         }
         for (Balloon balloon : new ArrayList<>(myBalloons)) {
             Disposer.dispose(balloon);
@@ -163,15 +164,15 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
             }
         );
 
-        if (myLafListener == null && layoutData != null) {
-            myLafListener = source -> {
+        if (myStyleDisposable == null && layoutData != null) {
+            StyleChangeListener listener = (oldStyle, newStyle) -> {
                 for (BalloonLayoutData layoutData1 : myLayoutData.values()) {
                     if (layoutData1.lafHandler != null) {
                         layoutData1.lafHandler.run();
                     }
                 }
             };
-            LafManager.getInstance().addLafManagerListener(myLafListener);
+            myStyleDisposable = StyleManager.get().addChangeListener(listener);
         }
 
         calculateSize();
@@ -262,7 +263,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
         return 2;
     }
 
-   
+
     private Dimension getSize(Balloon balloon) {
         BalloonLayoutData layoutData = myLayoutData.get(balloon);
         if (layoutData == null) {

@@ -16,7 +16,6 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.FrameStateManager;
@@ -30,8 +29,8 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.ui.impl.facade.AWTComponentProviderUtil;
+import consulo.desktop.awt.ui.popup.BalloonImpl;
 import consulo.desktop.awt.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
@@ -39,8 +38,6 @@ import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ui.ex.awt.internal.laf.LafManager;
-import consulo.ui.ex.awt.internal.laf.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.localize.LocalizeValue;
@@ -80,16 +77,19 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleChangeListener;
+import consulo.ui.style.StyleManager;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -249,19 +249,19 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         });
     }
 
-    
+
     @Override
     protected InternalDecoratorListener createInternalDecoratorListener() {
         return new MyInternalDecoratorListener();
     }
 
-    
+
     @Override
     protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
         return new DesktopStripeButton((DesktopInternalDecorator) internalDecorator, (DesktopToolWindowPanelImpl) myToolWindowPanel);
     }
 
-    
+
     @Override
     protected ToolWindowEx createToolWindow(
         String id,
@@ -273,7 +273,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent) component, shouldBeAvailable);
     }
 
-    
+
     @Override
     protected ToolWindowInternalDecorator createInternalDecorator(
         Project project,
@@ -394,7 +394,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return getModifiersVKs(baseModifiers);
     }
 
-    
+
     private static Set<Integer> getModifiersVKs(int mask) {
         Set<Integer> codes = new HashSet<>();
         if ((mask & InputEvent.SHIFT_MASK) > 0) {
@@ -453,7 +453,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         );
     }
 
-    
+
     public DesktopToolWindowPanelImpl getToolWindowPanel() {
         return (DesktopToolWindowPanelImpl) myToolWindowPanel;
     }
@@ -469,7 +469,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         MyLafManagerListener lafManagerListener = new MyLafManagerListener();
 
         UIManager.addPropertyChangeListener(uiManagerPropertyListener);
-        LafManager.getInstance().addLafManagerListener(lafManagerListener, this);
+        Disposer.register(this, StyleManager.get().addChangeListener(lafManagerListener));
 
         Disposer.register(this, () -> UIManager.removePropertyChangeListener(uiManagerPropertyListener));
 
@@ -525,7 +525,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         return FileEditorManager.getInstance(project).getComponent();
     }
 
-    
+
     @Override
     protected JLabel createInitializingLabel() {
         JLabel label = new JLabel("Initializing...", SwingConstants.CENTER);
@@ -1199,10 +1199,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
     }
 
-    private final class MyLafManagerListener implements LafManagerListener {
+    private final class MyLafManagerListener implements StyleChangeListener {
         @Override
-        @RequiredUIAccess
-        public void lookAndFeelChanged(LafManager source) {
+        public void styleChanged(Style oldStyle, Style newStyle) {
             updateComponentTreeUI();
         }
     }
@@ -1218,7 +1217,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         ProjectIdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
     }
 
-    
+
     private static Rectangle2D getRootBounds(JFrame frame) {
         JRootPane rootPane = frame.getRootPane();
         Rectangle bounds = rootPane.getBounds();

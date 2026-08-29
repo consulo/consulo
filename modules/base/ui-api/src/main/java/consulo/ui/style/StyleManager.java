@@ -17,6 +17,7 @@ package consulo.ui.style;
 
 import consulo.disposer.Disposable;
 import consulo.ui.AntialiasingType;
+import consulo.ui.Component;
 import consulo.ui.internal.UIInternal;
 import org.jspecify.annotations.Nullable;
 
@@ -52,6 +53,15 @@ public interface StyleManager {
     default void refreshAntialiasingType(AntialiasingType antialiasingType) {
     }
 
-    default void refreshUI() {
+    /**
+     * Force to repaint all compoents via {@link Component#forceRepaint()}
+     */
+    default void forceRepaintAll() {
+    }
+
+    /**
+     * Force to reinitialize UI of all components, for example style changed we need reinit UI
+     */
+    default void forceReinitAll() {
     }
 }

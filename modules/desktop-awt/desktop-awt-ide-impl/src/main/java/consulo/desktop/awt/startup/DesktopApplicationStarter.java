@@ -52,7 +52,6 @@ import consulo.externalService.plugin.PluginsConfigurable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
-import consulo.ui.ex.awt.internal.laf.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -70,6 +69,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.impl.style.StyleManagerService;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
@@ -211,8 +211,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             }
         });
 
-        // init laf settings
-        LafManager.getInstance();
+        // load style state
+        app.getInstance(StyleManagerService.class);
 
         TopMenuInitializer.register(app);
 

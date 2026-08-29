@@ -27,7 +27,7 @@ import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageKey;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTPNGImageReference;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTSVGImageReference;
 import consulo.desktop.awt.ui.impl.layout.*;
-import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
+import consulo.desktop.awt.ui.impl.style.DesktopAWTStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
 import consulo.desktop.awt.ui.impl.image.DesktopDeferredIconImpl;
 import consulo.disposer.Disposable;
@@ -252,7 +252,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
     @Override
     public StyleManager _StyleManager_get() {
-        return DesktopStyleManagerImpl.ourInstance;
+        return DesktopAWTStyleManagerImpl.INSTANCE;
     }
 
     @Override

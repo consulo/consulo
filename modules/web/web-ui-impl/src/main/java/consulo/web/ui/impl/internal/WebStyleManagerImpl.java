@@ -20,43 +20,46 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibraryManager;
+import consulo.ui.impl.style.PersistentStyleManagerImpl;
 import consulo.ui.impl.style.StyleImpl;
-import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.impl.style.UITheme;
 import consulo.ui.style.Style;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2017-09-15
  */
-public class WebStyleManagerImpl extends StyleManagerImpl {
+public class WebStyleManagerImpl extends PersistentStyleManagerImpl<WebStyleImpl> {
     private static final Logger LOG = Logger.getInstance(WebStyleManagerImpl.class);
 
-    private static final WebStyleImpl LIGHT = new WebStyleImpl(Style.LIGHT_ID, "Light", false, ColorScheme.Value.LIGHT);
-    private static final WebStyleImpl SEMI_DARK = new WebStyleImpl(Style.SEMI_DARK, "Dark Grey", true, ColorScheme.Value.DARK);
-    private static final WebStyleImpl DARK = new WebStyleImpl(Style.DARK_ID, "Dark", true, ColorScheme.Value.DARK);
+    public static final WebStyleManagerImpl INSTANCE = new WebStyleManagerImpl();
 
-    private List<Style> myStyles = List.of(LIGHT, SEMI_DARK, DARK);
-
-    public static final WebStyleManagerImpl ourInstance = new WebStyleManagerImpl();
-
-    private Style myCurrentStyle = LIGHT;
-
-    @Override
-    public List<Style> getStyles() {
-        return myStyles;
+    static class Styles {
+        private static final WebStyleImpl LIGHT = new WebStyleImpl(Style.LIGHT_ID, "Light", false, ColorScheme.Value.LIGHT);
+        private static final WebStyleImpl SEMI_DARK = new WebStyleImpl(Style.SEMI_DARK, "Dark Grey", true, ColorScheme.Value.DARK);
+        private static final WebStyleImpl DARK = new WebStyleImpl(Style.DARK_ID, "Dark", true, ColorScheme.Value.DARK);
     }
 
     @Override
-    public Style getCurrentStyle() {
-        return myCurrentStyle;
+    protected void fill(Consumer<WebStyleImpl> consumer) {
+        consumer.accept(Styles.LIGHT);
+        consumer.accept(Styles.SEMI_DARK);
+        consumer.accept(Styles.DARK);
     }
 
     @Override
-    public void setCurrentStyle(Style style) {
+    public WebStyleImpl getDefaultStyle() {
+        return Styles.LIGHT;
+    }
+
+    @Override
+    protected void setCurrentStyle(WebStyleImpl style, boolean wantChangeScheme, boolean fire, String iconLibraryId) {
         Style oldStyle = myCurrentStyle;
+
         myCurrentStyle = style;
 
         IconLibraryManager.get().setActiveLibraryFromActiveStyle();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.internal.laf;
+package consulo.ui.impl.style;
 
-import java.util.EventListener;
+import com.dslplatform.json.CompiledJson;
+import consulo.util.xml.serializer.annotation.Tag;
+import org.jspecify.annotations.Nullable;
 
 /**
- * If you are interested in listening UI changes you have to
- * use this listener instead of registering <code>PropertyChangeListener</code>
- * into <code>UIManager</code>
- *
- * @author Vladimir Kondratyev
+ * @author VISTALL
+ * @since 2026-08-29
  */
-public interface LafManagerListener extends EventListener{
-  void lookAndFeelChanged(LafManager source);
+@CompiledJson
+public class StyleManagerState {
+    @Tag
+    public @Nullable String theme;
+    @Tag
+    public @Nullable String locale;
+    @Tag
+    public @Nullable String icon;
 }

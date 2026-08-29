@@ -17,7 +17,6 @@ package consulo.web.ui.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.server.VaadinSession;
@@ -47,7 +46,6 @@ import consulo.ui.model.LazyFlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
-import consulo.web.ui.impl.internal.WebApplicationImpl;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebShowNotifier;
 import consulo.web.ui.impl.internal.htmlView.WebHtmlViewImpl;
@@ -365,7 +363,7 @@ public class WebUIInternalImpl extends UIInternal {
 
     @Override
     public StyleManager _StyleManager_get() {
-        return WebStyleManagerImpl.ourInstance;
+        return WebStyleManagerImpl.INSTANCE;
     }
 
     @Override

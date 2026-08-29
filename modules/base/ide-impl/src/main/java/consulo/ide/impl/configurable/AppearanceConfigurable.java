@@ -457,7 +457,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             }
 
             if (refreshUI) {
-                styleManager.refreshUI();
+                styleManager.forceRepaintAll();
             }
 
             if (finalUpdate) {

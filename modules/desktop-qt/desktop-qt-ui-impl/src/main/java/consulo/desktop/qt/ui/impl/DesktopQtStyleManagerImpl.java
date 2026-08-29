@@ -21,6 +21,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.logging.Logger;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconRefresher;
+import consulo.ui.impl.style.PersistentStyleManagerImpl;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.style.Style;
@@ -30,48 +31,39 @@ import io.qt.gui.QGuiApplication;
 import io.qt.gui.QPalette;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2026-08-16
  */
-public class DesktopQtStyleManagerImpl extends StyleManagerImpl {
+public class DesktopQtStyleManagerImpl extends PersistentStyleManagerImpl<DesktopQtStyleImpl> {
     private static final Logger LOG = Logger.getInstance(DesktopQtStyleManagerImpl.class);
 
-
-    private static final Style LIGHT = new DesktopQtStyleImpl(Style.LIGHT_ID);
-    private static final Style SEMI_DARK = new DesktopQtStyleImpl(Style.SEMI_DARK);
-    private static final Style DARK = new DesktopQtStyleImpl(Style.DARK_ID);
+    static class Styles {
+        private static final DesktopQtStyleImpl LIGHT = new DesktopQtStyleImpl(Style.LIGHT_ID);
+        private static final DesktopQtStyleImpl SEMI_DARK = new DesktopQtStyleImpl(Style.SEMI_DARK);
+        private static final DesktopQtStyleImpl DARK = new DesktopQtStyleImpl(Style.DARK_ID);
+    }
 
     public static final DesktopQtStyleManagerImpl INSTANCE = new DesktopQtStyleManagerImpl();
-
-    private static final List<Style> ourStyles = List.of(LIGHT, SEMI_DARK, DARK);
-
-    private Style myCurrentStyle = LIGHT;
-
-    /** the preference of the desktop is only the default, and a theme picked in the ide outranks it */
-    private boolean myStyleChosen;
 
     private boolean myApplyingStyle;
 
     @Override
-    public List<Style> getStyles() {
-        return ourStyles;
+    protected void fill(Consumer<DesktopQtStyleImpl> consumer) {
+        consumer.accept(Styles.LIGHT);
+        consumer.accept(Styles.SEMI_DARK);
+        consumer.accept(Styles.DARK);
     }
 
     @Override
-    public Style getCurrentStyle() {
-        return myCurrentStyle;
-    }
-
-    @Override
-    public void setCurrentStyle(Style style) {
+    protected void setCurrentStyle(DesktopQtStyleImpl style, boolean wantChangeScheme, boolean fire, String iconLibraryId) {
         if (myApplyingStyle) {
             LOG.warn("style change re-entered while applying " + myCurrentStyle.getId() + ", ignoring " + style.getId());
             return;
         }
 
-        myStyleChosen = true;
         myApplyingStyle = true;
         try {
             applyStyle(style);
@@ -108,37 +100,23 @@ public class DesktopQtStyleManagerImpl extends StyleManagerImpl {
         editorColorsManager.setGlobalScheme(scheme);
     }
 
+    @Override
+    public void forceReinitAll() {
+        forceRepaintAll();
+    }
+
     /**
      * Also the way an icon library picked by hand in the settings reaches the ui - it changes no style, so
      * nothing but this is fired for it.
      */
     @Override
-    public void refreshUI() {
+    public void forceRepaintAll() {
         DesktopQtStyleApplier.apply(myCurrentStyle);
 
         DesktopQtIconRefresher.refreshAll();
     }
 
-    /**
-     * Follows whatever color scheme the desktop asks for, so the theme the ide opens with matches the rest of the
-     * session. Qt answers Unknown on a platform which exposes no preference, and there the palette is the only hint
-     * left.
-     */
-    public void syncWithPlatform() {
-        if (!myStyleChosen) {
-            Style style = isPlatformDark() ? DARK : LIGHT;
-            if (style != myCurrentStyle) {
-                applyStyle(style);
-                return;
-            }
-        }
-
-        // the platform theme hands qt a palette of its own whenever the color scheme changes, and it has to be
-        // taken back out - the initial call comes through here too, which is what first paints the theme
-        DesktopQtStyleApplier.apply(myCurrentStyle);
-    }
-
-    private void applyStyle(Style style) {
+    private void applyStyle(DesktopQtStyleImpl style) {
         Style oldStyle = myCurrentStyle;
         myCurrentStyle = style;
 
@@ -151,15 +129,5 @@ public class DesktopQtStyleManagerImpl extends StyleManagerImpl {
         DesktopQtIconRefresher.refreshAll();
 
         fireStyleChanged(oldStyle, style);
-    }
-
-    private static boolean isPlatformDark() {
-        Qt.ColorScheme colorScheme = QGuiApplication.styleHints().colorScheme();
-
-        return switch (colorScheme) {
-            case Dark -> true;
-            case Light -> false;
-            default -> QGuiApplication.palette().color(QPalette.ColorRole.Window).lightness() < 128;
-        };
     }
 }
