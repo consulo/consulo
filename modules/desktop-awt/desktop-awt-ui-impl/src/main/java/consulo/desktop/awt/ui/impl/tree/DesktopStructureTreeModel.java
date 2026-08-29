@@ -1,16 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ui.ex.awt.tree;
+package consulo.desktop.awt.ui.impl.tree;
 
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.LeafState;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.util.Invoker;
-import consulo.ui.ex.util.InvokerFactory;
-import consulo.ui.ex.util.InvokerSupplier;
+import consulo.ui.TreeExecutor;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 
@@ -29,34 +28,33 @@ import static java.util.Collections.*;
 
 /**
  * @author Sergey.Malenkov
- * @deprecated build the tree on {@link consulo.ui.Tree}, which is free of awt and so is shown by every
- * frontend, and hand it a {@link consulo.ui.TreeExecutor}. A swing tree which cannot move yet has
- * {@code consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel}, the same model over {@code TreeExecutor}
- * and without the {@link InvokerSupplier} hook a tree used to read its executor from.
  */
-@Deprecated
-public class StructureTreeModel<Structure extends AbstractTreeStructure> extends AbstractTreeModel implements Disposable, InvokerSupplier, ChildrenProvider<TreeNode> {
+public class DesktopStructureTreeModel<Structure extends AbstractTreeStructure> extends AbstractTreeModel implements Disposable, ChildrenProvider<TreeNode> {
 
   private static final TreePath ROOT_INVALIDATED = new TreePath(new DefaultMutableTreeNode());
-  private static final Logger LOG = Logger.getInstance(StructureTreeModel.class);
+  private static final Logger LOG = Logger.getInstance(DesktopStructureTreeModel.class);
   private final Reference<Node> root = new Reference<>();
   private final String description;
-  private final Invoker invoker;
+  private final consulo.ui.Tree<?> tree;
+  private final TreeExecutor executor;
   private final Structure structure;
   private volatile Comparator<? super Node> comparator;
 
-  public StructureTreeModel(Structure structure, Disposable parent) {
-    this(structure, null, parent);
+  public DesktopStructureTreeModel(Structure structure, consulo.ui.Tree<?> tree, TreeExecutor executor, Disposable parent) {
+    this(structure, null, tree, executor, parent);
   }
 
-  public StructureTreeModel(Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, Disposable parent) {
-    this(structure, comparator, InvokerFactory.getInstance().forBackgroundThreadWithReadAction(parent), parent);
-  }
-
-  public StructureTreeModel(Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, Invoker invoker, Disposable parent) {
+  public DesktopStructureTreeModel(
+    Structure structure,
+    @Nullable Comparator<? super NodeDescriptor> comparator,
+    consulo.ui.Tree<?> tree,
+    TreeExecutor executor,
+    Disposable parent
+  ) {
     this.structure = structure;
     this.description = format(structure.toString());
-    this.invoker = invoker;
+    this.tree = tree;
+    this.executor = executor;
     this.comparator = comparator == null ? null : wrapToNodeComparator(comparator);
     Disposer.register(parent, this);
   }
@@ -91,17 +89,11 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     super.dispose(); // remove listeners after notification
   }
 
-  
-  @Override
-  public final Invoker getInvoker() {
-    return invoker;
-  }
-
-  private boolean isValidThread() {
-    if (invoker.isValidThread()) return true;
-    LOG.warn(new IllegalStateException("StructureTreeModel is used from unexpected thread"));
-    return false;
-  }
+  /**
+   * A {@link TreeExecutor} cannot be asked which thread it runs on - it only promises that what it is given
+   * runs there - so the checks the invoker allowed are gone. What they guarded is still true: everything below
+   * is reached through {@link #onValidThread}.
+   */
 
   /**
    * @param function a function to process current structure on a valid thread
@@ -109,13 +101,16 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    */
   private <Result> Promise<Result> onValidThread(Function<? super Structure, ? extends Result> function) {
     AsyncPromise<Result> promise = new AsyncPromise<>();
-    invoker.runOrInvokeLater(() -> {
+    executor.execute(tree, () -> {
       if (!disposed) {
         Result result = function.apply(structure);
         if (result != null) promise.setResult(result);
       }
       if (!promise.isDone()) promise.cancel();
-    }).onError(promise::setError);
+      return null;
+    }).whenComplete((ignored, error) -> {
+      if (error != null) promise.setError(error);
+    });
     return promise;
   }
 
@@ -189,7 +184,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   }
 
   private @Nullable TreePath invalidateInternal(@Nullable Node node, boolean structure) {
-    assert invoker.isValidThread();
     while (node != null && !isValid(node)) {
       LOG.debug("invalid element cannot be updated: ", node);
       node = (Node)node.getParent();
@@ -266,7 +260,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   @Override
   public final TreeNode getRoot() {
-    if (disposed || !isValidThread()) return null;
+    if (disposed) return null;
     if (!root.isValid()) {
       Node newRoot = getValidRoot();
       root.set(newRoot);
@@ -276,7 +270,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   }
 
   private Node getNode(Object object, boolean validateChildren) {
-    if (disposed || !(object instanceof Node) || !isValidThread()) return null;
+    if (disposed || !(object instanceof Node)) return null;
     Node node = (Node)object;
     if (isNodeRemoved(node)) return null;
     if (validateChildren) validateChildren(node);
@@ -566,7 +560,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   /**
    * @return a descriptive name for the instance to help a tree identification
-   * @see InvokerImpl#Invoker(String, Disposable)
    */
   @Override
   public String toString() {
@@ -581,5 +574,33 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
       }
     }
     return prefix;
+  }
+
+  /**
+   * The holder the level of a node is kept in - package private where this model was copied from, so it comes
+   * along. "Invalid" is a level which has to be built again, not one which is absent.
+   */
+  private static final class Reference<T> {
+    private volatile boolean valid;
+    private volatile T value;
+
+    boolean isValid() {
+      return valid;
+    }
+
+    void invalidate() {
+      valid = false;
+    }
+
+    T set(T value) {
+      T old = this.value;
+      this.value = value;
+      valid = true;
+      return old;
+    }
+
+    T get() {
+      return value;
+    }
   }
 }

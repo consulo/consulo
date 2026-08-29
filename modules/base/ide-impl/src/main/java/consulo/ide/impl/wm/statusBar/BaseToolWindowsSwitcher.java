@@ -22,6 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Component;
 import consulo.ui.FocusManager;
@@ -30,6 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
 import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,12 +39,23 @@ import consulo.ui.image.Image;
  */
 public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
   private final StatusBar myStatusBar;
+
+  /**
+   * The project of a status bar never changes, so the settings are asked for once. Looking them up on every
+   * update would ask a project which may be gone by then - closing one moves the focus to the welcome frame,
+   * and this listens for that - and a disposed container answers a lookup by throwing.
+   */
+  private final @Nullable ToolWindowSettings mySettings;
+
   protected JBPopup popup;
   protected boolean wasExited = false;
   protected Label myLabel;
 
   public BaseToolWindowsSwitcher(StatusBar statusBar) {
     myStatusBar = statusBar;
+
+    Project project = statusBar == null ? null : statusBar.getProject();
+    mySettings = project == null ? null : ToolWindowSettings.getInstance(project);
 
     myLabel = Label.create();
 
@@ -58,8 +71,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
 
   public void performAction() {
     if (isActive()) {
-      ToolWindowSettings settings = ToolWindowSettings.getInstance(myStatusBar.getProject());
-      settings.setHideToolStripes(!settings.isHideToolStripes());
+      mySettings.setHideToolStripes(!mySettings.isHideToolStripes());
       UISettings.getInstance().fireUISettingsChanged();
     }
   }
@@ -75,7 +87,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
         changes = true;
       }
 
-      Image icon = ToolWindowSettings.getInstance(myStatusBar.getProject()).isHideToolStripes()
+      Image icon = mySettings.isHideToolStripes()
         ? PlatformIconGroup.generalTbshown()
         : PlatformIconGroup.generalTbhidden();
       if (icon != myLabel.getImage()) {
@@ -94,7 +106,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
   }
 
   public boolean isActive() {
-    return myStatusBar != null && myStatusBar.getProject() != null;
+    return mySettings != null;
   }
 
   

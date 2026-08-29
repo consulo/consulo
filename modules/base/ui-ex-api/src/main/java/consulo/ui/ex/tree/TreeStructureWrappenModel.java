@@ -15,8 +15,6 @@
  */
 package consulo.ui.ex.tree;
 
-import consulo.application.ReadAction;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.dataContext.DataManager;
 import consulo.logging.Logger;
 import consulo.ui.Tree;
@@ -28,6 +26,10 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**
+ * Takes no read lock of its own: a tree over this model has to be created with an executor from
+ * {@link ApplicationTreeExecutorFactory}, which runs everything here - building and rendering alike - as one
+ * cancellable read action instead of the many small ones this model used to take itself.
+ *
  * @author VISTALL
  * @since 16-Sep-17
  */
@@ -63,16 +65,14 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
         return switch (leafState) {
             case ALWAYS -> true;
             case NEVER, ASYNC -> false;
-            case DEFAULT -> ReadAction.compute(() -> myStructure.getChildElements(element)).length == 0;
+            case DEFAULT -> myStructure.getChildElements(element).length == 0;
         };
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void buildChildren(Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
-        ThrowableComputable<Object[], RuntimeException> action = () -> myStructure.getChildElements(parentValue);
-
-        for (Object o : ReadAction.compute(action)) {
+        for (Object o : myStructure.getChildElements(parentValue)) {
             T element = (T) o;
             TreeNode<T> apply = nodeFactory.apply(element);
 
@@ -80,7 +80,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
             // carries no presentation yet - its name is null, and a comparator ordering by name cannot tell two
             // of them apart. the awt tree updates them as it builds, for the same reason
             if (o instanceof NodeDescriptor descriptor) {
-                ReadAction.compute(() -> descriptor.update());
+                descriptor.update();
             }
 
             apply.setLeaf(isLeaf(o));
@@ -98,7 +98,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
                 }
 
                 try {
-                    ReadAction.compute(() -> itemPresentation.withIcon(SimpleTreeModel.iconOf(descriptor)));
+                    itemPresentation.withIcon(SimpleTreeModel.iconOf(descriptor));
                 }
                 catch (Exception e) {
                     LOG.error(e);

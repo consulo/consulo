@@ -28,17 +28,34 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * A tree over a {@link TreeModel}, and an asynchronous one always: the model is never called on the thread
+ * that asked - every level is built and every presentation computed through the {@link TreeExecutor} of the
+ * tree, and the widget is filled with the result afterwards. Anything hanging on that work - expanding,
+ * selecting, revealing a node - is answered with a future rather than a value.
+ *
  * @author VISTALL
  * @since 2017-09-12
  */
-public interface Tree<E> extends Component, HasTransferHandler<TreeNode<E>>, HasComponentStyle<TreeStyle>, HasItemSize<TreeNode<E>>,
+public interface Tree<E> extends Component, HasDestroyHook, HasTransferHandler<TreeNode<E>>, HasComponentStyle<TreeStyle>, HasItemSize<TreeNode<E>>,
     HasSpeedSearch<TreeNode<E>> {
-    static <E> Tree<E> create(TreeModel<E> model, Disposable disposable) {
-        return create(null, model, disposable);
+    static <E> Tree<E> create(TreeModel<E> model) {
+        return create(null, model);
     }
 
-    static <E> Tree<E> create(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
-        return UIInternal.get()._Components_tree(rootValue, model, disposable);
+    static <E> Tree<E> create(@Nullable E rootValue, TreeModel<E> model) {
+        return create(rootValue, model, TreeExecutor.uiThread());
+    }
+
+    static <E> Tree<E> create(TreeModel<E> model, TreeExecutor executor) {
+        return create(null, model, executor);
+    }
+
+    /**
+     * @param executor where the model runs - {@link TreeExecutor#uiThread()} is only right for a model that
+     *                 computes nothing, see {@link TreeExecutor}
+     */
+    static <E> Tree<E> create(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return UIInternal.get()._Components_tree(rootValue, model, executor);
     }
 
     @Nullable

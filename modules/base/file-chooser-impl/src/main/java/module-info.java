@@ -7,6 +7,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 module consulo.file.chooser.impl {
     requires java.desktop;
+    requires jakarta.inject;
 
     requires consulo.file.chooser.api;
     requires consulo.project.api;

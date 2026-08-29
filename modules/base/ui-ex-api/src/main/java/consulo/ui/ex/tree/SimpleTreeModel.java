@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.tree;
 
-import consulo.application.ReadAction;
 import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -24,7 +23,6 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -35,6 +33,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Takes no read lock of its own: a tree over this model has to be created with an executor from
+ * {@link ApplicationTreeExecutorFactory}, which runs everything here - building and rendering alike - as one
+ * cancellable read action instead of the many small ones this model used to take itself.
+ */
 public class SimpleTreeModel<N extends SimpleNode> implements TreeModel<N> {
     private static final Logger LOG = Logger.getInstance(SimpleTreeModel.class);
 
@@ -60,12 +63,12 @@ public class SimpleTreeModel<N extends SimpleNode> implements TreeModel<N> {
             return;
         }
 
-        SimpleNode[] children = ReadAction.computeNotNull(parent::getChildren);
+        SimpleNode[] children = parent.getChildren();
         for (SimpleNode child : children) {
             N value = (N) child;
             TreeNode<N> node = nodeFactory.apply(value);
 
-            ReadAction.compute(value::update);
+            value.update();
 
             node.setLeaf(isLeaf(value));
             node.setRenderer(SimpleTreeModel::render);
@@ -76,18 +79,17 @@ public class SimpleTreeModel<N extends SimpleNode> implements TreeModel<N> {
         return switch (node.getLeafState()) {
             case ALWAYS -> true;
             case NEVER, ASYNC -> false;
-            case DEFAULT -> ReadAction.compute(() -> node.getChildren().length == 0);
+            case DEFAULT -> node.getChildren().length == 0;
         };
     }
 
-    @RequiredUIAccess
     private static void render(SimpleNode node, TextItemPresentation presentation) {
         node.update();
 
         renderPresentation(presentation, node, node);
 
         try {
-            ReadAction.compute(() -> presentation.withIcon(iconOf(node)));
+            presentation.withIcon(iconOf(node));
         }
         catch (Exception e) {
             LOG.error(e);

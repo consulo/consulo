@@ -25,6 +25,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.event.TreeCollapseEvent;
@@ -39,9 +40,9 @@ import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.AsyncTreeModel;
+import consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel;
+import consulo.desktop.awt.ui.impl.tree.DesktopStructureTreeModel;
 import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.tree.AbstractTreeStructure;
@@ -158,7 +159,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
         /**
          * A node the model built again for the same value keeps the place the old one had - what
-         * {@link StructureTreeModel} does with its own nodes - so what was open below it stays open. The value
+         * {@link DesktopStructureTreeModel} does with its own nodes - so what was open below it stays open. The value
          * itself is the one just built, since a refresh is there to show what changed about it.
          */
         private List<MyTreeNodeImpl<K>> reuse(List<MyTreeNodeImpl<K>> oldChildren, List<MyTreeNodeImpl<K>> newChildren) {
@@ -344,8 +345,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         /**
-         * {@link StructureTreeModel.Node} takes {@link LeafState#DEFAULT} for "build the level and see whether
-         * it came out empty", and {@link AsyncTreeModel} asks this of every sibling of a node it opens - so a
+         * {@link DesktopStructureTreeModel.Node} takes {@link LeafState#DEFAULT} for "build the level and see whether
+         * it came out empty", and {@link DesktopAsyncTreeModel} asks this of every sibling of a node it opens - so a
          * structure which cannot answer without building lists the whole tree to walk one path down it. The
          * node carries what the model said of it when it was built, and only a model which asks for the level
          * to be built first is given the answer that costs one.
@@ -380,7 +381,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         /**
-         * {@link StructureTreeModel#invalidate(Object, boolean)} walks up from the element to the root to find
+         * {@link DesktopStructureTreeModel#invalidate(Object, boolean)} walks up from the element to the root to find
          * the node it stands for, so a tree that cannot answer this can only ever be invalidated whole.
          */
         @Override
@@ -407,8 +408,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     public class MyTree extends DnDAwareTree implements FromSwingComponentWrapper {
-        public MyTree(StructureTreeModel<MyStructureWrapper<E>> structureTreeModel, Disposable disposable) {
-            super(new AsyncTreeModel(structureTreeModel, disposable));
+        public MyTree(DesktopStructureTreeModel<MyStructureWrapper<E>> structureTreeModel, TreeExecutor executor) {
+            super(new DesktopAsyncTreeModel(structureTreeModel, DesktopTreeImpl.this, executor, myDestroyHook));
         }
 
         
@@ -419,15 +420,23 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     private final TreeModel<E> myModel;
-    private final Disposable myDisposable;
     private final MyStructureWrapper<E> myStructure;
-    private final StructureTreeModel<MyStructureWrapper<E>> myStructureTreeModel;
+    private final DesktopStructureTreeModel<MyStructureWrapper<E>> myStructureTreeModel;
+    private final TreeExecutor myExecutor;
 
-    public DesktopTreeImpl(E rootValue, TreeModel<E> model, Disposable disposable) {
+
+    private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
+
+    @Override
+    public Disposable destroyHook() {
+        return myDestroyHook;
+    }
+
+    public DesktopTreeImpl(E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myModel = model;
-        myDisposable = disposable;
+        myExecutor = executor;
         myStructure = new MyStructureWrapper<>(rootValue, model);
-        myStructureTreeModel = new StructureTreeModel<>(myStructure, disposable);
+        myStructureTreeModel = new DesktopStructureTreeModel<>(myStructure, null, this, executor, myDestroyHook);
     }
 
     /**
@@ -448,7 +457,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
     @Override
     protected MyTree createComponent() {
-        MyTree tree = new MyTree(myStructureTreeModel, myDisposable);
+        MyTree tree = new MyTree(myStructureTreeModel, myExecutor);
         tree.setRootVisible(false);
         // the root is hidden, so without this the rows which stand for its children - the top level of the
         // tree - are drawn with no expand control at all, see BasicTreeUI#shouldPaintExpandControl

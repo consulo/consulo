@@ -1,14 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ui.ex.awt.tree;
+package consulo.desktop.awt.ui.impl.tree;
 
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.TreeExecutor;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.util.Command;
-import consulo.ui.ex.util.Invoker;
-import consulo.ui.ex.util.InvokerFactory;
-import consulo.ui.ex.util.InvokerSupplier;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.concurrent.AsyncPromise;
@@ -22,6 +22,9 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 
 import static consulo.util.concurrent.Promises.rejectedPromise;
@@ -30,18 +33,10 @@ import static java.util.Collections.singletonList;
 
 /**
  * @author Sergey.Malenkov
- * @deprecated build the tree on {@link consulo.ui.Tree}, which is free of awt and so is shown by every
- * frontend, and hand it a {@link consulo.ui.TreeExecutor} - the executor is named by the tree rather than
- * read off the model through {@link InvokerSupplier}, and a model which names none no longer falls back to
- * walking its levels on the very thread which draws them.
- *
- * <p>A swing tree which cannot move yet has {@code consulo.desktop.awt.ui.impl.tree.DesktopAsyncTreeModel},
- * the same model over {@code TreeExecutor}, but it is a step on the way out rather than a destination.
  */
-@Deprecated
-public final class AsyncTreeModel extends AbstractTreeModel implements Identifiable, Searchable, Navigatable, TreeVisitor.Acceptor {
-  private static final Logger LOG = Logger.getInstance(AsyncTreeModel.class);
-  private final Command.Processor processor;
+public final class DesktopAsyncTreeModel extends AbstractTreeModel implements Identifiable, Searchable, Navigatable, TreeVisitor.Acceptor {
+  private static final Logger LOG = Logger.getInstance(DesktopAsyncTreeModel.class);
+  private final Processor processor;
   private final Tree tree = new Tree();
   private final TreeModel model;
   private final boolean showLoadingNode;
@@ -71,11 +66,11 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
         }
         else if (type == EventType.NodesChanged) {
           // the object is already updated, so we should not start additional command to update
-          AsyncTreeModel.this.treeNodesChanged(event.getTreePath(), event.getChildIndices(), event.getChildren());
+          DesktopAsyncTreeModel.this.treeNodesChanged(event.getTreePath(), event.getChildIndices(), event.getChildren());
         }
         else if (node.isLoadingRequired()) {
           // update the object presentation only, if its children are not requested yet
-          AsyncTreeModel.this.treeNodesChanged(event.getTreePath(), null, null);
+          DesktopAsyncTreeModel.this.treeNodesChanged(event.getTreePath(), null, null);
         }
         else if (type == EventType.NodesInserted) {
           processor.process(new CmdGetChildren("Insert children", node, false));
@@ -91,40 +86,31 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
   };
 
   /**
-   * @deprecated use {@link #AsyncTreeModel(TreeModel, Disposable)} instead
+   * @param foreground the ui of the tree this model feeds - a level is handed over on it and nowhere else
+   * @param background where the model is walked, given by the tree rather than read off the model
    */
-  @Deprecated
-  public AsyncTreeModel(TreeModel model) {
-    this(model, true);
+  /**
+   * @param tree       the tree this model feeds - a level is handed to its ui and nowhere else
+   * @param background where the model is walked, given by the tree rather than read off the model
+   */
+  public DesktopAsyncTreeModel(TreeModel model, consulo.ui.Tree<?> tree, TreeExecutor background, Disposable parent) {
+    this(model, true, tree, background);
+    Disposer.register(parent, this);
   }
 
-  /**
-   * @deprecated use {@link #AsyncTreeModel(TreeModel, boolean, Disposable)} instead
-   */
-  @Deprecated
-  public AsyncTreeModel(TreeModel model, boolean showLoadingNode) {
+  public DesktopAsyncTreeModel(TreeModel model, boolean showLoadingNode, consulo.ui.Tree<?> tree, TreeExecutor background, Disposable parent) {
+    this(model, showLoadingNode, tree, background);
+    Disposer.register(parent, this);
+  }
+
+  private DesktopAsyncTreeModel(TreeModel model, boolean showLoadingNode, consulo.ui.Tree<?> tree, TreeExecutor background) {
     if (model instanceof Disposable) {
       Disposer.register(this, (Disposable)model);
     }
-    Invoker foreground = InvokerFactory.getInstance().forEventDispatchThread(this);
-    Invoker background = foreground;
-    if (model instanceof InvokerSupplier) {
-      InvokerSupplier supplier = (InvokerSupplier)model;
-      background = supplier.getInvoker();
-    }
-    this.processor = new Command.Processor(foreground, background);
+    this.processor = new Processor(tree, TreeExecutor.uiThread(), background);
     this.model = model;
     this.model.addTreeModelListener(listener);
     this.showLoadingNode = showLoadingNode;
-  }
-
-  public AsyncTreeModel(TreeModel model, Disposable parent) {
-    this(model, true, parent);
-  }
-
-  public AsyncTreeModel( TreeModel model, boolean showLoadingNode, Disposable parent) {
-    this(model, showLoadingNode);
-    Disposer.register(parent, this);
   }
 
   @Override
@@ -229,7 +215,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
 
   @Override
   public void valueForPathChanged(TreePath path, Object value) {
-    processor.background.runOrInvokeLater(() -> model.valueForPathChanged(path, value));
+    processor.run(processor.background, () -> model.valueForPathChanged(path, value));
   }
 
   @Override
@@ -273,7 +259,8 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
     };
     if (allowLoading) {
       // start visiting on the background thread to ensure that root node is already invalidated
-      processor.background.invokeLater(() -> onValidThread(() -> promiseRootEntry().onSuccess(walker::start).onError(walker::setError)));
+      processor.run(processor.background,
+                    () -> onValidThread(() -> promiseRootEntry().onSuccess(walker::start).onError(walker::setError)));
     }
     else {
       onValidThread(() -> walker.start(tree.root));
@@ -291,13 +278,13 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
   }
 
   private boolean isValidThread() {
-    if (processor.foreground.isValidThread()) return true;
-    LOG.warn(new IllegalStateException("AsyncTreeModel is used from unexpected thread: " + Thread.currentThread()));
+    if (UIAccess.isUIThread()) return true;
+    LOG.warn(new IllegalStateException("DesktopAsyncTreeModel is used from unexpected thread: " + Thread.currentThread()));
     return false;
   }
 
   public void onValidThread(Runnable runnable) {
-    processor.foreground.runOrInvokeLater(runnable);
+    processor.run(processor.foreground, runnable);
   }
 
   
@@ -718,7 +705,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
     }
 
     
-    Promise<Node> promise(Command.Processor processor, Supplier<? extends T> supplier) {
+    Promise<Node> promise(Processor processor, Supplier<? extends T> supplier) {
       T command;
       synchronized (deque) {
         command = deque.peekFirst();
@@ -933,5 +920,80 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
     node.insertPath(new TreePath(object));
     tree.root = node;
     tree.map.put(object, node);
+  }
+
+  /**
+   * The pair of executors this model is built with. The level is walked on the background one and what it
+   * answered is handed to the ui on the foreground one - neither ever runs the task of the other.
+   */
+  private static final class Processor {
+    final consulo.ui.Tree<?> tree;
+    final TreeExecutor foreground;
+    final TreeExecutor background;
+
+    private final AtomicInteger taskCount = new AtomicInteger();
+
+    Processor(consulo.ui.Tree<?> tree, TreeExecutor foreground, TreeExecutor background) {
+      this.tree = tree;
+      this.foreground = foreground;
+      this.background = background;
+    }
+
+    <T> void consume(Consumer<? super T> consumer, T value) {
+      if (consumer != null) {
+        run(foreground, () -> consumer.accept(value));
+      }
+    }
+
+    <T> void process(Command<T> command) {
+      if (command != null) {
+        process(command, command);
+      }
+    }
+
+    <T> void process(Supplier<? extends T> supplier, Consumer<? super T> consumer) {
+      if (supplier == null) {
+        consume(consumer, null);
+        return;
+      }
+
+      taskCount.incrementAndGet();
+      background.<T>execute(tree, supplier::get).whenComplete((value, error) -> {
+        taskCount.decrementAndGet();
+        if (error != null) {
+          logError(error);
+          return;
+        }
+        consume(consumer, value);
+      });
+    }
+
+    void run(TreeExecutor executor, Runnable task) {
+      taskCount.incrementAndGet();
+      executor.execute(tree, () -> {
+        task.run();
+        return null;
+      }).whenComplete((value, error) -> {
+        taskCount.decrementAndGet();
+        if (error != null) {
+          logError(error);
+        }
+      });
+    }
+
+    /**
+     * A task of a disposed tree is cancelled rather than failed, and so is one of a frontend with no ui left to
+     * dispatch through - neither is an error, but anything else is work lost without a trace.
+     */
+    private static void logError(Throwable error) {
+      Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+      if (!(cause instanceof CancellationException)) {
+        LOG.error(cause);
+      }
+    }
+
+    int getTaskCount() {
+      return taskCount.get();
+    }
   }
 }

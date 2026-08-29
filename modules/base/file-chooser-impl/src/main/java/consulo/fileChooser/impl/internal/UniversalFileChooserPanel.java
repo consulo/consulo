@@ -20,6 +20,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.DumbAwareToggleAction;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.TabbedLayout;
 import org.jspecify.annotations.Nullable;
@@ -46,13 +47,15 @@ class UniversalFileChooserPanel {
         List<UniversalFileChooserContributor> contributors,
         @Nullable Path preselectPath,
         Runnable okEnabledUpdater,
+        ApplicationTreeExecutorFactory treeExecutorFactory,
         Disposable disposable
     ) {
         myDescriptor = descriptor;
         myProject = project;
 
         for (UniversalFileChooserContributor contributor : contributors) {
-            FileView fileView = new FileView(contributor, descriptor, project, okAction, okEnabledUpdater, false, disposable);
+            FileView fileView =
+                new FileView(contributor, descriptor, project, okAction, okEnabledUpdater, false, treeExecutorFactory, disposable);
             fileView.setFileToSelect(preselectPath);
             myFileViews.add(fileView);
         }

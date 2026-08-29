@@ -9,6 +9,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.ui.Tree;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.util.collection.Sets;
@@ -17,8 +18,10 @@ import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.ThreeState;
 
+import java.awt.EventQueue;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,6 +87,21 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      */
     public final <T> CancellablePromise<T> compute(Supplier<? extends T> task) {
         return promise(new Task<>(task));
+    }
+
+    /**
+     * The task is always deferred, never run on the thread which asked for it. A frontend hands the ui back to
+     * this executor from whatever thread completed the level before - and a ui toolkit is free to run that
+     * callback on the very thread of this invoker - so running here would build a level inside another one,
+     * under a read action taken on what the application by then counts as its dispatch thread.
+     */
+    @Override
+    public final <T> CompletableFuture<T> execute(Tree<?> tree, Supplier<T> task) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        CancellablePromise<T> promise = computeLater(task);
+        promise.onSuccess(future::complete);
+        promise.onError(future::completeExceptionally);
+        return future;
     }
 
     /**
@@ -385,20 +403,18 @@ public abstract class InvokerImpl implements Disposable, Invoker {
 
     /**
      * This class is the {@code Invoker} in the Event Dispatch Thread,
-     * which is the only one valid thread for this invoker.
+     * which is the only one valid thread for this invoker. The thread is one for the whole application, so
+     * no {@link UIAccess} is taken or held - an access stored for the life of the invoker would go stale,
+     * since a frontend serves several UIs.
      */
     public static final class EDT extends InvokerImpl {
-        
-        private final UIAccess myUiAccess;
-
         /**
          * Creates the invoker of user tasks on the event dispatch thread.
          *
          * @param parent a disposable parent object
          */
-        public EDT(UIAccess uiAccess, Disposable parent) {
+        public EDT(Disposable parent) {
             super("UI", parent, ThreeState.UNSURE);
-            myUiAccess = uiAccess;
         }
 
         @Override
@@ -409,10 +425,11 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         @Override
         void offer(Runnable runnable, int delay) {
             if (delay > 0) {
-                myUiAccess.getScheduler().schedule(runnable, delay, MILLISECONDS);
+                AppExecutorUtil.getAppScheduledExecutorService()
+                    .schedule(() -> EventQueue.invokeLater(runnable), delay, MILLISECONDS);
             }
             else {
-                myUiAccess.execute(runnable);
+                EventQueue.invokeLater(runnable);
             }
         }
     }
@@ -577,8 +594,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     }
 
     
-    public static InvokerImpl forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
-        return new EDT(uiAccess, parent);
+    public static InvokerImpl forEventDispatchThread(Disposable parent) {
+        return new EDT(parent);
     }
 
     

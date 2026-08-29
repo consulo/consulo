@@ -28,6 +28,7 @@ import consulo.application.HelpManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
@@ -94,6 +95,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.TreeStructureWrappenModel;
 import consulo.ui.ex.tree.UITreeState;
@@ -379,6 +381,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     private boolean myFoldersAlwaysOnTop = true;
 
     private final Project myProject;
+    private final ApplicationTreeExecutorFactory myTreeExecutorFactory;
     private final Map<String, SelectInTarget> mySelectInTargets = new LinkedHashMap<>();
 
     private AbstractProjectViewPane myCurrentPane;
@@ -485,8 +488,9 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
     }
 
     @Inject
-    public UnifiedProjectViewImpl(Project project) {
+    public UnifiedProjectViewImpl(Project project, ApplicationTreeExecutorFactory treeExecutorFactory) {
         myProject = project;
+        myTreeExecutorFactory = treeExecutorFactory;
     }
 
     /**
@@ -560,7 +564,12 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, PersistentStateCom
             }
         };
 
-        myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model, this);
+        myTree = Tree.create(
+            (AbstractTreeNode)structure.getRootElement(),
+            model,
+            myTreeExecutorFactory.forBackgroundThreadWithReadAction(this)
+        );
+        Disposer.register(this, myTree.destroyHook());
         WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
         wrappedLayout.putUserData(UiDataProvider.KEY, new MyDataProvider());
 

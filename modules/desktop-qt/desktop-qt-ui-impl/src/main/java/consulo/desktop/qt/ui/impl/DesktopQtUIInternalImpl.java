@@ -16,6 +16,7 @@
 package consulo.desktop.qt.ui.impl;
 
 import consulo.application.impl.internal.ModalityStateImpl;
+import consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier;
 import consulo.desktop.qt.ui.impl.font.DesktopQtFontManagerImpl;
 import consulo.desktop.qt.ui.impl.htmlView.DesktopQtHtmlViewImpl;
 import consulo.desktop.qt.ui.impl.image.*;
@@ -472,13 +473,13 @@ public class DesktopQtUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
-        return new DesktopQtTreeImpl<>(rootValue, model, disposable);
+    public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new DesktopQtTreeImpl<>(rootValue, model, executor);
     }
 
     @Override
     public void _ShowNotifier_once(Component component, Runnable action) {
-        consulo.desktop.qt.ui.impl.base.DesktopQtShowNotifier.once(component, action);
+        DesktopQtShowNotifier.once(component, action);
     }
 
     @Override

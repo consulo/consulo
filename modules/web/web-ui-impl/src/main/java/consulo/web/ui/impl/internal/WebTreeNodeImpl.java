@@ -55,6 +55,12 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     private boolean myLeaf;
 
     /**
+     * Computed on the executor of the tree and read on the ui thread when the row is built, so it crosses
+     * threads by design.
+     */
+    private volatile @Nullable WebItemPresentationImpl myPresentation;
+
+    /**
      * The grid keeps the open nodes of the ui it belongs to, and a refresh builds a new one - the nodes outlive
      * it, so what was open is remembered here and put back once the new grid has the data.
      */
@@ -125,8 +131,18 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
         return myLeaf;
     }
 
-    public BiConsumer<N, TextItemPresentation> getRenderer() {
-        return myRenderer;
+    /**
+     * Runs the renderer of the model - which walks whatever the model is built over - so this belongs on the
+     * executor of the tree, never on the ui thread. {@link #getPresentation()} hands out what was computed here.
+     */
+    public void computePresentation() {
+        WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+        myRenderer.accept(myNode, presentation);
+        myPresentation = presentation;
+    }
+
+    public @Nullable WebItemPresentationImpl getPresentation() {
+        return myPresentation;
     }
 
     /**

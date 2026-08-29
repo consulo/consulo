@@ -11,6 +11,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -27,10 +28,16 @@ import java.util.concurrent.CompletableFuture;
 public class UniversalFileChooser implements FileChooserDialog, PathChooserDialog {
     private final FileChooserDescriptor myDescriptor;
     private final @Nullable Project myProject;
+    private final ApplicationTreeExecutorFactory myTreeExecutorFactory;
 
-    public UniversalFileChooser(FileChooserDescriptor descriptor, @Nullable Project project) {
+    public UniversalFileChooser(
+        FileChooserDescriptor descriptor,
+        @Nullable Project project,
+        ApplicationTreeExecutorFactory treeExecutorFactory
+    ) {
         myDescriptor = descriptor;
         myProject = project;
+        myTreeExecutorFactory = treeExecutorFactory;
     }
 
     @RequiredUIAccess
@@ -53,7 +60,7 @@ public class UniversalFileChooser implements FileChooserDialog, PathChooserDialo
             Application.get().getExtensionPoint(UniversalFileChooserContributor.class).getExtensionList();
 
         UniversalFileChooserDescriptor dialogDescriptor =
-            new UniversalFileChooserDescriptor(myDescriptor, targetProject, contributors, preselectPath);
+            new UniversalFileChooserDescriptor(myDescriptor, targetProject, contributors, preselectPath, myTreeExecutorFactory);
 
         CompletableFuture<VirtualFile[]> result = new CompletableFuture<>();
 

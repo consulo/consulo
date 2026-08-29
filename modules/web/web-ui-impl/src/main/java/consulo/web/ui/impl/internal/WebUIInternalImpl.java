@@ -247,8 +247,8 @@ public class WebUIInternalImpl extends UIInternal {
     }
 
     @Override
-    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, Disposable disposable) {
-        return new WebTreeImpl<>(rootValue, model, disposable);
+    public <E> Tree<E> _Components_tree(@Nullable E rootValue, TreeModel<E> model, TreeExecutor executor) {
+        return new WebTreeImpl<>(rootValue, model, executor);
     }
 
     @Override

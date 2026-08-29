@@ -28,12 +28,13 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.selection.SelectionModel;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.ui.Component;
 import com.vaadin.flow.dom.Style;
 import consulo.ui.Tree;
+import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeStyle;
 import consulo.ui.TreeNode;
@@ -45,6 +46,7 @@ import consulo.ui.event.TreeDoubleClickEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.event.TreeExpandEvent;
 import consulo.ui.event.TreeSelectEvent;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.ContainerUtil;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
@@ -54,9 +56,10 @@ import consulo.web.ui.impl.internal.base.WebInputDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
 /**
@@ -65,7 +68,7 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE>, PopupOwner {
-    private static final List CANCELED_RESULT = new ArrayList<>();
+    private static final Logger LOG = Logger.getInstance(WebTreeImpl.class);
 
     private @Nullable TransferHandler<TreeNode<NODE>> myTransferHandler;
     private @Nullable Function<TreeNode<NODE>, Length> myItemHeightGetter;
@@ -93,7 +96,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new ConcurrentHashMap<>();
         private final CompletableFuture<Void> myRootLoaded = new CompletableFuture<>();
 
-        private ExecutorService myExecutor;
+        private TreeExecutor myExecutor;
 
         private WebTreeNodeImpl<NODE> myRootNode;
         private TreeModel<NODE> myModel;
@@ -149,13 +152,16 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             ((SelectionModel.Single) getSelectionModel()).setDeselectAllowed(false);
 
             addComponentColumn(node -> {
-                WebItemPresentationImpl item = new WebItemPresentationImpl();
-                if (node instanceof WebTreeNodeImpl.NotLoaded) {
-                    item.append("Loading...");
+                // nothing is asked of the model here - the presentation was computed on the executor while the
+                // level was built, and this only turns it into the components of the row
+                WebItemPresentationImpl item = node.getPresentation();
+                if (item == null) {
+                    item = new WebItemPresentationImpl();
+                    if (node instanceof WebTreeNodeImpl.NotLoaded) {
+                        item.append(UILocalize.treenodeLoading());
+                    }
                 }
-                else {
-                    node.getRenderer().accept(node.getValue(), item);
-                }
+
                 VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
                 toggle.getElement().setAttribute("leaf", node.isLeaf());
                 toggle.getElement().setAttribute("level", String.valueOf(node.getLevel()));
@@ -252,10 +258,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             // placeholder child to a search instead of building the level - which is where a path walk starts
             myRootNode.setLoader(this::loadChildrenAsync);
 
-            if (myModel.isNeedBuildChildrenBeforeOpen(myRootNode)) {
-                fetchChildren(myRootNode, false);
-            }
-
             initTreeData(true);
 
             addExpandListener(event -> {
@@ -299,46 +301,63 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
             UI ui = UI.getCurrent();
 
-            invokeLater(() -> {
-                fetchChildren(myRootNode, false);
+            myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(myRootNode, false))
+                .whenComplete((children, error) -> {
+                    if (error != null) {
+                        logBuildError(error);
+                        // everything a walk down a stored path chains on hangs off this one
+                        myRootLoaded.complete(null);
+                        return;
+                    }
 
-                ui.access(() -> {
-                    initTreeData(false);
+                    ui.access(() -> {
+                        initTreeData(false);
 
-                    myRootLoaded.complete(null);
+                        myRootLoaded.complete(null);
+                    });
                 });
-            });
         }
 
         private void queue(WebTreeNodeImpl<NODE> parent, UI ui) {
             loadChildren(parent, ui);
         }
 
-        private CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildren(WebTreeNodeImpl<NODE> parent, UI ui) {
-            CompletableFuture<List<WebTreeNodeImpl<NODE>>> result = new CompletableFuture<>();
+        private CompletableFuture<List<WebTreeNodeImpl<NODE>>> loadChildren(WebTreeNodeImpl<NODE> parent, @Nullable UI ui) {
+            if (ui == null) {
+                return CompletableFuture.completedFuture(List.of());
+            }
 
-            invokeLater(() -> {
+            if (!parent.isNotLoaded()) {
+                // the whole chain that a walk down a path hangs on this future runs where it is completed,
+                // and touching the grid outside the ui lock is what corrupts a session
+                CompletableFuture<List<WebTreeNodeImpl<NODE>>> loaded = new CompletableFuture<>();
                 List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
-                if (parent.isNotLoaded()) {
-                    WebTreeNodeImpl<NODE> unloaded = children.get(0);
+                ui.access(() -> loaded.complete(children));
+                return loaded;
+            }
 
-                    children = fetchChildren(parent, false);
-                    if (children == CANCELED_RESULT) {
-                        ui.access(() -> result.complete(List.of()));
-                        return;
+            WebTreeNodeImpl<NODE> unloaded = parent.getChildren().get(0);
+
+            return myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(parent, false))
+                .handle((children, error) -> {
+                    CompletableFuture<List<WebTreeNodeImpl<NODE>>> result = new CompletableFuture<>();
+
+                    if (error != null) {
+                        logBuildError(error);
+                        result.complete(List.of());
+                        return result;
                     }
 
-                    List<WebTreeNodeImpl<NODE>> finalChildren = children;
                     ui.access(() -> {
                         TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
 
                         data.removeItem(unloaded);
 
-                        data.addItems(parent, finalChildren);
+                        data.addItems(parent, children);
 
                         // add raw children
-                        for (WebTreeNodeImpl<NODE> finalChild : finalChildren) {
-                            data.addItems(finalChild, finalChild.getChildren());
+                        for (WebTreeNodeImpl<NODE> child : children) {
+                            data.addItems(child, child.getChildren());
                         }
 
                         myNodeMap.remove(unloaded.getId());
@@ -347,18 +366,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
                         ui.push();
 
-                        result.complete(finalChildren);
+                        result.complete(children);
                     });
-                }
-                else {
-                    // the whole chain that a walk down a path hangs on this future runs where it is completed,
-                    // and touching the grid outside the ui lock is what corrupts a session
-                    List<WebTreeNodeImpl<NODE>> loaded = children;
-                    ui.access(() -> result.complete(loaded));
-                }
-            });
 
-            return result;
+                    return result;
+                })
+                .thenCompose(Function.identity());
         }
 
         /**
@@ -487,15 +500,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
 
         /**
-         * One thread for the whole tree, the way {@code Invoker} serialises the work of a swing tree. Building a
-         * level replaces the children of a node, and two of those running at once over the same node race each
-         * other - which is what a restore does, since every stored path asks for the nodes above it.
-         */
-        private void invokeLater(Runnable runnable) {
-            myExecutor.execute(runnable);
-        }
-
-        /**
          * The children live in the {@link TreeData} rather than being asked from the model on every paint, so a
          * change behind the tree only reaches it by rebuilding them here.
          */
@@ -518,50 +522,57 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             }
 
             UI ui = UI.getCurrent();
-            invokeLater(() -> {
-                List<WebTreeNodeImpl<NODE>> children = fetchChildren(node, false);
-                if (children == CANCELED_RESULT) {
-                    return;
-                }
-
-                ui.access(() -> {
-                    TreeData<WebTreeNodeImpl<NODE>> treeData = getTreeData();
-
-                    for (WebTreeNodeImpl<NODE> old : List.copyOf(treeData.getChildren(node))) {
-                        myNodeMap.remove(old.getId());
-                        treeData.removeItem(old);
+            myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(node, false))
+                .whenComplete((children, error) -> {
+                    if (error != null) {
+                        logBuildError(error);
+                        return;
                     }
 
-                    treeData.addItems(node, children);
-                    for (WebTreeNodeImpl<NODE> child : children) {
-                        treeData.addItems(child, child.getChildren());
-                    }
+                    ui.access(() -> {
+                        TreeData<WebTreeNodeImpl<NODE>> treeData = getTreeData();
 
-                    getDataProvider().refreshItem(node, true);
+                        for (WebTreeNodeImpl<NODE> old : List.copyOf(treeData.getChildren(node))) {
+                            myNodeMap.remove(old.getId());
+                            treeData.removeItem(old);
+                        }
 
-                    ui.push();
+                        treeData.addItems(node, children);
+                        for (WebTreeNodeImpl<NODE> child : children) {
+                            treeData.addItems(child, child.getChildren());
+                        }
+
+                        getDataProvider().refreshItem(node, true);
+
+                        ui.push();
+                    });
                 });
-            });
         }
 
         public CompletableFuture<?> refreshRoot() {
             UI ui = currentUI();
+            if (ui == null) {
+                return CompletableFuture.completedFuture(null);
+            }
+
             CompletableFuture<Void> result = new CompletableFuture<>();
 
-            invokeLater(() -> {
-                if (fetchChildren(myRootNode, false) == CANCELED_RESULT) {
-                    result.complete(null);
-                    return;
-                }
+            myExecutor.execute(WebTreeImpl.this, () -> fetchChildren(myRootNode, false))
+                .whenComplete((children, error) -> {
+                    if (error != null) {
+                        logBuildError(error);
+                        result.complete(null);
+                        return;
+                    }
 
-                ui.access(() -> {
-                    initTreeData(false);
+                    ui.access(() -> {
+                        initTreeData(false);
 
-                    ui.push();
+                        ui.push();
 
-                    result.complete(null);
+                        result.complete(null);
+                    });
                 });
-            });
 
             return result;
         }
@@ -633,24 +644,24 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             }
         }
 
+        /**
+         * Runs on the executor of the tree. A {@code ProcessCanceledException} is deliberately let through: the
+         * executor of a model over application data cancels its task when a write action arrives and restarts it
+         * by itself, and swallowing the exception here would turn the restart into an empty level.
+         */
         private List<WebTreeNodeImpl<NODE>> fetchChildren(WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
             List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
             Map<String, WebTreeNodeImpl<NODE>> nodeMap = new HashMap<>();
 
-            try {
-                myModel.buildChildren(
-                    node -> {
-                        WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
-                        child.setLoader(this::loadChildrenAsync);
-                        list.add(child);
-                        return child;
-                    },
-                    parent.getValue()
-                );
-            }
-            catch (ProcessCanceledException ignored) {
-                return CANCELED_RESULT;
-            }
+            myModel.buildChildren(
+                node -> {
+                    WebTreeNodeImpl<NODE> child = new WebTreeNodeImpl<>(parent, node, nodeMap);
+                    child.setLoader(this::loadChildrenAsync);
+                    list.add(child);
+                    return child;
+                },
+                parent.getValue()
+            );
 
             myNodeMap.putAll(nodeMap);
 
@@ -663,6 +674,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
             if (list.isEmpty()) {
                 parent.setLeaf(true);
+            }
+
+            // the row is built on the ui thread and the model must not be touched there, so what it would have
+            // asked for is computed here, while the level is being built
+            for (WebTreeNodeImpl<NODE> child : list) {
+                child.computePresentation();
             }
 
             if (fetchNext) {
@@ -682,15 +699,29 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
     }
 
+    /**
+     * A cancelled build - the tree left its ui, or the executor went down with its disposable - is the quiet end
+     * of a chain nobody is waiting on. Anything else on this path would otherwise vanish without a trace, since
+     * the future of a build is rarely looked at.
+     */
+    private static void logBuildError(Throwable error) {
+        Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+        if (!(cause instanceof CancellationException)) {
+            LOG.error(cause);
+        }
+    }
+
+    private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
+
+    @Override
+    public Disposable destroyHook() {
+        return myDestroyHook;
+    }
     @RequiredUIAccess
-    public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
+    public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, TreeExecutor executor) {
         Vaadin vaadin = toVaadinComponent();
-        vaadin.myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor(
-            "WebTree Loader",
-            AppExecutorUtil.getAppExecutorService(),
-            1,
-            disposable
-        );
+        vaadin.myExecutor = executor;
+
         vaadin.init(rootValue, model);
         vaadin.asSingleSelect().addValueChangeListener(event -> {
             WebTreeNodeImpl<NODE> value = event.getValue();

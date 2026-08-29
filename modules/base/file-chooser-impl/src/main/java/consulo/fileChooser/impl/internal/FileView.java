@@ -10,6 +10,7 @@ import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LoadingLayout;
 import consulo.ui.layout.ScrollableLayout;
@@ -50,6 +51,7 @@ class FileView {
         Runnable okAction,
         Runnable okEnabledUpdater,
         boolean restrictRootsToProjectEnvironment,
+        ApplicationTreeExecutorFactory treeExecutorFactory,
         Disposable disposable
     ) {
         myContributor = contributor;
@@ -61,7 +63,7 @@ class FileView {
         myChooseFiles = descriptor.isChooseFiles() || descriptor.isChooseJarContents();
         myChooseFolders = descriptor.isChooseFolders();
 
-        myFileTree = new NioFileSystemTree(descriptor, contributor, disposable);
+        myFileTree = new NioFileSystemTree(descriptor, contributor, treeExecutorFactory, disposable);
         myFileTree.addOkAction(okAction);
         myFileTree.addListener(this::onSelectionChanged);
         myFileTree.setOkEnabledSupplier(this::isOkEnabled);

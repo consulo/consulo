@@ -17,7 +17,6 @@ package consulo.ui.ex.impl.internal.util;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
-import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
 import jakarta.inject.Singleton;
@@ -31,8 +30,8 @@ import jakarta.inject.Singleton;
 public class InvokerFactoryImpl implements InvokerFactory {
   
   @Override
-  public Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
-    return InvokerImpl.forEventDispatchThread(uiAccess, parent);
+  public Invoker forEventDispatchThread(Disposable parent) {
+    return InvokerImpl.forEventDispatchThread(parent);
   }
 
   

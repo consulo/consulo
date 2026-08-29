@@ -15,15 +15,16 @@
  */
 package consulo.desktop.qt.ui.impl;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.ProcessCanceledException;
 import consulo.desktop.qt.ui.impl.image.DesktopQtIconOwner;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.ui.Length;
 import consulo.ui.Point2D;
 import consulo.ui.PopupOwner;
 import consulo.ui.TransferHandler;
 import consulo.ui.Tree;
+import consulo.ui.TreeExecutor;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.TreeStyle;
@@ -52,9 +53,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
 /**
@@ -63,6 +65,8 @@ import java.util.function.Function;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> implements Tree<E>, PopupOwner, DesktopQtIconOwner {
+    private static final Logger LOG = Logger.getInstance(DesktopQtTreeImpl.class);
+
     /**
      * Levels of rows an expand all opens, counting the top level ones.
      */
@@ -80,7 +84,7 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
      */
     private final Map<QTreeWidgetItem, DesktopQtTreeNode<E>> myNodes = new ConcurrentHashMap<>();
 
-    private final ExecutorService myExecutor;
+    private final TreeExecutor myExecutor;
 
     /**
      * The node the tree was built on. It has no row of its own - the tree starts at its children - and it is
@@ -97,19 +101,20 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
      */
     private volatile int myGeneration;
 
-    public DesktopQtTreeImpl(E rootValue, TreeModel<E> model, Disposable disposable) {
+    public DesktopQtTreeImpl(E rootValue, TreeModel<E> model, TreeExecutor executor) {
         myRootValue = rootValue;
         myModel = model;
-        myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor(
-            "DesktopQtTree Loader",
-            AppExecutorUtil.getAppExecutorService(),
-            1,
-            disposable
-        );
+        myExecutor = executor;
 
         myRootNode = createRootNode();
     }
 
+    private final Disposable myDestroyHook = Disposable.newDisposable("Tree");
+
+    @Override
+    public Disposable destroyHook() {
+        return myDestroyHook;
+    }
     private DesktopQtTreeNode<E> createRootNode() {
         DesktopQtTreeNode<E> root = new DesktopQtTreeNode<>(null, myRootValue);
         root.setLoader(this::buildAsync);
@@ -216,9 +221,14 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         int epoch = node.getEpoch();
 
         return DesktopQtUIAccess.INSTANCE.giveAsync(() -> showLoading(parent))
-            .thenCompose(loading -> CompletableFuture.supplyAsync(() -> fetchChildren(node), myExecutor)
-                .thenCompose(children -> DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
+            .thenCompose(loading -> myExecutor.execute(this, () -> fetchChildren(node))
+                .handle((children, error) -> DesktopQtUIAccess.INSTANCE.giveAsync(() -> {
                     hideLoading(loading);
+
+                    if (error != null) {
+                        logBuildError(error);
+                        return List.<DesktopQtTreeNode<E>>of();
+                    }
 
                     if (generation != myGeneration || epoch != node.getEpoch()) {
                         return List.<DesktopQtTreeNode<E>>of();
@@ -226,7 +236,20 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
 
                     attach(node, parent, children);
                     return children;
-                })));
+                }))
+                .thenCompose(Function.identity()));
+    }
+
+    /**
+     * A cancelled build - the tree left its UI, or the executor went down with its disposable - is the quiet
+     * end of a chain nobody is waiting on. Anything else on this path would otherwise vanish without a trace,
+     * since the future of a build is rarely looked at.
+     */
+    private static void logBuildError(Throwable error) {
+        Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+        if (!(cause instanceof CancellationException)) {
+            LOG.error(cause);
+        }
     }
 
     /**
@@ -274,24 +297,28 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
         loading.dispose();
     }
 
+    /**
+     * Runs on the executor of the tree. A {@code ProcessCanceledException} is deliberately let through: the
+     * executor of a model over application data cancels its task when a write action arrives and restarts it
+     * by itself, and swallowing the exception here would turn the restart into an empty level.
+     */
     private List<DesktopQtTreeNode<E>> fetchChildren(DesktopQtTreeNode<E> parent) {
         List<DesktopQtTreeNode<E>> list = new ArrayList<>();
 
-        try {
-            myModel.buildChildren(e -> {
-                DesktopQtTreeNode<E> node = new DesktopQtTreeNode<>(parent, e);
-                node.setLoader(this::buildAsync);
-                list.add(node);
-                return node;
-            }, parent.getValue());
-        }
-        catch (ProcessCanceledException ignored) {
-            return List.of();
-        }
+        myModel.buildChildren(e -> {
+            DesktopQtTreeNode<E> node = new DesktopQtTreeNode<>(parent, e);
+            node.setLoader(this::buildAsync);
+            list.add(node);
+            return node;
+        }, parent.getValue());
 
         Comparator<TreeNode<E>> comparator = myModel.getNodeComparator();
         if (comparator != null) {
             list.sort(comparator);
+        }
+
+        for (DesktopQtTreeNode<E> node : list) {
+            node.computePresentation();
         }
 
         return list;
@@ -535,7 +562,10 @@ public class DesktopQtTreeImpl<E> extends QtComponentDelegate<QTreeWidget> imple
             return;
         }
 
-        qtNode.render();
+        myExecutor.execute(this, () -> {
+            qtNode.computePresentation();
+            return null;
+        }).thenCompose(v -> DesktopQtUIAccess.INSTANCE.giveAsync(qtNode::render));
 
         if (refreshChildren) {
             for (QTreeWidgetItem child : item.takeChildren()) {

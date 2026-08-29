@@ -17,6 +17,7 @@ package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.ui.app.WholeLeftWindowWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -110,7 +111,8 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
             }
         };
 
-        Tree<Configurable> component = Tree.create(configurableTreeModel, uiDisposable);
+        Tree<Configurable> component = Tree.create(configurableTreeModel);
+        Disposer.register(uiDisposable, component.destroyHook());
 
         DockLayout rightPart = DockLayout.create();
         rightPart.center(Label.create(LocalizeValue.localizeTODO("Select configurable")));

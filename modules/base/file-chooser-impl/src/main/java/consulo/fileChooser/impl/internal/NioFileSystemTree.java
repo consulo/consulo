@@ -2,9 +2,11 @@
 package consulo.fileChooser.impl.internal;
 
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -33,11 +35,19 @@ class NioFileSystemTree implements Disposable {
 
     private BooleanSupplier myOkEnabledSupplier = () -> false;
 
-    NioFileSystemTree(FileChooserDescriptor descriptor, UniversalFileChooserContributor contributor, Disposable disposable) {
+    NioFileSystemTree(
+        FileChooserDescriptor descriptor,
+        UniversalFileChooserContributor contributor,
+        ApplicationTreeExecutorFactory treeExecutorFactory,
+        Disposable disposable
+    ) {
         myDescriptor = descriptor;
         myContributor = contributor;
         myModel = new NioFileTreeModel(descriptor);
-        myTree = Tree.create(myModel, disposable);
+        // the model walks the real filesystem - no application data is read, but a slow mount would freeze
+        // the ui for as long as it takes to answer
+        myTree = Tree.create(myModel, treeExecutorFactory.forBackgroundThreadWithoutReadAction(disposable));
+        Disposer.register(disposable, myTree.destroyHook());
 
         myTree.setSpeedSearchConverter(node -> {
             NioFileNode value = node.getValue();

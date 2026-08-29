@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.ui;
 
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -368,9 +369,9 @@ public class UITester {
                             nodeFactory.apply(parentValue + ", second child = " + i);
                         }
                     }
-                },
-                uiDisposable
+                }
             );
+            Disposer.register(uiDisposable, tree.destroyHook());
 
             return ScrollableLayout.create(tree);
         }

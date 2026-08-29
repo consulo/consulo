@@ -23,19 +23,28 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.project.Project;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
+import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
 @ExtensionImpl(id = FileOperateDialogProvider.APPLICATION_ID, order = "last")
 public class UniversalFileChooseDialogProvider implements FileChooseDialogProvider {
+    private final ApplicationTreeExecutorFactory myTreeExecutorFactory;
+
+    @Inject
+    public UniversalFileChooseDialogProvider(ApplicationTreeExecutorFactory treeExecutorFactory) {
+        myTreeExecutorFactory = treeExecutorFactory;
+    }
+
     @Override
     public FileChooserDialog createFileChooser(
         FileChooserDescriptor descriptor,
         @Nullable ComponentManager project,
         @Nullable Component parent
     ) {
-        return new UniversalFileChooser(descriptor, (Project) project);
+        return new UniversalFileChooser(descriptor, (Project) project, myTreeExecutorFactory);
     }
 
     @Override
@@ -44,7 +53,7 @@ public class UniversalFileChooseDialogProvider implements FileChooseDialogProvid
         @Nullable ComponentManager project,
         @Nullable Component parent
     ) {
-        return new UniversalFileChooser(descriptor, (Project) project);
+        return new UniversalFileChooser(descriptor, (Project) project, myTreeExecutorFactory);
     }
 
     @Override

@@ -38,7 +38,6 @@ import java.util.List;
  */
 public class WebItemPresentationImpl implements TextItemPresentation {
     private Image myIcon;
-    private List<Component> myFragments = new ArrayList<>();
     private @Nullable ColorValue myBackgroundColor;
 
     private LocalizeValue mySuffixText = LocalizeValue.empty();
@@ -88,15 +87,9 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
     @Override
     public void append(LocalizeValue text, TextAttribute textAttribute) {
-        String string = text.get();
-        Span span = new Span(string);
-
         // the attribute is what tells a file apart in the project view - grayed out, red for an error, the vcs
         // colour of a changed one. dropping it left every fragment looking the same
-        applyAttribute(span, textAttribute);
-
-        myFragments.add(span);
-        myFragmentModels.add(new Fragment(string, textAttribute));
+        myFragmentModels.add(new Fragment(text.get(), textAttribute));
 
         after();
     }
@@ -156,11 +149,16 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
     @Override
     public void clearText() {
-        myFragments.clear();
+        myFragmentModels.clear();
 
         after();
     }
 
+    /**
+     * Builds the components anew on every call. A presentation computed once and drawn many times - a tree row
+     * rebuilt as the grid scrolls - would otherwise hand the same spans to two parents, and vaadin moves an
+     * element rather than sharing it, so the row built first would lose its text.
+     */
     public Component toComponent() {
         Span span = new Span();
         span.addClassName("web-icon");
@@ -169,7 +167,12 @@ public class WebItemPresentationImpl implements TextItemPresentation {
             image.addClassName(AuraUtility.Margin.Right.SMALL);
             span.add(image);
         }
-        span.add(myFragments.toArray(Component[]::new));
+
+        for (Fragment fragment : myFragmentModels) {
+            Span text = new Span(fragment.text());
+            applyAttribute(text, fragment.attribute());
+            span.add(text);
+        }
 
         if (mySuffixText.isEmpty() && mySuffixIcon == null) {
             return span;

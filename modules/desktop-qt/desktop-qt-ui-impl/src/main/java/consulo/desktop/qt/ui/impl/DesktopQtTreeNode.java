@@ -35,6 +35,11 @@ import java.util.function.Predicate;
 public class DesktopQtTreeNode<E> implements TreeNode<E> {
     private BiConsumer<E, TextItemPresentation> myRenderer;
 
+    /**
+     * Computed on the executor of the tree and applied on the qt thread, so it crosses threads by design.
+     */
+    private volatile @Nullable DesktopQtTextItemPresentation myPresentation;
+
     private final @Nullable DesktopQtTreeNode<E> myParent;
 
     private final E myValue;
@@ -141,24 +146,38 @@ public class DesktopQtTreeNode<E> implements TreeNode<E> {
         return myEpoch;
     }
 
+    /**
+     * Runs the renderer of the model - which walks whatever the model is built over - so this belongs on the
+     * executor of the tree, never on the qt thread. {@link #render()} applies what was computed here.
+     */
+    public void computePresentation() {
+        DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
+
+        BiConsumer<E, TextItemPresentation> renderer = myRenderer;
+        if (renderer == null) {
+            presentation.append(myValue == null ? "" : myValue.toString());
+        }
+        else {
+            renderer.accept(myValue, presentation);
+        }
+
+        myPresentation = presentation;
+    }
+
+    /**
+     * Pushes the prebuilt presentation into the row - the model is not asked anything here, so this is safe
+     * on the qt thread.
+     */
     public void render() {
         if (myTreeItem == null || myTreeItem.isDisposed()) {
             return;
         }
 
-        if (myRenderer == null) {
-            myRenderer = (e, presentation) -> {
-                if (e == null) {
-                    presentation.append("");
-                }
-                else {
-                    presentation.append(e.toString());
-                }
-            };
+        DesktopQtTextItemPresentation presentation = myPresentation;
+        if (presentation == null) {
+            return;
         }
 
-        DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-        myRenderer.accept(myValue, presentation);
         myTreeItem.setText(0, presentation.toString());
 
         Image uiImage = presentation.getImage();

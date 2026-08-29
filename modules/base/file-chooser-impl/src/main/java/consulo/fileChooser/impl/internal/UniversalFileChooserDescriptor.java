@@ -8,6 +8,7 @@ import consulo.ui.Component;
 import consulo.ui.WidthAndHeight;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -24,6 +25,7 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
     private final Project myProject;
     private final List<UniversalFileChooserContributor> myContributors;
     private final @Nullable Path myPreselectPath;
+    private final ApplicationTreeExecutorFactory myTreeExecutorFactory;
 
     private @Nullable UniversalFileChooserPanel myPanel;
     private Runnable myOkAction = () -> {
@@ -33,13 +35,15 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
         FileChooserDescriptor descriptor,
         Project project,
         List<UniversalFileChooserContributor> contributors,
-        @Nullable Path preselectPath
+        @Nullable Path preselectPath,
+        ApplicationTreeExecutorFactory treeExecutorFactory
     ) {
         super(descriptor.getTitle());
         myDescriptor = descriptor;
         myProject = project;
         myContributors = contributors;
         myPreselectPath = preselectPath;
+        myTreeExecutorFactory = treeExecutorFactory;
     }
 
     @Override
@@ -62,6 +66,7 @@ class UniversalFileChooserDescriptor extends DialogDescriptor {
             myContributors,
             myPreselectPath,
             this::updateOkButtonState,
+            myTreeExecutorFactory,
             uiDisposable
         );
         myPanel = panel;

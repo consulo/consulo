@@ -18,6 +18,7 @@ package consulo.ide.impl.module.creation;
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ide.impl.welcomeScreen.WelcomeSlide;
 import consulo.ide.localize.IdeLocalize;
@@ -216,7 +217,8 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, WelcomeSlid
 
         Application.get().getExtensionPoint(NewModuleBuilder.class).forEach(it -> it.setupContext(context));
 
-        Tree<NewModuleContextNode> tree = Tree.create(new NewProjectTreeModel(context), myParentDisposable);
+        Tree<NewModuleContextNode> tree = Tree.create(new NewProjectTreeModel(context));
+        Disposer.register(myParentDisposable, tree.destroyHook());
         tree.addStyle(TreeStyle.FONT_LARGE);
         tree.addStyle(TreeStyle.TRANSPARENT_BACKGROUND);
         tree.setItemHeightGetter(node -> Length.ofPixel(24));
