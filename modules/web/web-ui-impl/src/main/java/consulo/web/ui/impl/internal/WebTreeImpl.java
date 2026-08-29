@@ -351,6 +351,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
                     ui.access(() -> {
                         TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
 
+                        // the level may have been built twice - the check which sent this build off happens two
+                        // thread hops before this, so a second one starts while the first is still on the
+                        // executor. whichever gets the ui lock first owns the rows; the other has nothing left
+                        // to do, and the placeholder it was holding on to is already gone
+                        if (!data.contains(unloaded)) {
+                            result.complete(parent.getChildren());
+                            return;
+                        }
+
                         data.removeItem(unloaded);
 
                         data.addItems(parent, children);
