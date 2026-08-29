@@ -6,24 +6,21 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ui.ex.awt.internal.DesktopIdeFrameUtil;
-import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
 import consulo.project.ui.impl.internal.wm.action.ActivateToolWindowAction;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,39 +67,28 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
 
         myAlarm = new Alarm(this);
 
-        myLabel.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 8);
-
-        JComponent awtLabel = (JComponent) TargetAWT.to(myLabel);
-
-        new BaseButtonBehavior(awtLabel, TimedDeadzone.NULL) {
-            @Override
-            protected void execute(MouseEvent e) {
-                performAction();
-            }
-        }.setActionTrigger(MouseEvent.MOUSE_PRESSED);
+        JComponent awtButton = (JComponent) TargetAWT.to(myButton);
 
         IdeEventQueue.getInstance().addDispatcher(
             e -> {
                 if (e instanceof MouseEvent) {
                     MouseEvent mouseEvent = (MouseEvent) e;
                     if (mouseEvent.getComponent() == null
-                        || !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), SwingUtilities.getWindowAncestor(awtLabel))) {
+                        || !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), SwingUtilities.getWindowAncestor(awtButton))) {
                         return false;
                     }
 
-                    if (e.getID() == MouseEvent.MOUSE_MOVED && awtLabel.isShowing()) {
+                    if (e.getID() == MouseEvent.MOUSE_MOVED && awtButton.isShowing()) {
                         Point p = mouseEvent.getLocationOnScreen();
-                        Point screen = awtLabel.getLocationOnScreen();
-                        if (new Rectangle(screen.x - 4, screen.y - 2, awtLabel.getWidth() + 4, awtLabel.getHeight() + 4).contains(p)) {
+                        if (buttonRectOnScreen().contains(p)) {
                             mouseEntered();
                             wasExited = false;
                         }
-                        else if (!wasExited) {
+                        else {
                             wasExited = mouseExited(p);
                         }
                     }
                     else if (e.getID() == MouseEvent.MOUSE_EXITED) {
-                        //mouse exits WND
                         mouseExited(mouseEvent.getLocationOnScreen());
                     }
                 }
@@ -112,20 +98,49 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
         );
     }
 
+    private static @Nullable Point pointerOnScreen() {
+        PointerInfo info = MouseInfo.getPointerInfo();
+        return info == null ? null : info.getLocation();
+    }
+
+    private Rectangle buttonRectOnScreen() {
+        JComponent awtButton = (JComponent) TargetAWT.to(myButton);
+        if (!awtButton.isShowing()) {
+            return new Rectangle();
+        }
+
+        Point location = awtButton.getLocationOnScreen();
+        return new Rectangle(location.x - 4, location.y - 2, awtButton.getWidth() + 4, awtButton.getHeight() + 4);
+    }
+
+    private boolean isOverSwitcherOrPopup(@Nullable Point screenPoint) {
+        if (screenPoint == null) {
+            return false;
+        }
+
+        if (buttonRectOnScreen().contains(screenPoint)) {
+            return true;
+        }
+
+        if (popup == null || !popup.isVisible()) {
+            return false;
+        }
+
+        Point location = popup.getLocationOnScreen();
+        Dimension size = popup.getSize();
+        return new Rectangle(location.x, location.y, size.width, size.height).contains(screenPoint);
+    }
+
     public boolean mouseExited(Point currentLocationOnScreen) {
         myAlarm.cancelAllRequests();
-        if (popup != null && popup.isVisible()) {
-            Point screen = popup.getLocationOnScreen();
-            Rectangle popupScreenRect = new Rectangle(screen.x, screen.y, popup.getSize().width, popup.getSize().height);
-            if (!popupScreenRect.contains(currentLocationOnScreen)) {
-                myAlarm.cancelAllRequests();
-                myAlarm.addRequest(() -> {
-                    if (popup != null && popup.isVisible()) {
-                        popup.cancel();
-                    }
-                }, 300);
-                return true;
-            }
+
+        if (popup != null && popup.isVisible() && !isOverSwitcherOrPopup(currentLocationOnScreen)) {
+            myAlarm.addRequest(() -> {
+                if (popup != null && popup.isVisible() && !isOverSwitcherOrPopup(pointerOnScreen())) {
+                    popup.cancel();
+                }
+            }, 300);
+            return true;
         }
         return false;
     }
@@ -137,7 +152,7 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
         }
         if (myAlarm.getActiveRequestCount() == 0) {
             myAlarm.addRequest(() -> {
-                IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(TargetAWT.to(myLabel));
+                IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(TargetAWT.to(myButton));
                 if (frame == null) {
                     return;
                 }
@@ -167,7 +182,7 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
                     actionBuilder.add(action);
                 }
 
-                DataContext context = DataManager.getInstance().getDataContext(myLabel);
+                DataContext context = DataManager.getInstance().getDataContext(myButton);
                 ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
                     null,
                     actionBuilder.build(),
@@ -189,7 +204,7 @@ public class DesktopToolWindowsSwitcher extends BaseToolWindowsSwitcher {
 
                 this.popup = popup;
 
-                this.popup.show(new RelativePoint(TargetAWT.to(myLabel), new Point(0, 0)));
+                this.popup.show(new RelativePoint(TargetAWT.to(myButton), new Point(36, 36)));
             }, 300);
         }
     }

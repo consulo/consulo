@@ -24,9 +24,10 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.Button;
+import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
 import consulo.ui.FocusManager;
-import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.toolWindow.ToolWindowSettings;
@@ -38,85 +39,98 @@ import org.jspecify.annotations.Nullable;
  * @since 2023-11-13
  */
 public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
-  private final StatusBar myStatusBar;
+    private final StatusBar myStatusBar;
 
-  /**
-   * The project of a status bar never changes, so the settings are asked for once. Looking them up on every
-   * update would ask a project which may be gone by then - closing one moves the focus to the welcome frame,
-   * and this listens for that - and a disposed container answers a lookup by throwing.
-   */
-  private final @Nullable ToolWindowSettings mySettings;
+    private @Nullable ToolWindowSettings mySettings;
 
-  protected JBPopup popup;
-  protected boolean wasExited = false;
-  protected Label myLabel;
+    protected JBPopup popup;
+    protected boolean wasExited = false;
+    protected Button myButton;
 
-  public BaseToolWindowsSwitcher(StatusBar statusBar) {
-    myStatusBar = statusBar;
+    @RequiredUIAccess
+    public BaseToolWindowsSwitcher(StatusBar statusBar) {
+        myStatusBar = statusBar;
 
-    Project project = statusBar == null ? null : statusBar.getProject();
-    mySettings = project == null ? null : ToolWindowSettings.getInstance(project);
+        myButton = Button.create(LocalizeValue.empty());
+        myButton.addStyle(ButtonStyle.TOOLBAR);
+        myButton.addClickListener(event -> performAction());
+        myButton.setFocusable(false);
 
-    myLabel = Label.create();
+        Disposer.register(this, FocusManager.get().addListener(this::update));
 
-    Disposer.register(this, FocusManager.get().addListener(this::update));
-
-    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.class, this);
-  }
-
-  @Override
-  public void uiSettingsChanged(UISettings uiSettings) {
-    update();
-  }
-
-  public void performAction() {
-    if (isActive()) {
-      mySettings.setHideToolStripes(!mySettings.isHideToolStripes());
-      UISettings.getInstance().fireUISettingsChanged();
+        Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.class, this);
     }
-  }
 
-  @RequiredUIAccess
-  public void update() {
-    myLabel.setToolTipText(LocalizeValue.empty());
-    if (isActive()) {
-      boolean changes = false;
-
-      if (!myLabel.isVisible()) {
-        myLabel.setVisible(true);
-        changes = true;
-      }
-
-      Image icon = mySettings.isHideToolStripes()
-        ? PlatformIconGroup.generalTbshown()
-        : PlatformIconGroup.generalTbhidden();
-      if (icon != myLabel.getImage()) {
-        myLabel.setImage(icon);
-        changes = true;
-      }
-
-      if (changes) {
-        myLabel.forceRepaint();
-      }
+    @Override
+    public void uiSettingsChanged(UISettings uiSettings) {
+        update();
     }
-    else {
-      myLabel.setVisible(false);
-      myLabel.setToolTipText(LocalizeValue.empty());
+
+    public void performAction() {
+        ToolWindowSettings settings = settings();
+        if (settings != null) {
+            settings.setHideToolStripes(!settings.isHideToolStripes());
+            UISettings.getInstance().fireUISettingsChanged();
+        }
     }
-  }
 
-  public boolean isActive() {
-    return mySettings != null;
-  }
+    /**
+     * A frame hands its status bar a project only after the bar is built, so the settings cannot be resolved in the
+     * constructor. Once resolved they are kept - looking them up on every update would ask a project which may be
+     * gone by then, and a disposed container answers a lookup by throwing.
+     */
+    private @Nullable ToolWindowSettings settings() {
+        if (mySettings == null) {
+            Project project = myStatusBar == null ? null : myStatusBar.getProject();
+            if (project != null && !project.isDisposed()) {
+                mySettings = ToolWindowSettings.getInstance(project);
+            }
+        }
+        return mySettings;
+    }
 
-  
-  public Component getUIComponent() {
-    return myLabel;
-  }
+    @RequiredUIAccess
+    public void update() {
+        myButton.setToolTipText(LocalizeValue.empty());
+        ToolWindowSettings settings = settings();
+        if (settings != null) {
+            boolean changes = false;
 
-  @Override
-  public void dispose() {
-    Disposer.dispose(this);
-    popup = null;
-  }
+            if (!myButton.isVisible()) {
+                myButton.setVisible(true);
+                changes = true;
+            }
+
+            Image icon = settings.isHideToolStripes()
+                ? PlatformIconGroup.generalTbshown()
+                : PlatformIconGroup.generalTbhidden();
+            if (icon != myButton.getIcon()) {
+                myButton.setIcon(icon);
+                changes = true;
+            }
+
+            if (changes) {
+                myButton.forceRepaint();
+            }
+        }
+        else {
+            myButton.setVisible(false);
+            myButton.setToolTipText(LocalizeValue.empty());
+        }
+    }
+
+    public boolean isActive() {
+        return settings() != null;
+    }
+
+
+    public Component getUIComponent() {
+        return myButton;
+    }
+
+    @Override
+    public void dispose() {
+        Disposer.dispose(this);
+        popup = null;
+    }
 }

@@ -16,12 +16,14 @@
 package consulo.ide.impl.wm.statusBar;
 
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 2023-11-13
  */
 public class UnifiedToolWindowsSwitcher extends BaseToolWindowsSwitcher {
+  @RequiredUIAccess
   public UnifiedToolWindowsSwitcher(StatusBar statusBar) {
     super(statusBar);
   }

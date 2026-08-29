@@ -215,7 +215,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
     private LayoutData recomputeBounds(boolean setBounds, Dimension toFitWith, boolean noDrop) {
         LayoutData data = new LayoutData();
-        int horizontaloffset = isBottom() ? getHeight() : getHeight() - 2;
+        int horizontaloffset = getHeight() - 2;
 
         data.eachY = 0;
         data.size = new Dimension();
@@ -227,8 +227,7 @@ final class DesktopStripePanelImpl extends JPanel {
             data.eachY = 1;
         }
         else if (data.horizontal) {
-            data.eachX = JBUI.scale(3);
-            data.size.width = data.eachX;
+            data.eachX = 0;
         }
         else {
             data.eachX = 0;
@@ -255,7 +254,7 @@ final class DesktopStripePanelImpl extends JPanel {
         }
 
         int gap = 0;
-        if (toFitWith != null) {
+        if (toFitWith != null && !isBottom()) {
             LayoutData layoutData = recomputeBounds(false, null, true);
             if (data.horizontal) {
                 gap = toFitWith.width - horizontaloffset - layoutData.size.width - data.eachX;
