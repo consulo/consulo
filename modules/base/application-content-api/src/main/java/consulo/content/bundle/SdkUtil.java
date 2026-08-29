@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
@@ -45,6 +46,8 @@ import java.util.function.Supplier;
  * @since 2014-08-21
  */
 public class SdkUtil {
+    private static final Logger LOG = Logger.getInstance(SdkUtil.class);
+
     public static String createUniqueSdkName(Platform platform, PlatformAwareSdkType type, Path home, Sdk[] sdks) {
         return createUniqueSdkName(type.suggestSdkName(platform, null, home), sdks);
     }
@@ -95,13 +98,14 @@ public class SdkUtil {
      *
      * @param path       identifies the SDK
      * @param sdkType
-     * @param predefined
+     * @param uiAccess
      * @return newly created SDK, or null.
      */
     @RequiredUIAccess
     public static @Nullable Sdk createAndAddSDK(String path, SdkType sdkType, UIAccess uiAccess) {
         Application app = Application.get();
-        VirtualFile sdkHome = app.runWriteAction((Supplier<VirtualFile>) () -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
+        VirtualFile sdkHome =
+            app.runWriteAction((Supplier<VirtualFile>) () -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
         if (sdkHome != null) {
             SdkTable sdkTable = SdkTable.getInstance();
             Sdk newSdk = setupSdk(sdkTable.getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
@@ -113,13 +117,15 @@ public class SdkUtil {
         return null;
     }
 
-    public static @Nullable Sdk setupSdk(Sdk[] allSdks,
-                                         VirtualFile homeDir,
-                                         SdkType sdkType,
-                                         boolean silent,
-                                         @Nullable SdkAdditionalData additionalData,
-                                         @Nullable String customSdkSuggestedName,
-                                         UIAccess uiAccess) {
+    public static @Nullable Sdk setupSdk(
+        Sdk[] allSdks,
+        VirtualFile homeDir,
+        SdkType sdkType,
+        boolean silent,
+        @Nullable SdkAdditionalData additionalData,
+        @Nullable String customSdkSuggestedName,
+        UIAccess uiAccess
+    ) {
         if (sdkType instanceof PlatformAwareSdkType bundleType) {
             return setupBundle(Platform.current(), allSdks, homeDir, bundleType, silent, additionalData, customSdkSuggestedName, uiAccess);
         }
@@ -127,14 +133,16 @@ public class SdkUtil {
         return setupLegacySdk(allSdks, homeDir, sdkType, silent, additionalData, customSdkSuggestedName, uiAccess);
     }
 
-    public static @Nullable Sdk setupBundle(Platform platform,
-                                            Sdk[] allSdks,
-                                            VirtualFile homeDir,
-                                            PlatformAwareSdkType platformAwareSdkType,
-                                            boolean silent,
-                                            @Nullable SdkAdditionalData additionalData,
-                                            @Nullable String customSdkSuggestedName,
-                                            UIAccess uiAccess) {
+    public static @Nullable Sdk setupBundle(
+        Platform platform,
+        Sdk[] allSdks,
+        VirtualFile homeDir,
+        PlatformAwareSdkType platformAwareSdkType,
+        boolean silent,
+        @Nullable SdkAdditionalData additionalData,
+        @Nullable String customSdkSuggestedName,
+        UIAccess uiAccess
+    ) {
         Sdk sdk;
         try {
             Path homeNioPath = homeDir.toNioPath();
@@ -160,15 +168,16 @@ public class SdkUtil {
             platformAwareSdkType.setupSdkPaths(sdk);
         }
         catch (Exception e) {
+            LOG.error(e);
             if (!silent) {
-                uiAccess.give(() -> {
-                    Alerts.okError(
+                uiAccess.give(
+                    () -> Alerts.okError(
                             "Error configuring SDK: " + e.getMessage() + ".\n" +
                                 "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type."
                         )
                         .title("Error Configuring SDK")
-                        .showAsync();
-                });
+                        .showAsync()
+                );
             }
             return null;
         }
@@ -188,9 +197,9 @@ public class SdkUtil {
         try {
             String sdkPath = sdkType.sdkPath(homeDir);
 
-            String sdkName = customSdkSuggestedName == null ? createUniqueSdkName(sdkType, sdkPath, allSdks) : createUniqueSdkName(
-                customSdkSuggestedName,
-                allSdks);
+            String sdkName = customSdkSuggestedName == null
+                ? createUniqueSdkName(sdkType, sdkPath, allSdks)
+                : createUniqueSdkName(customSdkSuggestedName, allSdks);
 
             sdk = SdkTable.getInstance().createSdk(sdkName, sdkType);
 
@@ -209,23 +218,24 @@ public class SdkUtil {
             sdkType.setupSdkPaths(sdk);
         }
         catch (Exception e) {
+            LOG.error(e);
             if (!silent) {
-                uiAccess.give(() -> {
-                    Alerts.okError(
+                uiAccess.give(
+                    () -> Alerts.okError(
                             "Error configuring SDK: " + e.getMessage() + ".\n" +
                                 "Please make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type."
                         )
                         .title("Error Configuring SDK")
-                        .showAsync();
-                });
+                        .showAsync()
+                );
             }
             return null;
         }
         return sdk;
     }
 
-    @RequiredUIAccess
     @Deprecated
+    @RequiredUIAccess
     public static void selectSdkHome(SdkType sdkType, @RequiredUIAccess Consumer<String> consumer) {
         if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
             selectSdkHome(Platform.current(), platformAwareSdkType, path -> consumer.accept(path.toString()));
@@ -236,7 +246,11 @@ public class SdkUtil {
     }
 
     @RequiredUIAccess
-    public static void selectSdkHome(Platform platform, PlatformAwareSdkType platformAwareSdkType, @RequiredUIAccess Consumer<Path> consumer) {
+    public static void selectSdkHome(
+        Platform platform,
+        PlatformAwareSdkType platformAwareSdkType,
+        @RequiredUIAccess Consumer<Path> consumer
+    ) {
         FileChooserDescriptor descriptor = platformAwareSdkType.getHomeChooserDescriptor(platform);
 
         FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(platformAwareSdkType)).whenComplete((virtualFiles, error) -> {

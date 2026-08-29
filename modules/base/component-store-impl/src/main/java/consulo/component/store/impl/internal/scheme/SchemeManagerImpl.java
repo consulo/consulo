@@ -77,7 +77,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   private String mySchemeExtension = DirectoryStorageData.DEFAULT_EXT;
   private boolean myUpdateExtension;
 
-  private final Set<String> myFilesToDelete = new HashSet<String>();
+  private final Set<String> myFilesToDelete = new HashSet<>();
 
   public SchemeManagerImpl(String fileSpec,
                            VirtualFileTracker virtualFileTracker,
@@ -90,9 +90,9 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     myRoamingType = roamingType;
     myProvider = provider;
     myIoDir = baseDir;
-    if (processor instanceof SchemeExtensionProvider) {
-      mySchemeExtension = ((SchemeExtensionProvider)processor).getSchemeExtension();
-      myUpdateExtension = ((SchemeExtensionProvider)processor).isUpgradeNeeded();
+    if (processor instanceof SchemeExtensionProvider seProvider) {
+      mySchemeExtension = seProvider.getSchemeExtension();
+      myUpdateExtension = seProvider.isUpgradeNeeded();
     }
 
     String baseDirPath = myIoDir.getAbsolutePath().replace(File.separatorChar, '/');
@@ -189,7 +189,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
 
   @Override
   public Collection<E> loadSchemes() {
-    Map<String, E> result = new LinkedHashMap<String, E>();
+    Map<String, E> result = new LinkedHashMap<>();
     if (myProvider != null && myProvider.isEnabled()) {
       readSchemesFromProviders(result);
     }
@@ -215,8 +215,8 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
 
   private E findSchemeFor(String ioFileName) {
     for (T scheme : mySchemes) {
-      if (scheme instanceof ExternalizableScheme) {
-        if (ioFileName.equals(((ExternalizableScheme)scheme).getExternalInfo().getCurrentFileName() + mySchemeExtension)) {
+      if (scheme instanceof ExternalizableScheme externalizableScheme) {
+        if (ioFileName.equals(externalizableScheme.getExternalInfo().getCurrentFileName() + mySchemeExtension)) {
           //noinspection CastConflictsWithInstanceof,unchecked
           return (E)scheme;
         }
@@ -252,8 +252,8 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
         boolean fileRenamed = false;
         assert scheme != null;
         T existing = findSchemeByName(scheme.getName());
-        if (existing instanceof ExternalizableScheme) {
-          String currentFileName = ((ExternalizableScheme)existing).getExternalInfo().getCurrentFileName();
+        if (existing instanceof ExternalizableScheme externalizableScheme) {
+          String currentFileName = externalizableScheme.getExternalInfo().getCurrentFileName();
           if (currentFileName != null && !currentFileName.equals(subPath)) {
             deleteServerFile(subPath);
             subPath = currentFileName;
@@ -277,8 +277,8 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
 
   private String checkFileNameIsFree(String subPath, String schemeName) {
     for (T scheme : mySchemes) {
-      if (scheme instanceof ExternalizableScheme) {
-        String name = ((ExternalizableScheme)scheme).getExternalInfo().getCurrentFileName();
+      if (scheme instanceof ExternalizableScheme externalizableScheme) {
+        String name = externalizableScheme.getExternalInfo().getCurrentFileName();
         if (name != null &&
             !schemeName.equals(myProcessor.getName(scheme)) &&
             subPath.length() == (name.length() + mySchemeExtension.length()) &&
@@ -292,10 +292,10 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   }
 
   private Collection<String> collectAllFileNames() {
-    Set<String> result = new HashSet<String>();
+    Set<String> result = new HashSet<>();
     for (T scheme : mySchemes) {
-      if (scheme instanceof ExternalizableScheme) {
-        ExternalInfo externalInfo = ((ExternalizableScheme)scheme).getExternalInfo();
+      if (scheme instanceof ExternalizableScheme externalizableScheme) {
+        ExternalInfo externalInfo = externalizableScheme.getExternalInfo();
         if (externalInfo.getCurrentFileName() != null) {
           result.add(externalInfo.getCurrentFileName());
         }
@@ -347,7 +347,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     return readSchemeFromFile(VirtualFileUtil.virtualToIoFile(file), forceAdd, duringLoad);
   }
 
-  private @Nullable E readSchemeFromFile(final File file, boolean forceAdd, boolean duringLoad) {
+  private @Nullable E readSchemeFromFile(File file, boolean forceAdd, boolean duringLoad) {
     if (!canRead(file)) {
       return null;
     }
@@ -374,14 +374,11 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       }
       return scheme;
     }
-    catch (final Exception e) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          String msg = "Cannot read scheme " + file.getName() + "  from '" + myFileSpec + "': " + e.getMessage();
-          LOG.info(msg, e);
-          Alerts.okError(LocalizeValue.localizeTODO(msg)).title(LocalizeValue.localizeTODO("Load Settings")).showAsync();
-        }
+    catch (Exception e) {
+      Application.get().invokeLater(() -> {
+        String msg = "Cannot read scheme " + file.getName() + "  from '" + myFileSpec + "': " + e.getMessage();
+        LOG.info(msg, e);
+        Alerts.okError(LocalizeValue.localizeTODO(msg)).title(LocalizeValue.localizeTODO("Load Settings")).showAsync();
       });
       return null;
     }
@@ -425,7 +422,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   public void save() {
     boolean hasSchemes = false;
     UniqueNameGenerator nameGenerator = new UniqueNameGenerator();
-    List<E> schemesToSave = new SmartList<E>();
+    List<E> schemesToSave = new SmartList<>();
     for (T scheme : mySchemes) {
       if (scheme instanceof ExternalizableScheme) {
         //noinspection CastConflictsWithInstanceof,unchecked
@@ -482,10 +479,11 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
       catch (Exception e) {
         LOG.error("Cannot write scheme " + scheme.getName() + " in '" + myFileSpec + "': " + e.getLocalizedMessage(), e);
 
-        Application app = Application.get();
-        app.invokeLater(
-                () -> Alerts.okError(LocalizeValue.localizeTODO("Cannot save scheme '" + scheme.getName() + ": " + e.getMessage())).title(LocalizeValue.localizeTODO("Save Settings")).showAsync());
-
+        Application.get().invokeLater(
+          () -> Alerts.okError(LocalizeValue.localizeTODO("Cannot save scheme '" + scheme.getName() + "': " + e.getMessage()))
+            .title(LocalizeValue.localizeTODO("Save Settings"))
+            .showAsync()
+        );
       }
     }
 
@@ -631,18 +629,18 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
   protected void schemeDeleted(T scheme) {
     super.schemeDeleted(scheme);
 
-    if (scheme instanceof ExternalizableScheme) {
-      ContainerUtil.addIfNotNull(myFilesToDelete, ((ExternalizableScheme)scheme).getExternalInfo().getCurrentFileName());
+    if (scheme instanceof ExternalizableScheme externalizableScheme) {
+      ContainerUtil.addIfNotNull(myFilesToDelete, externalizableScheme.getExternalInfo().getCurrentFileName());
     }
   }
 
   @Override
   protected void schemeAdded(T scheme) {
-    if (!(scheme instanceof ExternalizableScheme)) {
+    if (!(scheme instanceof ExternalizableScheme externalizableScheme)) {
       return;
     }
 
-    ExternalInfo externalInfo = ((ExternalizableScheme)scheme).getExternalInfo();
+    ExternalInfo externalInfo = externalizableScheme.getExternalInfo();
     String fileName = externalInfo.getCurrentFileName();
     if (fileName != null) {
       myFilesToDelete.remove(fileName);

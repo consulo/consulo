@@ -28,10 +28,18 @@ import java.util.function.Function;
 public final class Alerts {
     private static final Object ourStableNull = new Object();
 
+    public static Alert<Object> okInfo(LocalizeValue textValue) {
+        return okTemplate(textValue, o -> o);
+    }
+
     @Deprecated
     @DeprecationInfo("Use #okInfo(LocalizeValue)")
     public static Alert<Object> okInfo(String text) {
         return okTemplate(LocalizeValue.of(text), o -> o);
+    }
+
+    public static Alert<Object> okWarning(LocalizeValue textValue) {
+        return okTemplate(textValue, Alert::asWarning);
     }
 
     @Deprecated
@@ -40,22 +48,18 @@ public final class Alerts {
         return okTemplate(LocalizeValue.of(text), Alert::asWarning);
     }
 
+    public static Alert<Object> okError(LocalizeValue textValue) {
+        return okTemplate(textValue, Alert::asError);
+    }
+
+    public static Alert<Object> okError(Throwable throwable) {
+        return okError(LocalizeValue.ofNullable(throwable.getLocalizedMessage()));
+    }
+
     @Deprecated
     @DeprecationInfo("Use #okError(LocalizeValue)")
     public static Alert<Object> okError(String text) {
-        return okTemplate(LocalizeValue.of(text), Alert::asError);
-    }
-
-    public static Alert<Object> okInfo(LocalizeValue textValue) {
-        return okTemplate(textValue, o -> o);
-    }
-
-    public static Alert<Object> okWarning(LocalizeValue textValue) {
-        return okTemplate(textValue, Alert::asWarning);
-    }
-
-    public static Alert<Object> okError(LocalizeValue textValue) {
-        return okTemplate(textValue, Alert::asError);
+        return okError(LocalizeValue.of(text));
     }
 
     public static Alert<Object> okQuestion(LocalizeValue textValue) {

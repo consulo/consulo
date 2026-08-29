@@ -25,6 +25,7 @@ import consulo.externalService.impl.internal.update.PluginDownloader;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
@@ -43,6 +44,8 @@ import java.util.Objects;
  * @since 2026-08-13
  */
 public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
+    private static final Logger LOG = Logger.getInstance(UnifiedInstallPluginFromDiskAction.class);
+
     private final UnifiedPluginsPanel myPanel;
 
     public UnifiedInstallPluginFromDiskAction(UnifiedPluginsPanel panel) {
@@ -82,24 +85,25 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
             pluginDescriptor = InstalledPluginsTab.loadDescriptorFromArchive(file);
         }
         catch (IOException ex) {
-            Alerts.okError(LocalizeValue.of(ex.getMessage())).showAsync();
+            LOG.error(ex);
+            Alerts.okError(ex).showAsync();
             return;
         }
 
         if (pluginDescriptor == null) {
-            Alerts.okError(LocalizeValue.of("Fail to load plugin descriptor from file " + file.getName())).showAsync();
+            Alerts.okError(LocalizeValue.localizeTODO("Fail to load plugin descriptor from file " + file.getName())).showAsync();
             return;
         }
 
         if (PluginValidator.isIncompatible(pluginDescriptor)) {
-            Alerts.okError(LocalizeValue.of("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation"))
+            Alerts.okError(LocalizeValue.localizeTODO("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation"))
                 .showAsync();
             return;
         }
 
         InstalledPluginsState state = InstalledPluginsState.getInstance();
         if (state.getAllPlugins().contains(pluginDescriptor)) {
-            Alerts.okInfo(LocalizeValue.of("Plugin " + pluginDescriptor.getName() + " was already installed")).showAsync();
+            Alerts.okInfo(LocalizeValue.localizeTODO("Plugin " + pluginDescriptor.getName() + " was already installed")).showAsync();
             return;
         }
 
@@ -120,7 +124,8 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
             PluginDownloader.install(file, file.getName(), false);
         }
         catch (IOException ex) {
-            Alerts.okError(LocalizeValue.of(ex.getMessage())).showAsync();
+            LOG.error(ex);
+            Alerts.okError(ex).showAsync();
             return;
         }
 

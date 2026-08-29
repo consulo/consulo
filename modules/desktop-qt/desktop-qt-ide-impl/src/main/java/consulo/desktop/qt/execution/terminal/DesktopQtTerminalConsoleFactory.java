@@ -26,8 +26,9 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.Alerts;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -41,31 +42,28 @@ import java.util.function.BiFunction;
 @ServiceImpl
 @Singleton
 public class DesktopQtTerminalConsoleFactory implements TerminalConsoleFactory {
+    private static final Logger LOG = Logger.getInstance(DesktopQtTerminalConsoleFactory.class);
+
     private static final int DEFAULT_COLUMNS = 80;
     private static final int DEFAULT_ROWS = 24;
 
     @Override
-    public @Nullable JediTerminalConsole create(
-        TerminalSession session,
-        TerminalConsoleSettings settings,
-        Disposable parentDisposable
-    ) {
+    @RequiredUIAccess
+    public @Nullable JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         TtyConnector connector;
         try {
             connector = session.connect();
         }
         catch (ExecutionException e) {
-            Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync();
+            LOG.error("Error connecting terminal", e);
+            Alerts.okError(e).showAsync();
             return null;
         }
 
-        return start(new DesktopQtTerminalConsole(
-            session.getConnectorName(),
-            connector,
-            JediEmulator::new,
-            DEFAULT_COLUMNS,
-            DEFAULT_ROWS
-        ), parentDisposable);
+        return start(
+            new DesktopQtTerminalConsole(session.getConnectorName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS),
+            parentDisposable
+        );
     }
 
     @Override
@@ -74,13 +72,10 @@ public class DesktopQtTerminalConsoleFactory implements TerminalConsoleFactory {
         BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
         TtyConnector connector
     ) {
-        return start(new DesktopQtTerminalConsole(
-            connector.getName(),
-            connector,
-            jediEmulatorFactory,
-            DEFAULT_COLUMNS,
-            DEFAULT_ROWS
-        ), parentDisposable);
+        return start(
+            new DesktopQtTerminalConsole(connector.getName(), connector, jediEmulatorFactory, DEFAULT_COLUMNS, DEFAULT_ROWS),
+            parentDisposable
+        );
     }
 
     private static JediTerminalConsole start(DesktopQtTerminalConsole console, Disposable parentDisposable) {

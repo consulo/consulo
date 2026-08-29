@@ -26,8 +26,9 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.Alerts;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -36,11 +37,13 @@ import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 15/04/2023
+ * @since 2023-04-15
  */
 @ServiceImpl
 @Singleton
 public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory {
+    private static final Logger LOG = Logger.getInstance(DesktopAWTTerminalConsoleFactory.class);
+
     private final Application myApplication;
 
     @Inject
@@ -49,6 +52,7 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
     }
 
     @Override
+    @RequiredUIAccess
     public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
 
@@ -64,16 +68,19 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
             widget.createTerminalSession(session.connect()).start();
         }
         catch (ExecutionException e) {
-            Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync();
+            LOG.error("Error connecting terminal", e);
+            Alerts.okError(e).showAsync();
         }
 
         return widget;
     }
 
     @Override
-    public JediTerminalConsole createCustom(Disposable parentDisposable,
-                                            BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
-                                            TtyConnector connector) {
+    public JediTerminalConsole createCustom(
+        Disposable parentDisposable,
+        BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
+        TtyConnector connector
+    ) {
         JBTerminalSystemSettingsProvider provider =
             new JBTerminalSystemSettingsProvider(myApplication, TerminalConsoleSettings.DEFAULT, parentDisposable);
 

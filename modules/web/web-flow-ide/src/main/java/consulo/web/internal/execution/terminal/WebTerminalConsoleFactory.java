@@ -28,8 +28,9 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.Alerts;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -43,6 +44,8 @@ import java.util.function.BiFunction;
 @ServiceImpl
 @Singleton
 public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
+    private static final Logger LOG = Logger.getInstance(WebTerminalConsoleFactory.class);
+
     private static final int DEFAULT_COLUMNS = 80;
     private static final int DEFAULT_ROWS = 24;
 
@@ -60,18 +63,20 @@ public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
     }
 
     @Override
+    @RequiredUIAccess
     public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         TtyConnector connector;
         try {
             connector = session.connect();
         }
         catch (ExecutionException e) {
-            Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync();
+            LOG.error(e);
+            Alerts.okError(e).showAsync();
             return null;
         }
 
-        WebTerminalConsole console = new WebTerminalConsole(
-            session.getConnectorName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS);
+        WebTerminalConsole console =
+            new WebTerminalConsole(session.getConnectorName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS);
         Disposer.register(parentDisposable, console);
         listenForThemeChange(console, parentDisposable);
         console.start();
@@ -83,11 +88,13 @@ public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
      * them, so an emulator which rewrites what it prints will show one thing and record another.
      */
     @Override
-    public JediTerminalConsole createCustom(Disposable parentDisposable,
-                                            BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
-                                            TtyConnector connector) {
-        WebTerminalConsole console = new WebTerminalConsole(
-            connector.getName(), connector, jediEmulatorFactory, DEFAULT_COLUMNS, DEFAULT_ROWS);
+    public JediTerminalConsole createCustom(
+        Disposable parentDisposable,
+        BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,
+        TtyConnector connector
+    ) {
+        WebTerminalConsole console =
+            new WebTerminalConsole(connector.getName(), connector, jediEmulatorFactory, DEFAULT_COLUMNS, DEFAULT_ROWS);
         Disposer.register(parentDisposable, console);
         listenForThemeChange(console, parentDisposable);
         console.start();
