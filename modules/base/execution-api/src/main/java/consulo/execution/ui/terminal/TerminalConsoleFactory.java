@@ -24,6 +24,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.execution.terminal.TerminalSession;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
@@ -34,7 +35,7 @@ import java.util.function.BiFunction;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface TerminalConsoleFactory {
     @RequiredUIAccess
-    JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable);
+    @Nullable JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable);
 
     JediTerminalConsole createCustom(
         Disposable parentDisposable,

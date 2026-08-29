@@ -279,12 +279,12 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
     for (T scheme : mySchemes) {
       if (scheme instanceof ExternalizableScheme externalizableScheme) {
         String name = externalizableScheme.getExternalInfo().getCurrentFileName();
-        if (name != null &&
-            !schemeName.equals(myProcessor.getName(scheme)) &&
-            subPath.length() == (name.length() + mySchemeExtension.length()) &&
-            subPath.startsWith(name) &&
-            subPath.endsWith(mySchemeExtension)) {
-          return UniqueNameGenerator.generateUniqueName(FileUtil.sanitizeName(schemeName), collectAllFileNames());
+        if (name != null
+          && !schemeName.equals(myProcessor.getName(scheme))
+          && subPath.length() == (name.length() + mySchemeExtension.length())
+          && subPath.startsWith(name)
+          && subPath.endsWith(mySchemeExtension)) {
+          return UniqueNameGenerator.generateUniqueName(FileUtil.sanitizeFileName(schemeName, false), collectAllFileNames());
         }
       }
     }

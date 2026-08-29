@@ -33,6 +33,7 @@ import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
@@ -64,7 +65,7 @@ public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
 
     @Override
     @RequiredUIAccess
-    public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
+    public @Nullable JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
         TtyConnector connector;
         try {
             connector = session.connect();

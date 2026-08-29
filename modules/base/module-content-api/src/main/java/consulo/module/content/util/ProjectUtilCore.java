@@ -77,10 +77,12 @@ public class ProjectUtilCore {
         boolean moduleOnTheLeft
     ) {
         if (includeFilePath) {
-            //noinspection ConstantConditions
-            String projectHomeUrl = FileUtil.toSystemDependentName(Objects.requireNonNull(project.getBasePath()));
-            if (result.startsWith(projectHomeUrl)) {
-                result = "..." + result.substring(projectHomeUrl.length());
+            String basePath = project.getBasePath();
+            if (basePath != null) {
+                String projectHomeUrl = FileUtil.toSystemDependentName(basePath);
+                if (result.startsWith(projectHomeUrl)) {
+                    result = "..." + result.substring(projectHomeUrl.length());
+                }
             }
         }
 
