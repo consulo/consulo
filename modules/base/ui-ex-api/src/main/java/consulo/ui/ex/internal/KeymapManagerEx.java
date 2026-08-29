@@ -21,31 +21,34 @@ import consulo.ui.ex.keymap.KeymapManager;
 import java.util.Set;
 
 public abstract class KeymapManagerEx extends KeymapManager {
-  public static KeymapManagerEx getInstanceEx(){
-    return (KeymapManagerEx)getInstance();
-  }
+    public static KeymapManagerEx getInstanceEx() {
+        return (KeymapManagerEx) getInstance();
+    }
 
-  /**
-   * @return all available keymaps. The method return an empty array if no
-   * keymaps are available.
-   */
-  @Override
-  public abstract Keymap[] getAllKeymaps();
+    /**
+     * @return all available keymaps. The method return an empty array if no
+     * keymaps are available.
+     */
+    @Override
+    public abstract Keymap[] getAllKeymaps();
 
-  public abstract void setActiveKeymap(Keymap activeKeymap);
+    @Override
+    public abstract void setActiveKeymap(Keymap activeKeymap);
 
-  /**
-   * Instructs the manager that one action should use shortcut of another one (<code>'use-shortcut-of'</code> attribute at
-   * action's config located at plugin.xml).
-   *
-   * @param sourceActionId  if of the action which shortcut should be used for the 'target action'
-   * @param targetActionId  id of the action which should use shortcut of the 'source action'
-   */
-  public abstract void bindShortcuts(String sourceActionId, String targetActionId);
-  public abstract void unbindShortcuts(String targetActionId);
+    /**
+     * Instructs the manager that one action should use shortcut of another one (<code>'use-shortcut-of'</code> attribute at
+     * action's config located at plugin.xml).
+     *
+     * @param sourceActionId if of the action which shortcut should be used for the 'target action'
+     * @param targetActionId id of the action which should use shortcut of the 'source action'
+     */
+    public abstract void bindShortcuts(String sourceActionId, String targetActionId);
 
-  public abstract Set<String> getBoundActions();
-  public abstract String getActionBinding(String actionId);
+    public abstract void unbindShortcuts(String targetActionId);
 
-  public abstract void addKeyMap(Keymap keymap, boolean replaceExisting);
+    public abstract Set<String> getBoundActions();
+
+    public abstract String getActionBinding(String actionId);
+
+    public abstract void addKeyMap(Keymap keymap, boolean replaceExisting);
 }
