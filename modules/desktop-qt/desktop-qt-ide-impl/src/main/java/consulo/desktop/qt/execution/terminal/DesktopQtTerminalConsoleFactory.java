@@ -55,7 +55,7 @@ public class DesktopQtTerminalConsoleFactory implements TerminalConsoleFactory {
             connector = session.connect();
         }
         catch (ExecutionException e) {
-            LOG.error("Error connecting terminal", e);
+            LOG.warn("Error connecting terminal", e);
             Alerts.okError(e).showAsync();
             return null;
         }

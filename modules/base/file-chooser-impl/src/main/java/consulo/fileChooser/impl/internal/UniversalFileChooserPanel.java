@@ -156,7 +156,8 @@ class UniversalFileChooserPanel {
             }
             Path parent = activeFileView.getNewFileParent();
             e.getPresentation().setEnabled(
-                parent != null && parent.getParent() != null && Files.isDirectory(parent) && Files.isWritable(parent));
+                parent != null && parent.getParent() != null && Files.isDirectory(parent) && Files.isWritable(parent)
+            );
         }
 
         @Override
@@ -181,8 +182,8 @@ class UniversalFileChooserPanel {
             e.getPresentation().setEnabled(activeFileView != null && activeFileView.canDeleteSelectedFile());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             deleteSelectedFile();
         }
@@ -196,8 +197,8 @@ class UniversalFileChooserPanel {
             FileChooserLocalize.universalFileChooserActionHomeDescription(),
             PlatformIconGroup.nodesHomefolder()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 navigateToHome();
             }
@@ -211,8 +212,8 @@ class UniversalFileChooserPanel {
                 FileChooserLocalize.universalFileChooserActionProjectDescription(),
                 myProject.getApplication().getIcon()
             ) {
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
                     navigateToProject();
                 }
@@ -231,8 +232,8 @@ class UniversalFileChooserPanel {
             FileChooserLocalize.universalFileChooserActionRefreshDescription(),
             PlatformIconGroup.actionsRefresh()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 FileView activeFileView = getActiveFileView();
                 if (activeFileView != null) {
@@ -276,7 +277,7 @@ class UniversalFileChooserPanel {
     private void navigateToProject() {
         String basePath = myProject.getBasePath();
         FileView activeFileView = getActiveFileView();
-        if (activeFileView != null) {
+        if (basePath != null && activeFileView != null) {
             activeFileView.navigateToFile(Path.of(basePath));
         }
     }

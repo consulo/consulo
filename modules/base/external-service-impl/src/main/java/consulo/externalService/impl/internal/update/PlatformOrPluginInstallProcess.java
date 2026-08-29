@@ -32,7 +32,6 @@ import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Alert;
@@ -101,7 +100,7 @@ public final class PlatformOrPluginInstallProcess {
                     downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
                 }
                 catch (PluginDownloadFailedException e) {
-                    LOG.error(e);
+                    LOG.warn(e);
                     uiAccess.give(() -> Alerts.okError(e).showAsync());
                     return;
                 }
@@ -136,7 +135,7 @@ public final class PlatformOrPluginInstallProcess {
                     installed.add(pluginDescriptor);
                 }
                 catch (IOException e) {
-                    LOG.error(e);
+                    LOG.warn(e);
                     uiAccess.give(() -> Alerts.okError(e).showAsync());
                     return;
                 }

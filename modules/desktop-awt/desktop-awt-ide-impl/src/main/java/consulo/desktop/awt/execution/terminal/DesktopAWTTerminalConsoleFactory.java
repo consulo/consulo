@@ -68,7 +68,7 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
             widget.createTerminalSession(session.connect()).start();
         }
         catch (ExecutionException e) {
-            LOG.error("Error connecting terminal", e);
+            LOG.warn("Error connecting terminal", e);
             Alerts.okError(e).showAsync();
         }
 

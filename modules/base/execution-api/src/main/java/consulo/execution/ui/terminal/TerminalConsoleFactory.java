@@ -28,18 +28,12 @@ import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 15/04/2023
+ * @since 2023-04-15
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface TerminalConsoleFactory {
-    
-    JediTerminalConsole create(
-        TerminalSession session,
-        TerminalConsoleSettings settings,
-        Disposable parentDisposable
-    );
+    JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable);
 
-    
     JediTerminalConsole createCustom(
         Disposable parentDisposable,
         BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,

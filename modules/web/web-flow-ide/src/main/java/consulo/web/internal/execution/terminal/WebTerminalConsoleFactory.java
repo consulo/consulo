@@ -70,7 +70,7 @@ public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
             connector = session.connect();
         }
         catch (ExecutionException e) {
-            LOG.error(e);
+            LOG.warn("Error connecting terminal", e);
             Alerts.okError(e).showAsync();
             return null;
         }

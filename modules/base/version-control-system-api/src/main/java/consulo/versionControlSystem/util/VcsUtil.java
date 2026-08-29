@@ -559,8 +559,7 @@ public class VcsUtil {
     public static boolean isPathRemote(String path) {
         int idx = path.indexOf("://");
         if (idx == -1) {
-            int idx2 = path.indexOf(":\\\\");
-            return idx2 != -1 && idx2 > 0;
+            return path.indexOf(":\\\\") > 0;
         }
         return idx > 0;
     }

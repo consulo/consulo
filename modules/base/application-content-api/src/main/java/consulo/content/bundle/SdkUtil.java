@@ -168,7 +168,7 @@ public class SdkUtil {
             platformAwareSdkType.setupSdkPaths(sdk);
         }
         catch (Exception e) {
-            LOG.error(e);
+            LOG.warn(e);
             if (!silent) {
                 uiAccess.give(
                     () -> Alerts.okError(
@@ -218,7 +218,7 @@ public class SdkUtil {
             sdkType.setupSdkPaths(sdk);
         }
         catch (Exception e) {
-            LOG.error(e);
+            LOG.warn(e);
             if (!silent) {
                 uiAccess.give(
                     () -> Alerts.okError(

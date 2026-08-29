@@ -34,17 +34,13 @@ import org.jspecify.annotations.Nullable;
  * @since 2018-08-25
  */
 public class LightProject extends BaseComponentManager implements Project {
-    
     private final Application myApplication;
     
     private final String myName;
     
     private final LightExtensionRegistrator myRegistrator;
 
-    public LightProject(Application application,
-                        String name,
-                        ComponentBinding componentBinding,
-                        LightExtensionRegistrator registrator) {
+    public LightProject(Application application, String name, ComponentBinding componentBinding, LightExtensionRegistrator registrator) {
         super(application, name, ComponentScope.PROJECT, componentBinding, false);
         myApplication = application;
         myName = name;
@@ -58,7 +54,6 @@ public class LightProject extends BaseComponentManager implements Project {
         return ComponentProfiles.LIGHT_TEST;
     }
 
-    
     @Override
     public Application getApplication() {
         return myApplication;
@@ -68,7 +63,6 @@ public class LightProject extends BaseComponentManager implements Project {
     protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
     }
 
-    
     @Override
     protected InjectingContainer findRootContainer() {
         return InjectingContainer.root(getClass().getClassLoader());
@@ -86,7 +80,6 @@ public class LightProject extends BaseComponentManager implements Project {
         builder.bind(Project.class).to(this);
     }
 
-    
     @Override
     public String getName() {
         return myName;
@@ -98,7 +91,7 @@ public class LightProject extends BaseComponentManager implements Project {
     }
 
     @Override
-    public String getBasePath() {
+    public @Nullable String getBasePath() {
         return null;
     }
 
@@ -107,7 +100,6 @@ public class LightProject extends BaseComponentManager implements Project {
         return null;
     }
 
-    
     @Override
     public String getProjectFilePath() {
         return null;
@@ -123,7 +115,6 @@ public class LightProject extends BaseComponentManager implements Project {
         return null;
     }
 
-    
     @Override
     public String getLocationHash() {
         return null;
@@ -144,7 +135,6 @@ public class LightProject extends BaseComponentManager implements Project {
         return false;
     }
 
-    
     @Override
     public CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

@@ -47,7 +47,7 @@ public class TestModalTaskAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        Project project = e.getRequiredData(Project.KEY);
+        Project project = e.getData(Project.KEY);
 
         UIAccess uiAccess = UIAccess.current();
 

@@ -85,7 +85,7 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
             pluginDescriptor = InstalledPluginsTab.loadDescriptorFromArchive(file);
         }
         catch (IOException ex) {
-            LOG.error(ex);
+            LOG.warn(ex);
             Alerts.okError(ex).showAsync();
             return;
         }
@@ -124,7 +124,7 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
             PluginDownloader.install(file, file.getName(), false);
         }
         catch (IOException ex) {
-            LOG.error(ex);
+            LOG.warn(ex);
             Alerts.okError(ex).showAsync();
             return;
         }

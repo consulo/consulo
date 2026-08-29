@@ -510,7 +510,7 @@ public class SchemeManagerImpl<T, E extends ExternalizableScheme> extends Abstra
 
     String fileNameWithoutExtension = currentFileNameWithoutExtension;
     if (fileNameWithoutExtension == null || isRenamed(scheme)) {
-      fileNameWithoutExtension = nameGenerator.generateUniqueName(FileUtil.sanitizeName(scheme.getName()));
+        fileNameWithoutExtension = nameGenerator.generateUniqueName(FileUtil.sanitizeFileName(scheme.getName(), false));
     }
     String fileName = fileNameWithoutExtension + mySchemeExtension;
 
