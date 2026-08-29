@@ -701,19 +701,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(this, value));
         });
 
-        vaadin.addItemDoubleClickListener(event -> {
+        WebInputDetails.addClickListener(vaadin.getElement(), "dblclick", inputDetails -> {
             TreeNode<NODE> selectedNode = getSelectedNode();
             if (selectedNode == null) {
                 return;
             }
 
-            InputDetails inputDetails = WebInputDetails.details(event);
-
             getListenerDispatcher(TreeDoubleClickEvent.class)
                 .onEvent(new TreeDoubleClickEvent<>(this, selectedNode, inputDetails));
 
-            // the return value is the contract - true asks the tree to toggle the node, the way the awt trees
-            // do, and a model that answered with an action of its own - opening the file - says false
             if (model.onDoubleClick(this, selectedNode, inputDetails) && selectedNode instanceof WebTreeNodeImpl<NODE> node) {
                 if (vaadin.isExpanded(node)) {
                     vaadin.collapse(List.of(node));

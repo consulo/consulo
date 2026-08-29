@@ -49,7 +49,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
         if (node.getValue() instanceof SimpleNode simpleNode) {
             return !simpleNode.handleDoubleClickOrEnter(DataManager.getInstance().getDataContext(tree), inputDetails);
         }
-        return true;
+        return onDoubleClick(tree, node);
     }
 
     @Override
