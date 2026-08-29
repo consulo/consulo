@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
-import consulo.ui.ex.action.QuickList;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -27,14 +26,11 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.AbbreviationManager;
-import consulo.ui.ex.impl.internal.action.QuickListsManager;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.internal.KeymapManagerEx;
-import consulo.ide.impl.idea.openapi.keymap.impl.*;
-import consulo.ui.ex.impl.internal.keymap.KeymapImpl;
-import consulo.ui.ex.impl.internal.keymap.KeymapManagerImpl;
+import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
+import consulo.ide.impl.idea.openapi.keymap.impl.ShortcutRestrictions;
+import consulo.ide.impl.idea.openapi.keymap.impl.SystemShortcuts;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -53,8 +49,12 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.impl.internal.action.QuickListsManager;
+import consulo.ui.ex.impl.internal.keymap.KeymapImpl;
+import consulo.ui.ex.impl.internal.keymap.KeymapManagerImpl;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.internal.KeyMapSetting;
+import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
@@ -62,7 +62,6 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.ImageEffects;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -77,8 +76,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 @ExtensionImpl
 public class KeymapPanel implements SearchableConfigurable, Configurable.NoScroll, KeymapListener, ApplicationConfigurable {
@@ -118,7 +117,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         myKeyMapSettingProvider = keyMapSettingProvider;
         myAncestor = evt -> {
             if (evt.getPropertyName().equals("ancestor")
-                && evt.getNewValue() != null && evt.getOldValue() == null
+                && evt.getNewValue() != null
+                && evt.getOldValue() == null
                 && myQuickListsModified) {
                 processCurrentKeymapChanged(getCurrentQuickListIds());
                 myQuickListsModified = false;
@@ -290,11 +290,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         FocusableFrame ideFrame = IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
         if (ideFrame != null && KeyboardSettingsExternalizable.isSupportedKeyboardLayout(ideFrame.getComponent())) {
             String displayLanguage = ideFrame.getComponent().getInputContext().getLocale().getDisplayLanguage();
-            myNonEnglishKeyboardSupportOption =
-                CheckBox.create(displayLanguage + " " + KeyMapLocalize.useNonEnglishKeyboardLayoutSupport().get());
-            myNonEnglishKeyboardSupportOption.setValue(
-                KeyboardSettingsExternalizable.getInstance().isNonEnglishKeyboardSupportEnabled()
-            );
+            myNonEnglishKeyboardSupportOption = CheckBox.create(KeyMapLocalize.useNonEnglishKeyboardLayoutSupport(displayLanguage));
+            myNonEnglishKeyboardSupportOption.setValue(KeyboardSettingsExternalizable.getInstance().isNonEnglishKeyboardSupportEnabled());
 
             myNonEnglishKeyboardSupportOption.addValueListener(
                 event -> KeyboardSettingsExternalizable.getInstance()
@@ -473,8 +470,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
             KeyMapLocalize.filterShortcutActionText(),
             PlatformIconGroup.actionsShortcutfilter()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 myFilterComponent.reset();
                 if (myPopup == null || myPopup.getContent() == null) {
@@ -1025,7 +1022,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     @RequiredUIAccess
     public boolean isModified() {
         KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
-        if (!Comparing.equal(mySelectedKeymap, keymapManager.getActiveKeymap())) {
+        if (!Objects.equals(mySelectedKeymap, keymapManager.getActiveKeymap())) {
             return true;
         }
 

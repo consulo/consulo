@@ -72,8 +72,6 @@ editor.tab.popup.menu.title:
     text: Editor Tab Popup Menu
 enable.double.press.handler:
     text: Enable double modifier key shortcuts (Shift-Shift for Search Everywhere, Ctrl-Ctrl for Run Anything)
-use.unicode.characters.in.shortcuts:
-    text: Use unicode characters instead text in shortcuts (⇧ instead SHIFT)
 enable.second.keystroke.check.box:
     text: 'Enable:'
 favorites.popup.title:
@@ -193,6 +191,8 @@ shortcuts.keymap.no.shortcuts:
 unnamed.list.display.name:
     text: unnamed
 use.non.english.keyboard.layout.support:
-    text: la&yout support
+    text: '{0} la&yout support'
+use.unicode.characters.in.shortcuts:
+    text: Use unicode characters instead text in shortcuts (⇧ instead SHIFT)
 version.control.group.title:
     text: Version Control Systems

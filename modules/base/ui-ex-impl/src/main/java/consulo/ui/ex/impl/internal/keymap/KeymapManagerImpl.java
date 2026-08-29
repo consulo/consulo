@@ -107,12 +107,12 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
                 answer.add(keymap);
             }
         }
-        return answer.toArray(new Keymap[answer.size()]);
+        return answer.toArray(Keymap[]::new);
     }
 
     public Keymap[] getAllIncludingDefaultsKeymaps() {
         Collection<Keymap> keymaps = mySchemeManager.getAllSchemes();
-        return keymaps.toArray(new Keymap[keymaps.size()]);
+        return keymaps.toArray(Keymap[]::new);
     }
 
     @Override
