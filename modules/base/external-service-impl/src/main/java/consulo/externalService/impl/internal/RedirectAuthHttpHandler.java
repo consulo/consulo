@@ -42,7 +42,7 @@ import java.nio.charset.StandardCharsets;
  */
 @ExtensionImpl
 public class RedirectAuthHttpHandler extends HttpRequestHandler {
-  private static final Logger LOG = Logger.getInstance(RedirectAuthHttpHandler.class);
+    private static final Logger LOG = Logger.getInstance(RedirectAuthHttpHandler.class);
 
     public static class OAuthRequestResult {
         public UserAccount userAccount;

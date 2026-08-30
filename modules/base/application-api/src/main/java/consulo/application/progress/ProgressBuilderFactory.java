@@ -27,7 +27,5 @@ import org.jspecify.annotations.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProgressBuilderFactory {
-    
-    ProgressBuilder newProgressBuilder(@Nullable ComponentManager project,
-                                       LocalizeValue title);
+    ProgressBuilder newProgressBuilder(@Nullable ComponentManager project, LocalizeValue title);
 }

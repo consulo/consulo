@@ -44,7 +44,6 @@ import jakarta.inject.Inject;
 @ActionImpl(id = "Internal.CredentialStorageTester", parents = @ActionParentRef(@ActionRef(type = InternalActionGroup.class)))
 public class CredentialStorageTesterAction extends DumbAwareAction {
     private static class CredentialStorageDialogDescriptor extends DialogDescriptor {
-
         private final PasswordSafe myPasswordSafe;
 
         public CredentialStorageDialogDescriptor(LocalizeValue title, PasswordSafe passwordSafe) {
@@ -52,9 +51,8 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
             myPasswordSafe = passwordSafe;
         }
 
-        @RequiredUIAccess
-        
         @Override
+        @RequiredUIAccess
         public Component createCenterComponent(Disposable uiDisposable) {
             FormBuilder builder = FormBuilder.create();
 
@@ -70,30 +68,37 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
             builder.addLabeled(LocalizeValue.localizeTODO("User:"), userBox);
             builder.addLabeled(LocalizeValue.localizeTODO("Password:"), passwordBox);
 
-            Button testButton = Button.create(LocalizeValue.localizeTODO("Set Password"), event -> {
-                String user = userBox.getValueOrError();
-                String password = passwordBox.getValueOrError();
+            Button testButton = Button.create(
+                LocalizeValue.localizeTODO("Set Password"),
+                event -> {
+                    String user = userBox.getValueOrError();
+                    String password = passwordBox.getValueOrError();
 
-                String serviceName = CredentialAttributesUtil.generateServiceName(serviceBox.getValue(), user);
+                    String serviceName = CredentialAttributesUtil.generateServiceName(serviceBox.getValue(), user);
 
-                myPasswordSafe.set(new CredentialAttributes(serviceName, user), new Credentials(user, password));
-            });
-
-            Button fetchPassword = Button.create(LocalizeValue.localizeTODO("Get Password"), event -> {
-                String user = userBox.getValueOrError();
-
-                String serviceName = CredentialAttributesUtil.generateServiceName(serviceBox.getValue(), user);
-
-                CredentialAttributes attributes = new CredentialAttributes(serviceName, user);
-
-                Credentials credentials = myPasswordSafe.get(attributes);
-                if (credentials == null) {
-                    Alerts.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
-                } else {
-                    String password = credentials.getPasswordAsString();
-                    Alerts.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
+                    myPasswordSafe.set(new CredentialAttributes(serviceName, user), new Credentials(user, password));
                 }
-            });
+            );
+
+            Button fetchPassword = Button.create(
+                LocalizeValue.localizeTODO("Get Password"),
+                event -> {
+                    String user = userBox.getValueOrError();
+
+                    String serviceName = CredentialAttributesUtil.generateServiceName(serviceBox.getValue(), user);
+
+                    CredentialAttributes attributes = new CredentialAttributes(serviceName, user);
+
+                    Credentials credentials = myPasswordSafe.get(attributes);
+                    if (credentials == null) {
+                        Alerts.okError(LocalizeValue.localizeTODO("No Password")).showAsync(event.getComponent());
+                    }
+                    else {
+                        String password = credentials.getPasswordAsString();
+                        Alerts.okInfo(LocalizeValue.ofNullable(password)).showAsync(event.getComponent());
+                    }
+                }
+            );
 
             builder.addBottom(testButton);
             builder.addBottom(fetchPassword);
@@ -101,7 +106,6 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
             return builder.build();
         }
 
-        
         @Override
         public AnAction[] createActions(boolean inverseOrder) {
             return AnAction.EMPTY_ARRAY;
@@ -129,7 +133,10 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
     public void actionPerformed(AnActionEvent e) {
         LocalizeValue action = e.getPresentation().getTextValue();
 
-        Dialog dialog = myDialogService.build(e.getRequiredData(Project.KEY), new CredentialStorageDialogDescriptor(action, myPasswordSafe));
+        Dialog dialog = myDialogService.build(
+            e.getRequiredData(Project.KEY),
+            new CredentialStorageDialogDescriptor(action, myPasswordSafe)
+        );
 
         dialog.showAsync();
     }

@@ -82,7 +82,7 @@ public class UITester {
 
             VerticalLayout fold = VerticalLayout.create();
             fold.add(Label.create("Some label"));
-            fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), (e) -> Alerts.okError("Clicked!").showAsync()));
+            fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), e -> Alerts.okError("Clicked!").showAsync()));
 
             FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
             layout.addOpenedListener(it -> Alerts.okInfo("State " + it.isOpened()).showAsync());
@@ -253,8 +253,8 @@ public class UITester {
                     () -> TriStateCheckBox.create(LocalizeValue.empty()),
                     (checkBox, item) -> checkBox.setValue(item.getValue() == null ? ThreeState.NO : item.getValue())))
                 .setEditor(new TableItemEditor<>() {
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public ValueComponent<ThreeState> createComponent(String key) {
                         TriStateCheckBox checkBox =
                             TriStateCheckBox.create(LocalizeValue.empty(), states.getOrDefault(key, ThreeState.NO));
@@ -262,8 +262,8 @@ public class UITester {
                         return checkBox;
                     }
 
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public void commit(String key, @Nullable ThreeState value) {
                         states.put(key, value == null ? ThreeState.NO : value);
                         model.update(key);
@@ -283,14 +283,14 @@ public class UITester {
                     item.isSelected() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR
                 ))
                 .setEditor(new TableItemEditor<>() {
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public ValueComponent<String> createComponent(String key) {
                         return TextBox.create(values.get(key));
                     }
 
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public void commit(String key, @Nullable String value) {
                         values.put(key, value == null ? "" : value);
                         model.update(key);

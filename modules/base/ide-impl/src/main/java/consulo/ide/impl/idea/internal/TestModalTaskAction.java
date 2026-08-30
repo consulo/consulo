@@ -36,7 +36,6 @@ import java.util.concurrent.CompletableFuture;
  * @since 2024-11-23
  */
 public class TestModalTaskAction extends DumbAwareAction {
-
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
     public TestModalTaskAction(ProgressBuilderFactory progressBuilderFactory) {
@@ -45,38 +44,43 @@ public class TestModalTaskAction extends DumbAwareAction {
         myProgressBuilderFactory = progressBuilderFactory;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         UIAccess uiAccess = UIAccess.current();
 
-        SimpleReference<Boolean> started = SimpleReference.create(Boolean.FALSE);
+        SimpleReference<Boolean> started = SimpleReference.create(false);
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Modal Action..."))
             .cancelable()
             .modal()
-            .execute(uiAccess, () -> Coroutine.first(CodeExecution.run((c) -> {
-                        started.set(Boolean.TRUE);
+            .execute(
+                uiAccess,
+                () -> Coroutine.first(CodeExecution.run((c) -> {
+                        started.set(true);
                         ProgressIndicator.from(c).setIndeterminate(true);
                     }))
                     .then(Delay.sleep(5000L))
-                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 5 seconds"))))
+                    .then(CodeExecution.run(c -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 5 seconds"))))
                     .then(Delay.sleep(5000L))
-                    .then(CodeExecution.run((c) -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 10 seconds"))))
+                    .then(CodeExecution.run(c -> ProgressIndicator.from(c).setText(LocalizeValue.of("After 10 seconds"))))
                     .then(Delay.sleep(5000L))
                     .then(CodeExecution.supply(() -> "Success Result"))
             );
 
-        future.whenCompleteAsync((s, throwable) -> {
-            if (throwable != null) {
-                Alerts.okError(LocalizeValue.ofNullable(throwable.getLocalizedMessage())).showAsync(project);
-            }
-            else {
-                Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
-            }
-        }, uiAccess);
+        future.whenCompleteAsync(
+            (s, throwable) -> {
+                if (throwable != null) {
+                    Alerts.okError(throwable).showAsync(project);
+                }
+                else {
+                    Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
+                }
+            },
+            uiAccess
+        );
 
         System.out.println("started: " + started.get());
     }

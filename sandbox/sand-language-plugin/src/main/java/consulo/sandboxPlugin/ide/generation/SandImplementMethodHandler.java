@@ -28,24 +28,23 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
- * @since 17-Jul-22
+ * @since 2022-07-17
  */
 @ExtensionImpl
 public class SandImplementMethodHandler implements ImplementMethodHandler {
-  @Override
-  public boolean isValidFor(Editor editor, PsiFile file) {
-    return true;
-  }
+    @Override
+    public boolean isValidFor(Editor editor, PsiFile file) {
+        return true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void invoke(Project project, Editor editor, PsiFile file) {
-    Alerts.okInfo(LocalizeValue.localizeTODO("implement methods called")).showAsync();
-  }
+    @Override
+    @RequiredUIAccess
+    public void invoke(Project project, Editor editor, PsiFile file) {
+        Alerts.okInfo(LocalizeValue.localizeTODO("implement methods called")).showAsync();
+    }
 
-  
-  @Override
-  public Language getLanguage() {
-    return SandLanguage.INSTANCE;
-  }
+    @Override
+    public Language getLanguage() {
+        return SandLanguage.INSTANCE;
+    }
 }

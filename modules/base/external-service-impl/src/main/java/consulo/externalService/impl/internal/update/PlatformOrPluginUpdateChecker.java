@@ -142,7 +142,7 @@ public class PlatformOrPluginUpdateChecker {
 
         if (showErrorDialog) {
             uiAccess.give(() -> {
-                Alert<Object> alert = Alerts.okError(LocalizeValue.of(e.getLocalizedMessage()));
+                Alert<Object> alert = Alerts.okError(e);
                 if (project != null) {
                     alert.showAsync(project);
                 }

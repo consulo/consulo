@@ -17,7 +17,6 @@ package consulo.project.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
@@ -27,6 +26,7 @@ import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StorableComponent;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -68,7 +68,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     private boolean myFullyInitialized;
 
-    private String myName;
+    private @Nullable String myName = null;
 
     public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
     public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
@@ -81,12 +81,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return context;
     });
 
-    public ProjectImpl(Application application,
-                       ProjectManager manager,
-                       String dirPath,
-                       String projectName,
-                       boolean noUIThread,
-                       ComponentBinding componentBinding) {
+    public ProjectImpl(
+        Application application,
+        ProjectManager manager,
+        String dirPath,
+        String projectName,
+        boolean noUIThread,
+        ComponentBinding componentBinding
+    ) {
         super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT, componentBinding);
         myDirPath = dirPath;
 
@@ -105,7 +107,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         myName = projectName;
     }
 
-    
     @Override
     public CoroutineContext coroutineContext() {
         return myCoroutineContext.get();
@@ -127,7 +128,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    
     public Application getApplication() {
         return (Application) myParent;
     }
@@ -138,18 +138,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
         if (!projectName.equals(name)) {
             myName = projectName;
-            myStartupManagerProvider.get().runWhenProjectIsInitialized(new DumbAwareRunnable() {
-                @Override
-                public void run() {
-                    if (isDisposed()) {
-                        return;
-                    }
+            myStartupManagerProvider.get().runWhenProjectIsInitialized(() -> {
+                if (isDisposed()) {
+                    return;
+                }
 
-                    JFrame frame = WindowManager.getInstance().getFrame(ProjectImpl.this);
-                    String title = FrameTitleBuilder.getInstance().getProjectTitle(ProjectImpl.this);
-                    if (frame != null && title != null) {
-                        frame.setTitle(title);
-                    }
+                JFrame frame = WindowManager.getInstance().getFrame(ProjectImpl.this);
+                String title = FrameTitleBuilder.getInstance().getProjectTitle(ProjectImpl.this);
+                if (frame != null && title != null) {
+                    frame.setTitle(title);
                 }
             });
         }
@@ -177,7 +174,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     protected void notifyAboutInitialization(float percentOfLoad, Object component) {
         ProgressIndicator indicator = getApplication().getProgressManager().getProgressIndicator();
         if (indicator != null) {
-            indicator.setText2(component.getClass().getName());
+            indicator.setText2(LocalizeValue.of(component.getClass().getName()));
         }
     }
 
@@ -203,7 +200,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    
     public String getProjectFilePath() {
         return getStateStore().getProjectFilePath();
     }
@@ -219,11 +215,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    public String getBasePath() {
+    public @Nullable String getBasePath() {
         return getStateStore().getProjectBasePath();
     }
 
-    
     @Override
     public String getName() {
         if (myName == null) {
@@ -237,7 +232,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return getStateStore().getPresentableUrl();
     }
 
-    
     @Override
     public String getLocationHash() {
         String str = getPresentableUrl();
@@ -257,9 +251,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     @Override
     public void initNotLazyServices() {
         long start = System.currentTimeMillis();
-//    ProfilingUtil.startCPUProfiling();
+//        ProfilingUtil.startCPUProfiling();
         super.initNotLazyServices();
-//    ProfilingUtil.captureCPUSnapshot();
+//        ProfilingUtil.captureCPUSnapshot();
         long time = System.currentTimeMillis() - start;
         LOG.info(getNotLazyServicesCount() + " project not-lazy servicers initialized in " + time + " ms");
     }
@@ -332,6 +326,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     @Override
     public String toString() {
-        return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") + (isDefault() ? " (Default)" : "") + " " + myName;
+        return "Project" + (isDisposed() ? " (Disposed)" : isDefault() ? "" : " '" + myDirPath + "'") +
+            (isDefault() ? " (Default)" : "") + " " + myName;
     }
 }

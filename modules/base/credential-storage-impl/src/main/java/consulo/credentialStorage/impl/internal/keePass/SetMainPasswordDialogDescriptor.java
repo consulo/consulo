@@ -35,7 +35,6 @@ import java.util.function.Function;
  * @since 2025-04-04
  */
 public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
-
     public record NewMasterPasswordResult(byte[] password) implements DialogValue {
     }
 
@@ -49,8 +48,8 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
         myTopNote = topNote;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public boolean canHandle(AnAction action, @Nullable DialogValue value, Window window) {
         if (value instanceof NewMasterPasswordResult newMasterPasswordResult) {
             LocalizeValue error = myOkHandler.apply(newMasterPasswordResult.password());
@@ -63,15 +62,13 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
         return super.canHandle(action, value);
     }
 
-    
     @Override
     public DialogValue getOkValue() {
         return new NewMasterPasswordResult(myPasswordBox.getValueOrError().getBytes(StandardCharsets.UTF_8));
     }
 
-    @RequiredUIAccess
-    
     @Override
+    @RequiredUIAccess
     public Component createCenterComponent(Disposable uiDisposable) {
         myPasswordBox = PasswordBox.create();
         VerticalLayout layout = VerticalLayout.create();
@@ -83,8 +80,8 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
         return layout;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public Component getPreferredFocusedComponent() {
         return myPasswordBox;
     }
