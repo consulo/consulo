@@ -452,7 +452,7 @@ public class ActionsTree {
                 bound = myShowBoundActions && ((KeymapImpl) myKeymap).isActionBound(actionId);
                 AnAction action = ActionManager.getInstance().getActionOrStub(actionId);
                 if (action != null) {
-                    text = action.getTemplatePresentation().getTextValue().get();
+                    text = action.getTemplatePresentation().getText();
                     if (StringUtil.isEmpty(text)) { //fill dynamic presentation gaps
                         text = actionId;
                     }

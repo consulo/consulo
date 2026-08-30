@@ -42,47 +42,49 @@ public class GlassPanel extends JComponent {
     }
 
     public void paintSpotlight(Graphics g, JComponent surfaceComponent) {
+        if (myLightComponents.isEmpty()) {
+            return;
+        }
+
         Dimension size = surfaceComponent.getSize();
-        if (myLightComponents.size() > 0) {
-            int stroke = 2;
+        int stroke = 2;
 
-            Rectangle visibleRect = myPanel.getVisibleRect();
-            Point leftPoint = SwingUtilities.convertPoint(myPanel, new Point(visibleRect.x, visibleRect.y), surfaceComponent);
-            Area innerPanel = new Area(new Rectangle2D.Double(leftPoint.x, leftPoint.y, visibleRect.width, visibleRect.height));
-            Area mask = new Area(new Rectangle(-stroke, -stroke, 2 * stroke + size.width, 2 * stroke + size.height));
-            for (JComponent lightComponent : myLightComponents) {
-                Area area = getComponentArea(surfaceComponent, lightComponent, 1);
-                if (area == null) {
-                    continue;
+        Rectangle visibleRect = myPanel.getVisibleRect();
+        Point leftPoint = SwingUtilities.convertPoint(myPanel, new Point(visibleRect.x, visibleRect.y), surfaceComponent);
+        Area innerPanel = new Area(new Rectangle2D.Double(leftPoint.x, leftPoint.y, visibleRect.width, visibleRect.height));
+        Area mask = new Area(new Rectangle(-stroke, -stroke, 2 * stroke + size.width, 2 * stroke + size.height));
+        for (JComponent lightComponent : myLightComponents) {
+            Area area = getComponentArea(surfaceComponent, lightComponent, 1);
+            if (area == null) {
+                continue;
+            }
+
+            if (lightComponent instanceof JLabel label && label.getLabelFor() instanceof JComponent labelFor) {
+                Area labelForArea = getComponentArea(surfaceComponent, labelFor, 1);
+                if (labelForArea != null) {
+                    area.add(labelForArea);
                 }
-
-                if (lightComponent instanceof JLabel label && label.getLabelFor() instanceof JComponent labelFor) {
-                    Area labelForArea = getComponentArea(surfaceComponent, labelFor, 1);
-                    if (labelForArea != null) {
-                        area.add(labelForArea);
-                    }
-                }
-
-                area.intersect(innerPanel);
-                mask.subtract(area);
             }
-            Graphics clip = g.create(0, 0, size.width, size.height);
-            try {
-                Graphics2D g2 = (Graphics2D) clip;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
-                Color background = surfaceComponent.getBackground();
-                g2.setColor(ColorUtil.toAlpha(background == null ? null : background.darker(), 100));
-                g2.fill(mask);
+            area.intersect(innerPanel);
+            mask.subtract(area);
+        }
+        Graphics clip = g.create(0, 0, size.width, size.height);
+        try {
+            Graphics2D g2 = (Graphics2D) clip;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
-                g2.setStroke(new BasicStroke(stroke));
-                g2.setColor(SPOTLIGHT_BORDER_COLOR);
-                g2.draw(mask);
-            }
-            finally {
-                clip.dispose();
-            }
+            Color background = surfaceComponent.getBackground();
+            g2.setColor(ColorUtil.toAlpha(background == null ? null : background.darker(), 100));
+            g2.fill(mask);
+
+            g2.setStroke(new BasicStroke(stroke));
+            g2.setColor(SPOTLIGHT_BORDER_COLOR);
+            g2.draw(mask);
+        }
+        finally {
+            clip.dispose();
         }
     }
 

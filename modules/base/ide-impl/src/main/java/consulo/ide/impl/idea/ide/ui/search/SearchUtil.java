@@ -425,11 +425,12 @@ public class SearchUtil {
         Color background,
         SimpleColoredComponent textRenderer
     ) {
-        ColorValue bgColor = TargetAWT.from(background);
-        ColorValue fgColor = TargetAWT.from(foreground);
         if (text == null) {
             return;
         }
+
+        ColorValue bgColor = TargetAWT.from(background);
+        ColorValue fgColor = TargetAWT.from(foreground);
         if (StringUtil.isEmpty(filter)) {
             textRenderer.append(text, SimpleTextAttributes.of(bgColor, fgColor, TargetAWT.from(JBColor.RED), style));
         }
@@ -470,7 +471,7 @@ public class SearchUtil {
             for (String word : selectedWords) {
                 text = text.substring(idx);
                 String before = text.substring(0, text.indexOf(word));
-                if (before.length() > 0) {
+                if (!before.isEmpty()) {
                     textRenderer.append(before, SimpleTextAttributes.of(bgColor, fgColor, null, style));
                 }
                 idx = text.indexOf(word) + word.length();
@@ -479,8 +480,8 @@ public class SearchUtil {
                     SimpleTextAttributes.of(bgColor, fgColor, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH)
                 );
             }
-            String after = text.substring(idx, text.length());
-            if (after.length() > 0) {
+            String after = text.substring(idx);
+            if (!after.isEmpty()) {
                 textRenderer.append(after, SimpleTextAttributes.of(bgColor, fgColor, null, style));
             }
         }

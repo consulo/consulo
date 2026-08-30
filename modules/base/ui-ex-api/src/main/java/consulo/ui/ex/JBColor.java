@@ -196,7 +196,7 @@ public class JBColor extends Color {
     @Override
     public float[] getRGBColorComponents(float[] compArray) {
         Color c = getColor();
-        return c == this ? super.getRGBComponents(compArray) : c.getRGBColorComponents(compArray);
+        return c == this ? super.getRGBColorComponents(compArray) : c.getRGBColorComponents(compArray);
     }
 
     @Override
