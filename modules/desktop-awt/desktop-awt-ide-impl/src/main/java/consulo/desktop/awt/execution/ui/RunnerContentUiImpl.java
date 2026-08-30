@@ -95,7 +95,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private final String mySessionName;
     private NonOpaquePanel myComponent;
 
-    private final Wrapper myToolbar = new Wrapper();
     final MyDragOutDelegate myDragOutDelegate = new MyDragOutDelegate();
 
     JBRunnerTabs myTabs;
@@ -135,13 +134,10 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private boolean myToDisposeRemovedContent = true;
 
     private int myAttractionCount;
-    private ActionGroup myLeftToolbarActions;
 
     private final LayoutActionGroup myViewActions = new LayoutActionGroup();
 
     private boolean myContentToolbarBefore = true;
-    private boolean myTopLeftActionsVisible = true;
-    private boolean myTopLeftActionsBefore = false;
 
     private JBTabs myCurrentOver;
     private Image myCurrentOverImg;
@@ -192,32 +188,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         rebuildTabPopup();
     }
 
-    public void setLeftToolbar(ActionGroup group, String place) {
-        ActionToolbar tb = myActionManager.createActionToolbar(place, group, false);
-        tb.setTargetComponent(myComponent);
-        myToolbar.setContent(tb.getComponent());
-        myLeftToolbarActions = group;
-
-        myComponent.revalidate();
-        myComponent.repaint();
-    }
-
-    void setLeftToolbarVisible(boolean value) {
-        myToolbar.setVisible(value);
-//    TODO ?
-//    Border border = myTabs.getComponent().getBorder();
-//    if (border instanceof JBRunnerTabs.JBRunnerTabsBorder) {
-//      ((JBRunnerTabs.JBRunnerTabsBorder)border).setSideMask(value ? SideBorder.LEFT : SideBorder.NONE);
-//    }
-        myComponent.revalidate();
-        myComponent.repaint();
-    }
-
-    void setTopLeftActionsBefore(boolean value) {
-        myTopLeftActionsBefore = value;
-        rebuildCommonActions();
-    }
-
     void setContentToolbarBefore(boolean value) {
         myContentToolbarBefore = value;
         getGrids().forEach(grid -> grid.setToolbarBefore(value));
@@ -230,11 +200,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             updateTabUI(each, usedNames);
         }
         myTabs.updateTabActionsAsync(UIAccess.current(), false);
-    }
-
-    void setTopLeftActionsVisible(boolean visible) {
-        myTopLeftActionsVisible = visible;
-        rebuildCommonActions();
     }
 
     public void initUi() {
@@ -261,11 +226,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         rebuildTabPopup();
 
         myTabs.getPresentation().setPaintFocus(false).setRequestFocusOnLastFocusedComponent(true);
-        myTabs.getComponent().setBackground(myToolbar.getBackground());
-        myToolbar.setBorder(JBUI.Borders.customLine(JBColor.border(), 0, 0, 0, 1));
-
         NonOpaquePanel wrapper = new MyComponent(new BorderLayout(0, 0));
-        wrapper.add(myToolbar, BorderLayout.WEST);
         wrapper.add(myTabs.getComponent(), BorderLayout.CENTER);
         wrapper.setBorder(new EmptyBorder(-1, 0, 0, 0));
 
@@ -822,8 +783,8 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
         TabInfo tab = new TabInfo(grid).setObject(getStateFor(content).getTab()).setText("Tab");
 
-        Wrapper left = new Wrapper();
-        myCommonActionsPlaceholder.put(grid, left);
+        Wrapper fore = new Wrapper();
+        myCommonActionsPlaceholder.put(grid, fore);
 
         Wrapper minimizedToolbar = new Wrapper();
         myMinimizedButtonsPlaceholder.put(grid, minimizedToolbar);
@@ -833,11 +794,8 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             searchComponent.setContent(content.getSearchComponent());
         }
 
-        TwoSideComponent right = new TwoSideComponent(searchComponent, minimizedToolbar);
-
-        NonOpaquePanel sideComponent = new TwoSideComponent(left, right);
-
-        tab.setSideComponent(sideComponent);
+        tab.setForeSideComponent(fore);
+        tab.setSideComponent(new TwoSideComponent(searchComponent, minimizedToolbar));
 
         tab.setTabLabelActions((ActionGroup) myActionManager.getAction(VIEW_TOOLBAR), ViewContext.TAB_TOOLBAR_PLACE);
 
@@ -922,34 +880,15 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         boolean hasToolbarContent = false;
         for (Map.Entry<GridImpl, Wrapper> entry : myCommonActionsPlaceholder.entrySet()) {
             Wrapper eachPlaceholder = entry.getValue();
-            List<Content> contentList = entry.getKey().getContents();
 
-            Set<Content> contents = new HashSet<>();
-            contents.addAll(contentList);
-
-            DefaultActionGroup groupToBuild;
-            JComponent contextComponent = null;
-            if (isHorizontalToolbar() && contents.size() == 1) {
-                Content content = contentList.get(0);
-                groupToBuild = new DefaultActionGroup();
-                if (content.getActions() != null) {
-                    groupToBuild.addAll(content.getActions());
-                    groupToBuild.addSeparator();
-                    contextComponent = content.getActionsContextComponent();
-                }
-                groupToBuild.addAll(myTopActions);
-            }
-            else {
-                DefaultActionGroup group = new DefaultActionGroup();
-                group.addAll(myTopActions);
-                groupToBuild = group;
-            }
+            DefaultActionGroup groupToBuild = new DefaultActionGroup();
+            groupToBuild.addAll(myTopActions);
 
             AnAction[] actions = groupToBuild.getChildren(null);
             if (!Arrays.equals(actions, myContextActions.get(entry.getKey()))) {
                 String adjustedPlace = ActionPlaces.UNKNOWN.equals(myActionsPlace) ? ActionPlaces.TOOLBAR : myActionsPlace;
                 ActionToolbar tb = myActionManager.createActionToolbar(adjustedPlace, groupToBuild, true);
-                tb.setTargetComponent(contextComponent);
+                tb.setTargetComponent(myComponent);
                 eachPlaceholder.setContent(tb.getComponent());
             }
 
@@ -1249,7 +1188,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         myOriginal = null;
         myTopActions = null;
         myAdditionalFocusActions = null;
-        myLeftToolbarActions = null;
     }
 
     @Override
@@ -1313,8 +1251,10 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
     @RequiredUIAccess
     public void updateActionsImmediately(UIAccess uiAccess) {
-        if (myToolbar.getTargetComponent() instanceof ActionToolbar toolbar) {
-            toolbar.updateActionsAsync();
+        for (Wrapper placeholder : myCommonActionsPlaceholder.values()) {
+            if (placeholder.getTargetComponent() instanceof ActionToolbar toolbar) {
+                toolbar.updateActionsAsync();
+            }
         }
     }
 
@@ -1875,14 +1815,9 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     @Override
     public List<AnAction> getActions(boolean originalProvider) {
         ArrayList<AnAction> result = new ArrayList<>();
-        if (myLeftToolbarActions != null) {
-            AnAction[] kids = myLeftToolbarActions.getChildren(null);
-            ContainerUtil.addAll(result, kids);
+        if (myTopActions != null) {
+            ContainerUtil.addAll(result, myTopActions.getChildren(null));
         }
-//      if (myTopLeftActions != null && UIExperiment.isNewDebuggerUIEnabled()) {
-//          AnAction[] kids = myTopLeftActions.getChildren(null);
-//          ContainerUtil.addAll(result, kids);
-//      }
         return result;
     }
 

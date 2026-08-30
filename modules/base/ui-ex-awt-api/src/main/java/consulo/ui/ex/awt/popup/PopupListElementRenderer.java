@@ -114,9 +114,8 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
 
         myButtonSeparator = createButtonsSeparator();
 
-        BorderLayoutPanel left = JBUI.Panels.simplePanel()
+        BorderLayoutPanel left = JBUI.Panels.simplePanel(middleItemComponent)
             .andTransparent()
-            .addToLeft(middleItemComponent)
             .addToRight(myButtonSeparator);
 
         return JBUI.Panels.simplePanel(left)

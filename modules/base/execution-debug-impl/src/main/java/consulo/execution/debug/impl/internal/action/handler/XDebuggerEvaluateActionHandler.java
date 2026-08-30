@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
@@ -30,14 +29,12 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.evaluate.XDebuggerEvaluationDialog;
 import consulo.execution.debug.impl.internal.ui.tree.action.XDebuggerTreeActionBase;
-import consulo.execution.debug.internal.UnsupportedDebuggerEditorsProvider;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -142,15 +139,5 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     @Override
     protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
         return session.getDebugProcess().getEvaluator() != null;
-    }
-
-    @Override
-    public boolean isHidden(Project project, AnActionEvent event) {
-        XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
-        if (session != null && session.getDebugProcess().getEditorsProvider() == UnsupportedDebuggerEditorsProvider.INSTANCE) {
-            return false;
-        }
-
-        return true;
     }
 }

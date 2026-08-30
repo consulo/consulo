@@ -492,8 +492,6 @@ xdebugger.button.evaluate:
     text: E&valuate
 xdebugger.colors.page.name:
     text: Debugger
-xdebugger.debugger.tab.title:
-    text: Debugger
 xdebugger.default.content.title:
     text: Debug
 xdebugger.dialog.title.evaluate.expression:
@@ -534,6 +532,8 @@ xdebugger.remove.line.breakpoint.action.text:
     text: Remove breakpoint
 xdebugger.reset.frame.title:
     text: Reset Frame
+xdebugger.threads.vars.tab.title:
+    text: "Threads & Variables"
 xdebugger.view.breakpoint.edit.action:
     text: Edit
 xdebugger.view.breakpoint.properties.action:

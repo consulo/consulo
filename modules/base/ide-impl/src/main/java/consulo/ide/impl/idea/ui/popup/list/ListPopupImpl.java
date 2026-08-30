@@ -1021,48 +1021,18 @@ public class ListPopupImpl extends WizardPopup implements AWTListPopup, NextStep
         }
 
         @Override
-        public Dimension getPreferredSize() {
-            return removeSeparatorsHeight(super.getPreferredSize());
-        }
-
-        @Override
-        public Dimension getMinimumSize() {
-            return removeSeparatorsHeight(super.getMinimumSize());
-        }
-
-        @Override
-        public Dimension getMaximumSize() {
-            return removeSeparatorsHeight(super.getMaximumSize());
-        }
-
-        @Override
         public Dimension getPreferredScrollableViewportSize() {
-            if (getModel().getSize() <= Math.min(myMaxRowCount, getVisibleRowCount())) {
+            int visibleRows = Math.min(myMaxRowCount, getVisibleRowCount());
+            if (getModel().getSize() <= visibleRows) {
                 return getPreferredSize();
             }
-            return removeSeparatorsHeight(super.getPreferredScrollableViewportSize());
-        }
 
-        /**
-         * Hack for remove extra height produced by separators
-         */
-        private Dimension removeSeparatorsHeight(Dimension size) {
-            int height = size.height;
-
-            ListPopupModel model = getListModel();
-            for (int i = 0; i < model.getSize(); i++) {
-                Object o = model.getElementAt(i);
-                if (o != null && model.isSeparator(o)) {
-                    String textFor = model.getTextFor(o);
-                    if (!StringUtil.isEmpty(textFor)) {
-                        height -= JBUI.scale(12);
-                    }
-                    else {
-                        height -= JBUI.scale(20);
-                    }
-                }
+            Dimension size = super.getPreferredScrollableViewportSize();
+            Rectangle cellBounds = getCellBounds(0, visibleRows - 1);
+            if (cellBounds != null) {
+                Insets insets = getInsets();
+                size.height = cellBounds.height + insets.top + insets.bottom;
             }
-            size.height = height;
             return size;
         }
 

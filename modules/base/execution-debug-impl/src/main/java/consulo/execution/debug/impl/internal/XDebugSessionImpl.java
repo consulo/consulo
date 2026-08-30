@@ -106,7 +106,6 @@ public class XDebugSessionImpl implements XDebugSession {
     private final @Nullable
     ExecutionEnvironment myEnvironment;
     private final AtomicBoolean myStopped = new AtomicBoolean();
-    private boolean myPauseActionSupported;
     private boolean myReadOnly = false;
     private final AtomicBoolean myShowTabOnSuspend;
     private final List<AnAction> myRestartActions = new SmartList<>();
@@ -180,7 +179,7 @@ public class XDebugSessionImpl implements XDebugSession {
 
     @Override
     public void setPauseActionSupported(boolean isSupported) {
-        myPauseActionSupported = isSupported;
+        mySessionData.setPauseSupported(isSupported);
     }
 
     
@@ -231,7 +230,7 @@ public class XDebugSessionImpl implements XDebugSession {
     }
 
     public boolean isPauseActionSupported() {
-        return myPauseActionSupported;
+        return mySessionData.isPauseSupported();
     }
 
     @Override

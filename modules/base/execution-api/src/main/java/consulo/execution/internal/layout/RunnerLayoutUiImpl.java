@@ -29,13 +29,7 @@ import java.util.List;
  * @since 12.05.2024
  */
 public interface RunnerLayoutUiImpl extends Disposable.Parent, RunnerLayoutUi, LayoutStateDefaults, LayoutViewOptions, UiDataProvider {
-    void setLeftToolbarVisible(boolean value);
-
-    void setTopLeftActionsBefore(boolean value);
-
     void setContentToolbarBefore(boolean value);
-
-    void setTopLeftActionsVisible(boolean value);
 
     List<AnAction> getActions();
 

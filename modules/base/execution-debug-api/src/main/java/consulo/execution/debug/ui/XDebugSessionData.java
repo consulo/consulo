@@ -29,6 +29,7 @@ public class XDebugSessionData extends UserDataHolderBase {
   private XExpression[] myWatchExpressions;
   private final String myConfigurationName;
   private boolean myBreakpointsMuted = false;
+  private boolean myPauseSupported = false;
 
   public XDebugSessionData(XExpression[] watchExpressions, String configurationName) {
     myWatchExpressions = watchExpressions;
@@ -50,6 +51,14 @@ public class XDebugSessionData extends UserDataHolderBase {
 
   public void setBreakpointsMuted(boolean breakpointsMuted) {
     myBreakpointsMuted = breakpointsMuted;
+  }
+
+  public boolean isPauseSupported() {
+    return myPauseSupported;
+  }
+
+  public void setPauseSupported(boolean pauseSupported) {
+    myPauseSupported = pauseSupported;
   }
 
   

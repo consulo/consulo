@@ -52,7 +52,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
   public DebuggerSessionTabBase(Project project, String runnerId, String sessionName, GlobalSearchScope searchScope) {
     super(project, searchScope, runnerId, XDebuggerLocalize.xdebuggerDefaultContentTitle().get(), sessionName);
 
-    myUi.getDefaults().initTabDefaults(0, XDebuggerLocalize.xdebuggerDebuggerTabTitle().get(), ExecutionDebugIconGroup.actionStartdebugger())
+    myUi.getDefaults().initTabDefaults(0, XDebuggerLocalize.xdebuggerThreadsVarsTabTitle().get(), ExecutionDebugIconGroup.actionStartdebugger())
             .initFocusContent(DebuggerContentInfo.FRAME_CONTENT, XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION)
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
   }

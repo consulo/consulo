@@ -189,7 +189,6 @@ public class XFramesView extends XDebugView {
         };
 
         myThreadsPanel = new Wrapper();
-        myThreadsPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, 1, 0));
         myMainPanel.add(myThreadsPanel, BorderLayout.NORTH);
     }
 
@@ -262,11 +261,20 @@ public class XFramesView extends XDebugView {
             addExecutionStacks(Arrays.asList(executionStacks));
 
             myThreadComboBox.setSelectedItem(activeExecutionStack);
-            myThreadsPanel.removeAll();
-            boolean invisible = executionStacks.length == 1 && StringUtil.isEmpty(executionStacks[0].getDisplayName());
-            if (!invisible) {
-                myThreadsPanel.add(myThreadComboBox, BorderLayout.CENTER);
+
+            boolean invisible = activeExecutionStack == null || StringUtil.isEmpty(activeExecutionStack.getDisplayName());
+            if (invisible != (myThreadComboBox.getParent() == null)) {
+                if (invisible) {
+                    myThreadsPanel.remove(myThreadComboBox);
+                    myThreadsPanel.setBorder(null);
+                }
+                else {
+                    myThreadsPanel.add(myThreadComboBox, BorderLayout.CENTER);
+                    myThreadsPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, 1, 0));
+                }
+                myThreadsPanel.revalidate();
             }
+
             updateFrames(activeExecutionStack, session, event == SessionEvent.FRAME_CHANGED ? currentStackFrame : null);
         });
     }

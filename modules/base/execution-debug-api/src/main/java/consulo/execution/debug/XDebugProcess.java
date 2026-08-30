@@ -282,7 +282,7 @@ public abstract class XDebugProcess {
     /**
      * Override this method to provide additional actions in 'Debug' tool window
      */
-    public void registerAdditionalActions(DefaultActionGroup leftToolbar, DefaultActionGroup topToolbar, DefaultActionGroup settings) {
+    public void registerAdditionalActions(DefaultActionGroup moreGroup, DefaultActionGroup topToolbar, DefaultActionGroup settings) {
     }
 
     /**
