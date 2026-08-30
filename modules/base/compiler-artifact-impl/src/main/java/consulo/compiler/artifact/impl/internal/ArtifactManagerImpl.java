@@ -371,9 +371,6 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       myInsideCommit = false;
     }
     updateWatchedRoots();
-    if (hasChanges) {
-      //TODO [VISTALL] compiler BuildManager.getInstance().clearState(myProject);
-    }
   }
 
   public Project getProject() {

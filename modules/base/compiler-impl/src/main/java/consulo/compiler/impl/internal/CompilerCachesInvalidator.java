@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,15 @@ package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.CachesInvalidator;
-import consulo.compiler.TranslatingCompilerFilesMonitor;
+import consulo.compiler.impl.internal.state.ProjectCompilerState;
 import consulo.localize.LocalizeValue;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
  * @since 2022-06-18
  */
 @ExtensionImpl
-class TranslactionCompilerMonitorCachesInvalidator extends CachesInvalidator {
-    private final Provider<TranslatingCompilerFilesMonitor> myTranslatingCompilerFilesMonitorProvider;
-
-    @Inject
-    TranslactionCompilerMonitorCachesInvalidator(Provider<TranslatingCompilerFilesMonitor> translatingCompilerFilesMonitorProvider) {
-        myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
-    }
-
-    
+public class CompilerCachesInvalidator extends CachesInvalidator {
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Invalidate compiler cache");
@@ -43,8 +33,6 @@ class TranslactionCompilerMonitorCachesInvalidator extends CachesInvalidator {
 
     @Override
     public void invalidateCaches() {
-        TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl) myTranslatingCompilerFilesMonitorProvider.get();
-
-        monitor.invalidate();
+        ProjectCompilerState.requestGlobalInvalidation();
     }
 }

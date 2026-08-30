@@ -15,24 +15,22 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.application.Application;
 import consulo.compiler.FileProcessingCompiler;
-import consulo.util.collection.Maps;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 class CacheDeferredUpdater {
-    private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData =
-        Maps.newHashMap(FileUtil.FILE_HASHING_STRATEGY);
+    private final Map<Path, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData =
+        new HashMap<>();
 
     public void addFileForUpdate(FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
-        File file = item.getFile();
+        Path file = item.getFile();
         List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>> list = myData.get(file);
         if (list == null) {
             list = new ArrayList<>();
@@ -42,23 +40,12 @@ class CacheDeferredUpdater {
     }
 
     public void doUpdate() throws IOException {
-        IOException[] ex = {null};
-        Application.get().runReadAction(() -> {
-            try {
-                for (Map.Entry<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry
-                    : myData.entrySet()) {
-                    for (Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem> pair : entry.getValue()) {
-                        FileProcessingCompiler.ProcessingItem item = pair.getSecond();
-                        pair.getFirst().update(entry.getKey(), item.getValidityState());
-                    }
-                }
+        for (Map.Entry<Path, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry
+            : myData.entrySet()) {
+            for (Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem> pair : entry.getValue()) {
+                FileProcessingCompiler.ProcessingItem item = pair.getSecond();
+                pair.getFirst().update(entry.getKey(), item.getValidityState());
             }
-            catch (IOException e) {
-                ex[0] = e;
-            }
-        });
-        if (ex[0] != null) {
-            throw ex[0];
         }
     }
 }

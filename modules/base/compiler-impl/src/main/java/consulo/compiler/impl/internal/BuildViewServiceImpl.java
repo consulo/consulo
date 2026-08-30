@@ -32,10 +32,10 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -110,7 +110,7 @@ public class BuildViewServiceImpl {
                 if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
                     VirtualFile file = openFileDescriptor.getFile();
 
-                    counters.addErrorFile(file);
+                    counters.addErrorFile(file.toNioPath());
 
                     WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance(myProject);
 
@@ -274,7 +274,7 @@ public class BuildViewServiceImpl {
 
     public void addMessage(Object sessionId, CompilerMessage compilerMessage) {
         MessageEvent.Kind kind = convertCategory(compilerMessage.getCategory());
-        VirtualFile virtualFile = compilerMessage.getVirtualFile();
+        Path messageFile = compilerMessage.getFile();
         Navigatable navigatable = compilerMessage.getNavigatable();
         LocalizeValue title = compilerMessage.getMessage().map(BuildViewServiceImpl::getMessageTitle);
         BuildIssue issue = buildIssue(
@@ -282,14 +282,14 @@ public class BuildViewServiceImpl {
             title,
             compilerMessage.getMessage(),
             kind,
-            virtualFile,
+            messageFile,
             navigatable
         );
         if (issue != null) {
             myBuildProgress.buildIssue(issue, kind);
         }
-        else if (virtualFile != null) {
-            File file = VirtualFileUtil.virtualToIoFile(virtualFile);
+        else if (messageFile != null) {
+            File file = messageFile.toFile();
             FilePosition filePosition;
             if (navigatable instanceof OpenFileDescriptor fileDescriptor) {
                 int column = fileDescriptor.getColumn();
@@ -340,7 +340,7 @@ public class BuildViewServiceImpl {
         LocalizeValue title,
         LocalizeValue message,
         MessageEvent.Kind kind,
-        @Nullable VirtualFile virtualFile,
+        @Nullable Path file,
         @Nullable Navigatable navigatable
     ) {
         // TODO [VISTALL] use ep? like in idea

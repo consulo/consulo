@@ -27,12 +27,14 @@ import consulo.module.content.layer.ModulesProvider;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +66,18 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
                                                              ArtifactType artifactType) {
     Library library = findLibrary(context);
     if (library != null) {
-      VirtualFile[] files = library.getFiles(BinariesOrderRootType.ID);
       List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
-      for (VirtualFile file : files) {
-        String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
-        elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(
-          path));
+      for (String url : library.getUrls(BinariesOrderRootType.ID)) {
+        String path = FileUtil.toSystemIndependentName(VirtualFileUtil.urlToPath(url));
+        int archiveSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+        if (archiveSeparatorIndex != -1) {
+          elements.add(new FileCopyPackagingElement(path.substring(0, archiveSeparatorIndex)));
+        }
+        else {
+          elements.add(Files.isDirectory(Path.of(FileUtil.toSystemDependentName(path)))
+                         ? new DirectoryCopyPackagingElement(path)
+                         : new FileCopyPackagingElement(path));
+        }
       }
       return elements;
     }
@@ -169,12 +177,12 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   public static PackagingElementOutputKind getKindForLibrary(Library library) {
     boolean containsDirectories = false;
     boolean containsJars = false;
-    for (VirtualFile file : library.getFiles(BinariesOrderRootType.ID)) {
-      if (file.isInLocalFileSystem()) {
-        containsDirectories = true;
+    for (String url : library.getUrls(BinariesOrderRootType.ID)) {
+      if (url.contains(URLUtil.ARCHIVE_SEPARATOR)) {
+        containsJars = true;
       }
       else {
-        containsJars = true;
+        containsDirectories = true;
       }
     }
     return new PackagingElementOutputKind(containsDirectories, containsJars);

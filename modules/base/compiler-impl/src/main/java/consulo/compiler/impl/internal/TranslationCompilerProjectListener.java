@@ -18,6 +18,7 @@ package consulo.compiler.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
+import consulo.application.AccessRule;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.compiler.TranslatingCompilerFilesMonitor;
@@ -31,13 +32,12 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.collection.ContainerUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -61,20 +61,19 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
 
         MessageBusConnection conn = project.getMessageBus().connect();
         final TranslatingCompilerFilesMonitorImpl.ProjectRef projRef = new TranslatingCompilerFilesMonitorImpl.ProjectRef(project);
-        final int projectId = monitor.getProjectId(project);
 
         monitor.watchProject(project);
 
         conn.subscribe(
             ModuleRootListener.class,
             new ModuleRootListener() {
-                private VirtualFile[] myRootsBefore;
+                private List<Path> myRootsBefore;
                 private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
 
                 @Override
                 @RequiredReadAction
                 public void beforeRootsChange(ModuleRootEvent event) {
-                    if (monitor.isSuspended(projectId)) {
+                    if (monitor.isSuspended(project)) {
                         return;
                     }
                     try {
@@ -88,39 +87,28 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
                 @Override
                 @RequiredReadAction
                 public void rootsChanged(ModuleRootEvent event) {
-                    if (monitor.isSuspended(projectId)) {
+                    if (monitor.isSuspended(project)) {
                         return;
                     }
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Before roots changed for projectId=" + projectId + "; url=" + project.getPresentableUrl());
+                        LOG.debug("Before roots changed for project url=" + project.getPresentableUrl());
                     }
                     try {
-                        VirtualFile[] rootsBefore = myRootsBefore;
+                        List<Path> rootsBefore = myRootsBefore;
                         myRootsBefore = null;
-                        VirtualFile[] rootsAfter = monitor.getRootsForScan(projRef.get());
-                        final Set<VirtualFile> newRoots = new HashSet<>();
-                        final Set<VirtualFile> oldRoots = new HashSet<>();
-                        {
-                            if (rootsAfter.length > 0) {
-                                ContainerUtil.addAll(newRoots, rootsAfter);
-                            }
-                            if (rootsBefore != null) {
-                                newRoots.removeAll(Arrays.asList(rootsBefore));
-                            }
-                        }
-                        {
-                            if (rootsBefore != null) {
-                                ContainerUtil.addAll(oldRoots, rootsBefore);
-                            }
-                            if (!oldRoots.isEmpty() && rootsAfter.length > 0) {
-                                oldRoots.removeAll(Arrays.asList(rootsAfter));
-                            }
+                        List<Path> rootsAfter = monitor.getRootsForScan(projRef.get());
+                        final Set<Path> newRoots = new HashSet<>(rootsAfter);
+                        final Set<Path> oldRoots = new HashSet<>();
+                        if (rootsBefore != null) {
+                            newRoots.removeAll(rootsBefore);
+                            oldRoots.addAll(rootsBefore);
+                            rootsAfter.forEach(oldRoots::remove);
                         }
 
                         myAlarm.cancelAllRequests(); // need alarm to deal with multiple rootsChanged events
                         myAlarm.addRequest(
                             () -> {
-                                monitor.startAsyncScan(projectId);
+                                monitor.startAsyncScan(project);
                                 new Task.Backgroundable(project, CompilerLocalize.compilerInitialScanningProgressText(), false) {
                                     @Override
                                     public void run(ProgressIndicator indicator) {
@@ -133,14 +121,15 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
                                             }
                                             monitor.markOldOutputRoots(
                                                 projRef,
-                                                TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout()
+                                                AccessRule.read(() -> TranslationCompilerProjectMonitor.getInstance(projRef.get())
+                                                    .buildOutputRootsLayout())
                                             );
                                         }
                                         catch (TranslatingCompilerFilesMonitorImpl.ProjectRef.ProjectClosedException swallowed) {
                                             // ignored
                                         }
                                         finally {
-                                            monitor.terminateAsyncScan(projectId, false);
+                                            monitor.terminateAsyncScan(project, false);
                                         }
                                     }
                                 }.queue();
@@ -159,14 +148,7 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
 
     @Override
     public void projectClosed(Project project, UIAccess uiAccess) {
-        TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
-
-        int projectId = monitor.getProjectId(project);
-        monitor.terminateAsyncScan(projectId, true);
-        synchronized (monitor.myDataLock) {
-            monitor.mySourcesToRecompile.remove(projectId);
-            monitor.myOutputsToDelete.remove(projectId);  // drop cache to save memory
-        }
+        getMonitor().terminateAsyncScan(project, true);
     }
 
     

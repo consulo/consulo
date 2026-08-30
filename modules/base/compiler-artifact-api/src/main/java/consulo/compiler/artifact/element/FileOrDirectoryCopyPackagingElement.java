@@ -15,10 +15,13 @@
  */
 package consulo.compiler.artifact.element;
 
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.xml.serializer.annotation.Attribute;
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author nik
@@ -38,6 +41,10 @@ public abstract class FileOrDirectoryCopyPackagingElement<T extends FileOrDirect
 
   public @Nullable VirtualFile findFile() {
     return LocalFileSystem.getInstance().findFileByPath(myFilePath);
+  }
+
+  public @Nullable Path getNioPath() {
+    return myFilePath == null ? null : Path.of(FileUtil.toSystemDependentName(myFilePath));
   }
 
   @Override

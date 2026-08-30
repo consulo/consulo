@@ -16,7 +16,8 @@
 package consulo.compiler;
 
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
+
+import java.nio.file.Path;
 
 /**
  * A base interface for all compilers that generate new files. The generated files may be processed by other compilers.
@@ -75,5 +76,5 @@ public interface GeneratingCompiler extends Compiler, ValidityStateFactory, Inte
      *                            subsequent build steps.
      * @return successfully generated items
      */
-    GenerationItem[] generate(CompileContext context, GenerationItem[] items, VirtualFile outputRootDirectory);
+    GenerationItem[] generate(CompileContext context, GenerationItem[] items, Path outputRootDirectory);
 }

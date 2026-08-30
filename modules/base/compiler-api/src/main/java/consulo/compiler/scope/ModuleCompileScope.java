@@ -16,7 +16,6 @@
 package consulo.compiler.scope;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.FileIndex;
 import consulo.module.Module;
@@ -26,14 +25,15 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
@@ -110,39 +110,36 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     }
 
     @Override
-    public boolean belongs(String url) {
+    public boolean belongs(Path path) {
         if (myScopeModules.isEmpty()) {
             return false; // optimization
         }
+        String filePath = FileUtil.toSystemIndependentName(path.toString());
         Module candidateModule = null;
-        int maxUrlLength = 0;
+        int maxRootLength = 0;
         ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
         for (Module module : myModules) {
             String[] contentRootUrls = getModuleContentUrls(module);
             for (String contentRootUrl : contentRootUrls) {
-                if (contentRootUrl.length() < maxUrlLength) {
+                String contentRootPath = VirtualFileUtil.urlToPath(contentRootUrl);
+                if (contentRootPath.length() < maxRootLength) {
                     continue;
                 }
-                if (!isUrlUnderRoot(url, contentRootUrl)) {
+                if (!isPathUnderRoot(filePath, contentRootPath)) {
                     continue;
                 }
-                if (contentRootUrl.length() == maxUrlLength) {
+                if (contentRootPath.length() == maxRootLength) {
                     if (candidateModule == null) {
                         candidateModule = module;
                     }
                     else if (!candidateModule.equals(module)) {
                         // the same content root exists in several modules
-                        candidateModule = Application.get().runReadAction((Supplier<Module>) () -> {
-                            VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
-                            if (contentRootFile != null) {
-                                return projectFileIndex.getModuleForFile(contentRootFile);
-                            }
-                            return null;
-                        });
+                        VirtualFile contentRootFile = LocalFileSystem.getInstance().findFileByPath(contentRootPath);
+                        candidateModule = contentRootFile != null ? projectFileIndex.getModuleForFile(contentRootFile) : null;
                     }
                 }
                 else {
-                    maxUrlLength = contentRootUrl.length();
+                    maxRootLength = contentRootPath.length();
                     candidateModule = module;
                 }
             }
@@ -152,13 +149,13 @@ public class ModuleCompileScope extends FileIndexCompileScope {
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(candidateModule);
             String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderTypeProvider.onlyExcluded());
             for (String excludeRootUrl : excludeRootUrls) {
-                if (isUrlUnderRoot(url, excludeRootUrl)) {
+                if (isPathUnderRoot(filePath, VirtualFileUtil.urlToPath(excludeRootUrl))) {
                     return false;
                 }
             }
             String[] sourceRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderTypeProvider.allExceptExcluded());
             for (String sourceRootUrl : sourceRootUrls) {
-                if (isUrlUnderRoot(url, sourceRootUrl)) {
+                if (isPathUnderRoot(filePath, VirtualFileUtil.urlToPath(sourceRootUrl))) {
                     return true;
                 }
             }
@@ -167,8 +164,8 @@ public class ModuleCompileScope extends FileIndexCompileScope {
         return false;
     }
 
-    private static boolean isUrlUnderRoot(String url, String root) {
-        return (url.length() > root.length()) && url.charAt(root.length()) == '/' && FileUtil.startsWith(url, root);
+    private static boolean isPathUnderRoot(String path, String root) {
+        return (path.length() > root.length()) && path.charAt(root.length()) == '/' && FileUtil.startsWith(path, root);
     }
 
     private final Map<Module, String[]> myContentUrlsCache = new HashMap<>();

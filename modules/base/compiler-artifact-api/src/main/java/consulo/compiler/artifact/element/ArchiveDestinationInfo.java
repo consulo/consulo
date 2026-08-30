@@ -17,41 +17,41 @@
 package consulo.compiler.artifact.element;
 
 import consulo.logging.Logger;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 /**
  * @author nik
  */
 public class ArchiveDestinationInfo extends DestinationInfo {
-  private static final Logger LOG = Logger.getInstance(ArchiveDestinationInfo.class);
+    private static final Logger LOG = Logger.getInstance(ArchiveDestinationInfo.class);
 
-  private final String myPathInJar;
-  private final ArchivePackageInfo myArchivePackageInfo;
+    private final String myPathInJar;
+    private final ArchivePackageInfo myArchivePackageInfo;
 
-  public ArchiveDestinationInfo(String pathInJar, ArchivePackageInfo archivePackageInfo, DestinationInfo jarDestination) {
-    super(appendPathInJar(jarDestination.getOutputPath(), pathInJar), jarDestination.getOutputFile(), jarDestination.getOutputFilePath());
-    LOG.assertTrue(!pathInJar.startsWith(".."), pathInJar);
-    myPathInJar = StringUtil.startsWithChar(pathInJar, '/') ? pathInJar : "/" + pathInJar;
-    myArchivePackageInfo = archivePackageInfo;
-  }
+    public ArchiveDestinationInfo(String pathInJar, ArchivePackageInfo archivePackageInfo, DestinationInfo jarDestination) {
+        super(appendPathInJar(jarDestination.getOutputPath(), pathInJar), jarDestination.getOutputFilePath());
+        LOG.assertTrue(!pathInJar.startsWith(".."), pathInJar);
+        myPathInJar = StringUtil.startsWithChar(pathInJar, '/') ? pathInJar : "/" + pathInJar;
+        myArchivePackageInfo = archivePackageInfo;
+    }
 
-  private static String appendPathInJar(String outputPath, String pathInJar) {
-    LOG.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
-    LOG.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
-    return outputPath + ArchiveFileSystem.ARCHIVE_SEPARATOR + pathInJar;
-  }
+    private static String appendPathInJar(String outputPath, String pathInJar) {
+        LOG.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
+        LOG.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
+        return outputPath + URLUtil.ARCHIVE_SEPARATOR + pathInJar;
+    }
 
-  public String getPathInJar() {
-    return myPathInJar;
-  }
+    public String getPathInJar() {
+        return myPathInJar;
+    }
 
-  public ArchivePackageInfo getArchivePackageInfo() {
-    return myArchivePackageInfo;
-  }
+    public ArchivePackageInfo getArchivePackageInfo() {
+        return myArchivePackageInfo;
+    }
 
-  @Override
-  public String toString() {
-    return myPathInJar + "(" + getOutputPath() + ")";
-  }
+    @Override
+    public String toString() {
+        return myPathInJar + "(" + getOutputPath() + ")";
+    }
 }

@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.*;
 import consulo.compiler.generic.GenericCompiler;
+import consulo.compiler.impl.internal.state.ProjectCompilerState;
 import consulo.compiler.impl.internal.generic.GenericCompilerCache;
 import consulo.compiler.impl.internal.generic.GenericCompilerRunner;
 import consulo.compiler.localize.CompilerLocalize;
@@ -163,10 +164,13 @@ public class CompilerCacheManager implements Disposable {
         myCacheDisposables.clear();
         myGenericCachesMap.clear();
         myCompilerToCacheMap.clear();
+
+        ProjectCompilerState.getInstance(myProject).force();
     }
 
     public void clearCaches(CompileContext context) {
         flushCaches();
+        ProjectCompilerState.getInstance(myProject).reset();
         File[] children = myCachesRoot.listFiles();
         if (children != null) {
             for (File child : children) {

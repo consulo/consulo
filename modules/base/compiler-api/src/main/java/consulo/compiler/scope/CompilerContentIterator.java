@@ -20,15 +20,16 @@ import consulo.content.ContentIterator;
 import consulo.content.FileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 public class CompilerContentIterator implements ContentIterator {
     private final FileType myFileType;
     private final FileIndex myFileIndex;
     private final boolean myInSourceOnly;
-    private final Collection<VirtualFile> myFiles;
+    private final Collection<Path> myFiles;
 
-    public CompilerContentIterator(FileType fileType, FileIndex fileIndex, boolean inSourceOnly, Collection<VirtualFile> files) {
+    public CompilerContentIterator(FileType fileType, FileIndex fileIndex, boolean inSourceOnly, Collection<Path> files) {
         myFileType = fileType;
         myFileIndex = fileIndex;
         myInSourceOnly = inSourceOnly;
@@ -47,7 +48,7 @@ public class CompilerContentIterator implements ContentIterator {
             return true;
         }
         if (myFileType == null || myFileType == fileOrDir.getFileType()) {
-            myFiles.add(fileOrDir);
+            myFiles.add(fileOrDir.toNioPath());
         }
         return true;
     }

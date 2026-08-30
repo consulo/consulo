@@ -143,13 +143,11 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
         return list;
     }
 
-    
     @Override
     public ContentFolder addFolder(VirtualFile file, ContentFolderTypeProvider contentFolderType) {
         assertCanAddFolder(file);
         return addFolderInternal(new ContentFolderImpl(file, contentFolderType, this));
     }
-
     
     @Override
     public ContentFolder addFolder(String url, ContentFolderTypeProvider contentFolderType) {
@@ -162,7 +160,6 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
         Disposer.register(this, f);
         return f;
     }
-
     
     @Override
     public Collection<ContentFolder> getContentFolders() {

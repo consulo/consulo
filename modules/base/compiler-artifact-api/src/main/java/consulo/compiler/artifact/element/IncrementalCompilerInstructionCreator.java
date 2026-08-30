@@ -15,25 +15,25 @@
  */
 package consulo.compiler.artifact.element;
 
-import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author nik
  */
 public interface IncrementalCompilerInstructionCreator {
+    void addFileCopyInstruction(Path file, String outputFileName);
 
-  void addFileCopyInstruction(VirtualFile file, String outputFileName);
+    void addDirectoryCopyInstructions(Path directory);
 
-  void addDirectoryCopyInstructions(VirtualFile directory);
+    void addDirectoryCopyInstructions(Path directory, @Nullable PackagingFileFilter filter);
 
-  void addDirectoryCopyInstructions(VirtualFile directory, @Nullable PackagingFileFilter filter);
+    void addExtractDirectoryInstruction(Path jarFile, String pathInJar);
 
-  IncrementalCompilerInstructionCreator subFolder(String directoryName);
+    IncrementalCompilerInstructionCreator subFolder(String directoryName);
 
-  
-  IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter);
+    IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter);
 
-  IncrementalCompilerInstructionCreator subFolderByRelativePath(String relativeDirectoryPath);
+    IncrementalCompilerInstructionCreator subFolderByRelativePath(String relativeDirectoryPath);
 }

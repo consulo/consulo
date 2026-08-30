@@ -397,7 +397,7 @@ public class ArtifactUtil {
   public static Collection<Trinity<Artifact, PackagingElementPath, String>> findContainingArtifactsWithOutputPaths(final VirtualFile file,
                                                                                                                    Project project,
                                                                                                                    Artifact[] artifacts) {
-    final boolean isResourceFile = ResourceCompilerConfiguration.getInstance(project).isResourceFile(file);
+    final boolean isResourceFile = file.isInLocalFileSystem() && ResourceCompilerConfiguration.getInstance(project).isResourceFile(file.toNioPath());
     final List<Trinity<Artifact, PackagingElementPath, String>> result = new ArrayList<>();
     final PackagingElementResolvingContext context = ArtifactManager.getInstance(project).getResolvingContext();
     for (final Artifact artifact : artifacts) {
@@ -499,8 +499,8 @@ public class ArtifactUtil {
           else if (element instanceof ModuleOutputPackagingElement) {
             for (VirtualFile sourceRoot : ((ModuleOutputPackagingElement)element).getSourceRoots(context)) {
               VirtualFile sourceFile = sourceRoot.findFileByRelativePath(path);
-              if (sourceFile != null && ResourceCompilerConfiguration.getInstance(context.getProject())
-                                                                     .isResourceFile(sourceFile)) {
+              if (sourceFile != null && sourceFile.isInLocalFileSystem() && ResourceCompilerConfiguration.getInstance(context.getProject())
+                                                                     .isResourceFile(sourceFile.toNioPath())) {
                 result.add(sourceFile);
               }
             }

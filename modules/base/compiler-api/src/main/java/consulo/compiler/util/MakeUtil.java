@@ -17,32 +17,28 @@ package consulo.compiler.util;
 
 import consulo.compiler.CompileContext;
 import consulo.module.Module;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.util.io.FileUtil;
+import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author Jeka
  * @since 2002-01-17
  */
 public class MakeUtil {
-    public static VirtualFile getSourceRoot(CompileContext context, Module module, VirtualFile file) {
-        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
-        VirtualFile root = fileIndex.getSourceRootForFile(file);
-        if (root != null) {
-            return root;
-        }
-        // try to find among roots of generated files.
-        VirtualFile[] sourceRoots = context.getSourceRoots(module);
-        for (VirtualFile sourceRoot : sourceRoots) {
-            if (fileIndex.isInSourceContent(sourceRoot)) {
-                continue; // skip content source roots, need only roots for generated files
-            }
-            if (VirtualFileUtil.isAncestor(sourceRoot, file, false)) {
-                return sourceRoot;
+    public static @Nullable Path getSourceRoot(CompileContext context, Module module, Path file) {
+        String filePath = FileUtil.toSystemIndependentName(file.toString());
+        Path[] sourceRoots = context.getSourceRoots(module);
+        Path bestRoot = null;
+        int bestRootLength = -1;
+        for (Path sourceRoot : sourceRoots) {
+            String rootPath = FileUtil.toSystemIndependentName(sourceRoot.toString());
+            if (FileUtil.startsWith(filePath, rootPath) && rootPath.length() > bestRootLength) {
+                bestRoot = sourceRoot;
+                bestRootLength = rootPath.length();
             }
         }
-        return null;
+        return bestRoot;
     }
 }

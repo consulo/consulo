@@ -15,18 +15,50 @@
  */
 package consulo.compiler.impl.internal;
 
-import consulo.application.Application;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
+import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerPaths;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.Project;
+import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Set;
 
 public class CompilerPathsEx extends CompilerPaths {
     public static final Key<Boolean> CLEAR_ALL_OUTPUTS_KEY = Key.create("_should_clear_all_outputs_");
+
+    @RequiredReadAction
+    public static Set<String> getExcludedPaths(Project project) {
+        Set<String> result = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
+        for (Module module : ModuleManager.getInstance(project).getModules()) {
+            ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+            for (String url : rootManager.getContentFolderUrls(LanguageContentFolderScopes.excluded())) {
+                result.add(FileUtil.toSystemIndependentName(VirtualFileUtil.urlToPath(url)));
+            }
+
+            ModuleCompilerPathsManager pathsManager = ModuleCompilerPathsManager.getInstance(module);
+            for (ContentFolderTypeProvider folderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.all(false))) {
+                String outputUrl = pathsManager.getCompilerOutputUrl(folderType);
+                if (outputUrl != null) {
+                    result.add(FileUtil.toSystemIndependentName(VirtualFileUtil.urlToPath(outputUrl)));
+                }
+            }
+        }
+        result.add(FileUtil.toSystemIndependentName(VirtualFileUtil.urlToPath(CompilerConfiguration.getInstance(project).getCompilerOutputUrl())));
+        return result;
+    }
 
     public static File getZippedOutputPath(Project project, String outputDirectoryPath) {
         File outputDir = new File(outputDirectoryPath);
@@ -68,10 +100,8 @@ public class CompilerPathsEx extends CompilerPaths {
 
     public static void visitFiles(Collection<VirtualFile> directories, FileVisitor visitor) {
         for (VirtualFile outputDir : directories) {
-            Application.get().runReadAction(() -> {
-                String path = outputDir.getPath();
-                visitor.accept(outputDir, path, path);
-            });
+            String path = outputDir.getPath();
+            visitor.accept(outputDir, path, path);
         }
     }
 }

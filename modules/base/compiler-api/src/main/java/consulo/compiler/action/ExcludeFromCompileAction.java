@@ -44,7 +44,7 @@ public abstract class ExcludeFromCompileAction extends LegacyAnAction {
         VirtualFile file = getFile();
 
         if (file != null && file.isValid()) {
-            ExcludeEntryDescription description = new ExcludeEntryDescription(file, false, true, myProject);
+            ExcludeEntryDescription description = new ExcludeEntryDescription(file.getUrl(), false, true, myProject);
             CompilerManager.getInstance(myProject).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
             FileStatusManager.getInstance(myProject).fileStatusesChanged();
         }

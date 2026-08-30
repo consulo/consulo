@@ -17,11 +17,11 @@ package consulo.compiler.scope;
 
 import consulo.compiler.util.ExportableUserDataHolderBase;
 import consulo.content.FileIndex;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,13 +32,12 @@ public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase
     protected abstract FileIndex[] getFileIndices();
 
     @Override
-    
-    public VirtualFile[] getFiles(FileType fileType) {
-        List<VirtualFile> files = new ArrayList<>();
+    public Collection<Path> getFiles(FileType fileType) {
+        List<Path> files = new ArrayList<>();
         FileIndex[] fileIndices = getFileIndices();
         for (FileIndex fileIndex : fileIndices) {
             fileIndex.iterateContent(new CompilerContentIterator(fileType, fileIndex, !includeTestScope(), files));
         }
-        return VirtualFileUtil.toVirtualFileArray(files);
+        return files;
     }
 }

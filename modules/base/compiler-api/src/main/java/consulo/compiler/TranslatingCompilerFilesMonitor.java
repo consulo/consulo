@@ -18,15 +18,14 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -37,8 +36,6 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TranslatingCompilerFilesMonitor {
-    
-    @Deprecated
     public static TranslatingCompilerFilesMonitor getInstance() {
         return Application.get().getInstance(TranslatingCompilerFilesMonitor.class);
     }
@@ -67,15 +64,13 @@ public abstract class TranslatingCompilerFilesMonitor {
 
     public abstract boolean isSuspended(Project project);
 
-    public abstract boolean isSuspended(int projectId);
-
     public abstract void collectFiles(
         CompileContext context,
         TranslatingCompiler compiler,
-        Iterator<VirtualFile> scopeSrcIterator,
+        Iterator<Path> scopeSrcIterator,
         boolean forceCompile,
         boolean isRebuild,
-        Collection<VirtualFile> toCompile,
+        Collection<Path> toCompile,
         Collection<Trinity<File, String, Boolean>> toDelete
     );
 
@@ -83,21 +78,10 @@ public abstract class TranslatingCompilerFilesMonitor {
         CompileContext context,
         @Nullable String outputRoot,
         Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
-        VirtualFile[] filesToRecompile
+        Collection<Path> filesToRecompile
     ) throws IOException;
 
-    public abstract void updateOutputRootsLayout(Project project);
+    public abstract List<String> getCompiledClassNames(Path srcFile, Project project);
 
-    public abstract List<String> getCompiledClassNames(VirtualFile srcFile, Project project);
-
-    public abstract void scanSourceContent(
-        ProjectRef projRef,
-        Collection<VirtualFile> roots,
-        int totalRootCount,
-        boolean isNewRoots
-    );
-
-    public abstract void ensureInitializationCompleted(Project project, ProgressIndicator indicator);
-
-    public abstract boolean isMarkedForCompilation(Project project, VirtualFile file);
+    public abstract boolean isMarkedForCompilation(Project project, Path file);
 }

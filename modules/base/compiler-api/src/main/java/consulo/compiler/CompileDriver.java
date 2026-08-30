@@ -17,11 +17,11 @@ package consulo.compiler;
 
 import consulo.compiler.scope.CompileScope;
 import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Predicate;
 
 /**
@@ -40,7 +40,7 @@ public interface CompileDriver {
 
     CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Predicate<Compiler> filter);
 
-    @Nullable VirtualFile getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources);
+    @Nullable Path getGenerationOutputDir(IntermediateOutputCompiler compiler, Module module, boolean forTestSources);
 
     Predicate<Compiler> getCompilerFilter();
 }

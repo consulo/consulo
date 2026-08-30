@@ -20,41 +20,45 @@ import consulo.compiler.artifact.element.ArchivePackageInfo;
 import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
 import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.compiler.artifact.element.ExplodedDestinationInfo;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.compiler.impl.internal.CompilerPathsEx;
+import consulo.util.collection.Maps;
+import consulo.util.io.FileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author nik
  */
 public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrementalCompilerContext {
-    protected final Map<VirtualFile, ArtifactCompilerCompileItem> myItemsBySource;
-    private final Map<String, VirtualFile> mySourceByOutput;
+    protected final Map<String, ArtifactCompilerCompileItem> myItemsBySource;
+    private final Map<String, String> mySourceByOutput;
     private final Map<String, ArchivePackageInfo> myJarByPath;
     private final CompileContext myCompileContext;
     private final boolean myPrintToLog;
+    private @Nullable Set<String> myExcludedPaths;
 
     public ArtifactsProcessingItemsBuilderContext(CompileContext compileContext) {
         myCompileContext = compileContext;
-        myItemsBySource = new HashMap<>();
-        mySourceByOutput = new HashMap<>();
+        myItemsBySource = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
+        mySourceByOutput = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
         myJarByPath = new HashMap<>();
         myPrintToLog = ArtifactsCompilerInstance.FULL_LOG.isDebugEnabled();
     }
 
-    public boolean addDestination(VirtualFile sourceFile, DestinationInfo destinationInfo) {
-        if (destinationInfo instanceof ExplodedDestinationInfo && sourceFile.equals(destinationInfo.getOutputFile())) {
+    public boolean addDestination(String sourcePath, DestinationInfo destinationInfo) {
+        if (destinationInfo instanceof ExplodedDestinationInfo && FileUtil.pathsEqual(sourcePath, destinationInfo.getOutputPath())) {
             return false;
         }
 
-        if (checkOutputPath(destinationInfo.getOutputPath(), sourceFile)) {
+        if (checkOutputPath(destinationInfo.getOutputPath(), sourcePath)) {
             if (myPrintToLog) {
-                ArtifactsCompilerInstance.FULL_LOG.debug("  " + sourceFile.getPath() + " -> " + destinationInfo);
+                ArtifactsCompilerInstance.FULL_LOG.debug("  " + sourcePath + " -> " + destinationInfo);
             }
-            getOrCreateProcessingItem(sourceFile).addDestination(destinationInfo);
+            getOrCreateProcessingItem(sourcePath).addDestination(destinationInfo);
             return true;
         }
         return false;
@@ -64,18 +68,18 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
         return myItemsBySource.values();
     }
 
-    public boolean checkOutputPath(String outputPath, VirtualFile sourceFile) {
-        VirtualFile old = mySourceByOutput.get(outputPath);
+    public boolean checkOutputPath(String outputPath, String sourcePath) {
+        String old = mySourceByOutput.get(outputPath);
         if (old == null) {
-            mySourceByOutput.put(outputPath, sourceFile);
+            mySourceByOutput.put(outputPath, sourcePath);
             return true;
         }
         //todo[nik] show warning?
         return false;
     }
 
-    public ArtifactCompilerCompileItem getItemBySource(VirtualFile source) {
-        return myItemsBySource.get(source);
+    public ArtifactCompilerCompileItem getItemBySource(String sourcePath) {
+        return myItemsBySource.get(sourcePath);
     }
 
     public boolean registerJarFile(ArchivePackageInfo archivePackageInfo, String outputPath) {
@@ -90,7 +94,7 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
         return myJarByPath.get(outputPath);
     }
 
-    public @Nullable VirtualFile getSourceByOutput(String outputPath) {
+    public @Nullable String getSourceByOutput(String outputPath) {
         return mySourceByOutput.get(outputPath);
     }
 
@@ -98,11 +102,18 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
         return myCompileContext;
     }
 
-    public ArtifactCompilerCompileItem getOrCreateProcessingItem(VirtualFile sourceFile) {
-        ArtifactCompilerCompileItem item = myItemsBySource.get(sourceFile);
+    public Set<String> getExcludedPaths() {
+        if (myExcludedPaths == null) {
+            myExcludedPaths = CompilerPathsEx.getExcludedPaths(myCompileContext.getProject());
+        }
+        return myExcludedPaths;
+    }
+
+    public ArtifactCompilerCompileItem getOrCreateProcessingItem(String sourcePath) {
+        ArtifactCompilerCompileItem item = myItemsBySource.get(sourcePath);
         if (item == null) {
-            item = new ArtifactCompilerCompileItem(sourceFile);
-            myItemsBySource.put(sourceFile, item);
+            item = new ArtifactCompilerCompileItem(sourcePath);
+            myItemsBySource.put(sourcePath, item);
         }
         return item;
     }

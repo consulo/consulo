@@ -30,6 +30,8 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import org.jspecify.annotations.Nullable;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author nik
@@ -65,8 +67,8 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
                                                      PackagingElementResolvingContext resolvingContext,
                                                      ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
-    VirtualFile file = findFile();
-    if (file != null && file.isValid() && !file.isDirectory()) {
+    Path file = getNioPath();
+    if (file != null && Files.isRegularFile(file)) {
       creator.addFileCopyInstruction(file, getOutputFileName());
     }
   }

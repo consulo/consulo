@@ -20,10 +20,9 @@ import consulo.compiler.util.ExportableUserDataHolderBase;
 import consulo.module.Module;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -66,23 +65,19 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
         }
     }
 
-    
     @Override
-    public VirtualFile[] getFiles(FileType fileType) {
-        Set<VirtualFile> allFiles = new HashSet<>();
+    public Collection<Path> getFiles(FileType fileType) {
+        Set<Path> allFiles = new HashSet<>();
         for (CompileScope scope : myScopes) {
-            VirtualFile[] files = scope.getFiles(fileType);
-            if (files.length > 0) {
-                ContainerUtil.addAll(allFiles, files);
-            }
+            allFiles.addAll(scope.getFiles(fileType));
         }
-        return VirtualFileUtil.toVirtualFileArray(allFiles);
+        return allFiles;
     }
 
     @Override
-    public boolean belongs(String url) {
+    public boolean belongs(Path path) {
         for (CompileScope scope : myScopes) {
-            if (scope.belongs(url)) {
+            if (scope.belongs(path)) {
                 return true;
             }
         }

@@ -24,7 +24,8 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
-import consulo.language.psi.stub.FileBasedIndex;
+import consulo.compiler.impl.internal.state.OutputSourceInfo;
+import consulo.compiler.impl.internal.state.ProjectCompilerState;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -34,20 +35,18 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
-import consulo.util.collection.OrderedSet;
-import consulo.util.collection.primitive.ints.IntSet;
-import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.collection.Sets;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
@@ -61,48 +60,32 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
         @Override
         public MessageBuilder url(String url) {
-            return optionalFile(findPresentableFileForMessage(url));
+            return assignUrl(findPresentableUrlForMessage(url));
         }
 
-        private @Nullable VirtualFile findPresentableFileForMessage(String url) {
-            VirtualFile file = findFileByUrl(url);
-            if (file == null) {
-                return null;
-            }
-            return myProject.getApplication().runReadAction((Supplier<VirtualFile>)() -> {
-                if (file.isValid()) {
-                    for (Map.Entry<VirtualFile, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
-                        VirtualFile root = entry.getKey();
-                        if (VirtualFileUtil.isAncestor(root, file, false)) {
-                            Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
-                            VirtualFile presentableFile =
-                                pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), root, file);
-                            return presentableFile != null ? presentableFile : file;
-                        }
-                    }
+        private @Nullable String findPresentableUrlForMessage(String url) {
+            String path = TranslatingCompilerFilesMonitorImpl.normalizePath(VirtualFileUtil.urlToPath(url));
+            for (Map.Entry<String, Pair<SourceGeneratingCompiler, Module>> entry : myOutputRootToSourceGeneratorMap.entrySet()) {
+                String root = entry.getKey();
+                if (FileUtil.isAncestor(root, path, false)) {
+                    Pair<SourceGeneratingCompiler, Module> pair = entry.getValue();
+                    Path presentableFile =
+                        pair.getFirst().getPresentableFile(CompileContextImpl.this, pair.getSecond(), Path.of(root), Path.of(path));
+                    return presentableFile != null ? VirtualFileUtil.pathToUrl(
+                        FileUtil.toSystemIndependentName(presentableFile.toString())) : url;
                 }
-                return file;
-            });
-        }
-
-        private static @Nullable VirtualFile findFileByUrl(String url) {
-            VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-            VirtualFile file = virtualFileManager.findFileByUrl(url);
-            if (file == null) {
-                // groovy stubs may be placed in completely random directories which aren't refreshed automatically
-                return virtualFileManager.refreshAndFindFileByUrl(url);
             }
-            return file;
+            return url;
         }
 
         @Override
         public void add() {
-            addMessage(new CompilerMessageImpl(myProject, myCategory, myMessage, myFile, myRow, myColumn, myNavigatable));
+            addMessage(new CompilerMessageImpl(myProject, myCategory, myMessage, myUrl, myRow, myColumn, myNavigatable));
         }
     }
 
     private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
-    
+
     private final Project myProject;
     private final CompilerTask myTask;
     private CompileScope myCompileScope;
@@ -113,13 +96,14 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     private boolean myRebuildRequested = false;
     private LocalizeValue myRebuildReason;
-    private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<>();
-    private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<>();
-    private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap = new HashMap<>();
-    private final Set<VirtualFile> myGeneratedTestRoots = new HashSet<>();
-    private VirtualFile[] myOutputDirectories;
-    private Set<VirtualFile> myTestOutputDirectories;
-    private final IntSet myGeneratedSources = IntSets.newHashSet();
+    private final NavigableMap<String, Module> myRootToModuleMap = new TreeMap<>();
+    private final Map<String, Module> myContentRootToModule = new HashMap<>();
+    private final Map<Module, Set<Path>> myModuleToRootsMap = new HashMap<>();
+    private final Map<String, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap = new HashMap<>();
+    private final Set<String> myGeneratedTestRoots = new HashSet<>();
+    private Path[] myOutputDirectories;
+    private Set<Path> myTestOutputDirectories;
+    private final Set<String> myGeneratedSources = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
     private final ProjectFileIndex myProjectFileIndex; // cached for performance reasons
     private final long myStartCompilationStamp;
     private final UUID mySessionId = UUID.randomUUID();
@@ -154,26 +138,36 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     public void recalculateOutputDirs() {
         Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
-        Set<VirtualFile> allDirs = new OrderedSet<>();
-        Set<VirtualFile> testOutputDirs = new HashSet<>();
-        Set<VirtualFile> productionOutputDirs = new HashSet<>();
+        Set<Path> allDirs = new LinkedHashSet<>();
+        Set<Path> testOutputDirs = new HashSet<>();
+        Set<Path> productionOutputDirs = new HashSet<>();
+
+        myContentRootToModule.clear();
+        for (Module module : allModules) {
+            for (String url : ModuleRootManager.getInstance(module).getContentRootUrls()) {
+                myContentRootToModule.put(
+                    TranslatingCompilerFilesMonitorImpl.normalizePath(VirtualFileUtil.urlToPath(url)),
+                    module
+                );
+            }
+        }
 
         for (Module module : allModules) {
             ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
-            VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-            if (output != null && output.isValid()) {
+            Path output = moduleCompilerPathsManager.getCompilerOutputPath(ProductionContentFolderTypeProvider.getInstance());
+            if (output != null) {
                 allDirs.add(output);
                 productionOutputDirs.add(output);
             }
 
-            VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
-            if (testsOutput != null && testsOutput.isValid()) {
+            Path testsOutput = moduleCompilerPathsManager.getCompilerOutputPath(TestContentFolderTypeProvider.getInstance());
+            if (testsOutput != null) {
                 allDirs.add(testsOutput);
                 testOutputDirs.add(testsOutput);
             }
         }
-        myOutputDirectories = VirtualFileUtil.toVirtualFileArray(allDirs);
+        myOutputDirectories = allDirs.toArray(new Path[allDirs.size()]);
         // need this to ensure that the sent contains only _dedicated_ test output dirs
         // Directories that are configured for both test and production classes must not be added in the resulting set
         testOutputDirs.removeAll(productionOutputDirs);
@@ -181,9 +175,9 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void markGenerated(Collection<VirtualFile> files) {
-        for (VirtualFile file : files) {
-            myGeneratedSources.add(FileBasedIndex.getFileId(file));
+    public void markGenerated(Collection<Path> files) {
+        for (Path file : files) {
+            myGeneratedSources.add(TranslatingCompilerFilesMonitorImpl.normalizePath(file.toString()));
         }
     }
 
@@ -193,11 +187,12 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public boolean isGenerated(VirtualFile file) {
-        if (myGeneratedSources.contains(FileBasedIndex.getFileId(file))) {
+    public boolean isGenerated(Path file) {
+        String path = TranslatingCompilerFilesMonitorImpl.normalizePath(file.toString());
+        if (myGeneratedSources.contains(path)) {
             return true;
         }
-        if (isUnderRoots(myRootToModuleMap.keySet(), file)) {
+        if (findRootByPrefix(myRootToModuleMap, path) != null) {
             return true;
         }
 
@@ -205,8 +200,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return module != null && module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class).computeSafeIfAny(provider -> {
             List<ModuleAdditionalOutputDirectory> outputDirectories = provider.getOutputDirectories();
             for (ModuleAdditionalOutputDirectory outputDirectory : outputDirectories) {
-                String path = outputDirectory.path();
-                if (path != null && FileUtil.isAncestor(new File(path), new File(file.getPath()), true)) {
+                String outputPath = outputDirectory.path();
+                if (outputPath != null && FileUtil.isAncestor(new File(outputPath), file.toFile(), true)) {
                     return provider;
                 }
             }
@@ -263,27 +258,25 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public ProgressIndicator getProgressIndicator() {
-        //if (myProgressIndicatorProxy != null) {
-        //    return myProgressIndicatorProxy;
-        //}
         return myTask.getIndicator();
     }
 
     @Override
-    public void assignModule(VirtualFile root, Module module, boolean isTestSource, @Nullable Compiler compiler) {
+    public void assignModule(Path root, Module module, boolean isTestSource, @Nullable Compiler compiler) {
+        String rootPath = TranslatingCompilerFilesMonitorImpl.normalizePath(root.toString());
         try {
-            myRootToModuleMap.put(root, module);
-            Set<VirtualFile> set = myModuleToRootsMap.get(module);
+            myRootToModuleMap.put(rootPath, module);
+            Set<Path> set = myModuleToRootsMap.get(module);
             if (set == null) {
                 set = new HashSet<>();
                 myModuleToRootsMap.put(module, set);
             }
             set.add(root);
             if (isTestSource) {
-                myGeneratedTestRoots.add(root);
+                myGeneratedTestRoots.add(rootPath);
             }
             if (compiler instanceof SourceGeneratingCompiler sourceGeneratingCompiler) {
-                myOutputRootToSourceGeneratorMap.put(root, Pair.create(sourceGeneratingCompiler, module));
+                myOutputRootToSourceGeneratorMap.put(rootPath, Pair.create(sourceGeneratingCompiler, module));
             }
         }
         finally {
@@ -292,94 +285,99 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public @Nullable VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
-        return TranslatingCompilerFilesMonitorImpl.getSourceFileByOutput(outputFile);
+    public @Nullable Path getSourceFileByOutputFile(Path outputFile) {
+        OutputSourceInfo info = ProjectCompilerState.getInstance(myProject)
+            .getOutputInfo(TranslatingCompilerFilesMonitorImpl.normalizePath(outputFile.toString()));
+        return info == null ? null : Path.of(info.sourcePath());
     }
 
     @Override
-    public Module getModuleByFile(VirtualFile file) {
-        Module module = myProjectFileIndex.getModuleForFile(file);
-        if (module != null) {
-            LOG.assertTrue(!module.isDisposed());
+    public Module getModuleByFile(Path file) {
+        String path = TranslatingCompilerFilesMonitorImpl.normalizePath(file.toString());
+        String root = findRootByPrefix(myRootToModuleMap, path);
+        if (root != null) {
+            Module module = myRootToModuleMap.get(root);
+            if (module != null) {
+                LOG.assertTrue(!module.isDisposed());
+            }
             return module;
         }
-        for (VirtualFile root : myRootToModuleMap.keySet()) {
-            if (VirtualFileUtil.isAncestor(root, file, false)) {
-                Module mod = myRootToModuleMap.get(root);
-                if (mod != null) {
-                    LOG.assertTrue(!mod.isDisposed());
-                }
-                return mod;
+        String current = path;
+        while (current != null) {
+            Module module = myContentRootToModule.get(current);
+            if (module != null) {
+                LOG.assertTrue(!module.isDisposed());
+                return module;
             }
+            int slash = current.lastIndexOf('/');
+            current = slash > 0 ? current.substring(0, slash) : null;
         }
         return null;
     }
 
-    private final Map<Module, VirtualFile[]> myModuleToRootsCache = new HashMap<>();
+    private static @Nullable String findRootByPrefix(NavigableMap<String, Module> rootMap, String path) {
+        String bestRoot = null;
+        for (String root : rootMap.keySet()) {
+            if (FileUtil.startsWith(path, root)
+                && (path.length() == root.length() || path.charAt(root.length()) == '/' || root.endsWith("/"))
+                && (bestRoot == null || root.length() > bestRoot.length())) {
+                bestRoot = root;
+            }
+        }
+        return bestRoot;
+    }
+
+    private final Map<Module, Path[]> myModuleToRootsCache = new HashMap<>();
 
     @Override
-    public VirtualFile[] getSourceRoots(Module module) {
-        VirtualFile[] cachedRoots = myModuleToRootsCache.get(module);
+    public Path[] getSourceRoots(Module module) {
+        Path[] cachedRoots = myModuleToRootsCache.get(module);
         if (cachedRoots != null) {
-            if (areFilesValid(cachedRoots)) {
-                return cachedRoots;
-            }
-            else {
-                myModuleToRootsCache.remove(module); // clear cache for this module and rebuild list of roots
-            }
+            return cachedRoots;
         }
 
-        Set<VirtualFile> additionalRoots = myModuleToRootsMap.get(module);
-        VirtualFile[] moduleRoots =
+        Set<Path> additionalRoots = myModuleToRootsMap.get(module);
+        VirtualFile[] moduleRootFiles =
             ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
-        if (additionalRoots == null || additionalRoots.isEmpty()) {
-            myModuleToRootsCache.put(module, moduleRoots);
-            return moduleRoots;
+        List<Path> allRoots = new ArrayList<>(moduleRootFiles.length + (additionalRoots == null ? 0 : additionalRoots.size()));
+        for (VirtualFile moduleRootFile : moduleRootFiles) {
+            allRoots.add(moduleRootFile.toNioPath());
         }
-
-        VirtualFile[] allRoots = new VirtualFile[additionalRoots.size() + moduleRoots.length];
-        System.arraycopy(moduleRoots, 0, allRoots, 0, moduleRoots.length);
-        int index = moduleRoots.length;
-        for (VirtualFile additionalRoot : additionalRoots) {
-            allRoots[index++] = additionalRoot;
+        if (additionalRoots != null) {
+            allRoots.addAll(additionalRoots);
         }
-        myModuleToRootsCache.put(module, allRoots);
-        return allRoots;
-    }
-
-    private static boolean areFilesValid(VirtualFile[] files) {
-        for (VirtualFile file : files) {
-            if (!file.isValid()) {
-                return false;
-            }
-        }
-        return true;
+        Path[] result = allRoots.toArray(new Path[allRoots.size()]);
+        myModuleToRootsCache.put(module, result);
+        return result;
     }
 
     @Override
-    public VirtualFile[] getAllOutputDirectories() {
+    public Path[] getAllOutputDirectories() {
         return myOutputDirectories;
     }
 
     @Override
-    
-    public Set<VirtualFile> getTestOutputDirectories() {
+    public Set<Path> getTestOutputDirectories() {
         return myTestOutputDirectories;
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectory(Module module) {
+    public Path getModuleOutputDirectory(Module module) {
         return CompilerPaths.getModuleOutputDirectory(module, false);
     }
 
     @Override
-    public VirtualFile getModuleOutputDirectoryForTests(Module module) {
+    public Path getModuleOutputDirectoryForTests(Module module) {
         return CompilerPaths.getModuleOutputDirectory(module, true);
     }
 
     @Override
-    public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
-        ContentFolderTypeProvider contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
+    public Path getOutputForFile(Module module, Path file) {
+        ContentFolderTypeProvider contentFolderTypeForFile = null;
+        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(file);
+        if (virtualFile != null) {
+            contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
+        }
         if (contentFolderTypeForFile == null) {
             contentFolderTypeForFile = ProductionContentFolderTypeProvider.getInstance();
         }
@@ -388,8 +386,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public @Nullable VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
-        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
+    public @Nullable Path getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
+        return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPath(contentFolderType);
     }
 
     @Override
@@ -408,40 +406,34 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public boolean isInTestSourceContent(VirtualFile fileOrDir) {
-        if (TestSourcesFilter.isTestSources(fileOrDir, myProject) || myProjectFileIndex.isInTestResource(fileOrDir)) {
+    public boolean isInTestSourceContent(Path fileOrDir) {
+        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(fileOrDir);
+        if (virtualFile != null
+            && (TestSourcesFilter.isTestSources(virtualFile, myProject) || myProjectFileIndex.isInTestResource(virtualFile))) {
             return true;
         }
-        //noinspection RedundantIfStatement
-        if (isUnderRoots(myGeneratedTestRoots, fileOrDir)) {
-            return true;
-        }
-        return false;
+        return isUnderRoots(myGeneratedTestRoots, fileOrDir);
     }
 
     @Override
-    public boolean isInSourceContent(VirtualFile fileOrDir) {
-        if (myProjectFileIndex.isInSourceContent(fileOrDir) || myProjectFileIndex.isInResource(fileOrDir)) {
+    public boolean isInSourceContent(Path fileOrDir) {
+        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(fileOrDir);
+        if (virtualFile != null
+            && (myProjectFileIndex.isInSourceContent(virtualFile) || myProjectFileIndex.isInResource(virtualFile))) {
             return true;
         }
-        //noinspection RedundantIfStatement
-        if (isUnderRoots(myRootToModuleMap.keySet(), fileOrDir)) {
-            return true;
-        }
-        return false;
+        return isUnderRoots(myRootToModuleMap.keySet(), fileOrDir);
     }
 
-    public static boolean isUnderRoots(Set<VirtualFile> roots, VirtualFile file) {
-        VirtualFile parent = file;
-        while (true) {
-            if (parent == null) {
-                return false;
-            }
-            if (roots.contains(parent)) {
+    private static boolean isUnderRoots(Set<String> roots, Path file) {
+        String path = TranslatingCompilerFilesMonitorImpl.normalizePath(file.toString());
+        for (String root : roots) {
+            if (FileUtil.startsWith(path, root)
+                && (path.length() == root.length() || path.charAt(root.length()) == '/' || root.endsWith("/"))) {
                 return true;
             }
-            parent = parent.getParent();
         }
+        return false;
     }
 
     public UUID getSessionId() {

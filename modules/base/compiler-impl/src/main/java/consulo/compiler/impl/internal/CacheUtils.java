@@ -23,9 +23,9 @@ import consulo.compiler.localize.CompilerLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,15 +36,15 @@ import java.util.function.Function;
  * @since 2003-08-18
  */
 public class CacheUtils {
-    public static Collection<VirtualFile> findDependentFiles(
+    public static Collection<Path> findDependentFiles(
         CompileContextEx context,
-        Set<VirtualFile> compiledWithErrors,
-        @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter
+        Set<Path> compiledWithErrors,
+        @Nullable Function<Pair<int[], Set<Path>>, Pair<int[], Set<Path>>> filter
     ) throws CacheCorruptedException, ExitException {
         context.getProgressIndicator().setText(CompilerLocalize.progressCheckingDependencies());
 
         DependencyCache dependencyCache = context.getDependencyCache();
-        Set<VirtualFile> dependentFiles = new HashSet<>();
+        Set<Path> dependentFiles = new HashSet<>();
 
         dependencyCache.findDependentFiles(context, new SimpleReference<>(), filter, dependentFiles, compiledWithErrors);
 

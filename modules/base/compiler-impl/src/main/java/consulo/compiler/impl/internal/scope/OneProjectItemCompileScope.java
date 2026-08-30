@@ -28,28 +28,28 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class OneProjectItemCompileScope extends ExportableUserDataHolderBase implements CompileScope {
     private static final Logger LOG = Logger.getInstance(OneProjectItemCompileScope.class);
     private final Project myProject;
     private final VirtualFile myFile;
-    private final String myUrl;
+    private final String myPath;
 
     public OneProjectItemCompileScope(Project project, VirtualFile file) {
         myProject = project;
         myFile = file;
-        String url = file.getUrl();
-        myUrl = file.isDirectory() ? url + "/" : url;
+        String path = file.getPath();
+        myPath = file.isDirectory() ? path + "/" : path;
     }
 
-    
     @Override
-    public VirtualFile[] getFiles(FileType fileType) {
-        List<VirtualFile> files = new ArrayList<>(1);
+    public Collection<Path> getFiles(FileType fileType) {
+        List<Path> files = new ArrayList<>(1);
         FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
         ContentIterator iterator = new CompilerContentIterator(fileType, projectFileIndex, true, files);
         if (myFile.isDirectory()) {
@@ -58,15 +58,16 @@ public class OneProjectItemCompileScope extends ExportableUserDataHolderBase imp
         else {
             iterator.processFile(myFile);
         }
-        return VirtualFileUtil.toVirtualFileArray(files);
+        return files;
     }
 
     @Override
-    public boolean belongs(String url) {
+    public boolean belongs(Path path) {
+        String normalizedPath = FileUtil.toSystemIndependentName(path.toString());
         if (myFile.isDirectory()) {
-            return FileUtil.startsWith(url, myUrl);
+            return FileUtil.startsWith(normalizedPath, myPath);
         }
-        return FileUtil.pathsEqual(url, myUrl);
+        return FileUtil.pathsEqual(normalizedPath, myPath);
     }
 
     

@@ -22,4 +22,6 @@ module consulo.compiler.impl {
     opens consulo.compiler.impl.internal.action to consulo.component.impl;
 
     opens consulo.compiler.impl.internal to consulo.component.impl, consulo.util.xml.serializer;
+
+    opens consulo.compiler.impl.internal.state to consulo.component.impl;
 }
