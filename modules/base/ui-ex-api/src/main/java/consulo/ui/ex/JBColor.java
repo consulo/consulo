@@ -35,276 +35,279 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("UseJBColor")
 public class JBColor extends Color {
-  
-  public static JBColor namedColor(String propertyName, int defaultValueRGB) {
-    return namedColor(propertyName, new Color(defaultValueRGB));
-  }
+    public static JBColor namedColor(String propertyName, int defaultValueRGB) {
+        return namedColor(propertyName, new Color(defaultValueRGB));
+    }
 
-  
-  public static JBColor namedColor(String propertyName, int defaultValueRGB, int darkValueRGB) {
-    return namedColor(propertyName, new JBColor(defaultValueRGB, darkValueRGB));
-  }
+    public static JBColor namedColor(String propertyName, int defaultValueRGB, int darkValueRGB) {
+        return namedColor(propertyName, new JBColor(defaultValueRGB, darkValueRGB));
+    }
 
-  
-  public static JBColor namedColor(String propertyName, Color defaultColor) {
-    return new JBColor(() -> {
-      Color color = ObjectUtil.notNull(UIManager.getColor(propertyName), () -> ObjectUtil.notNull(findPatternMatch(propertyName), defaultColor));
-      if (UIManager.get(propertyName) == null) {
-        UIManager.put(propertyName, color);
-      }
-      return color;
-    });
-  }
+    public static JBColor namedColor(String propertyName, Color defaultColor) {
+        return new JBColor(() -> {
+            Color color = ObjectUtil.notNull(
+                UIManager.getColor(propertyName),
+                () -> ObjectUtil.notNull(findPatternMatch(propertyName), defaultColor)
+            );
+            if (UIManager.get(propertyName) == null) {
+                UIManager.put(propertyName, color);
+            }
+            return color;
+        });
+    }
 
-  // Let's find if namedColor can be overridden by *.propertyName rule in ui theme and apply it
-  // We need to cache calculated results. Cache and rules will be reset after LaF change
-  private static Color findPatternMatch(String name) {
-    Object value = UIManager.get("*");
+    // Let's find if namedColor can be overridden by *.propertyName rule in ui theme and apply it
+    // We need to cache calculated results. Cache and rules will be reset after LaF change
+    private static Color findPatternMatch(String name) {
+        Object value = UIManager.get("*");
 
-    if (value instanceof Map) {
-      Map<?, ?> map = (Map<?, ?>)value;
-      Object o = UIManager.get("*cache");
-      if (!(o instanceof Map)) {
-        o = new HashMap<String, Color>();
-        UIManager.put("*cache", o);
-      }
-      @SuppressWarnings("unchecked") Map<String, Color> cache = (Map)o;
-      if (cache.containsKey(name)) {
-        return cache.get(name);
-      }
-      Color color = null;
-      for (Map.Entry<?, ?> entry : map.entrySet()) {
-        if (entry.getKey() instanceof String && name.endsWith((String)entry.getKey())) {
-          Object result = map.get(entry.getKey());
-          if (result instanceof Color) {
-            color = (Color)result;
-            break;
-          }
+        if (value instanceof Map<?, ?> map) {
+            Object o = UIManager.get("*cache");
+            if (!(o instanceof Map)) {
+                o = new HashMap<String, Color>();
+                UIManager.put("*cache", o);
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Color> cache = (Map) o;
+            if (cache.containsKey(name)) {
+                return cache.get(name);
+            }
+            Color color = null;
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                if (entry.getKey() instanceof String key && name.endsWith(key) && entry.getValue() instanceof Color result) {
+                    color = result;
+                    break;
+                }
+            }
+            cache.put(name, color);
+            return color;
         }
-      }
-      cache.put(name, color);
-      return color;
+        return null;
     }
-    return null;
-  }
 
-  private final Supplier<Color> darkColorGetter;
-  private final Supplier<Color> func;
+    private final Supplier<Color> darkColorGetter;
+    private final Supplier<Color> func;
 
-  public JBColor(int rgb, int darkRGB) {
-    this(new Color(rgb), () -> new Color(darkRGB));
-  }
-
-  public JBColor(Color regular, Color dark) {
-    super(regular.getRGB(), regular.getAlpha() != 255);
-    darkColorGetter = () -> dark;
-    func = null;
-  }
-
-  public JBColor(Color regular, Supplier<Color> dark) {
-    super(regular.getRGB(), regular.getAlpha() != 255);
-    darkColorGetter = dark;
-    func = null;
-  }
-
-  public JBColor(Supplier<Color> function) {
-    super(0);
-    darkColorGetter = null;
-    func = function;
-  }
-
-  Color getDarkVariant() {
-    return darkColorGetter.get();
-  }
-
-  Color getColor() {
-    if (func != null) {
-      return func.get();
+    public JBColor(int rgb, int darkRGB) {
+        this(new Color(rgb), () -> new Color(darkRGB));
     }
-    else {
-      return StyleManager.get().getCurrentStyle().isDark() ? getDarkVariant() : this;
+
+    public JBColor(Color regular, Color dark) {
+        super(regular.getRGB(), regular.getAlpha() != 255);
+        darkColorGetter = () -> dark;
+        func = null;
     }
-  }
 
-  @Override
-  public int getRed() {
-    Color c = getColor();
-    return c == this ? super.getRed() : c.getRed();
-  }
-
-  @Override
-  public int getGreen() {
-    Color c = getColor();
-    return c == this ? super.getGreen() : c.getGreen();
-  }
-
-  @Override
-  public int getBlue() {
-    Color c = getColor();
-    return c == this ? super.getBlue() : c.getBlue();
-  }
-
-  @Override
-  public int getAlpha() {
-    Color c = getColor();
-    return c == this ? super.getAlpha() : c.getAlpha();
-  }
-
-  @Override
-  public int getRGB() {
-    Color c = getColor();
-    return c == this ? super.getRGB() : c.getRGB();
-  }
-
-  @Override
-  public Color brighter() {
-    if (func != null) {
-      return new JBColor(() -> func. get().brighter());
+    public JBColor(Color regular, Supplier<Color> dark) {
+        super(regular.getRGB(), regular.getAlpha() != 255);
+        darkColorGetter = dark;
+        func = null;
     }
-    return new JBColor(super.brighter(), getDarkVariant().brighter());
-  }
 
-  @Override
-  public Color darker() {
-    if (func != null) {
-      return new JBColor(() -> func.get().darker());
+    public JBColor(Supplier<Color> function) {
+        super(0);
+        darkColorGetter = null;
+        func = function;
     }
-    return new JBColor(super.darker(), getDarkVariant().darker());
-  }
 
-  @Override
-  public int hashCode() {
-    Color c = getColor();
-    return c == this ? super.hashCode() : c.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    Color c = getColor();
-    return c == this ? super.equals(obj) : c.equals(obj);
-  }
-
-  @Override
-  public String toString() {
-    Color c = getColor();
-    return c == this ? super.toString() : c.toString();
-  }
-
-  @Override
-  public float[] getRGBComponents(float[] compArray) {
-    Color c = getColor();
-    return c == this ? super.getRGBComponents(compArray) : c.getRGBComponents(compArray);
-  }
-
-  @Override
-  public float[] getRGBColorComponents(float[] compArray) {
-    Color c = getColor();
-    return c == this ? super.getRGBComponents(compArray) : c.getRGBColorComponents(compArray);
-  }
-
-  @Override
-  public float[] getComponents(float[] compArray) {
-    Color c = getColor();
-    return c == this ? super.getComponents(compArray) : c.getComponents(compArray);
-  }
-
-  @Override
-  public float[] getColorComponents(float[] compArray) {
-    Color c = getColor();
-    return c == this ? super.getColorComponents(compArray) : c.getColorComponents(compArray);
-  }
-
-  @Override
-  public float[] getComponents(ColorSpace cspace, float[] compArray) {
-    Color c = getColor();
-    return c == this ? super.getComponents(cspace, compArray) : c.getComponents(cspace, compArray);
-  }
-
-  @Override
-  public float[] getColorComponents(ColorSpace cspace, float[] compArray) {
-    Color c = getColor();
-    return c == this ? super.getColorComponents(cspace, compArray) : c.getColorComponents(cspace, compArray);
-  }
-
-  @Override
-  public ColorSpace getColorSpace() {
-    Color c = getColor();
-    return c == this ? super.getColorSpace() : c.getColorSpace();
-  }
-
-  @Override
-  public synchronized PaintContext createContext(ColorModel cm, Rectangle r, Rectangle2D r2d, AffineTransform xform, RenderingHints hints) {
-    Color c = getColor();
-    return c == this ? super.createContext(cm, r, r2d, xform, hints) : c.createContext(cm, r, r2d, xform, hints);
-  }
-
-  @Override
-  public int getTransparency() {
-    Color c = getColor();
-    return c == this ? super.getTransparency() : c.getTransparency();
-  }
-
-  public static final JBColor red = new JBColor(Color.red, DarculaColors.RED);
-  public static final JBColor RED = red;
-
-  public static final JBColor blue = new JBColor(Color.blue, DarculaColors.BLUE);
-  public static final JBColor BLUE = blue;
-
-  public static final JBColor white = new JBColor(Color.white, LafProperty::getListBackground) {
-    @Override
     Color getDarkVariant() {
-      return LafProperty.getListBackground();
+        return darkColorGetter.get();
     }
-  };
-  public static final JBColor WHITE = white;
 
-  public static final JBColor black = new JBColor(Color.black, LafProperty::getListForeground) {
+    Color getColor() {
+        if (func != null) {
+            return func.get();
+        }
+        else {
+            return StyleManager.get().getCurrentStyle().isDark() ? getDarkVariant() : this;
+        }
+    }
+
     @Override
-    Color getDarkVariant() {
-      return LafProperty.getListForeground();
+    public int getRed() {
+        Color c = getColor();
+        return c == this ? super.getRed() : c.getRed();
     }
-  };
-  
-  public static final JBColor BLACK = black;
 
-  public static final JBColor gray = new JBColor(Gray._128, Gray._128);
-  public static final JBColor GRAY = gray;
+    @Override
+    public int getGreen() {
+        Color c = getColor();
+        return c == this ? super.getGreen() : c.getGreen();
+    }
 
-  public static final JBColor lightGray = new JBColor(Gray._192, Gray._64);
-  public static final JBColor LIGHT_GRAY = lightGray;
+    @Override
+    public int getBlue() {
+        Color c = getColor();
+        return c == this ? super.getBlue() : c.getBlue();
+    }
 
-  public static final JBColor darkGray = new JBColor(Gray._64, Gray._192);
-  public static final JBColor DARK_GRAY = darkGray;
+    @Override
+    public int getAlpha() {
+        Color c = getColor();
+        return c == this ? super.getAlpha() : c.getAlpha();
+    }
 
-  public static final JBColor pink = new JBColor(Color.pink, Color.pink);
-  public static final JBColor PINK = pink;
+    @Override
+    public int getRGB() {
+        Color c = getColor();
+        return c == this ? super.getRGB() : c.getRGB();
+    }
 
-  public static final JBColor orange = new JBColor(Color.orange, new Color(159, 107, 0));
-  public static final JBColor ORANGE = orange;
+    @Override
+    public Color brighter() {
+        if (func != null) {
+            return new JBColor(() -> func.get().brighter());
+        }
+        return new JBColor(super.brighter(), getDarkVariant().brighter());
+    }
 
-  public static final JBColor yellow = new JBColor(Color.yellow, new Color(138, 138, 0));
-  public static final JBColor YELLOW = yellow;
+    @Override
+    public Color darker() {
+        if (func != null) {
+            return new JBColor(() -> func.get().darker());
+        }
+        return new JBColor(super.darker(), getDarkVariant().darker());
+    }
 
-  public static final JBColor green = new JBColor(Color.green, new Color(98, 150, 85));
-  public static final JBColor GREEN = green;
+    @Override
+    public int hashCode() {
+        Color c = getColor();
+        return c == this ? super.hashCode() : c.hashCode();
+    }
 
-  public static final Color magenta = new JBColor(Color.magenta, new Color(151, 118, 169));
-  public static final Color MAGENTA = magenta;
+    @Override
+    public boolean equals(Object obj) {
+        Color c = getColor();
+        return c == this ? super.equals(obj) : c.equals(obj);
+    }
 
-  public static final Color cyan = new JBColor(Color.cyan, new Color(0, 137, 137));
-  public static final Color CYAN = cyan;
+    @Override
+    public String toString() {
+        Color c = getColor();
+        return c == this ? super.toString() : c.toString();
+    }
 
-  @Deprecated
-  @DeprecationInfo("ComponentColors#TEXT_FOREGROUND")
-  public static Color foreground() {
-    return new JBColor(LafProperty::getLabelForeground);
-  }
+    @Override
+    public float[] getRGBComponents(float[] compArray) {
+        Color c = getColor();
+        return c == this ? super.getRGBComponents(compArray) : c.getRGBComponents(compArray);
+    }
 
-  public static Color background() {
-    return new JBColor(LafProperty::getListBackground);
-  }
+    @Override
+    public float[] getRGBColorComponents(float[] compArray) {
+        Color c = getColor();
+        return c == this ? super.getRGBComponents(compArray) : c.getRGBColorComponents(compArray);
+    }
 
-  public static Color border() {
-    return namedColor("Component.borderColor", new JBColor(Gray._192, Gray._50));
-  }
+    @Override
+    public float[] getComponents(float[] compArray) {
+        Color c = getColor();
+        return c == this ? super.getComponents(compArray) : c.getComponents(compArray);
+    }
+
+    @Override
+    public float[] getColorComponents(float[] compArray) {
+        Color c = getColor();
+        return c == this ? super.getColorComponents(compArray) : c.getColorComponents(compArray);
+    }
+
+    @Override
+    public float[] getComponents(ColorSpace cSpace, float[] compArray) {
+        Color c = getColor();
+        return c == this ? super.getComponents(cSpace, compArray) : c.getComponents(cSpace, compArray);
+    }
+
+    @Override
+    public float[] getColorComponents(ColorSpace cSpace, float[] compArray) {
+        Color c = getColor();
+        return c == this ? super.getColorComponents(cSpace, compArray) : c.getColorComponents(cSpace, compArray);
+    }
+
+    @Override
+    public ColorSpace getColorSpace() {
+        Color c = getColor();
+        return c == this ? super.getColorSpace() : c.getColorSpace();
+    }
+
+    @Override
+    public synchronized PaintContext createContext(
+        ColorModel cm,
+        Rectangle r,
+        Rectangle2D r2d,
+        AffineTransform xForm,
+        RenderingHints hints
+    ) {
+        Color c = getColor();
+        return c == this ? super.createContext(cm, r, r2d, xForm, hints) : c.createContext(cm, r, r2d, xForm, hints);
+    }
+
+    @Override
+    public int getTransparency() {
+        Color c = getColor();
+        return c == this ? super.getTransparency() : c.getTransparency();
+    }
+
+    public static final JBColor red = new JBColor(Color.red, DarculaColors.RED);
+    public static final JBColor RED = red;
+
+    public static final JBColor blue = new JBColor(Color.blue, DarculaColors.BLUE);
+    public static final JBColor BLUE = blue;
+
+    public static final JBColor white = new JBColor(Color.white, LafProperty::getListBackground) {
+        @Override
+        Color getDarkVariant() {
+            return LafProperty.getListBackground();
+        }
+    };
+    public static final JBColor WHITE = white;
+
+    public static final JBColor black = new JBColor(Color.black, LafProperty::getListForeground) {
+        @Override
+        Color getDarkVariant() {
+            return LafProperty.getListForeground();
+        }
+    };
+
+    public static final JBColor BLACK = black;
+
+    public static final JBColor gray = new JBColor(Gray._128, Gray._128);
+    public static final JBColor GRAY = gray;
+
+    public static final JBColor lightGray = new JBColor(Gray._192, Gray._64);
+    public static final JBColor LIGHT_GRAY = lightGray;
+
+    public static final JBColor darkGray = new JBColor(Gray._64, Gray._192);
+    public static final JBColor DARK_GRAY = darkGray;
+
+    public static final JBColor pink = new JBColor(Color.pink, Color.pink);
+    public static final JBColor PINK = pink;
+
+    public static final JBColor orange = new JBColor(Color.orange, new Color(159, 107, 0));
+    public static final JBColor ORANGE = orange;
+
+    public static final JBColor yellow = new JBColor(Color.yellow, new Color(138, 138, 0));
+    public static final JBColor YELLOW = yellow;
+
+    public static final JBColor green = new JBColor(Color.green, new Color(98, 150, 85));
+    public static final JBColor GREEN = green;
+
+    public static final Color magenta = new JBColor(Color.magenta, new Color(151, 118, 169));
+    public static final Color MAGENTA = magenta;
+
+    public static final Color cyan = new JBColor(Color.cyan, new Color(0, 137, 137));
+    public static final Color CYAN = cyan;
+
+    @Deprecated
+    @DeprecationInfo("ComponentColors#TEXT_FOREGROUND")
+    public static Color foreground() {
+        return new JBColor(LafProperty::getLabelForeground);
+    }
+
+    public static Color background() {
+        return new JBColor(LafProperty::getListBackground);
+    }
+
+    public static Color border() {
+        return namedColor("Component.borderColor", new JBColor(Gray._192, Gray._50));
+    }
 }

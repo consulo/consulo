@@ -98,14 +98,11 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
             Document document = JDOMUtil.loadDocument(indexResource);
             Element root = document.getRootElement();
-            List configurables = root.getChildren("configurable");
-            for (Object o : configurables) {
-                Element configurable = (Element)o;
+            for (Element configurable : root.getChildren("configurable")) {
                 String id = configurable.getAttributeValue("id");
                 String groupName = configurable.getAttributeValue("configurable_name");
-                List options = configurable.getChildren("option");
-                for (Object o1 : options) {
-                    Element optionElement = (Element)o1;
+                List<Element> options = configurable.getChildren("option");
+                for (Element optionElement : options) {
                     String option = optionElement.getAttributeValue("name");
                     String path = optionElement.getAttributeValue("path");
                     String hit = optionElement.getAttributeValue("hit");
@@ -116,9 +113,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
             //synonyms
             document = JDOMUtil.loadDocument(ResourceUtil.getResource(SearchableOptionsRegistrar.class, "/search/", "synonyms.xml"));
             root = document.getRootElement();
-            configurables = root.getChildren("configurable");
-            for (Object o : configurables) {
-                Element configurable = (Element)o;
+            for (Element configurable : root.getChildren("configurable")) {
                 String id = configurable.getAttributeValue("id");
                 String groupName = configurable.getAttributeValue("configurable_name");
                 List synonyms = configurable.getChildren("synonym");
@@ -132,13 +127,9 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                         }
                     }
                 }
-                List options = configurable.getChildren("option");
-                for (Object o1 : options) {
-                    Element optionElement = (Element)o1;
+                for (Element optionElement : configurable.getChildren("option")) {
                     String option = optionElement.getAttributeValue("name");
-                    List list = optionElement.getChildren("synonym");
-                    for (Object o2 : list) {
-                        Element synonymElement = (Element)o2;
+                    for (Element synonymElement : optionElement.getChildren("synonym")) {
                         String synonym = synonymElement.getTextNormalize();
                         if (synonym != null) {
                             Set<String> words = getProcessedWords(synonym);

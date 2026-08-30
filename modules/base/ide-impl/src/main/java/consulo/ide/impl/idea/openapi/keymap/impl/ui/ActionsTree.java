@@ -427,81 +427,80 @@ public class ActionsTree {
             int row,
             boolean hasFocus
         ) {
+            if (!(value instanceof DefaultMutableTreeNode defaultMutableTreeNode)) {
+                return;
+            }
+
             boolean showIcons = UISettings.getInstance().SHOW_ICONS_IN_MENUS;
             Keymap originalKeymap = myKeymap != null ? myKeymap.getParent() : null;
             Image icon = null;
             String text;
             boolean bound = false;
+            Object userObject = defaultMutableTreeNode.getUserObject();
 
-            if (value instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
-                Object userObject = defaultMutableTreeNode.getUserObject();
-                boolean changed;
-                if (userObject instanceof KeymapGroupImpl group) {
-                    text = group.getName();
+            boolean changed;
+            if (userObject instanceof KeymapGroupImpl group) {
+                text = group.getName();
 
-                    changed = originalKeymap != null && isGroupChanged(group, originalKeymap, myKeymap);
-                    icon = group.getIcon();
-                    if (icon == null) {
-                        icon = CLOSE_ICON;
-                    }
+                changed = originalKeymap != null && isGroupChanged(group, originalKeymap, myKeymap);
+                icon = group.getIcon();
+                if (icon == null) {
+                    icon = CLOSE_ICON;
                 }
-                else if (userObject instanceof String actionId) {
-                    bound = myShowBoundActions && ((KeymapImpl) myKeymap).isActionBound(actionId);
-                    AnAction action = ActionManager.getInstance().getActionOrStub(actionId);
-                    if (action != null) {
-                        text = action.getTemplatePresentation().getText();
-                        if (text == null || text.length() == 0) { //fill dynamic presentation gaps
-                            text = actionId;
-                        }
-                        Image actionIcon = action.getTemplatePresentation().getIcon();
-                        if (actionIcon != null) {
-                            icon = actionIcon;
-                        }
-                    }
-                    else {
+            }
+            else if (userObject instanceof String actionId) {
+                bound = myShowBoundActions && ((KeymapImpl) myKeymap).isActionBound(actionId);
+                AnAction action = ActionManager.getInstance().getActionOrStub(actionId);
+                if (action != null) {
+                    text = action.getTemplatePresentation().getTextValue().get();
+                    if (StringUtil.isEmpty(text)) { //fill dynamic presentation gaps
                         text = actionId;
                     }
-                    changed = originalKeymap != null && isActionChanged(actionId, originalKeymap, myKeymap);
-                }
-                else if (userObject instanceof QuickList list) {
-                    icon = PlatformIconGroup.actionsQuicklist();
-                    text = list.getDisplayName();
-
-                    changed = originalKeymap != null && isActionChanged(list.getActionId(), originalKeymap, myKeymap);
-                }
-                else if (userObject instanceof AnSeparator) {
-                    // TODO[vova,anton]: beautify
-                    changed = false;
-                    text = "-------------";
+                    icon = action.getTemplatePresentation().getIcon();
                 }
                 else {
-                    throw new IllegalArgumentException("unknown userObject: " + userObject);
+                    text = actionId;
                 }
-
-                if (showIcons) {
-                    setIcon(ActionsTree.getEvenIcon(icon));
-                }
-
-                Color foreground;
-                if (selected) {
-                    foreground = UIUtil.getTreeSelectionForeground(true);
-                }
-                else {
-                    foreground = changed ? JBColor.BLUE : UIUtil.getTreeForeground();
-
-                    if (bound) {
-                        foreground = JBColor.MAGENTA;
-                    }
-                }
-                SearchUtil.appendFragments(
-                    myFilter,
-                    text,
-                    Font.PLAIN,
-                    foreground,
-                    selected ? UIUtil.getTreeSelectionBackground(true) : UIUtil.getTreeTextBackground(),
-                    this
-                );
+                changed = originalKeymap != null && isActionChanged(actionId, originalKeymap, myKeymap);
             }
+            else if (userObject instanceof QuickList list) {
+                icon = PlatformIconGroup.actionsQuicklist();
+                text = list.getDisplayName();
+
+                changed = originalKeymap != null && isActionChanged(list.getActionId(), originalKeymap, myKeymap);
+            }
+            else if (userObject instanceof AnSeparator) {
+                // TODO[vova,anton]: beautify
+                changed = false;
+                text = "-------------";
+            }
+            else {
+                throw new IllegalArgumentException("unknown userObject: " + userObject);
+            }
+
+            if (showIcons) {
+                setIcon(ActionsTree.getEvenIcon(icon));
+            }
+
+            Color foreground;
+            if (selected) {
+                foreground = UIUtil.getTreeSelectionForeground(true);
+            }
+            else {
+                foreground = changed ? JBColor.BLUE : UIUtil.getTreeForeground();
+
+                if (bound) {
+                    foreground = JBColor.MAGENTA;
+                }
+            }
+            SearchUtil.appendFragments(
+                myFilter,
+                text,
+                Font.PLAIN,
+                foreground,
+                selected ? UIUtil.getTreeSelectionBackground(true) : UIUtil.getTreeTextBackground(),
+                this
+            );
         }
     }
 }
