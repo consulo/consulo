@@ -19,7 +19,6 @@ import consulo.application.HelpManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -128,14 +127,12 @@ public class RunToolWindowManager {
         Executor executor = myProject.getApplication().getExtensionPoint(Executor.class)
             .findFirstSafe(e -> e.getToolWindowId().equals(toolWindowId));
         assert executor != null;
-        return registerToolWindow(executor.getToolWindowId(), executor.getToolWindowIcon(), executor.getToolWindowIconIfRunning(), null);
+        return registerToolWindow(executor);
     }
 
     @RequiredUIAccess
-    private ContentManager registerToolWindow(String toolWindowId,
-                                              Image toolWindowIcon,
-                                              Image toolWindowIconActive,
-                                              @Nullable Executor executor) {
+    private ContentManager registerToolWindow(Executor executor) {
+        String toolWindowId = executor.getToolWindowId();
         ToolWindowManager toolWindowManager = myToolWindowManager.get();
 
         if (toolWindowManager.getToolWindow(toolWindowId) != null) {
@@ -144,16 +141,12 @@ public class RunToolWindowManager {
 
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, myParentDisposable, true);
         ContentManager contentManager = toolWindow.getContentManager();
-        contentManager.addUiDataProvider(sink -> {
-            if (executor != null) {
-                sink.set(HelpManager.HELP_ID, executor.getHelpId());
-            }
-        });
+        contentManager.addUiDataProvider(sink -> sink.set(HelpManager.HELP_ID, executor.getHelpId()));
 
-        toolWindow.setDisplayName(ExecutionLocalize.toolWindowNameRun());
-        toolWindow.setIcon(toolWindowIcon);
+        toolWindow.setDisplayName(executor.getActionName());
+        toolWindow.setIcon(executor.getToolWindowIcon());
         ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
-        initToolWindow(executor, toolWindowId, toolWindowIcon, toolWindowIconActive, contentManager);
+        initToolWindow(null, toolWindowId, executor.getToolWindowIcon(), executor.getToolWindowIconIfRunning(), contentManager);
 
         return contentManager;
     }
