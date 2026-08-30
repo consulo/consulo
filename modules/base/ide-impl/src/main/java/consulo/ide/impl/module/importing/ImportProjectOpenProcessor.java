@@ -242,11 +242,10 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
         ImportTarget target = continuation.getCopyableUserData(IMPORT_TARGET);
         return NewOrImportModuleUtil.importProject(target.context(), target.provider(), uiAccess);
       }))
-      // Resolve the project directory and dispose the temp project — ProjectOpenService will create a real one
-      .then(WriteLock.<Project, VirtualFile>apply(project -> {
-        VirtualFile projectDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(project.getBasePath());
-        Disposer.dispose(project);
-        return projectDir;
+      .then(CodeExecution.<Project, VirtualFile>apply((project, continuation) -> {
+        // set file as context var - so we can try to reopen it
+        continuation.putCopyableUserData(Project.KEY, project);
+        return project.getBaseDir();
       }));
   }
 

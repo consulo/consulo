@@ -25,6 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -74,6 +75,8 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class ProjectOpenServiceImpl implements ProjectOpenService {
     private static final Logger LOG = Logger.getInstance(ProjectOpenServiceImpl.class);
+
+    private static final Key<Boolean> ALREADY_INITIALIZED = Key.create("ALREADY_INITIALIZED");
 
     /**
      * Context carrier for coroutine steps.
@@ -179,12 +182,20 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                             return null;
                         }
 
-                        ProjectImpl project =
-                            new ProjectImpl(myApplication, myProjectManager.get(), projectDir.getPath(), null, true, myComponentBinding);
+                        ProjectImpl p;
+
+                        Project contextData = continuation.getCopyableUserData(Project.KEY);
+                        if (contextData != null) {
+                            p = (ProjectImpl) contextData;
+                            p.putUserData(ALREADY_INITIALIZED, true);
+                        } else {
+                            p = new ProjectImpl(myApplication, myProjectManager.get(), projectDir.getPath(), null, true, myComponentBinding);
+                        }
+
                         // before anything of the project asks for a ui - its coroutine context keeps the first
                         // answer it gets, and the opening thread is the only place the right one is known
-                        project.setUIAccess(uiAccess);
-                        return project;
+                        p.setUIAccess(uiAccess);
+                        return p;
                     }));
 
                 // Allocate frame
@@ -229,16 +240,21 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             .cancelable()
             .execute(uiAccess, () -> {
                 Coroutine<?, Object> init = Coroutine
-                    .first(CodeExecution.run(() -> {
+                    .first(CodeExecution.run((c) -> {
                         try {
-                            project.getStateStore().load();
+                            if (project.getUserData(ALREADY_INITIALIZED) == null) {
+                                project.getStateStore().load();
+                            }
                         }
                         catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }))
                     .then(CodeExecution.supply((c) -> {
-                        project.initNotLazyServices();
+                        // only init services if it not initiazed
+                        if (project.getUserData(ALREADY_INITIALIZED) == null) {
+                            project.initNotLazyServices();
+                        }
                         return c;
                     }))
                     .then(CodeExecution.supply((c) -> {
