@@ -40,6 +40,7 @@ class UniversalFileChooserPanel {
 
     private @Nullable TabbedLayout myTabbedLayout;
 
+    @RequiredUIAccess
     UniversalFileChooserPanel(
         FileChooserDescriptor descriptor,
         Project project,
@@ -130,8 +131,8 @@ class UniversalFileChooserPanel {
             e.getPresentation().setEnabled(true);
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             navigateToDesktop();
         }
@@ -155,11 +156,12 @@ class UniversalFileChooserPanel {
             }
             Path parent = activeFileView.getNewFileParent();
             e.getPresentation().setEnabled(
-                parent != null && parent.getParent() != null && Files.isDirectory(parent) && Files.isWritable(parent));
+                parent != null && parent.getParent() != null && Files.isDirectory(parent) && Files.isWritable(parent)
+            );
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             createNewFolder();
         }
@@ -180,8 +182,8 @@ class UniversalFileChooserPanel {
             e.getPresentation().setEnabled(activeFileView != null && activeFileView.canDeleteSelectedFile());
         }
 
-        @RequiredUIAccess
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             deleteSelectedFile();
         }
@@ -195,8 +197,8 @@ class UniversalFileChooserPanel {
             FileChooserLocalize.universalFileChooserActionHomeDescription(),
             PlatformIconGroup.nodesHomefolder()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 navigateToHome();
             }
@@ -210,8 +212,8 @@ class UniversalFileChooserPanel {
                 FileChooserLocalize.universalFileChooserActionProjectDescription(),
                 myProject.getApplication().getIcon()
             ) {
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void actionPerformed(AnActionEvent e) {
                     navigateToProject();
                 }
@@ -230,8 +232,8 @@ class UniversalFileChooserPanel {
             FileChooserLocalize.universalFileChooserActionRefreshDescription(),
             PlatformIconGroup.actionsRefresh()
         ) {
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 FileView activeFileView = getActiveFileView();
                 if (activeFileView != null) {
@@ -251,8 +253,8 @@ class UniversalFileChooserPanel {
                 return activeFileView != null && activeFileView.getFileTree().areHiddensShown();
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void setSelected(AnActionEvent e, boolean state) {
                 for (FileView fileView : myFileViews) {
                     fileView.getFileTree().showHiddens(state);
@@ -302,6 +304,7 @@ class UniversalFileChooserPanel {
         }
     }
 
+    @RequiredUIAccess
     private void createNewFolder() {
         FileView activeFileView = getActiveFileView();
         if (activeFileView == null) {

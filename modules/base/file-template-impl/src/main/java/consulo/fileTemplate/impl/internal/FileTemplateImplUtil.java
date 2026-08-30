@@ -45,7 +45,7 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 27-Mar-22
+ * @since 2022-03-27
  */
 public class FileTemplateImplUtil {
     private static final Logger LOG = Logger.getInstance(FileTemplateImplUtil.class);
@@ -69,13 +69,7 @@ public class FileTemplateImplUtil {
         return mergeTemplate(content, context, useSystemLineSeparators);
     }
 
-    
-    public static FileTemplate createTemplate(
-        String prefName,
-        String extension,
-        String content,
-        FileTemplate[] templates
-    ) {
+    public static FileTemplate createTemplate(String prefName, String extension, String content, FileTemplate[] templates) {
         Set<String> names = new HashSet<>();
         for (FileTemplate template : templates) {
             names.add(template.getName());
@@ -193,8 +187,7 @@ public class FileTemplateImplUtil {
         for (int i = 0; i < childCount; i++) {
             Node apacheChild = apacheNode.jjtGetChild(i);
             collectAttributes(referenced, defined, apacheChild, propertiesNames, includeDummies, visitedIncludes, project);
-            if (apacheChild instanceof ASTReference) {
-                ASTReference apacheReference = (ASTReference)apacheChild;
+            if (apacheChild instanceof ASTReference apacheReference) {
                 String s = apacheReference.literal();
                 s = referenceToAttribute(s, includeDummies);
                 if (s != null && s.length() > 0 && !propertiesNames.contains(s)) {
@@ -208,30 +201,26 @@ public class FileTemplateImplUtil {
                     defined.add(attr);
                 }
             }
-            else if (
-                apacheChild instanceof ASTDirective astDirective
-                    && "parse".equals(astDirective.getDirectiveName())
-                    && apacheChild.jjtGetNumChildren() == 1
-            ) {
-                Node literal = apacheChild.jjtGetChild(0);
-                if (literal instanceof ASTStringLiteral && literal.jjtGetNumChildren() == 0) {
-                    Token firstToken = literal.getFirstToken();
-                    if (firstToken != null) {
-                        String s = StringUtil.unquoteString(firstToken.toString());
-                        FileTemplate includedTemplate = FileTemplateManager.getInstance(project).getTemplate(s);
-                        if (includedTemplate != null && visitedIncludes.add(s)) {
-                            SimpleNode template =
-                                VelocityWrapper.parse(new StringReader(includedTemplate.getText()), "MyTemplate");
-                            collectAttributes(
-                                referenced,
-                                defined,
-                                template,
-                                propertiesNames,
-                                includeDummies,
-                                visitedIncludes,
-                                project
-                            );
-                        }
+            else if (apacheChild instanceof ASTDirective astDirective
+                && "parse".equals(astDirective.getDirectiveName())
+                && apacheChild.jjtGetNumChildren() == 1
+                && apacheChild.jjtGetChild(0) instanceof ASTStringLiteral literal
+                && literal.jjtGetNumChildren() == 0) {
+                Token firstToken = literal.getFirstToken();
+                if (firstToken != null) {
+                    String s = StringUtil.unquoteString(firstToken.toString());
+                    FileTemplate includedTemplate = FileTemplateManager.getInstance(project).getTemplate(s);
+                    if (includedTemplate != null && visitedIncludes.add(s)) {
+                        SimpleNode template = VelocityWrapper.parse(new StringReader(includedTemplate.getText()), "MyTemplate");
+                        collectAttributes(
+                            referenced,
+                            defined,
+                            template,
+                            propertiesNames,
+                            includeDummies,
+                            visitedIncludes,
+                            project
+                        );
                     }
                 }
             }

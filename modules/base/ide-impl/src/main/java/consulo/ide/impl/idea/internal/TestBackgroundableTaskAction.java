@@ -34,7 +34,6 @@ import java.util.concurrent.CompletableFuture;
  * @since 2025-05-06
  */
 public class TestBackgroundableTaskAction extends DumbAwareAction {
-    
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
     public TestBackgroundableTaskAction(ProgressBuilderFactory progressBuilderFactory) {
@@ -43,8 +42,8 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
         myProgressBuilderFactory = progressBuilderFactory;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
@@ -52,17 +51,18 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
 
         CompletableFuture<String> future = myProgressBuilderFactory.newProgressBuilder(project, LocalizeValue.of("Background Action..."))
             .cancelable()
-            .execute(uiAccess, () -> Coroutine.first(Delay.sleep(60_000))
-                .then(CodeExecution.supply(() -> "Success Result"))
-            );
+            .execute(uiAccess, () -> Coroutine.first(Delay.sleep(60_000)).then(CodeExecution.supply(() -> "Success Result")));
 
-        future.whenCompleteAsync((s, throwable) -> {
-            if (throwable != null) {
-                Alerts.okError(LocalizeValue.ofNullable(throwable.getLocalizedMessage())).showAsync(project);
-            }
-            else {
-                Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
-            }
-        }, uiAccess);
+        future.whenCompleteAsync(
+            (s, throwable) -> {
+                if (throwable != null) {
+                    Alerts.okError(throwable).showAsync(project);
+                }
+                else {
+                    Alerts.okInfo(LocalizeValue.ofNullable(s)).showAsync(project);
+                }
+            },
+            uiAccess
+        );
     }
 }

@@ -50,8 +50,7 @@ public class ProgressBuilderFactoryImpl implements ProgressBuilderFactory {
     public ProgressBuilder newProgressBuilder(@Nullable ComponentManager project, LocalizeValue title) {
         return new BaseProgressBuilderImpl(project, title) {
             @Override
-            public <V> CompletableFuture<V> execute(UIAccess uiAccess,
-                                                    Supplier<Coroutine<?, V>> supplier) {
+            public <V> CompletableFuture<V> execute(UIAccess uiAccess, Supplier<Coroutine<?, V>> supplier) {
                 assertCreated();
                 return myProgressManager.executeTask(uiAccess, myProject, myTitle, myModal, myCancelable, supplier);
             }

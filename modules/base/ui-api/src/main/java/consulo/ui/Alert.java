@@ -129,7 +129,7 @@ public interface Alert<V> {
      * Does not block UI thread
      */
     @RequiredUIAccess
-    default CompletableFuture<V> showAsync(WindowOwner component) {
-        return showAsync(component.getWindow());
+    default CompletableFuture<V> showAsync(@Nullable WindowOwner component) {
+        return showAsync(component != null ? component.getWindow() : null);
     }
 }

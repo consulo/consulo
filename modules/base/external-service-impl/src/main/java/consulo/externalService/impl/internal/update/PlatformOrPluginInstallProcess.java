@@ -32,7 +32,7 @@ import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
-import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Alert;
 import consulo.ui.Alerts;
@@ -42,11 +42,7 @@ import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -54,6 +50,8 @@ import java.util.function.Consumer;
  * decides what to show, this one does what was confirmed.
  */
 public final class PlatformOrPluginInstallProcess {
+    private static final Logger LOG = Logger.getInstance(PlatformOrPluginInstallProcess.class);
+
     private PlatformOrPluginInstallProcess() {
     }
 
@@ -102,7 +100,8 @@ public final class PlatformOrPluginInstallProcess {
                     downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
                 }
                 catch (PluginDownloadFailedException e) {
-                    uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
+                    LOG.warn(e);
+                    uiAccess.give(() -> Alerts.okError(e).showAsync());
                     return;
                 }
             }
@@ -136,7 +135,8 @@ public final class PlatformOrPluginInstallProcess {
                     installed.add(pluginDescriptor);
                 }
                 catch (IOException e) {
-                    uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
+                    LOG.warn(e);
+                    uiAccess.give(() -> Alerts.okError(e).showAsync());
                     return;
                 }
             }
