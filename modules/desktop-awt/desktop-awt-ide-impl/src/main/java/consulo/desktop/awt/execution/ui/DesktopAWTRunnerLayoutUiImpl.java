@@ -259,12 +259,6 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    public LayoutViewOptions setLeftToolbar(ActionGroup leftToolbar, String place) {
-        myContentUI.setLeftToolbar(leftToolbar, place);
-        return this;
-    }
-
-    @Override
     public @Nullable Content findContent(String key) {
         return myContentUI.findContent(key);
     }
@@ -365,24 +359,10 @@ public class DesktopAWTRunnerLayoutUiImpl implements RunnerLayoutUiImpl {
     }
 
     @Override
-    public void setLeftToolbarVisible(boolean value) {
-        myContentUI.setLeftToolbarVisible(value);
-    }
-
-    @Override
-    public void setTopLeftActionsBefore(boolean value) {
-        myContentUI.setTopLeftActionsBefore(value);
-    }
-
-    @Override
     public void setContentToolbarBefore(boolean value) {
         myContentUI.setContentToolbarBefore(value);
     }
 
-    @Override
-    public void setTopLeftActionsVisible(boolean value) {
-        myContentUI.setTopLeftActionsVisible(value);
-    }
 
     @Override
     public List<AnAction> getActions() {

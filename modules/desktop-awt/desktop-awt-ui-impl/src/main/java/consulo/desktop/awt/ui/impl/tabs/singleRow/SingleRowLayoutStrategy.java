@@ -116,11 +116,14 @@ public abstract class SingleRowLayoutStrategy {
     @Override
     public int getToFitLength(SingleRowPassInfo data) {
       int entryPointWidth = myTabs.getEntryPointButtonWidth();
+      int length = myTabs.getWidth() - data.insets.left - data.insets.right - entryPointWidth;
       if (data.hToolbar != null) {
-        return myTabs.getWidth() - data.insets.left - data.insets.right - data.hToolbar.getMinimumSize().width - entryPointWidth;
-      } else {
-        return myTabs.getWidth() - data.insets.left - data.insets.right - entryPointWidth;
+        length -= data.hToolbar.getMinimumSize().width;
       }
+      if (data.hfToolbar != null) {
+        length -= data.hfToolbar.getPreferredSize().width;
+      }
+      return length;
     }
 
     @Override
@@ -150,7 +153,7 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public int getStartPosition(SingleRowPassInfo data) {
-      return data.insets.left;
+      return data.hfToolbar == null ? data.insets.left : data.insets.left + data.hfToolbar.getPreferredSize().width;
     }
 
     @Override
@@ -202,6 +205,12 @@ public abstract class SingleRowLayoutStrategy {
         int vToolbarWidth = data.vToolbar != null ? data.vToolbar.getPreferredSize().width : 0;
         int x = vToolbarWidth > 0 ? vToolbarWidth + 1 : 0;
         int y = myTabs.myHeaderFitSize.height;
+
+        if (data.hfToolbar != null && myTabs.isSideComponentOnTabs()) {
+          myTabs.layout(data.hfToolbar, new Rectangle(data.insets.left, data.insets.top,
+                                                      data.hfToolbar.getPreferredSize().width,
+                                                      myTabs.myHeaderFitSize.height - myTabs.getTabBorderSize()));
+        }
 
         if (data.hToolbar != null) {
           Rectangle compBounds = myTabs.layoutComp(x, y, data.comp);

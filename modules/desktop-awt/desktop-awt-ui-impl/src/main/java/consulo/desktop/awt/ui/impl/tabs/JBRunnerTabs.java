@@ -21,11 +21,14 @@ import consulo.desktop.awt.ui.impl.tabs.JBEditorTabs;
 import consulo.desktop.awt.ui.impl.tabs.JBTabsImpl;
 import consulo.desktop.awt.ui.impl.tabs.TabLabel;
 import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.tab.TabInfo;
 import org.jspecify.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
@@ -35,6 +38,38 @@ import java.util.Map;
 public class JBRunnerTabs extends JBEditorTabs {
   public JBRunnerTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, Disposable parent) {
     super(project, actionManager, focusManager, parent);
+  }
+
+  @Override
+  protected void paintHeaderSeparator(Graphics g) {
+    if (isEmptyVisible()) {
+      return;
+    }
+
+    TabInfo selected = getSelectedInfo();
+    if (selected == null) {
+      return;
+    }
+
+    int lineY = -1;
+
+    Toolbar foreToolbar = myInfo2ForeToolbar.get(selected);
+    if (foreToolbar != null && !foreToolbar.isEmpty() && foreToolbar.getHeight() > 0) {
+      lineY = foreToolbar.getY() + foreToolbar.getHeight();
+    }
+
+    JComponent content = selected.getComponent();
+    if (content != null && content.getParent() == this) {
+      lineY = Math.max(lineY, content.getY());
+    }
+
+    int thickness = JBUI.scale(1);
+    if (lineY < thickness) {
+      return;
+    }
+
+    g.setColor(JBColor.border());
+    g.fillRect(0, lineY - thickness, getWidth(), thickness);
   }
 
   @Override

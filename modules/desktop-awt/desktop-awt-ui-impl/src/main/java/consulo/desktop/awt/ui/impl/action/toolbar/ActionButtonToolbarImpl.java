@@ -67,7 +67,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
 
             @Override
             protected void fillToolBar(List<? extends AnAction> visibleActions, boolean shouldRebuildUI) {
-                refill(visibleActions, shouldRebuildUI);
+                refill(visibleActions);
             }
 
             @Override
@@ -82,7 +82,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
         };
     }
 
-    private void refill(List<? extends AnAction> visibleActions, boolean shouldRebuildUI) {
+    private void refill(List<? extends AnAction> visibleActions) {
         Dimension oldSize = getPreferredSize();
 
         removeAll();
@@ -93,16 +93,7 @@ public class ActionButtonToolbarImpl extends JPanel implements DesktopAWTActionT
 
         ((WindowManagerEx) WindowManager.getInstance()).adjustContainerWindow(this, oldSize, newSize);
 
-        if (shouldRebuildUI) {
-            revalidate();
-        }
-        else {
-            Container parent = getParent();
-            if (parent != null) {
-                parent.invalidate();
-                parent.validate();
-            }
-        }
+        revalidate();
 
         repaint();
     }

@@ -19,9 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.XDebuggerActions;
-import consulo.execution.debug.impl.internal.stream.action.TraceStreamAction;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
@@ -31,16 +29,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
 @ActionImpl(
     id = XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP,
     children = {
-        @ActionRef(type = ShowExecutionPointAction.class),
-        @ActionRef(type = AnSeparator.class),
         @ActionRef(type = StepOverAction.class),
         @ActionRef(type = StepIntoAction.class),
-        @ActionRef(type = ForceStepIntoAction.class),
-        @ActionRef(type = StepOutAction.class),
-        @ActionRef(type = RunToCursorAction.class),
-        @ActionRef(type = AnSeparator.class),
-        @ActionRef(type = EvaluateAction.class),
-        @ActionRef(type = TraceStreamAction.class)
+        @ActionRef(type = StepOutAction.class)
     }
 )
 public class DebugToolWindowTopToolbarGroup extends DefaultActionGroup implements DumbAware {

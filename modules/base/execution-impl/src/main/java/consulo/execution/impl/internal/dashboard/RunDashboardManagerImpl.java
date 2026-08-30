@@ -697,13 +697,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         RunContentDescriptor descriptor = RunContentManagerImpl.getRunContentDescriptorByContent(content);
         RunnerLayoutUiImpl ui = getRunnerLayoutUi(descriptor);
         if (ui != null) {
-            if (!ServiceViewUIUtils.isNewServicesUIEnabled()) {
-                ui.setLeftToolbarVisible(visible);
-            }
             ui.setContentToolbarBefore(visible);
-            if (Registry.is("ide.services.debugger.left.toolbar", true)) {
-                ui.setTopLeftActionsBefore(!visible);
-            }
         }
         else {
             ActionToolbar toolbar = findActionToolbar(descriptor);

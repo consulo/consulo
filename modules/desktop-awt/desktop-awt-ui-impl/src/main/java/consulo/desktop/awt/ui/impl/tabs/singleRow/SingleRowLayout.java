@@ -201,6 +201,9 @@ public class SingleRowLayout extends TabLayout {
     data.insets = myTabs.getLayoutInsets();
     data.insets.left += JBUI.scale(myTabs.getFirstTabOffset());
 
+    JBTabsImpl.Toolbar selectedForeToolbar = myTabs.myInfo2ForeToolbar.get(selected);
+    data.hfToolbar = selectedForeToolbar != null && myTabs.myHorizontalSide && !selectedForeToolbar.isEmpty() ? selectedForeToolbar : null;
+
     JBTabsImpl.Toolbar selectedToolbar = myTabs.myInfo2Toolbar.get(selected);
     data.hToolbar = selectedToolbar != null && myTabs.myHorizontalSide && !selectedToolbar.isEmpty() ? selectedToolbar : null;
     data.vToolbar = selectedToolbar != null && !myTabs.myHorizontalSide && !selectedToolbar.isEmpty() ? selectedToolbar : null;

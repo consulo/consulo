@@ -35,6 +35,7 @@ public class SingleRowPassInfo extends LayoutPassInfo {
   final int moreRectAxisSize;
   public Rectangle moreRect;
 
+  public JComponent hfToolbar;
   public JComponent hToolbar;
   public JComponent vToolbar;
 

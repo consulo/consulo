@@ -19,6 +19,7 @@ package consulo.execution.impl.internal.ui.layout;
 import consulo.execution.internal.layout.Tab;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.ui.image.Image;
+import consulo.util.xml.serializer.annotation.Transient;
 
 public class TabImpl extends AbstractTab implements Tab {
   TabImpl() {
@@ -34,6 +35,7 @@ public class TabImpl extends AbstractTab implements Tab {
     return myDefaultIndex >= 0 ? myDefaultIndex : myIndex;
   }
 
+  @Transient
   public String getDisplayName() {
     return myDisplayName;
   }

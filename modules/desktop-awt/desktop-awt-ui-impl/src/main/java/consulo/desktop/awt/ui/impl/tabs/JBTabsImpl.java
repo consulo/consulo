@@ -43,6 +43,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -102,6 +103,7 @@ public abstract class JBTabsImpl extends JComponent
     private TabInfo mySelectedInfo;
     public final Map<TabInfo, TabLabel> myInfo2Label = new HashMap<>();
     public final Map<TabInfo, Toolbar> myInfo2Toolbar = new HashMap<>();
+    public final Map<TabInfo, Toolbar> myInfo2ForeToolbar = new HashMap<>();
     public Dimension myHeaderFitSize;
 
     private @Nullable JComponent myEntryPointButton;
@@ -419,6 +421,7 @@ public abstract class JBTabsImpl extends JComponent
         myActivePopup = null;
         myInfo2Label.clear();
         myInfo2Toolbar.clear();
+        myInfo2ForeToolbar.clear();
         myTabListeners.clear();
     }
 
@@ -502,15 +505,27 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     public void layoutComp(SingleRowPassInfo data, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
-        if (data.hToolbar != null) {
-            int toolbarHeight = data.hToolbar.getPreferredSize().height;
+        if (data.hfToolbar != null || data.hToolbar != null) {
+            int toolbarHeight = Math.max(
+                data.hfToolbar == null ? 0 : data.hfToolbar.getPreferredSize().height,
+                data.hToolbar == null ? 0 : data.hToolbar.getPreferredSize().height
+            );
             Rectangle compRect = layoutComp(deltaX, toolbarHeight + deltaY, data.comp, deltaWidth, deltaHeight);
-            layout(data.hToolbar, compRect.x, compRect.y - toolbarHeight, compRect.width, toolbarHeight);
+            int offsetX = compRect.x;
+            if (data.hfToolbar != null) {
+                int width = data.hToolbar == null ? compRect.width : data.hfToolbar.getPreferredSize().width;
+                layout(data.hfToolbar, offsetX, compRect.y - toolbarHeight, width, toolbarHeight);
+                offsetX += width;
+            }
+            if (data.hToolbar != null) {
+                layout(data.hToolbar, offsetX, compRect.y - toolbarHeight, compRect.width - offsetX + compRect.x, toolbarHeight);
+            }
         }
         else if (data.vToolbar != null) {
             int toolbarWidth = data.vToolbar.getPreferredSize().width;
-            Rectangle compRect = layoutComp(toolbarWidth + deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
-            layout(data.vToolbar, compRect.x - toolbarWidth, compRect.y, toolbarWidth, compRect.height);
+            int separatorWidth = toolbarWidth > 0 ? JBUI.scale(1) : 0;
+            Rectangle compRect = layoutComp(toolbarWidth + separatorWidth + deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
+            layout(data.vToolbar, compRect.x - toolbarWidth - separatorWidth, compRect.y, toolbarWidth, compRect.height);
         }
         else {
             layoutComp(deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
@@ -1218,13 +1233,18 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     private void updateSideComponent(TabInfo tabInfo) {
-        Toolbar old = myInfo2Toolbar.get(tabInfo);
+        updateToolbar(tabInfo, myInfo2ForeToolbar, tabInfo.getForeSideComponent(), null);
+        updateToolbar(tabInfo, myInfo2Toolbar, tabInfo.getSideComponent(), tabInfo.getGroup());
+    }
+
+    private void updateToolbar(TabInfo tabInfo, Map<TabInfo, Toolbar> toolbars, JComponent side, ActionGroup group) {
+        Toolbar old = toolbars.get(tabInfo);
         if (old != null) {
             remove(old);
         }
 
-        Toolbar toolbar = createToolbarComponent(tabInfo);
-        myInfo2Toolbar.put(tabInfo, toolbar);
+        Toolbar toolbar = createToolbarComponent(tabInfo, side, group);
+        toolbars.put(tabInfo, toolbar);
         add(toolbar);
     }
 
@@ -1332,8 +1352,8 @@ public abstract class JBTabsImpl extends JComponent
         return null;
     }
 
-    protected Toolbar createToolbarComponent(TabInfo tabInfo) {
-        return new Toolbar(this, tabInfo);
+    protected Toolbar createToolbarComponent(TabInfo tabInfo, JComponent side, ActionGroup group) {
+        return new Toolbar(this, tabInfo, side, group);
     }
 
     @Override
@@ -1431,12 +1451,9 @@ public abstract class JBTabsImpl extends JComponent
     public static class Toolbar extends JPanel {
         private final JBTabsImpl myTabs;
 
-        public Toolbar(JBTabsImpl tabs, TabInfo info) {
+        public Toolbar(JBTabsImpl tabs, TabInfo info, JComponent side, ActionGroup group) {
             super(new BorderLayout());
             myTabs = tabs;
-
-            ActionGroup group = info.getGroup();
-            JComponent side = info.getSideComponent();
 
             if (group != null && myTabs.myActionManager != null) {
                 String place = info.getPlace();
@@ -1608,6 +1625,7 @@ public abstract class JBTabsImpl extends JComponent
             resetLayout(c);
         }
 
+        resetLayout(myInfo2ForeToolbar.get(each));
         resetLayout(myInfo2Toolbar.get(each));
 
         if (resetLabels) {
@@ -1661,6 +1679,27 @@ public abstract class JBTabsImpl extends JComponent
         }
 
         super.paint(g);
+
+        drawToolbarSeparator(g);
+        paintHeaderSeparator(g);
+    }
+
+    protected void paintHeaderSeparator(Graphics g) {
+    }
+
+    private void drawToolbarSeparator(Graphics g) {
+        Toolbar toolbar = myInfo2Toolbar.get(getSelectedInfo());
+        if (toolbar == null || toolbar.getParent() != this || isSideComponentOnTabs() || myHorizontalSide || !isHideTabs()) {
+            return;
+        }
+
+        Rectangle bounds = toolbar.getBounds();
+        if (bounds.width <= 0) {
+            return;
+        }
+
+        g.setColor(JBColor.border());
+        g.fillRect(bounds.x + bounds.width, bounds.y, JBUI.scale(1), bounds.height);
     }
 
     private Max computeMaxSize() {
@@ -1669,6 +1708,11 @@ public abstract class JBTabsImpl extends JComponent
             TabLabel label = myInfo2Label.get(eachInfo);
             max.myLabel.height = Math.max(max.myLabel.height, label.getPreferredSize().height);
             max.myLabel.width = Math.max(max.myLabel.width, label.getPreferredSize().width);
+            Toolbar foreToolbar = myInfo2ForeToolbar.get(eachInfo);
+            if (foreToolbar != null && !foreToolbar.isEmpty()) {
+                max.myToolbar.height = Math.max(max.myToolbar.height, foreToolbar.getPreferredSize().height);
+                max.myToolbar.width += foreToolbar.getPreferredSize().width;
+            }
             Toolbar toolbar = myInfo2Toolbar.get(eachInfo);
             if (myLayout.isSideComponentOnTabs() && toolbar != null && !toolbar.isEmpty()) {
                 max.myToolbar.height = Math.max(max.myToolbar.height, toolbar.getPreferredSize().height);
@@ -1753,6 +1797,7 @@ public abstract class JBTabsImpl extends JComponent
 
     private void processRemove(TabInfo info, boolean forcedNow) {
         remove(myInfo2Label.get(info));
+        remove(myInfo2ForeToolbar.get(info));
         remove(myInfo2Toolbar.get(info));
 
         JComponent tabComponent = info.getComponent();
@@ -1767,6 +1812,7 @@ public abstract class JBTabsImpl extends JComponent
         myVisibleInfos.remove(info);
         myHiddenInfos.remove(info);
         myInfo2Label.remove(info);
+        myInfo2ForeToolbar.remove(info);
         myInfo2Toolbar.remove(info);
         resetTabsCache();
 

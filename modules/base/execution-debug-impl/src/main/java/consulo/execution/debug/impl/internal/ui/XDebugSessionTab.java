@@ -50,7 +50,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -262,27 +261,31 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
             leftToolbar.add(action, new Constraints(Anchor.AFTER, IdeActions.ACTION_STOP_PROGRAM));
         }
 
-        //group.addSeparator();
-        //addAction(group, DebuggerActions.EXPORT_THREADS);
-        leftToolbar.addSeparator();
-
-        leftToolbar.add(myUi.getOptions().getLayoutActions());
-        AnAction[] commonSettings = myUi.getOptions().getSettingsActionsList();
         DefaultActionGroup settings = new DefaultActionGroup(ActionLocalize.groupXdebuggerSettingsText(), true);
         settings.getTemplatePresentation().setIcon(myUi.getOptions().getSettingsActions().getTemplatePresentation().getIcon());
-        settings.addAll(commonSettings);
-        leftToolbar.add(settings);
+        settings.add(myUi.getOptions().getLayoutActions());
+        settings.addAll(myUi.getOptions().getSettingsActionsList());
 
-        leftToolbar.addSeparator();
-
-        leftToolbar.add(ToolWindowActions.getPinAction());
+        MoreActionGroup more = new MoreActionGroup(false);
+        more.setPopup(true);
+        more.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_EXTRA_GROUP));
 
         DefaultActionGroup topToolbar = new DefaultActionGroup();
         topToolbar.addAll(DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP));
 
-        session.getDebugProcess().registerAdditionalActions(leftToolbar, topToolbar, settings);
-        myUi.getOptions().setLeftToolbar(leftToolbar, ActionPlaces.DEBUGGER_TOOLBAR);
-        myUi.getOptions().setTopToolbar(topToolbar, ActionPlaces.DEBUGGER_TOOLBAR);
+        session.getDebugProcess().registerAdditionalActions(more, topToolbar, settings);
+
+        more.addSeparator();
+        more.add(settings);
+
+        DefaultActionGroup toolbar = new DefaultActionGroup();
+        toolbar.addAll(leftToolbar);
+        toolbar.addSeparator();
+        toolbar.addAll(topToolbar);
+        toolbar.addSeparator();
+        toolbar.add(more);
+
+        myUi.getOptions().setTopToolbar(toolbar, ActionPlaces.DEBUGGER_TOOLBAR);
 
         if (myEnvironment != null) {
             initLogConsoles(myEnvironment.getRunProfile(), myRunContentDescriptor, myConsole);
