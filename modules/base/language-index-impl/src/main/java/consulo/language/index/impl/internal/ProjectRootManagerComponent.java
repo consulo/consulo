@@ -40,7 +40,6 @@ import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.scope.ModuleScopeProvider;
-import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.WatchedRootsProvider;
@@ -49,7 +48,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
@@ -59,8 +57,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -78,7 +78,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     private final boolean myDoLogCachesUpdate;
 
     @Inject
-    public ProjectRootManagerComponent(Project project, VirtualFileManager virtualFileManager) {
+    public ProjectRootManagerComponent(Project project) {
         super(project);
 
         myDoLogCachesUpdate = ApplicationProperties.isInSandbox();
@@ -101,13 +101,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
                 rootsChanged(true);
             }
         });
-
-        virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerListener() {
-            @Override
-            public void afterRefreshFinish(boolean asynchronous) {
-                doUpdateOnRefresh();
-            }
-        }, this);
 
         BatchUpdateListener handler = new BatchUpdateListener() {
             @Override
@@ -161,24 +154,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     @RequiredWriteAction
     private void rootsChanged(boolean fileTypes) {
         getBatchSession(fileTypes).rootsChanged();
-    }
-
-    private void doUpdateOnRefresh() {
-        if (myProject.getApplication().isUnitTestMode() && (!myStartupActivityPerformed || myProject.isDisposed())) {
-            return; // in test mode suppress addition to a queue unless project is properly initialized
-        }
-        if (myProject.isDefault()) {
-            return;
-        }
-
-        if (myDoLogCachesUpdate) {
-            LOG.debug("refresh");
-        }
-        DumbService dumbService = DumbService.getInstance(myProject);
-        DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(myProject);
-        if (task != null) {
-            dumbService.queueTask(task);
-        }
     }
 
     @RequiredReadAction
@@ -265,23 +240,28 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
         DumbService dumbService = DumbService.getInstance(myProject);
         if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
-            dumbService.queueTask(new UnindexedFilesUpdater(myProject));
+            dumbService.queueTask(new UnindexedFilesScanner(myProject));
         }
     }
 
     @Override
     @RequiredReadAction
-    public void markRootsForRefresh() {
+    public List<VirtualFile> markRootsForRefresh() {
         Set<String> paths = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
         addRootsFromModules(false, paths, paths);
 
         LocalFileSystem fs = LocalFileSystem.getInstance();
+        List<VirtualFile> roots = new ArrayList<>();
         for (String path : paths) {
             VirtualFile root = fs.findFileByPath(path);
-            if (root instanceof NewVirtualFile newVirtualFile) {
-                newVirtualFile.markDirtyRecursively();
+            if (root != null) {
+                roots.add(root);
+                if (root instanceof NewVirtualFile newVirtualFile) {
+                    newVirtualFile.markDirtyRecursively();
+                }
             }
         }
+        return roots;
     }
 
     @Override

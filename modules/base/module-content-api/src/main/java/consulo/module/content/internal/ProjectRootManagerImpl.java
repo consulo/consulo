@@ -357,7 +357,8 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @Override
-    public void markRootsForRefresh() {
+    public List<VirtualFile> markRootsForRefresh() {
+        return List.of();
     }
 
     private ModuleManager getModuleManager() {

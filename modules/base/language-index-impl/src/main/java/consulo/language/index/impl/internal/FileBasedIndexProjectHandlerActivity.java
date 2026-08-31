@@ -46,17 +46,19 @@ public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity
         project.getMessageBus().connect().subscribe(DumbModeListener.class, new DumbModeListener() {
             @Override
             public void exitDumbMode() {
-                LOG.info("Has changed files: " + (FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project) != null) + "; project=" + project);
+                if (index instanceof FileBasedIndexImpl indexImpl) {
+                    LOG.info("Has changed files: " + FileBasedIndexProjectHandler.mightHaveManyChangedFilesInProject(project, indexImpl) + "; project=" + project);
+                }
             }
         });
 
         // schedule dumb mode start after the read action we're currently in
         if (index instanceof FileBasedIndexImpl) {
-            DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
+            DumbService.getInstance(project).queueTask(new UnindexedFilesScanner(project));
         }
 
-        FileBaseIndexSet set = new FileBaseIndexSet(FileBasedIndexScanRunnableCollector.getInstance(project));
-        index.registerIndexableSet(set, project);
+        FileBasedIndexImpl indexImpl = (FileBasedIndexImpl) index;
+        indexImpl.registerProjectFileSets(project);
 
         Disposable listener = Disposable.newDisposable("project close listener");
         Disposer.register(project, listener);
@@ -68,7 +70,7 @@ public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity
             public void projectClosing(Project eventProject) {
                 if (eventProject == project && !removed) {
                     removed = true;
-                    index.removeIndexableSet(set);
+                    indexImpl.removeProjectFileSets(project);
                 }
             }
         });

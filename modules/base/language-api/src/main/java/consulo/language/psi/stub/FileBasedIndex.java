@@ -47,10 +47,6 @@ public abstract class FileBasedIndex {
 
     public abstract void iterateIndexableFiles(ContentIterator processor, Project project, @Nullable ProgressIndicator indicator);
 
-    public void iterateIndexableFilesConcurrently(ContentIterator processor, Project project, @Nullable ProgressIndicator indicator) {
-        iterateIndexableFiles(processor, project, indicator);
-    }
-
     /**
      * @return the file which the current thread is indexing right now, or {@code null} if current thread isn't indexing.
      */

@@ -174,12 +174,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
 
     private void queueTasks(List<? extends Runnable> actions) {
         actions.forEach(myTasks::offer);
-        DumbModeTask task = new DumbModeTask(this) {
-            @Override
-            public void performInDumbMode(ProgressIndicator indicator, Exception trace) {
-                performPushTasks();
-            }
-        };
+        DumbModeTask task = new MyDumbModeTask(this);
         myProject.getMessageBus().connect(task).subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
             public void rootsChanged(ModuleRootEvent event) {
@@ -187,6 +182,27 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
             }
         });
         DumbService.getInstance(myProject).queueTask(task);
+    }
+
+    private static class MyDumbModeTask extends DumbModeTask {
+        private final PushedFilePropertiesUpdaterImpl myUpdater;
+
+        private MyDumbModeTask(PushedFilePropertiesUpdaterImpl updater) {
+            myUpdater = updater;
+        }
+
+        @Override
+        public void performInDumbMode(ProgressIndicator indicator, Exception trace) {
+            myUpdater.performPushTasks();
+        }
+
+        @Override
+        public @Nullable DumbModeTask tryMergeWith(DumbModeTask taskFromQueue) {
+            if (taskFromQueue instanceof MyDumbModeTask task && task.myUpdater == myUpdater) {
+                return this;
+            }
+            return null;
+        }
     }
 
     private void performPushTasks() {
@@ -212,14 +228,7 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
     }
 
     private void scheduleDumbModeReindexingIfNeeded() {
-        if (myProject.isDisposed()) {
-            return;
-        }
-
-        DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(myProject);
-        if (task != null) {
-            DumbService.getInstance(myProject).queueTask(task);
-        }
+        FileBasedIndexProjectHandler.scheduleReindexingInDumbMode(myProject);
     }
 
     @Override

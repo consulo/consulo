@@ -16,6 +16,7 @@
 package consulo.language.index.impl.internal;
 
 import consulo.content.scope.SearchScope;
+import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 
@@ -26,10 +27,10 @@ class ProjectFilesCondition implements Predicate<VirtualFile> {
     private final VirtualFile myRestrictedTo;
     private final SearchScope myFilter;
     private int myFilesFromOtherProjects;
-    private final FileBasedIndexImpl.ProjectIndexableFilesFilter myIndexableFilesFilter;
+    private final IdFilter myIndexableFilesFilter;
 
     public ProjectFilesCondition(
-        FileBasedIndexImpl.ProjectIndexableFilesFilter indexableFilesFilter,
+        IdFilter indexableFilesFilter,
         SearchScope filter,
         VirtualFile restrictedTo,
         boolean includeFilesFromOtherProjects

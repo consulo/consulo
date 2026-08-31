@@ -19,8 +19,11 @@ package consulo.module.content.internal;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+
+import java.util.List;
 
 public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public static ProjectRootManagerEx getInstanceEx(Project project) {
@@ -30,7 +33,7 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
   // invokes runnable surrounded by beforeRootsChange()/rootsChanged() callbacks
   public abstract void makeRootsChange(Runnable runnable, boolean filetypes, boolean fireEvents);
 
-  public abstract void markRootsForRefresh();
+  public abstract List<VirtualFile> markRootsForRefresh();
 
   public abstract void clearScopesCachesForModules();
 

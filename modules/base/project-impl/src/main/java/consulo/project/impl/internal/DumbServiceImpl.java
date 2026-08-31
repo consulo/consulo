@@ -74,15 +74,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private final AtomicReference<DumbState> myDumbState = new AtomicReference<>(new DumbState(0, 0));
     private final AtomicReference<DumbModeEventListenerState> myListenerBackgroundableState =
         new AtomicReference<>(DumbModeEventListenerState.EXITED);
-    private final Object myTaskQueueLock = new Object();
-    private final Set<Object> myQueuedEquivalences = new HashSet<>();
-    private final Queue<DumbModeTask> myUpdatesQueue = new Queue<>(5);
-
-    /**
-     * Per-task progress indicators. Removed from EDT only.
-     * The task is removed from this map after it's finished or when the project is disposed.
-     */
-    private final Map<DumbModeTask, ProgressIndicatorEx> myProgresses = new ConcurrentHashMap<>();
+    private final DumbServiceMergingTaskQueue myTaskQueue = new DumbServiceMergingTaskQueue();
 
     private final Queue<Runnable> myRunWhenSmartQueue = new Queue<>(5);
     private final List<DumbTaskLauncher> myDumbTaskLaunchers = Lists.newLockFreeCopyOnWriteList();
@@ -146,10 +138,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     @Override
     public void cancelTask(DumbModeTask task) {
-        ProgressIndicatorEx indicator = myProgresses.get(task);
-        if (indicator != null) {
-            indicator.cancel();
-        }
+        myTaskQueue.cancelTask(task);
     }
 
     @Override
@@ -157,20 +146,13 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     public void dispose() {
         myApplication.assertWriteAccessAllowed();
 
-        synchronized (myTaskQueueLock) {
-            myUpdatesQueue.clear();
-            myQueuedEquivalences.clear();
-        }
         synchronized (myRunWhenSmartQueue) {
             myRunWhenSmartQueue.clear();
         }
         for (DumbTaskLauncher launcher : new ArrayList<>(myDumbTaskLaunchers)) {
             launcher.cancel();
         }
-        for (DumbModeTask task : new ArrayList<>(myProgresses.keySet())) {
-            cancelTask(task);
-            Disposer.dispose(task);
-        }
+        myTaskQueue.disposePendingTasks();
         myTransitionExecutor.shutdownNow();
     }
 
@@ -291,10 +273,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     void queueAsynchronousTask(DumbModeTask task) {
         Exception trace = new Exception(); // please report exceptions here to peter
-        if (!addTaskToQueue(task)) {
-            return;
-        }
-
+        myTaskQueue.addTask(task);
         enterDumbMode(trace);
     }
 
@@ -302,26 +281,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         DumbTaskLauncher launcher = new DumbTaskLauncher(trace);
         myDumbTaskLaunchers.add(launcher);
         myApplication.invokeLater(launcher::launch, myProject.getDisposed());
-    }
-
-    private boolean addTaskToQueue(DumbModeTask task) {
-        synchronized (myTaskQueueLock) {
-            if (myQueuedEquivalences.add(task.getEquivalenceObject())) {
-                myProgresses.put(task, new ProgressIndicatorBase());
-                Disposer.register(
-                    task,
-                    () -> {
-                        UIAccess.assertIsUIThread();
-                        myProgresses.remove(task);
-                    }
-                );
-                myUpdatesQueue.addLast(task);
-                return true;
-            }
-        }
-
-        Disposer.dispose(task);
-        return false;
     }
 
     private void enterDumbMode(Exception trace) {
@@ -679,31 +638,13 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     private @Nullable Pair<DumbModeTask, ProgressIndicatorEx> pollTaskQueue() {
-        while (true) {
-            DumbModeTask queuedTask;
-            synchronized (myTaskQueueLock) {
-                if (myUpdatesQueue.isEmpty()) {
-                    queuedTask = null;
-                }
-                else {
-                    queuedTask = myUpdatesQueue.pullFirst();
-                    myQueuedEquivalences.remove(queuedTask.getEquivalenceObject());
-                }
-            }
-
-            if (queuedTask == null) {
-                queueUpdateFinished();
-                return null;
-            }
-
-            ProgressIndicatorEx indicator = myProgresses.get(queuedTask);
-            if (indicator.isCanceled()) {
-                Disposer.dispose(queuedTask);
-                continue;
-            }
-
-            return Pair.create(queuedTask, indicator);
+        DumbServiceMergingTaskQueue.QueuedDumbModeTask queuedTask = myTaskQueue.extractNextTask();
+        if (queuedTask == null) {
+            queueUpdateFinished();
+            return null;
         }
+
+        return Pair.create(queuedTask.getTask(), queuedTask.getIndicator());
     }
 
     private static @Nullable <T> T waitForFuture(Future<T> result) {

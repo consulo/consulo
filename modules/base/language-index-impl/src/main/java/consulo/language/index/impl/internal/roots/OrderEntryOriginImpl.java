@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.psi.stub;
+package consulo.language.index.impl.internal.roots;
 
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.index.impl.internal.roots.kind.OrderEntryOrigin;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 
-/**
- * @author max
- */
-public interface IndexableFileSet {
-    boolean isInSet(VirtualFile file);
+class OrderEntryOriginImpl implements OrderEntryOrigin {
+    private final OrderEntry myOrderEntry;
+
+    OrderEntryOriginImpl(OrderEntry orderEntry) {
+        myOrderEntry = orderEntry;
+    }
+
+    @Override
+    public OrderEntry getOrderEntry() {
+        return myOrderEntry;
+    }
 }
