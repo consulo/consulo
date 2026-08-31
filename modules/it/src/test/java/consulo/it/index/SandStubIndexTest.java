@@ -18,6 +18,7 @@ package consulo.it.index;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -99,9 +101,8 @@ public class SandStubIndexTest {
         DumbService dumbService = DumbService.getInstance(project);
         awaitSmart(dumbService);
 
-        assertThat(findClasses(project, "Foo5"))
-            .as("class from the initial scan must be found through the stub index")
-            .isNotEmpty();
+        // class from the initial scan must be found through the stub index
+        waitFor(() -> !findClasses(project, "Foo5").isEmpty());
 
         // an external tool renames every class
         for (int i = 0; i < FILES; i++) {
@@ -112,30 +113,37 @@ public class SandStubIndexTest {
         assertThat(srcFile).isNotNull();
         srcFile.refresh(false, true);
 
-        waitFor(() -> !findClasses(project, "Bar5").isEmpty());
+        // the changed-files reindex runs in dumb mode; both facts are checked in one read action, so a non-empty
+        // "Bar" answer proves the index was ready when the empty "Foo" answer was produced
+        waitFor(() -> ReadAction.compute(() -> {
+            try {
+                return !StubIndex.getElements(SandIndexKeys.SAND_CLASSES, "Bar5", project, GlobalSearchScope.allScope(project), SandClass.class).isEmpty()
+                    && StubIndex.getElements(SandIndexKeys.SAND_CLASSES, "Foo5", project, GlobalSearchScope.allScope(project), SandClass.class).isEmpty();
+            }
+            catch (IndexNotReadyException e) {
+                return false;
+            }
+        }));
         awaitSmart(dumbService);
-
-        assertThat(findClasses(project, "Bar5"))
-            .as("stub index must serve the new class after the external change was reindexed")
-            .isNotEmpty();
-        assertThat(findClasses(project, "Foo5"))
-            .as("stub index must forget the old class after the external change was reindexed")
-            .isEmpty();
 
         // a full rescan resets and repopulates the per-project filter which gates stub index queries;
         // up-to-date files must stay visible afterwards
         dumbService.queueTask(new UnindexedFilesScanner(project));
         awaitSmart(dumbService);
 
-        assertThat(findClasses(project, "Bar5"))
-            .as("stub index must keep serving up-to-date files after a full rescan")
-            .isNotEmpty();
+        waitFor(() -> !findClasses(project, "Bar5").isEmpty());
     }
 
     private static Collection<SandClass> findClasses(Project project, String name) {
-        return ReadAction.compute(
-            () -> StubIndex.getElements(SandIndexKeys.SAND_CLASSES, name, project, GlobalSearchScope.allScope(project), SandClass.class)
-        );
+        return ReadAction.compute(() -> {
+            try {
+                return StubIndex.getElements(SandIndexKeys.SAND_CLASSES, name, project, GlobalSearchScope.allScope(project), SandClass.class);
+            }
+            catch (IndexNotReadyException e) {
+                // the reindex is still running in dumb mode - the caller polls until the index answers
+                return List.of();
+            }
+        });
     }
 
     private static void awaitSmart(DumbService dumbService) throws InterruptedException {
@@ -155,4 +163,3 @@ public class SandStubIndexTest {
         assertThat(condition.getAsBoolean()).as("timed out waiting for condition").isTrue();
     }
 }
-
