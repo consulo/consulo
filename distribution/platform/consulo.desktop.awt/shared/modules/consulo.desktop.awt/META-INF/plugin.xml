@@ -23,7 +23,9 @@
                     class="consulo.ide.impl.idea.notification.impl.actions.NotificationTestAction"
                     text="Add Test Notification"/>
 
-            <action id="UiInspector" internal="true" class="consulo.desktop.awt.ui.impl.action.UiInspectorAction" text="UI Inspector"/>
+            <action id="UiInspector" internal="true" class="consulo.desktop.awt.internal.inspector.UiInspectorAction" text="UI Inspector">
+                <mouse-shortcut keymap="$default" keystroke="ctrl alt button1"/>
+            </action>
             <action id="ShowSplash" internal="true" class="consulo.desktop.awt.uiOld.ShowSplashAction" text="Show Splash"/>
             <action id="ShowGotItMessage" internal="true" class="consulo.ide.impl.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
             <action id="ValidationTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestDialogWithValidationAction"

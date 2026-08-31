@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.impl.action;
+package consulo.desktop.awt.internal.inspector;
 
 import com.google.common.base.MoreObjects;
 import consulo.application.Application;
-import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.lang.reflect.ReflectionUtil;
-import consulo.ui.ex.awt.ColorIcon;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
+import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.ui.ex.awt.ColorIcon;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.AntialiasingType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -79,29 +76,29 @@ import java.util.function.Function;
 
 import static java.util.Locale.ENGLISH;
 
-public class UiInspectorAction extends ToggleAction implements DumbAware {
+public class UiInspectorAction extends UiMouseAction {
     private static final String CLICK_INFO = "CLICK_INFO";
     private static final String RENDERER_BOUNDS = "clicked renderer";
-    private UiInspector myInspector;
+
+    private final AWTEventListener myContainerListener = event -> {
+        if (event instanceof ContainerEvent containerEvent) {
+            processContainerEvent(containerEvent);
+        }
+    };
 
     public UiInspectorAction() {
+        super("UiInspector");
+
         if (Boolean.getBoolean("idea.ui.debug.mode")) {
             Application.get().invokeLater(() -> setSelected(null, true));
         }
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
-        return myInspector != null;
-    }
-
-    @Override
     @RequiredUIAccess
-    public void setSelected(AnActionEvent e, boolean state) {
+    protected void onToggle(boolean state) {
         if (state) {
-            if (myInspector == null) {
-                myInspector = new UiInspector();
-            }
+            Toolkit.getDefaultToolkit().addAWTEventListener(myContainerListener, AWTEvent.CONTAINER_EVENT_MASK);
 
             UiInspectorNotification[] existing =
                 NotificationsManager.getNotificationsManager().getNotificationsOfType(UiInspectorNotification.class, null);
@@ -115,11 +112,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             }
         }
         else {
-            UiInspector inspector = myInspector;
-            myInspector = null;
-            if (inspector != null) {
-                Disposer.dispose(inspector);
-            }
+            Toolkit.getDefaultToolkit().removeAWTEventListener(myContainerListener);
+            closeAllInspectorWindows();
         }
     }
 
@@ -127,6 +121,102 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         private UiInspectorNotification(Notification.Builder notificationBuilder) {
             super(notificationBuilder);
         }
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void handleClick(Component component, MouseEvent event) {
+        closeAllInspectorWindows();
+
+        if (event != null && component instanceof JComponent jComponent) {
+            jComponent.putClientProperty(CLICK_INFO, getClickInfo(event, component));
+        }
+
+        Window window = new InspectorWindow(component);
+        window.pack();
+        window.setVisible(true);
+        window.toFront();
+    }
+
+    private static void closeAllInspectorWindows() {
+        for (Window window : Window.getWindows()) {
+            if (window instanceof InspectorWindow inspectorWindow) {
+                inspectorWindow.close();
+            }
+        }
+    }
+
+    private static void processContainerEvent(ContainerEvent event) {
+        Component child = event.getID() == ContainerEvent.COMPONENT_ADDED ? event.getChild() : null;
+        if (child instanceof JComponent childComponent && !(event.getSource() instanceof CellRendererPane)) {
+            String text = ExceptionUtil.getThrowableText(new Throwable());
+            int first = text.indexOf("at com.intellij", text.indexOf("at java.awt"));
+            int last = text.indexOf("at java.awt.EventQueue");
+            if (last == -1) {
+                last = text.length();
+            }
+            String val = last > first && first > 0 ? text.substring(first, last) : null;
+            childComponent.putClientProperty("uiInspector.addedAt", val);
+        }
+    }
+
+    private static List<PropertyBean> getClickInfo(MouseEvent me, Component component) {
+        if (me.getComponent() == null) {
+            return null;
+        }
+        me = SwingUtilities.convertMouseEvent(me.getComponent(), me, component);
+        List<PropertyBean> clickInfo = new ArrayList<>();
+        if (component instanceof JList list) {
+            int row = list.getUI().locationToIndex(list, me.getPoint());
+            if (row != -1) {
+                Component rendererComponent = list.getCellRenderer().getListCellRendererComponent(
+                    list,
+                    list.getModel().getElementAt(row),
+                    row,
+                    list.getSelectionModel().isSelectedIndex(row),
+                    list.hasFocus()
+                );
+                clickInfo.add(new PropertyBean(RENDERER_BOUNDS, list.getUI().getCellBounds(list, row, row)));
+                clickInfo.addAll(new InspectorTableModel(rendererComponent).myProperties);
+                return clickInfo;
+            }
+        }
+        if (component instanceof JTable table) {
+            int row = table.rowAtPoint(me.getPoint());
+            int column = table.columnAtPoint(me.getPoint());
+            if (row != -1 && column != -1) {
+                Component rendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(
+                    table,
+                    table.getValueAt(row, column),
+                    table.getSelectionModel().isSelectedIndex(row),
+                    table.hasFocus(),
+                    row,
+                    column
+                );
+                clickInfo.add(new PropertyBean(RENDERER_BOUNDS, table.getCellRect(row, column, true)));
+                clickInfo.addAll(new InspectorTableModel(rendererComponent).myProperties);
+                return clickInfo;
+            }
+        }
+        if (component instanceof JTree tree) {
+            TreePath path = tree.getClosestPathForLocation(me.getX(), me.getY());
+            if (path != null) {
+                Object object = path.getLastPathComponent();
+                Component rendererComponent = tree.getCellRenderer().getTreeCellRendererComponent(
+                    tree,
+                    object,
+                    tree.getSelectionModel().isPathSelected(path),
+                    tree.isExpanded(path),
+                    tree.getModel().isLeaf(object),
+                    tree.getRowForPath(path),
+                    tree.hasFocus()
+                );
+                clickInfo.add(new PropertyBean(RENDERER_BOUNDS, tree.getPathBounds(path)));
+                clickInfo.addAll(new InspectorTableModel(rendererComponent).myProperties);
+                return clickInfo;
+            }
+        }
+        return null;
     }
 
     private static class InspectorWindow extends JFrameAsUIWindow {
@@ -382,6 +472,10 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
                     }
                 }
                 append(getComponentName(component));
+                consulo.ui.Component uiComponent = fromUnifiedComponent(component);
+                if (uiComponent != null) {
+                    append(" [" + uiComponent.getClass().getSimpleName() + "]", new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, JBColor.BLUE));
+                }
                 append(": " + RectangleRenderer.toString(component.getBounds()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
                 if (component.isOpaque()) {
                     append(", opaque", SimpleTextAttributes.GRAYED_ATTRIBUTES);
@@ -405,6 +499,15 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
 
     
+    private static consulo.ui.@Nullable Component fromUnifiedComponent(Component component) {
+        try {
+            return TargetAWT.from(component);
+        }
+        catch (Throwable e) {
+            return null;
+        }
+    }
+
     private static String getComponentName(Component component) {
         String name = getClassName(component);
 
@@ -1455,140 +1558,6 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             myProperties.clear();
             fillTable();
             fireTableDataChanged();
-        }
-    }
-
-    private static class UiInspector implements AWTEventListener, Disposable {
-        public UiInspector() {
-            Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.CONTAINER_EVENT_MASK);
-        }
-
-        @Override
-        public void dispose() {
-            Toolkit.getDefaultToolkit().removeAWTEventListener(this);
-            for (Window window : Window.getWindows()) {
-                if (window instanceof InspectorWindow inspectorWindow) {
-                    inspectorWindow.close();
-                }
-            }
-        }
-
-        public void showInspector(Component c) {
-            Window window = new InspectorWindow(c);
-            window.pack();
-            window.setVisible(true);
-            window.toFront();
-        }
-
-        @Override
-        public void eventDispatched(AWTEvent event) {
-            if (event instanceof MouseEvent mouseEvent) {
-                processMouseEvent(mouseEvent);
-            }
-            else if (event instanceof ContainerEvent containerEvent) {
-                processContainerEvent(containerEvent);
-            }
-        }
-
-        private void processMouseEvent(MouseEvent me) {
-            if (!me.isAltDown() || !me.isControlDown()) {
-                return;
-            }
-            if (me.getClickCount() != 1 || me.isPopupTrigger()) {
-                return;
-            }
-            me.consume();
-            if (me.getID() != MouseEvent.MOUSE_RELEASED) {
-                return;
-            }
-            Component component = me.getComponent();
-
-            if (component instanceof Container container) {
-                component = container.findComponentAt(me.getPoint());
-            }
-            else if (component == null) {
-                component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-            }
-            if (component != null) {
-                if (component instanceof JComponent jComponent) {
-                    jComponent.putClientProperty(CLICK_INFO, getClickInfo(me, component));
-                }
-                showInspector(component);
-            }
-        }
-
-        private static List<PropertyBean> getClickInfo(MouseEvent me, Component component) {
-            if (me.getComponent() == null) {
-                return null;
-            }
-            me = SwingUtilities.convertMouseEvent(me.getComponent(), me, component);
-            List<PropertyBean> clickInfo = new ArrayList<>();
-            //clickInfo.add(new PropertyBean("Click point", me.getPoint()));
-            if (component instanceof JList list) {
-                int row = list.getUI().locationToIndex(list, me.getPoint());
-                if (row != -1) {
-                    Component rendererComponent = list.getCellRenderer().getListCellRendererComponent(
-                        list,
-                        list.getModel().getElementAt(row),
-                        row,
-                        list.getSelectionModel().isSelectedIndex(row),
-                        list.hasFocus()
-                    );
-                    clickInfo.add(new PropertyBean(RENDERER_BOUNDS, list.getUI().getCellBounds(list, row, row)));
-                    clickInfo.addAll(new InspectorTableModel(rendererComponent).myProperties);
-                    return clickInfo;
-                }
-            }
-            if (component instanceof JTable table) {
-                int row = table.rowAtPoint(me.getPoint());
-                int column = table.columnAtPoint(me.getPoint());
-                if (row != -1 && column != -1) {
-                    Component rendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(
-                        table,
-                        table.getValueAt(row, column),
-                        table.getSelectionModel().isSelectedIndex(row),
-                        table.hasFocus(),
-                        row,
-                        column
-                    );
-                    clickInfo.add(new PropertyBean(RENDERER_BOUNDS, table.getCellRect(row, column, true)));
-                    clickInfo.addAll(new InspectorTableModel(rendererComponent).myProperties);
-                    return clickInfo;
-                }
-            }
-            if (component instanceof JTree tree) {
-                TreePath path = tree.getClosestPathForLocation(me.getX(), me.getY());
-                if (path != null) {
-                    Object object = path.getLastPathComponent();
-                    Component rendererComponent = tree.getCellRenderer().getTreeCellRendererComponent(
-                        tree,
-                        object,
-                        tree.getSelectionModel().isPathSelected(path),
-                        tree.isExpanded(path),
-                        tree.getModel().isLeaf(object),
-                        tree.getRowForPath(path),
-                        tree.hasFocus()
-                    );
-                    clickInfo.add(new PropertyBean(RENDERER_BOUNDS, tree.getPathBounds(path)));
-                    clickInfo.addAll(new InspectorTableModel(rendererComponent).myProperties);
-                    return clickInfo;
-                }
-            }
-            return null;
-        }
-
-        private static void processContainerEvent(ContainerEvent event) {
-            Component child = event.getID() == ContainerEvent.COMPONENT_ADDED ? event.getChild() : null;
-            if (child instanceof JComponent childComponent && !(event.getSource() instanceof CellRendererPane)) {
-                String text = ExceptionUtil.getThrowableText(new Throwable());
-                int first = text.indexOf("at com.intellij", text.indexOf("at java.awt"));
-                int last = text.indexOf("at java.awt.EventQueue");
-                if (last == -1) {
-                    last = text.length();
-                }
-                String val = last > first && first > 0 ? text.substring(first, last) : null;
-                childComponent.putClientProperty("uiInspector.addedAt", val);
-            }
         }
     }
 
