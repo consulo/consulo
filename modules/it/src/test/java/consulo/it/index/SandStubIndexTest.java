@@ -163,3 +163,4 @@ public class SandStubIndexTest {
         assertThat(condition.getAsBoolean()).as("timed out waiting for condition").isTrue();
     }
 }
+

@@ -38,10 +38,7 @@ import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.index.impl.internal.hash.FileContentHashIndex;
-import consulo.language.index.impl.internal.hash.FileContentHashIndexExtension;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
-import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.internal.FileTypeManagerEx;
 import consulo.language.internal.LanguageInternal;
 import consulo.language.internal.SerializationManagerEx;
@@ -396,9 +393,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                 registrationStatusSink.registerIndexAsInitiallyBuilt(name);
             }
 
-            if (extension.hasSnapshotMapping() && versionFileExisted) {
-                FileUtil.deleteWithRenaming(IndexInfrastructure.getPersistentIndexRootDir(name));
-            }
             File rootDir = IndexInfrastructure.getIndexRootDir(name);
             if (versionFileExisted) {
                 FileUtil.deleteWithRenaming(rootDir);
@@ -416,15 +410,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         throws IOException {
         VfsAwareMapIndexStorage<K, V> storage = null;
         ID<K, V> name = extension.getName();
-        boolean contentHashesEnumeratorOk = false;
 
         for (int attempt = 0; attempt < 2; attempt++) {
             try {
-                if (extension.hasSnapshotMapping()) {
-                    ContentHashesSupport.initContentHashesEnumerator();
-                    contentHashesEnumeratorOk = true;
-                }
-
                 storage = new VfsAwareMapIndexStorage<>(
                     IndexInfrastructure.getStorageFile(name),
                     extension.getKeyDescriptor(),
@@ -451,11 +439,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
                 UpdatableIndex<K, V, FileContent> index = createIndex(extension, new MemoryIndexStorage<>(storage, name));
 
-                ProvidedIndexExtension<K, V> providedExtension = ProvidedIndexExtensionLocator.findProvidedIndexExtensionFor(extension);
-                if (providedExtension != null) {
-                    index = ProvidedIndexExtension.wrapWithProvidedIndex(providedExtension, extension, index);
-                }
-
                 state.registerIndex(
                     name,
                     index,
@@ -468,7 +451,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             }
             catch (Exception e) {
                 LOG.info(e);
-                boolean instantiatedStorage = storage != null;
                 try {
                     if (storage != null) {
                         storage.close();
@@ -480,10 +462,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
                 FileUtil.deleteWithRenaming(IndexInfrastructure.getIndexRootDir(name));
 
-                if (extension.hasSnapshotMapping() && (!contentHashesEnumeratorOk || instantiatedStorage)) {
-                    // todo there is possibility of corruption of storage and content hashes
-                    FileUtil.deleteWithRenaming(IndexInfrastructure.getPersistentIndexRootDir(name));
-                }
                 IndexingStamp.rewriteVersion(name, version);
             }
         }
@@ -585,7 +563,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     }
                 }
 
-                ContentHashesSupport.flushContentHashes();
                 SharedIndicesData.flushData();
                 myConnection.disconnect();
             }
@@ -688,7 +665,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             }
         }
 
-        ContentHashesSupport.flushContentHashes();
         SharedIndicesData.flushData();
     }
 
@@ -1497,9 +1473,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     }
                     else {
                         newFc = new FileContentImpl(vFile, contentText, currentDocStamp);
-                        if (IdIndex.ourSnapshotMappingsEnabled) {
-                            newFc.putUserData(UpdatableSnapshotInputMappingIndex.FORCE_IGNORE_MAPPING_INDEX_UPDATE, Boolean.TRUE);
-                        }
                         document.putUserData(ourFileContentKey, new WeakReference<>(newFc));
                     }
 
@@ -1741,12 +1714,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                         }
                         fc = new FileContentImpl(file, currentBytes);
 
-                        if (IdIndex.ourSnapshotMappingsEnabled) {
-                            FileType substituteFileType = SubstitutedFileType.substituteFileType(file, fileType, finalProject);
-                            byte[] hash = calculateHash(currentBytes, fc.getCharset(), fileType, substituteFileType);
-                            fc.setHash(hash);
-                        }
-
                         psiFile = content.getUserData(IndexingDataKeys.PSI_FILE);
                         initFileContent(fc, finalProject, psiFile);
                     }
@@ -1780,18 +1747,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         });
         file.putUserData(IndexingDataKeys.REBUILD_REQUESTED, null);
         return setIndexedStatus.get();
-    }
-
-    
-    public static byte[] calculateHash(
-        byte[] currentBytes,
-        Charset charset,
-        FileType fileType,
-        FileType substituteFileType
-    ) {
-        return fileType.isBinary()
-            ? ContentHashesSupport.calcContentHash(currentBytes, substituteFileType)
-            : ContentHashesSupport.calcContentHashWithFileType(currentBytes, charset, substituteFileType);
     }
 
     @Override
@@ -2566,28 +2521,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
         catch (Throwable ignore) {
         }
-    }
-
-    public synchronized FileContentHashIndex getFileContentHashIndex(File enumeratorPath) {
-        UpdatableIndex<Integer, Void, FileContent> index = getState().getIndex(FileContentHashIndexExtension.HASH_INDEX_ID);
-        if (index == null) {
-            IndicesRegistrationResult registrationResult = new IndicesRegistrationResult();
-            try {
-                registerIndexer(null, FileContentHashIndexExtension.create(enumeratorPath, myApplication), myState, registrationResult);
-                registrationResult.logChangedAndFullyBuiltIndices(
-                    LOG,
-                    "Version was changed for:",
-                    "Index is to be rebuilt:"
-                );
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        else {
-            return (FileContentHashIndex) index;
-        }
-        return (FileContentHashIndex) getState().getIndex(FileContentHashIndexExtension.HASH_INDEX_ID);
     }
 
     static boolean isPsiDependentIndex(IndexExtension<?, ?, ?> extension) {

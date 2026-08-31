@@ -18,8 +18,6 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.forward.KeyValueUpdateProcessor;
 import consulo.index.io.forward.RemovedKeyProcessor;
 import consulo.language.index.impl.internal.*;
-import consulo.language.index.impl.internal.hash.MergedInvertedIndex;
-import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.FileContent;
@@ -218,18 +216,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                 );
                 MemoryIndexStorage<K, Void> memStorage = new MemoryIndexStorage<>(storage, indexKey);
                 UpdatableIndex<K, Void, FileContent> index =
-                    new VfsAwareMapReduceIndex<>(wrappedExtension, memStorage, null, null, null, lock);
-
-                if (stubUpdatingIndex instanceof MergedInvertedIndex) {
-                    ProvidedIndexExtension<Integer, SerializedStubTree> ex =
-                        ((MergedInvertedIndex<Integer, SerializedStubTree>)stubUpdatingIndex).getProvidedExtension();
-                    if (ex instanceof StubProvidedIndexExtension stubProvidedIndexExt) {
-                        ProvidedIndexExtension<K, Void> providedStubIndexExtension = stubProvidedIndexExt.findProvidedStubIndex(extension);
-                        if (providedStubIndexExtension != null) {
-                            index = ProvidedIndexExtension.wrapWithProvidedIndex(providedStubIndexExtension, wrappedExtension, index);
-                        }
-                    }
-                }
+                    new VfsAwareMapReduceIndex<>(wrappedExtension, memStorage, null, null, lock);
 
                 HashingStrategy<K> keyHashingStrategy = new HashingStrategy<>() {
                     private final KeyDescriptor<K> descriptor = extension.getKeyDescriptor();

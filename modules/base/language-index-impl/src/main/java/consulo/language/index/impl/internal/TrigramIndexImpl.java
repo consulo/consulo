@@ -77,12 +77,7 @@ public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexF
 
     @Override
     public int getVersion() {
-        return 3 + (IdIndex.ourSnapshotMappingsEnabled ? 0xFF : 0);
-    }
-
-    @Override
-    public boolean hasSnapshotMapping() {
-        return true;
+        return 4;
     }
 
     private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();

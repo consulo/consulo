@@ -71,8 +71,4 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
   public boolean traceKeyHashToVirtualFileMapping() {
     return false;
   }
-
-  public boolean hasSnapshotMapping() {
-    return false;
-  }
 }

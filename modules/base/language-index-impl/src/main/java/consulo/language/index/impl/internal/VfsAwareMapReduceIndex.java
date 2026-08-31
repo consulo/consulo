@@ -49,13 +49,11 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   private final AtomicBoolean myInMemoryMode = new AtomicBoolean();
   private final IntObjectMap<Map<Key, Value>> myInMemoryKeysAndValues = IntMaps.newIntObjectHashMap();
 
-  private final SnapshotInputMappingIndex<Key, Value, Input> mySnapshotInputMappings;
-  private final boolean myUpdateMappings;
   private final boolean mySingleEntryIndex;
 
   public VfsAwareMapReduceIndex(IndexExtension<Key, Value, Input> extension,
                                 IndexStorage<Key, Value> storage) throws IOException {
-    this(extension, storage, hasSnapshotMapping(extension) ? new SnapshotInputMappings<>(extension) : null);
+    this(extension, storage, getForwardIndexMap(extension), getForwardIndexAccessor(extension), null);
     if (!(myIndexId instanceof ID<?, ?>)) {
       throw new IllegalArgumentException("myIndexId should be instance of consulo.ide.impl.idea.util.indexing.ID");
     }
@@ -63,74 +61,19 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
 
   public VfsAwareMapReduceIndex(IndexExtension<Key, Value, Input> extension,
                                 IndexStorage<Key, Value> storage,
-                                @Nullable SnapshotInputMappings<Key, Value, Input> snapshotInputMappings) throws IOException {
-    this(extension,
-         storage,
-         snapshotInputMappings != null ? new SharedIntMapForwardIndex(extension,
-                                                                      snapshotInputMappings.getInputIndexStorageFile(),
-                                                                      true) : getForwardIndexMap(extension),
-         snapshotInputMappings != null ? snapshotInputMappings.getForwardIndexAccessor() : getForwardIndexAccessor(extension),
-         snapshotInputMappings,
-         null);
-  }
-
-  public VfsAwareMapReduceIndex(IndexExtension<Key, Value, Input> extension,
-                                IndexStorage<Key, Value> storage,
                                 @Nullable ForwardIndex forwardIndexMap,
                                 @Nullable ForwardIndexAccessor<Key, Value> forwardIndexAccessor,
-                                @Nullable SnapshotInputMappingIndex<Key, Value, Input> snapshotInputMappings,
                                 @Nullable ReadWriteLock lock) {
     super(extension, storage, forwardIndexMap, forwardIndexAccessor, lock);
     if (myIndexId instanceof ID) {
       SharedIndicesData.registerIndex((ID<Key, Value>)myIndexId, extension);
     }
-    mySnapshotInputMappings = IndexImporterMappingIndex.wrap(snapshotInputMappings, extension);
-    myUpdateMappings = snapshotInputMappings instanceof UpdatableSnapshotInputMappingIndex;
     mySingleEntryIndex = extension instanceof SingleEntryFileBasedIndexExtension;
     installMemoryModeListener();
   }
 
-  private static <Key, Value> boolean hasSnapshotMapping(IndexExtension<Key, Value, ?> indexExtension) {
-    return indexExtension instanceof FileBasedIndexExtension && ((FileBasedIndexExtension<Key, Value>)indexExtension).hasSnapshotMapping() && IdIndex.ourSnapshotMappingsEnabled;
-  }
-
-  
-  @Override
-  protected InputData<Key, Value> mapInput(@Nullable Input content) {
-    InputData<Key, Value> data;
-    boolean containsSnapshotData = true;
-    if (mySnapshotInputMappings != null && content != null) {
-      try {
-        data = mySnapshotInputMappings.readData(content);
-        if (data != null) {
-          return data;
-        }
-        else {
-          containsSnapshotData = !myUpdateMappings;
-        }
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    data = super.mapInput(content);
-    if (!containsSnapshotData && !UpdatableSnapshotInputMappingIndex.ignoreMappingIndexUpdate(content)) {
-      try {
-        return ((UpdatableSnapshotInputMappingIndex<Key, Value, Input>)mySnapshotInputMappings).putData(content, data);
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return data;
-  }
-
-  
   @Override
   protected InputDataDiffBuilder<Key, Value> getKeysDiffBuilder(int inputId) throws IOException {
-    if (mySnapshotInputMappings != null && !myInMemoryMode.get()) {
-      return super.getKeysDiffBuilder(inputId);
-    }
     if (myInMemoryMode.get()) {
       synchronized (myInMemoryKeysAndValues) {
         Map<Key, Value> keysAndValues = myInMemoryKeysAndValues.get(inputId);
@@ -315,62 +258,16 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     FileBasedIndex.getInstance().requestRebuild((ID<?, ?>)myIndexId, ex);
   }
 
-  @Override
-  protected void doClear() throws StorageException, IOException {
-    super.doClear();
-    if (mySnapshotInputMappings != null && myUpdateMappings) {
-      try {
-        ((UpdatableSnapshotInputMappingIndex<Key, Value, Input>)mySnapshotInputMappings).clear();
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
-  }
-
-  @Override
-  protected void doFlush() throws IOException, StorageException {
-    super.doFlush();
-    if (mySnapshotInputMappings != null && myUpdateMappings) {
-      ((UpdatableSnapshotInputMappingIndex<Key, Value, Input>)mySnapshotInputMappings).flush();
-    }
-  }
-
-  @Override
-  protected void doDispose() throws StorageException {
-    super.doDispose();
-
-    if (mySnapshotInputMappings != null) {
-      try {
-        mySnapshotInputMappings.close();
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
-  }
-
-  private static @Nullable <Key, Value> ForwardIndexAccessor<Key, Value> getForwardIndexAccessor(IndexExtension<Key, Value, ?> indexExtension) {
-    if (!shouldCreateForwardIndex(indexExtension)) return null;
+  private static <Key, Value> ForwardIndexAccessor<Key, Value> getForwardIndexAccessor(IndexExtension<Key, Value, ?> indexExtension) {
     if (indexExtension instanceof SingleEntryFileBasedIndexExtension) return new SingleEntryIndexForwardIndexAccessor(indexExtension);
     return new MapForwardIndexAccessor<>(new InputMapExternalizer<>(indexExtension));
   }
 
-  private static @Nullable ForwardIndex getForwardIndexMap(IndexExtension<?, ?, ?> indexExtension) throws IOException {
-    if (!shouldCreateForwardIndex(indexExtension)) return null;
+  private static ForwardIndex getForwardIndexMap(IndexExtension<?, ?, ?> indexExtension) throws IOException {
     if (indexExtension instanceof SingleEntryFileBasedIndexExtension<?>)
       return new EmptyForwardIndex(); // indexStorage and forwardIndex are same here
     File indexStorageFile = IndexInfrastructure.getInputIndexStorageFile((ID<?, ?>)indexExtension.getName());
     return new PersistentMapBasedForwardIndex(indexStorageFile, false);
-  }
-
-  private static boolean shouldCreateForwardIndex(IndexExtension<?, ?, ?> indexExtension) {
-    if (hasSnapshotMapping(indexExtension)) return false;
-    if (indexExtension instanceof CustomInputsIndexFileBasedIndexExtension) {
-      LOG.error("Index `" + indexExtension.getName() + "` will be created without forward index");
-      return false;
-    }
-    return true;
   }
 
   private void installMemoryModeListener() {
