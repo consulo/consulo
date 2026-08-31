@@ -143,7 +143,7 @@ public class UnindexedFilesScanner extends DumbModeTask {
                 indicator.setText(provider.getRootsScanningProgressText());
 
                 List<VirtualFile> files = new ArrayList<>();
-                ContentIterator collectingIterator = myIndex.createUnindexedFilesFinder(files);
+                ContentIterator collectingIterator = myIndex.createUnindexedFilesFinder(project, files);
                 provider.iterateFiles(project, fileOrDir -> {
                     ProgressManager.checkCanceled(); // give a chance to suspend indexing
                     return collectingIterator.processFile(fileOrDir);

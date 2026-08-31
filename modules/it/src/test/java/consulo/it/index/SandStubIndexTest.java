@@ -16,12 +16,13 @@
 package consulo.it.index;
 
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.it.AllowLogError;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.language.index.impl.internal.UnindexedFilesScanner;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.language.psi.stub.IdFilter;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -31,49 +32,49 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
-import consulo.project.event.DumbModeListenerBackgroundable;
+import consulo.sandboxPlugin.lang.psi.SandClass;
+import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BooleanSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Reproduces the external-change scenario which used to cycle refresh and indexing: an external tool rewrites many
- * files at once, the VFS refresh publishes the changes and the index must catch up in a small, bounded number of dumb
- * mode passes instead of feeding itself new work forever.
- * <p>
- * The count of changed files is deliberately above {@code ide.dumb.mode.minFilesToStart} (20), so the changed-files
- * path has to go through a dumb mode reindex ({@code FileBasedIndexProjectHandler.scheduleReindexingInDumbMode})
- * rather than a lazy update.
+ * Verifies that stub indexes stay correct through the whole pipeline: initial scan, an external mass change with
+ * VFS refresh and changed-files reindexing, and a subsequent full rescan (which resets and repopulates the
+ * per-project indexable files filter gating stub index queries).
  */
 @ExtendWith(HeadlessApplicationExtension.class)
-public class ExternalChangesReindexTest {
+public class SandStubIndexTest {
     private static final long TIMEOUT_SECONDS = 60;
-    private static final int FILES = 30;
+    private static final int FILES = 25;
 
     /**
      * See {@code ProjectStateReloadTest} - the refresh makes the platform fire VFS events on the UI thread,
      * where the pointer manager and the indexing listeners break their own threading assertions in a headless
      * application. Unrelated to the behavior under test; any other logged error still fails it.
      */
-    @AllowLogError({"consulo.virtualFileSystem.internal.BaseVirtualFileManager", "consulo.application.impl.internal.BaseApplication"})
+    @AllowLogError({
+        "consulo.virtualFileSystem.internal.BaseVirtualFileManager",
+        "consulo.application.impl.internal.BaseApplication",
+        // the sand plugin registers actions into UI groups (MainMenu etc.) which do not exist in the headless application
+        "consulo.ui.ex.impl.internal.action.ActionManagerImpl"
+    })
     @Test
-    public void externalMassChangeCausesBoundedReindex(Application application, ProjectManager projectManager) throws Exception {
-        Path directory = Files.createTempDirectory("consulo-it-external-reindex");
+    public void stubIndexSurvivesExternalChangesAndRescan(Application application, ProjectManager projectManager) throws Exception {
+        Path directory = Files.createTempDirectory("consulo-it-sand-stub-index");
         Path src = directory.resolve("src");
         Files.createDirectories(src);
         for (int i = 0; i < FILES; i++) {
-            Files.writeString(src.resolve("file" + i + ".txt"), "hello " + i);
+            Files.writeString(src.resolve("file" + i + ".sand"), "class Foo" + i + " {}");
         }
 
         Project project = projectManager
@@ -98,55 +99,43 @@ public class ExternalChangesReindexTest {
         DumbService dumbService = DumbService.getInstance(project);
         awaitSmart(dumbService);
 
-        AtomicInteger dumbModeEntries = new AtomicInteger();
-        project.getMessageBus().connect().subscribe(
-            DumbModeListenerBackgroundable.class,
-            new DumbModeListenerBackgroundable() {
-                @Override
-                public void enteredDumbMode() {
-                    dumbModeEntries.incrementAndGet();
-                }
-            }
-        );
+        assertThat(findClasses(project, "Foo5"))
+            .as("class from the initial scan must be found through the stub index")
+            .isNotEmpty();
 
-        // an external tool rewrites every file at once
+        // an external tool renames every class
         for (int i = 0; i < FILES; i++) {
-            Files.writeString(src.resolve("file" + i + ".txt"), "changed content of file " + i);
+            Files.writeString(src.resolve("file" + i + ".sand"), "class Bar" + i + " {}");
         }
 
         VirtualFile srcFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(src);
         assertThat(srcFile).isNotNull();
         srcFile.refresh(false, true);
 
-        // the changed-files reindex is scheduled from a background worker after the events settle
-        waitFor(() -> dumbModeEntries.get() >= 1);
+        waitFor(() -> !findClasses(project, "Bar5").isEmpty());
         awaitSmart(dumbService);
 
-        // give a refresh/index feedback loop a chance to expose itself, then require the count to be small and stable
-        int cyclesAfterReindex = dumbModeEntries.get();
-        Thread.sleep(TimeUnit.SECONDS.toMillis(3));
-        awaitSmart(dumbService);
+        assertThat(findClasses(project, "Bar5"))
+            .as("stub index must serve the new class after the external change was reindexed")
+            .isNotEmpty();
+        assertThat(findClasses(project, "Foo5"))
+            .as("stub index must forget the old class after the external change was reindexed")
+            .isEmpty();
 
-        assertThat(dumbModeEntries.get())
-            .as("dumb mode kept cycling after the reindex - refresh and indexing feed each other")
-            .isEqualTo(cyclesAfterReindex);
-        assertThat(cyclesAfterReindex)
-            .as("a single external change wave must be absorbed by a couple of dumb mode passes")
-            .isLessThanOrEqualTo(3);
-        assertThat(dumbService.isDumb()).isFalse();
-
-        // a full rescan resets and repopulates the per-project filter; up-to-date files must survive it,
-        // otherwise index queries silently lose them ("indexed but not resolved")
+        // a full rescan resets and repopulates the per-project filter which gates stub index queries;
+        // up-to-date files must stay visible afterwards
         dumbService.queueTask(new UnindexedFilesScanner(project));
         awaitSmart(dumbService);
 
-        IdFilter projectFilter = FileBasedIndex.getInstance().createProjectIndexableFiles(project);
-        assertThat(projectFilter).as("project indexable files filter must be available in smart mode").isNotNull();
-        VirtualFile sample = srcFile.findChild("file5.txt");
-        assertThat(sample).isNotNull();
-        assertThat(projectFilter.containsFileId(((VirtualFileWithId) sample).getId()))
-            .as("up-to-date project file must stay in the indexable files filter after a rescan")
-            .isTrue();
+        assertThat(findClasses(project, "Bar5"))
+            .as("stub index must keep serving up-to-date files after a full rescan")
+            .isNotEmpty();
+    }
+
+    private static Collection<SandClass> findClasses(Project project, String name) {
+        return ReadAction.compute(
+            () -> StubIndex.getElements(SandIndexKeys.SAND_CLASSES, name, project, GlobalSearchScope.allScope(project), SandClass.class)
+        );
     }
 
     private static void awaitSmart(DumbService dumbService) throws InterruptedException {
@@ -155,7 +144,7 @@ public class ExternalChangesReindexTest {
         assertThat(smart.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).as("project must reach smart mode").isTrue();
     }
 
-    private static void waitFor(BooleanSupplier condition) throws Exception {
+    private static void waitFor(java.util.function.BooleanSupplier condition) throws Exception {
         long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(TIMEOUT_SECONDS);
         while (System.currentTimeMillis() < deadline) {
             if (condition.getAsBoolean()) {

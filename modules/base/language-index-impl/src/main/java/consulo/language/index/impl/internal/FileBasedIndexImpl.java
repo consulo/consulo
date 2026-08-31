@@ -2115,24 +2115,27 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     class UnindexedFilesFinder implements ContentIterator {
+        private final Project myProject;
         private final List<VirtualFile> myFiles;
         private final boolean myDoTraceForFilesToBeIndexed = LOG.isTraceEnabled();
 
-        UnindexedFilesFinder(List<VirtualFile> files) {
+        UnindexedFilesFinder(Project project, List<VirtualFile> files) {
+            myProject = project;
             myFiles = files;
         }
 
         @Override
         public boolean processFile(VirtualFile file) {
             return AccessRule.read(() -> {
-                if (!file.isValid()) {
-                    return true;
-                }
-                if (file instanceof InternalNewVirtualFile virtualFileSystemEntry && virtualFileSystemEntry.isFileIndexed()) {
+                if (!file.isValid() || !(file instanceof VirtualFileWithId)) {
                     return true;
                 }
 
-                if (!(file instanceof VirtualFileWithId)) {
+                // the file may be up-to-date and skipped below, but it still belongs to the project's indexable files,
+                // so it must enter the per-project filter which gates index queries
+                myIndexableFilesFilterHolder.addFileId(Math.abs(getIdMaskingNonIdBasedFile(file)), myProject);
+
+                if (file instanceof InternalNewVirtualFile virtualFileSystemEntry && virtualFileSystemEntry.isFileIndexed()) {
                     return true;
                 }
                 getFileTypeManager().freezeFileTypeTemporarilyIn(file, () -> {
@@ -2188,8 +2191,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
-    ContentIterator createUnindexedFilesFinder(List<VirtualFile> files) {
-        return new UnindexedFilesFinder(files);
+    ContentIterator createUnindexedFilesFinder(Project project, List<VirtualFile> files) {
+        return new UnindexedFilesFinder(project, files);
     }
 
     private boolean shouldIndexFile(Project project, VirtualFile file, ID<?, ?> indexId) {

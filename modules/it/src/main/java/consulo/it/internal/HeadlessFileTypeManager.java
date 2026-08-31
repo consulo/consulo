@@ -17,23 +17,32 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.language.file.FileTypeManager;
 import consulo.language.internal.FileTypeManagerEx;
 import consulo.project.Project;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Mock {@code FileTypeManager} for the integration-test harness. The production impl
- * ({@code FileTypeManagerImpl}) lives in {@code ide-impl}; for now every file resolves to
- * {@link UnknownFileType} and no ignore patterns / associations are known. Bound only under the
+ * ({@code FileTypeManagerImpl}) lives in {@code ide-impl}; file types registered through
+ * {@link FileTypeFactory} extensions are resolved by extension and name matcher, everything else is
+ * {@link UnknownFileType} and no ignore patterns / user associations are known. Bound only under the
  * {@link ComponentProfiles#INTEGRATION_TEST} profile.
  *
  * @author VISTALL
@@ -41,6 +50,49 @@ import java.util.List;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.INTEGRATION_TEST)
 public class HeadlessFileTypeManager extends FileTypeManagerEx {
+    private volatile @Nullable Registry myRegistry;
+
+    private static class Registry {
+        final Map<String, FileType> byExtension = new HashMap<>();
+        final List<Pair<FileNameMatcher, FileType>> matchers = new ArrayList<>();
+    }
+
+    private Registry registry() {
+        Registry registry = myRegistry;
+        if (registry == null) {
+            synchronized (this) {
+                registry = myRegistry;
+                if (registry == null) {
+                    Registry filled = new Registry();
+                    Application.get().getExtensionPoint(FileTypeFactory.class).forEach(factory -> factory.createFileTypes(new FileTypeConsumer() {
+                        @Override
+                        public void consume(FileType fileType) {
+                            consume(fileType, fileType.getDefaultExtension());
+                        }
+
+                        @Override
+                        public void consume(FileType fileType, String extensions) {
+                            for (String extension : extensions.split(";")) {
+                                if (!extension.isEmpty()) {
+                                    filled.byExtension.put(extension.toLowerCase(Locale.ROOT), fileType);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void consume(FileType fileType, FileNameMatcher... nameMatchers) {
+                            for (FileNameMatcher matcher : nameMatchers) {
+                                filled.matchers.add(Pair.create(matcher, fileType));
+                            }
+                        }
+                    }));
+                    myRegistry = registry = filled;
+                }
+            }
+        }
+        return registry;
+    }
+
     @Override
     public String getExtension(String fileName) {
         int index = fileName.lastIndexOf('.');
@@ -72,26 +124,44 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx {
 
     @Override
     public FileType[] getRegisteredFileTypes() {
-        return new FileType[]{UnknownFileType.INSTANCE};
+        Registry registry = registry();
+        List<FileType> types = new ArrayList<>(registry.byExtension.values());
+        for (Pair<FileNameMatcher, FileType> matcher : registry.matchers) {
+            types.add(matcher.getSecond());
+        }
+        types.add(UnknownFileType.INSTANCE);
+        return types.toArray(FileType[]::new);
     }
 
     @Override
     public FileType getFileTypeByFile(VirtualFile file) {
-        return UnknownFileType.INSTANCE;
+        return getFileTypeByFileName(file.getName());
     }
 
     @Override
-    public FileType getFileTypeByFileName(String fileTypeId) {
-        return UnknownFileType.INSTANCE;
+    public FileType getFileTypeByFileName(String fileName) {
+        Registry registry = registry();
+        for (Pair<FileNameMatcher, FileType> matcher : registry.matchers) {
+            if (matcher.getFirst().accept(fileName)) {
+                return matcher.getSecond();
+            }
+        }
+        return getFileTypeByExtension(getExtension(fileName));
     }
 
     @Override
     public FileType getFileTypeByExtension(String extension) {
-        return UnknownFileType.INSTANCE;
+        FileType fileType = registry().byExtension.get(extension.toLowerCase(Locale.ROOT));
+        return fileType == null ? UnknownFileType.INSTANCE : fileType;
     }
 
     @Override
     public @Nullable FileType findFileTypeByName(String fileTypeName) {
+        for (FileType fileType : getRegisteredFileTypes()) {
+            if (fileType.getId().equals(fileTypeName)) {
+                return fileType;
+            }
+        }
         return null;
     }
 
