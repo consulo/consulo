@@ -47,7 +47,9 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -187,7 +189,7 @@ public class PluginDownloader {
 
             String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
-            File platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory();
+            Path platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory().toPath();
 
             try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
                 TarArchiveEntry tempEntry;
@@ -195,29 +197,27 @@ public class PluginDownloader {
                     String name = tempEntry.getName();
                     // we interest only in new build
                     if (name.startsWith(prefix) && name.length() != prefix.length()) {
-                        File targetFile = new File(platformDirectory, name.substring(prefix.length(), name.length()));
+                        Path targetFile = platformDirectory.resolve(name.substring(prefix.length(), name.length()));
 
                         if (tempEntry.isDirectory()) {
-                            FileUtil.createDirectory(targetFile);
+                            Files.createDirectories(targetFile);
                         }
                         else if (tempEntry.isSymbolicLink()) {
-                            FileUtil.createParentDirs(targetFile);
-
-                            Files.createSymbolicLink(targetFile.toPath(), Paths.get(tempEntry.getLinkName()));
+                            Files.createDirectories(targetFile.getParent());
+                            Files.createSymbolicLink(targetFile, Paths.get(tempEntry.getLinkName()));
                         }
                         else {
-                            FileUtil.createParentDirs(targetFile);
-
-                            try (OutputStream stream = new FileOutputStream(targetFile)) {
+                            Files.createDirectories(targetFile.getParent());
+                            try (OutputStream stream = Files.newOutputStream(targetFile)) {
                                 StreamUtil.copyStreamContent(ais, stream);
                             }
 
-                            targetFile.setLastModified(tempEntry.getLastModifiedDate().getTime());
+                            Files.setLastModifiedTime(targetFile, FileTime.fromMillis(tempEntry.getLastModifiedDate().getTime()));
 
                             // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
                             if (tempEntry.getMode() == 0b111_101_101) {
                                 NioPathUtil.setPosixFilePermissions(
-                                    targetFile.toPath(),
+                                    targetFile,
                                     NioPathUtil.convertModeToFilePermissions(tempEntry.getMode())
                                 );
                             }
@@ -228,9 +228,9 @@ public class PluginDownloader {
 
             // at start - delete old version, after restart. On mac - we can't delete boot build
             String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
-            File oldBuild = new File(platformDirectory, "build" + buildNumber);
-            if (oldBuild.exists()) {
-                StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldBuild));
+            Path oldBuild = platformDirectory.resolve("build" + buildNumber);
+            if (Files.exists(oldBuild)) {
+                StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldBuild.toFile()));
             }
 
             FileUtil.delete(myFile);

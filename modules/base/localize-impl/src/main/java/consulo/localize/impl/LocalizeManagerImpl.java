@@ -25,6 +25,7 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;
 import consulo.localize.LocalizeValue;
 import consulo.localize.internal.LocalizeManagerEx;
+import consulo.localize.localize.CoreLocalize;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.io.URLUtil;
@@ -33,17 +34,13 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.ClearableLazyValue;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -286,7 +283,6 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         }
     }
 
-
     private Locale buildLocale(String fullId) {
         StringTokenizer tokenizer = new StringTokenizer(fullId, "_");
         String language = tokenizer.nextToken();
@@ -296,9 +292,8 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return new Locale(language, country, variant);
     }
 
-
     @Override
-    public Set<Locale> getAvaliableLocales() {
+    public Set<Locale> getAvailableLocales() {
         return Collections.unmodifiableSet(myLocalizes.keySet());
     }
 
@@ -315,7 +310,6 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         }
     }
 
-
     @Override
     public Locale getLocale() {
         if (myCurrentLocale != null) {
@@ -324,7 +318,6 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
         return myAutoDetectedLocale.get();
     }
-
 
     @Override
     public Locale getAutoDetectedLocale() {
@@ -346,7 +339,6 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return myModificationCount;
     }
 
-
     @Override
     public Locale parseLocale(String localeText) {
         try {
@@ -357,7 +349,6 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
             return ourDefaultLocale;
         }
     }
-
 
     @Override
     public LocalizeValue fromStringKey(String localizeKeyInfo) {
@@ -370,6 +361,43 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         return localizeKey.getValue();
     }
 
+    @Override
+    public LocalizeValue fromException(Throwable t) {
+        if (t instanceof IOException || t instanceof UncheckedIOException || t instanceof IOError) {
+            return fromIoError(t);
+        }
+
+        String message = t.getLocalizedMessage();
+        return LocalizeValue.of(StringUtil.isEmptyOrSpaces(message) ? t.toString() : message);
+    }
+
+    private LocalizeValue fromIoError(Throwable t) {
+        String message = t.getLocalizedMessage();
+        if (StringUtil.isEmptyOrSpaces(message)) {
+            return CoreLocalize.ioErrorUnknown();
+        }
+
+        if (t instanceof UncheckedIOException || t instanceof IOError) {
+            t = t.getCause();
+        }
+
+        return switch (t) {
+            case AccessDeniedException ade -> {
+                String reason = ade.getReason();
+                yield reason != null
+                    ? CoreLocalize.ioErrorAccessDeniedReason(message, reason)
+                    : CoreLocalize.ioErrorAccessDenied(message);
+            }
+            case DirectoryNotEmptyException e -> CoreLocalize.ioErrorDirNotEmpty(message);
+            case FileAlreadyExistsException e -> CoreLocalize.ioErrorAlreadyExists(message);
+            case NoSuchFileException e -> CoreLocalize.ioErrorNoSuchFile(message);
+            case NotDirectoryException e -> CoreLocalize.ioErrorNotDir(message);
+            case NotLinkException e -> CoreLocalize.ioErrorNotLink(message);
+            case FileSystemException fse when message.equals(fse.getFile()) ->
+                LocalizeValue.of(t.getClass().getSimpleName() + ": " + message);
+            default -> LocalizeValue.of(message);
+        };
+    }
 
     @Override
     public Map.Entry<Locale, String> getUnformattedText(LocalizeKey key) {

@@ -596,11 +596,11 @@ public class FileUtil {
     }
 
     public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-        if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
-            try (FileChannel fromChannel = ((FileInputStream) inputStream).getChannel()) {
-                try (FileChannel toChannel = ((FileOutputStream) outputStream).getChannel()) {
-                    fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
-                }
+        if (USE_FILE_CHANNELS
+            && inputStream instanceof FileInputStream fileInputStream
+            && outputStream instanceof FileOutputStream fileOutputStream) {
+            try (FileChannel fromChannel = fileInputStream.getChannel(); FileChannel toChannel = fileOutputStream.getChannel()) {
+                fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
             }
         }
         else {
@@ -998,17 +998,17 @@ public class FileUtil {
                 Files.deleteIfExists(path);
                 return Boolean.TRUE;
             }
-            catch (IOException e) {
+            catch (AccessDeniedException ignored) {
                 // file is read-only: fallback to standard java.io API
-                if (e instanceof AccessDeniedException) {
-                    File file = path.toFile();
-                    if (file == null) {
-                        return Boolean.FALSE;
-                    }
-                    if (file.delete() || !file.exists()) {
-                        return Boolean.TRUE;
-                    }
+                File file = path.toFile();
+                if (file == null) {
+                    return Boolean.FALSE;
                 }
+                if (file.delete() || !file.exists()) {
+                    return Boolean.TRUE;
+                }
+            }
+            catch (IOException ignored) {
             }
             return lastAttempt ? Boolean.FALSE : null;
         });

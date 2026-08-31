@@ -1,0 +1,20 @@
+io.error.dialog.no.proxy:
+    text: Set up HTTP proxy settings
+io.error.dialog.retry:
+    text: Try Again
+io.error.unknown:
+    text: Unknown I/O error
+io.error.access.denied:
+    text: 'Access denied: {0}'
+io.error.access.denied.reason:
+    text: 'Access denied: {0} ({1})'
+io.error.dir.not.empty:
+    text: 'Directory is not empty: {0}'
+io.error.already.exists:
+    text: 'File already exists: {0}'
+io.error.no.such.file:
+    text: 'File does not exist: {0}'
+io.error.not.dir:
+    text: 'Not a directory: {0}'
+io.error.not.link:
+    text: 'Not a symbolic link: {0}'

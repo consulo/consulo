@@ -54,8 +54,7 @@ public final class Alerts {
     }
 
     public static Alert<Object> okError(Throwable throwable) {
-        String message = throwable.getLocalizedMessage();
-        return okError(LocalizeValue.of(StringUtil.isEmpty(message) ? throwable.toString() : message));
+        return okError(LocalizeValue.of(throwable));
     }
 
     @Deprecated

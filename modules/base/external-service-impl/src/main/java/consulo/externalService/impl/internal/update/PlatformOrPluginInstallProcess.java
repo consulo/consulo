@@ -135,7 +135,7 @@ public final class PlatformOrPluginInstallProcess {
                     installed.add(pluginDescriptor);
                 }
                 catch (IOException e) {
-                    LOG.warn(e);
+                    LOG.warn("Installation failed", e);
                     uiAccess.give(() -> Alerts.okError(e).showAsync());
                     return;
                 }
